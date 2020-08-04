@@ -35,7 +35,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import org.lwjgl.Sys;
 
 import java.util.List;
 import java.util.Objects;
@@ -49,6 +48,7 @@ import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
  * @author CrowsOfWar
  */
 public class AbilityFireball extends Ability {
+
 
     public AbilityFireball() {
         super(Firebending.ID, "fireball");
@@ -115,9 +115,8 @@ public class AbilityFireball extends Ability {
             }
 
             int r, g, b, fadeR, fadeG, fadeB;
-            int rRandom, gRandom, bRandom;
             float damage = getProperty(DAMAGE, ctx).floatValue();
-            int size = (int) (getProperty(SIZE, ctx).floatValue() * 32);
+            float size = getProperty(SIZE, ctx).floatValue();
             int lifetime = getProperty(LIFETIME, ctx).intValue();
             int performance = getProperty(PERFORMANCE, ctx).intValue();
             int fireTime = getProperty(FIRE_TIME, ctx).intValue();
@@ -138,13 +137,14 @@ public class AbilityFireball extends Ability {
             fireballs = fireballs.stream().filter(entityFireball -> entityFireball.getOwner() == entity).collect(Collectors.toList());
             canUse |= fireballs.size() < 3 && ctx.isDynamicMasterLevel(AbilityTreePath.FIRST);
 
-            size *= (0.75 + 0.25 * ctx.getPowerRatingDamageMod() * abilityData.getXpModifier());
-            damage *= ctx.getPowerRatingDamageMod() * abilityData.getXpModifier();
-            damage += size / 10F;
-            explosionSize *= ctx.getPowerRatingDamageMod() * abilityData.getXpModifier();
-            explosionDamage *= ctx.getPowerRatingDamageMod() * abilityData.getXpModifier();
+            size *= abilityData.getDamageMult() * abilityData.getXpModifier();
+            damage *= abilityData.getDamageMult() * abilityData.getXpModifier();
+            damage += size;
+            explosionSize *= abilityData.getDamageMult() * abilityData.getXpModifier();
+            explosionDamage *= abilityData.getDamageMult() * abilityData.getXpModifier();
             chiHit *= ctx.getPowerRatingDamageMod();
             lifetime *= (0.75 + 0.25 * ctx.getPowerRatingDamageMod() * abilityData.getXpModifier());
+           // System.out.println(size);
 
             if (canUse) {
                 assert target != null;
@@ -154,7 +154,7 @@ public class AbilityFireball extends Ability {
                 fireball.setBehaviour(fireballs.size() < 1 ? new FireballOrbitController() : new FireballBehavior.PlayerControlled());
                 fireball.setDamage(damage);
                 fireball.setPowerRating(bender.calcPowerRating(Firebending.ID));
-                fireball.setSize(size);
+                fireball.setEntitySize(size / 2F);
                 fireball.setLifeTime(lifetime);
                 fireball.setOrbitID(fireballs.size() + 1);
                 fireball.setPerformanceAmount(performance);
@@ -261,10 +261,10 @@ public class AbilityFireball extends Ability {
                     float maxSize = ball.getProperty(MAX_SIZE, abilityData).floatValue();
                     maxSize *= (0.75 + 0.25 * abilityData.getDamageMult() * abilityData.getXpModifier());
                     if (maxSize > entity.getAvgSize()) {
-						if (entity.ticksExisted % 2 == 0) {
-							entity.setEntitySize((entity).getAvgSize() + 0.025F);
-						}
-					}
+                        if (entity.ticksExisted % 2 == 0) {
+                            entity.setEntitySize((entity).getAvgSize() + 0.025F);
+                        }
+                    }
                 }
             }
 

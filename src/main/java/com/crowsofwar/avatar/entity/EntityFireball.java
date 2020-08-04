@@ -54,8 +54,7 @@ import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
 @Optional.Interface(iface = "com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity", modid = "hammercore")
 public class EntityFireball extends EntityOffensive implements IGlowingEntity {
 
-    public static final DataParameter<Integer> SYNC_SIZE = EntityDataManager.createKey(EntityFireball.class,
-            DataSerializers.VARINT);
+
     private static final DataParameter<Integer> SYNC_ORBIT_ID = EntityDataManager.createKey(EntityFireball.class,
             DataSerializers.VARINT);
 
@@ -74,7 +73,6 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
     @Override
     public void entityInit() {
         super.entityInit();
-        dataManager.register(SYNC_SIZE, 30);
         dataManager.register(SYNC_ORBIT_ID, 1);
     }
 
@@ -168,10 +166,6 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
             }
 
         }
-
-        //I'm using 0.03125, because that results in a size of 0.5F when rendering, as the default size for the fireball is actually 16.
-        //This is due to weird rendering shenanigans
-        setEntitySize(getSize() * 0.03125F, getSize() * 0.03125F);
     }
 
     @Override
@@ -194,12 +188,9 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
 
 
     public int getSize() {
-        return dataManager.get(SYNC_SIZE);
+        return (int) (getAvgSize() * 16);
     }
 
-    public void setSize(int size) {
-        dataManager.set(SYNC_SIZE, size);
-    }
 
     public int getOrbitID() {
         return dataManager.get(SYNC_ORBIT_ID);

@@ -152,32 +152,36 @@ public class AbilityImmolate extends Ability {
         public Behavior<EntityLightOrb> onUpdate(EntityLightOrb entity) {
             super.onUpdate(entity);
             EntityLivingBase emitter = entity.getOwner();
-            assert emitter instanceof EntityPlayer || emitter instanceof EntityBender;
-            Bender b = Bender.get(emitter);
-            if (b != null && BendingData.getFromEntity(emitter) != null && entity.ticksExisted > 1) {
-                if (!Objects.requireNonNull(b.getData().getPowerRatingManager(Firebending.ID)).hasModifier(ImmolatePowerModifier.class)) {
-                    entity.setDead();
+            if (emitter != null) {
+                assert emitter instanceof EntityPlayer || emitter instanceof EntityBender;
+                Bender b = Bender.get(emitter);
+                if (b != null && BendingData.getFromEntity(emitter) != null && entity.ticksExisted > 1) {
+                    if (!Objects.requireNonNull(b.getData().getPowerRatingManager(Firebending.ID)).hasModifier(ImmolatePowerModifier.class)) {
+                        entity.setDead();
+                    }
                 }
+                int lightRadius = 5;
+                //Stops constant spam and calculations
+                if (entity.ticksExisted == 1) {
+                    AbilityData aD = AbilityData.get(emitter, "immolate");
+                    int level = aD.getLevel();
+                    if (level >= 1) {
+                        lightRadius = 7;
+                    }
+                    if (level >= 2) {
+                        lightRadius = 10;
+                    }
+                    if (aD.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+                        lightRadius = 9;
+                    }
+                    if (aD.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+                        lightRadius = 12;
+                    }
+                }
+                if (entity.getEntityWorld().isRemote) entity.setLightRadius(lightRadius + (int) (Math.random() * 5));
+                return this;
             }
-            int lightRadius = 5;
-            //Stops constant spam and calculations
-            if (entity.ticksExisted == 1) {
-                AbilityData aD = AbilityData.get(emitter, "immolate");
-                int level = aD.getLevel();
-                if (level >= 1) {
-                    lightRadius = 7;
-                }
-                if (level >= 2) {
-                    lightRadius = 10;
-                }
-                if (aD.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-                    lightRadius = 9;
-                }
-                if (aD.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-                    lightRadius = 12;
-                }
-            }
-            if (entity.getEntityWorld().isRemote) entity.setLightRadius(lightRadius + (int) (Math.random() * 5));
+            else entity.setDead();
             return this;
         }
 

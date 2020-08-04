@@ -51,17 +51,17 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
             .createKey(EntityOffensive.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Float> SYNC_EXPLOSION_SIZE = EntityDataManager
             .createKey(EntityOffensive.class, DataSerializers.FLOAT);
-    private static final DataParameter<Integer> SYNC_R = EntityDataManager.createKey(EntityFlames.class,
+    private static final DataParameter<Integer> SYNC_R = EntityDataManager.createKey(EntityOffensive.class,
             DataSerializers.VARINT);
-    private static final DataParameter<Integer> SYNC_G = EntityDataManager.createKey(EntityFlames.class,
+    private static final DataParameter<Integer> SYNC_G = EntityDataManager.createKey(EntityOffensive.class,
             DataSerializers.VARINT);
-    private static final DataParameter<Integer> SYNC_B = EntityDataManager.createKey(EntityFlames.class,
+    private static final DataParameter<Integer> SYNC_B = EntityDataManager.createKey(EntityOffensive.class,
             DataSerializers.VARINT);
-    private static final DataParameter<Integer> SYNC_FADE_R = EntityDataManager.createKey(EntityFlames.class,
+    private static final DataParameter<Integer> SYNC_FADE_R = EntityDataManager.createKey(EntityOffensive.class,
             DataSerializers.VARINT);
-    private static final DataParameter<Integer> SYNC_FADE_G = EntityDataManager.createKey(EntityFlames.class,
+    private static final DataParameter<Integer> SYNC_FADE_G = EntityDataManager.createKey(EntityOffensive.class,
             DataSerializers.VARINT);
-    private static final DataParameter<Integer> SYNC_FADE_B = EntityDataManager.createKey(EntityFlames.class,
+    private static final DataParameter<Integer> SYNC_FADE_B = EntityDataManager.createKey(EntityOffensive.class,
             DataSerializers.VARINT);
 
     /**
