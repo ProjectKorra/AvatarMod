@@ -224,7 +224,7 @@ public interface IOffensiveEntity {
         if (getSounds() != null)
             for (int i = 0; i < getSounds().length; i++)
                 entity.world.playSound(null, new BlockPos(entity), getSounds()[i],
-                        entity.getSoundCategory(), getPitch(), getVolume());
+                        entity.getSoundCategory(), getVolume(), getPitch());
     }
 
     //Only called when a piercing projectile hits an entity.
@@ -232,14 +232,14 @@ public interface IOffensiveEntity {
         if (getSounds() != null)
             for (int i = 0; i < getSounds().length; i++)
                 entity.world.playSound(null, new BlockPos(entity), getSounds()[i],
-                        entity.getSoundCategory(), getPitch(), getVolume());
+                        entity.getSoundCategory(), getVolume(), getPitch());
     }
 
     default void playDissipateSounds(Entity entity) {
         if (getSounds() != null)
             for (int i = 0; i < getSounds().length; i++)
                 entity.world.playSound(null, new BlockPos(entity), getSounds()[i],
-                        entity.getSoundCategory(), getPitch(), getVolume());
+                        entity.getSoundCategory(), getVolume(), getPitch());
     }
 
     //TODO: Get rid of these particle methods as they're unnecessary with the ease of the new particle system.

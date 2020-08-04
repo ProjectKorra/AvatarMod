@@ -107,6 +107,11 @@ public class StatCtrlThrowFireball extends StatusControl {
 
             Vector lookPos = Vector.getEyePos(entity).plus(Vector.getLookRectangular(entity).times(15 + fireball.getAvgSize()));
 
+            //Sets it to 0 if the entity is in creative mode.
+            if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
+                chi = burnOut = exhaustion = cooldown = 0;
+            }
+
             if (Objects.requireNonNull(Bender.get(entity)).consumeChi(chi)) {
 
                 fireball.setBehaviour(new FireballBehavior.Thrown());

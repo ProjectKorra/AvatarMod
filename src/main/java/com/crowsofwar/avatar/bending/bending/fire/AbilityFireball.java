@@ -142,8 +142,8 @@ public class AbilityFireball extends Ability {
             damage += size;
             explosionSize *= abilityData.getDamageMult() * abilityData.getXpModifier();
             explosionDamage *= abilityData.getDamageMult() * abilityData.getXpModifier();
-            chiHit *= ctx.getPowerRatingDamageMod();
-            lifetime *= (0.75 + 0.25 * ctx.getPowerRatingDamageMod() * abilityData.getXpModifier());
+            chiHit *= abilityData.getDamageMult();
+            lifetime *= (0.75 + 0.25 * abilityData.getDamageMult() * abilityData.getXpModifier());
            // System.out.println(size);
 
             if (canUse) {
@@ -160,9 +160,11 @@ public class AbilityFireball extends Ability {
                 fireball.setPerformanceAmount(performance);
                 fireball.setAbility(this);
                 fireball.setChiHit(chiHit);
+                fireball.setTier(getCurrentTier(ctx));
                 fireball.setExplosionDamage(explosionDamage);
                 fireball.setExplosionSize(explosionSize);
                 fireball.setFireTime(fireTime);
+                fireball.setDamageSource("avatar_Fire_fireball");
                 fireball.setRGB(r, g, b);
                 fireball.setFade(fadeR, fadeG, fadeB);
                 fireball.setXp(getProperty(XP_HIT, ctx).floatValue());

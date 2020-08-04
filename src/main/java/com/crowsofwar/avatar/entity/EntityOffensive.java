@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.entity;
 import com.crowsofwar.avatar.bending.bending.combustion.Combustionbending;
 import com.crowsofwar.avatar.bending.bending.lightning.Lightningbending;
 import com.crowsofwar.avatar.client.particle.AvatarParticles;
+import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.entity.data.Behavior;
 import com.crowsofwar.avatar.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
@@ -561,6 +562,16 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
             }
         }
         return collided || collision;
+    }
+
+    @Override
+    protected void spawnExtinguishIndicators() {
+        if (world.isRemote) {
+            for (int i = 0; i < 4; i++)
+                ParticleBuilder.create(ParticleBuilder.Type.SNOW).pos(AvatarEntityUtils.getMiddleOfEntity(this)).scale(getAvgSize() * 2)
+                        .vel(world.rand.nextGaussian() / 20 + motionX / 8, world.rand.nextDouble() / 10 + motionY / 8,
+                                world.rand.nextGaussian() / 20 + motionZ / 8).time(AvatarUtils.getRandomNumberInRange(8, 16) * 2).spawn(world);
+        }
     }
 
     public int getLifeTime() {

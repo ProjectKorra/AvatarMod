@@ -49,6 +49,7 @@ public class AbilityData {
 	private double powerRating;
 	//How much exhaustion to add to the player (affects the hunger bar, like sprinting or fighting)
 	private float exhaustion;
+	private boolean shouldRegenBurnout;
 	/**
 	 * Current burnout amount of the ability.
 	 * <p>
@@ -86,6 +87,7 @@ public class AbilityData {
 		this.burnOut = 0;
 		this.exhaustion = 0;
 		this.powerRating = 0;
+		this.shouldRegenBurnout = false;
 	}
 
 	public AbilityData(BendingData data, String abilityName, boolean switchPath) {
@@ -99,6 +101,7 @@ public class AbilityData {
 		this.burnOut = 0;
 		this.exhaustion = 0;
 		this.powerRating = 0;
+		this.shouldRegenBurnout = false;
 	}
 
 	/**
@@ -124,6 +127,13 @@ public class AbilityData {
 		return BendingData.get(world, playerName).getAbilityData(abilityName);
 	}
 
+	public void setRegenBurnout(boolean regen) {
+		this.shouldRegenBurnout = regen;
+	}
+
+	public boolean shouldRegenBurnout() {
+		return this.shouldRegenBurnout;
+	}
 
 	public void setBurnOut(float burnOut) {
 		this.burnOut = burnOut;
@@ -163,6 +173,7 @@ public class AbilityData {
 	 * <li>100 power rating gives 1.5; damage would be 1.5 times as much as usual</li>
 	 * Powerrating goes from -1000 to 1000, to allow for insane buffs (avatar).
 	 */
+	//NOTE: Unlike the other methods, this works server-side and client-side! Use this in abilities and such.
 	public double getDamageMult() {
 		double powerRating = getPowerRating();
 		if (powerRating < 0) {
@@ -418,6 +429,7 @@ public class AbilityData {
 		powerRating = nbt.getDouble("PowerRating");
 		exhaustion = nbt.getFloat("Exhaustion");
 		burnOut = nbt.getFloat("Burnout");
+		shouldRegenBurnout = nbt.getBoolean("RegenBurnout");
 	}
 
 	public void writeToNbt(NBTTagCompound nbt) {
@@ -429,6 +441,7 @@ public class AbilityData {
 		nbt.setDouble("PowerRating", powerRating);
 		nbt.setFloat("Exhaustion", exhaustion);
 		nbt.setFloat("Burnout", burnOut);
+		nbt.setBoolean("RegenBurnout", shouldRegenBurnout);
 	}
 
 	public void toBytes(ByteBuf buf) {
@@ -440,6 +453,7 @@ public class AbilityData {
 		buf.writeDouble(powerRating);
 		buf.writeFloat(exhaustion);
 		buf.writeFloat(burnOut);
+		buf.writeBoolean(shouldRegenBurnout);
 	}
 
 	private void fromBytes(ByteBuf buf) {
@@ -450,6 +464,7 @@ public class AbilityData {
 		powerRating = buf.readDouble();
 		exhaustion = buf.readFloat();
 		burnOut = buf.readFloat();
+		shouldRegenBurnout = buf.readBoolean();
 	}
 
 	/**

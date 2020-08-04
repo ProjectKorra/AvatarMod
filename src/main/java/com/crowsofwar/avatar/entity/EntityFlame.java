@@ -42,7 +42,6 @@ public class EntityFlame extends EntityOffensive implements IGlowingEntity, ICus
         this.setsFires = false;
         this.lightTrailingFire = false;
         this.reflect = false;
-        this.ignoreFrustumCheck = true;
         this.lightTnt = true;
         this.sizeMult = 1.1F;
     }

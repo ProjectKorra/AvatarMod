@@ -23,6 +23,7 @@ import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import com.crowsofwar.avatar.bending.bending.air.Airbending;
 import com.crowsofwar.avatar.client.particle.ClientParticleSpawner;
 import com.crowsofwar.avatar.client.particle.NetworkParticleSpawner;
+import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.client.particle.ParticleSpawner;
 import com.crowsofwar.avatar.entity.data.SyncedEntity;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
@@ -75,6 +76,10 @@ public abstract class AvatarEntity extends Entity {
 
     private static final DataParameter<String> SYNC_ABILITY = EntityDataManager.createKey(AvatarEntity.class,
             DataSerializers.STRING);
+
+    private static final DataParameter<Integer> SYNC_TIER = EntityDataManager.createKey(AvatarEntity.class,
+            DataSerializers.VARINT);
+
     private final SyncedEntity<EntityLivingBase> ownerRef;
     private final IBlockState prevDoorState = null;
     protected boolean putsOutFires, flammable;
@@ -82,7 +87,6 @@ public abstract class AvatarEntity extends Entity {
     protected boolean setsFires, lightTnt;
     private double powerRating;
     private BendingStyle element;
-    private int tier;
     private BlockPos prevLeverPos = null, prevDoorPos = null, prevTrapdoorPos = null,
             prevButtonPos = null, prevGatePos = null;
     private IBlockState prevLeverState = null;
@@ -102,7 +106,6 @@ public abstract class AvatarEntity extends Entity {
         this.element = null;
         this.setsFires = false;
         this.lightTnt = false;
-        this.tier = 1;
         this.pushRedstone = false;
     }
 
@@ -151,6 +154,7 @@ public abstract class AvatarEntity extends Entity {
                 world.isRemote ? -1 : AvatarWorldData.getDataFromWorld(world).nextEntityId());
         dataManager.register(SYNC_OWNER, Optional.absent());
         dataManager.register(SYNC_ABILITY, "earth_control");
+        dataManager.register(SYNC_TIER, 1);
     }
 
     /**
@@ -277,7 +281,7 @@ public abstract class AvatarEntity extends Entity {
         pushStoneButton = nbt.getBoolean("PushStoneButton");
         pushTrapDoor = nbt.getBoolean("PushIronTrapDoor");
         pushDoor = nbt.getBoolean("PushIronDoor");
-        tier = nbt.getInteger("Tier");
+        setTier(nbt.getInteger("Tier"));
         ownerRef.readFromNbt(nbt);
     }
 
@@ -287,7 +291,7 @@ public abstract class AvatarEntity extends Entity {
         nbt.setBoolean("PushIronDor", pushDoor);
         nbt.setBoolean("PushIronTrapDoor", pushTrapDoor);
         nbt.setBoolean("PushStoneButton", pushStoneButton);
-        nbt.setInteger("Tier", tier);
+        nbt.setInteger("Tier", getTier());
         ownerRef.writeToNbt(nbt);
     }
 
@@ -358,38 +362,15 @@ public abstract class AvatarEntity extends Entity {
     }
 
     public void setFires() {
-        for (int x = 0; x <= 1; x++) {
-            for (int z = 0; z <= 1; z++) {
-                for (int y = 0; y <= 1; y++) {
-                    BlockPos pos = new BlockPos(posX + x * width, posY + y * height, posZ + z * width);
-                    if (Blocks.FIRE.canPlaceBlockAt(world, pos) && world.getBlockState(pos).getBlock() == Blocks.AIR
-                            && world.getBlockState(pos.down()).getBlock() != Blocks.WATER && world.getBlockState(pos.down()).getBlock()
-                            != Blocks.FLOWING_WATER) {
-                        world.setBlockState(pos, Blocks.FIRE.getDefaultState());
-                    }
-                }
-            }
-        }
-        for (int x = 0; x >= -1; x--) {
-            for (int z = 0; z >= -1; z--) {
-                for (int y = 0; y >= -1; y--) {
-                    BlockPos pos = new BlockPos(posX + x * width, posY + y * height, posZ + z * width);
-                    if (Blocks.FIRE.canPlaceBlockAt(world, pos) && world.getBlockState(pos).getBlock() == Blocks.AIR
-                            && world.getBlockState(pos.down()).getBlock() != Blocks.WATER && world.getBlockState(pos.down()).getBlock()
-                            != Blocks.FLOWING_WATER) {
-                        world.setBlockState(pos, Blocks.FIRE.getDefaultState());
-                    }
-                }
-            }
-        }
-        if (lightTnt) {
+        if (!world.isRemote) {
             for (int x = 0; x <= 1; x++) {
                 for (int z = 0; z <= 1; z++) {
                     for (int y = 0; y <= 1; y++) {
                         BlockPos pos = new BlockPos(posX + x * width, posY + y * height, posZ + z * width);
-                        if (world.getBlockState(pos).getBlock() == Blocks.TNT) {
-                            ((BlockTNT) world.getBlockState(pos).getBlock()).explode(world, pos,
-                                    world.getBlockState(pos).withProperty(EXPLODE, true), getOwner());
+                        if (Blocks.FIRE.canPlaceBlockAt(world, pos) && world.getBlockState(pos).getBlock() == Blocks.AIR
+                                && world.getBlockState(pos.down()).getBlock() != Blocks.WATER && world.getBlockState(pos.down()).getBlock()
+                                != Blocks.FLOWING_WATER) {
+                            world.setBlockState(pos, Blocks.FIRE.getDefaultState());
                         }
                     }
                 }
@@ -398,9 +379,34 @@ public abstract class AvatarEntity extends Entity {
                 for (int z = 0; z >= -1; z--) {
                     for (int y = 0; y >= -1; y--) {
                         BlockPos pos = new BlockPos(posX + x * width, posY + y * height, posZ + z * width);
-                        if (world.getBlockState(pos).getBlock() == Blocks.TNT) {
-                            ((BlockTNT) world.getBlockState(pos).getBlock()).explode(world, pos,
-                                    world.getBlockState(pos).withProperty(EXPLODE, true), getOwner());
+                        if (Blocks.FIRE.canPlaceBlockAt(world, pos) && world.getBlockState(pos).getBlock() == Blocks.AIR
+                                && world.getBlockState(pos.down()).getBlock() != Blocks.WATER && world.getBlockState(pos.down()).getBlock()
+                                != Blocks.FLOWING_WATER) {
+                            world.setBlockState(pos, Blocks.FIRE.getDefaultState());
+                        }
+                    }
+                }
+            }
+            if (lightTnt) {
+                for (int x = 0; x <= 1; x++) {
+                    for (int z = 0; z <= 1; z++) {
+                        for (int y = 0; y <= 1; y++) {
+                            BlockPos pos = new BlockPos(posX + x * width, posY + y * height, posZ + z * width);
+                            if (world.getBlockState(pos).getBlock() == Blocks.TNT) {
+                                ((BlockTNT) world.getBlockState(pos).getBlock()).explode(world, pos,
+                                        world.getBlockState(pos).withProperty(EXPLODE, true), getOwner());
+                            }
+                        }
+                    }
+                }
+                for (int x = 0; x >= -1; x--) {
+                    for (int z = 0; z >= -1; z--) {
+                        for (int y = 0; y >= -1; y--) {
+                            BlockPos pos = new BlockPos(posX + x * width, posY + y * height, posZ + z * width);
+                            if (world.getBlockState(pos).getBlock() == Blocks.TNT) {
+                                ((BlockTNT) world.getBlockState(pos).getBlock()).explode(world, pos,
+                                        world.getBlockState(pos).withProperty(EXPLODE, true), getOwner());
+                            }
                         }
                     }
                 }
@@ -771,19 +777,12 @@ public abstract class AvatarEntity extends Entity {
      * Spawns smoke particles and plays sounds to indicate that the entity is being extinguished
      */
     protected void spawnExtinguishIndicators() {
-
-        ParticleSpawner particleSpawner;
         if (world.isRemote) {
-            particleSpawner = new ClientParticleSpawner();
-        } else {
-            particleSpawner = new NetworkParticleSpawner();
+            for (int i = 0; i < 4; i++)
+                ParticleBuilder.create(ParticleBuilder.Type.SNOW).pos(AvatarEntityUtils.getMiddleOfEntity(this)).scale(width)
+                        .vel(world.rand.nextGaussian() / 30, world.rand.nextDouble(), world.rand.nextGaussian() / 30)
+                        .time(AvatarUtils.getRandomNumberInRange(8, 16)).spawn(world);
         }
-        particleSpawner.spawnParticles(world, EnumParticleTypes.CLOUD, 4, 8, posX, posY, posZ,
-                0.05, 0.2, 0.05, true);
-
-        world.playSound(null, posX, posY, posZ, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE,
-                SoundCategory.PLAYERS, 1, rand.nextFloat() * 0.3f + 1.1f);
-
     }
 
     @Override
@@ -833,11 +832,11 @@ public abstract class AvatarEntity extends Entity {
 
     //Used to determine what the tier of the entity is. Useful for better collision.
     public int getTier() {
-        return tier;
+        return dataManager.get(SYNC_TIER);
     }
 
     public void setTier(int tier) {
-        this.tier = tier;
+        dataManager.set(SYNC_TIER, tier);
     }
 
 }

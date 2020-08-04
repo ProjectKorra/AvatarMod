@@ -5,19 +5,16 @@ import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.fire.AbilityFlameStrike;
 import com.crowsofwar.avatar.bending.bending.fire.Firebending;
+import com.crowsofwar.avatar.client.particle.ParticleBuilder;
+import com.crowsofwar.avatar.entity.*;
+import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.util.damageutils.DamageUtils;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.StatusControl;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
-import com.crowsofwar.avatar.entity.AvatarEntity;
-import com.crowsofwar.avatar.entity.EntityFlame;
-import com.crowsofwar.avatar.entity.EntityShield;
-import com.crowsofwar.avatar.entity.IShieldEntity;
 import com.crowsofwar.avatar.util.event.ParticleCollideEvent;
-import com.crowsofwar.avatar.client.particle.ParticleBuilder;
-import com.crowsofwar.avatar.util.AvatarUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityEnderCrystal;
@@ -25,7 +22,9 @@ import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.entity.projectile.EntityThrowable;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Mod;
@@ -34,11 +33,12 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import java.util.HashMap;
 import java.util.UUID;
 
+import static com.crowsofwar.avatar.bending.bending.Ability.*;
 import static com.crowsofwar.avatar.bending.bending.fire.AbilityFlameStrike.STRIKES;
-import static com.crowsofwar.avatar.config.ConfigSkills.SKILLS_CONFIG;
-import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.client.controls.AvatarControl.CONTROL_LEFT_CLICK;
 import static com.crowsofwar.avatar.client.controls.AvatarControl.CONTROL_RIGHT_CLICK;
+import static com.crowsofwar.avatar.config.ConfigSkills.SKILLS_CONFIG;
+import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.util.data.StatusControlController.FLAME_STRIKE_MAIN;
 import static com.crowsofwar.avatar.util.data.StatusControlController.FLAME_STRIKE_OFF;
 import static com.crowsofwar.avatar.util.data.TickHandlerController.FLAME_STRIKE_HANDLER;
@@ -297,8 +297,9 @@ public class StatCtrlFlameStrike extends StatusControl {
                             look.y * mult + world.rand.nextGaussian() * accuracyMult,
                             look.z * mult + world.rand.nextGaussian() * accuracyMult)
                             .element(new Firebending()).ability(strike).spawnEntity(entity)
-                            .clr(r, g, b).collide(true).scale(size * 0.75F).time(lifeTime + AvatarUtils.getRandomNumberInRange(1, 5))
-                            .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).spawn(world);
+                            .clr(r, g, b, 150).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(50, 140)).collide(true)
+                            .scale(size * 0.75F).time(lifeTime + AvatarUtils.getRandomNumberInRange(1, 5)).
+                            spawn(world);
                     //Using the random function each time ensures a different number for every value, making the ability "feel" better.
                     rRandom = fadeR < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeR * 2) : AvatarUtils.getRandomNumberInRange(fadeR / 2,
                             fadeR * 2);
@@ -310,12 +311,12 @@ public class StatCtrlFlameStrike extends StatusControl {
                             look.y * mult + world.rand.nextGaussian() * accuracyMult,
                             look.z * mult + world.rand.nextGaussian() * accuracyMult)
                             .element(new Firebending()).ability(strike).spawnEntity(entity)
-                            .clr(255, 60 + AvatarUtils.getRandomNumberInRange(0, 60), 10).collide(true)
+                            .clr(255, 60 + AvatarUtils.getRandomNumberInRange(0, 60), 10, 150).collide(true)
                             .scale(size * 0.75F).time(lifeTime + AvatarUtils.getRandomNumberInRange(1, 5))
-                            .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).spawn(world);
+                            .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(40, 140)).spawn(world);
                 }
                 if (i % 3 == 0) {
-                    EntityFlame flames = new EntityFlame(world);
+                    EntityFlames flames = new EntityFlames(world);
                     flames.setOwner(entity);
                     flames.setDynamicSpreadingCollision(false);
                     flames.setAbility(strike);
@@ -324,15 +325,19 @@ public class StatCtrlFlameStrike extends StatusControl {
                     flames.setXp(xp);
                     flames.setLifeTime((int) (lifeTime * 0.785) + AvatarUtils.getRandomNumberInRange(0, 4));
                     //Make a property later
-                    flames.setTrailingFire(strike.getBooleanProperty(Ability.SETS_FIRES, abilityData) && world.rand.nextBoolean());
+                    flames.setTrailingFires(strike.getBooleanProperty(Ability.SETS_FIRES, abilityData) && world.rand.nextBoolean());
+                    flames.setFires(strike.getBooleanProperty(Ability.SETS_FIRES, abilityData) && world.rand.nextBoolean());
                     flames.setDamage(damage);
-                    flames.setSmelt(strike.getBooleanProperty(Ability.SMELTS, abilityData));
+                    flames.setSmelts(strike.getBooleanProperty(Ability.SMELTS, abilityData));
                     flames.setFireTime(fireTime);
                     flames.setPerformanceAmount(performance);
+                    flames.setRGB(strike.getProperty(FIRE_R, abilityData).intValue(), strike.getProperty(FIRE_R, abilityData).intValue(), strike.getProperty(FIRE_R, abilityData).intValue());
+                    flames.setRGB(strike.getProperty(FADE_R, abilityData).intValue(), strike.getProperty(FADE_G, abilityData).intValue(), strike.getProperty(FADE_B, abilityData).intValue());
                     flames.setElement(new Firebending());
+                    flames.setTier(strike.getCurrentTier(abilityData));
                     flames.setPosition(x1, y1, z1);
+                    flames.setDamageSource("avatar_Fire_flameStrike");
                     flames.setChiHit(strike.getProperty(Ability.CHI_HIT, abilityData).floatValue());
-                    flames.setTrailingFire(strike.getBooleanProperty(Ability.SETS_FIRES, abilityData) && world.rand.nextBoolean());
                     flames.setVelocity(new Vec3d(look.x * mult + world.rand.nextGaussian() * accuracyMult,
                             look.y * mult + world.rand.nextGaussian() * accuracyMult,
                             look.z * mult + world.rand.nextGaussian() * accuracyMult));
@@ -355,6 +360,8 @@ public class StatCtrlFlameStrike extends StatusControl {
             if (!world.isRemote && getTimesUsed(entity.getPersistentID()) >= strike.getProperty(STRIKES, abilityData).intValue())
                 abilityData.setAbilityCooldown(cooldown);
 
+            world.playSound(entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 1.0F + Math.max(abilityData.getLevel() * 0.5F, 0),
+                    1.25F * world.rand.nextFloat(), false);
         }
         return true;
     }

@@ -65,6 +65,7 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
             DataSerializers.BOOLEAN);
     private static final DataParameter<Boolean> SYNC_TRAILING_FIRES = EntityDataManager.createKey(EntityFlames.class,
             DataSerializers.BOOLEAN);
+    private boolean smelts;
 
 
     public EntityFlames(World worldIn) {
@@ -72,6 +73,7 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
         setSize(1.0f, 1.0f);
         this.lightTnt = true;
         this.setsFires = true;
+        this.smelts = false;
     }
 
     public boolean getTrailingFires() {
@@ -90,6 +92,14 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
         dataManager.set(SYNC_REFLECT, reflect);
     }
 
+    public void setSmelts(boolean smelts) {
+        this.smelts = smelts;
+    }
+
+    public boolean shouldSmelt() {
+        return smelts;
+    }
+
 
     @Override
     protected void entityInit() {
@@ -105,14 +115,14 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
 
     @Override
     public void onCollideWithEntity(Entity entity) {
-        if (entity instanceof EntityItem)
+        if (entity instanceof EntityItem && smelts)
             AvatarEntityUtils.smeltItemEntity((EntityItem) entity, getTier());
         super.onCollideWithEntity(entity);
     }
 
     @Override
     public boolean onCollideWithSolid() {
-        if (collided && setsFires && world.rand.nextBoolean() && !world.isRemote)
+        if (collided && setsFires)
             setFires();
         return super.onCollideWithSolid() && !getReflect();
     }
@@ -140,36 +150,6 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
             }
         }
 
-
-        if (world.isRemote) {
-            int[] fade = getFade();
-            int[] rgb = getRGB();
-            for (double i = 0; i < width; i += 0.1 * getAvgSize() * 4) {
-                int rRandom = fade[0] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[0] * 2) : AvatarUtils.getRandomNumberInRange(fade[0] / 2,
-                        fade[0] * 2);
-                int gRandom = fade[1] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[1] * 2) : AvatarUtils.getRandomNumberInRange(fade[1] / 2,
-                        fade[1] * 2);
-                int bRandom = fade[2] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[2] * 2) : AvatarUtils.getRandomNumberInRange(fade[2] / 2,
-                        fade[2] * 2);
-                Random random = new Random();
-                AxisAlignedBB boundingBox = getEntityBoundingBox();
-                double spawnX = boundingBox.minX + random.nextDouble() * (boundingBox.maxX - boundingBox.minX);
-                double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
-                double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
-                ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
-                        world.rand.nextGaussian() / 60).time(12 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(rgb[0], rgb[1], rgb[2])
-                        .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).scale(getAvgSize() * 1.75F).element(getElement())
-                        .ability(getAbility()).spawnEntity(getOwner()).spawn(world);
-                ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
-                        world.rand.nextGaussian() / 60).time(12 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(rgb[0], rgb[1], rgb[2])
-                        .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).scale(getAvgSize() * 1.75F).element(getElement())
-                        .ability(getAbility()).spawnEntity(getOwner()).spawn(world);
-                ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(AvatarEntityUtils.getMiddleOfEntity(this)).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
-                        world.rand.nextGaussian() / 60).time(12 + AvatarUtils.getRandomNumberInRange(0, 4)).scale(getAvgSize())
-                        .element(getElement()).ability(getAbility()).spawnEntity(getOwner()).spawn(world);
-
-            }
-        }
 
         if (getTrailingFires() && !world.isRemote) {
             if (AvatarUtils.getRandomNumberInRange(1, 10) <= 5) {
@@ -235,18 +215,13 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
 
     @Override
     public boolean onAirContact() {
-        if (getAbility() instanceof AbilityFireShot && getOwner() != null) {
-            AbilityData data = AbilityData.get(getOwner(), getAbility().getName());
-            if (!data.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-                setDead();
-                spawnExtinguishIndicators();
-                return true;
-            } else return false;
-        } else {
+        if (getTier() < 2) {
             setDead();
             spawnExtinguishIndicators();
             return true;
-        }
+        } else if (world.rand.nextBoolean())
+            spawnExtinguishIndicators();
+        return false;
     }
 
     @Override
@@ -268,24 +243,18 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
 
     @Override
     public boolean onMinorWaterContact() {
-        if (getAbility() instanceof AbilityFireShot && getOwner() != null) {
-            AbilityData data = AbilityData.get(getOwner(), getAbility().getName());
-            if (!data.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-                setDead();
-                // Spawn less extinguish indicators in the rain to prevent spamming
-                if (rand.nextDouble() < 0.4) {
-                    spawnExtinguishIndicators();
-                }
-                return true;
-
-            } else return false;
-        } else {
+        if (getTier() < 3) {
             setDead();
             // Spawn less extinguish indicators in the rain to prevent spamming
-            if (rand.nextDouble() < 0.4) {
+            if (rand.nextDouble() < 0.8) {
                 spawnExtinguishIndicators();
             }
             return true;
+        } else {
+            if (rand.nextDouble() < 0.4) {
+                spawnExtinguishIndicators();
+            }
+            return false;
         }
     }
 
@@ -313,11 +282,6 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
 
     @Override
     public boolean isPiercing() {
-        if (getOwner() != null && getAbility() instanceof AbilityFireShot) {
-            AbilityData data = AbilityData.get(getOwner(), getAbility().getName());
-            if (data != null)
-                return data.isMasterPath(AbilityData.AbilityTreePath.FIRST);
-        }
         return false;
     }
 
@@ -336,5 +300,12 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
     @Override
     public boolean contains(Vec3d point) {
         return false;
+    }
+
+    @Override
+    public float getVolume() {
+        if (getAbility() instanceof AbilityFireShot)
+            return super.getVolume();
+        else return 0.25F * world.rand.nextFloat();
     }
 }

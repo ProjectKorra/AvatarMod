@@ -979,26 +979,28 @@ public abstract class ParticleAvatar extends Particle {
 
     //Abstraction, I guess
     public void spawnSteamParticles() {
-        ParticleBuilder.create(ParticleBuilder.Type.SNOW).scale(particleScale).pos(posX, posY, posZ).vel(world.rand.nextGaussian() / 20 + motionX,
-                world.rand.nextDouble() / 10, world.rand.nextGaussian() / 20 + motionZ).time(particleMaxAge - particleAge + 5).spawn(world);
+        ParticleBuilder.create(ParticleBuilder.Type.SNOW).scale(particleScale).pos(posX, posY, posZ).vel(world.rand.nextGaussian() / 40 + motionX / 8,
+                world.rand.nextDouble() / 15, world.rand.nextGaussian() / 40 + motionZ / 8).time(particleMaxAge - particleAge + 5).spawn(world);
     }
 
     public void applyElementalContact(ParticleAvatar particle) {
         if (particle.getAbility() != null && particle.getSpawnEntity() instanceof EntityLivingBase) {
             AbilityData data = AbilityData.get((EntityLivingBase) particle.getSpawnEntity(), particle.getAbility().getName());
-            switch (particle.getAbility().getElement().getName()) {
-                case "waterbending":
-                    if (particle.getAbility().getCurrentTier(data) < 3)
-                        onMinorWaterContact();
-                    else onMajorWaterContact();
-                    break;
-                case "firebending":
-                    if (particle.getAbility().getCurrentTier(data) < 3)
-                        onMinorFireContact();
-                    else onMajorFireContact();
-                    break;
-                default:
-                    break;
+            if (data != null) {
+                switch (particle.getAbility().getElement().getName()) {
+                    case "waterbending":
+                        if (particle.getAbility().getCurrentTier(data) < 3)
+                            onMinorWaterContact();
+                        else onMajorWaterContact();
+                        break;
+                    case "firebending":
+                        if (particle.getAbility().getCurrentTier(data) < 3)
+                            onMinorFireContact();
+                        else onMajorFireContact();
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 

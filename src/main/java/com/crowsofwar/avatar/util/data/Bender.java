@@ -232,6 +232,7 @@ public abstract class Bender {
                             aD.setAbilityCooldown(ability.getCooldown(abilityCtx));
                             //We set the burnout last as it affects all of the other inhibiting stats
                             aD.setBurnOut(ability.getBurnOut(abilityCtx));
+                            aD.setRegenBurnout(true);
 
                         } else {
                             Objects.requireNonNull(Bender.get(getEntity())).sendMessage("avatar.abilityCooldown");
@@ -291,7 +292,14 @@ public abstract class Bender {
         List<Ability> abilities = Abilities.all().stream().filter(ability -> AbilityData.get(entity, ability.getName()).getAbilityCooldown() > 0).collect(Collectors.toList());
         for (Ability ability : abilities) {
             AbilityData aD = AbilityData.get(entity, ability.getName());
-            aD.decrementCooldown();
+            if (aD != null) {
+                if (aD.shouldRegenBurnout()) {
+                    if (aD.getBurnOut() > 0) {
+                        aD.setBurnOut(aD.getBurnOut() - ability.getProperty(Ability.BURNOUT_REGEN, aD).floatValue());
+                    }
+                }
+                aD.decrementCooldown();
+            }
             data.save(DataCategory.ABILITY_DATA);
         }
 

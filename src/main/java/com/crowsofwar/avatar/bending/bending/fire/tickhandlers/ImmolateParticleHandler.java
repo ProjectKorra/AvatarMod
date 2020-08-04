@@ -64,7 +64,7 @@ public class ImmolateParticleHandler extends TickHandler {
                 //Temporary solution to colour fading: randomising the colour between crimson and orangey-yellow for each particle.
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(location.plus(Vector.getEntityPos(entity)).toMinecraft()).time(4 + AvatarUtils.getRandomNumberInRange(1, 4)).
                         vel(world.rand.nextGaussian() / 40, world.rand.nextDouble() / 2, world.rand.nextGaussian() / 40)
-                        .clr(r, g, b).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 170))
+                        .clr(r, g, b, 150).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(50, 140))
                         .element(new Firebending()).scale(scale).spawn(world);
             }
         }
