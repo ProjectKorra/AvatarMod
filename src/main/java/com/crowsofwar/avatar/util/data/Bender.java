@@ -384,7 +384,9 @@ public abstract class Bender {
             PrModifierHandler.addPowerRatingModifiers(this);
         }
 
-        data.getPerformance().update();
+        //Doesn't immediately start updating
+        if (entity.ticksExisted - entity.getLastAttackedEntityTime() > 3)
+            data.getPerformance().update();
 
         if (entity instanceof EntityPlayer && !world.isRemote && entity.ticksExisted % 40 == 0) {
             syncPowerRating();
