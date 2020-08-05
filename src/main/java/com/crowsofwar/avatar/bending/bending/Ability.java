@@ -104,7 +104,15 @@ public abstract class Ability {
             POWERRATING = "powerrating",
             EFFECT_LEVEl = "effectLevel",
             EFFECT_STRENGTH = "effectStrength",
-            EFFECT_DURATION = "effectDuration";
+            EFFECT_DURATION = "effectDuration",
+            STRENGTH_LEVEL = "strengthLevel",
+            STRENGTH_DURATION = "strengthDuration",
+            SPEED_LEVEL = "speedLevel",
+            SPEED_DURATION = "speedDuration",
+            HEALTH_LEVEL = "healthLevel",
+            HEALTH_DURATION = "healthDuration",
+            JUMP_LEVEL = "jumpLevel",
+            JUMP_DURATION = "jumpDuration";
     //Combustion/boom stuff
     public static final String
             EXPLOSION_SIZE = "explosionSize",
@@ -210,7 +218,7 @@ public abstract class Ability {
                 addProperties(DAMAGE);
         }
         if (isBuff())
-            addProperties(DURATION, XP_USE);
+            addProperties(DURATION, XP_USE, POWERRATING);
         if (isUtility())
             addProperties(XP_USE);
         if (isChargeable())

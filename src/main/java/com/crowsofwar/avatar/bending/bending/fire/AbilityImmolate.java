@@ -26,12 +26,6 @@ import static com.crowsofwar.avatar.util.data.TickHandlerController.PURIFY_PARTI
 public class AbilityImmolate extends Ability {
 
     public static final String
-            STRENGTH_LEVEL = "strengthLevel",
-            STRENGTH_DURATION = "strengthDuration",
-            SPEED_LEVEL = "speedLevel",
-            SPEED_DURATION = "speedDuration",
-            HEALTH_LEVEL = "healthLevel",
-            HEALTH_DURATION = "healthDuration",
             INCINERATE_PROJECTILES = "projectileIncineration",
             FIRE_CHANCE = "fireChance";
 

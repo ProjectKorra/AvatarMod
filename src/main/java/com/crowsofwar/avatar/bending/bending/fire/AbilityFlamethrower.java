@@ -34,7 +34,7 @@ public class AbilityFlamethrower extends Ability {
 
 	public static final String
 			RANDOMNESS = "randomness",
-			FLAMES_PER_SECOND = "flamesPerSecond";
+			FLAMES_PER_SECOND = "particles";
 
 	public AbilityFlamethrower() {
 		super(Firebending.ID, "flamethrower");

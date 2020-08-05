@@ -19,6 +19,8 @@ import static com.crowsofwar.avatar.util.data.TickHandlerController.SLIPSTREAM_W
 
 public class AbilitySlipstream extends Ability {
 
+	private static final String AIR_WALK = "walkOnAir";
+
 	public AbilitySlipstream() {
 		super(Airbending.ID, "slipstream");
 	}
@@ -26,6 +28,13 @@ public class AbilitySlipstream extends Ability {
 	@Override
 	public boolean isBuff() {
 		return true;
+	}
+
+	@Override
+	public void init() {
+		super.init();
+		addProperties(STRENGTH_LEVEL, STRENGTH_DURATION, SPEED_LEVEL, SPEED_DURATION, JUMP_LEVEL, JUMP_DURATION);
+		addBooleanProperties(AIR_WALK);
 	}
 
 	@Override
