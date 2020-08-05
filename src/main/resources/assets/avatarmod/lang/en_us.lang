@@ -576,6 +576,8 @@ entity.Airbender.name=§f§lAirbender
 entity.Firebender.name=§c§lFirebender
 entity.Waterbender.name=§9§lWaterbender
 entity.SkyBison.name=Flying Bison
+entity.flying_lemur.name=Flying Lemur
+entity.ascended_flying_lemur.name=Ascended Flying Lemur
 entity.OtterPenguin.name=Otter Penguin
 entity.OstrichHorse.name=Ostrich Horse
 

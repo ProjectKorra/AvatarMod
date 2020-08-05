@@ -16,7 +16,7 @@
 */
 package com.crowsofwar.avatar.client.render;
 
-import com.crowsofwar.avatar.entity.EntityLightningSpear;
+import com.crowsofwar.avatar.common.entity.EntityLightningSpear;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;

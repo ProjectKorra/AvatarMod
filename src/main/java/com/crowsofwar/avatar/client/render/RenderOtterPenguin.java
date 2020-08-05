@@ -16,7 +16,7 @@
 */
 package com.crowsofwar.avatar.client.render;
 
-import com.crowsofwar.avatar.entity.mob.EntityOtterPenguin;
+import com.crowsofwar.avatar.common.entity.mob.EntityOtterPenguin;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;

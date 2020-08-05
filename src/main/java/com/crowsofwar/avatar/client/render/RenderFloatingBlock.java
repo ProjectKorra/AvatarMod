@@ -17,7 +17,7 @@
 
 package com.crowsofwar.avatar.client.render;
 
-import com.crowsofwar.avatar.entity.EntityFloatingBlock;
+import com.crowsofwar.avatar.common.entity.EntityFloatingBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;

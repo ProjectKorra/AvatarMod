@@ -17,7 +17,7 @@
 
 package com.crowsofwar.avatar.client.render;
 
-import com.crowsofwar.avatar.entity.EntityWallSegment;
+import com.crowsofwar.avatar.common.entity.EntityWallSegment;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;

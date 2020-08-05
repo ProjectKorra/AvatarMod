@@ -1,9 +1,13 @@
 package com.crowsofwar.avatar.client.render;
 
-import com.crowsofwar.avatar.entity.EntityAirGust;
+import com.crowsofwar.avatar.common.entity.EntityAirGust;
+import com.crowsofwar.avatar.common.particle.ParticleBuilder;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 

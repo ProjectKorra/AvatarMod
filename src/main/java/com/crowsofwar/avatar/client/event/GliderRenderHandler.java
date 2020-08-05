@@ -1,12 +1,13 @@
 package com.crowsofwar.avatar.client.event;
 
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.bending.bending.BendingStyles;
-import com.crowsofwar.avatar.util.data.BendingData;
-import com.crowsofwar.avatar.util.helper.GliderHelper;
-import com.crowsofwar.avatar.item.IGlider;
+import com.crowsofwar.avatar.common.bending.BendingStyles;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.api.helper.GliderHelper;
+import com.crowsofwar.avatar.api.item.IGlider;
 import com.crowsofwar.avatar.client.model.ModelGlider;
-import com.crowsofwar.avatar.util.helper.GliderPlayerHelper;
+import com.crowsofwar.avatar.common.helper.GliderPlayerHelper;
+import com.crowsofwar.avatar.common.helper.MathHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.GlStateManager;
@@ -25,7 +26,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import static com.crowsofwar.avatar.config.ConfigGlider.GLIDER_CONFIG;
+import static com.crowsofwar.avatar.common.config.ConfigGlider.GLIDER_CONFIG;
 
 @SideOnly(Side.CLIENT)
 public class GliderRenderHandler {

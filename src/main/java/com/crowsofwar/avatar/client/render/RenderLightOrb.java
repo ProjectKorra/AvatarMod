@@ -5,8 +5,13 @@ import codechicken.lib.render.CCModel;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.OBJParser;
 import codechicken.lib.texture.TextureUtils;
-import com.crowsofwar.avatar.bending.bending.fire.AbilityFlameStrike;
-import com.crowsofwar.avatar.entity.EntityLightOrb;
+import com.crowsofwar.avatar.common.AvatarParticles;
+import com.crowsofwar.avatar.common.bending.fire.AbilityFireball;
+import com.crowsofwar.avatar.common.bending.fire.AbilityFlameStrike;
+import com.crowsofwar.avatar.common.bending.fire.AbilityFlamethrower;
+import com.crowsofwar.avatar.common.entity.EntityFireball;
+import com.crowsofwar.avatar.common.entity.EntityLightOrb;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -15,6 +20,8 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.World;
 
 /**
  * @author Aang23

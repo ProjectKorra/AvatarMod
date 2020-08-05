@@ -98,6 +98,9 @@ repositories {
         name = "DragonForge"
         url = "https://raw.github.com/dragon-forge/maven/master"
     }
+	maven {
+		url "https://maven.mcmoddev.com/" 
+	}
 }
 
 configurations {
@@ -120,6 +123,7 @@ dependencies {
     provided "codechicken:CodeChickenLib:1.12.2-3.2.2.353:universal"
     deobfCompile "tk.zeitheron.HammerLib:HammerLib-1.12.2:2.0.6.13:deobf"
     deobfCompile "tk.zeitheron.ColoredLux:ColoredLux-1.12.2:12r:deobf"
+	deobfCompile "net.ilexiconn:llibrary:1.7.17-1.12.2"
     // compile against the JEI API but do not include it at runtime
     deobfProvided "mezz.jei:jei_1.12.2:4.15.0.293:api"
     // at runtime, use the full JEI jar

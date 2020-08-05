@@ -16,7 +16,7 @@
 */
 package com.crowsofwar.avatar.client.gui;
 
-import com.crowsofwar.avatar.config.ConfigAnalytics;
+import com.crowsofwar.avatar.common.config.ConfigAnalytics;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;

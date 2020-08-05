@@ -17,7 +17,7 @@
 
 package com.crowsofwar.avatar.client.render;
 
-import com.crowsofwar.avatar.entity.mob.EntitySkyBison;
+import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
 import net.minecraft.block.Block;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;

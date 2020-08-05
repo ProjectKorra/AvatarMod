@@ -1,15 +1,15 @@
 package com.crowsofwar.avatar.client.gui;
 
 import com.crowsofwar.avatar.AvatarInfo;
-import com.crowsofwar.avatar.util.data.BendingData;
-import com.crowsofwar.avatar.util.event.BendingCycleEvent;
-import com.crowsofwar.avatar.util.event.BendingUseEvent;
+import com.crowsofwar.avatar.common.data.BendingData;
+import com.crowsofwar.avatar.common.event.BendingCycleEvent;
+import com.crowsofwar.avatar.common.event.BendingUseEvent;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import static com.crowsofwar.avatar.config.ConfigClient.CLIENT_CONFIG;
-import static com.crowsofwar.avatar.util.data.TickHandlerController.RENDER_ELEMENT_HANDLER;
+import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
+import static com.crowsofwar.avatar.common.data.TickHandlerController.RENDER_ELEMENT_HANDLER;
 
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class FadeElementListener {

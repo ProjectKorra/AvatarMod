@@ -17,7 +17,7 @@
 
 package com.crowsofwar.avatar.client.render;
 
-import com.crowsofwar.avatar.entity.EntityWaterBubble;
+import com.crowsofwar.avatar.common.entity.EntityWaterBubble;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.Render;

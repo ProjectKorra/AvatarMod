@@ -489,6 +489,9 @@ entity.SkyBison.name=Летающий бизон
 entity.OtterPenguin.name=Выдропингвин
 entity.OstrichHorse.name=Страусиная лошадь
 
+entity.flying_lemur.name=Летающий лемур
+entity.ascended_flying_lemur.name=Возвышенный летающий лемур
+
 itemGroup.avatar.items=Предметы вселенной Аватара
 
 item.avatarmod:scroll.all.name=§d§lСвиток

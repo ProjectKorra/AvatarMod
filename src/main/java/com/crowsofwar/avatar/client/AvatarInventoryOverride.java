@@ -17,8 +17,8 @@
 package com.crowsofwar.avatar.client;
 
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.entity.mob.EntitySkyBison;
-import com.crowsofwar.avatar.network.packets.PacketSBisonInventory;
+import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
+import com.crowsofwar.avatar.common.network.packets.PacketSBisonInventory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;

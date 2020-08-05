@@ -1,9 +1,10 @@
 package com.crowsofwar.avatar.client.render;
 
 import com.crowsofwar.avatar.AvatarLog;
-import com.crowsofwar.avatar.bending.bending.air.Airbending;
-import com.crowsofwar.avatar.bending.bending.air.powermods.SlipstreamPowerModifier;
-import com.crowsofwar.avatar.util.data.BendingData;
+import com.crowsofwar.avatar.client.renderer.LayerGlider;
+import com.crowsofwar.avatar.common.bending.air.Airbending;
+import com.crowsofwar.avatar.common.bending.air.powermods.SlipstreamPowerModifier;
+import com.crowsofwar.avatar.common.data.BendingData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.RenderManager;

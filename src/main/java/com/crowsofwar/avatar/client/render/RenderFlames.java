@@ -17,13 +17,17 @@
 
 package com.crowsofwar.avatar.client.render;
 
-import com.crowsofwar.avatar.client.particle.AvatarParticles;
-import com.crowsofwar.avatar.entity.EntityFlames;
-import com.crowsofwar.avatar.client.particle.ParticleSpawner;
+import com.crowsofwar.avatar.common.AvatarParticles;
+import com.crowsofwar.avatar.common.entity.EntityFlames;
+import com.crowsofwar.avatar.common.particle.ParticleBuilder;
+import com.crowsofwar.avatar.common.particle.ParticleSpawner;
+import com.crowsofwar.avatar.common.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.World;
 
 import java.util.Random;
 
