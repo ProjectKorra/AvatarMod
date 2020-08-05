@@ -6,7 +6,10 @@ import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.fire.AbilityFlameStrike;
 import com.crowsofwar.avatar.bending.bending.fire.Firebending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
-import com.crowsofwar.avatar.entity.*;
+import com.crowsofwar.avatar.entity.AvatarEntity;
+import com.crowsofwar.avatar.entity.EntityFlames;
+import com.crowsofwar.avatar.entity.EntityShield;
+import com.crowsofwar.avatar.entity.IShieldEntity;
 import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.util.damageutils.DamageUtils;
@@ -89,7 +92,7 @@ public class StatCtrlFlameStrike extends StatusControl {
         }
     }
 
-    private static boolean attackEntity(EntityLivingBase attacker, Entity target, Vec3d vel) {
+    private static void attackEntity(EntityLivingBase attacker, Entity target, Vec3d vel) {
         AbilityData abilityData = AbilityData.get(attacker, new AbilityFlameStrike().getName());
         Bender bender = Bender.get(attacker);
         World world = attacker.world;
@@ -153,7 +156,6 @@ public class StatCtrlFlameStrike extends StatusControl {
             target.setFire(fireTime);
 
         }
-        return false;
     }
 
     private static boolean canCollideWithEntity(Entity entity, Entity owner) {
@@ -199,8 +201,9 @@ public class StatCtrlFlameStrike extends StatusControl {
         Bender bender = Bender.get(entity);
         AbilityFlameStrike strike = (AbilityFlameStrike) Abilities.get(new AbilityFlameStrike().getName());
 
-        if (!ctx.getData().hasTickHandler(FLAME_STRIKE_HANDLER))
+        if (strike == null || bender == null || !ctx.getData().hasTickHandler(FLAME_STRIKE_HANDLER))
             return true;
+
         if (!entity.getHeldItem(hand).isEmpty())
             return false;
 
@@ -227,10 +230,10 @@ public class StatCtrlFlameStrike extends StatusControl {
         fadeG = strike.getProperty(Ability.FADE_G, abilityData).intValue();
         fadeB = strike.getProperty(Ability.FADE_B, abilityData).intValue();
 
-        float burnout = strike.getProperty(Ability.BURNOUT, abilityData).floatValue();
+        float burnout = strike.getBurnOut(abilityData);
         float chiCost = strike.getChiCost(abilityData);
-        float exhaustion = strike.getProperty(Ability.EXHAUSTION, abilityData).floatValue();
-        int cooldown = strike.getProperty(Ability.COOLDOWN, abilityData).intValue();
+        float exhaustion = strike.getExhaustion(abilityData);
+        int cooldown = strike.getCooldown(abilityData);
 
 
         if (abilityData.getLevel() == 1) {
@@ -257,11 +260,6 @@ public class StatCtrlFlameStrike extends StatusControl {
         fireTime *= powerModifier * xpMod;
         performance *= (powerModifier * xpMod * 0.5 + 1);
 
-        //Inhibitor factors
-        cooldown -= cooldown * powerModifier * xpMod * 0.5;
-        exhaustion -= exhaustion * powerModifier * xpMod * 0.25;
-        burnout -= burnout * powerModifier * xpMod * 0.25;
-
 
         Vec3d look = entity.getLookVec();
         double eyePos = entity.getEyeHeight() + entity.getEntityBoundingBox().minY;
@@ -283,7 +281,7 @@ public class StatCtrlFlameStrike extends StatusControl {
                 double y1 = eyePos - 0.4F + world.rand.nextGaussian() * accuracyMult;
                 double z1 = entity.posZ + look.z * i / 50 + world.rand.nextGaussian() * accuracyMult;
 
-                //140, 90, 90
+                //140, 90, 90 = rainbow of fun
                 int rRandom = fadeR < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeR * 2) : AvatarUtils.getRandomNumberInRange(fadeR / 2,
                         fadeR * 2);
                 int gRandom = fadeG < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeG * 2) : AvatarUtils.getRandomNumberInRange(fadeG / 2,
@@ -357,8 +355,10 @@ public class StatCtrlFlameStrike extends StatusControl {
             if (!world.isRemote)
                 setTimesUsed(entity.getPersistentID(), getTimesUsed(entity.getPersistentID()) + 1);
 
-            if (!world.isRemote && getTimesUsed(entity.getPersistentID()) >= strike.getProperty(STRIKES, abilityData).intValue())
+            if (!world.isRemote && getTimesUsed(entity.getPersistentID()) >= strike.getProperty(STRIKES, abilityData).intValue()) {
                 abilityData.setAbilityCooldown(cooldown);
+                abilityData.setRegenBurnout(true);
+            }
 
             world.playSound(entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 1.0F + Math.max(abilityData.getLevel() * 0.5F, 0),
                     1.25F * world.rand.nextFloat(), false);

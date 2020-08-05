@@ -24,7 +24,6 @@ import com.crowsofwar.avatar.bending.bending.fire.statctrls.StatCtrlFlameStrike;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.entity.EntityLightOrb;
 import com.crowsofwar.avatar.entity.EntityOffensive;
-import com.crowsofwar.avatar.entity.data.Behavior;
 import com.crowsofwar.avatar.entity.data.LightOrbBehavior;
 import com.crowsofwar.avatar.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.entity.mob.EntityBender;
@@ -103,7 +102,7 @@ public class AbilityFlameStrike extends Ability {
 
         }
 
-        if (bender.consumeChi(getChiCost(ctx) / 2)) {
+        if (bender.consumeChi(getChiCost(ctx) / 4)) {
 
             //Light orb model translating is currently whack
             Vec3d height = entity.getPositionVector().add(0, 1.8, 0);
@@ -124,9 +123,11 @@ public class AbilityFlameStrike extends Ability {
             orb.setColourShiftInterval(0.15F);
             orb.setBehavior(new FlameStrikeLightOrb());
             orb.setType(CLIENT_CONFIG.fireRenderSettings.flameStrikeSphere ? EntityLightOrb.EnumType.COLOR_SPHERE : EntityLightOrb.EnumType.COLOR_CUBE);
-            world.spawnEntity(orb);
-
+            if (!world.isRemote)
+                world.spawnEntity(orb);
         }
+
+        ctx.getAbilityData().setRegenBurnout(false);
         StatCtrlFlameStrike.setTimesUsed(ctx.getBenderEntity().getPersistentID(), 0);
         data.addTickHandler(FLAME_STRIKE_HANDLER);
         data.addStatusControl(FLAME_STRIKE_MAIN);
@@ -160,21 +161,6 @@ public class AbilityFlameStrike extends Ability {
     }
 
     @Override
-    public int getCooldown(AbilityData data) {
-        return 0;
-    }
-
-    @Override
-    public float getBurnOut(AbilityData data) {
-        return 0;
-    }
-
-    @Override
-    public float getExhaustion(AbilityData data) {
-        return 0;
-    }
-
-    @Override
     public boolean isProjectile() {
         return true;
     }
@@ -183,7 +169,7 @@ public class AbilityFlameStrike extends Ability {
     public static class FireblastBehaviour extends OffensiveBehaviour {
 
         @Override
-        public Behavior onUpdate(EntityOffensive entity) {
+        public OffensiveBehaviour onUpdate(EntityOffensive entity) {
             entity.setEntitySize(entity.getAvgSize() * 1.075F);
             entity.setVelocity(entity.getVelocity().scale(0.9375));
 
@@ -268,7 +254,7 @@ public class AbilityFlameStrike extends Ability {
     public static class FlameStrikeLightOrb extends LightOrbBehavior {
 
         @Override
-        public Behavior onUpdate(EntityLightOrb entity) {
+        public LightOrbBehavior onUpdate(EntityLightOrb entity) {
             Entity emitter = entity.getEmittingEntity();
             if (emitter != null) {
                 if (emitter instanceof EntityBender || emitter instanceof EntityPlayer) {
@@ -287,17 +273,14 @@ public class AbilityFlameStrike extends Ability {
                                     //Right
                                     if (((EntityPlayer) emitter).getPrimaryHand() == EnumHandSide.RIGHT) {
                                         rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw + 90), 0).times(0.5).withY(0).toMinecraft();
-                                        rightSide = rightSide.add(height);
-                                        vel = rightSide.subtract(entity.getPositionVector());
                                     }
                                     //Left
                                     else {
                                         rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw - 90), 0).times(0.5).withY(0).toMinecraft();
-                                        rightSide = rightSide.add(height);
-                                        vel = rightSide.subtract(entity.getPositionVector());
                                     }
+                                    rightSide = rightSide.add(height);
+                                    vel = rightSide.subtract(entity.getPositionVector());
                                     entity.setVelocity(vel.scale(0.5));
-                                    AvatarUtils.afterVelocityAdded(entity);
                                 } else {
                                     entity.setOrbSize(entity.getInitialSize());
                                     height = emitter.getPositionVector().add(0, 0.88, 0);
@@ -305,15 +288,12 @@ public class AbilityFlameStrike extends Ability {
                                     if (((EntityPlayer) emitter).getPrimaryHand() == EnumHandSide.RIGHT) {
                                         rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw + 90), 0).times(0.55 -
                                                 Math.min(0.5F / entity.getOrbSize() * 0.1F, 0.05F)).withY(0).toMinecraft();
-                                        rightSide = rightSide.add(height);
-                                        vel = rightSide.subtract(entity.getPositionVector());
                                     } else {
                                         rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw - 90), 0).times(0.55).withY(0).toMinecraft();
-                                        rightSide = rightSide.add(height);
-                                        vel = rightSide.subtract(entity.getPositionVector());
                                     }
+                                    rightSide = rightSide.add(height);
+                                    vel = rightSide.subtract(entity.getPositionVector());
                                     entity.setVelocity(vel.scale(0.5));
-                                    AvatarUtils.afterVelocityAdded(entity);
                                 }
 
                             } else {
@@ -322,32 +302,32 @@ public class AbilityFlameStrike extends Ability {
                                 Vec3d vel;
                                 if (((EntityBender) emitter).getPrimaryHand() == EnumHandSide.RIGHT) {
                                     rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw + 90), 0).times(0.55).withY(0).toMinecraft();
-                                    rightSide = rightSide.add(height);
-                                    vel = rightSide.subtract(entity.getPositionVector());
                                 } else {
                                     rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw - 90), 0).times(0.55).withY(0).toMinecraft();
-                                    rightSide = rightSide.add(height);
-                                    vel = rightSide.subtract(entity.getPositionVector());
                                 }
+                                rightSide = rightSide.add(height);
+                                vel = rightSide.subtract(entity.getPositionVector());
                                 entity.setVelocity(vel.scale(0.5));
-                                AvatarUtils.afterVelocityAdded(entity);
                             }
+                            AvatarUtils.afterVelocityAdded(entity);
                             int lightRadius = 4;
                             //Stops constant spam and calculations
                             if (entity.ticksExisted == 1) {
                                 AbilityData aD = AbilityData.get((EntityLivingBase) emitter, "inferno_punch");
-                                int level = aD.getLevel();
-                                if (level >= 1) {
-                                    lightRadius = 6;
-                                }
-                                if (level >= 2) {
-                                    lightRadius = 8;
-                                }
-                                if (aD.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-                                    lightRadius = 12;
-                                }
-                                if (aD.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-                                    lightRadius = 7;
+                                if (aD != null) {
+                                    int level = aD.getLevel();
+                                    if (level >= 1) {
+                                        lightRadius = 6;
+                                    }
+                                    if (level >= 2) {
+                                        lightRadius = 8;
+                                    }
+                                    if (aD.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+                                        lightRadius = 12;
+                                    }
+                                    if (aD.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+                                        lightRadius = 7;
+                                    }
                                 }
                             }
                             if (entity.getEntityWorld().isRemote)

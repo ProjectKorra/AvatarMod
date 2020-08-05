@@ -17,14 +17,13 @@
 package com.crowsofwar.avatar.bending.bending.fire.tickhandlers;
 
 import com.crowsofwar.avatar.bending.bending.Abilities;
-import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.fire.AbilityFlamethrower;
 import com.crowsofwar.avatar.bending.bending.fire.Firebending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
-import com.crowsofwar.avatar.entity.EntityFlame;
-import com.crowsofwar.avatar.entity.EntityLightOrb;
-import com.crowsofwar.avatar.entity.data.Behavior;
-import com.crowsofwar.avatar.entity.data.LightOrbBehavior;
+import com.crowsofwar.avatar.entity.EntityFlames;
+import com.crowsofwar.avatar.entity.EntityOffensive;
+import com.crowsofwar.avatar.entity.data.OffensiveBehaviour;
+import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.util.data.AbilityData;
@@ -45,15 +44,18 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
+import java.util.Random;
 import java.util.UUID;
 
+import static com.crowsofwar.avatar.bending.bending.Ability.*;
+import static com.crowsofwar.avatar.bending.bending.fire.AbilityFlamethrower.FLAMES_PER_SECOND;
+import static com.crowsofwar.avatar.bending.bending.fire.AbilityFlamethrower.RANDOMNESS;
 import static com.crowsofwar.avatar.config.ConfigClient.CLIENT_CONFIG;
-import static com.crowsofwar.avatar.config.ConfigSkills.SKILLS_CONFIG;
-import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.util.data.StatusControlController.STOP_FLAMETHROW;
 import static com.crowsofwar.gorecore.util.Vector.getEyePos;
 import static java.lang.Math.toRadians;
@@ -79,43 +81,15 @@ public class FlamethrowerUpdateTick extends TickHandler {
         AbilityData abilityData = data.getAbilityData("flamethrower");
         AbilityFlamethrower flamethrower = (AbilityFlamethrower) Abilities.get(new AbilityFlamethrower().getName());
 
-        int duration = data.getTickHandlerDuration(this);
+        if (flamethrower == null)
+            return false;
 
-        //Don't remove this, it makes sure the ability data works properly.
-        if (!world.isRemote)
-            abilityData = data.getAbilityData(new AbilityFlamethrower().getName());
+        //No dividing by 0 here
+        int flamesPerSecond = Math.max(flamethrower.getProperty(FLAMES_PER_SECOND).intValue(), 1);
 
-        AbilityTreePath path = abilityData.getPath();
-
-        int level = abilityData.getLevel();
-        int flamesPerSecond;
-
-        flamesPerSecond = level <= 0 ? 1 : 2;
-        if (level == 3 && path == AbilityTreePath.FIRST)
-            flamesPerSecond = 3;
-        else if (level == 3 && path == AbilityTreePath.SECOND)
-            flamesPerSecond = 1;
-
-
-        double powerRating = bender.calcPowerRating(Firebending.ID);
-
-        float requiredChi = STATS_CONFIG.chiFlamethrowerSecond / 20;
-        if (level == 3 && path == AbilityTreePath.FIRST) {
-            requiredChi = STATS_CONFIG.chiFlamethrowerSecondLvl4_1 / 20;
-        }
-        if (level == 3 && path == AbilityTreePath.SECOND) {
-            requiredChi = STATS_CONFIG.chiFlamethrowerSecondLvl4_2 / 20;
-        }
-        if (level < 3)
-            requiredChi = requiredChi * (1F + (float) (Math.max(level, 0)) / 10F);
-
-        // Adjust chi to power rating
-        // Multiply chi by a number (from 0..2) based on the power rating - powerFactor
-        //  Numbers 0..1 would reduce the chi, while numbers 1..2 would increase the chi
-        // maxPowerFactor: maximum amount that the chi can be multiplied by
-        // e.g. 0.1 -> chi can be changed by 10%; powerFactor in between 0.9..1.1
-        double maxPowerFactor = 0.4;
-        double powerFactor = (powerRating + 100) / 100 * maxPowerFactor + 1 - maxPowerFactor;
+        float requiredChi = flamethrower.getProperty(CHI_COST, abilityData).floatValue() / 20F;
+        double powerFactor = 2 - abilityData.getDamageMult();
+        //Inverts what happens as you want chi to decrease when you're more powerful
         requiredChi *= powerFactor;
 
         if (bender.consumeChi(requiredChi)) {
@@ -129,120 +103,76 @@ public class FlamethrowerUpdateTick extends TickHandler {
 
             if (!isRaining && !(headInLiquid || inWaterBlock)) {
 
-                double speedMult = 15 + 5 * abilityData.getXpModifier();
-                double randomness = 3.0 - 0.5 * (abilityData.getXpModifier() + Math.max(abilityData.getLevel(), 0));
-                float size = 0.75F;
-                int fireTime = 2;
-                float damage = STATS_CONFIG.flamethrowerSettings.damage;
-                float performanceAmount = 3;
-                float xp = SKILLS_CONFIG.flamethrowerHit;
+                double speedMult = flamethrower.getProperty(SPEED, abilityData).floatValue() * 3;
+                double randomness = flamethrower.getProperty(RANDOMNESS, abilityData).doubleValue();
+                float size = flamethrower.getProperty(SIZE, abilityData).floatValue();
+                int fireTime = flamethrower.getProperty(FIRE_TIME, abilityData).intValue();
+                float damage = flamethrower.getProperty(DAMAGE, abilityData).floatValue();
+                float performanceAmount = flamethrower.getProperty(PERFORMANCE, abilityData).floatValue();
+                float xp = flamethrower.getProperty(XP_HIT, abilityData).floatValue();
+                float chiHit = flamethrower.getProperty(CHI_HIT, abilityData).floatValue();
+                int lifetime = flamethrower.getProperty(LIFETIME, abilityData).intValue();
+                float knockback = flamethrower.getProperty(KNOCKBACK, abilityData).floatValue();
 
-                switch (abilityData.getLevel()) {
-                    case 1:
-                        size = 1.125F;
-                        damage = 1.75F;
-                        fireTime = 3;
-                        speedMult += 5;
-                        break;
-                    case 2:
-                        size = 1.5F;
-                        fireTime = 4;
-                        damage = 2.5F;
-                        performanceAmount = 4;
-                        speedMult += 10;
-                        break;
-                }
-                if (abilityData.isDynamicMasterLevel(AbilityTreePath.FIRST)) {
-                    speedMult = 38;
-                    speedMult += 20;
-                    randomness = 0;
-                    fireTime = 5;
-                    size = 1.25F;
-                    damage = 4.5F;
-                    performanceAmount = 6;
+                //RGB values for being kewl
+                int r, g, b, fadeR, fadeG, fadeB;
+                r = flamethrower.getProperty(FIRE_R, abilityData).intValue();
+                g = flamethrower.getProperty(FIRE_G, abilityData).intValue();
+                b = flamethrower.getProperty(FIRE_B, abilityData).intValue();
+                fadeR = flamethrower.getProperty(FADE_R, abilityData).intValue();
+                fadeG = flamethrower.getProperty(FADE_G, abilityData).intValue();
+                fadeB = flamethrower.getProperty(FADE_B, abilityData).intValue();
 
-
-                }
-                if (abilityData.isDynamicMasterLevel(AbilityTreePath.SECOND)) {
-                    speedMult = 12;
-                    randomness = 9;
-                    fireTime = 10;
-                    size = 2.25F;
-                    damage = 1.5F;
-                    performanceAmount = 3;
-
-                }
-                // Affect stats by power rating
-                size += powerRating / 200F;
-                damage += powerRating / 100F;
-                fireTime += (int) (powerRating / 50F);
-                speedMult += powerRating / 100f * 2.5f;
-                speedMult *= abilityData.getXpModifier();
-                randomness = randomness >= powerRating / 100f * 2.5f ? randomness - powerRating / 100F * 2.5 : 0;
-                randomness = randomness < 0 ? 0 : randomness;
 
                 // Affect stats by power rating
-                size += powerRating / 200F;
-                speedMult += powerRating / 100f * 2.5f;
-                randomness = randomness >= powerRating / 100f * 2.5f ? randomness - powerRating / 100F * 2.5 : 0;
+                size *= abilityData.getPowerRatingMult() * abilityData.getXpModifier();
+                damage *= abilityData.getDamageMult() * abilityData.getXpModifier();
+                fireTime *= abilityData.getDamageMult() * abilityData.getXpModifier();
+                speedMult *= abilityData.getPowerRatingMult() * abilityData.getXpModifier();
+                randomness -= bender.calcPowerRating(Firebending.ID) / 100;
+                randomness *= (0.5 / abilityData.getPowerRatingMult()) * abilityData.getXpModifier();
                 randomness = randomness < 0 ? 0 : randomness;
+                lifetime *= abilityData.getDamageMult() * abilityData.getXpModifier();
+                knockback *= abilityData.getDamageMult() * abilityData.getXpModifier();
+
 
                 double yawRandom = entity.rotationYaw + (Math.random() * 2 - 1) * randomness;
                 double pitchRandom = entity.rotationPitch + (Math.random() * 2 - 1) * randomness;
                 Vector look = Vector.toRectangular(toRadians(yawRandom), toRadians(pitchRandom));
-                Vector start = look.plus(eye.minusY(0.5));
-
+                Vector start = look.plus(eye.minusY(0.45));
 
                 //Particle code.
                 if (world.isRemote) {
                     speedMult /= 28.75;
                     for (int i = 0; i < flamesPerSecond; i++) {
-                        Vector start1 = look.times((i / (double) flamesPerSecond) / 10000).plus(eye.minusY(0.5));
+                        Vector start1 = look.times(Math.max(i / (double) flamesPerSecond, 0.25F)).plus(eye.minusY(0.45));
+                        int rRandom = fadeR < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeR * 2) : AvatarUtils.getRandomNumberInRange(fadeR / 2,
+                                fadeR * 2);
+                        int gRandom = fadeG < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeG * 2) : AvatarUtils.getRandomNumberInRange(fadeG / 2,
+                                fadeG * 2);
+                        int bRandom = fadeB < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeB * 2) : AvatarUtils.getRandomNumberInRange(fadeB / 2,
+                                fadeB * 2);
+
                         if (CLIENT_CONFIG.fireRenderSettings.solidFlamethrowerParticles) {
-                            ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start1.toMinecraft()).scale(size * 1.125F).time(10 + AvatarUtils.getRandomNumberInRange(0, 4)).collide(true).vel(look.times(speedMult / 1.25).toMinecraft()).
-                                    ability(new AbilityFlamethrower()).spawnEntity(entity).spawn(world);
-                            if (abilityData.isDynamicMasterLevel(AbilityTreePath.FIRST)) {
-                                ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(14 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult).toMinecraft()).
-                                        clr(235 + AvatarUtils.getRandomNumberInRange(0, 20), 10, 5, 225).collide(true).spawnEntity(entity).scale(size * 1.75F).element(new Firebending())
-                                        .fade(AvatarUtils.getRandomNumberInRange(100, 255), AvatarUtils.getRandomNumberInRange(1, 180),
-                                                AvatarUtils.getRandomNumberInRange(1, 180), AvatarUtils.getRandomNumberInRange(100, 175)).spawn(world);
-                                ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult).toMinecraft()).
-                                        clr(255, 60 + AvatarUtils.getRandomNumberInRange(1, 40), 10, 200).collide(true).spawnEntity(entity).scale(size * 1.75F).element(new Firebending())
-                                        .fade(AvatarUtils.getRandomNumberInRange(100, 255), AvatarUtils.getRandomNumberInRange(1, 180),
-                                                AvatarUtils.getRandomNumberInRange(1, 180), AvatarUtils.getRandomNumberInRange(100, 175)).ability(flamethrower).spawn(world);
-                            } else {
-                                ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult).toMinecraft()).
-                                        clr(235 + AvatarUtils.getRandomNumberInRange(0, 20), 10, 5, 225).collide(true).spawnEntity(entity).scale(size * 1.75F).element(new Firebending())
-                                        .ability(flamethrower).spawn(world);
-                                ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult).toMinecraft()).
-                                        clr(255, 60 + AvatarUtils.getRandomNumberInRange(1, 40), 10, 200).collide(true).spawnEntity(entity).scale(size * 1.75F).element(new Firebending())
-                                        .ability(flamethrower).spawn(world);
-                            }
-                        } else if (!CLIENT_CONFIG.fireRenderSettings.solidFlamethrowerParticles) {
-                            if (abilityData.isDynamicMasterLevel(AbilityTreePath.FIRST)) {
-                                ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(14 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult).toMinecraft()).
-                                        clr(235 + AvatarUtils.getRandomNumberInRange(0, 20), 10, 5, 225).collide(true).spawnEntity(entity).scale(size * 1.75F).element(new Firebending())
-                                        .fade(AvatarUtils.getRandomNumberInRange(100, 255), AvatarUtils.getRandomNumberInRange(1, 180),
-                                                AvatarUtils.getRandomNumberInRange(1, 180), AvatarUtils.getRandomNumberInRange(100, 175)).spawn(world);
-                                ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult).toMinecraft()).
-                                        clr(255, 60 + AvatarUtils.getRandomNumberInRange(1, 40), 10, 200).collide(true).spawnEntity(entity).scale(size * 1.75F).element(new Firebending())
-                                        .fade(AvatarUtils.getRandomNumberInRange(100, 255), AvatarUtils.getRandomNumberInRange(1, 180),
-                                                AvatarUtils.getRandomNumberInRange(1, 180), AvatarUtils.getRandomNumberInRange(100, 175)).ability(flamethrower).spawn(world);
-                            } else {
-                                ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult).toMinecraft()).
-                                        clr(235 + AvatarUtils.getRandomNumberInRange(0, 20), 10, 5, 225).collide(true).spawnEntity(entity).scale(size * 1.75F).element(new Firebending())
-                                        .ability(flamethrower).spawn(world);
-                                ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult).toMinecraft()).
-                                        clr(255, 60 + AvatarUtils.getRandomNumberInRange(1, 40), 10, 200).collide(true).spawnEntity(entity).scale(size * 1.75F).element(new Firebending())
-                                        .ability(flamethrower).spawn(world);
-                            }
+                            ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start1.toMinecraft()).scale(size * 1.125F).time(lifetime - AvatarUtils.getRandomNumberInRange(0, 2)).collide(true).vel(look.times(speedMult / 1.25).toMinecraft()).
+                                    ability(new AbilityFlamethrower()).collide(true).spawnEntity(entity).spawn(world);
                         }
+
+                        ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(lifetime + AvatarUtils.getRandomNumberInRange(4, 8)).vel(look.times(speedMult).toMinecraft()).
+                                clr(r, g, b, 180).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(40, 100)).collide(true).spawnEntity(entity).scale(size * 1.75F).element(new Firebending())
+                                .ability(flamethrower).spawn(world);
+                        ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(lifetime + AvatarUtils.getRandomNumberInRange(4, 8)).vel(look.times(speedMult).toMinecraft()).
+                                clr(r, g + 15, b, 180).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(40, 100)).collide(true).spawnEntity(entity).scale(size * 1.75F).element(new Firebending())
+                                .ability(flamethrower).spawn(world);
+                        ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(lifetime + AvatarUtils.getRandomNumberInRange(4, 8)).vel(look.times(speedMult).toMinecraft()).
+                                clr(r, g + 60, b * 2, 180).fade(rRandom, gRandom + 60, bRandom * 2, AvatarUtils.getRandomNumberInRange(40, 100)).collide(true).spawnEntity(entity).scale(size * 1.75F).element(new Firebending())
+                                .ability(flamethrower).spawn(world);
                     }
                 }
                 //}
 
 
-                EntityFlame flames = new EntityFlame(world);
+                EntityFlames flames = new EntityFlames(world);
                 flames.setPosition(start);
                 flames.setOwner(entity);
                 flames.setDynamicSpreadingCollision(true);
@@ -252,17 +182,23 @@ public class FlamethrowerUpdateTick extends TickHandler {
                         : AvatarDamageSource.FIRE.getDamageType());
                 flames.setTier(flamethrower.getCurrentTier(abilityData));
                 //Will need to be changed later as I go through and add in the new ability config
-                flames.setXp(flamethrower.getProperty(Ability.XP_HIT, abilityData).floatValue());
+                flames.setXp(flamethrower.getProperty(XP_HIT, abilityData).floatValue());
                 flames.setVelocity(look.times(speedMult / 1.625F));
-                flames.setLifeTime(8 + AvatarUtils.getRandomNumberInRange(0, 4));
-                flames.setTrailingFire(abilityData.isDynamicMasterLevel(AbilityTreePath.SECOND));
+                flames.setLifeTime(lifetime + AvatarUtils.getRandomNumberInRange(0, 4));
+                flames.setTrailingFires(flamethrower.getBooleanProperty(SETS_FIRES, abilityData));
+                flames.setFires(flamethrower.getBooleanProperty(SETS_FIRES, abilityData));
                 flames.setFireTime(fireTime);
+                flames.setChiHit(chiHit);
+                flames.setXp(xp);
                 flames.setDamage(damage);
-                flames.setSmelt(true);
+                flames.setPush(knockback / 4);
+                flames.setRGB(r, g, b);
+                flames.setFade(r, g, b);
+                flames.setSmelts(flamethrower.getBooleanProperty(SMELTS, abilityData));
                 flames.setFireTime(fireTime);
                 flames.setPerformanceAmount((int) performanceAmount);
                 flames.setElement(new Firebending());
-                flames.setChiHit(flamethrower.getProperty(Ability.CHI_HIT, abilityData).floatValue());
+                flames.setChiHit(flamethrower.getProperty(CHI_HIT, abilityData).floatValue());
                 if (size >= 1.5) {
                     for (int i = 0; i < 4; i++) {
                         yawRandom = entity.rotationYaw + (Math.random() * 2 - 1) * randomness * 2;
@@ -315,9 +251,12 @@ public class FlamethrowerUpdateTick extends TickHandler {
 
         } else {
             // not enough chi
+            abilityData.setRegenBurnout(true);
             entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(FLAMETHROWER_MOVEMENT_MODIFIER_ID);
             return true;
         }
+        if (data.hasStatusControl(STOP_FLAMETHROW))
+            abilityData.setRegenBurnout(true);
         return !data.hasStatusControl(STOP_FLAMETHROW);
     }
 
@@ -332,98 +271,37 @@ public class FlamethrowerUpdateTick extends TickHandler {
     }
     //TODO: Rather than having a server-side laggy event, make a client side event and create a damage packet based on that
 
-    public static class FlamethrowerBehaviour extends LightOrbBehavior {
+    public static class FlamethrowerBehaviour extends OffensiveBehaviour {
 
         @Override
-        public Behavior onUpdate(EntityLightOrb entity) {
+        public OffensiveBehaviour onUpdate(EntityOffensive entity) {
             if (entity.getOwner() != null) {
-                AbilityData abilityData = AbilityData.get(entity.getOwner(), new AbilityFlamethrower().getName());
-                int flamesPerSecond;
-                World world = entity.world;
-                entity.setVelocity(entity.getPositionVector().subtract(entity.getOwner().getPositionVector()
-                        .add(0, entity.getOwner().getEyeHeight() - 0.5, 0)));
-                if (abilityData != null) {
-                    int level = abilityData.getLevel();
-                    AbilityTreePath path = abilityData.getPath();
-                    Bender bender = Bender.get(entity.getOwner());
-                    System.out.println(level);
-                    if (bender != null && level > -1) {
-
-                        flamesPerSecond = level <= 0 ? 1 : 2;
-                        if (level == 3 && path == AbilityTreePath.FIRST)
-                            flamesPerSecond = 3;
-                        else if (level == 3 && path == AbilityTreePath.SECOND)
-                            flamesPerSecond = 1;
-
-
-                        double powerRating = bender.calcPowerRating(Firebending.ID);
-                        double speedMult = 15 + 5 * abilityData.getXpModifier();
-                        double randomness = 3.0 - 0.5 * (abilityData.getXpModifier() + Math.max(abilityData.getLevel(), 0));
-                        float size = 0.75F;
-
-
-                        switch (abilityData.getLevel()) {
-                            case 1:
-                                size = 1.125F;
-                                break;
-                            case 2:
-                                size = 1.5F;
-                                break;
-                        }
-                        if (level == 3 && path == AbilityTreePath.FIRST) {
-                            speedMult = 38;
-                            randomness = 0;
-                            size = 1.25F;
-
-                        }
-                        if (level == 3 && path == AbilityTreePath.SECOND) {
-                            speedMult = 12;
-                            randomness = 9;
-                            size = 2.5F;
-
-                        }
-
-                        // Affect stats by power rating
-                        size += powerRating / 200F;
-                        speedMult += powerRating / 100f * 2.5f;
-
-                        double yawRandom = entity.rotationYaw + (Math.random() * 2 - 1) * randomness;
-                        double pitchRandom = entity.rotationPitch + (Math.random() * 2 - 1) * randomness;
-                        Vector eye = getEyePos(entity.getOwner());
-                        Vector look = randomness == 0 ? Vector.getLookRectangular(entity) : Vector.toRectangular(toRadians(yawRandom), toRadians(pitchRandom));
-                        Vector start = look.plus(eye.minusY(0.5));
-
-
-                        if (entity.world.isRemote) {
-                            speedMult /= 28.75;
-                            if (CLIENT_CONFIG.fireRenderSettings.solidFlamethrowerParticles) {
-                                for (double i = 0; i < flamesPerSecond; i += 3) {
-                                    Vector start1 = look.times((i / (double) flamesPerSecond) / 10000).plus(eye.minusY(0.5));
-                                    ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start1.toMinecraft()).scale(size * 1.5F).time(22).collide(true).spawnEntity(entity).vel(look.times(speedMult).toMinecraft())
-                                            .ability(new AbilityFlamethrower()).spawn(world);
-                                }
-                            }
-                            for (int i = 0; i < flamesPerSecond; i++) {
-                                Vector start1 = look.times((i / (double) flamesPerSecond) / 10000).plus(eye.minusY(0.5));
-                                if (CLIENT_CONFIG.fireRenderSettings.solidFlamethrowerParticles) {
-                                    ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start.toMinecraft()).scale(size * 1.5F).time(22).collide(true).vel(look.times(speedMult / 1.25).toMinecraft()).
-                                            ability(new AbilityFlamethrower()).spawnEntity(entity).spawn(world);
-                                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult).toMinecraft()).
-                                            clr(235 + AvatarUtils.getRandomNumberInRange(0, 20), 10, 5, 255).collide(true).spawnEntity(entity).scale(size * 1.75F).element(new Firebending())
-                                            .ability(new AbilityFlamethrower()).spawn(world);
-                                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult).toMinecraft()).
-                                            clr(255, 60 + AvatarUtils.getRandomNumberInRange(1, 40), 10, 200).collide(true).spawnEntity(entity).scale(size * 1.75F).element(new Firebending())
-                                            .ability(new AbilityFlamethrower()).spawn(world);
-                                } else if (!CLIENT_CONFIG.fireRenderSettings.solidFlamethrowerParticles) {
-                                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult).toMinecraft()).
-                                            clr(235 + AvatarUtils.getRandomNumberInRange(0, 20), 10, 5, 255).collide(true).spawnEntity(entity).scale(size * 1.75F).element(new Firebending())
-                                            .ability(new AbilityFlamethrower()).spawn(world);
-                                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start1.toMinecraft()).time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).vel(look.times(speedMult).toMinecraft()).
-                                            clr(255, 60 + AvatarUtils.getRandomNumberInRange(1, 40), 10, 200).collide(true).spawnEntity(entity).scale(size * 1.75F).element(new Firebending())
-                                            .ability(new AbilityFlamethrower()).spawn(world);
-                                }
-                            }
-                        }
+                if (entity.world.isRemote && entity.ticksExisted > 1) {
+                    int[] fade = entity.getFade();
+                    int[] rgb = entity.getRGB();
+                    for (double i = 0; i < entity.width; i += 0.1 * entity.getAvgSize() * 4) {
+                        int rRandom = fade[0] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[0] * 2) : AvatarUtils.getRandomNumberInRange(fade[0] / 2,
+                                fade[0] * 2);
+                        int gRandom = fade[1] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[1] * 2) : AvatarUtils.getRandomNumberInRange(fade[1] / 2,
+                                fade[1] * 2);
+                        int bRandom = fade[2] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[2] * 2) : AvatarUtils.getRandomNumberInRange(fade[2] / 2,
+                                fade[2] * 2);
+                        Random random = new Random();
+                        AxisAlignedBB boundingBox = entity.getEntityBoundingBox();
+                        double spawnX = boundingBox.minX + random.nextDouble() * (boundingBox.maxX - boundingBox.minX);
+                        double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
+                        double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
+                        ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 60,
+                                entity.world.rand.nextGaussian() / 60, entity.world.rand.nextGaussian() / 60).time(12 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(rgb[0], rgb[1], rgb[2])
+                                .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).scale(entity.getAvgSize() * 1.5F).element(entity.getElement())
+                                .ability(entity.getAbility()).spawnEntity(entity.getOwner()).spawn(entity.world);
+                        ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 60,
+                                entity.world.rand.nextGaussian() / 60, entity.world.rand.nextGaussian() / 60).time(12 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(rgb[0], rgb[1], rgb[2])
+                                .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).scale(entity.getAvgSize() * 1.5F).element(entity.getElement())
+                                .ability(entity.getAbility()).spawnEntity(entity.getOwner()).spawn(entity.world);
+                        ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(AvatarEntityUtils.getMiddleOfEntity(entity)).vel(entity.world.rand.nextGaussian() / 40,
+                                entity.world.rand.nextGaussian() / 40, entity.world.rand.nextGaussian() / 40).time(12 + AvatarUtils.getRandomNumberInRange(0, 4)).scale(entity.getAvgSize() / 2)
+                                .element(entity.getElement()).ability(entity.getAbility()).spawnEntity(entity.getOwner()).spawn(entity.world);
                     }
                 }
             }

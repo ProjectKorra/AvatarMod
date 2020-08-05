@@ -226,13 +226,14 @@ public abstract class Bender {
                     if (data.getMiscData().getCanUseAbilities()) {
                         if (aD.getAbilityCooldown() == 0 || entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
                             aD.setPowerRating(calcPowerRating(ability.getBendingId()));
+                            //This lets the ability disable burnout regeneration
+                            aD.setRegenBurnout(true);
                             ability.execute(abilityCtx);
                             if (entity instanceof EntityPlayer)
                                 ((EntityPlayer) entity).addExhaustion(ability.getExhaustion(abilityCtx));
                             aD.setAbilityCooldown(ability.getCooldown(abilityCtx));
                             //We set the burnout last as it affects all of the other inhibiting stats
                             aD.setBurnOut(ability.getBurnOut(abilityCtx));
-                            aD.setRegenBurnout(true);
 
                         } else {
                             Objects.requireNonNull(Bender.get(getEntity())).sendMessage("avatar.abilityCooldown");

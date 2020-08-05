@@ -177,9 +177,20 @@ public class AbilityData {
 	public double getDamageMult() {
 		double powerRating = getPowerRating();
 		if (powerRating < 0) {
-			return 0.005 * powerRating + 1 < 0 ? 1F / 50 : 0.005 * powerRating + 1;
+			return 0.005 * powerRating + 1 < 0 ? 1 / 50F : 0.005 * powerRating + 1;
 		} else {
 			return 0.005 * powerRating + 1;
+		}
+	}
+
+
+	//NOTE: Unlike the other methods, this works server-side and client-side! Use this in abilities and such.
+	public double getPowerRatingMult() {
+		double powerRating = getPowerRating();
+		if (powerRating < 0) {
+			return 0.01 * powerRating + 1 < 0 ? 1 / 100F : 0.01 * powerRating + 1;
+		} else {
+			return 0.01 * powerRating + 1;
 		}
 	}
 

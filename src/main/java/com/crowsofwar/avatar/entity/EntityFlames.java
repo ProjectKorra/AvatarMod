@@ -306,6 +306,6 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
     public float getVolume() {
         if (getAbility() instanceof AbilityFireShot)
             return super.getVolume();
-        else return 0.25F * world.rand.nextFloat();
+        else return 0.125F * world.rand.nextFloat();
     }
 }

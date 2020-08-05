@@ -80,21 +80,6 @@ public class AbilityFireball extends Ability {
     }
 
     @Override
-    public int getCooldown(AbilityData data) {
-        return 0;
-    }
-
-    @Override
-    public float getBurnOut(AbilityData data) {
-        return 0;
-    }
-
-    @Override
-    public float getExhaustion(AbilityData data) {
-        return 0;
-    }
-
-    @Override
     public void execute(AbilityContext ctx) {
 
         EntityLivingBase entity = ctx.getBenderEntity();
@@ -171,6 +156,7 @@ public class AbilityFireball extends Ability {
                 if (!world.isRemote)
                     world.spawnEntity(fireball);
 
+                abilityData.setRegenBurnout(false);
                 data.addStatusControl(THROW_FIREBALL);
 
             }

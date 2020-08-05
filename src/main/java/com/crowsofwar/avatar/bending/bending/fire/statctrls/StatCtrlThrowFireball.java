@@ -68,9 +68,9 @@ public class StatCtrlThrowFireball extends StatusControl {
             assert ability != null;
             double speedMult = ability.getProperty(Ability.SPEED, abilityData).floatValue() * 3.5;
             float chi = ability.getChiCost(abilityData);
-            cooldown = ability.getProperty(Ability.COOLDOWN, abilityData).intValue();
-            burnOut = ability.getProperty(Ability.BURNOUT, abilityData).floatValue();
-            exhaustion = ability.getProperty(Ability.EXHAUSTION, abilityData).floatValue();
+            cooldown = ability.getCooldown(abilityData);
+            burnOut = ability.getBurnOut(abilityData);
+            exhaustion = ability.getExhaustion(abilityData);
             size = ability.getProperty(Ability.SIZE, abilityData).floatValue();
             damage = ability.getProperty(Ability.DAMAGE, abilityData).floatValue();
             maxDamage = ability.getProperty(Ability.MAX_DAMAGE, abilityData).floatValue();
@@ -84,22 +84,14 @@ public class StatCtrlThrowFireball extends StatusControl {
 
             float mult = fireball.getAvgSize() / size;
 
-            cooldown -= cooldown * abilityData.getDamageMult() * abilityData.getXpModifier();
-            burnOut -= burnOut * abilityData.getDamageMult() * abilityData.getXpModifier();
-            exhaustion -= exhaustion * abilityData.getDamageMult() * abilityData.getXpModifier();
-            maxBurnout -= maxBurnout * abilityData.getDamageMult() * abilityData.getXpModifier();
-            maxExhaustion -= maxExhaustion * abilityData.getDamageMult() * abilityData.getXpModifier();
-
-
-            cooldown *= (1 + abilityData.getBurnOut() / 200);
+            maxBurnout *= (2 - abilityData.getDamageMult()) * abilityData.getXpModifier();
+            maxExhaustion  *= (2 - abilityData.getDamageMult()) * abilityData.getXpModifier();
 
             exhaustion *= mult;
             exhaustion = Math.min(exhaustion, maxExhaustion);
-            exhaustion *= (1 + abilityData.getBurnOut() / 100);
 
             burnOut *= mult;
             burnOut = Math.min(burnOut, maxBurnout);
-            burnOut *= (1 + abilityData.getBurnOut() / 200);
 
             damage *= mult;
             damage = Math.min(damage, maxDamage);
@@ -138,8 +130,14 @@ public class StatCtrlThrowFireball extends StatusControl {
                         }
                         if (fireballs.size() > 1)
                             fireball.setVelocity(vel.normalize().times(speedMult));
-                        else fireball.setVelocity(Vector.getLookRectangular(entity).times(speedMult));
-                    } else fireball.setVelocity(Vector.getLookRectangular(entity).times(speedMult));
+                        else {
+                            fireball.setVelocity(Vector.getLookRectangular(entity).times(speedMult));
+                            abilityData.setRegenBurnout(true);
+                        }
+                    } else {
+                        fireball.setVelocity(Vector.getLookRectangular(entity).times(speedMult));
+                        abilityData.setRegenBurnout(true);
+                    }
                 }
             }
             world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.HOSTILE, 4F, 0.8F);

@@ -513,9 +513,9 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 
     @Override
     public Vec3d getKnockback() {
-        double x = getKnockbackMult().x * motionX;
-        double y = Math.min(0.5, (motionY + 0.15) * getKnockbackMult().y);
-        double z = getKnockbackMult().z * motionZ;
+        double x = getKnockbackMult().x * motionX / 2;
+        double y = Math.min(0.35, (motionY + 0.05) * getKnockbackMult().y);
+        double z = getKnockbackMult().z * motionZ / 2;
         return new Vec3d(x, y, z);
     }
 
@@ -568,7 +568,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
     protected void spawnExtinguishIndicators() {
         if (world.isRemote) {
             for (int i = 0; i < 4; i++)
-                ParticleBuilder.create(ParticleBuilder.Type.SNOW).pos(AvatarEntityUtils.getMiddleOfEntity(this)).scale(getAvgSize() * 2)
+                ParticleBuilder.create(ParticleBuilder.Type.SNOW).pos(AvatarEntityUtils.getMiddleOfEntity(this)).scale(Math.min(Math.max(getAvgSize() * 2, 0.125F), 1F))
                         .vel(world.rand.nextGaussian() / 20 + motionX / 8, world.rand.nextDouble() / 10 + motionY / 8,
                                 world.rand.nextGaussian() / 20 + motionZ / 8).time(AvatarUtils.getRandomNumberInRange(8, 16) * 2).spawn(world);
         }
@@ -589,7 +589,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 
     @Override
     public Vec3d getKnockbackMult() {
-        return new Vec3d(1, 2, 1);
+        return new Vec3d(push, push / 2, push);
     }
 
     @Override

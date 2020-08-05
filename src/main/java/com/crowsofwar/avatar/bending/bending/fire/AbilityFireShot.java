@@ -90,7 +90,6 @@ public class AbilityFireShot extends Ability {
         int performance = getProperty(PERFORMANCE, ctx).intValue();
 
         double damageMult = abilityData.getDamageMult();
-        double powerrating = bender.calcPowerRating(Firebending.ID);
 
         damage *= abilityData.getXpModifier() * damageMult;
         size *= (abilityData.getXpModifier() * damageMult);
