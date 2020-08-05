@@ -7,6 +7,8 @@ import com.crowsofwar.avatar.bending.bending.air.tickhandlers.ShootAirBurstHandl
 import com.crowsofwar.avatar.bending.bending.air.tickhandlers.SmashGroundHandler;
 import com.crowsofwar.avatar.bending.bending.fire.AbilityFlameStrike;
 import com.crowsofwar.avatar.bending.bending.fire.AbilityFireShot;
+import com.crowsofwar.avatar.bending.bending.fire.statctrls.StatCtrlFlameStrike;
+import com.crowsofwar.avatar.bending.bending.fire.tickhandlers.FlamethrowerUpdateTick;
 import com.crowsofwar.avatar.entity.EntityOffensive;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
@@ -20,13 +22,14 @@ public abstract class OffensiveBehaviour extends Behavior<EntityOffensive> {
 	public static void register() {
 		DataSerializers.registerSerializer(DATA_SERIALIZER);
 		registerBehavior(Idle.class);
-		registerBehavior(AbilityFlameStrike.FireblastBehaviour.class);
 		registerBehavior(AirBurstHandler.AirburstShockwave.class);
 		registerBehavior(AbilityFireShot.FireShockwaveBehaviour.class);
 		registerBehavior(SmashGroundHandler.AirGroundPoundShockwave.class);
 		registerBehavior(ShootAirBurstHandler.AirBurstBeamBehaviour.class);
 		registerBehavior(AbilityAirGust.AirGustBehaviour.class);
 		registerBehavior(AbilityAirblade.AirBladeBehaviour.class);
+		registerBehavior(FlamethrowerUpdateTick.FlamethrowerBehaviour.class);
+		registerBehavior(StatCtrlFlameStrike.FlameStrikeBehaviour.class);
 		FireballBehavior.register();
 	}
 

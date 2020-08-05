@@ -158,18 +158,20 @@ public class AbilityImmolate extends Ability {
                 //Stops constant spam and calculations
                 if (entity.ticksExisted == 1) {
                     AbilityData aD = AbilityData.get(emitter, "immolate");
-                    int level = aD.getLevel();
-                    if (level >= 1) {
-                        lightRadius = 7;
-                    }
-                    if (level >= 2) {
-                        lightRadius = 10;
-                    }
-                    if (aD.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-                        lightRadius = 9;
-                    }
-                    if (aD.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-                        lightRadius = 12;
+                    if (aD != null) {
+                        int level = aD.getLevel();
+                        if (level >= 1) {
+                            lightRadius = 7;
+                        }
+                        if (level >= 2) {
+                            lightRadius = 10;
+                        }
+                        if (aD.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+                            lightRadius = 9;
+                        }
+                        if (aD.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+                            lightRadius = 12;
+                        }
                     }
                 }
                 if (entity.getEntityWorld().isRemote) entity.setLightRadius(lightRadius + (int) (Math.random() * 5));

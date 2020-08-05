@@ -51,7 +51,6 @@ public abstract class LightOrbBehavior extends Behavior<EntityLightOrb> {
 		registerBehavior(FollowPlayer.class);
 		registerBehavior(AbilityFlameStrike.FlameStrikeLightOrb.class);
 		registerBehavior(AbilityImmolate.ImmolateLightOrbBehaviour.class);
-		registerBehavior(FlamethrowerUpdateTick.FlamethrowerBehaviour.class);
 	}
 
 	public static class Idle extends LightOrbBehavior {

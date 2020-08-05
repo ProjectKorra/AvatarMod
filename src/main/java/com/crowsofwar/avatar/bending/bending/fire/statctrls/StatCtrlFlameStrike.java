@@ -6,10 +6,9 @@ import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.fire.AbilityFlameStrike;
 import com.crowsofwar.avatar.bending.bending.fire.Firebending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
-import com.crowsofwar.avatar.entity.AvatarEntity;
-import com.crowsofwar.avatar.entity.EntityFlames;
-import com.crowsofwar.avatar.entity.EntityShield;
-import com.crowsofwar.avatar.entity.IShieldEntity;
+import com.crowsofwar.avatar.entity.*;
+import com.crowsofwar.avatar.entity.data.OffensiveBehaviour;
+import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.util.damageutils.DamageUtils;
@@ -26,17 +25,20 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.HashMap;
+import java.util.Random;
 import java.util.UUID;
 
-import static com.crowsofwar.avatar.bending.bending.Ability.*;
 import static com.crowsofwar.avatar.bending.bending.fire.AbilityFlameStrike.STRIKES;
 import static com.crowsofwar.avatar.client.controls.AvatarControl.CONTROL_LEFT_CLICK;
 import static com.crowsofwar.avatar.client.controls.AvatarControl.CONTROL_RIGHT_CLICK;
@@ -328,9 +330,10 @@ public class StatCtrlFlameStrike extends StatusControl {
                     flames.setDamage(damage);
                     flames.setSmelts(strike.getBooleanProperty(Ability.SMELTS, abilityData));
                     flames.setFireTime(fireTime);
+                    flames.setBehaviour(new FlameStrikeBehaviour());
                     flames.setPerformanceAmount(performance);
-                    flames.setRGB(strike.getProperty(FIRE_R, abilityData).intValue(), strike.getProperty(FIRE_R, abilityData).intValue(), strike.getProperty(FIRE_R, abilityData).intValue());
-                    flames.setRGB(strike.getProperty(FADE_R, abilityData).intValue(), strike.getProperty(FADE_G, abilityData).intValue(), strike.getProperty(FADE_B, abilityData).intValue());
+                    flames.setRGB(r, g, b);
+                    flames.setFade(fadeR, fadeG, fadeB);
                     flames.setElement(new Firebending());
                     flames.setTier(strike.getCurrentTier(abilityData));
                     flames.setPosition(x1, y1, z1);
@@ -364,5 +367,67 @@ public class StatCtrlFlameStrike extends StatusControl {
                     1.25F * world.rand.nextFloat(), false);
         }
         return true;
+    }
+
+    public static class FlameStrikeBehaviour extends OffensiveBehaviour {
+
+        @Override
+        public OffensiveBehaviour onUpdate(EntityOffensive entity) {
+            if (entity.getOwner() != null) {
+                entity.motionX *= 0.95;
+                entity.motionY *= 0.95;
+                entity.motionZ *= 0.95;
+                if (entity.world.isRemote && entity.ticksExisted > 1) {
+                    int[] fade = entity.getFade();
+                    int[] rgb = entity.getRGB();
+                    for (double i = 0; i < entity.width; i += 0.1 * entity.getAvgSize() * 4) {
+                        int rRandom = fade[0] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[0] * 2) : AvatarUtils.getRandomNumberInRange(fade[0] / 2,
+                                fade[0] * 2);
+                        int gRandom = fade[1] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[1] * 2) : AvatarUtils.getRandomNumberInRange(fade[1] / 2,
+                                fade[1] * 2);
+                        int bRandom = fade[2] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[2] * 2) : AvatarUtils.getRandomNumberInRange(fade[2] / 2,
+                                fade[2] * 2);
+                        Random random = new Random();
+                        Vec3d box = AvatarEntityUtils.getMiddleOfEntity(entity);
+                        AxisAlignedBB boundingBox = entity.getEntityBoundingBox();
+                        double spawnX = box.x + random.nextDouble() * 1.5 * (boundingBox.maxX - boundingBox.minX);
+                        double spawnY = box.y + random.nextDouble() * 1.5 * (boundingBox.maxY - boundingBox.minY);
+                        double spawnZ = box.z + random.nextDouble() * 1.5 * (boundingBox.maxZ - boundingBox.minZ);
+                        ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 30,
+                                entity.world.rand.nextGaussian() / 30, entity.world.rand.nextGaussian() / 30).time(5 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(rgb[0], rgb[1], rgb[2])
+                                .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).scale(entity.getAvgSize() * 2F).element(entity.getElement())
+                                .ability(entity.getAbility()).spawnEntity(entity.getOwner()).spawn(entity.world);
+                        ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 60,
+                                entity.world.rand.nextGaussian() / 30, entity.world.rand.nextGaussian() / 30).time(5 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(rgb[0], rgb[1], rgb[2])
+                                .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).scale(entity.getAvgSize() * 2F).element(entity.getElement())
+                                .ability(entity.getAbility()).spawnEntity(entity.getOwner()).spawn(entity.world);
+                        ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 50,
+                                entity.world.rand.nextGaussian() / 50, entity.world.rand.nextGaussian() / 50).time(5 + AvatarUtils.getRandomNumberInRange(0, 2)).scale(entity.getAvgSize() / 2)
+                                .element(entity.getElement()).ability(entity.getAbility()).spawnEntity(entity.getOwner()).spawn(entity.world);
+                    }
+                }
+            }
+            return this;
+        }
+
+        @Override
+        public void fromBytes(PacketBuffer buf) {
+
+        }
+
+        @Override
+        public void toBytes(PacketBuffer buf) {
+
+        }
+
+        @Override
+        public void load(NBTTagCompound nbt) {
+
+        }
+
+        @Override
+        public void save(NBTTagCompound nbt) {
+
+        }
     }
 }

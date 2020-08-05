@@ -131,10 +131,6 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
     public void onUpdate() {
         super.onUpdate();
 
-        // motionX *= 0.95;
-        //  motionY *= 0.95;
-        // motionZ *= 0.95;
-
 
         if (velocity().sqrMagnitude() <= 0.5) Dissipate();
 
