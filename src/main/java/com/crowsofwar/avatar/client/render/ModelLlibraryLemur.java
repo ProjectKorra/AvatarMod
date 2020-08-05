@@ -860,8 +860,7 @@ public class ModelLlibraryLemur extends AdvancedModelBase {
         AdvancedAdvancedModelRenderer.rotateAngleZ = z;
     }
 	
-    public void setLivingAnimations(EntityLivingBase entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTickTime)
-    {
+    public void setLivingAnimations(EntityLivingBase entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTickTime) {
     	this.resetToDefaultPose();
  
      	this.Left_Wing.setScale(0, 0, 0);
@@ -875,8 +874,7 @@ public class ModelLlibraryLemur extends AdvancedModelBase {
                 gliding = GliderHelper.getIsGliderDeployed((EntityPlayer) lemur.getOwner());
             }
 
-            if (lemur.isPartying())
-            {
+            if (lemur.isPartying()) {
                 this.state = ModelLlibraryLemur.State.PARTY;
                 this.Body.rotateAngleY = -1.5F;
                 this.Body.rotateAngleX = 0.3F;
@@ -1203,8 +1201,7 @@ public class ModelLlibraryLemur extends AdvancedModelBase {
                 gliding = GliderHelper.getIsGliderDeployed((EntityPlayer) lemur.getOwner());
             }
 
-            if (lemur.isPartying())
-            {
+            if (lemur.isPartying()) {
                 this.state = ModelLlibraryLemur.State.PARTY;
                 this.Body.rotateAngleY = -1.5F;
                 this.Body.rotateAngleX = 0.3F;
@@ -1738,13 +1735,9 @@ public class ModelLlibraryLemur extends AdvancedModelBase {
         
         
     }
-    private float triangleWave(float p_78172_1_, float p_78172_2_)
-    {
-        return (Math.abs(p_78172_1_ % p_78172_2_ - p_78172_2_ * 0.5F) - p_78172_2_ * 0.25F) / (p_78172_2_ * 0.25F);
-    }
+
     @SideOnly(Side.CLIENT)
-    static enum State
-    {
+    static enum State {
         FLYING,
         SPRINTING,
         SITTING,

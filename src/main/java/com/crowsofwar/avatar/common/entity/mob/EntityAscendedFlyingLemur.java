@@ -55,22 +55,21 @@ public class EntityAscendedFlyingLemur extends EntityTameable implements EntityF
     private boolean partyLemur;
     private BlockPos jukeboxPosition;
 
-    public EntityAscendedFlyingLemur(World worldIn)
-    {
+    public EntityAscendedFlyingLemur(World worldIn) {
         super(worldIn);
         this.setSize(0.3F, 1F);
         this.moveHelper = new EntityFlyHelper(this);
         experienceValue = 200;
     }
+
     @Nullable
-    public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata)
-    {
+    public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata) {
         this.setVariant(this.rand.nextInt(2));
         return super.onInitialSpawn(difficulty, livingdata);
     }
+
     @Override
-    protected void initEntityAI()
-    {
+    protected void initEntityAI() {
         this.aiSit = new EntityAISit(this);
         this.tasks.addTask(1, new EntityAISwimming(this));
         this.tasks.addTask(2, this.aiSit);
@@ -87,24 +86,19 @@ public class EntityAscendedFlyingLemur extends EntityTameable implements EntityF
     }
 
     @Override
-    public EnumActionResult applyPlayerInteraction(EntityPlayer player, Vec3d vec, EnumHand hand)
-    {
+    public EnumActionResult applyPlayerInteraction(EntityPlayer player, Vec3d vec, EnumHand hand) {
 
-        if(player.isSneaking() &&  this.getOwner() != null && this.getOwner() == player && !this.getLeashed())
-        {
+        if(player.isSneaking() &&  this.getOwner() != null && this.getOwner() == player && !this.getLeashed()) {
             IPlayerShoulders playerShoulders = player.getCapability(CapabilityPlayerShoulders.TEST_HANDLER, null);
             this.setSitting(false);
-            if(playerShoulders.getRiders().size() == 0)
-            {
-                if(!previusRidingPos)
-                {
+            if(playerShoulders.getRiders().size() == 0) {
+                if(!previusRidingPos) {
                     this.setRightShoulder(true);
                     this.setNoAI(true);
                     playerShoulders.setRightShoulder(true);
                     previusRidingPos = true;
                 }
-                else
-                {
+                else {
                     this.setLeftShoulder(true);
                     this.setNoAI(true);
                     playerShoulders.setLeftShoulder(true);
@@ -114,10 +108,8 @@ public class EntityAscendedFlyingLemur extends EntityTameable implements EntityF
                 playerShoulders.addRiders(this);
             }
             else {
-                if(playerShoulders.getRiders().size() < 2)
-                {
-                    if(playerShoulders.getRiders().size() == 1 && !playerShoulders.getRiders().contains(this))
-                    {
+                if(playerShoulders.getRiders().size() < 2) {
+                    if(playerShoulders.getRiders().size() == 1 && !playerShoulders.getRiders().contains(this)) {
                         if(playerShoulders.getRiders().get(0) instanceof EntityAscendedFlyingLemur) {
                             EntityAscendedFlyingLemur lemur = (EntityAscendedFlyingLemur) playerShoulders.getRiders().get(0);
                             if(lemur.getRightShoulder()) {
@@ -162,7 +154,6 @@ public class EntityAscendedFlyingLemur extends EntityTameable implements EntityF
 
 
         }
-
         return super.applyPlayerInteraction(player, vec, hand);
     }
 
@@ -175,8 +166,7 @@ public class EntityAscendedFlyingLemur extends EntityTameable implements EntityF
     }
 
     @Override
-    public void onLivingUpdate()
-    {
+    public void onLivingUpdate() {
         super.onLivingUpdate();
 
         updatespeed(!this.isLemurRiding());
@@ -195,13 +185,10 @@ public class EntityAscendedFlyingLemur extends EntityTameable implements EntityF
 
         }
 
-
-        if (this.jukeboxPosition == null || this.jukeboxPosition.distanceSq(this.posX, this.posY, this.posZ) > 12.0D || this.world.getBlockState(this.jukeboxPosition).getBlock() != Blocks.JUKEBOX)
-        {
+        if (this.jukeboxPosition == null || this.jukeboxPosition.distanceSq(this.posX, this.posY, this.posZ) > 12.0D || this.world.getBlockState(this.jukeboxPosition).getBlock() != Blocks.JUKEBOX) {
             this.partyLemur = false;
             this.jukeboxPosition = null;
         }
-
 
         if(this.isLemurRiding()) {
             if(this.getOwner() != null && this.getOwner().dimension == this.dimension) {
@@ -223,19 +210,15 @@ public class EntityAscendedFlyingLemur extends EntityTameable implements EntityF
     }
 
     @SideOnly(Side.CLIENT)
-    public void setPartying(BlockPos pos, boolean p_191987_2_)
-    {
+    public void setPartying(BlockPos pos, boolean p_191987_2_) {
         this.jukeboxPosition = pos;
         this.partyLemur = p_191987_2_;
     }
 
-
     @SideOnly(Side.CLIENT)
-    public boolean isPartying()
-    {
+    public boolean isPartying() {
         return this.partyLemur;
     }
-
 
     @Override
     public boolean canBeCollidedWith() {
@@ -254,31 +237,28 @@ public class EntityAscendedFlyingLemur extends EntityTameable implements EntityF
     public void setLeftShoulder(boolean ride) {
         byte b0 = ((Byte)this.dataManager.get(LEFTSHOULDER)).byteValue();
 
-        if (ride)
-        {
+        if (ride) {
             this.height = 0.0f;
             this.width = 0.1f;
             this.setSitting(false);
             this.dataManager.set(LEFTSHOULDER, Byte.valueOf((byte)(b0 | 1)));
         }
-        else
-        {
+        else {
             this.dataManager.set(LEFTSHOULDER, Byte.valueOf((byte)(b0 & -2)));
         }
     }
+
     public void setRightShoulder(boolean ride) {
 
         byte b0 = ((Byte)this.dataManager.get(RIGHTSHOULDER)).byteValue();
 
-        if (ride)
-        {
+        if (ride) {
             this.height = 0.0f;
             this.width = 0.1f;
             this.setSitting(false);
             this.dataManager.set(RIGHTSHOULDER, Byte.valueOf((byte)(b0 | 1)));
         }
-        else
-        {
+        else {
             this.dataManager.set(RIGHTSHOULDER, Byte.valueOf((byte)(b0 & -2)));
         }
     }
@@ -289,16 +269,14 @@ public class EntityAscendedFlyingLemur extends EntityTameable implements EntityF
     }
 
     @Override
-    protected void entityInit()
-    {
+    protected void entityInit() {
         super.entityInit();
         this.dataManager.register(RIGHTSHOULDER, Byte.valueOf((byte)0));
         this.dataManager.register(LEFTSHOULDER, Byte.valueOf((byte)0));
         this.dataManager.register(VARIANT, Integer.valueOf(0));
     }
 
-    public boolean isFlying()
-    {
+    public boolean isFlying() {
         return !this.onGround;
     }
 
@@ -311,8 +289,7 @@ public class EntityAscendedFlyingLemur extends EntityTameable implements EntityF
         }
     }
 
-    protected PathNavigate createNavigator(World worldIn)
-    {
+    protected PathNavigate createNavigator(World worldIn) {
         PathNavigateFlying pathnavigateflying = new PathNavigateFlying(this, worldIn);
         pathnavigateflying.setCanOpenDoors(false);
         pathnavigateflying.setCanFloat(true);
@@ -321,46 +298,18 @@ public class EntityAscendedFlyingLemur extends EntityTameable implements EntityF
         PathNavigateGround pathnavigateground = new PathNavigateGround(this, worldIn);
 
 
-        if(this.getMoveHelper() instanceof EntityFlyHelper)
-        {
+        if(this.getMoveHelper() instanceof EntityFlyHelper) {
             return pathnavigateflying;
         }
 
-        if(this.getMoveHelper() instanceof EntityMoveHelper)
-        {
+        if(this.getMoveHelper() instanceof EntityMoveHelper) {
             return pathnavigateground;
         }
 
         return null;
     }
-    /*
-    protected PathNavigate createNavigator(World worldIn)
-    {
-        PathNavigateFlying pathnavigateflying = new PathNavigateFlying(this, worldIn);
-        PathNavigateGround pathnavigateground = new PathNavigateGround(this, worldIn);
 
-
-        pathnavigateflying.setCanFloat(true);
-        pathnavigateflying.setCanOpenDoors(true);
-        pathnavigateflying.setCanEnterDoors(true);
-        pathnavigateground.setEnterDoors(true);
-        pathnavigateground.setCanSwim(true);
-
-        if(this.getMoveHelper() instanceof EntityFlyHelper)
-        {
-            return pathnavigateflying;
-        }
-
-        if(this.getMoveHelper() instanceof EntityMoveHelper)
-        {
-            return pathnavigateground;
-        }
-
-        return null;
-    }
-    */
-    public float getEyeHeight()
-    {
+    public float getEyeHeight() {
         if(this.isFlying() || this.isLemurRiding() ) {
             return  0.1F;
         }
@@ -378,6 +327,7 @@ public class EntityAscendedFlyingLemur extends EntityTameable implements EntityF
         }
 
     }
+
     @Override
     public double getYOffset() {
         if(this.getOwner() != null && this.getOwner().isSneaking()) {
@@ -397,19 +347,15 @@ public class EntityAscendedFlyingLemur extends EntityTameable implements EntityF
 
     }
 
-
-    public void fall(float distance, float damageMultiplier)
-    {
+    public void fall(float distance, float damageMultiplier) {
 
     }
 
-    protected void updateFallState(double y, boolean onGroundIn, IBlockState state, BlockPos pos)
-    {
+    protected void updateFallState(double y, boolean onGroundIn, IBlockState state, BlockPos pos) {
 
     }
 
-    public boolean getCanSpawnHere()
-    {
+    public boolean getCanSpawnHere() {
         int i = MathHelper.floor(this.posX);
         int j = MathHelper.floor(this.getEntityBoundingBox().minY);
         int k = MathHelper.floor(this.posZ);
@@ -417,9 +363,9 @@ public class EntityAscendedFlyingLemur extends EntityTameable implements EntityF
         Block block = this.world.getBlockState(blockpos.down()).getBlock();
         return block instanceof BlockLeaves || block == Blocks.GRASS || block instanceof BlockLog || block == Blocks.AIR && this.world.getLight(blockpos) > 8 && super.getCanSpawnHere();
     }
+
     @Override
-    protected void applyEntityAttributes()
-    {
+    protected void applyEntityAttributes() {
         super.applyEntityAttributes();
         this.getAttributeMap().registerAttribute(SharedMonsterAttributes.FLYING_SPEED);
         this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.33D);
@@ -430,38 +376,26 @@ public class EntityAscendedFlyingLemur extends EntityTameable implements EntityF
         this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(2.0D);
     }
 
-    /*
-     * Config - End
-     */
-
-    public int getVerticalFaceSpeed()
-    {
+    public int getVerticalFaceSpeed() {
         return this.isSitting() ? 20 : super.getVerticalFaceSpeed();
     }
-    public boolean attackEntityFrom(DamageSource source, float amount)
-    {
-        if (this.isEntityInvulnerable(source))
-        {
+
+    public boolean attackEntityFrom(DamageSource source, float amount) {
+        if (this.isEntityInvulnerable(source)) {
             return false;
         }
-        else
-        {
+        else {
             Entity entity = source.getTrueSource();
 
-            if (this.aiSit != null)
-            {
+            if (this.aiSit != null) {
                 this.aiSit.setSitting(false);
             }
 
-
-
-            if (entity instanceof EntityPlayer)
-            {
+            if (entity instanceof EntityPlayer) {
                 if(!((EntityPlayer) entity).isCreative()) return false;
 
             }
-            else
-            {
+            else {
                 if(source != source.OUT_OF_WORLD) {
                     return false;
                 }
@@ -470,33 +404,29 @@ public class EntityAscendedFlyingLemur extends EntityTameable implements EntityF
             return super.attackEntityFrom(source, amount);
         }
     }
-    public boolean attackEntityAsMob(Entity entityIn)
-    {
+
+    public boolean attackEntityAsMob(Entity entityIn) {
         boolean flag = entityIn.attackEntityFrom(DamageSource.causeMobDamage(this), (float)((int)this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue()));
 
-        if (flag)
-        {
+        if (flag) {
             this.applyEnchantments(this, entityIn);
         }
 
         return flag;
     }
+
     public void setTamed(boolean tamed)
     {
         super.setTamed(tamed);
     }
-    public boolean processInteract(EntityPlayer player, EnumHand hand)
-    {
+
+    public boolean processInteract(EntityPlayer player, EnumHand hand) {
         ItemStack itemstack = player.getHeldItem(hand);
 
-        if (this.isTamed())
-        {
-            if (!itemstack.isEmpty())
-            {
-                if (TAME_ITEMS.contains(itemstack.getItem()) && this.getHealth() < 30.0F)
-                {
-                    if (!player.capabilities.isCreativeMode)
-                    {
+        if (this.isTamed()) {
+            if (!itemstack.isEmpty()) {
+                if (TAME_ITEMS.contains(itemstack.getItem()) && this.getHealth() < 30.0F) {
+                    if (!player.capabilities.isCreativeMode) {
                         itemstack.shrink(1);
                     }
 
@@ -505,25 +435,20 @@ public class EntityAscendedFlyingLemur extends EntityTameable implements EntityF
                 }
             }
 
-            if (this.isOwner(player) && !this.world.isRemote && !this.isBreedingItem(itemstack))
-            {
+            if (this.isOwner(player) && !this.world.isRemote && !this.isBreedingItem(itemstack)) {
                 this.aiSit.setSitting(!this.isSitting());
                 this.isJumping = false;
                 this.navigator.clearPath();
                 this.setAttackTarget((EntityLivingBase)null);
             }
         }
-        else if (TAME_ITEMS.contains(itemstack.getItem()))
-        {
-            if (!player.capabilities.isCreativeMode)
-            {
+        else if (TAME_ITEMS.contains(itemstack.getItem())) {
+            if (!player.capabilities.isCreativeMode) {
                 itemstack.shrink(1);
             }
 
-            if (!this.world.isRemote)
-            {
-                if (this.rand.nextInt(3) == 0 && !net.minecraftforge.event.ForgeEventFactory.onAnimalTame(this, player))
-                {
+            if (!this.world.isRemote) {
+                if (this.rand.nextInt(3) == 0 && !net.minecraftforge.event.ForgeEventFactory.onAnimalTame(this, player)) {
                     this.setTamedBy(player);
                     this.navigator.clearPath();
                     this.setAttackTarget((EntityLivingBase)null);
@@ -532,8 +457,7 @@ public class EntityAscendedFlyingLemur extends EntityTameable implements EntityF
                     this.playTameEffect(true);
                     this.world.setEntityState(this, (byte)7);
                 }
-                else
-                {
+                else {
                     this.playTameEffect(false);
                     this.world.setEntityState(this, (byte)6);
                 }
@@ -544,107 +468,85 @@ public class EntityAscendedFlyingLemur extends EntityTameable implements EntityF
 
         return super.processInteract(player, hand);
     }
-    public boolean canBeLeashedTo(EntityPlayer player)
-    {
+
+    public boolean canBeLeashedTo(EntityPlayer player) {
         return super.canBeLeashedTo(player);
     }
-    public int getMaxSpawnedInChunk()
-    {
+
+    public int getMaxSpawnedInChunk() {
         return 8;
     }
 
-    public void setVariant(int variantIn)
-    {
+    public void setVariant(int variantIn) {
         this.dataManager.set(VARIANT, Integer.valueOf(variantIn));
     }
-    public int getVariant()
-    {
+
+    public int getVariant() {
         return MathHelper.clamp(((Integer)this.dataManager.get(VARIANT)).intValue(), 0, 1);
     }
 
-    /*
-     * Mating - Start
-     */
-    public boolean isBreedingItem(ItemStack stack)
-    {
+    public boolean isBreedingItem(ItemStack stack) {
         return stack.getItem() == Items.GOLDEN_APPLE;
     }
+
     @Override
-    public EntityAgeable createChild(EntityAgeable ageable)
-    {
+    public EntityAgeable createChild(EntityAgeable ageable) {
         EntityAscendedFlyingLemur entitymonkey = new EntityAscendedFlyingLemur(this.world);
         UUID uuid = this.getOwnerId();
 
-        if (uuid != null)
-        {
+        if (uuid != null) {
             entitymonkey.setOwnerId(uuid);
             entitymonkey.setTamed(true);
         }
 
         return entitymonkey;
     }
-    public boolean canMateWith(EntityAnimal otherAnimal)
-    {
-        if (otherAnimal == this)
-        {
+
+    public boolean canMateWith(EntityAnimal otherAnimal) {
+        if (otherAnimal == this) {
             return false;
         }
-        else if (!this.isTamed())
-        {
+        else if (!this.isTamed()) {
             return false;
         }
-        else if (!(otherAnimal instanceof EntityAscendedFlyingLemur))
-        {
+        else if (!(otherAnimal instanceof EntityAscendedFlyingLemur)) {
             return false;
         }
-        else
-        {
+        else {
             EntityAscendedFlyingLemur lemur = (EntityAscendedFlyingLemur)otherAnimal;
 
-            if (!lemur.isTamed())
-            {
+            if (!lemur.isTamed()) {
                 return false;
             }
-            else if (lemur.isSitting())
-            {
+            else if (lemur.isSitting()) {
                 return false;
             }
-            else
-            {
+            else {
                 return this.isInLove() && lemur.isInLove();
             }
         }
     }
-    /*
-     * Mating - End
-     */
 
-    /*
-     * Sounds - Start
-     */
     protected SoundEvent getAmbientSound()
     {
         return SoundsHandler.ENTITY_FLYINGLEMUR_AMBIENT;
     }
+
     protected SoundEvent getHurtSound(DamageSource damageSourceIn)
     {
         return SoundsHandler.ENTITY_FLYINGLEMUR_HURT;
     }
+
     protected SoundEvent getDeathSound()
     {
         return SoundsHandler.ENTITY_FLYINGLEMUR_DEATH;
     }
+
     protected float getSoundVolume()
     {
         return 1.75F;
     }
-    /*
-     * Sounds - End
-     */
 
-    /*
-     * Particle Effects - Start
-     */
     public void playRideEffect(boolean play) {
         EnumParticleTypes enumparticletypes = EnumParticleTypes.EXPLOSION_NORMAL;
         for (int i = 0; i < 4; ++i)
@@ -655,7 +557,5 @@ public class EntityAscendedFlyingLemur extends EntityTameable implements EntityF
             this.world.spawnParticle(enumparticletypes, this.posX + (double)(this.rand.nextFloat() * this.width * 2.0F) - (double)this.width, this.posY + 0.5D + (double)(this.rand.nextFloat() * this.height), this.posZ + (double)(this.rand.nextFloat() * this.width * 2.0F) - (double)this.width, d0, d1, d2);
         }
     }
-/*
- * Particle Effects - End
- */
+
 }

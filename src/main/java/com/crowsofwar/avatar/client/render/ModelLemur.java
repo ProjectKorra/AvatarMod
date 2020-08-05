@@ -831,16 +831,14 @@ public class ModelLemur extends ModelBase {
     public void render(Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
     	super.render(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
 
-    	if (this.isChild)
-        {
+    	if (this.isChild) {
     	 	GL11.glPushMatrix();
             GL11.glTranslatef(0F, 1.5F-1.5F*0.35F, 0F);
         	GL11.glScalef(0.35F, 0.35F, 0.35F);
     		this.Body.render(scale);
     		GL11.glPopMatrix();
         }
-        else
-        { 
+        else {
            	GL11.glPushMatrix();
             GL11.glTranslatef(0F, 1.5F-1.5F*0.5F, 0F);
         	GL11.glScalef(0.5F, 0.5F, 0.5F);
@@ -855,8 +853,7 @@ public class ModelLemur extends ModelBase {
         ModelRenderer.rotateAngleZ = z;
     }
 	
-    public void setLivingAnimations(EntityLivingBase entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTickTime)
-    {
+    public void setLivingAnimations(EntityLivingBase entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTickTime) {
 
         /*
      	this.Left_Wing.setScale(0, 0, 0);
@@ -868,8 +865,8 @@ public class ModelLemur extends ModelBase {
 
             boolean gliding = GliderHelper.getIsGliderDeployed((EntityPlayer) lemur.getOwner());
 
-            if (lemur.isPartying())
-            {
+            if (lemur.isPartying()) {
+
                 this.state = State.PARTY;
                 //TODO
                 this.Body.rotateAngleY = -1.5F;
@@ -1197,8 +1194,7 @@ public class ModelLemur extends ModelBase {
 
         	EntityAscendedFlyingLemur lemur = (EntityAscendedFlyingLemur)entitylivingbaseIn;
 
-            if (lemur.isPartying())
-            {
+            if (lemur.isPartying()) {
                 this.state = State.PARTY;
                 //TODO
                 this.Body.rotateAngleY = -1.5F;
@@ -1536,13 +1532,9 @@ public class ModelLemur extends ModelBase {
         this.ArmRight.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
         
     }
-    private float triangleWave(float p_78172_1_, float p_78172_2_)
-    {
-        return (Math.abs(p_78172_1_ % p_78172_2_ - p_78172_2_ * 0.5F) - p_78172_2_ * 0.25F) / (p_78172_2_ * 0.25F);
-    }
+
     @SideOnly(Side.CLIENT)
-    static enum State
-    {
+    static enum State {
         FLYING,
         SPRINTING,
         SITTING,
