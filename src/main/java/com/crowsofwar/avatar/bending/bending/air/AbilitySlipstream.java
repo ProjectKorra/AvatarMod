@@ -7,112 +7,89 @@ import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 
 import java.util.Objects;
 
-import static com.crowsofwar.avatar.config.ConfigSkills.SKILLS_CONFIG;
-import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.util.data.TickHandlerController.SLIPSTREAM_WALK_HANDLER;
 
 public class AbilitySlipstream extends Ability {
 
-	private static final String AIR_WALK = "walkOnAir";
+    public static final String
+            AIR_WALK = "walkOnAir",
+            INVIS_CHANCE = "invisibleChance";
 
-	public AbilitySlipstream() {
-		super(Airbending.ID, "slipstream");
-	}
+    public AbilitySlipstream() {
+        super(Airbending.ID, "slipstream");
+    }
 
-	@Override
-	public boolean isBuff() {
-		return true;
-	}
+    @Override
+    public boolean isBuff() {
+        return true;
+    }
 
-	@Override
-	public void init() {
-		super.init();
-		addProperties(STRENGTH_LEVEL, STRENGTH_DURATION, SPEED_LEVEL, SPEED_DURATION, JUMP_LEVEL, JUMP_DURATION);
-		addBooleanProperties(AIR_WALK);
-	}
+    @Override
+    public void init() {
+        super.init();
+        addProperties(STRENGTH_LEVEL, STRENGTH_DURATION, SPEED_LEVEL, SPEED_DURATION, JUMP_LEVEL, JUMP_DURATION, INVIS_CHANCE);
+        addBooleanProperties(AIR_WALK);
+    }
 
-	@Override
-	public void execute(AbilityContext ctx) {
+    @Override
+    public void execute(AbilityContext ctx) {
 
-		BendingData data = ctx.getData();
-		AbilityData abilityData = data.getAbilityData(this);
-		EntityLivingBase entity = ctx.getBenderEntity();
-		Bender bender = ctx.getBender();
+        BendingData data = ctx.getData();
+        AbilityData abilityData = data.getAbilityData(this);
+        EntityLivingBase entity = ctx.getBenderEntity();
+        Bender bender = ctx.getBender();
 
-		float chi = STATS_CONFIG.chiBuff;
-		if (abilityData.getLevel() == 1) {
-			chi = STATS_CONFIG.chiBuffLvl2;
-		} else if (abilityData.getLevel() == 2) {
-			chi = STATS_CONFIG.chiBuffLvl3;
-		} else if (abilityData.getLevel() == 3) {
-			chi = STATS_CONFIG.chiBuffLvl4 * 1.5F;
-		}
+        float chi = getChiCost(ctx);
 
-		if (bender.consumeChi(chi)) {
-			float xp = SKILLS_CONFIG.buffUsed;
+        if (bender.consumeChi(chi)) {
+            float xp = getProperty(XP_USE, ctx).floatValue();
+            int duration = getProperty(DURATION, ctx).intValue();
+            int speedLevel, speedDuration, jumpLevel, jumpDuration, strengthLevel, strengthDuration;
 
-			// 4s base + 1s per level
-			int duration = abilityData.getLevel() > 0 ? 100 + 20 * abilityData.getLevel() : 80;
+            duration *= (2 - abilityData.getDamageMult()) * abilityData.getXpModifier();
+            speedLevel = getProperty(SPEED_LEVEL, ctx).intValue();
+            speedDuration = getProperty(SPEED_DURATION, ctx).intValue();
+            jumpLevel = getProperty(JUMP_LEVEL, ctx).intValue();
+            jumpDuration = getProperty(JUMP_DURATION, ctx).intValue();
+            strengthLevel = getProperty(STRENGTH_LEVEL, ctx).intValue();
+            strengthDuration = getProperty(STRENGTH_DURATION, ctx).intValue();
 
-			int effectLevel = abilityData.getLevel() >= 2 ? 1 : 0;
-			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-				effectLevel = 2;
-				data.addTickHandler(SLIPSTREAM_WALK_HANDLER);
-			}
+            speedDuration *= abilityData.getDamageMult() * abilityData.getXpModifier();
+            jumpDuration *= abilityData.getDamageMult() * abilityData.getXpModifier();
+            strengthDuration *= abilityData.getDamageMult() * abilityData.getXpModifier();
 
-			entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, duration, effectLevel, false, false));
-			data.getAbilityData("slipstream").addXp(xp);
+            if (getBooleanProperty(AIR_WALK, ctx))
+                data.addTickHandler(SLIPSTREAM_WALK_HANDLER);
 
-			if (abilityData.getLevel() >= 1) {
-				entity.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, duration, effectLevel, false, false));
-			}
 
-			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-				entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, duration, effectLevel, false, false));
-			}
+            if (speedLevel > 0)
+                entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, speedDuration, speedLevel - 1, false, false));
 
-			SlipstreamPowerModifier modifier = new SlipstreamPowerModifier();
-			modifier.setTicks(duration);
-			Objects.requireNonNull(data.getPowerRatingManager(getBendingId())).addModifier(modifier, ctx);
-		}
-		super.execute(ctx);
+            if (jumpLevel > 0)
+                entity.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, jumpDuration, jumpLevel - 1, false, false));
 
-	}
+            if (strengthLevel > 0)
+                entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, strengthDuration, strengthLevel - 1, false, false));
 
-	@Override
-	public int getCooldown(AbilityContext ctx) {
-		EntityLivingBase entity = ctx.getBenderEntity();
 
-		int coolDown = 140;
-		if (ctx.getLevel() == 1) {
-			coolDown = 120;
-		}
-		if (ctx.getLevel() == 2) {
-			coolDown = 100;
-		}
-		if (ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-			coolDown = 110;
-		}
-		if (ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
-			coolDown = 90;
-		}
+            SlipstreamPowerModifier modifier = new SlipstreamPowerModifier();
+            modifier.setTicks(duration);
+            Objects.requireNonNull(data.getPowerRatingManager(getBendingId())).addModifier(modifier, ctx);
+            abilityData.addXp(xp);
+        }
+        super.execute(ctx);
 
-		if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
-			coolDown = 0;
-		}
-		return coolDown;
-	}
+    }
 
-	@Override
-	public int getBaseTier() {
-		return 5;
-	}
+    @Override
+    public int getBaseTier() {
+        return 5;
+    }
 }
 
 
