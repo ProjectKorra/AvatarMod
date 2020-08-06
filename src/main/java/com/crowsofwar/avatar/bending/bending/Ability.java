@@ -163,6 +163,10 @@ public abstract class Ability {
      */
     public static void syncProperties(EntityPlayer player) {
         if (player instanceof EntityPlayerMP) {
+            AbilityProperties.loadWorldSpecificAbilityProperties(player.world);
+            for (Ability ability : Abilities.all()) {
+                if (!ability.arePropertiesInitialised()) ability.setProperties(ability.globalProperties);
+            }
             // On the server side, send a packet to the player to synchronise their spell properties
             List<Ability> abilities = Abilities.all();
             AvatarMod.network.sendToAll(new PacketCSyncAbilityProperties(abilities.stream().map(a -> a.properties).toArray(AbilityProperties[]::new)));

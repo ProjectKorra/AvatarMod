@@ -509,7 +509,7 @@ death.attack.avatar_Fire_fireShot=%1$s was burnt to death by %2$s's §c§lfire s
 death.attack.avatar_Fire_flamethrower=%1$s just got §c§lroasted by %2$s !
 death.attack.avatar_Fire_dragonFire=%1$s was §c§lpurified by %2$s !
 death.attack.avatar_Fire_fireball=%2$s §c§lincinerated %1$s with a §c§lfireball!
-death.attack.avatar_Fire_shockWave=%2$s was §c§lcremated away by %1$s's shockwave!
+death.attack.avatar_Fire_shockWave=%2$s was §c§lcremated by %1$s's shockwave!
 death.attack.avatar_Fire_sphere_shockWave=%2$s was §c§lconflagrated by %1$s's fire burst!
 
 death.attack.avatar_Water=%1$s drowned from %2$s's §9§lwaterbending!

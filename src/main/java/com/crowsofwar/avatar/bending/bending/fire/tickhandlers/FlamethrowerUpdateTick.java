@@ -148,8 +148,8 @@ public class FlamethrowerUpdateTick extends TickHandler {
                 flames.setDynamicSpreadingCollision(true);
                 flames.setEntitySize(0.1F, 0.1F);
                 flames.setAbility(new AbilityFlamethrower());
-                flames.setDamageSource(abilityData.isDynamicMasterLevel(AbilityTreePath.FIRST) ? AvatarDamageSource.FIRE.getDamageType() + "dragonFire"
-                        : AvatarDamageSource.FIRE.getDamageType());
+                flames.setDamageSource(abilityData.isDynamicMasterLevel(AbilityTreePath.FIRST) ? AvatarDamageSource.FIRE.getDamageType() + "_dragonFire"
+                        : AvatarDamageSource.FIRE.getDamageType() + "_flamethrower");
                 flames.setTier(flamethrower.getCurrentTier(abilityData));
                 flames.setXp(flamethrower.getProperty(XP_HIT, abilityData).floatValue());
                 flames.setVelocity(look.times(speedMult / 29.5F).toMinecraft());
@@ -160,7 +160,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
                 flames.setChiHit(chiHit);
                 flames.setXp(xp);
                 flames.setDamage(damage);
-                flames.setPush(knockback / 4);
+                flames.setPush(knockback);
                 flames.setRGB(r, g, b);
                 flames.setFade(fadeR, fadeG, fadeB);
                 flames.setSmelts(flamethrower.getBooleanProperty(SMELTS, abilityData));
@@ -189,7 +189,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
                 }
 
                 //Particle code.
-                if (world.isRemote && flamethrower.getCurrentTier(abilityData) < 4) {
+                if (world.isRemote && (flamethrower.getCurrentTier(abilityData) < 4 || !isRaining)) {
                     speedMult /= 29.5F;
                     for (int i = 0; i < flamesPerSecond; i++) {
                         int rRandom = fadeR < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeR * 2) : AvatarUtils.getRandomNumberInRange(fadeR / 2,
