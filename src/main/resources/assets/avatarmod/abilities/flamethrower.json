@@ -3,7 +3,7 @@
     "xpOnHit": 2,
     "level1": {
       "tier": 2,
-      "chiCost": 1.25,
+      "chiCost": 1.75,
       "cooldown": 100,
       "exhaustion": 2.0,
       "burnOut": 10.0,
@@ -29,7 +29,7 @@
     },
     "level2": {
       "tier": 2,
-      "chiCost": 1.5,
+      "chiCost": 2.0,
       "cooldown": 120,
       "exhaustion": 2.5,
       "burnOut": 0.75,
@@ -46,7 +46,7 @@
     },
     "level3": {
       "tier": 3,
-      "chiCost": 1.75,
+      "chiCost": 2.25,
       "cooldown": 145,
       "exhaustion": 3.0,
       "burnOut": 1.0,
@@ -64,7 +64,7 @@
     },
     "level4_1": {
       "tier": 4,
-      "chiCost": 2,
+      "chiCost": 2.75,
       "cooldown": 150,
       "exhaustion": 3.5,
       "burnOut": 1.25,
@@ -85,7 +85,7 @@
     },
     "level4_2": {
       "tier": 4,
-      "chiCost": 2.25,
+      "chiCost": 2.5,
       "cooldown": 160,
       "exhaustion": 4.0,
       "burnOutPerTick": 1.5,
