@@ -252,7 +252,7 @@ public abstract class Bender {
             } else {
                 if (entity instanceof EntityPlayer)
                     Ability.syncProperties((EntityPlayer) entity);
-                //TODO: Message sent upon properties files being screwed up
+                Bender.get(entity).sendMessage("avatar.reload");
             }
         }
 
@@ -388,7 +388,7 @@ public abstract class Bender {
         if (entity.ticksExisted - entity.getLastAttackedEntityTime() > 3)
             data.getPerformance().update();
 
-        if (entity instanceof EntityPlayer && !world.isRemote && entity.ticksExisted % 40 == 0) {
+        if (entity instanceof EntityPlayer && !world.isRemote && entity.ticksExisted % 20 == 0) {
             syncPowerRating();
         }
 

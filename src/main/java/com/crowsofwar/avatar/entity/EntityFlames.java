@@ -23,11 +23,11 @@ import com.crowsofwar.avatar.bending.bending.fire.Firebending;
 import com.crowsofwar.avatar.blocks.BlockTemp;
 import com.crowsofwar.avatar.blocks.BlockUtils;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
+import com.crowsofwar.avatar.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.Raytrace;
 import com.crowsofwar.avatar.util.damageutils.AvatarDamageSource;
-import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.gorecore.util.Vector;
 import com.zeitheron.hammercore.api.lighting.ColoredLight;
 import com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity;
@@ -134,7 +134,37 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
 
         if (velocity().sqrMagnitude() <= 0.5) Dissipate();
 
-        //Pretty much
+        if (getBehaviour() instanceof OffensiveBehaviour.Idle) {
+            if (world.isRemote && ticksExisted > 1) {
+                int[] fade = getFade();
+                int[] rgb = getRGB();
+                for (double i = 0; i < width; i += 0.1 * getAvgSize() * 4) {
+                    int rRandom = fade[0] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[0] * 2) : AvatarUtils.getRandomNumberInRange(fade[0] / 2,
+                            fade[0] * 2);
+                    int gRandom = fade[1] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[1] * 2) : AvatarUtils.getRandomNumberInRange(fade[1] / 2,
+                            fade[1] * 2);
+                    int bRandom = fade[2] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[2] * 2) : AvatarUtils.getRandomNumberInRange(fade[2] / 2,
+                            fade[2] * 2);
+                    Random random = new Random();
+                    Vec3d box = AvatarEntityUtils.getMiddleOfEntity(this);
+                    AxisAlignedBB boundingBox = getEntityBoundingBox();
+                    double spawnX = box.x + random.nextDouble() * 1.5 * (boundingBox.maxX - boundingBox.minX);
+                    double spawnY = box.y + random.nextDouble() * 1.5 * (boundingBox.maxY - boundingBox.minY);
+                    double spawnZ = box.z + random.nextDouble() * 1.5 * (boundingBox.maxZ - boundingBox.minZ);
+                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 30,
+                            world.rand.nextGaussian() / 30, world.rand.nextGaussian() / 30).time(5 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(rgb[0], rgb[1], rgb[2])
+                            .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).scale(getAvgSize() * 2F).element(getElement())
+                            .ability(getAbility()).spawnEntity(getOwner()).spawn(world);
+                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 30,
+                            world.rand.nextGaussian() / 30, world.rand.nextGaussian() / 30).time(5 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(rgb[0], rgb[1], rgb[2])
+                            .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).scale(getAvgSize() * 2F).element(getElement())
+                            .ability(getAbility()).spawnEntity(getOwner()).spawn(world);
+                    ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 50,
+                            world.rand.nextGaussian() / 50, world.rand.nextGaussian() / 50).time(5 + AvatarUtils.getRandomNumberInRange(0, 2)).scale(getAvgSize() / 2)
+                            .element(getElement()).ability(getAbility()).spawnEntity(getOwner()).spawn(world);
+                }
+            }
+        }
 
         //Looks for only blocks
         Raytrace.Result raytrace = Raytrace.raytrace(world, position(), velocity().normalize(), 0.125,

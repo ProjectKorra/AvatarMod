@@ -923,7 +923,7 @@ public abstract class ParticleAvatar extends Particle {
                 if (data != null && ability.getCurrentTier(data) < 3) {
                     spawnSteamParticles();
                     setExpired();
-                } else
+                } else if (particleAge % 2 == 0 && world.rand.nextBoolean())
                     spawnSteamParticles();
             } else {
                 spawnSteamParticles();
@@ -942,7 +942,7 @@ public abstract class ParticleAvatar extends Particle {
                 if (data != null && ability.getCurrentTier(data) < 6) {
                     spawnSteamParticles();
                     setExpired();
-                } else
+                } else if (particleAge % 2 == 0 && world.rand.nextBoolean())
                     spawnSteamParticles();
             } else {
                 spawnSteamParticles();
@@ -968,7 +968,7 @@ public abstract class ParticleAvatar extends Particle {
                 if (data != null && ability.getCurrentTier(data) < 3) {
                     spawnSteamParticles();
                     setExpired();
-                } else
+                } else if (particleAge % 2 == 0 && world.rand.nextBoolean())
                     spawnSteamParticles();
             } else {
                 spawnSteamParticles();

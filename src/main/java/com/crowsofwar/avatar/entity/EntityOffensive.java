@@ -288,7 +288,11 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
     public void onUpdate() {
         super.onUpdate();
 
-        setBehaviour((OffensiveBehaviour) getBehaviour().onUpdate(this));
+        if (getBehaviour() != null)
+            setBehaviour((OffensiveBehaviour) getBehaviour().onUpdate(this));
+        else
+            setBehaviour(new OffensiveBehaviour.Idle());
+
         setSize(getWidth(), getHeight());
 
         List<Entity> targets = world.getEntitiesWithinAABB(Entity.class, getExpandedHitbox());

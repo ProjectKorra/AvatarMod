@@ -30,11 +30,11 @@ public class WaterbendingPerformanceBonus {
 				double score = data.getPerformance().getScore();
 
 				if (score == 100) {
-					player.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 80, 1));
-					player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 80, 0));
+					player.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 25, 0));
+					player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 50, 0));
 					performance.setScore(0);
 				} else if (score >= 80) {
-					player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 50, 1));
+					player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 25, 1));
 					performance.setScore(0);
 				}
 

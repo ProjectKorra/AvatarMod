@@ -76,8 +76,8 @@ public class BattlePerformanceScore {
 
 		// Minimum / maximum score change per second, where min. change occurs when score is near 0,
 		// and max. change occurs when score is at 100
-		final double min = 0.5;
-		final double max = 2;
+		final double min = 1;
+		final double max = 4;
 
 		// Generates a curve from minimum to maximum
 

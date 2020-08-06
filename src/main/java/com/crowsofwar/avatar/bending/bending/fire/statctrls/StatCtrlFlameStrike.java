@@ -397,7 +397,7 @@ public class StatCtrlFlameStrike extends StatusControl {
                                 entity.world.rand.nextGaussian() / 30, entity.world.rand.nextGaussian() / 30).time(5 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(rgb[0], rgb[1], rgb[2])
                                 .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).scale(entity.getAvgSize() * 2F).element(entity.getElement())
                                 .ability(entity.getAbility()).spawnEntity(entity.getOwner()).spawn(entity.world);
-                        ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 60,
+                        ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 30,
                                 entity.world.rand.nextGaussian() / 30, entity.world.rand.nextGaussian() / 30).time(5 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(rgb[0], rgb[1], rgb[2])
                                 .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).scale(entity.getAvgSize() * 2F).element(entity.getElement())
                                 .ability(entity.getAbility()).spawnEntity(entity.getOwner()).spawn(entity.world);

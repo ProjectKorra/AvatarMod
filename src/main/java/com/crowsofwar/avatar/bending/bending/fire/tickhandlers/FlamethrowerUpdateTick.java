@@ -42,13 +42,11 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 
 import java.util.Random;
 import java.util.UUID;
@@ -102,7 +100,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
             boolean headInLiquid = world.getBlockState(entity.getPosition().up()) instanceof BlockLiquid || world.getBlockState(entity.getPosition().up()).getBlock() == Blocks.WATER
                     || world.getBlockState(entity.getPosition().up()).getBlock() == Blocks.FLOWING_WATER;
 
-            if (!isRaining && !(headInLiquid || inWaterBlock)) {
+            if ((!isRaining || flamethrower.getCurrentTier(abilityData) > 3) && !(headInLiquid || inWaterBlock)) {
 
                 double speedMult = flamethrower.getProperty(SPEED, abilityData).floatValue() * 3;
                 double randomness = flamethrower.getProperty(RANDOMNESS, abilityData).doubleValue();
@@ -139,8 +137,9 @@ public class FlamethrowerUpdateTick extends TickHandler {
 
                 double yawRandom = entity.rotationYaw + (Math.random() * 2 - 1) * randomness;
                 double pitchRandom = entity.rotationPitch + (Math.random() * 2 - 1) * randomness;
+                double range = Math.min(Math.max(1F - speedMult / 25, 0.1F), 0.25F);
                 Vector look = Vector.toRectangular(toRadians(yawRandom), toRadians(pitchRandom));
-                Vector start = look.plus(eye.minusY(0.45));
+                Vector start = look.times(range).plus(eye.minusY(0.45));
 
 
                 EntityFlames flames = new EntityFlames(world);
@@ -190,10 +189,9 @@ public class FlamethrowerUpdateTick extends TickHandler {
                 }
 
                 //Particle code.
-                if (world.isRemote) {
+                if (world.isRemote && flamethrower.getCurrentTier(abilityData) < 4) {
                     speedMult /= 29.5F;
                     for (int i = 0; i < flamesPerSecond; i++) {
-                        Vector start1 = look.times(Math.max(i / (double) flamesPerSecond, 0.5F)).plus(eye.minusY(0.45));
                         int rRandom = fadeR < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeR * 2) : AvatarUtils.getRandomNumberInRange(fadeR / 2,
                                 fadeR * 2);
                         int gRandom = fadeG < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeG * 2) : AvatarUtils.getRandomNumberInRange(fadeG / 2,
@@ -229,16 +227,11 @@ public class FlamethrowerUpdateTick extends TickHandler {
 
             } else {
                 if (world.isRemote) {
-                    for (int i = 0; i < 5; i++)
-                        ParticleBuilder.create(ParticleBuilder.Type.SNOW).collide(true).time(15).vel(world.rand.nextGaussian() / 50, world.rand.nextGaussian() / 50, world.rand.nextGaussian() / 50)
-                                .scale(1.5F + abilityData.getLevel() / 2F).pos(getEyePos(entity).plus(Vector.getLookRectangular(entity)).toMinecraft()).clr(0.75F, 0.75F, 0.75f).spawn(world);
+                    //Fix lag
+                    for (int i = 0; i < 30; i++)
+                        ParticleBuilder.create(ParticleBuilder.Type.SNOW).collide(true).time(12 + AvatarUtils.getRandomNumberInRange(0, 3)).vel(world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40)
+                                .scale(0.125F + flamethrower.getProperty(SIZE, abilityData).floatValue() / 2).pos(getEyePos(entity).plus(Vector.getLookRectangular(entity)).toMinecraft()).clr(1F, 1F, 1F, 0.85F).spawn(world);
 
-                }
-                Vector pos = getEyePos(entity).plus(Vector.getLookRectangular(entity));
-                if (!world.isRemote && world instanceof WorldServer) {
-                    WorldServer World = (WorldServer) world;
-                    World.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, pos.x(), pos.y(), pos.z(), 3 + Math.max(abilityData.getLevel(), 0),
-                            0, 0, 0, 0.0015);
                 }
                 entity.world.playSound(null, new BlockPos(entity), SoundEvents.BLOCK_FIRE_EXTINGUISH, entity.getSoundCategory(),
                         1.0F, 0.8F + world.rand.nextFloat() / 10);
@@ -294,12 +287,12 @@ public class FlamethrowerUpdateTick extends TickHandler {
                         double spawnX = box.x + random.nextDouble() * 0.125 * (boundingBox.maxX - boundingBox.minX);
                         double spawnY = box.y + random.nextDouble() * 0.125 * (boundingBox.maxY - boundingBox.minY);
                         double spawnZ = box.z + random.nextDouble() * 0.125 * (boundingBox.maxZ - boundingBox.minZ);
-                        ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 30 * entity.getAvgSize() * 2,
-                                entity.world.rand.nextGaussian() / 30 * entity.getAvgSize() * 2, entity.world.rand.nextGaussian() / 50 * entity.getAvgSize() * 2).time(6 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(rgb[0], rgb[1], rgb[2])
+                        ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 20 * entity.getAvgSize() * 3,
+                                entity.world.rand.nextGaussian() / 20 * entity.getAvgSize() * 3, entity.world.rand.nextGaussian() / 20 * entity.getAvgSize() * 3).time(6 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(rgb[0], rgb[1], rgb[2])
                                 .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).scale(entity.getAvgSize() * 1.5F).element(entity.getElement())
                                 .ability(entity.getAbility()).spawnEntity(entity.getOwner()).spawn(entity.world);
-                        ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 30 * entity.getAvgSize() * 2,
-                                entity.world.rand.nextGaussian() / 30 * entity.getAvgSize() * 2, entity.world.rand.nextGaussian() / 30 * entity.getAvgSize() * 2).time(6 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(rgb[0], rgb[1], rgb[2])
+                        ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 20 * entity.getAvgSize() * 3,
+                                entity.world.rand.nextGaussian() / 20 * entity.getAvgSize() * 3, entity.world.rand.nextGaussian() / 20 * entity.getAvgSize() * 3).time(6 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(rgb[0], rgb[1], rgb[2])
                                 .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).scale(entity.getAvgSize() * 1.5F).element(entity.getElement())
                                 .ability(entity.getAbility()).spawnEntity(entity.getOwner()).spawn(entity.world);
                         ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 15 * entity.getAvgSize() * 2,

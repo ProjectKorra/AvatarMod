@@ -34,7 +34,7 @@ public class ImmolateParticleHandler extends TickHandler {
 
         AbilityImmolate immolate = (AbilityImmolate) Abilities.get("immolate");
         int duration = data.getTickHandlerDuration(this);
-        float scale = 1.0F + Math.max(0, aD.getLevel()) * 0.25F;
+        float scale = 0.75F + Math.max(0, aD.getLevel()) * 0.125F;
 
         assert immolate != null;
         int immolateDuration = immolate.getProperty(Ability.DURATION, aD).intValue();
@@ -51,7 +51,7 @@ public class ImmolateParticleHandler extends TickHandler {
 
         //The particles take a while to disappear after the ability finishes- so you decrease the time the particles can spawn
         if (world.isRemote) {
-            for (int i = 0; i < 12 + Math.max(aD.getLevel(), 1) * 4; i++) {
+            for (int i = 0; i < 10 + Math.max(aD.getLevel(), 1) * 2; i++) {
 				int rRandom = fadeR < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeR * 2) : AvatarUtils.getRandomNumberInRange(fadeR / 2,
 						fadeR * 2);
 				int gRandom = fadeG < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeG * 2) : AvatarUtils.getRandomNumberInRange(fadeG / 2,
@@ -60,7 +60,8 @@ public class ImmolateParticleHandler extends TickHandler {
 						fadeB * 2);
 
                 double random = world.rand.nextGaussian();
-                Vector location = Vector.toRectangular(Math.toRadians(entity.rotationYaw + (i * 30) + (random * 2)), 0).times(aD.getLevel() < 1 ? 0.25 : aD.getLevel() * 0.25).withY(entity.getEyeHeight() - 0.7);
+                double radius = world.rand.nextDouble() * 0.2F * Math.max(aD.getLevel(), 0);
+                Vector location = Vector.toRectangular(Math.toRadians(entity.rotationYaw + (i * 30) + (random * 2)), 0).times(radius).withY(entity.getEyeHeight() - 0.7);
                 //Temporary solution to colour fading: randomising the colour between crimson and orangey-yellow for each particle.
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(location.plus(Vector.getEntityPos(entity)).toMinecraft()).time(4 + AvatarUtils.getRandomNumberInRange(1, 4)).
                         vel(world.rand.nextGaussian() / 40, world.rand.nextDouble() / 2, world.rand.nextGaussian() / 40)
