@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.bending.bending.fire;
 
 import com.crowsofwar.avatar.bending.bending.Ability;
+import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 
 public class AbilityFireRedirect extends Ability {
 
@@ -31,5 +32,20 @@ public class AbilityFireRedirect extends Ability {
 	@Override
 	public boolean isUtility() {
 		return true;
+	}
+
+	@Override
+	public int getCooldown(AbilityContext ctx) {
+		return 0;
+	}
+
+	@Override
+	public float getBurnOut(AbilityContext ctx) {
+		return 0;
+	}
+
+	@Override
+	public float getExhaustion(AbilityContext ctx) {
+		return 0;
 	}
 }

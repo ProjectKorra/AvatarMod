@@ -124,10 +124,10 @@ public class FlamethrowerUpdateTick extends TickHandler {
 
 
                 // Affect stats by power rating
-                size *= abilityData.getPowerRatingMult() * abilityData.getXpModifier();
+                size *= abilityData.getDamageMult() * abilityData.getXpModifier();
                 damage *= abilityData.getDamageMult() * abilityData.getXpModifier();
                 fireTime *= abilityData.getDamageMult() * abilityData.getXpModifier();
-                speedMult *= abilityData.getPowerRatingMult() * abilityData.getXpModifier();
+                speedMult *= abilityData.getDamageMult() * abilityData.getXpModifier();
                 randomness -= bender.calcPowerRating(Firebending.ID) / 100;
                 randomness *= (0.5 / abilityData.getPowerRatingMult()) * abilityData.getXpModifier();
                 randomness = randomness < 0 ? 0 : randomness;
@@ -141,12 +141,10 @@ public class FlamethrowerUpdateTick extends TickHandler {
                 Vector look = Vector.toRectangular(toRadians(yawRandom), toRadians(pitchRandom));
                 Vector start = look.times(range).plus(eye.minusY(0.45));
 
-
                 EntityFlames flames = new EntityFlames(world);
                 flames.setPosition(start);
                 flames.setOwner(entity);
                 flames.setDynamicSpreadingCollision(true);
-                flames.setEntitySize(0.1F, 0.1F);
                 flames.setAbility(new AbilityFlamethrower());
                 flames.setDamageSource(abilityData.isDynamicMasterLevel(AbilityTreePath.FIRST) ? AvatarDamageSource.FIRE.getDamageType() + "_dragonFire"
                         : AvatarDamageSource.FIRE.getDamageType() + "_flamethrower");
@@ -169,24 +167,9 @@ public class FlamethrowerUpdateTick extends TickHandler {
                 flames.setElement(new Firebending());
                 flames.setBehaviour(new FlamethrowerBehaviour());
                 flames.setChiHit(flamethrower.getProperty(CHI_HIT, abilityData).floatValue());
-
-                if (size >= 1.5) {
-                    for (int i = 0; i < 4; i++) {
-                        yawRandom = entity.rotationYaw + (Math.random() * 2 - 1) * randomness * 2;
-                        pitchRandom = entity.rotationPitch + (Math.random() * 2 - 1) * randomness * 2;
-                        look = Vector.toRectangular(toRadians(yawRandom), toRadians(pitchRandom));
-                        start = look.plus(eye.minusY(0.5));
-                        flames.setPosition(start);
-                        flames.setVelocity(look.times(speedMult / 1.5F));
-                        flames.setEntitySize(size / 6);
-                        if (!world.isRemote)
-                            world.spawnEntity(flames);
-                    }
-                } else {
-                    flames.setEntitySize(size / 4);
-                    if (!world.isRemote)
-                        world.spawnEntity(flames);
-                }
+                flames.setEntitySize(size / 4);
+                if (!world.isRemote)
+                    world.spawnEntity(flames);
 
                 //Particle code.
                 if (world.isRemote && (flamethrower.getCurrentTier(abilityData) < 4 || !isRaining)) {

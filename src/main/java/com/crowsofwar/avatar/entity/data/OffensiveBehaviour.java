@@ -63,4 +63,33 @@ public abstract class OffensiveBehaviour extends Behavior<EntityOffensive> {
 		}
 
 	}
+
+	public static class Redirect extends OffensiveBehaviour {
+
+		@Override
+		public OffensiveBehaviour onUpdate(EntityOffensive entity) {
+			//TODO: Change velocity based on entity position relative to owner's hand
+			return this;
+		}
+
+		@Override
+		public void fromBytes(PacketBuffer buf) {
+
+		}
+
+		@Override
+		public void toBytes(PacketBuffer buf) {
+
+		}
+
+		@Override
+		public void load(NBTTagCompound nbt) {
+
+		}
+
+		@Override
+		public void save(NBTTagCompound nbt) {
+
+		}
+	}
 }
