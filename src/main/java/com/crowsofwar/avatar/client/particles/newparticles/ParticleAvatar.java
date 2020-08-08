@@ -15,7 +15,6 @@ import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.google.common.collect.Queues;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
@@ -269,9 +268,9 @@ public abstract class ParticleAvatar extends Particle {
     public void setGlowing(boolean glow) {
         this.glow = glow;
     }
-    
-    public boolean glows(){
-    	return glow;
+
+    public boolean glows() {
+        return glow;
     }
 
     public void setSparkle(boolean sparkle) {
@@ -653,7 +652,7 @@ public abstract class ParticleAvatar extends Particle {
         ticksExisted = particleAge;
         //Colour shifting! Who needs colour fading, amirite?
         //Copied from my (FavouriteDragon) glorious light orb code.
-        if (colourShiftRange[0] != 0 && colourShiftInterval[0] != 0) {
+        if (colourShiftRange[0] != 0 && colourShiftInterval[0] != 0 && entity != null) {
             float rRange = colourShiftRange[0] / 2;
             float gRange = colourShiftRange[1] / 2;
             float bRange = colourShiftRange[2] / 2;
@@ -837,19 +836,20 @@ public abstract class ParticleAvatar extends Particle {
         } else {
             this.setBoundingBox(this.getBoundingBox().offset(x, y, z));
         }
-        
+
         if (!AvatarUtils.getAliveParticles().isEmpty()) {
             Queue<ParticleAvatar> particles = Queues.newArrayDeque();
-            for(Queue<ParticleAvatar> q : AvatarUtils.getEnemyParticles(this)){
-            	for(ParticleAvatar p : q){
-            		if(p.getBoundingBox().intersects(getBoundingBox()))
-            			particles.add(p);
-            	}
+            for (Queue<ParticleAvatar> q : AvatarUtils.getEnemyParticles(this)) {
+                for (ParticleAvatar p : q) {
+                    if (p.getBoundingBox().intersects(getBoundingBox()))
+                        particles.add(p);
+                }
             }
-            if (!particles.isEmpty()) {
+            //Rng reduces lag
+            if (!particles.isEmpty() && world.rand.nextBoolean()) {
                 //Makes particles spread out on collision, but also makes them push other particles
                 collidedWithParticle = true;
-                Vec3d hitVel = ((ParticleAvatar) particles.peek()).getVelocity();
+                Vec3d hitVel = particles.peek().getVelocity();
                 Vec3d pVel = getVelocity();
                 if (AvatarUtils.getMagnitude(hitVel) >= AvatarUtils.getMagnitude(pVel))
                     motionX = motionY = motionZ = 0;
@@ -875,11 +875,6 @@ public abstract class ParticleAvatar extends Particle {
     public void onCollideWithEntity(Entity entity) {
         if (entity != getEntity() && (getAbility() != null || this.element != null)) {
             if (entity instanceof EntityShield && ((EntityShield) entity).getOwner() != getEntity() || entity instanceof EntityWall || entity instanceof EntityWallSegment) {
-				/*if (getAbility() != null)
-					AvatarMod.network.sendToServer(new PacketSParticleCollideEvent(entity, this.getVelocity(), spawnEntity, getAbility()));
-				else
-					AvatarMod.network.sendToServer(new PacketSParticleCollideEvent(entity, this.getVelocity(), spawnEntity, element.getId()));
-				**/
                 collidedWithSolid = true;
             } else if (entity instanceof EntityThrowable || entity instanceof EntityArrow || entity instanceof EntityOffensive && ((EntityOffensive) entity).getOwner() != spawnEntity
                     || entity instanceof IOffensiveEntity && ((AvatarEntity) entity).getOwner() != spawnEntity) {
@@ -893,22 +888,9 @@ public abstract class ParticleAvatar extends Particle {
                     this.motionY += entity.motionY;
                     this.motionZ += entity.motionZ;
                 }
-                if (entity instanceof AvatarEntity)
-                    applyElementalContact((AvatarEntity) entity);
+//                if (entity instanceof AvatarEntity)
+//                    applyElementalContact((AvatarEntity) entity);
 
-                //if (entity != null && spawnEntity != null && getAbility() != null)
-                //	AvatarMod.network.sendToServer(new PacketSParticleCollideEvent(entity, this.getVelocity(), spawnEntity, getAbility()));
-            } else if (spawnEntity != null && getAbility() != null && entity != spawnEntity && !(entity instanceof AvatarEntity) || entity instanceof AvatarEntity && ((AvatarEntity) entity).getOwner() != spawnEntity && !collidedWithSolid) {
-                //Send packets
-                //TODO: Find a way to reduce lag
-				/*if (!entity.getIsInvulnerable()) {
-					if (entity instanceof EntityLivingBase) {
-						if (((EntityLivingBase) entity).attackable() && entity.canBeAttackedWithItem())
-							AvatarMod.network.sendToServer(new PacketSParticleCollideEvent(entity, this.getVelocity(), spawnEntity, getAbility()));
-
-					} else if (entity.canBeAttackedWithItem())
-						AvatarMod.network.sendToServer(new PacketSParticleCollideEvent(entity, this.getVelocity(), spawnEntity, getAbility()));
-				}**/
             }
         }
     }
@@ -1033,9 +1015,9 @@ public abstract class ParticleAvatar extends Particle {
     public void setBehaviour(ParticleAvatarBehaviour behaviour) {
         this.behaviour = behaviour;
     }
-    
-    public RenderLayer getCustomRenderLayer(){
-    	return null;
+
+    public RenderLayer getCustomRenderLayer() {
+        return null;
     }
 
     /**

@@ -30,6 +30,7 @@ public class FireRedirectHandler {
             if (data.hasBending(new Firebending())) {
                 if (AbilityData.get(entity, "fire_redirect") != null &&
                         Objects.requireNonNull(AbilityData.get(entity, "fire_redirect")).getLevel() > -1) {
+                    AbilityData abilityData = AbilityData.get(entity, "fire_redirect");
                     if (data.getAllStatusControls() != null) {
                         List<StatusControl> controls = data.getAllStatusControls();
                         if (!controls.isEmpty()) {
