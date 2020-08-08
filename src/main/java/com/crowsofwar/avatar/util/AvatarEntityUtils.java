@@ -70,8 +70,8 @@ public class AvatarEntityUtils {
                 break;
             case 4:
                 canSmelt = stack.getItem() instanceof ItemArmor || stack.getItem() instanceof ItemSword;
-			case 3:
-				canSmelt |= stack.getItem() instanceof ItemTool;
+            case 3:
+                canSmelt |= stack.getItem() instanceof ItemTool;
             case 2:
                 canSmelt |= stack.getItem() instanceof ItemFood;
             case 1:
@@ -240,6 +240,13 @@ public class AvatarEntityUtils {
         }
         return null;
 
+    }
+
+    public static Vec3d getMiddleOfAABB(AxisAlignedBB box) {
+        double x = box.maxX - box.minX;
+        double y = box.maxY - box.minY;
+        double z = box.maxZ - box.minZ;
+        return new Vec3d(box.minX + x / 2, box.minY + y / 2, box.minZ + z / 2);
     }
 
     //Same as the above method, but the bottom y value of the entity instead of the middle y value.

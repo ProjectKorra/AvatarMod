@@ -4,23 +4,32 @@ import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.fire.AbilityFireRedirect;
 import com.crowsofwar.avatar.bending.bending.fire.Firebending;
+import com.crowsofwar.avatar.bending.bending.fire.powermods.FireRedirectPowerModifier;
 import com.crowsofwar.avatar.client.controls.AvatarControl;
+import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.entity.EntityOffensive;
 import com.crowsofwar.avatar.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.entity.mob.EntityBender;
+import com.crowsofwar.avatar.util.AvatarEntityUtils;
+import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.StatusControl;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
+import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.block.BlockFire;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static com.crowsofwar.avatar.bending.bending.fire.AbilityFireRedirect.REDIRECT_TIER;
+import static com.crowsofwar.avatar.bending.bending.fire.AbilityFireRedirect.*;
 
 public class StatCtrlFireRedirect extends StatusControl {
 
@@ -45,6 +54,7 @@ public class StatCtrlFireRedirect extends StatusControl {
             float xp = redirect.getProperty(Ability.XP_USE, abilityData).floatValue();
             float radius = redirect.getProperty(Ability.RADIUS, abilityData).floatValue();
             int redirectTier = redirect.getProperty(REDIRECT_TIER, abilityData).intValue();
+            boolean applyInhibitors = false;
 
             xp *= abilityData.getDamageMult() * abilityData.getXpModifier();
 
@@ -60,15 +70,51 @@ public class StatCtrlFireRedirect extends StatusControl {
                     if (e.getTier() <= redirectTier) {
                         if (bender.consumeChi(chiCost)) {
                             e.setOwner(entity);
-                            e.setBehaviour(new OffensiveBehaviour.Redirect());
-                            abilityData.setAbilityCooldown(cooldown);
-                            abilityData.setBurnOut(burnout);
-                            if (entity instanceof EntityPlayer)
-                                ((EntityPlayer) entity).addExhaustion(exhaustion);
+                            if (redirect.getBooleanProperty(ABSORB_FIRE) &&
+                                    e.getTier() <= redirect.getProperty(ABSORB_TIER).intValue()) {
+                                e.setBehaviour(new AbsorbBehaviour());
+                            } else e.setBehaviour(new OffensiveBehaviour.Redirect());
                             abilityData.addXp(xp);
+                            applyInhibitors = true;
                         }
                     }
                 }
+            }
+
+            List<AxisAlignedBB> positions = world.getCollisionBoxes(entity, entity.getEntityBoundingBox().grow(radius, radius / 2, radius));
+
+            if (!positions.isEmpty() && redirect.getBooleanProperty(ABSORB_FIRE)) {
+                for (AxisAlignedBB blockBox : positions) {
+                    BlockPos pos = new BlockPos(AvatarEntityUtils.getMiddleOfAABB(blockBox));
+                    if (world.getBlockState(pos).getBlock() instanceof BlockFire) {
+                        FireRedirectPowerModifier powerMod = new FireRedirectPowerModifier();
+                        powerMod.setTicks(100);
+                        powerMod.setPowerRating(5);
+                        Objects.requireNonNull(data.getPowerRatingManager(Firebending.ID)).addModifier(powerMod, ctx);
+                        if (world.isRemote) {
+                            for (int i = 0; i < 3; i++) {
+                                ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(AvatarEntityUtils.getMiddleOfAABB(blockBox))
+                                        .target(Vector.getEyePos(entity).toMinecraft()).scale(0.25F + world.rand.nextFloat() / 2)
+                                        .clr(235 + AvatarUtils.getRandomNumberInRange(0, 20), 10 + AvatarUtils.getRandomNumberInRange(0, 20),
+                                                5 + AvatarUtils.getRandomNumberInRange(0, 10), 170 + AvatarUtils.getRandomNumberInRange(0, 40))
+                                        .spawn(world);
+                                ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(AvatarEntityUtils.getMiddleOfAABB(blockBox))
+                                        .target(Vector.getEyePos(entity).toMinecraft()).scale(0.25F + world.rand.nextFloat() / 2)
+                                        .clr(235 + AvatarUtils.getRandomNumberInRange(0, 20), 60 + AvatarUtils.getRandomNumberInRange(10, 40),
+                                                25 + AvatarUtils.getRandomNumberInRange(0, 20), 215 + AvatarUtils.getRandomNumberInRange(0, 40))
+                                        .spawn(world);
+                            }
+                        }
+                        applyInhibitors = true;
+                    }
+                }
+            }
+
+            if (applyInhibitors) {
+                abilityData.setAbilityCooldown(cooldown);
+                abilityData.addBurnout(burnout);
+                if (entity instanceof EntityPlayer)
+                    ((EntityPlayer) entity).addExhaustion(exhaustion);
             }
 
         }

@@ -113,7 +113,7 @@ public class StatCtrlThrowFireball extends StatusControl {
                 abilityData.setAbilityCooldown(cooldown);
                 if (entity instanceof EntityPlayer)
                     ((EntityPlayer) entity).addExhaustion(exhaustion);
-                abilityData.setBurnOut(burnOut);
+                abilityData.addBurnout(burnOut);
 
                 Vector vel = lookPos.minus(Vector.getEntityPos(fireball));
 

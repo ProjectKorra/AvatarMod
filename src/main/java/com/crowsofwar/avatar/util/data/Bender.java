@@ -233,7 +233,7 @@ public abstract class Bender {
                                 ((EntityPlayer) entity).addExhaustion(ability.getExhaustion(abilityCtx));
                             aD.setAbilityCooldown(ability.getCooldown(abilityCtx));
                             //We set the burnout last as it affects all of the other inhibiting stats
-                            aD.setBurnOut(ability.getBurnOut(abilityCtx));
+                            aD.addBurnout(ability.getBurnOut(abilityCtx));
 
                         } else {
                             Objects.requireNonNull(Bender.get(getEntity())).sendMessage("avatar.abilityCooldown");

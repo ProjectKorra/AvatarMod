@@ -70,7 +70,7 @@ public class StatCtrlFireSplit extends StatusControl {
                             if (bender.consumeChi(chiCost)) {
                                 ((EntityOffensive) e).Dissipate();
                                 abilityData.setAbilityCooldown(cooldown);
-                                abilityData.setBurnOut(burnout);
+                                abilityData.addBurnout(burnout);
                                 if (entity instanceof EntityPlayer)
                                     ((EntityPlayer) entity).addExhaustion(exhaustion);
                                 abilityData.addXp(xp);

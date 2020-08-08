@@ -272,7 +272,7 @@ public class StatCtrlFlameStrike extends StatusControl {
         }
 
         if (bender.consumeChi(chiCost)) {
-            abilityData.setBurnOut(abilityData.getBurnOut() + burnout);
+            abilityData.addBurnout(abilityData.getBurnOut() + burnout);
             if (entity instanceof EntityPlayer)
                 ((EntityPlayer) entity).addExhaustion(exhaustion);
 

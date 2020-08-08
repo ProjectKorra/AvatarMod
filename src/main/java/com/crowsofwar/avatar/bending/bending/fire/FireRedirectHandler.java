@@ -31,6 +31,11 @@ public class FireRedirectHandler {
                 if (AbilityData.get(entity, "fire_redirect") != null &&
                         Objects.requireNonNull(AbilityData.get(entity, "fire_redirect")).getLevel() > -1) {
                     AbilityData abilityData = AbilityData.get(entity, "fire_redirect");
+                    //Ok big brain time- do I want a tickhandler or what?
+                    //Think.
+                    //Ok. All fire projectiles tier 2 or less will get absorbed, along with nearby fire blocks.
+                    //Put this in the status control class. Quick absorbtion behaviour class necessary for those entities,
+                    //extinguish the blocks and spawn some particles for the fire blocks. 5 rating per block,lasts 30 seconds.
                     if (data.getAllStatusControls() != null) {
                         List<StatusControl> controls = data.getAllStatusControls();
                         if (!controls.isEmpty()) {
