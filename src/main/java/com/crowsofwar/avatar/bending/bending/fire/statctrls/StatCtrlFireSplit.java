@@ -1,8 +1,32 @@
 package com.crowsofwar.avatar.bending.bending.fire.statctrls;
 
+import com.crowsofwar.avatar.bending.bending.Abilities;
+import com.crowsofwar.avatar.bending.bending.Ability;
+import com.crowsofwar.avatar.bending.bending.fire.AbilityFireRedirect;
+import com.crowsofwar.avatar.bending.bending.fire.Firebending;
 import com.crowsofwar.avatar.client.controls.AvatarControl;
+import com.crowsofwar.avatar.entity.EntityOffensive;
+import com.crowsofwar.avatar.entity.data.OffensiveBehaviour;
+import com.crowsofwar.avatar.entity.mob.EntityBender;
+import com.crowsofwar.avatar.util.Raytrace;
+import com.crowsofwar.avatar.util.data.AbilityData;
+import com.crowsofwar.avatar.util.data.Bender;
+import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.StatusControl;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
+import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.EnumHand;
+import net.minecraft.world.World;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.crowsofwar.avatar.bending.bending.Ability.RANGE;
+import static com.crowsofwar.avatar.bending.bending.fire.AbilityFireRedirect.DESTROY_TIER;
+import static com.crowsofwar.avatar.bending.bending.fire.AbilityFireRedirect.REDIRECT_TIER;
 
 public class StatCtrlFireSplit extends StatusControl {
 
@@ -13,6 +37,52 @@ public class StatCtrlFireSplit extends StatusControl {
 
     @Override
     public boolean execute(BendingContext ctx) {
-        return false;
+        EntityLivingBase entity = ctx.getBenderEntity();
+        World world = ctx.getWorld();
+        BendingData data = ctx.getData();
+        Bender bender = ctx.getBender();
+        AbilityData abilityData = data.getAbilityData(new AbilityFireRedirect());
+        AbilityFireRedirect redirect = (AbilityFireRedirect) Abilities.get("fire_redirect");
+
+        if (redirect != null) {
+            int cooldown = redirect.getCooldown(abilityData);
+            float exhaustion = redirect.getExhaustion(abilityData);
+            float burnout = redirect.getBurnOut(abilityData);
+            float chiCost = redirect.getChiCost(abilityData);
+            float xp = redirect.getProperty(Ability.XP_USE, abilityData).floatValue();
+            float aimAssist = redirect.getProperty(Ability.AIM_ASSIST, abilityData).floatValue();
+            float range = redirect.getProperty(Ability.RANGE, abilityData).floatValue();
+            int destroyTier = redirect.getProperty(DESTROY_TIER, abilityData).intValue();
+
+            xp *= abilityData.getDamageMult() * abilityData.getXpModifier();
+
+            if (entity instanceof EntityBender || entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative())
+                chiCost = exhaustion = burnout = cooldown = 0;
+
+            List<Entity> destructables = Raytrace.entityRaytrace(world, Vector.getEyePos(entity), Vector.getLookRectangular(entity),
+                     range, aimAssist, entity1 -> entity1 instanceof EntityOffensive && ((EntityOffensive) entity1).canCollideWith(entity)
+            && ((EntityOffensive) entity1).getElement() instanceof Firebending);
+
+            if (!destructables.isEmpty()) {
+                for (Entity e : destructables) {
+                    if (e instanceof EntityOffensive) {
+                        if (((EntityOffensive) e).getTier() <= destroyTier) {
+                            if (bender.consumeChi(chiCost)) {
+                                ((EntityOffensive) e).Dissipate();
+                                abilityData.setAbilityCooldown(cooldown);
+                                abilityData.setBurnOut(burnout);
+                                if (entity instanceof EntityPlayer)
+                                    ((EntityPlayer) entity).addExhaustion(exhaustion);
+                                abilityData.addXp(xp);
+                                entity.swingArm(EnumHand.MAIN_HAND);
+                                //TODO: Spawn particles and maybe an entity
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+        return true;
     }
 }

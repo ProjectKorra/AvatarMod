@@ -80,8 +80,8 @@ public abstract class Ability {
             DURATION = "duration",
             CHARGE_TIME = "chargeTime",
             RADIUS = "radius",
-            EFFECT_RADIUS = "effect_radius",
-            AIM_ASSIST = "aim_assist",
+            EFFECT_RADIUS = "effectRadius",
+            AIM_ASSIST = "aimAssist",
             RANGE = "range";
     //Airbending stuff
     public static final String

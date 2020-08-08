@@ -71,7 +71,6 @@ public class StatCtrlFireRedirect extends StatusControl {
                 }
             }
 
-
         }
         return true;
     }
