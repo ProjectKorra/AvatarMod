@@ -151,6 +151,7 @@ public class AbilityFireball extends Ability {
                 fireball.setFireTime(fireTime);
                 fireball.setDamageSource("avatar_Fire_fireball");
                 fireball.setRGB(r, g, b);
+                fireball.setRedirectable(true);
                 fireball.setFade(fadeR, fadeG, fadeB);
                 fireball.setXp(getProperty(XP_HIT, ctx).floatValue());
                 if (!world.isRemote)

@@ -87,7 +87,7 @@ public class AbilityData {
 		this.burnOut = 0;
 		this.exhaustion = 0;
 		this.powerRating = 0;
-		this.shouldRegenBurnout = false;
+		this.shouldRegenBurnout = true;
 	}
 
 	public AbilityData(BendingData data, String abilityName, boolean switchPath) {
@@ -101,7 +101,7 @@ public class AbilityData {
 		this.burnOut = 0;
 		this.exhaustion = 0;
 		this.powerRating = 0;
-		this.shouldRegenBurnout = false;
+		this.shouldRegenBurnout = true;
 	}
 
 	/**

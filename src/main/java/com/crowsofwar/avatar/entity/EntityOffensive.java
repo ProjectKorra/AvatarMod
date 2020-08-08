@@ -64,6 +64,8 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
             DataSerializers.VARINT);
     private static final DataParameter<Integer> SYNC_FADE_B = EntityDataManager.createKey(EntityOffensive.class,
             DataSerializers.VARINT);
+    private static final DataParameter<Boolean> SYNC_REDIRECTABLE = EntityDataManager.createKey(EntityOffensive.class,
+            DataSerializers.BOOLEAN);
 
     /**
      * The fraction of the impact velocity that should be the maximum spread speed added on impact.
@@ -233,6 +235,14 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
         dataManager.set(SYNC_FADE_B, fade[2]);
     }
 
+    public void setRedirectable(boolean redirectable) {
+        dataManager.set(SYNC_REDIRECTABLE, redirectable);
+    }
+
+    public boolean isRedirectable() {
+        return dataManager.get(SYNC_REDIRECTABLE);
+    }
+
     //This just makes the methods easier to use.
     public void Explode() {
         Explode(world, this, getOwner());
@@ -262,6 +272,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
         dataManager.register(SYNC_FADE_R, 255);
         dataManager.register(SYNC_FADE_G, 255);
         dataManager.register(SYNC_FADE_B, 255);
+        dataManager.register(SYNC_REDIRECTABLE, false);
     }
 
     @Override

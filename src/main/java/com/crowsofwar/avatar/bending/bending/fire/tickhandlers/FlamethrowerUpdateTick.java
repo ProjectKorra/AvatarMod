@@ -165,6 +165,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
                 flames.setFireTime(fireTime);
                 flames.setPerformanceAmount((int) performanceAmount);
                 flames.setElement(new Firebending());
+                flames.setRedirectable(true);
                 flames.setBehaviour(new FlamethrowerBehaviour());
                 flames.setChiHit(flamethrower.getProperty(CHI_HIT, abilityData).floatValue());
                 flames.setEntitySize(size / 4);
