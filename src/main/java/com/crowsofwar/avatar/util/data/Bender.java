@@ -388,7 +388,7 @@ public abstract class Bender {
         if (entity.ticksExisted - entity.getLastAttackedEntityTime() > 3)
             data.getPerformance().update();
 
-        if (entity instanceof EntityPlayer && !world.isRemote && entity.ticksExisted % 20 == 0) {
+        if (entity instanceof EntityPlayer && !world.isRemote && entity.ticksExisted % 10 == 0) {
             syncPowerRating();
         }
 

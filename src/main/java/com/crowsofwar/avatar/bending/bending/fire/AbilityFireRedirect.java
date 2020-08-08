@@ -5,7 +5,6 @@ import com.crowsofwar.avatar.bending.bending.fire.powermods.FireRedirectPowerMod
 import com.crowsofwar.avatar.entity.EntityOffensive;
 import com.crowsofwar.avatar.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.util.Raytrace;
-import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
@@ -15,8 +14,13 @@ import net.minecraft.network.PacketBuffer;
 
 public class AbilityFireRedirect extends Ability {
 
-    public static final String DESTROY_TIER = "destroyTier", REDIRECT_TIER = "redirectTier",
-            ABSORB_FIRE = "absorbFires", ABSORB_TIER = "absorbTier";
+    public static final String
+            DESTROY_TIER = "destroyTier",
+            REDIRECT_TIER = "redirectTier",
+            ABSORB_FIRE = "absorbFires",
+            ABSORB_TIER = "absorbTier",
+            POWER_BOOST = "powerBoost",
+            POWER_DURATION = "powerDuration";
 
     public AbilityFireRedirect() {
         super(Firebending.ID, "fire_redirect");
@@ -25,7 +29,7 @@ public class AbilityFireRedirect extends Ability {
     @Override
     public void init() {
         super.init();
-        addProperties(DESTROY_TIER, REDIRECT_TIER, ABSORB_TIER, RADIUS, AIM_ASSIST, RANGE);
+        addProperties(DESTROY_TIER, REDIRECT_TIER, ABSORB_TIER, RADIUS, AIM_ASSIST, RANGE, POWER_BOOST, POWER_DURATION);
         addBooleanProperties(ABSORB_FIRE);
     }
 

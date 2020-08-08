@@ -108,7 +108,7 @@ public class AbilityFireShot extends Ability {
                 flames.rotationYaw = entity.rotationYaw;
                 flames.rotationPitch = entity.rotationPitch;
                 flames.setEntitySize(size);
-                flames.setDynamicSpreadingCollision(true);
+                flames.setDynamicSpreadingCollision(false);
                 flames.setReflect(getBooleanProperty(REFLECT, ctx));
                 flames.setAbility(this);
                 flames.setPerformanceAmount(performance);

@@ -1,5 +1,7 @@
 package com.crowsofwar.avatar.util.data;
 
+import com.crowsofwar.avatar.bending.bending.fire.powermods.FireRedirectPowerModifier;
+import com.crowsofwar.avatar.bending.bendingmultipliers.FirebendingSunModifier;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
 import net.minecraft.util.math.MathHelper;
 
@@ -37,6 +39,11 @@ public class PowerRatingManager {
 
 		double result = 0;
 		for (PowerRatingModifier modifier : modifiers) {
+			if (modifier instanceof FireRedirectPowerModifier) {
+				System.out.println(modifier);
+				System.out.println(modifier.get(ctx));
+				System.out.println(((FireRedirectPowerModifier) modifier).getId());
+			}
 			result += modifier.get(ctx);
 		}
 		return MathHelper.clamp(result, -1000, 1000);

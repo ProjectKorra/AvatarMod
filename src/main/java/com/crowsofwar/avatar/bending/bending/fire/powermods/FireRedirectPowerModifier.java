@@ -10,13 +10,33 @@ public class FireRedirectPowerModifier extends PowerRatingModifier {
 
 	private double powerrating;
 
+	//Debugging purposes
+	int id;
 	public FireRedirectPowerModifier() {
 		super();
 		this.powerrating = 5;
+		this.id = 0;
+	}
+	public FireRedirectPowerModifier(int id) {
+		super();
+		this.powerrating = 5;
+		this.id = id;
 	}
 
 	public void setPowerRating(double powerrating) {
 		this.powerrating = powerrating;
+	}
+
+	public double getPowerrating() {
+		return this.powerrating;
+	}
+
+	public int getTicks() {
+		return this.ticks;
+	}
+
+	public int getId() {
+		return this.id;
 	}
 
 	@Override
@@ -24,5 +44,15 @@ public class FireRedirectPowerModifier extends PowerRatingModifier {
 		return powerrating;
 	}
 
+	@Override
+	public void onAdded(BendingContext ctx) {
+		super.onAdded(ctx);
+		System.out.println("Nice");
+	}
 
+	@Override
+	public void onRemoval(BendingContext ctx) {
+		super.onRemoval(ctx);
+		System.out.println("Hm");
+	}
 }

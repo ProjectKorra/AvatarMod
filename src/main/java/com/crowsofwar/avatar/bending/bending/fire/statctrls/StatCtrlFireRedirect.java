@@ -10,7 +10,6 @@ import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.entity.EntityOffensive;
 import com.crowsofwar.avatar.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.entity.mob.EntityBender;
-import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
@@ -21,8 +20,9 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.BlockFire;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -46,6 +46,9 @@ public class StatCtrlFireRedirect extends StatusControl {
         AbilityData abilityData = data.getAbilityData(new AbilityFireRedirect());
         AbilityFireRedirect redirect = (AbilityFireRedirect) Abilities.get("fire_redirect");
 
+        if (abilityData.getAbilityCooldown() > 0 && !(entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()))
+            return true;
+
         if (redirect != null) {
             int cooldown = redirect.getCooldown(abilityData);
             float exhaustion = redirect.getExhaustion(abilityData);
@@ -65,6 +68,7 @@ public class StatCtrlFireRedirect extends StatusControl {
             redirectables = redirectables.stream().filter(entityOffensive -> entityOffensive.canCollideWith(entity) && entityOffensive.isRedirectable()
                     && entityOffensive.getElement() instanceof Firebending).collect(Collectors.toList());
 
+
             if (!redirectables.isEmpty()) {
                 for (EntityOffensive e : redirectables) {
                     if (e.getTier() <= redirectTier) {
@@ -81,34 +85,27 @@ public class StatCtrlFireRedirect extends StatusControl {
                 }
             }
 
-            List<AxisAlignedBB> positions = world.getCollisionBoxes(entity, entity.getEntityBoundingBox().grow(radius, radius / 2, radius));
 
-            if (!positions.isEmpty() && redirect.getBooleanProperty(ABSORB_FIRE)) {
-                for (AxisAlignedBB blockBox : positions) {
-                    BlockPos pos = new BlockPos(AvatarEntityUtils.getMiddleOfAABB(blockBox));
-                    if (world.getBlockState(pos).getBlock() instanceof BlockFire) {
-                        FireRedirectPowerModifier powerMod = new FireRedirectPowerModifier();
-                        powerMod.setTicks(100);
-                        powerMod.setPowerRating(5);
-                        Objects.requireNonNull(data.getPowerRatingManager(Firebending.ID)).addModifier(powerMod, ctx);
-                        if (world.isRemote) {
-                            for (int i = 0; i < 3; i++) {
-                                ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(AvatarEntityUtils.getMiddleOfAABB(blockBox))
-                                        .target(Vector.getEyePos(entity).toMinecraft()).scale(0.25F + world.rand.nextFloat() / 2)
-                                        .clr(235 + AvatarUtils.getRandomNumberInRange(0, 20), 10 + AvatarUtils.getRandomNumberInRange(0, 20),
-                                                5 + AvatarUtils.getRandomNumberInRange(0, 10), 170 + AvatarUtils.getRandomNumberInRange(0, 40))
-                                        .spawn(world);
-                                ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(AvatarEntityUtils.getMiddleOfAABB(blockBox))
-                                        .target(Vector.getEyePos(entity).toMinecraft()).scale(0.25F + world.rand.nextFloat() / 2)
-                                        .clr(235 + AvatarUtils.getRandomNumberInRange(0, 20), 60 + AvatarUtils.getRandomNumberInRange(10, 40),
-                                                25 + AvatarUtils.getRandomNumberInRange(0, 20), 215 + AvatarUtils.getRandomNumberInRange(0, 40))
-                                        .spawn(world);
-                            }
+            int id = 0;
+            if (redirect.getBooleanProperty(ABSORB_FIRE, abilityData)) {
+                for (int x = 0; x <= radius; x++) {
+                    for (int z = 0; z <= radius; z++) {
+                        for (int y = 0; y <= radius; y++) {
+                            BlockPos pos = new BlockPos(entity.posX + x, entity.posY + y, entity.posZ + z);
+                            applyInhibitors = handleAbsorption(pos, world, redirect, abilityData, ctx, data, entity, id++);
                         }
-                        applyInhibitors = true;
+                    }
+                }
+                for (int x = 0; x >= -radius; x--) {
+                    for (int z = 0; z >= -radius; z--) {
+                        for (int y = 0; y >= -radius; y--) {
+                            BlockPos pos = new BlockPos(entity.posX + x, entity.posY + y, entity.posZ + z);
+                            applyInhibitors = handleAbsorption(pos, world, redirect, abilityData, ctx, data, entity, id++);
+                        }
                     }
                 }
             }
+
 
             if (applyInhibitors) {
                 abilityData.setAbilityCooldown(cooldown);
@@ -119,5 +116,43 @@ public class StatCtrlFireRedirect extends StatusControl {
 
         }
         return true;
+    }
+
+
+    public boolean handleAbsorption(BlockPos pos, World world, AbilityFireRedirect redirect, AbilityData abilityData,
+                                    BendingContext ctx, BendingData data, EntityLivingBase entity, int id) {
+        if (world.getBlockState(pos).getBlock() instanceof BlockFire
+                || world.getBlockState(pos).getBlock() == Blocks.FIRE) {
+            if (world.isRemote) {
+                for (int h = 0; h < 12; h++) {
+                    Vec3d spawnPos = new Vec3d(pos.getX(), pos.getY() + 0.5, pos.getZ());
+                    Vec3d endPos = Vector.getEyePos(entity).toMinecraft();
+                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(pos.getX() + world.rand.nextGaussian() / 20,
+                            pos.getY() + 0.5, pos.getZ() + world.rand.nextGaussian() / 20)
+                            .vel(spawnPos.subtract(endPos).scale(0.05)).scale(0.125F + world.rand.nextFloat() / 20)
+                            .clr(235 + AvatarUtils.getRandomNumberInRange(0, 20), 10 + AvatarUtils.getRandomNumberInRange(0, 20),
+                                    5 + AvatarUtils.getRandomNumberInRange(0, 10), 170 + AvatarUtils.getRandomNumberInRange(0, 40))
+                            .time(12 + AvatarUtils.getRandomNumberInRange(0, 4)).spawn(world);
+                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(pos.getX() + world.rand.nextGaussian() / 20,
+                            pos.getY() + 0.5, pos.getZ() + world.rand.nextGaussian() / 20)
+                            .vel(spawnPos.subtract(endPos).scale(0.05)).scale(0.125F + world.rand.nextFloat() / 20)
+                            .clr(235 + AvatarUtils.getRandomNumberInRange(0, 20), 80 + AvatarUtils.getRandomNumberInRange(10, 40),
+                                    25 + AvatarUtils.getRandomNumberInRange(0, 20), 215 + AvatarUtils.getRandomNumberInRange(0, 40))
+                            .time(12 + AvatarUtils.getRandomNumberInRange(0, 4)).spawn(world);
+                }
+            } else {
+                world.setBlockToAir(pos);
+
+                FireRedirectPowerModifier powerMod = new FireRedirectPowerModifier(id);
+                powerMod.setTicks(redirect.getProperty(POWER_DURATION, abilityData).intValue());
+                powerMod.setPowerRating(redirect.getProperty(POWER_BOOST, abilityData).intValue());
+                Objects.requireNonNull(data.getPowerRatingManager(Firebending.ID)).addModifier(powerMod, ctx);
+
+
+            }
+            return true;
+        }
+        return false;
+
     }
 }
