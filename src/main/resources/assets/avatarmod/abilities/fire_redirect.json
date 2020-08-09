@@ -56,7 +56,7 @@
       "range": 4,
       "radius": 3,
       "powerBoost": 5,
-      "powerDuration": 100,
+      "powerDuration": 200,
       "absorbTier": 3,
       "absorbFires": true
     },

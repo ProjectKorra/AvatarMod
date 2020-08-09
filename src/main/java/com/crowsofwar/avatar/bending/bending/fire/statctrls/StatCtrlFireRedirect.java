@@ -85,14 +85,12 @@ public class StatCtrlFireRedirect extends StatusControl {
                 }
             }
 
-
-            int id = 0;
             if (redirect.getBooleanProperty(ABSORB_FIRE, abilityData)) {
                 for (int x = 0; x <= radius; x++) {
                     for (int z = 0; z <= radius; z++) {
                         for (int y = 0; y <= radius; y++) {
                             BlockPos pos = new BlockPos(entity.posX + x, entity.posY + y, entity.posZ + z);
-                            applyInhibitors = handleAbsorption(pos, world, redirect, abilityData, ctx, data, entity, id++);
+                            applyInhibitors = handleAbsorption(pos, world, redirect, abilityData, ctx, data, entity);
                         }
                     }
                 }
@@ -100,7 +98,7 @@ public class StatCtrlFireRedirect extends StatusControl {
                     for (int z = 0; z >= -radius; z--) {
                         for (int y = 0; y >= -radius; y--) {
                             BlockPos pos = new BlockPos(entity.posX + x, entity.posY + y, entity.posZ + z);
-                            applyInhibitors = handleAbsorption(pos, world, redirect, abilityData, ctx, data, entity, id++);
+                            applyInhibitors = handleAbsorption(pos, world, redirect, abilityData, ctx, data, entity);
                         }
                     }
                 }
@@ -120,30 +118,32 @@ public class StatCtrlFireRedirect extends StatusControl {
 
 
     public boolean handleAbsorption(BlockPos pos, World world, AbilityFireRedirect redirect, AbilityData abilityData,
-                                    BendingContext ctx, BendingData data, EntityLivingBase entity, int id) {
+                                    BendingContext ctx, BendingData data, EntityLivingBase entity) {
         if (world.getBlockState(pos).getBlock() instanceof BlockFire
                 || world.getBlockState(pos).getBlock() == Blocks.FIRE) {
             if (world.isRemote) {
                 for (int h = 0; h < 12; h++) {
                     Vec3d spawnPos = new Vec3d(pos.getX(), pos.getY() + 0.5, pos.getZ());
                     Vec3d endPos = Vector.getEyePos(entity).toMinecraft();
-                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(pos.getX() + world.rand.nextGaussian() / 20,
-                            pos.getY() + 0.5, pos.getZ() + world.rand.nextGaussian() / 20)
-                            .vel(spawnPos.subtract(endPos).scale(0.05)).scale(0.125F + world.rand.nextFloat() / 20)
+                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(pos.getX() + world.rand.nextGaussian() / 5,
+                            pos.getY() + 0.5 + world.rand.nextGaussian() / 5, pos.getZ() + world.rand.nextGaussian() / 5)
+                            .vel(endPos.subtract(spawnPos).scale(0.15).add(world.rand.nextGaussian() / 240,
+                                    world.rand.nextGaussian() / 240, world.rand.nextGaussian() / 240)).scale(0.5F + world.rand.nextFloat() / 10)
                             .clr(235 + AvatarUtils.getRandomNumberInRange(0, 20), 10 + AvatarUtils.getRandomNumberInRange(0, 20),
                                     5 + AvatarUtils.getRandomNumberInRange(0, 10), 170 + AvatarUtils.getRandomNumberInRange(0, 40))
-                            .time(12 + AvatarUtils.getRandomNumberInRange(0, 4)).spawn(world);
-                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(pos.getX() + world.rand.nextGaussian() / 20,
-                            pos.getY() + 0.5, pos.getZ() + world.rand.nextGaussian() / 20)
-                            .vel(spawnPos.subtract(endPos).scale(0.05)).scale(0.125F + world.rand.nextFloat() / 20)
+                            .time(4 + AvatarUtils.getRandomNumberInRange(0, 4)).glow(true).spawn(world);
+                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(pos.getX() + world.rand.nextGaussian() / 5,
+                            pos.getY() + 0.5 + world.rand.nextGaussian() / 5, pos.getZ() + world.rand.nextGaussian() / 5)
+                            .vel(endPos.subtract(spawnPos).scale(0.15).add(world.rand.nextGaussian() / 240,
+                                    world.rand.nextGaussian() / 240, world.rand.nextGaussian() / 240)).scale(0.5F + world.rand.nextFloat() / 10)
                             .clr(235 + AvatarUtils.getRandomNumberInRange(0, 20), 80 + AvatarUtils.getRandomNumberInRange(10, 40),
                                     25 + AvatarUtils.getRandomNumberInRange(0, 20), 215 + AvatarUtils.getRandomNumberInRange(0, 40))
-                            .time(12 + AvatarUtils.getRandomNumberInRange(0, 4)).spawn(world);
+                            .time(4 + AvatarUtils.getRandomNumberInRange(0, 4)).glow(true).spawn(world);
                 }
             } else {
                 world.setBlockToAir(pos);
 
-                FireRedirectPowerModifier powerMod = new FireRedirectPowerModifier(id);
+                FireRedirectPowerModifier powerMod = new FireRedirectPowerModifier();
                 powerMod.setTicks(redirect.getProperty(POWER_DURATION, abilityData).intValue());
                 powerMod.setPowerRating(redirect.getProperty(POWER_BOOST, abilityData).intValue());
                 Objects.requireNonNull(data.getPowerRatingManager(Firebending.ID)).addModifier(powerMod, ctx);

@@ -10,18 +10,10 @@ public class FireRedirectPowerModifier extends PowerRatingModifier {
 
 	private double powerrating;
 
-	//Debugging purposes
-	int id;
 
 	public FireRedirectPowerModifier() {
 		super();
 		this.powerrating = 5;
-		this.id = 0;
-	}
-	public FireRedirectPowerModifier(int id) {
-		super();
-		this.powerrating = 5;
-		this.id = id;
 	}
 
 	public void setPowerRating(double powerrating) {
@@ -34,10 +26,6 @@ public class FireRedirectPowerModifier extends PowerRatingModifier {
 
 	public int getTicks() {
 		return this.ticks;
-	}
-
-	public int getId() {
-		return this.id;
 	}
 
 	@Override
