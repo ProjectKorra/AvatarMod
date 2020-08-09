@@ -74,6 +74,9 @@ public abstract class OffensiveBehaviour extends Behavior<EntityOffensive> {
 
     public static class Redirect extends OffensiveBehaviour {
 
+        int ticks = 0;
+        boolean rotateRight = true;
+
         @Override
         public OffensiveBehaviour onUpdate(EntityOffensive entity) {
             if (entity.getOwner() != null) {
@@ -83,7 +86,6 @@ public abstract class OffensiveBehaviour extends Behavior<EntityOffensive> {
                     if (!AvatarMod.realFirstPersonRender2Compat && (PlayerViewRegistry.getPlayerViewMode(owner.getUniqueID()) >= 2 || PlayerViewRegistry.getPlayerViewMode(owner.getUniqueID()) <= -1)) {
                         height = owner.getPositionVector().add(0, 1.5, 0);
                         height = height.add(owner.getLookVec().scale(0.8));
-
 
                         rightSide = Vector.toRectangular(Math.toRadians(owner.rotationYaw + 90), 0).times(0.5).withY(0).toMinecraft();
                         leftSide = Vector.toRectangular(Math.toRadians(owner.rotationYaw - 90), 0).times(0.5).withY(0).toMinecraft();
@@ -97,15 +99,21 @@ public abstract class OffensiveBehaviour extends Behavior<EntityOffensive> {
                     }
                 } else {
                     height = owner.getPositionVector().add(0, 0.84, 0);
+
                     rightSide = Vector.toRectangular(Math.toRadians(owner.renderYawOffset + 90), 0).times(0.385).withY(0).toMinecraft();
                     leftSide = Vector.toRectangular(Math.toRadians(owner.renderYawOffset - 90), 0).times(0.385).withY(0).toMinecraft();
-
-
                 }
                 rightSide = rightSide.add(height);
                 leftSide = leftSide.add(height);
 
-                if (entity.getDistance(leftSide.x, leftSide.y, leftSide.z) >= entity.getDistance(rightSide.x, rightSide.y, rightSide.z)) {
+                if (entity.getDistance(leftSide.x, leftSide.y, leftSide.z) >= entity.getDistance(rightSide.x, rightSide.y, rightSide.z)
+                        && ticks <= 1)
+                    rotateRight = true;
+                else if (ticks <= 1)
+                    rotateRight = false;
+
+
+                if (rotateRight) {
                     int angle = (owner.ticksExisted % 360) * 10;
                     double radians = Math.toRadians(angle);
                     double x = Math.cos(radians);
@@ -113,8 +121,7 @@ public abstract class OffensiveBehaviour extends Behavior<EntityOffensive> {
                     double z = Math.sin(radians);
                     entity.setVelocity(new Vec3d(x + owner.posX, y + owner.getEntityBoundingBox().minY,
                             z + entity.posZ).subtract(entity.getPositionVector()).scale(0.25));
-                }
-                else {
+                } else {
                     int angle = (owner.ticksExisted % 360) * -10;
                     double radians = Math.toRadians(angle);
                     double x = Math.cos(radians);
@@ -122,10 +129,11 @@ public abstract class OffensiveBehaviour extends Behavior<EntityOffensive> {
                     double z = Math.sin(radians);
                     entity.setVelocity(new Vec3d(x + owner.posX, y + owner.getEntityBoundingBox().minY,
                             z + entity.posZ).subtract(entity.getPositionVector()).scale(0.25));
+
                 }
 
             }
-            //TODO: Change velocity based on entity position relative to owner's hand
+            ticks++;
             return this;
         }
 
