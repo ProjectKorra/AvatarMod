@@ -12,6 +12,7 @@ public class FireRedirectPowerModifier extends PowerRatingModifier {
 
 	//Debugging purposes
 	int id;
+
 	public FireRedirectPowerModifier() {
 		super();
 		this.powerrating = 5;
