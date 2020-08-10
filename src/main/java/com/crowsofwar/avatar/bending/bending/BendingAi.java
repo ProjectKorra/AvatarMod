@@ -68,7 +68,7 @@ public abstract class BendingAi extends EntityAIBase {
 
     @Override
     public boolean shouldContinueExecuting() {
-        return false;
+        return applyCustomBehaviour();
     }
 
     @Override
@@ -120,7 +120,7 @@ public abstract class BendingAi extends EntityAIBase {
                 entity.getDistanceSq(target) < getTargetRange() * getTargetRange();
         return targetInRange && shouldExec();
     }
-    
+
 
     protected abstract boolean shouldExec();
 
