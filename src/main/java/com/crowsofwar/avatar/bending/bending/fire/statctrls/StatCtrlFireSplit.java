@@ -5,9 +5,11 @@ import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.fire.AbilityFireRedirect;
 import com.crowsofwar.avatar.bending.bending.fire.Firebending;
 import com.crowsofwar.avatar.client.controls.AvatarControl;
+import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.entity.EntityOffensive;
 import com.crowsofwar.avatar.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.entity.mob.EntityBender;
+import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.Raytrace;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
@@ -79,6 +81,18 @@ public class StatCtrlFireSplit extends StatusControl {
                             }
                         }
                     }
+                }
+                for (int i = 0; i < 12; i++) {
+                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).vel(entity.getLookVec().scale(range / 2))
+                            .time((int) range + AvatarUtils.getRandomNumberInRange(0, 4)).scale(0125F + range / 5)
+                            .pos(Vector.getEyePos(entity).toMinecraft()).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
+                            60 + AvatarUtils.getRandomNumberInRange(10, 40), 25 + AvatarUtils.getRandomNumberInRange(0, 10),
+                            170 + AvatarUtils.getRandomNumberInRange(0, 20)).glow(true).spawn(world);
+                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).vel(entity.getLookVec().scale(range / 2))
+                            .time((int) range + AvatarUtils.getRandomNumberInRange(0, 4)).scale(0125F + range / 5)
+                            .pos(Vector.getEyePos(entity).toMinecraft()).clr(255,
+                            20 + AvatarUtils.getRandomNumberInRange(0, 20), 5 + AvatarUtils.getRandomNumberInRange(0, 10),
+                            120 + AvatarUtils.getRandomNumberInRange(0, 20)).glow(true).spawn(world);
                 }
             }
 
