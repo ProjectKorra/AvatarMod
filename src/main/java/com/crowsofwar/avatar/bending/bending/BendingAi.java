@@ -17,19 +17,25 @@
 package com.crowsofwar.avatar.bending.bending;
 
 import com.crowsofwar.avatar.util.Raytrace;
+import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.StatusControl;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
+import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.util.math.Vec3d;
 
-import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Random;
 
 import static com.crowsofwar.avatar.bending.bending.BendingAi.AbilityType.*;
+import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
+import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
+import static java.lang.Math.toDegrees;
 
 /**
  * Represents behavior needed for use of an ability by a mob. When most
@@ -74,34 +80,50 @@ public abstract class BendingAi extends EntityAIBase {
     @Override
     public void resetTask() {
         timeExecuting = 0;
+        cleanUp();
     }
 
     public boolean applyCustomBehaviour() {
         if (Arrays.stream(getAbilityTypes()).anyMatch(abilityType -> abilityType == PROJECTILE
                 || abilityType == OFFENSIVE)) {
-            lookAtTarget();
-            execAbility();
-            if (getStatusControl() != null) {
-                if (timeExecuting >= getWaitDuration()) {
-                    execStatusControl(getStatusControl());
-                    return !isConstant();
-                }
+            if (entity.getAttackTarget() == null)
+                return false;
+
+            lookAtAttackTarget();
+            if (shouldExecAbility())
+                execAbility();
+
+            for (StatusControl sc : getStatusControls()) {
+                if (shouldExecStatCtrl(sc))
+                    execStatusControl(sc);
             }
+
+            return !isConstant();
         } else if (Arrays.stream(getAbilityTypes()).anyMatch(abilityType -> abilityType == MOBILITY)) {
-            execAbility();
             Random rand = entity.world.rand;
+            if (shouldExecAbility())
+                execAbility();
             if (timeExecuting >= getWaitDuration()) {
-                entity.getLookHelper().setLookPosition(entity.posX + rand.nextGaussian(),
-                        entity.posY + entity.getEyeHeight() + rand.nextGaussian(), entity.posZ + rand.nextGaussian(),
-                        entity.getHorizontalFaceSpeed(), entity.getVerticalFaceSpeed());
-                if (getStatusControl() != null) {
-                    execStatusControl(getStatusControl());
-                    return false;
+                lookAtTarget(entity.getPositionVector().add(rand.nextGaussian() / 2, entity.getEyeHeight() + rand.nextGaussian() / 2,
+                        rand.nextGaussian() / 2));
+                for (StatusControl sc : getStatusControls()) {
+                    if (shouldExecStatCtrl(sc))
+                        execStatusControl(sc);
                 }
+                return false;
+
             }
         } else {
-            execAbility();
+            if (shouldExecAbility())
+                execAbility();
+            for (StatusControl sc : getStatusControls()) {
+                if (shouldExecStatCtrl(sc))
+                    execStatusControl(sc);
+            }
             return false;
+        }
+        if (timeExecuting >= getTotalDuration()) {
+            cleanUp();
         }
         return timeExecuting < getTotalDuration();
 
@@ -117,7 +139,8 @@ public abstract class BendingAi extends EntityAIBase {
     public final boolean shouldExecute() {
         EntityLivingBase target = entity.getAttackTarget();
         boolean targetInRange = target == null ||
-                entity.getDistanceSq(target) < getTargetRange() * getTargetRange();
+                entity.getDistanceSq(target) < getMaxTargetRange() * getMaxTargetRange() &&
+                entity.getDistanceSq(target) > getMinTargetRange() * getMinTargetRange();
         return targetInRange && shouldExec();
     }
 
@@ -130,7 +153,8 @@ public abstract class BendingAi extends EntityAIBase {
      * Executes the ability's main code (the part used for players)
      */
     protected void execAbility() {
-        bender.executeAbility(ability, false);
+        if (Objects.requireNonNull(AbilityData.get(entity, ability.getName())).getAbilityCooldown() <= 0)
+            bender.executeAbility(ability, false);
     }
 
     /**
@@ -152,24 +176,61 @@ public abstract class BendingAi extends EntityAIBase {
         };
     }
 
-    public int getTargetRange() {
-        return 12;
+    public float getMaxTargetRange() {
+        return 8;
+    }
+
+    public float getMinTargetRange() {
+        return 2;
     }
 
     public Ability getAbility() {
         return ability;
     }
 
-    @Nullable
-    public StatusControl getStatusControl() {
-        return null;
+    //TODO: Redo status controls to be an array,
+    //and have a function per status control that defines if it should execute
+    public void cleanUp() {
+        for (StatusControl sc : getStatusControls())
+            if (bender.getData().hasStatusControl(sc))
+                bender.getData().removeStatusControl(sc);
+
     }
 
-    public void lookAtTarget() {
+    public boolean shouldExecAbility() {
+        return true;
+    }
+
+    public StatusControl[] getStatusControls() {
+        return new StatusControl[0];
+    }
+
+    public boolean shouldExecStatCtrl(StatusControl statusControl) {
+        return timeExecuting >= getWaitDuration();
+    }
+
+    public void lookAtAttackTarget() {
         if (entity.getAttackTarget() != null) {
             EntityLivingBase target = entity.getAttackTarget();
+
+            Vector rotations = getRotationTo(getEntityPos(entity), getEntityPos(entity.getAttackTarget()));
+            entity.rotationYaw = (float) toDegrees(rotations.y());
+            entity.rotationPitch = (float) toDegrees(rotations.x());
+
             entity.getLookHelper().setLookPosition(target.posX, target.posY + target.getEyeHeight(), target.posZ,
-                    entity.getHorizontalFaceSpeed(), entity.getVerticalFaceSpeed());
+                    entity.getHorizontalFaceSpeed() * 5, entity.getVerticalFaceSpeed() * 5);
+        }
+    }
+
+    public void lookAtTarget(Vec3d target) {
+        if (entity.getAttackTarget() != null) {
+
+            Vector rotations = getRotationTo(getEntityPos(entity), new Vector(target));
+            entity.rotationYaw = (float) toDegrees(rotations.y());
+            entity.rotationPitch = (float) toDegrees(rotations.x());
+
+            entity.getLookHelper().setLookPosition(target.x, target.y, target.z,
+                    entity.getHorizontalFaceSpeed() * 5, entity.getVerticalFaceSpeed() * 5);
         }
     }
 

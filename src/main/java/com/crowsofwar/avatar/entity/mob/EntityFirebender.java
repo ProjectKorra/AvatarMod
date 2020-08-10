@@ -74,49 +74,42 @@ public class EntityFirebender extends EntityHumanBender {
 				getData().getAbilityData("flamethrower").setLevel(0);
 				getData().getAbilityData("flame_strike").setLevel(0);
 				getData().getAbilityData("fire_shot").setLevel(1);
-			//	getData().getAbilityData("inferno_punch").setLevel(-1);
 				break;
 			case 3:
 				getData().getAbilityData("fireball").setLevel(-1);
 				getData().getAbilityData("flamethrower").setLevel(0);
 				getData().getAbilityData("flame_strike").setLevel(1);
 				getData().getAbilityData("fire_shot").setLevel(1);
-			//	getData().getAbilityData("inferno_punch").setLevel(-1);
 				break;
 			case 4:
 				getData().getAbilityData("fireball").setLevel(0);
 				getData().getAbilityData("flamethrower").setLevel(1);
 				getData().getAbilityData("flame_strike").setLevel(1);
 				getData().getAbilityData("fire_shot").setLevel(2);
-			//	getData().getAbilityData("inferno_punch").setLevel(0);
 				break;
 			case 5:
 				getData().getAbilityData("fireball").setLevel(1);
 				getData().getAbilityData("flamethrower").setLevel(2);
 				getData().getAbilityData("flame_strike").setLevel(2);
 				getData().getAbilityData("fire_shot").setPath(fireShotPath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
-			//	getData().getAbilityData("inferno_punch").setLevel(1);
 				break;
 			case 6:
 				getData().getAbilityData("fireball").setLevel(2);
 				getData().getAbilityData("flamethrower").setLevel(2);
 				getData().getAbilityData("flame_strike").setPath(fireBlastPath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
 				getData().getAbilityData("fire_shot").setPath(fireShotPath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
-			//	getData().getAbilityData("inferno_punch").setLevel(1);
 				break;
 			case 7:
 				getData().getAbilityData("fireball").setPath(fireballPath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
 				getData().getAbilityData("flamethrower").setPath(flamethrowerPath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
 				getData().getAbilityData("flame_strike").setPath(fireBlastPath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
 				getData().getAbilityData("fire_shot").setPath(fireShotPath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
-			//	getData().getAbilityData("inferno_punch").setLevel(2);
 				break;
 			default:
 				getData().getAbilityData("fireball").setLevel(-1);
 				getData().getAbilityData("flamethrower").setLevel(-1);
 				getData().getAbilityData("flame_strike").setLevel(0);
 				getData().getAbilityData("fire_shot").setLevel(0);
-			//	getData().getAbilityData("inferno_punch").setLevel(-1);
 				break;
 		}
 
@@ -145,7 +138,7 @@ public class EntityFirebender extends EntityHumanBender {
 		this.tasks.addTask(2 , Objects.requireNonNull(Abilities.getAi("flamethrower", this, getBender())));
 		this.tasks.addTask(2, Objects.requireNonNull(Abilities.getAi("fireball", this, getBender())));
 		this.tasks.addTask(1, Objects.requireNonNull(Abilities.getAi("fire_shot", this, getBender())));
-		//this.tasks.addTask(2, Objects.requireNonNull(Abilities.getAi("fire_blast", this, getBender())));
+		//this.tasks.addTask(2);
 		this.tasks.addTask(5, new EntityAIAttackMelee(this, 1.3, true));
 	}
 

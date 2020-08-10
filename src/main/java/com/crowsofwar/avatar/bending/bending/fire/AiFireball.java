@@ -18,88 +18,105 @@ package com.crowsofwar.avatar.bending.bending.fire;
 
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingAi;
-import com.crowsofwar.avatar.util.data.Bender;
-import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.entity.AvatarEntity;
 import com.crowsofwar.avatar.entity.EntityFireball;
 import com.crowsofwar.avatar.entity.data.FireballBehavior;
-import com.crowsofwar.gorecore.util.Vector;
+import com.crowsofwar.avatar.util.data.AbilityData;
+import com.crowsofwar.avatar.util.data.Bender;
+import com.crowsofwar.avatar.util.data.StatusControl;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 
 import static com.crowsofwar.avatar.util.data.StatusControlController.THROW_FIREBALL;
-import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
-import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
-import static java.lang.Math.toDegrees;
 
 /**
  * @author CrowsOfWar
  */
 public class AiFireball extends BendingAi {
 
-	private int timeExecuting;
 
-	/**
-	 * @param ability
-	 * @param entity
-	 * @param bender
-	 */
-	protected AiFireball(Ability ability, EntityLiving entity, Bender bender) {
-		super(ability, entity, bender);
-		timeExecuting = 0;
-		setMutexBits(2);
-	}
+    /**
+     * @param ability The Ability
+     * @param entity  The entity
+     * @param bender  The bender, from the entity
+     */
+    protected AiFireball(Ability ability, EntityLiving entity, Bender bender) {
+        super(ability, entity, bender);
+        setMutexBits(3);
+    }
 
-	@Override
-	protected void startExec() {
-		BendingData data = bender.getData();
-		execAbility();
-		data.getAbilityData(ability).setAbilityCooldown(120);
-	}
+    @Override
+    protected void startExec() {
+        execAbility();
+    }
 
-	@Override
-	public boolean shouldContinueExecuting() {
 
-		if (entity.getAttackTarget() == null) return false;
+    @Override
+    protected boolean shouldExec() {
+        EntityLivingBase target = entity.getAttackTarget();
+        return target != null;
+    }
 
-		Vector rotations = getRotationTo(getEntityPos(entity), getEntityPos(entity.getAttackTarget()));
-		entity.rotationYaw = (float) toDegrees(rotations.y());
-		entity.rotationPitch = (float) toDegrees(rotations.x());
+    @Override
+    public void resetTask() {
+        super.resetTask();
 
-		if (timeExecuting >= 15) {
-			execStatusControl(THROW_FIREBALL);
-			timeExecuting = 0;
-			return false;
-		} else {
-			return true;
-		}
+        for (int i = 0; i < 3; i++) {
+            EntityFireball fireball = AvatarEntity.lookupEntity(entity.world, EntityFireball.class, //
+                    fire -> (fire.getBehaviour() instanceof FireballBehavior.PlayerControlled
+                            || fire.getBehaviour() instanceof AbilityFireball.FireballOrbitController)
+                            && fire.getOwner() == entity);
 
-	}
+            if (fireball != null) {
+                fireball.setDead();
+                cleanUp();
+            }
+        }
+    }
 
-	@Override
-	protected boolean shouldExec() {
-		EntityLivingBase target = entity.getAttackTarget();
-		return target != null && entity.getDistance(target) > 4
-				&& bender.getData().getAbilityData(ability).getAbilityCooldown() == 0 && entity.getRNG().nextBoolean();
-	}
+    @Override
+    public int getTotalDuration() {
+        AbilityData abilityData = bender.getData().getAbilityData(ability);
+        int duration = 40;
+        float maxSize = ability.getProperty(Ability.MAX_SIZE, abilityData).floatValue();
+        float size = ability.getProperty(Ability.SIZE, abilityData).floatValue();
+        int fireballs = (int) entity.world.getEntitiesWithinAABB(EntityFireball.class, entity.getEntityBoundingBox().grow(3.5, 3, 3.5))
+                .stream().filter(entityFireball -> entityFireball.getOwner() == entity && entityFireball.getBehaviour()
+                        instanceof FireballBehavior.PlayerControlled).count();
+        if (maxSize > size)
+            duration *= (maxSize / size);
+        duration *= Math.max(1, fireballs);
+        return duration;
+    }
 
-	@Override
-	public void updateTask() {
-		timeExecuting++;
-	}
+    @Override
+    public int getWaitDuration() {
+        return 15;
+    }
 
-	@Override
-	public void resetTask() {
+    @Override
+    public StatusControl[] getStatusControls() {
+        StatusControl[] controls = new StatusControl[1];
+        controls[0] = THROW_FIREBALL;
+        return controls;
+    }
 
-		EntityFireball fireball = AvatarEntity.lookupEntity(entity.world, EntityFireball.class, //
-				fire -> fire.getBehaviour() instanceof FireballBehavior.PlayerControlled
-						&& fire.getOwner() == entity);
+    @Override
+    public boolean shouldExecStatCtrl(StatusControl statusControl) {
+        if (statusControl == THROW_FIREBALL) {
+            return timeExecuting > 0 && timeExecuting % getWaitDuration() == 0
+                    && ability.getCooldown(bender.getData().getAbilityData(ability)) <= 0;
+        }
+        return super.shouldExecStatCtrl(statusControl);
+    }
 
-		if (fireball != null) {
-			fireball.setDead();
-			bender.getData().removeStatusControl(THROW_FIREBALL);
-		}
+    @Override
+    public float getMaxTargetRange() {
+        return 10;
+    }
 
-	}
-
+    @Override
+    public float getMinTargetRange() {
+        return 2.5F;
+    }
 }

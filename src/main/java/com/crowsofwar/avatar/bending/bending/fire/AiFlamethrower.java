@@ -18,79 +18,81 @@ package com.crowsofwar.avatar.bending.bending.fire;
 
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingAi;
-import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
-import com.crowsofwar.avatar.util.data.BendingData;
-import com.crowsofwar.gorecore.util.Vector;
+import com.crowsofwar.avatar.util.data.StatusControl;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 
 import static com.crowsofwar.avatar.util.data.StatusControlController.START_FLAMETHROW;
 import static com.crowsofwar.avatar.util.data.StatusControlController.STOP_FLAMETHROW;
 import static com.crowsofwar.avatar.util.data.TickHandlerController.FLAMETHROWER;
-import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
-import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
-import static java.lang.Math.toDegrees;
 
 /**
  * @author CrowsOfWar
  */
 public class AiFlamethrower extends BendingAi {
 
-	protected AiFlamethrower(Ability ability, EntityLiving entity, Bender bender) {
-		super(ability, entity, bender);
-		setMutexBits(2);
-	}
-
-	@Override
-	public void resetTask() {
-		super.resetTask();
-		bender.getData().removeStatusControl(START_FLAMETHROW);
-		bender.getData().removeTickHandler(FLAMETHROWER);
-		bender.getData().removeStatusControl(STOP_FLAMETHROW);
-	}
-
-	@Override
-	public boolean shouldContinueExecuting() {
+    protected AiFlamethrower(Ability ability, EntityLiving entity, Bender bender) {
+        super(ability, entity, bender);
+        setMutexBits(2);
+    }
 
 
-		if (entity.getAttackTarget() == null || AbilityData.get(bender.getEntity(), "flamethrower").getLevel() < 0) return false;
+    @Override
+    protected boolean shouldExec() {
+        EntityLivingBase target = entity.getAttackTarget();
+        double chance = 1 - timeExecuting / (double) getTotalDuration();
+        //Chance to end while using it
+        return target != null && Math.random() / 2 < chance;
+    }
 
-		Vector rotations = getRotationTo(getEntityPos(entity), getEntityPos(entity.getAttackTarget()));
-		BendingData data = BendingData.getFromEntity(entity);
-		entity.rotationYaw = (float) toDegrees(rotations.y());
-		entity.rotationPitch = (float) toDegrees(rotations.x());
+    @Override
+    protected void startExec() {
+        cleanUp();
+        execAbility();
+    }
 
-		if (timeExecuting == 1) {
-			if (!entity.world.isRemote) {
-				execStatusControl(START_FLAMETHROW);
-			}
-		}
+    @Override
+    public boolean isConstant() {
+        return true;
+    }
 
-		if (timeExecuting >= 120) {
-			execStatusControl(STOP_FLAMETHROW);
-			bender.getData().removeStatusControl(START_FLAMETHROW);
-			bender.getData().removeTickHandler(FLAMETHROWER);
+    @Override
+    public StatusControl[] getStatusControls() {
+        StatusControl[] controls = new StatusControl[2];
+        controls[0] = START_FLAMETHROW;
+        controls[1] = STOP_FLAMETHROW;
+        return controls;
+    }
 
-			bender.getData().getAbilityData(ability).setAbilityCooldown(80);
-			return false;
-		}
+    @Override
+    public boolean shouldExecStatCtrl(StatusControl statusControl) {
+        if (statusControl == START_FLAMETHROW)
+            return timeExecuting >= getWaitDuration();
+        if (statusControl == STOP_FLAMETHROW)
+            return timeExecuting >= getTotalDuration();
+        return super.shouldExecStatCtrl(statusControl);
+    }
 
-		return true;
+    @Override
+    public boolean shouldExecAbility() {
+        return timeExecuting <= 1;
+    }
 
-	}
+    @Override
+    public int getWaitDuration() {
+        return 5;
+    }
 
-	@Override
-	protected boolean shouldExec() {
-		int amount = Math.max(bender.getData().getAbilityData(new AbilityFlamethrower()).getLevel(), 0) + 7;
-		EntityLivingBase target = entity.getAttackTarget();
-		return target != null && entity.getDistance(target) < amount;
-	}
+    @Override
+    public int getTotalDuration() {
+        return 80;
+    }
 
-	@Override
-	protected void startExec() {
-		timeExecuting = 0;
-		execAbility();
-	}
-
+    @Override
+    public void cleanUp() {
+        super.cleanUp();
+        bender.getData().removeTickHandler(FLAMETHROWER
+        );
+    }
 }
