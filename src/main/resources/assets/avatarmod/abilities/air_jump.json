@@ -4,47 +4,67 @@
     "level1": {
       "tier": 1,
       "chiCost": 3.0,
-      "cooldown": 0,
+      "cooldown": 40,
       "exhaustion": 2.0,
       "burnOut": 10.0,
-      "burnOutRecoverTick": 0.5,
-      "performanceAmount": 20
+      "burnOutRecoverTick": 0.18,
+      "performanceAmount": 10,
+      "effectSize": 0.5,
+      "knockback": 0.5,
+      "jumpHeight": 2,
+      "numberOfJumps": 1,
+      "groundPound": false
     },
     "level2": {
       "tier": 1,
       "chiCost": 3.25,
-      "cooldown": 5,
+      "cooldown": 50,
       "exhaustion": 2.5,
       "burnOut": 15.0,
-      "burnOutRecoverTick": 0.75,
-      "performanceAmount": 25
+      "burnOutRecoverTick": 0.22,
+      "performanceAmount": 15,
+      "effectSize": 0.75,
+      "jumpHeight": 3,
+      "knockback": 1.0
     },
     "level3": {
       "tier": 2,
       "chiCost": 3.5,
-      "cooldown": 10,
+      "cooldown": 60,
       "exhaustion": 3.0,
       "burnOut": 20.0,
-      "burnOutRecoverTick": 1.0,
-      "performanceAmount": 30
+      "burnOutRecoverTick": 0.25,
+      "performanceAmount": 20,
+      "effectSize": 1.0,
+      "jumpHeight": 4,
+      "knockback": 1.5
     },
     "level4_1": {
       "tier": 3,
-      "chiCost": 3.75,
-      "cooldown": 15,
+      "chiCost": 6.0,
+      "cooldown": 50,
       "exhaustion": 3.5,
-      "burnOut": 25.0,
-      "burnOutRecoverTick": 1.25,
-      "performanceAmount": 35
+      "burnOut": 27.0,
+      "burnOutRecoverTick": 0.4,
+      "performanceAmount": 25,
+      "effectSize": 1.25,
+      "jumpHeight": 5.5,
+      "numberOfJumps": 2,
+      "knockback": 2
     },
     "level4_2": {
       "tier": 3,
       "chiCost": 4.0,
-      "cooldown": 20,
+      "cooldown": 45,
       "exhaustion": 4.0,
       "burnOut": 30.0,
-      "burnOutRecoverTick": 1.5,
-      "performanceAmount": 40
+      "burnOutRecoverTick": 0.4,
+      "performanceAmount": 27,
+      "effectSize": 1.5,
+      "jumpHeight": 6,
+      "numberOfJumps": 1,
+      "knockback": 3,
+      "groundPound": true
     }
   }
 }
