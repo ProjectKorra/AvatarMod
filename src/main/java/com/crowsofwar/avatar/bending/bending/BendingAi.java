@@ -76,14 +76,16 @@ public abstract class BendingAi extends EntityAIBase {
         timeExecuting = 0;
     }
 
-    public void applyCustomBehaviour() {
+    public boolean applyCustomBehaviour() {
         if (Arrays.stream(getAbilityTypes()).anyMatch(abilityType -> abilityType == PROJECTILE
                 || abilityType == OFFENSIVE)) {
             lookAtTarget();
             execAbility();
             if (getStatusControl() != null) {
-                if (timeExecuting >= getWaitDuration())
+                if (timeExecuting >= getWaitDuration()) {
                     execStatusControl(getStatusControl());
+                    return !isConstant();
+                }
             }
         } else if (Arrays.stream(getAbilityTypes()).anyMatch(abilityType -> abilityType == MOBILITY)) {
             execAbility();
@@ -92,18 +94,22 @@ public abstract class BendingAi extends EntityAIBase {
                 entity.getLookHelper().setLookPosition(entity.posX + rand.nextGaussian(),
                         entity.posY + entity.getEyeHeight() + rand.nextGaussian(), entity.posZ + rand.nextGaussian(),
                         entity.getHorizontalFaceSpeed(), entity.getVerticalFaceSpeed());
-                if (getStatusControl() != null)
+                if (getStatusControl() != null) {
                     execStatusControl(getStatusControl());
+                    return false;
+                }
             }
-        }else
+        } else {
             execAbility();
+            return false;
+        }
+        return timeExecuting < getTotalDuration();
 
     }
 
     @Override
     public void updateTask() {
         super.updateTask();
-        applyCustomBehaviour();
         timeExecuting++;
     }
 
@@ -114,6 +120,7 @@ public abstract class BendingAi extends EntityAIBase {
                 entity.getDistanceSq(target) < getTargetRange() * getTargetRange();
         return targetInRange && shouldExec();
     }
+    
 
     protected abstract boolean shouldExec();
 
@@ -168,6 +175,14 @@ public abstract class BendingAi extends EntityAIBase {
 
     public int getWaitDuration() {
         return 10;
+    }
+
+    public boolean isConstant() {
+        return false;
+    }
+
+    public int getTotalDuration() {
+        return 40;
     }
 
     public enum AbilityType {
