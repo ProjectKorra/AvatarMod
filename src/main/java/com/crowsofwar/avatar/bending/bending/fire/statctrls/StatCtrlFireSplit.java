@@ -82,20 +82,20 @@ public class StatCtrlFireSplit extends StatusControl {
                         }
                     }
                 }
-                /*if (world.isRemote) {
+                if (world.isRemote) {
                     for (int i = 0; i < 4; i++) {
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).vel(entity.getLookVec().scale(range / 30))
-                                .time((int) range * 2 + AvatarUtils.getRandomNumberInRange(0, 4)).scale(0125F + range / 40)
+                                .time((int) range * 2 + AvatarUtils.getRandomNumberInRange(0, 4)).scale(0.125F + range / 40)
                                 .pos(Vector.getEyePos(entity).toMinecraft()).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
                                 60 + AvatarUtils.getRandomNumberInRange(10, 40), 25 + AvatarUtils.getRandomNumberInRange(0, 10),
                                 170 + AvatarUtils.getRandomNumberInRange(0, 20)).element(new Firebending()).spawn(world);
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).vel(entity.getLookVec().scale(range / 30))
-                                .time((int) range * 2 + AvatarUtils.getRandomNumberInRange(0, 4)).scale(0125F + range / 40)
+                                .time((int) range * 2 + AvatarUtils.getRandomNumberInRange(0, 4)).scale(0.125F + range / 40)
                                 .pos(Vector.getEyePos(entity).toMinecraft()).clr(255,
                                 20 + AvatarUtils.getRandomNumberInRange(0, 20), 5 + AvatarUtils.getRandomNumberInRange(0, 10),
                                 120 + AvatarUtils.getRandomNumberInRange(0, 20)).element(new Firebending()).spawn(world);
                     }
-                }**/
+                }
             }
 
         }

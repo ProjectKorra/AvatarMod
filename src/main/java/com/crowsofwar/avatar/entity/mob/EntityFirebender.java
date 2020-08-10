@@ -130,16 +130,16 @@ public class EntityFirebender extends EntityHumanBender {
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(40);
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.2);
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.3);
 	}
 
 	@Override
 	protected void addBendingTasks() {
 		this.tasks.addTask(2 , Objects.requireNonNull(Abilities.getAi("flamethrower", this, getBender())));
-		//this.tasks.addTask(2, Objects.requireNonNull(Abilities.getAi("fireball", this, getBender())));
-		//this.tasks.addTask(2, Objects.requireNonNull(Abilities.getAi("fire_shot", this, getBender())));
-		//this.tasks.addTask(2, Objects.requireNonNull(Abilities.getAi("flame_strike", this, getBender())));
-		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1.3, true));
+		this.tasks.addTask(2, Objects.requireNonNull(Abilities.getAi("fireball", this, getBender())));
+		this.tasks.addTask(1, Objects.requireNonNull(Abilities.getAi("fire_shot", this, getBender())));
+		this.tasks.addTask(2, Objects.requireNonNull(Abilities.getAi("flame_strike", this, getBender())));
+		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1.8, true));
 	}
 
 	@Override

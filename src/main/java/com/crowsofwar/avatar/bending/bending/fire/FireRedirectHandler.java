@@ -27,7 +27,7 @@ public class FireRedirectHandler {
             assert data != null;
             boolean removeRedirect = false;
             boolean removeSplit = false;
-            if (data.hasBending(new Firebending())) {
+            if (data.hasBending(new Firebending()) && !entity.world.isRemote) {
                 if (AbilityData.get(entity, "fire_redirect") != null &&
                         Objects.requireNonNull(AbilityData.get(entity, "fire_redirect")).getLevel() > -1) {
                     AbilityData abilityData = AbilityData.get(entity, "fire_redirect");
@@ -58,11 +58,13 @@ public class FireRedirectHandler {
                 }
                 if (removeRedirect)
                     data.removeStatusControl(StatusControlController.REDIRECT_FIRE);
-                else data.addStatusControl(StatusControlController.REDIRECT_FIRE);
+                else if (entity.ticksExisted % 20 == 0)
+                    data.addStatusControl(StatusControlController.REDIRECT_FIRE);
 
                 if (removeSplit)
                     data.removeStatusControl(StatusControlController.SPLIT_FIRE);
-                else data.addStatusControl(StatusControlController.SPLIT_FIRE);
+                else if (entity.ticksExisted % 20 == 0)
+                    data.addStatusControl(StatusControlController.SPLIT_FIRE);
             }
         }
     }
