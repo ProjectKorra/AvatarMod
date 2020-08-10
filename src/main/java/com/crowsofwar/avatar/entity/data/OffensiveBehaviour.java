@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.entity.data;
 
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.air.AbilityAirGust;
 import com.crowsofwar.avatar.bending.bending.air.AbilityAirblade;
 import com.crowsofwar.avatar.bending.bending.air.tickhandlers.AirBurstHandler;
@@ -8,11 +9,17 @@ import com.crowsofwar.avatar.bending.bending.air.tickhandlers.ShootAirBurstHandl
 import com.crowsofwar.avatar.bending.bending.air.tickhandlers.SmashGroundHandler;
 import com.crowsofwar.avatar.bending.bending.fire.AbilityFireRedirect;
 import com.crowsofwar.avatar.bending.bending.fire.AbilityFireShot;
+import com.crowsofwar.avatar.bending.bending.fire.AbilityFlamethrower;
 import com.crowsofwar.avatar.bending.bending.fire.statctrls.StatCtrlFlameStrike;
 import com.crowsofwar.avatar.bending.bending.fire.tickhandlers.FlamethrowerUpdateTick;
+import com.crowsofwar.avatar.entity.EntityFireball;
+import com.crowsofwar.avatar.entity.EntityFlames;
 import com.crowsofwar.avatar.entity.EntityOffensive;
 import com.crowsofwar.avatar.util.PlayerViewRegistry;
+import com.crowsofwar.avatar.util.data.Bender;
+import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -20,6 +27,8 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.math.Vec3d;
+
+import static com.crowsofwar.avatar.util.data.StatusControlController.THROW_FIREBALL;
 
 public abstract class OffensiveBehaviour extends Behavior<EntityOffensive> {
     public static final DataSerializer<OffensiveBehaviour> DATA_SERIALIZER = new Behavior.BehaviorSerializer<>();
@@ -131,7 +140,14 @@ public abstract class OffensiveBehaviour extends Behavior<EntityOffensive> {
                             z + entity.posZ).subtract(entity.getPositionVector()).scale(0.05));
 
                 }
-
+                if (entity instanceof EntityFireball)
+                    BendingData.getFromEntity(owner).addStatusControl(THROW_FIREBALL);
+                //280 degrees
+                if (ticks >= 28)
+                    if (entity instanceof EntityFlames && entity.getAbility() instanceof AbilityFlamethrower) {
+                        entity.addVelocity(entity.getLookVec().scale(2));
+                        entity.setBehaviour(new FlamethrowerUpdateTick.FlamethrowerBehaviour());
+                    }
             }
             if (ticks >= 60)
                 entity.setDead();
