@@ -16,16 +16,20 @@
 */
 package com.crowsofwar.avatar.bending.bending;
 
+import com.crowsofwar.avatar.util.Raytrace;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.StatusControl;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
-import com.crowsofwar.avatar.util.Raytrace;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 
-import static com.crowsofwar.avatar.bending.bending.BendingAi.AbilityType.PROJECTILE;
+import javax.annotation.Nullable;
+import java.util.Arrays;
+import java.util.Random;
+
+import static com.crowsofwar.avatar.bending.bending.BendingAi.AbilityType.*;
 
 /**
  * Represents behavior needed for use of an ability by a mob. When most
@@ -72,8 +76,34 @@ public abstract class BendingAi extends EntityAIBase {
         timeExecuting = 0;
     }
 
+    public void applyCustomBehaviour() {
+        if (Arrays.stream(getAbilityTypes()).anyMatch(abilityType -> abilityType == PROJECTILE
+                || abilityType == OFFENSIVE)) {
+            lookAtTarget();
+            execAbility();
+            if (getStatusControl() != null) {
+                if (timeExecuting >= getWaitDuration())
+                    execStatusControl(getStatusControl());
+            }
+        } else if (Arrays.stream(getAbilityTypes()).anyMatch(abilityType -> abilityType == MOBILITY)) {
+            execAbility();
+            Random rand = entity.world.rand;
+            if (timeExecuting >= getWaitDuration()) {
+                entity.getLookHelper().setLookPosition(entity.posX + rand.nextGaussian(),
+                        entity.posY + entity.getEyeHeight() + rand.nextGaussian(), entity.posZ + rand.nextGaussian(),
+                        entity.getHorizontalFaceSpeed(), entity.getVerticalFaceSpeed());
+                if (getStatusControl() != null)
+                    execStatusControl(getStatusControl());
+            }
+        }else
+            execAbility();
+
+    }
+
     @Override
     public void updateTask() {
+        super.updateTask();
+        applyCustomBehaviour();
         timeExecuting++;
     }
 
@@ -110,9 +140,34 @@ public abstract class BendingAi extends EntityAIBase {
     }
 
     public AbilityType[] getAbilityTypes() {
-        return new AbilityType[] {
+        return new AbilityType[]{
                 PROJECTILE
         };
+    }
+
+    public int getTargetRange() {
+        return 12;
+    }
+
+    public Ability getAbility() {
+        return ability;
+    }
+
+    @Nullable
+    public StatusControl getStatusControl() {
+        return null;
+    }
+
+    public void lookAtTarget() {
+        if (entity.getAttackTarget() != null) {
+            EntityLivingBase target = entity.getAttackTarget();
+            entity.getLookHelper().setLookPosition(target.posX, target.posY + target.getEyeHeight(), target.posZ,
+                    entity.getHorizontalFaceSpeed(), entity.getVerticalFaceSpeed());
+        }
+    }
+
+    public int getWaitDuration() {
+        return 10;
     }
 
     public enum AbilityType {
@@ -122,10 +177,6 @@ public abstract class BendingAi extends EntityAIBase {
         UTILITY,
         MOBILITY,
         DEFENSIVE
-    }
-
-    public int getTargetRange() {
-        return 12;
     }
 
 }
