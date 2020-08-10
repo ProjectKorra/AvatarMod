@@ -42,12 +42,12 @@ public class AiFireShot extends BendingAi {
 
 	@Override
 	public int getWaitDuration() {
-		return 5;
+		return 2;
 	}
 
 	@Override
 	public int getTotalDuration() {
-		return 15;
+		return 10;
 	}
 
 	@Override

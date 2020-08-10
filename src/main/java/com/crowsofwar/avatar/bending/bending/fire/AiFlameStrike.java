@@ -18,8 +18,11 @@ package com.crowsofwar.avatar.bending.bending.fire;
 
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingAi;
+import com.crowsofwar.avatar.bending.bending.BendingAiMelee;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
+import com.crowsofwar.avatar.util.data.StatusControl;
+import com.crowsofwar.avatar.util.data.StatusControlController;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -33,87 +36,39 @@ import static java.lang.Math.toDegrees;
 /**
  * @author CrowsOfWar
  */
-public class AiFlameStrike extends BendingAi {
+public class AiFlameStrike extends BendingAiMelee {
 
-	private int timeExecuting;
-
-	private float velocityYaw, velocityPitch;
-
-	/**
-	 * @param ability
-	 * @param entity
-	 * @param bender
-	 */
-	protected AiFlameStrike(Ability ability, EntityLiving entity, Bender bender) {
-		super(ability, entity, bender);
-		timeExecuting = 0;
-		setMutexBits(2);
+	public AiFlameStrike(Ability ability, EntityLiving entity, Bender bender, double speedIn, boolean useLongMemory) {
+		super(ability, entity, bender, speedIn, useLongMemory);
 	}
 
 	@Override
-	protected void startExec() {
-		BendingData data = bender.getData();
-		velocityYaw = 0;
-		velocityPitch = 0;
-		execAbility();
+	public float getMaxTargetRange() {
+		float distance = 4;
+		distance *= ability.getProperty(Ability.SPEED, bender.getData().getAbilityData(ability)).floatValue() / 5;
+		return distance;
 	}
 
 	@Override
-	public boolean shouldContinueExecuting() {
-
-		if (entity.getAttackTarget() == null) return false;
-
-		Vector target = getRotationTo(getEntityPos(entity), getEntityPos(entity.getAttackTarget()));
-		float targetYaw = (float) toDegrees(target.y());
-		float targetPitch = (float) toDegrees(target.x());
-
-		float currentYaw = normalizeAngle(entity.rotationYaw);
-		float currentPitch = normalizeAngle(entity.rotationPitch);
-
-		float yawLeft = abs(normalizeAngle(currentYaw - targetYaw));
-		float yawRight = abs(normalizeAngle(targetYaw - currentYaw));
-		if (yawRight < yawLeft) {
-			velocityYaw += yawRight / 10;
-		} else {
-			velocityYaw -= yawLeft / 10;
-		}
-
-		entity.rotationYaw += velocityYaw;
-		entity.rotationPitch += velocityPitch;
-
-		if (timeExecuting < 20) {
-			entity.rotationYaw = targetYaw;
-			entity.rotationPitch = targetPitch;
-		}
-
-
-		if (timeExecuting >= 20) {
-			BendingData data = bender.getData();
-			//execStatusControl(THROW_FIRE);
-			timeExecuting = 0;
-			return false;
-		} else {
-			return true;
-		}
-
+	public float getMinTargetRange() {
+		return 0;
 	}
 
 	@Override
-	protected boolean shouldExec() {
-		EntityLivingBase target = entity.getAttackTarget();
-		return target != null && entity.getDistanceSq(target) < 3 * 3
-				&& bender.getData().getAbilityData(ability).getAbilityCooldown() == 0;
+	public StatusControl[] getStatusControls() {
+		StatusControl[] controls = new StatusControl[2];
+		controls[0] = StatusControlController.FLAME_STRIKE_MAIN;
+		controls[1] = StatusControlController.FLAME_STRIKE_OFF;
+		return controls;
 	}
 
 	@Override
-	public void updateTask() {
-		timeExecuting++;
+	public boolean shouldExecStatCtrl(StatusControl statusControl) {
+		return timeExecuting > 0 && timeExecuting % getWaitDuration() == 0;
 	}
 
 	@Override
-	public void resetTask() {
-
-
+	public int getWaitDuration() {
+		return 10;
 	}
-
 }

@@ -114,25 +114,28 @@ public abstract class OffensiveBehaviour extends Behavior<EntityOffensive> {
 
 
                 if (rotateRight) {
-                    int angle = (owner.ticksExisted % 360) * 10;
+                    int angle = (owner.ticksExisted * 10)  % 360;
                     double radians = Math.toRadians(angle);
-                    double x = Math.cos(radians);
+                    double x = 1.75 * Math.cos(radians);
                     double y = height.y;
                     double z = Math.sin(radians);
-                    entity.setVelocity(new Vec3d(x + owner.posX, y + owner.getEntityBoundingBox().minY,
-                            z + entity.posZ).subtract(entity.getPositionVector()).scale(0.25));
+                    entity.setVelocity(new Vec3d(x + owner.posX, y,
+                            z + entity.posZ).subtract(entity.getPositionVector()).scale(0.05));
                 } else {
-                    int angle = (owner.ticksExisted % 360) * -10;
+                    int angle = (owner.ticksExisted * -10) % 360;
                     double radians = Math.toRadians(angle);
                     double x = Math.cos(radians);
                     double y = height.y;
                     double z = Math.sin(radians);
-                    entity.setVelocity(new Vec3d(x + owner.posX, y + owner.getEntityBoundingBox().minY,
-                            z + entity.posZ).subtract(entity.getPositionVector()).scale(0.25));
+                    entity.setVelocity(new Vec3d(x + owner.posX, y,
+                            z + entity.posZ).subtract(entity.getPositionVector()).scale(0.05));
 
                 }
 
             }
+            if (ticks >= 60)
+                entity.setDead();
+
             ticks++;
             return this;
         }

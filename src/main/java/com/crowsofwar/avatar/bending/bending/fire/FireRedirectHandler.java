@@ -42,7 +42,7 @@ public class FireRedirectHandler {
                                         if (sc.getSubscribedControl() == AvatarControl.CONTROL_SHIFT)
                                             removeRedirect = true;
                                 }
-                            } else if (controls.contains(StatusControlController.SPLIT_FIRE)) {
+                            } if (controls.contains(StatusControlController.SPLIT_FIRE)) {
                                 for (StatusControl sc : controls) {
                                     if (!(sc instanceof StatCtrlFireSplit))
                                         if (sc.getSubscribedControl() == AvatarControl.CONTROL_RIGHT_CLICK

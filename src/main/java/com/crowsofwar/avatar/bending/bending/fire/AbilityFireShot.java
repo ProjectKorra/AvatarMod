@@ -217,7 +217,7 @@ public class AbilityFireShot extends Ability {
                         }
                     }
                 } else if (entity instanceof EntityFlames) {
-                    if (entity.world.isRemote && entity.ticksExisted > 1) {
+                    if (entity.world.isRemote && entity.ticksExisted > 0) {
                         int[] fade = entity.getFade();
                         int[] rgb = entity.getRGB();
                         for (double i = 0; i < entity.width; i += 0.1 * entity.getAvgSize() * 4) {

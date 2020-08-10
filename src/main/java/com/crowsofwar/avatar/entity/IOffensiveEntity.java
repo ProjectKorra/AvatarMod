@@ -144,7 +144,7 @@ public interface IOffensiveEntity {
                     else hit.addVelocity(vel.x, vel.y, vel.z);
                 }
                 if (multiHit() && hit instanceof EntityLivingBase)
-                    ((EntityLivingBase) hit).hurtResistantTime = 15;
+                    ((EntityLivingBase) hit).hurtResistantTime = 10;
                 AvatarUtils.afterVelocityAdded(hit);
 
                 if (attacker.getOwner() != null) {

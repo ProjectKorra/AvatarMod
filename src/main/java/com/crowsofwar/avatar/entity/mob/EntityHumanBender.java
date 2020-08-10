@@ -152,7 +152,8 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 			if (entity != null && !entity.isInvisible() && entity.canBeAttackedWithItem()) {
 				if (entity.getTeam() == null || getTeam() == null || entity.getTeam() != null && getTeam() != null && entity.getTeam() == getTeam()) {
 					return entity instanceof EntityMob
-							&& (((EntityMob) entity).isEntityUndead());
+							&& (((EntityMob) entity).isEntityUndead()) || entity instanceof EntityLivingBase
+					&& ((EntityLivingBase) entity).getLastAttackedEntity() == this;
 				}
 			}
 

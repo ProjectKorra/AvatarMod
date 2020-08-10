@@ -128,6 +128,11 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
     }
 
     @Override
+    public boolean multiHit() {
+        return true;
+    }
+
+    @Override
     public void onUpdate() {
         super.onUpdate();
 

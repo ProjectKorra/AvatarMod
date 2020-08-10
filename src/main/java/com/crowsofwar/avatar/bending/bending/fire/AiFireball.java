@@ -105,7 +105,7 @@ public class AiFireball extends BendingAi {
     public boolean shouldExecStatCtrl(StatusControl statusControl) {
         if (statusControl == THROW_FIREBALL) {
             return timeExecuting > 0 && timeExecuting % getWaitDuration() == 0
-                    && ability.getCooldown(bender.getData().getAbilityData(ability)) <= 0;
+                    && bender.getData().getAbilityData(ability).getAbilityCooldown() <= 0;
         }
         return super.shouldExecStatCtrl(statusControl);
     }

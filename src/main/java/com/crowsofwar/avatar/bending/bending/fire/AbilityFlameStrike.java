@@ -21,11 +21,8 @@ import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingAi;
 import com.crowsofwar.avatar.bending.bending.fire.statctrls.StatCtrlFlameStrike;
-import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.entity.EntityLightOrb;
-import com.crowsofwar.avatar.entity.EntityOffensive;
 import com.crowsofwar.avatar.entity.data.LightOrbBehavior;
-import com.crowsofwar.avatar.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.entity.mob.EntityBender;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
@@ -137,7 +134,8 @@ public class AbilityFlameStrike extends Ability {
 
     @Override
     public BendingAi getAi(EntityLiving entity, Bender bender) {
-        return new AiFlameStrike(this, entity, bender);
+        return new AiFlameStrike(this, entity, bender,
+                1.2, false);
     }
 
     @Override

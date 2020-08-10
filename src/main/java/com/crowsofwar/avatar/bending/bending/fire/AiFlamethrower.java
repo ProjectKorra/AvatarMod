@@ -34,7 +34,7 @@ public class AiFlamethrower extends BendingAi {
 
     protected AiFlamethrower(Ability ability, EntityLiving entity, Bender bender) {
         super(ability, entity, bender);
-        setMutexBits(2);
+        setMutexBits(3);
     }
 
 
@@ -43,7 +43,7 @@ public class AiFlamethrower extends BendingAi {
         EntityLivingBase target = entity.getAttackTarget();
         double chance = 1 - timeExecuting / (double) getTotalDuration();
         //Chance to end while using it
-        return target != null && Math.random() / 2 < chance;
+        return target != null && Math.random() / 4 < chance;
     }
 
     @Override

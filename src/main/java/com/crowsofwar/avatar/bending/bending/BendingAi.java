@@ -98,7 +98,6 @@ public abstract class BendingAi extends EntityAIBase {
                     execStatusControl(sc);
             }
 
-            return !isConstant();
         } else if (Arrays.stream(getAbilityTypes()).anyMatch(abilityType -> abilityType == MOBILITY)) {
             Random rand = entity.world.rand;
             if (shouldExecAbility())
