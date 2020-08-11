@@ -6,8 +6,8 @@ import com.crowsofwar.avatar.bending.bending.fire.Firebending;
 import com.crowsofwar.avatar.bending.bending.fire.tickhandlers.FireParticleSpawner;
 import com.crowsofwar.avatar.client.controls.AvatarControl;
 import com.crowsofwar.avatar.config.ConfigSkills;
-import com.crowsofwar.avatar.entity.AvatarEntity;
 import com.crowsofwar.avatar.entity.EntityShockwave;
+import com.crowsofwar.avatar.entity.mob.EntityBender;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.data.AbilityData;
@@ -17,13 +17,7 @@ import com.crowsofwar.avatar.util.data.StatusControl;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityAreaEffectCloud;
-import net.minecraft.entity.EntityHanging;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityArmorStand;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
@@ -35,7 +29,6 @@ import net.minecraft.world.World;
 import java.util.List;
 
 import static com.crowsofwar.avatar.bending.bending.Ability.*;
-import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.util.data.TickHandlerController.*;
 
 public class StatCtrlFireJump extends StatusControl {
@@ -55,90 +48,95 @@ public class StatCtrlFireJump extends StatusControl {
         AbilityFireJump jump = (AbilityFireJump) Abilities.get("fire_jump");
 
         if (jump != null) {
-        	float chiCost, exhaustion, burnOut, cooldown;
-        	chiCost = jump.getChiCost(abilityData);
-        	exhaustion = jump.getExhaustion(abilityData);
-        	burnOut = jump.getBurnOut(abilityData);
-        	cooldown = jump.getCooldown(abilityData);
+            float chiCost, exhaustion, burnOut;
+            int cooldown;
+            chiCost = jump.getChiCost(abilityData);
+            exhaustion = jump.getExhaustion(abilityData);
+            burnOut = jump.getBurnOut(abilityData);
+            cooldown = jump.getCooldown(abilityData);
 
-        	if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative())
-        		chiCost = exhaustion = burnOut = cooldown = 0;
+            if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative())
+                chiCost = exhaustion = burnOut = cooldown = 0;
+            if (entity instanceof EntityBender)
+                chiCost = 0;
 
-			boolean allowDoubleJump = abilityData.getLevel() == 3 && abilityData.getPath() == AbilityData.AbilityTreePath.SECOND;
+            boolean allowDoubleJump = abilityData.getLevel() == 3 && abilityData.getPath() == AbilityData.AbilityTreePath.SECOND;
 
-			// Figure out whether entity is on ground by finding collisions with
-			// ground - if found a collision box, then is not on ground
-			List<AxisAlignedBB> collideWithGround = world.getCollisionBoxes(entity, entity.getEntityBoundingBox().grow(0.2, 1, 0.2));
-			boolean onGround = !collideWithGround.isEmpty() || entity.collidedVertically;
+            // Figure out whether entity is on ground by finding collisions with
+            // ground - if found a collision box, then is not on ground
+            List<AxisAlignedBB> collideWithGround = world.getCollisionBoxes(entity, entity.getEntityBoundingBox().grow(0.2, 1, 0.2));
+            boolean onGround = !collideWithGround.isEmpty() || entity.collidedVertically;
 
-			if (onGround || (allowDoubleJump && bender.consumeChi(chiCost))) {
-
-				///////AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
-				int lvl = abilityData.getLevel();
-				double jumpMultiplier = jump.getProperty(JUMP_HEIGHT, abilityData).doubleValue() / 10;
-				float fallAbsorption = jump.getProperty(FALL_ABSORPTION, abilityData).floatValue();
-
-
-				if (abilityData.getLevel() == 2 || abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-					data.addTickHandler(SMASH_GROUND_FIRE, ctx);
-				} else if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-					data.addTickHandler(SMASH_GROUND_FIRE_BIG, ctx);
-				}
-
-				// Calculate direction to jump -- in the direction the player is currently already going
-
-				// For some reason, velocity is 0 here when player is walking, so must instead
-				// calculate using delta position
-				Vector deltaPos = new Vector(entity.posX - entity.lastTickPosX, 0, entity.posZ - entity.lastTickPosZ);
-				double currentYaw = Vector.getRotationTo(Vector.ZERO, deltaPos).y();
-
-				// Just go forwards if not moving right now
-				if (deltaPos.sqrMagnitude() <= 0.001) {
-					currentYaw = Math.toRadians(entity.rotationYaw);
-				}
-
-				float pitch = entity.rotationPitch;
-				if (pitch < -45) {
-					pitch = -45;
-				}
-
-				Vector rotations = new Vector(Math.toRadians(pitch), currentYaw, 0);
-
-				// Calculate velocity to move bender
-
-				Vector velocity = rotations.toRectangular();
-
-				velocity = velocity.withX(velocity.x() * 2);
-				velocity = velocity.withZ(velocity.z() * 2);
-
-				velocity = velocity.times(jumpMultiplier);
-				entity.onGround = false;
-				if (!onGround) {
-					velocity = velocity.times(1);
-					entity.motionX = 0;
-					entity.motionY = 0;
-					entity.motionZ = 0;
-				}
-				entity.addVelocity(velocity.x(), velocity.y(), velocity.z());
-				AvatarUtils.afterVelocityAdded(entity);
-
-				Block currentBlock = world.getBlockState(entity.getPosition()).getBlock();
-				if (currentBlock == Blocks.AIR) {
-					damageNearbyEntities(ctx);
-				}
+            if (onGround || (allowDoubleJump && bender.consumeChi(chiCost))) {
+                
+                double jumpMultiplier = jump.getProperty(JUMP_HEIGHT, abilityData).doubleValue() / 10;
+                float fallAbsorption = jump.getProperty(FALL_ABSORPTION, abilityData).floatValue();
 
 
-				data.addTickHandler(FIRE_PARTICLE_SPAWNER, ctx);
-				data.getMiscData().setFallAbsorption(fallAbsorption);
+                if (abilityData.getLevel() == 2 || abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+                    data.addTickHandler(SMASH_GROUND_FIRE, ctx);
+                } else if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+                    data.addTickHandler(SMASH_GROUND_FIRE_BIG, ctx);
+                }
 
-				abilityData.addXp(ConfigSkills.SKILLS_CONFIG.fireJump);
+                // Calculate direction to jump -- in the direction the player is currently already going
 
-				entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 1, .7f);
+                // For some reason, velocity is 0 here when player is walking, so must instead
+                // calculate using delta position
+                Vector deltaPos = new Vector(entity.posX - entity.lastTickPosX, 0, entity.posZ - entity.lastTickPosZ);
+                double currentYaw = Vector.getRotationTo(Vector.ZERO, deltaPos).y();
 
-				return true;
+                // Just go forwards if not moving right now
+                if (deltaPos.sqrMagnitude() <= 0.001) {
+                    currentYaw = Math.toRadians(entity.rotationYaw);
+                }
 
-			}
-		}
+                float pitch = entity.rotationPitch;
+                if (pitch < -45) {
+                    pitch = -45;
+                }
+
+                Vector rotations = new Vector(Math.toRadians(pitch), currentYaw, 0);
+
+                // Calculate velocity to move bender
+
+                Vector velocity = rotations.toRectangular();
+
+                velocity = velocity.withX(velocity.x() * 2);
+                velocity = velocity.withZ(velocity.z() * 2);
+
+                velocity = velocity.times(jumpMultiplier);
+                entity.onGround = false;
+                if (!onGround) {
+                    velocity = velocity.times(1);
+                    entity.motionX = 0;
+                    entity.motionY = 0;
+                    entity.motionZ = 0;
+                }
+                entity.addVelocity(velocity.x(), velocity.y(), velocity.z());
+                AvatarUtils.afterVelocityAdded(entity);
+
+                Block currentBlock = world.getBlockState(entity.getPosition()).getBlock();
+                if (currentBlock == Blocks.AIR) {
+                    damageNearbyEntities(ctx);
+                }
+
+
+                data.addTickHandler(FIRE_PARTICLE_SPAWNER, ctx);
+                data.getMiscData().setFallAbsorption(fallAbsorption);
+
+                abilityData.addXp(ConfigSkills.SKILLS_CONFIG.fireJump);
+
+                entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 1, .7f);
+
+                if (entity instanceof EntityPlayer)
+                    ((EntityPlayer) entity).addExhaustion(exhaustion);
+                abilityData.addBurnout(burnOut);
+                abilityData.setAbilityCooldown(cooldown);
+                return true;
+
+            }
+        }
 
         return false;
 
@@ -205,16 +203,6 @@ public class StatCtrlFireJump extends StatusControl {
             if (!world.isRemote)
                 world.spawnEntity(wave);
         }
-    }
-
-    private boolean canDamageEntity(Entity entity) {
-        if (entity instanceof AvatarEntity && ((AvatarEntity) entity).getOwner() != entity) {
-            return false;
-        }
-        if (entity instanceof EntityHanging || entity instanceof EntityXPOrb || entity instanceof EntityItem || entity instanceof EntityArmorStand
-                || entity instanceof EntityAreaEffectCloud) {
-            return false;
-        } else return entity.canBeCollidedWith() && entity.canBePushed();
     }
 
 }
