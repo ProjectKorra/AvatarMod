@@ -116,9 +116,9 @@ public abstract class OffensiveBehaviour extends Behavior<EntityOffensive> {
                 leftSide = leftSide.add(height);
 
                 if (entity.getDistance(leftSide.x, leftSide.y, leftSide.z) >= entity.getDistance(rightSide.x, rightSide.y, rightSide.z)
-                        && ticks <= 1)
+                        && ticks < 1)
                     rotateRight = true;
-                else if (ticks <= 1)
+                else if (ticks < 1)
                     rotateRight = false;
 
 
@@ -129,7 +129,7 @@ public abstract class OffensiveBehaviour extends Behavior<EntityOffensive> {
                     double y = height.y;
                     double z = Math.sin(radians);
                     entity.setVelocity(new Vec3d(x + owner.posX, y,
-                            z + entity.posZ).subtract(entity.getPositionVector()).scale(0.05));
+                            z + entity.posZ).subtract(entity.getPositionVector()).scale(0.25));
                 } else {
                     int angle = (owner.ticksExisted * -10) % 360;
                     double radians = Math.toRadians(angle);
@@ -137,7 +137,7 @@ public abstract class OffensiveBehaviour extends Behavior<EntityOffensive> {
                     double y = height.y;
                     double z = Math.sin(radians);
                     entity.setVelocity(new Vec3d(x + owner.posX, y,
-                            z + entity.posZ).subtract(entity.getPositionVector()).scale(0.05));
+                            z + entity.posZ).subtract(entity.getPositionVector()).scale(0.25));
 
                 }
                 if (entity instanceof EntityFireball)
