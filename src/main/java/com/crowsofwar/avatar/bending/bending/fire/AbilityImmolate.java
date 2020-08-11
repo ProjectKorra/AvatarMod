@@ -129,7 +129,7 @@ public class AbilityImmolate extends Ability {
             if (!world.isRemote)
                 world.spawnEntity(orb);
             abilityData.addXp(getProperty(XP_USE, ctx).floatValue());
-            data.addTickHandler(PURIFY_PARTICLE_SPAWNER);
+            data.addTickHandler(PURIFY_PARTICLE_SPAWNER, ctx);
 
         }
 

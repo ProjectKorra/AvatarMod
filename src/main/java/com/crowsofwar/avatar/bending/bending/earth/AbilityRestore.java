@@ -83,7 +83,7 @@ public class AbilityRestore extends Ability {
 			// Ignore warning; we know manager != null if they have the bending style
 			//noinspection ConstantConditions
 			data.getPowerRatingManager(getBendingId()).addModifier(modifier, ctx);
-			data.addTickHandler(RESTORE_PARTICLE_SPAWNER);
+			data.addTickHandler(RESTORE_PARTICLE_SPAWNER, ctx);
 
 		}
 	}

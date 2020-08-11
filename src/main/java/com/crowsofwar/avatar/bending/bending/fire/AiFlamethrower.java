@@ -18,8 +18,10 @@ package com.crowsofwar.avatar.bending.bending.fire;
 
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingAi;
+import com.crowsofwar.avatar.util.Raytrace;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.StatusControl;
+import com.crowsofwar.avatar.util.data.ctx.BendingContext;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 
@@ -43,7 +45,7 @@ public class AiFlamethrower extends BendingAi {
         EntityLivingBase target = entity.getAttackTarget();
         double chance = 1 - timeExecuting / (double) getTotalDuration();
         //Chance to end while using it
-        return target != null && Math.random() / 4 < chance;
+        return target != null && Math.random() / 2 < chance;
     }
 
     @Override
@@ -86,13 +88,12 @@ public class AiFlamethrower extends BendingAi {
 
     @Override
     public int getTotalDuration() {
-        return 80;
+        return 50;
     }
 
     @Override
     public void cleanUp() {
         super.cleanUp();
-        bender.getData().removeTickHandler(FLAMETHROWER
-        );
+        bender.getData().removeTickHandler(FLAMETHROWER, new BendingContext(bender.getData(), entity, new Raytrace.Result()));
     }
 }

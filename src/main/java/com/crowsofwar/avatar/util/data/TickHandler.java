@@ -35,6 +35,14 @@ public abstract class TickHandler {
 	 */
 	public abstract boolean tick(BendingContext ctx);
 
+	public void onAdded(BendingContext ctx) {
+
+	}
+
+	public void onRemoved(BendingContext ctx) {
+
+	}
+
 	public int id() {
 		return id;
 	}

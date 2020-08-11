@@ -70,7 +70,7 @@ public abstract class FireballBehavior extends OffensiveBehaviour {
         }
 
         @Override
-        public FireballBehavior onUpdate(EntityOffensive entity) {
+        public OffensiveBehaviour onUpdate(EntityOffensive entity) {
             return this;
         }
 

@@ -53,8 +53,7 @@ public class EntityShockwave extends EntityOffensive {
 	private double knockbackHeight;
 	//The minimum height entities will be knocked back. Set to 0 for no effect.
 	private int fireTime;
-	//How long to set the target entity on fire
-	private DamageSource source;
+	//How long to set the target entity on fir
 
 	private Vec3d knockbackMult;
 	//Individual values for how to scale the knockback
@@ -65,8 +64,6 @@ public class EntityShockwave extends EntityOffensive {
 		this.damage = 1;
 		this.performanceAmount = 10;
 		this.knockbackHeight = 0;
-		this.fireTime = 0;
-		this.source = AvatarDamageSource.AIR;
 		this.knockbackMult = new Vec3d(1, 2, 1);
 		this.setSize(1, 1);
 	}
@@ -159,9 +156,6 @@ public class EntityShockwave extends EntityOffensive {
 		dataManager.set(SYNC_IS_SPHERE, sphere);
 	}
 
-	public void setDamageSource(DamageSource source) {
-		this.source = source;
-	}
 
 	public void setRenderNormal(boolean normal) {
 		dataManager.set(SYNC_RENDER_NORMAL, normal);
@@ -296,12 +290,6 @@ public class EntityShockwave extends EntityOffensive {
 	@Override
 	public double getExpandedHitboxHeight() {
 		return (ticksExisted * getSpeed() * 0.5);
-	}
-
-	@Override
-	public DamageSource getDamageSource(Entity target, EntityLivingBase owner) {
-		return getSphere() ? AvatarDamageSource.causeSphericalShockwaveDamage(target, getOwner(), source)
-				: AvatarDamageSource.causeShockwaveDamage(target, getOwner(), source);
 	}
 
 	@Override

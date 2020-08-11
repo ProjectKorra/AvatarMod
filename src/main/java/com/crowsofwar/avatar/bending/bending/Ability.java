@@ -82,7 +82,10 @@ public abstract class Ability {
             RADIUS = "radius",
             EFFECT_RADIUS = "effectRadius",
             AIM_ASSIST = "aimAssist",
-            RANGE = "range";
+            RANGE = "range",
+            COLOUR_R = "colouR",
+            COLOUR_G = "colourG",
+            COLOUR_B = "colourB";
     //Airbending stuff
     public static final String
             PUSH_REDSTONE = "pushRedstone",
@@ -125,6 +128,12 @@ public abstract class Ability {
             MAX_BURNOUT = "maxBurnout",
             MAX_EXHAUSTION = "maxExhaustion",
             MAX_COOLDOWN = "maxCooldown";
+    //Jump stuff
+    public static final String
+            JUMP_HEIGHT = "jumpHeight",
+            STOP_SHOCKWAVE = "stopShockwave",
+            GROUND_POUND = "groundPound",
+            JUMPS = "numberOfJumps";
 
 
     private final UUID type;

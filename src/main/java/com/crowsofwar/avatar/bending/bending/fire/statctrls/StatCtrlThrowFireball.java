@@ -119,7 +119,7 @@ public class StatCtrlThrowFireball extends StatusControl {
 
                 //Drillgon200: Why deal with orbit ids when there's already two other ids you can organize them by?
                 //FD: No clue
-                if (!world.isRemote) {
+                //if (!world.isRemote) {
                     if (!fireballs.isEmpty()) {
                         fireballs = fireballs.stream().filter(fireball1 -> !(fireball1.getBehaviour() instanceof FireballBehavior.Thrown
                                 || fireball1.getBehaviour() instanceof AbilityFireball.FireballOrbitController)).collect(Collectors.toList());
@@ -138,7 +138,7 @@ public class StatCtrlThrowFireball extends StatusControl {
                         fireball.setVelocity(Vector.getLookRectangular(entity).times(speedMult));
                         abilityData.setRegenBurnout(true);
                     }
-                }
+                //}
             }
             world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.HOSTILE, 4F, 0.8F);
         }

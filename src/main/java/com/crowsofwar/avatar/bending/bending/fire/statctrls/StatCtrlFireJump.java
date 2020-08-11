@@ -105,9 +105,9 @@ public class StatCtrlFireJump extends StatusControl {
 			}
 
 			if (abilityData.getLevel() == 2 || abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-				data.addTickHandler(SMASH_GROUND_FIRE);
+				data.addTickHandler(SMASH_GROUND_FIRE, ctx);
 			} else if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-				data.addTickHandler(SMASH_GROUND_FIRE_BIG);
+				data.addTickHandler(SMASH_GROUND_FIRE_BIG, ctx);
 			}
 
 			// Calculate direction to jump -- in the direction the player is currently already going
@@ -165,7 +165,7 @@ public class StatCtrlFireJump extends StatusControl {
 							.spawnEntity(entity).collide(true).spawn(world);
 				}
 			}
-			data.addTickHandler(FIRE_PARTICLE_SPAWNER);
+			data.addTickHandler(FIRE_PARTICLE_SPAWNER, ctx);
 			data.getMiscData().setFallAbsorption(fallAbsorption);
 
 			abilityData.addXp(ConfigSkills.SKILLS_CONFIG.fireJump);

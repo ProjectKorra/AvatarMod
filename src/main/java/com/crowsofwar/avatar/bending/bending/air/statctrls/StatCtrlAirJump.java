@@ -161,9 +161,9 @@ public class StatCtrlAirJump extends StatusControl {
 
             data.getMiscData().setFallAbsorption(fallAbsorption);
 
-            data.addTickHandler(AIR_PARTICLE_SPAWNER);
+            data.addTickHandler(AIR_PARTICLE_SPAWNER, ctx);
             if (abilityData.getLevel() == 3 && abilityData.getPath() == AbilityTreePath.SECOND) {
-                data.addTickHandler(SMASH_GROUND);
+                data.addTickHandler(SMASH_GROUND, ctx);
             }
 
             abilityData.addXp(SKILLS_CONFIG.airJump);

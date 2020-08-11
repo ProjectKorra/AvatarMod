@@ -355,7 +355,7 @@ public abstract class Bender {
                     if (handler.tick(ctx)) {
                         // Can use this since the list is a COPY of the
                         // underlying list
-                        data.removeTickHandler(handler);
+                        data.removeTickHandler(handler, ctx);
                     } else {
                         int newDuration = data.getTickHandlerDuration(handler) + 1;
                         data.setTickHandlerDuration(handler, newDuration);

@@ -27,7 +27,7 @@ public class AbilityLightningArc extends Ability {
 		boolean hasLightningCharge = data.hasTickHandler(LIGHTNING_CHARGE);
 
 		if (hasChi && !hasLightningCharge) {
-			ctx.getData().addTickHandler(LIGHTNING_CHARGE);
+			ctx.getData().addTickHandler(LIGHTNING_CHARGE, ctx);
 		}
 
 	}

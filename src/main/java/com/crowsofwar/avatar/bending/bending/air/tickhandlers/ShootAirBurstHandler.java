@@ -143,7 +143,7 @@ public class ShootAirBurstHandler extends TickHandler {
 				entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(modifier);
 			}
 		}
-		ctx.getData().removeTickHandler(AIRBURST_CHARGE_HANDLER);
+		ctx.getData().removeTickHandler(AIRBURST_CHARGE_HANDLER, ctx);
 		ctx.getData().removeStatusControl(CHARGE_AIR_BURST);
 		return true;
 	}

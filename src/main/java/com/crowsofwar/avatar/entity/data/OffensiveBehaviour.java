@@ -81,7 +81,7 @@ public abstract class OffensiveBehaviour extends Behavior<EntityOffensive> {
 
     }
 
-    public static class Redirect extends OffensiveBehaviour {
+    public static class Redirect extends FireballBehavior.PlayerControlled {
 
         int ticks = 0;
         boolean rotateRight = true;

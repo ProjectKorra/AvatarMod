@@ -1,7 +1,9 @@
 package com.crowsofwar.avatar.client.gui;
 
 import com.crowsofwar.avatar.AvatarInfo;
+import com.crowsofwar.avatar.util.Raytrace;
 import com.crowsofwar.avatar.util.data.BendingData;
+import com.crowsofwar.avatar.util.data.ctx.BendingContext;
 import com.crowsofwar.avatar.util.event.BendingCycleEvent;
 import com.crowsofwar.avatar.util.event.BendingUseEvent;
 import net.minecraft.entity.EntityLivingBase;
@@ -20,13 +22,12 @@ public class FadeElementListener {
 			EntityLivingBase entity = event.getEntityLiving();
 			BendingData data = BendingData.getFromEntity(entity);
 			if (data != null) {
+				BendingContext ctx = new BendingContext(data, entity, new Raytrace.Result());
 				if (CLIENT_CONFIG.activeBendingSettings.shouldBendingMenuDisappear) {
 					if (data.hasTickHandler(RENDER_ELEMENT_HANDLER)) {
-						data.removeTickHandler(RENDER_ELEMENT_HANDLER);
-						data.addTickHandler(RENDER_ELEMENT_HANDLER);
-					} else {
-						data.addTickHandler(RENDER_ELEMENT_HANDLER);
+						data.removeTickHandler(RENDER_ELEMENT_HANDLER, ctx);
 					}
+					data.addTickHandler(RENDER_ELEMENT_HANDLER, ctx);
 				}
 			}
 		}
@@ -38,13 +39,13 @@ public class FadeElementListener {
 			EntityLivingBase entity = event.getEntityLiving();
 			BendingData data = BendingData.getFromEntity(entity);
 			if (data != null) {
+				BendingContext ctx = new BendingContext(data, entity, new Raytrace.Result());
+
 				if (CLIENT_CONFIG.activeBendingSettings.shouldBendingMenuDisappear) {
 					if (data.hasTickHandler(RENDER_ELEMENT_HANDLER)) {
-						data.removeTickHandler(RENDER_ELEMENT_HANDLER);
-						data.addTickHandler(RENDER_ELEMENT_HANDLER);
-					} else {
-						data.addTickHandler(RENDER_ELEMENT_HANDLER);
+						data.removeTickHandler(RENDER_ELEMENT_HANDLER, ctx);
 					}
+					data.addTickHandler(RENDER_ELEMENT_HANDLER, ctx);
 				}
 			}
 		}

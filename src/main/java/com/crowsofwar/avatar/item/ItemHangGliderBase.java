@@ -4,10 +4,12 @@ import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.bending.bending.air.AbilityAirGust;
 import com.crowsofwar.avatar.bending.bending.air.AbilityAirblade;
 import com.crowsofwar.avatar.bending.bending.air.Airbending;
+import com.crowsofwar.avatar.util.Raytrace;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.Chi;
 import com.crowsofwar.avatar.entity.EntityAirGust;
 import com.crowsofwar.avatar.entity.EntityAirblade;
+import com.crowsofwar.avatar.util.data.ctx.BendingContext;
 import com.crowsofwar.avatar.util.event.StaffUseEvent;
 import com.crowsofwar.avatar.util.helper.GliderPlayerHelper;
 import com.crowsofwar.avatar.registry.AvatarItem;
@@ -128,6 +130,8 @@ public class ItemHangGliderBase extends ItemSword implements IGlider, AvatarItem
     }
 
 
+    //God this is cancer
+    //TODO: Actually fix this
     @Override
     public boolean onEntitySwing(EntityLivingBase entityLiving, ItemStack stack) {
         boolean isCreative = entityLiving instanceof EntityPlayer && ((EntityPlayer) entityLiving)
@@ -148,7 +152,7 @@ public class ItemHangGliderBase extends ItemSword implements IGlider, AvatarItem
                             gust.setVelocity(Vector.getLookRectangular(entityLiving).times(30));
                             entityLiving.world.spawnEntity(gust);
                             if (!isCreative) {
-                                data.addTickHandler(STAFF_GUST_HANDLER);
+                                data.addTickHandler(STAFF_GUST_HANDLER, new BendingContext(data, entityLiving, new Raytrace.Result()));
                                 stack.damageItem(2, entityLiving);
                             }
                             return true;
@@ -166,7 +170,7 @@ public class ItemHangGliderBase extends ItemSword implements IGlider, AvatarItem
                             blade.setDamage(2);
                             entityLiving.world.spawnEntity(blade);
                             if (!isCreative) {
-                                data.addTickHandler(STAFF_GUST_HANDLER);
+                                data.addTickHandler(STAFF_GUST_HANDLER, new BendingContext(data, entityLiving, new Raytrace.Result()));
                                 stack.damageItem(2, entityLiving);
                             }
                             return true;
@@ -193,7 +197,7 @@ public class ItemHangGliderBase extends ItemSword implements IGlider, AvatarItem
                         gust.setVelocity(Vector.getLookRectangular(entityLiving).times(30));
                         entityLiving.world.spawnEntity(gust);
                         if (!isCreative) {
-                            data.addTickHandler(STAFF_GUST_HANDLER);
+                            data.addTickHandler(STAFF_GUST_HANDLER, new BendingContext(data, entityLiving, new Raytrace.Result()));
                             stack.damageItem(2, entityLiving);
                         }
                         return true;
@@ -211,7 +215,7 @@ public class ItemHangGliderBase extends ItemSword implements IGlider, AvatarItem
                         blade.setDamage(2);
                         entityLiving.world.spawnEntity(blade);
                         if (!isCreative) {
-                            data.addTickHandler(STAFF_GUST_HANDLER);
+                            data.addTickHandler(STAFF_GUST_HANDLER, new BendingContext(data, entityLiving, new Raytrace.Result()));
                             stack.damageItem(2, entityLiving);
                         }
                         return true;

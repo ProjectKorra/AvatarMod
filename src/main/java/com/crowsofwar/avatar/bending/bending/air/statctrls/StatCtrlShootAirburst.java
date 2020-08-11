@@ -22,14 +22,14 @@ public class StatCtrlShootAirburst extends StatusControl {
 	public boolean execute(BendingContext ctx) {
 		BendingData data = ctx.getData();
 		if (ctx.getData().hasTickHandler(TickHandlerController.AIRBURST_CHARGE_HANDLER)) {
-			data.addTickHandler(TickHandlerController.SHOOT_AIRBURST);
+			data.addTickHandler(TickHandlerController.SHOOT_AIRBURST, ctx);
 			AttributeModifier mod = ctx.getBenderEntity().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED)
 					.getModifier(AIRBURST_MOVEMENT_MODIFIER_ID);
 			if (mod != null) {
 				ctx.getBenderEntity().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(mod);
 			}
 		}
-		data.removeTickHandler(TickHandlerController.AIRBURST_CHARGE_HANDLER);
+		data.removeTickHandler(TickHandlerController.AIRBURST_CHARGE_HANDLER, ctx);
 		data.removeStatusControl(RELEASE_AIR_BURST);
 		return true;
 	}
