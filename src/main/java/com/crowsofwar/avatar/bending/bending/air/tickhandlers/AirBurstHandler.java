@@ -214,7 +214,7 @@ public class AirBurstHandler extends TickHandler {
                 shockwave.setRenderNormal(false);
                 shockwave.setElement(new Airbending());
                 shockwave.setParticleSpeed(0.5F * radius / STATS_CONFIG.airBurstSettings.radius);
-                shockwave.setDamageSource(AvatarDamageSource.AIR);
+                shockwave.setDamageSource("avatar_Air_sphere_shockwave");
                 shockwave.setKnockbackHeight(upwardKnockback);
                 shockwave.setKnockbackMult(new Vec3d(knockBack, knockBack / 2, knockBack));
                 shockwave.setDamage((float) damage);

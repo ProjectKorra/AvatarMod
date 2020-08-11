@@ -84,7 +84,7 @@ public class SmashGroundHandler extends TickHandler {
 		shockwave.setParticleAmount(getParticleAmount());
 		shockwave.setParticleSpeed((float) getParticleSpeed());
 		shockwave.setFireTime(fireTime());
-		shockwave.setDamageSource(getDamageSource());
+		shockwave.setDamageSource(getDamageSource().getDamageType() + "_shockwave");
 		shockwave.setAbility(getAbility());
 		shockwave.setParticleWaves(getParticleWaves());
 		shockwave.setPerformanceAmount(getPerformanceAmount());

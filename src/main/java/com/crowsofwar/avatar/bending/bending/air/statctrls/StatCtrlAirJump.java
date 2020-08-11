@@ -186,7 +186,7 @@ public class StatCtrlAirJump extends StatusControl {
             wave.setPerformanceAmount(10);
             wave.setKnockbackMult(new Vec3d(0.5, 0.2, 0.5));
             wave.setParticleAmount(2);
-            wave.setDamageSource(AvatarDamageSource.AIR);
+            wave.setDamageSource("avatar_Air_shockwave");
             wave.setAbility(new AbilityAirJump());
             wave.setElement(new Airbending());
             wave.setParticleSpeed(lvl > 0 ? 0.02F + lvl / 40F : 0.02F);

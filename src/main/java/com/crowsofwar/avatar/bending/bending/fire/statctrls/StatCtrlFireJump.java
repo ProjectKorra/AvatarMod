@@ -59,6 +59,7 @@ public class StatCtrlFireJump extends StatusControl {
 
 		if (onGround || (allowDoubleJump && bender.consumeChi(STATS_CONFIG.chiFireJump))) {
 
+			///////AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
 			int lvl = abilityData.getLevel();
 			double jumpMultiplier = 0.4;
 			float fallAbsorption = 3;

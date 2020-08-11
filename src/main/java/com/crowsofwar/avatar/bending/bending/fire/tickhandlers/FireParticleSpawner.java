@@ -40,20 +40,40 @@ public class FireParticleSpawner extends TickHandler {
         AbilityFireJump jump = (AbilityFireJump) Abilities.get(new AbilityFireJump().getName());
         Vector pos = Vector.getEntityPos(target).minusY(0.05);
 
-        if (world.isRemote)
+        if (world.isRemote && jump != null) {
+            float size = jump.getProperty(SIZE, data).floatValue() / 2;
+            int r, g, b, fadeR, fadeG, fadeB;
+
+            r = jump.getProperty(FIRE_R, data).intValue();
+            g = jump.getProperty(FIRE_G, data).intValue();
+            b = jump.getProperty(FIRE_B, data).intValue();
+            fadeR = jump.getProperty(FADE_R, data).intValue();
+            fadeG = jump.getProperty(FADE_G, data).intValue();
+            fadeB = jump.getProperty(FADE_B, data).intValue();
+
+            size *= data.getDamageMult() * data.getXpModifier();
+
             for (int i = 0; i < 2 + AvatarUtils.getRandomNumberInRange(0, 4); i++) {
-                ParticleBuilder.create(ParticleBuilder.Type.FLASH).clr(255, 10,
-                        5).pos(pos.toMinecraft()).vel(world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40).scale(1F +
-                        Math.max(data.getLevel(), 0) / 2F).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(new Firebending()).collide(true)
+                int rRandom = fadeR < 100 ? AvatarUtils.getRandomNumberInRange(0, fadeR * 2) : AvatarUtils.getRandomNumberInRange(fadeR / 2,
+                        fadeR * 2);
+                int gRandom = fadeG < 100 ? AvatarUtils.getRandomNumberInRange(0, fadeG * 2) : AvatarUtils.getRandomNumberInRange(fadeG / 2,
+                        fadeG * 2);
+                int bRandom = fadeB < 100 ? AvatarUtils.getRandomNumberInRange(0, fadeB * 2) : AvatarUtils.getRandomNumberInRange(fadeB / 2,
+                        fadeB * 2);
+
+                ParticleBuilder.create(ParticleBuilder.Type.FLASH).clr(r, g, b, 180 + AvatarUtils.getRandomNumberInRange(0, 40))
+                        .fade(rRandom, gRandom, bRandom, 100 + AvatarUtils.getRandomNumberInRange(0, 40))
+                        .pos(pos.toMinecraft()).vel(world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40)
+                        .scale(size).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(new Firebending()).collide(true)
                         .ability(jump).spawnEntity(target).spawn(world);
-                ParticleBuilder.create(ParticleBuilder.Type.FLASH).clr(255, 40 + AvatarUtils.getRandomNumberInRange(0, 60),
-                        10).pos(pos.toMinecraft()).vel(world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40)
-                        .scale(1F + Math.max(data.getLevel(), 0) / 2F).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(new Firebending()).collide(true)
+                ParticleBuilder.create(ParticleBuilder.Type.FLASH).clr(r, g * 8, b * 2, 180 + AvatarUtils.getRandomNumberInRange(0, 40))
+                        .fade(rRandom, gRandom, bRandom, 100 + AvatarUtils.getRandomNumberInRange(0, 40))
+                        .pos(pos.toMinecraft()).vel(world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40)
+                        .scale(size).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(new Firebending()).collide(true)
                         .ability(jump).spawnEntity(target).spawn(world);
             }
+        }
 
-        //particles.spawnParticles(world, world.rand.nextBoolean() ? AvatarParticles.getParticleFlames() : AvatarParticles.getParticleFire(),
-        //		4, 16, pos, new Vector(0.7, 0.2, 0.7), true);
 
         return target.isInWater() || target.onGround || bender.isFlying();
 
