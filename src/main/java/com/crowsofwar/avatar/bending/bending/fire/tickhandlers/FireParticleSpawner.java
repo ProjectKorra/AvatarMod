@@ -3,9 +3,7 @@ package com.crowsofwar.avatar.bending.bending.fire.tickhandlers;
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.fire.AbilityFireJump;
 import com.crowsofwar.avatar.bending.bending.fire.Firebending;
-import com.crowsofwar.avatar.client.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
-import com.crowsofwar.avatar.client.particle.ParticleSpawner;
 import com.crowsofwar.avatar.entity.EntityOffensive;
 import com.crowsofwar.avatar.entity.EntityShockwave;
 import com.crowsofwar.avatar.entity.data.OffensiveBehaviour;
@@ -13,7 +11,6 @@ import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
-import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.TickHandler;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
 import com.crowsofwar.gorecore.util.Vector;
@@ -25,7 +22,6 @@ import net.minecraft.world.World;
 import static com.crowsofwar.avatar.bending.bending.Ability.*;
 
 public class FireParticleSpawner extends TickHandler {
-    private static final ParticleSpawner particles = new NetworkParticleSpawner();
 
     public FireParticleSpawner(int id) {
         super(id);
@@ -85,7 +81,6 @@ public class FireParticleSpawner extends TickHandler {
 
         World world = ctx.getWorld();
         EntityLivingBase entity = ctx.getBenderEntity();
-        BendingData data = ctx.getData();
         AbilityData abilityData = ctx.getData().getAbilityData("fire_jump");
         AbilityFireJump jump = (AbilityFireJump) Abilities.get("fire_jump");
 
@@ -139,6 +134,7 @@ public class FireParticleSpawner extends TickHandler {
             wave.setParticleAmount(4);
             wave.setRGB(r, g, b);
             wave.setFade(fadeR, fadeG, fadeB);
+            wave.setRenderNormal(false);
             if (!world.isRemote)
                 world.spawnEntity(wave);
         }

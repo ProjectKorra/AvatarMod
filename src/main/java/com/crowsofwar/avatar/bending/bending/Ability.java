@@ -133,7 +133,8 @@ public abstract class Ability {
             JUMP_HEIGHT = "jumpHeight",
             STOP_SHOCKWAVE = "stopShockwave",
             GROUND_POUND = "groundPound",
-            JUMPS = "numberOfJumps";
+            JUMPS = "numberOfJumps",
+            FALL_ABSORPTION = "fallAbsorption";
 
 
     private final UUID type;

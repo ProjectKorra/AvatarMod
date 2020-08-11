@@ -11,6 +11,7 @@ import com.crowsofwar.avatar.bending.bending.fire.AbilityFireRedirect;
 import com.crowsofwar.avatar.bending.bending.fire.AbilityFireShot;
 import com.crowsofwar.avatar.bending.bending.fire.AbilityFlamethrower;
 import com.crowsofwar.avatar.bending.bending.fire.statctrls.StatCtrlFlameStrike;
+import com.crowsofwar.avatar.bending.bending.fire.tickhandlers.FireParticleSpawner;
 import com.crowsofwar.avatar.bending.bending.fire.tickhandlers.FlamethrowerUpdateTick;
 import com.crowsofwar.avatar.entity.EntityFireball;
 import com.crowsofwar.avatar.entity.EntityFlames;
@@ -45,9 +46,10 @@ public abstract class OffensiveBehaviour extends Behavior<EntityOffensive> {
         registerBehavior(AbilityAirblade.AirBladeBehaviour.class);
         registerBehavior(FlamethrowerUpdateTick.FlamethrowerBehaviour.class);
         registerBehavior(StatCtrlFlameStrike.FlameStrikeBehaviour.class);
+        registerBehavior(FireParticleSpawner.FireJumpShockwave.class);
+        FireballBehavior.register();
         registerBehavior(Redirect.class);
         registerBehavior(AbilityFireRedirect.AbsorbBehaviour.class);
-        FireballBehavior.register();
     }
 
     public static class Idle extends OffensiveBehaviour {
