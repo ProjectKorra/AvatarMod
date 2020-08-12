@@ -109,7 +109,7 @@ public class AbilityContext extends BendingContext {
 	 * <li>100 power rating gives 2; damage would be twice as much as usual</li>
 	 */
 	public double getPowerRatingDamageMod() {
-		return getBender().getDamageMult(ability.getBendingId());
+		return getAbilityData().getDamageMult();
 	}
 
 }

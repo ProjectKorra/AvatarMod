@@ -22,108 +22,74 @@ import com.crowsofwar.avatar.entity.EntityOffensive;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.datasync.DataSerializer;
-import net.minecraft.network.datasync.DataSerializers;
 
 /**
  * @author CrowsOfWar
  */
 public abstract class FireballBehavior extends OffensiveBehaviour {
 
-	public static final DataSerializer<FireballBehavior> DATA_SERIALIZER = new Behavior.BehaviorSerializer<>();
-
-	public static int ID_NOTHING, ID_FALL, ID_PICKUP, ID_PLAYER_CONTROL, ID_THROWN;
-
-	public static void register() {
-		DataSerializers.registerSerializer(DATA_SERIALIZER);
-		ID_NOTHING = registerBehavior(Idle.class);
-		ID_PLAYER_CONTROL = registerBehavior(PlayerControlled.class);
-		ID_THROWN = registerBehavior(Thrown.class);
-		registerBehavior(AbilityFireball.FireballOrbitController.class);
-	}
-
-	public static class Idle extends FireballBehavior {
-
-		@Override
-		public FireballBehavior onUpdate(EntityOffensive entity) {
-			return this;
-		}
-
-		@Override
-		public void fromBytes(PacketBuffer buf) {
-		}
-
-		@Override
-		public void toBytes(PacketBuffer buf) {
-		}
-
-		@Override
-		public void load(NBTTagCompound nbt) {
-		}
-
-		@Override
-		public void save(NBTTagCompound nbt) {
-		}
-
-	}
-
-	public static class Thrown extends FireballBehavior {
-
-		@Override
-		public FireballBehavior onUpdate(EntityOffensive entity) {
-
-			entity.addVelocity(Vector.DOWN.times(1F / 40));
-			return this;
-
-		}
+    public static void register() {
+        registerBehavior(PlayerControlled.class);
+        registerBehavior(Thrown.class);
+        registerBehavior(AbilityFireball.FireballOrbitController.class);
+    }
 
 
-		@Override
-		public void fromBytes(PacketBuffer buf) {
-		}
+    public static class Thrown extends FireballBehavior {
 
-		@Override
-		public void toBytes(PacketBuffer buf) {
-		}
+        @Override
+        public FireballBehavior onUpdate(EntityOffensive entity) {
 
-		@Override
-		public void load(NBTTagCompound nbt) {
-		}
+            entity.addVelocity(Vector.DOWN.times(1F / 40));
+            return this;
 
-		@Override
-		public void save(NBTTagCompound nbt) {
-		}
+        }
 
-	}
 
-	public static class PlayerControlled extends FireballBehavior {
+        @Override
+        public void fromBytes(PacketBuffer buf) {
+        }
 
-		int ticks = 0;
+        @Override
+        public void toBytes(PacketBuffer buf) {
+        }
 
-		public PlayerControlled() {
-		}
+        @Override
+        public void load(NBTTagCompound nbt) {
+        }
 
-		@Override
-		public FireballBehavior onUpdate(EntityOffensive entity) {
-			return this;
-		}
+        @Override
+        public void save(NBTTagCompound nbt) {
+        }
 
-		@Override
-		public void fromBytes(PacketBuffer buf) {
-		}
+    }
 
-		@Override
-		public void toBytes(PacketBuffer buf) {
-		}
+    public static class PlayerControlled extends FireballBehavior {
 
-		@Override
-		public void load(NBTTagCompound nbt) {
-		}
+        public PlayerControlled() {
+        }
 
-		@Override
-		public void save(NBTTagCompound nbt) {
-		}
+        @Override
+        public FireballBehavior onUpdate(EntityOffensive entity) {
+            return this;
+        }
 
-	}
+        @Override
+        public void fromBytes(PacketBuffer buf) {
+        }
+
+        @Override
+        public void toBytes(PacketBuffer buf) {
+        }
+
+        @Override
+        public void load(NBTTagCompound nbt) {
+        }
+
+        @Override
+        public void save(NBTTagCompound nbt) {
+        }
+
+    }
 
 }

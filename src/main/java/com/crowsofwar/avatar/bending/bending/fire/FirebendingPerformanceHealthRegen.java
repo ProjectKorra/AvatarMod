@@ -30,12 +30,12 @@ public class FirebendingPerformanceHealthRegen {
 
 				// Provide health regen/benefits
 				if (score == 100) {
-					performance.modifyScore(-31);
+					performance.modifyScore(-25);
 					player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 50, 1));
 				} else if (score >= 70 && score < 100) {
 					// Heals 1/2 heart
 					player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 50, 0));
-					performance.modifyScore(-20);
+					performance.modifyScore(-15);
 				}
 
 			}

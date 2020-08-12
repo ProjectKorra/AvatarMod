@@ -21,20 +21,19 @@ import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingAi;
 import com.crowsofwar.avatar.bending.bending.fire.statctrls.StatCtrlFlameStrike;
+import com.crowsofwar.avatar.client.particle.ParticleBuilder;
+import com.crowsofwar.avatar.entity.EntityLightOrb;
+import com.crowsofwar.avatar.entity.EntityOffensive;
+import com.crowsofwar.avatar.entity.data.LightOrbBehavior;
+import com.crowsofwar.avatar.entity.data.OffensiveBehaviour;
+import com.crowsofwar.avatar.entity.mob.EntityBender;
+import com.crowsofwar.avatar.util.AvatarEntityUtils;
+import com.crowsofwar.avatar.util.AvatarUtils;
+import com.crowsofwar.avatar.util.PlayerViewRegistry;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
-import com.crowsofwar.avatar.entity.EntityLightOrb;
-import com.crowsofwar.avatar.entity.EntityOffensive;
-import com.crowsofwar.avatar.entity.data.Behavior;
-import com.crowsofwar.avatar.entity.data.LightOrbBehavior;
-import com.crowsofwar.avatar.entity.data.OffensiveBehaviour;
-import com.crowsofwar.avatar.entity.mob.EntityBender;
-import com.crowsofwar.avatar.client.particle.ParticleBuilder;
-import com.crowsofwar.avatar.util.AvatarEntityUtils;
-import com.crowsofwar.avatar.util.AvatarUtils;
-import com.crowsofwar.avatar.util.PlayerViewRegistry;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -48,7 +47,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.config.ConfigClient.CLIENT_CONFIG;
-import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.util.data.StatusControlController.FLAME_STRIKE_MAIN;
 import static com.crowsofwar.avatar.util.data.StatusControlController.FLAME_STRIKE_OFF;
 import static com.crowsofwar.avatar.util.data.TickHandlerController.FLAME_STRIKE_HANDLER;
@@ -68,7 +66,7 @@ public class AbilityFlameStrike extends Ability {
     @Override
     public void init() {
         super.init();
-        addProperties(FIRE_R, FIRE_G,  FIRE_B, FADE_R, FADE_G, FADE_B, STRIKES);
+        addProperties(FIRE_R, FIRE_G, FIRE_B, FADE_R, FADE_G, FADE_B, STRIKES);
         addBooleanProperties(SETS_FIRES, SMELTS);
     }
 
@@ -81,39 +79,30 @@ public class AbilityFlameStrike extends Ability {
         if (data.hasStatusControl(FLAME_STRIKE_MAIN) || data.hasStatusControl(FLAME_STRIKE_OFF))
             return;
 
-        float chi = STATS_CONFIG.chiFlameStrike;
         float orbSize = 0.3F;
         int lightRadius = 4;
         if (ctx.getLevel() == 1) {
-            chi = STATS_CONFIG.chiFlameStrike * 1.5F;
-            //3
             lightRadius += 2;
             orbSize += 0.1F;
 
         }
         if (ctx.getLevel() == 2) {
-            chi = STATS_CONFIG.chiInfernoPunch * 2;
-            //4
             lightRadius += 4;
             orbSize += 0.2F;
 
         }
         if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-            chi = STATS_CONFIG.chiFlameStrike * 2.5F;
-            //5
             lightRadius += 8;
             orbSize += 0.4F;
 
         }
         if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
-            chi = STATS_CONFIG.chiFlameStrike * 3F;
-            //6
             lightRadius += 3;
             orbSize += 0.15F;
 
         }
-
-        if (bender.consumeChi(chi)) {
+        
+        if(bender.consumeChi(getChiCost(ctx) / 4)) {
 
             //Light orb model translating is currently whack
             Vec3d height = entity.getPositionVector().add(0, 1.8, 0);
@@ -134,9 +123,11 @@ public class AbilityFlameStrike extends Ability {
             orb.setColourShiftInterval(0.15F);
             orb.setBehavior(new FlameStrikeLightOrb());
             orb.setType(CLIENT_CONFIG.fireRenderSettings.flameStrikeSphere ? EntityLightOrb.EnumType.COLOR_SPHERE : EntityLightOrb.EnumType.COLOR_CUBE);
-            world.spawnEntity(orb);
-
+            if (!world.isRemote)
+                world.spawnEntity(orb);
         }
+
+        ctx.getAbilityData().setRegenBurnout(false);
         StatCtrlFlameStrike.setTimesUsed(ctx.getBenderEntity().getPersistentID(), 0);
         data.addTickHandler(FLAME_STRIKE_HANDLER);
         data.addStatusControl(FLAME_STRIKE_MAIN);
@@ -154,96 +145,30 @@ public class AbilityFlameStrike extends Ability {
         return true;
     }
 
-    //Useless except for npc's; I need to fix this
-    public static class FireblastBehaviour extends OffensiveBehaviour {
+    @Override
+    public int getCooldown(AbilityContext ctx) {
+        return 0;
+    }
 
-        @Override
-        public Behavior onUpdate(EntityOffensive entity) {
-            entity.setEntitySize(entity.getAvgSize() * 1.075F);
-            entity.setVelocity(entity.getVelocity().scale(0.9375));
+    @Override
+    public float getBurnOut(AbilityContext ctx) {
+        return 0;
+    }
 
-            if (entity.velocity().magnitude() < 4)
-                entity.setDead();
-            if (entity.onGround)
-                entity.setDead();
+    @Override
+    public float getExhaustion(AbilityContext ctx) {
+        return 0;
+    }
 
-            World world = entity.world;
-            if (world.isRemote) {
-                if (entity.ticksExisted % 2 == 0) {
-                    for (double angle = 0; angle < 360; angle += Math.max((int) (entity.getAvgSize() * 20), 5)) {
-                        Vector position = Vector.getOrthogonalVector(entity.getLookVec(), angle, entity.getAvgSize());
-                        position = position.plus(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20);
-                        position = position.plus(AvatarEntityUtils.getMiddleOfEntity(entity).x, AvatarEntityUtils.getMiddleOfEntity(entity).y,
-                                AvatarEntityUtils.getMiddleOfEntity(entity).z);
-                        double spawnX = position.x();
-                        double spawnY = position.y();
-                        double spawnZ = position.z();
-                        ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Firebending()).vel(world.rand.nextGaussian() / 45,
-                                world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45).pos(spawnX, spawnY, spawnZ).
-                                scale(entity.getAvgSize() * 1.25F).time(4 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(255, 10, 5).spawn(world);
-                        ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Firebending()).vel(world.rand.nextGaussian() / 45,
-                                world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45).pos(spawnX, spawnY, spawnZ).
-                                scale(entity.getAvgSize() * 1.25F).time(14 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(255, 10, 5).spawn(world);
-                        ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Firebending()).vel(world.rand.nextGaussian() / 45,
-                                world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45).pos(spawnX, spawnY, spawnZ).
-                                scale(entity.getAvgSize() * 1.25F).time(4 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
-                                20 + AvatarUtils.getRandomNumberInRange(0, 30), 10).spawn(world);
-                        ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Firebending()).vel(world.rand.nextGaussian() / 45,
-                                world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45).pos(spawnX, spawnY, spawnZ).
-                                scale(entity.getAvgSize() * 1.25F).time(14 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
-                                20 + AvatarUtils.getRandomNumberInRange(0, 30), 10).spawn(world);
-                    }
-                }
-                for (int i = 0; i < 2; i++) {
-                    Vec3d mid = AvatarEntityUtils.getMiddleOfEntity(entity);
-                    double spawnX = mid.x + world.rand.nextGaussian() / 15;
-                    double spawnY = mid.y + world.rand.nextGaussian() / 15;
-                    double spawnZ = mid.z + world.rand.nextGaussian() / 15;
-                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Firebending()).vel(world.rand.nextGaussian() / 45,
-                            world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45).pos(spawnX, spawnY, spawnZ).
-                            scale(entity.getAvgSize() * 1.25F).time(4 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(255, 10, 5).spawn(world);
-                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Firebending()).vel(world.rand.nextGaussian() / 45,
-                            world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45).pos(spawnX, spawnY, spawnZ).
-                            scale(entity.getAvgSize() * 1.25F).time(14 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(255, 10, 5).spawn(world);
-                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Firebending()).vel(world.rand.nextGaussian() / 45,
-                            world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45).pos(spawnX, spawnY, spawnZ).
-                            scale(entity.getAvgSize() * 1.25F).time(4 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
-                            20 + AvatarUtils.getRandomNumberInRange(0, 30), 10).spawn(world);
-                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Firebending()).vel(world.rand.nextGaussian() / 45,
-                            world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45).pos(spawnX, spawnY, spawnZ).
-                            scale(entity.getAvgSize() * 1.25F).time(14 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
-                            20 + AvatarUtils.getRandomNumberInRange(0, 30), 10).spawn(world);
-
-                }
-            }
-            return this;
-        }
-
-        @Override
-        public void fromBytes(PacketBuffer buf) {
-
-        }
-
-        @Override
-        public void toBytes(PacketBuffer buf) {
-
-        }
-
-        @Override
-        public void load(NBTTagCompound nbt) {
-
-        }
-
-        @Override
-        public void save(NBTTagCompound nbt) {
-
-        }
+    @Override
+    public boolean isProjectile() {
+        return true;
     }
 
     public static class FlameStrikeLightOrb extends LightOrbBehavior {
 
         @Override
-        public Behavior onUpdate(EntityLightOrb entity) {
+        public LightOrbBehavior onUpdate(EntityLightOrb entity) {
             Entity emitter = entity.getEmittingEntity();
             if (emitter != null) {
                 if (emitter instanceof EntityBender || emitter instanceof EntityPlayer) {
@@ -262,17 +187,14 @@ public class AbilityFlameStrike extends Ability {
                                     //Right
                                     if (((EntityPlayer) emitter).getPrimaryHand() == EnumHandSide.RIGHT) {
                                         rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw + 90), 0).times(0.5).withY(0).toMinecraft();
-                                        rightSide = rightSide.add(height);
-                                        vel = rightSide.subtract(entity.getPositionVector());
                                     }
                                     //Left
                                     else {
                                         rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw - 90), 0).times(0.5).withY(0).toMinecraft();
-                                        rightSide = rightSide.add(height);
-                                        vel = rightSide.subtract(entity.getPositionVector());
                                     }
+                                    rightSide = rightSide.add(height);
+                                    vel = rightSide.subtract(entity.getPositionVector());
                                     entity.setVelocity(vel.scale(0.5));
-                                    AvatarUtils.afterVelocityAdded(entity);
                                 } else {
                                     entity.setOrbSize(entity.getInitialSize());
                                     height = emitter.getPositionVector().add(0, 0.88, 0);
@@ -280,15 +202,12 @@ public class AbilityFlameStrike extends Ability {
                                     if (((EntityPlayer) emitter).getPrimaryHand() == EnumHandSide.RIGHT) {
                                         rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw + 90), 0).times(0.55 -
                                                 Math.min(0.5F / entity.getOrbSize() * 0.1F, 0.05F)).withY(0).toMinecraft();
-                                        rightSide = rightSide.add(height);
-                                        vel = rightSide.subtract(entity.getPositionVector());
                                     } else {
                                         rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw - 90), 0).times(0.55).withY(0).toMinecraft();
-                                        rightSide = rightSide.add(height);
-                                        vel = rightSide.subtract(entity.getPositionVector());
                                     }
+                                    rightSide = rightSide.add(height);
+                                    vel = rightSide.subtract(entity.getPositionVector());
                                     entity.setVelocity(vel.scale(0.5));
-                                    AvatarUtils.afterVelocityAdded(entity);
                                 }
 
                             } else {
@@ -297,32 +216,32 @@ public class AbilityFlameStrike extends Ability {
                                 Vec3d vel;
                                 if (((EntityBender) emitter).getPrimaryHand() == EnumHandSide.RIGHT) {
                                     rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw + 90), 0).times(0.55).withY(0).toMinecraft();
-                                    rightSide = rightSide.add(height);
-                                    vel = rightSide.subtract(entity.getPositionVector());
                                 } else {
                                     rightSide = Vector.toRectangular(Math.toRadians(emitter.rotationYaw - 90), 0).times(0.55).withY(0).toMinecraft();
-                                    rightSide = rightSide.add(height);
-                                    vel = rightSide.subtract(entity.getPositionVector());
                                 }
+                                rightSide = rightSide.add(height);
+                                vel = rightSide.subtract(entity.getPositionVector());
                                 entity.setVelocity(vel.scale(0.5));
-                                AvatarUtils.afterVelocityAdded(entity);
                             }
+                            AvatarUtils.afterVelocityAdded(entity);
                             int lightRadius = 4;
                             //Stops constant spam and calculations
                             if (entity.ticksExisted == 1) {
                                 AbilityData aD = AbilityData.get((EntityLivingBase) emitter, "inferno_punch");
-                                int level = aD.getLevel();
-                                if (level >= 1) {
-                                    lightRadius = 6;
-                                }
-                                if (level >= 2) {
-                                    lightRadius = 8;
-                                }
-                                if (aD.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-                                    lightRadius = 12;
-                                }
-                                if (aD.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-                                    lightRadius = 7;
+                                if (aD != null) {
+                                    int level = aD.getLevel();
+                                    if (level >= 1) {
+                                        lightRadius = 6;
+                                    }
+                                    if (level >= 2) {
+                                        lightRadius = 8;
+                                    }
+                                    if (aD.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+                                        lightRadius = 12;
+                                    }
+                                    if (aD.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+                                        lightRadius = 7;
+                                    }
                                 }
                             }
                             if (entity.getEntityWorld().isRemote)
@@ -465,10 +384,5 @@ public class AbilityFlameStrike extends Ability {
         public void save(NBTTagCompound nbt) {
 
         }
-    }
-
-    @Override
-    public boolean isProjectile() {
-        return true;
     }
 }

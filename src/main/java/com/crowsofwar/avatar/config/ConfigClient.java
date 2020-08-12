@@ -208,7 +208,7 @@ public class ConfigClient {
 		public final boolean showFlameStrikeOrb = false;
 
 		@Load
-		public final boolean solidFlamethrowerParticles = true;
+		public final boolean solidFlamethrowerParticles = false;
 
 		@Load
 		public final boolean solidFlameStrikeParticles = true;

@@ -1,13 +1,14 @@
 package com.crowsofwar.avatar.entity;
 
-import com.crowsofwar.avatar.client.particle.AvatarParticles;
 import com.crowsofwar.avatar.bending.bending.combustion.Combustionbending;
 import com.crowsofwar.avatar.bending.bending.lightning.Lightningbending;
-import com.crowsofwar.avatar.util.damageutils.AvatarDamageSource;
+import com.crowsofwar.avatar.client.particle.AvatarParticles;
+import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.entity.data.Behavior;
 import com.crowsofwar.avatar.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
+import com.crowsofwar.avatar.util.damageutils.AvatarDamageSource;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.BlockLiquid;
@@ -47,6 +48,22 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
             .createKey(EntityOffensive.class, DataSerializers.FLOAT);
     private static final DataParameter<OffensiveBehaviour> SYNC_BEHAVIOR = EntityDataManager
             .createKey(EntityOffensive.class, OffensiveBehaviour.DATA_SERIALIZER);
+    private static final DataParameter<Boolean> SYNC_PIERCES = EntityDataManager
+            .createKey(EntityOffensive.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Float> SYNC_EXPLOSION_SIZE = EntityDataManager
+            .createKey(EntityOffensive.class, DataSerializers.FLOAT);
+    private static final DataParameter<Integer> SYNC_R = EntityDataManager.createKey(EntityOffensive.class,
+            DataSerializers.VARINT);
+    private static final DataParameter<Integer> SYNC_G = EntityDataManager.createKey(EntityOffensive.class,
+            DataSerializers.VARINT);
+    private static final DataParameter<Integer> SYNC_B = EntityDataManager.createKey(EntityOffensive.class,
+            DataSerializers.VARINT);
+    private static final DataParameter<Integer> SYNC_FADE_R = EntityDataManager.createKey(EntityOffensive.class,
+            DataSerializers.VARINT);
+    private static final DataParameter<Integer> SYNC_FADE_G = EntityDataManager.createKey(EntityOffensive.class,
+            DataSerializers.VARINT);
+    private static final DataParameter<Integer> SYNC_FADE_B = EntityDataManager.createKey(EntityOffensive.class,
+            DataSerializers.VARINT);
 
     /**
      * The fraction of the impact velocity that should be the maximum spread speed added on impact.
@@ -59,6 +76,8 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 
     private float xp;
     private float push;
+    //Bloody hell
+    private float chiHit;
     private int fireTime;
     private boolean dynamicSpreadingCollision;
     private boolean collidedWithSolid;
@@ -67,6 +86,8 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
     private double prevVelX, prevVelY, prevVelZ;
     private Predicate<Entity> solidEntities;
     private String damageSource;
+    private float explosionStrength;
+    private float explosionDamage;
 
 
     public EntityOffensive(World world) {
@@ -82,15 +103,18 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
         this.height = getHeight();
         this.damageSource = AvatarDamageSource.FIRE.getDamageType();
         this.push = 1;
-    }
-
-    public void setPush(float push) {
-        this.push = push;
+        this.chiHit = 1;
+        this.explosionStrength = 0.4F;
+        this.explosionDamage = 1;
     }
 
     @Override
     public float getPush() {
         return push;
+    }
+
+    public void setPush(float push) {
+        this.push = push;
     }
 
     public OffensiveBehaviour getBehaviour() {
@@ -136,7 +160,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
     public float getAvgSize() {
         if (getHeight() == getWidth()) {
             return getHeight();
-        } else return (getHeight() + getWidth()) / 2;
+        } else return (getHeight() + getWidth()) / 2.0F;
     }
 
     public void setEntitySize(float height, float width) {
@@ -155,6 +179,58 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 
     public void setDamage(float damage) {
         dataManager.set(SYNC_DAMAGE, damage);
+    }
+
+    public void setExplosionSize(float size) {
+        dataManager.set(SYNC_EXPLOSION_SIZE, size);
+    }
+
+    public void setExplosionStrength(float strength) {
+        this.explosionStrength = strength;
+    }
+
+    public void setExplosionDamage(float damage) {
+        this.explosionDamage = damage;
+    }
+
+    public void setRGB(int r, int g, int b) {
+        dataManager.set(SYNC_R, r);
+        dataManager.set(SYNC_G, g);
+        dataManager.set(SYNC_B, b);
+    }
+
+    public int[] getRGB() {
+        int[] rgb = new int[3];
+        rgb[0] = dataManager.get(SYNC_R);
+        rgb[1] = dataManager.get(SYNC_G);
+        rgb[2] = dataManager.get(SYNC_B);
+        return rgb;
+    }
+
+    public void setRGB(int[] rgb) {
+        dataManager.set(SYNC_R, rgb[0]);
+        dataManager.set(SYNC_G, rgb[1]);
+        dataManager.set(SYNC_B, rgb[2]);
+    }
+
+    public void setFade(int fadeR, int fadeG, int fadeB) {
+        dataManager.set(SYNC_FADE_R, fadeR);
+        dataManager.set(SYNC_FADE_G, fadeG);
+        dataManager.set(SYNC_FADE_B, fadeB);
+    }
+
+    public int[] getFade() {
+        int[] fade = new int[3];
+        fade[0] = dataManager.get(SYNC_FADE_R);
+        fade[1] = dataManager.get(SYNC_FADE_G);
+        fade[2] = dataManager.get(SYNC_FADE_B);
+        return fade;
+    }
+
+    public void setFade(int[] fade) {
+        dataManager.set(SYNC_FADE_R, fade[0]);
+        dataManager.set(SYNC_FADE_G, fade[1]);
+        dataManager.set(SYNC_FADE_B, fade[2]);
     }
 
     //This just makes the methods easier to use.
@@ -178,6 +254,14 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
         dataManager.register(SYNC_WIDTH, 1.0F);
         dataManager.register(SYNC_HEIGHT, 1.0F);
         dataManager.register(SYNC_BEHAVIOR, new OffensiveBehaviour.Idle());
+        dataManager.register(SYNC_PIERCES, false);
+        dataManager.register(SYNC_EXPLOSION_SIZE, 1F);
+        dataManager.register(SYNC_R, 255);
+        dataManager.register(SYNC_G, 255);
+        dataManager.register(SYNC_B, 255);
+        dataManager.register(SYNC_FADE_R, 255);
+        dataManager.register(SYNC_FADE_G, 255);
+        dataManager.register(SYNC_FADE_B, 255);
     }
 
     @Override
@@ -204,7 +288,11 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
     public void onUpdate() {
         super.onUpdate();
 
-        setBehaviour((OffensiveBehaviour) getBehaviour().onUpdate(this));
+        if (getBehaviour() != null)
+            setBehaviour((OffensiveBehaviour) getBehaviour().onUpdate(this));
+        else
+            setBehaviour(new OffensiveBehaviour.Idle());
+
         setSize(getWidth(), getHeight());
 
         List<Entity> targets = world.getEntitiesWithinAABB(Entity.class, getExpandedHitbox());
@@ -429,9 +517,9 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 
     @Override
     public Vec3d getKnockback() {
-        double x = getKnockbackMult().x * motionX;
-        double y = Math.min(0.5, (motionY + 0.15) * getKnockbackMult().y);
-        double z = getKnockbackMult().z * motionZ;
+        double x = getKnockbackMult().x * motionX / 2;
+        double y = Math.min(0.35, (motionY + 0.05) * getKnockbackMult().y);
+        double z = getKnockbackMult().z * motionZ / 2;
         return new Vec3d(x, y, z);
     }
 
@@ -443,8 +531,9 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 
     @Override
     public boolean onCollideWithSolid() {
-        IBlockState state = world.getBlockState(getPosition());
+        IBlockState state;
         boolean collision = !world.getCollisionBoxes(this, getExpandedHitbox()).isEmpty();
+
         for (double x = 0; x <= 1; x += 0.5) {
             for (double z = 0; z <= 1; z += 0.5) {
                 for (double y = 0; y <= 1; y += 0.5) {
@@ -479,6 +568,16 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
         return collided || collision;
     }
 
+    @Override
+    protected void spawnExtinguishIndicators() {
+        if (world.isRemote) {
+            for (int i = 0; i < 4; i++)
+                ParticleBuilder.create(ParticleBuilder.Type.SNOW).pos(AvatarEntityUtils.getMiddleOfEntity(this)).scale(Math.min(Math.max(getAvgSize() * 2, 0.125F), 1F))
+                        .vel(world.rand.nextGaussian() / 20 + motionX / 8, world.rand.nextDouble() / 10 + motionY / 8,
+                                world.rand.nextGaussian() / 20 + motionZ / 8).time(AvatarUtils.getRandomNumberInRange(8, 16) * 2).spawn(world);
+        }
+    }
+
     public int getLifeTime() {
         return dataManager.get(SYNC_LIFETIME);
     }
@@ -489,12 +588,12 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 
     @Override
     public float getAoeDamage() {
-        return 1;
+        return explosionDamage;
     }
 
     @Override
     public Vec3d getKnockbackMult() {
-        return new Vec3d(1, 2, 1);
+        return new Vec3d(push, push / 2, push);
     }
 
     @Override
@@ -542,7 +641,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
         if (damageSource.startsWith("avatar_")) {
             source = new EntityDamageSourceIndirect(damageSource, target, owner);
             if (isProjectile())
-               source.setProjectile();
+                source.setProjectile();
             source.setMagicDamage();
             if (getElement() instanceof Lightningbending)
                 source.setDamageBypassesArmor();
@@ -573,7 +672,11 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 
     @Override
     public boolean isPiercing() {
-        return false;
+        return dataManager.get(SYNC_PIERCES);
+    }
+
+    public void setPiercing(boolean pierces) {
+        dataManager.set(SYNC_PIERCES, pierces);
     }
 
     @Override
@@ -592,7 +695,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 
     @Override
     public double getExplosionHitboxGrowth() {
-        return 1;
+        return (double) dataManager.get(SYNC_EXPLOSION_SIZE);
     }
 
     @Override
@@ -602,6 +705,15 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 
     public void setXp(float xp) {
         this.xp = xp;
+    }
+
+    @Override
+    public float getChiHit() {
+        return this.chiHit;
+    }
+
+    public void setChiHit(float chi) {
+        this.chiHit = chi;
     }
 
     @Override
@@ -618,7 +730,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
     //No relation to getKnockback.
     @Override
     public Vec3d getExplosionKnockbackMult() {
-        return new Vec3d(0.4, 0.4, 0.4);
+        return new Vec3d(explosionStrength, explosionStrength, explosionStrength);
     }
 
     //Only used in shockwaves

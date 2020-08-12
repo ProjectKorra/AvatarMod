@@ -174,7 +174,7 @@ public class SmashGroundHandler extends TickHandler {
 						Vector speed = new Vector((entity.ticksExisted * ((EntityShockwave) entity).getSpeed()) * Math.sin(angle) * (entity.getParticleSpeed() * 8.25),
 								entity.getParticleSpeed() / 6, (entity.ticksExisted * ((EntityShockwave) entity).getSpeed()) * Math.cos(angle) * (entity.getParticleSpeed() * 8.25));
 						ParticleBuilder.create(ParticleBuilder.Type.FLASH).clr(0.95F, 0.95F, 0.95F, 0.2F).pos(x2, y2, z2).vel(speed.toMinecraft())
-								.collide(true).scale(2F).time(10 + AvatarUtils.getRandomNumberInRange(0, 4)).spawn(entity.world);
+								.collide(true).collideParticles(true).scale(2F).time(10 + AvatarUtils.getRandomNumberInRange(0, 4)).spawn(entity.world);
 					}
 				}
 				}

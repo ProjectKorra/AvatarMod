@@ -10,15 +10,16 @@
       "burnOutRecoverTick": 0.12,
       "performanceAmount": 15,
       "lifeTime": 30,
-      "size": 0.5,
+      "size": 0.75,
       "speed": 5,
       "knockback": 1,
       "chiOnHit": 1.4,
       "damage": 3.5,
       "numberOfBlades": 1,
+      "angle": 0,
       "boomerAang": false,
       "destroyGrass": false,
-      "angle": 0
+      "pierces": false
     },
     "level2": {
       "tier": 2,
@@ -29,7 +30,7 @@
       "burnOutRecoverTick": 0.21,
       "performanceAmount": 20,
       "lifeTime": 35,
-      "size": 0.75,
+      "size": 1,
       "speed": 7,
       "knockback": 1.5,
       "chiOnHit": 1.6,
@@ -44,12 +45,13 @@
       "burnOutRecoverTick": 0.23,
       "performanceAmount": 25,
       "lifeTime": 40,
-      "size": 1.0,
+      "size": 1.25,
       "speed": 9,
       "knockback": 1.7,
       "chiOnHit": 1.7,
       "damage": 4.5,
-      "destroyGrass": true
+      "destroyGrass": true,
+      "pierces": true
     },
     "level4_1": {
       "tier": 4,
@@ -66,7 +68,7 @@
       "chiOnHit": 1.8,
       "damage": 3.5,
       "numberOfBlades": 5,
-      "angle": 8
+      "angle": 15
     },
     "level4_2": {
       "tier": 4,
@@ -76,8 +78,8 @@
       "burnOut": 30.0,
       "burnOutRecoverTick": 0.28,
       "performanceAmount": 15,
-      "lifeTime": 70,
-      "size": 1.4,
+      "lifeTime": 50,
+      "size": 1.75,
       "speed": 12,
       "knockback": 3,
       "chiOnHit": 1.9,

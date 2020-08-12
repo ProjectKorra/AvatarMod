@@ -35,11 +35,11 @@ public class FireParticleSpawner extends TickHandler {
             for (int i = 0; i < 2 + AvatarUtils.getRandomNumberInRange(0, 4); i++) {
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).clr(255, 10,
                         5).pos(pos.toMinecraft()).vel(world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40).scale(1F +
-                        Math.max(data.getLevel(), 0) / 2F).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(new Firebending()).collide(true)
+                        Math.max(data.getLevel(), 0) / 2F).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(new Firebending()).collide(true).collideParticles(true)
                         .ability(jump).spawnEntity(target).spawn(world);
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).clr(255, 40 + AvatarUtils.getRandomNumberInRange(0, 60),
                         10).pos(pos.toMinecraft()).vel(world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40)
-                        .scale(1F + Math.max(data.getLevel(), 0) / 2F).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(new Firebending()).collide(true)
+                        .scale(1F + Math.max(data.getLevel(), 0) / 2F).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(new Firebending()).collide(true).collideParticles(true)
                         .ability(jump).spawnEntity(target).spawn(world);
             }
 

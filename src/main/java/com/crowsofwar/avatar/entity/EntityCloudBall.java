@@ -191,11 +191,11 @@ public class EntityCloudBall extends EntityOffensive {
 				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x,
 						world.rand.nextGaussian() / 80 + velocity.y, world.rand.nextGaussian() / 80 + velocity.z)
 						.time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(0.95F, 0.95F, 0.95F, 0.1F).spawnEntity(getOwner())
-						.scale(0.75F * getAvgSize() * (1 / getAvgSize())).element(new Airbending()).collide(true).spawn(world);
+						.scale(0.75F * getAvgSize() * (1 / getAvgSize())).element(new Airbending()).collide(true).collideParticles(true).spawn(world);
 				ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x,
 						world.rand.nextGaussian() / 80 + velocity.y, world.rand.nextGaussian() / 80 + velocity.z)
 						.time(10 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(0.95F, 0.95F, 0.95F, 0.1F).spawnEntity(getOwner())
-						.scale(0.75F * getAvgSize() * (1 / getAvgSize())).element(new Airbending()).collide(true).spawn(world);
+						.scale(0.75F * getAvgSize() * (1 / getAvgSize())).element(new Airbending()).collide(true).collideParticles(true).spawn(world);
 
 			}
 		}
@@ -370,7 +370,7 @@ public class EntityCloudBall extends EntityOffensive {
 	public void spawnExplosionParticles(World world, Vec3d pos) {
 		if (world.isRemote)
 			for (int i = 0; i < getSize(); i++)
-				ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(getAvgSize()).collide(true).vel(world.rand.nextGaussian() / 10,
+				ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(getAvgSize()).collide(true).collideParticles(true).vel(world.rand.nextGaussian() / 10,
 						world.rand.nextGaussian() / 10, world.rand.nextGaussian() / 10).time(8).pos(AvatarEntityUtils.getMiddleOfEntity(this))
 						.clr(0.95F, 0.95F, 0.95F, 0.2F).element(getElement()).spawn(world);
 	}
@@ -379,7 +379,7 @@ public class EntityCloudBall extends EntityOffensive {
 	public void spawnDissipateParticles(World world, Vec3d pos) {
 		if (world.isRemote)
 			for (int i = 0; i < getSize(); i++)
-				ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(getAvgSize()).collide(true).vel(world.rand.nextGaussian() / 40,
+				ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(getAvgSize()).collide(true).collideParticles(true).vel(world.rand.nextGaussian() / 40,
 						world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40).time(8).pos(AvatarEntityUtils.getMiddleOfEntity(this))
 						.clr(0.95F, 0.95F, 0.95F, 0.2F).element(getElement()).spawn(world);
 

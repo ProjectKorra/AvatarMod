@@ -52,7 +52,7 @@ public class AirParticleSpawner extends TickHandler {
 			for (int i = 0; i < 4 + AvatarUtils.getRandomNumberInRange(0, 2); i++) {
 				ParticleBuilder.create(ParticleBuilder.Type.FLASH).clr(0.95F, 0.95F, 0.95F, 0.075F).pos(pos.toMinecraft()).vel(world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40)
 						.scale(1.25F + Math.max(data.getLevel(), 0) / 4F).time(8 + AvatarUtils.getRandomNumberInRange(0, 6))
-						.element(new Airbending()).collide(true).spawn(world);
+						.element(new Airbending()).collide(true).collideParticles(true).spawn(world);
 				}
 		//particles.spawnParticles(entity.world, EnumParticleTypes.EXPLOSION_NORMAL, 1, 4, pos,
 		//		new Vector(0.7, 0.2, 0.7), true);

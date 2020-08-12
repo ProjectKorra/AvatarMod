@@ -38,28 +38,28 @@ public class BattlePerformanceScore {
 	}
 
 	public static void addScore(EntityLivingBase entity, int amount) {
-		BendingData bendingData = BendingData.get(entity);
+		BendingData bendingData = BendingData.getFromEntity(entity);
 		if (bendingData != null) {
 			bendingData.getPerformance().modifyScore(amount);
 		}
 	}
 
 	public static void addSmallScore(EntityLivingBase entity) {
-		BendingData bendingData = BendingData.get(entity);
+		BendingData bendingData = BendingData.getFromEntity(entity);
 		if (bendingData != null) {
 			bendingData.getPerformance().modifyScore(SCORE_MOD_SMALL);
 		}
 	}
 
 	public static void addMediumScore(EntityLivingBase entity) {
-		BendingData bendingData = BendingData.get(entity);
+		BendingData bendingData = BendingData.getFromEntity(entity);
 		if (bendingData != null) {
 			bendingData.getPerformance().modifyScore(SCORE_MOD_MEDIUM);
 		}
 	}
 
 	public static void addLargeScore(EntityLivingBase entity) {
-		BendingData bendingData = BendingData.get(entity);
+		BendingData bendingData = BendingData.getFromEntity(entity);
 		if (bendingData != null) {
 			bendingData.getPerformance().modifyScore(SCORE_MOD_LARGE);
 		}
@@ -76,7 +76,7 @@ public class BattlePerformanceScore {
 
 		// Minimum / maximum score change per second, where min. change occurs when score is near 0,
 		// and max. change occurs when score is at 100
-		final double min = 2;
+		final double min = 1;
 		final double max = 4;
 
 		// Generates a curve from minimum to maximum

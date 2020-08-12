@@ -162,9 +162,9 @@ public abstract class Bender {
     public double getDamageMult(UUID bendingId) {
         double powerRating = calcPowerRating(bendingId);
         if (powerRating < 0) {
-            return 0.005 * powerRating + 1 < 0 ? 1F / 50 : 0.005 * powerRating + 1;
+            return 0.05 * powerRating + 1 < 0 ? 1F / 50 : 0.05 * powerRating + 1;
         } else {
-            return 0.005 * powerRating + 1;
+            return 0.05 * powerRating + 1;
         }
     }
 
@@ -225,6 +225,9 @@ public abstract class Bender {
                 if (canUseAbility(ability) && !MinecraftForge.EVENT_BUS.post(new AbilityUseEvent(entity, ability, level + 1, path))) {
                     if (data.getMiscData().getCanUseAbilities()) {
                         if (aD.getAbilityCooldown() == 0 || entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
+                            aD.setPowerRating(calcPowerRating(ability.getBendingId()));
+                            //This lets the ability disable burnout regeneration
+                            aD.setRegenBurnout(true);
                             ability.execute(abilityCtx);
                             if (entity instanceof EntityPlayer)
                                 ((EntityPlayer) entity).addExhaustion(ability.getExhaustion(abilityCtx));
@@ -249,6 +252,7 @@ public abstract class Bender {
             } else {
                 if (entity instanceof EntityPlayer)
                     Ability.syncProperties((EntityPlayer) entity);
+                Objects.requireNonNull(Bender.get(entity)).sendMessage("avatar.reload");
             }
         }
 
@@ -289,7 +293,14 @@ public abstract class Bender {
         List<Ability> abilities = Abilities.all().stream().filter(ability -> AbilityData.get(entity, ability.getName()).getAbilityCooldown() > 0).collect(Collectors.toList());
         for (Ability ability : abilities) {
             AbilityData aD = AbilityData.get(entity, ability.getName());
-            aD.decrementCooldown();
+            if (aD != null) {
+                if (aD.shouldRegenBurnout()) {
+                    if (aD.getBurnOut() > 0) {
+                        aD.setBurnOut(aD.getBurnOut() - ability.getProperty(Ability.BURNOUT_REGEN, aD).floatValue());
+                    }
+                }
+                aD.decrementCooldown();
+            }
             data.save(DataCategory.ABILITY_DATA);
         }
 
@@ -373,9 +384,11 @@ public abstract class Bender {
             PrModifierHandler.addPowerRatingModifiers(this);
         }
 
-        data.getPerformance().update();
+        //Doesn't immediately start updating
+        if (entity.ticksExisted - entity.getLastAttackedEntityTime() > 3)
+            data.getPerformance().update();
 
-        if (entity instanceof EntityPlayer && !world.isRemote && entity.ticksExisted % 40 == 0) {
+        if (entity instanceof EntityPlayer && !world.isRemote && entity.ticksExisted % 20 == 0) {
             syncPowerRating();
         }
 

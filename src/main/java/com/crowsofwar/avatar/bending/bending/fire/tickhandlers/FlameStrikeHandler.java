@@ -15,7 +15,9 @@ import com.crowsofwar.avatar.util.PlayerViewRegistry;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumHandSide;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -42,8 +44,6 @@ public class FlameStrikeHandler extends TickHandler {
         int usage = strike.getProperty(STRIKES, abilityData).intValue();
         int particleCount = 1;
         int level = abilityData.getLevel();
-        boolean charge = false;
-        int chargeLevel = StatCtrlFlameStrike.getChargeLevel(entity.getPersistentID());
         float particleSize = 0.7F;
         int r, g, b, fadeR, fadeG, fadeB;
         r = strike.getProperty(FIRE_R, abilityData).intValue();
@@ -63,8 +63,6 @@ public class FlameStrikeHandler extends TickHandler {
         if (level == 2) {
             particleSize = 0.875F;
         }
-        if (level >= 2)
-            charge = true;
 
         if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
             particleCount = 3;
@@ -77,27 +75,24 @@ public class FlameStrikeHandler extends TickHandler {
             particleSize = 1F;
         }
 
-        particleSize *= ctx.getBender().getDamageMult(Firebending.ID) * abilityData.getXpModifier();
-        //particleSize = (float) (particleSize * (0.8 + chargeLevel / 5F));
-        charge |= usage - StatCtrlFlameStrike.getTimesUsed(entity.getPersistentID()) == 1;
-        if ((data.hasStatusControl(FLAME_STRIKE_MAIN) || data.hasStatusControl(FLAME_STRIKE_OFF))) {
+        particleSize *= abilityData.getDamageMult() * abilityData.getXpModifier();
+         if ((data.hasStatusControl(FLAME_STRIKE_MAIN) || data.hasStatusControl(FLAME_STRIKE_OFF))) {
 
             Vec3d height, rightSide;
             if (entity instanceof EntityPlayer) {
                 if (!AvatarMod.realFirstPersonRender2Compat && (PlayerViewRegistry.getPlayerViewMode(entity.getUniqueID()) >= 2 || PlayerViewRegistry.getPlayerViewMode(entity.getUniqueID()) <= -1)) {
-                    height = entity.getPositionVector().add(0, 1.6, 0);
+                    height = entity.getPositionVector().add(0, 1.5, 0);
                     height = height.add(entity.getLookVec().scale(0.8));
                     //Right
                     if (entity.getPrimaryHand() == EnumHandSide.RIGHT && data.hasStatusControl(FLAME_STRIKE_MAIN)
                             || entity.getPrimaryHand() == EnumHandSide.LEFT && data.hasStatusControl(FLAME_STRIKE_OFF)) {
                         rightSide = Vector.toRectangular(Math.toRadians(entity.rotationYaw + 90), 0).times(0.5).withY(0).toMinecraft();
-                        rightSide = rightSide.add(height);
                     }
                     //Left
                     else {
                         rightSide = Vector.toRectangular(Math.toRadians(entity.rotationYaw - 90), 0).times(0.5).withY(0).toMinecraft();
-                        rightSide = rightSide.add(height);
                     }
+                    rightSide = rightSide.add(height);
                 } else {
                     height = entity.getPositionVector().add(0, 0.84, 0);
                     if (entity.getPrimaryHand() == EnumHandSide.RIGHT && data.hasStatusControl(FLAME_STRIKE_MAIN)
@@ -130,23 +125,14 @@ public class FlameStrikeHandler extends TickHandler {
                             fadeG * 2);
                     int bRandom = fadeB < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeB * 2) : AvatarUtils.getRandomNumberInRange(fadeB / 2,
                             fadeB * 2);
-                    if (abilityData.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(rightSide).time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).vel(world.rand.nextGaussian() / 40, world.rand.nextDouble() / 40,
-                                world.rand.nextGaussian() / 40).clr(r, g, b).collide(false).
-                                scale(particleSize / 1.5F).element(new Firebending()).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175))
-                                .spawn(world);
+                                world.rand.nextGaussian() / 40).clr(r, g, b).collide(true).collideParticles(true).
+                                scale(particleSize / 2F).element(new Firebending()).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(20, 100))
+                                .ability(strike).spawnEntity(entity).spawn(world);
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(rightSide).time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).vel(world.rand.nextGaussian() / 40, world.rand.nextDouble() / 40,
-                                world.rand.nextGaussian() / 40).clr(255, 60 + AvatarUtils.getRandomNumberInRange(0, 60), 10).collide(false).
-                                scale(particleSize / 1.5F).element(new Firebending()).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175))
-                                .spawn(world);
-                    } else {
-                        ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(rightSide).time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).vel(world.rand.nextGaussian() / 40, world.rand.nextDouble() / 40,
-                                world.rand.nextGaussian() / 40).clr(r, g, b).collide(false).
-                                scale(particleSize / 1.5F).element(new Firebending()).spawn(world);
-                        ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(rightSide).time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).vel(world.rand.nextGaussian() / 40, world.rand.nextDouble() / 40,
-                                world.rand.nextGaussian() / 40).clr(255, 60 + AvatarUtils.getRandomNumberInRange(0, 60), 10).collide(false).
-                                scale(particleSize / 1.5F).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).element(new Firebending()).spawn(world);
-                    }
+                                world.rand.nextGaussian() / 40).clr(255, 60 + AvatarUtils.getRandomNumberInRange(0, 60), 10).collide(true).collideParticles(true).
+                                scale(particleSize / 2F).element(new Firebending()).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(20, 100))
+                                .ability(strike).spawnEntity(entity).spawn(world);
                 }
 
         } else return true;

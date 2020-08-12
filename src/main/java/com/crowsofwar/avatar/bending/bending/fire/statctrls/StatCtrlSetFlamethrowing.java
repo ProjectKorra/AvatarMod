@@ -60,20 +60,6 @@ public class StatCtrlSetFlamethrowing extends StatusControl {
 
 		if (data.hasBendingId(Firebending.ID)) {
 			if (setting) {
-				if (!(bender instanceof EntityPlayer) && (existing == null || !(existing.getBehavior() instanceof FlamethrowerUpdateTick.FlamethrowerBehaviour))) {
-					EntityLightOrb orb = new EntityLightOrb(world);
-					orb.setOwner(bender);
-					orb.setPosition(bender.getPositionVector().add(0, bender.getEyeHeight() - 0.5, 0));
-					orb.setOrbSize(0.25F);
-					orb.setAbility(new AbilityFlamethrower());
-					orb.setColor(1F, 77 / 255F, 0F, 1F);
-					orb.setType(EntityLightOrb.EnumType.COLOR_CUBE);
-					orb.setLightRadius(3);
-					orb.setElement(new Firebending());
-					orb.setBehavior(new FlamethrowerUpdateTick.FlamethrowerBehaviour());
-					if (!world.isRemote)
-						world.spawnEntity(orb);
-				}
 				data.addStatusControl(STOP_FLAMETHROW);
 				data.addTickHandler(FLAMETHROWER);
 			} else {

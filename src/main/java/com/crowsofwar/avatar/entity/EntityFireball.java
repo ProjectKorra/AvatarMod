@@ -18,13 +18,13 @@ package com.crowsofwar.avatar.entity;
 
 import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import com.crowsofwar.avatar.bending.bending.fire.Firebending;
+import com.crowsofwar.avatar.client.particle.ParticleBuilder;
+import com.crowsofwar.avatar.entity.data.FireballBehavior;
+import com.crowsofwar.avatar.util.AvatarEntityUtils;
+import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.StatusControlController;
-import com.crowsofwar.avatar.entity.data.FireballBehavior;
-import com.crowsofwar.avatar.client.particle.ParticleBuilder;
-import com.crowsofwar.avatar.util.AvatarEntityUtils;
-import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import com.zeitheron.hammercore.api.lighting.ColoredLight;
 import com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity;
@@ -47,7 +47,6 @@ import java.util.Objects;
 import java.util.Random;
 
 import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.avatar.util.data.StatusControlController.THROW_FIREBALL;
 
 /**
  * @author CrowsOfWar
@@ -55,17 +54,11 @@ import static com.crowsofwar.avatar.util.data.StatusControlController.THROW_FIRE
 @Optional.Interface(iface = "com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity", modid = "hammercore")
 public class EntityFireball extends EntityOffensive implements IGlowingEntity {
 
-    public static final DataParameter<Integer> SYNC_SIZE = EntityDataManager.createKey(EntityFireball.class,
-            DataSerializers.VARINT);
-    private static final DataParameter<FireballBehavior> SYNC_BEHAVIOR = EntityDataManager
-            .createKey(EntityFireball.class, FireballBehavior.DATA_SERIALIZER);
+
     private static final DataParameter<Integer> SYNC_ORBIT_ID = EntityDataManager.createKey(EntityFireball.class,
             DataSerializers.VARINT);
 
 
-    /**
-     * @param world
-     */
     public EntityFireball(World world) {
         super(world);
         setSize(.8f, .8f);
@@ -80,19 +73,16 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
     @Override
     public void entityInit() {
         super.entityInit();
-        dataManager.register(SYNC_BEHAVIOR, new FireballBehavior.Idle());
-        dataManager.register(SYNC_SIZE, 30);
         dataManager.register(SYNC_ORBIT_ID, 1);
     }
 
     @Override
     public void onUpdate() {
         super.onUpdate();
-        setBehavior((FireballBehavior) getBehavior().onUpdate(this));
 
-        if (getBehavior() == null) {
+        if (getBehaviour() == null) {
             this.setVelocity(world.rand.nextGaussian(), world.rand.nextGaussian(), world.rand.nextGaussian());
-            this.setBehavior(new FireballBehavior.Thrown());
+            this.setBehaviour(new FireballBehavior.Thrown());
         }
 
         if (ticksExisted % 30 == 0) {
@@ -100,20 +90,16 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
         }
 
 
-        if (getOwner() != null) {
-            EntityFireball fireball = AvatarEntity.lookupControlledEntity(world, EntityFireball.class, getOwner());
-            BendingData bD = BendingData.get(getOwner());
-            if (fireball == null && (bD.hasStatusControl(THROW_FIREBALL))) {
-                bD.removeStatusControl(THROW_FIREBALL);
-            }
-            if (fireball != null && fireball.getBehavior() instanceof FireballBehavior.PlayerControlled && !(bD.hasStatusControl(THROW_FIREBALL))) {
-                bD.addStatusControl(THROW_FIREBALL);
-            }
-
-        }
-
         //Particles!
         if (world.isRemote && getOwner() != null) {
+            int[] fade = getFade();
+            int[] rgb = getRGB();
+            int rRandom = fade[0] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[0] * 2) : AvatarUtils.getRandomNumberInRange(fade[0] / 2,
+                    fade[0] * 2);
+            int gRandom = fade[1] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[1] * 2) : AvatarUtils.getRandomNumberInRange(fade[1] / 2,
+                    fade[1] * 2);
+            int bRandom = fade[2] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[2] * 2) : AvatarUtils.getRandomNumberInRange(fade[2] / 2,
+                    fade[2] * 2);
 
             for (double h = 0; h < width; h += 0.1) {
                 Random random = new Random();
@@ -138,17 +124,18 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
                 double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
                 double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
-                        world.rand.nextGaussian() / 60).time(12).clr(255, 10, 5)
+                        world.rand.nextGaussian() / 60).time(12).clr(rgb[0], rgb[1], rgb[2])
+                        .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175))
                         .scale(getSize() * 0.03125F).element(getElement()).spawnEntity(getOwner())
                         .spawn(world);
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
-                        world.rand.nextGaussian() / 60).time(12).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
-                        20 + AvatarUtils.getRandomNumberInRange(0, 60), 10)
+                        world.rand.nextGaussian() / 60).time(12).clr(rgb[0], rgb[1], rgb[2])
+                        .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175))
                         .scale(getSize() * 0.03125F).element(getElement()).spawnEntity(getOwner())
                         .spawn(world);
             }
 
-            if (getBehavior() instanceof FireballBehavior.Thrown) {
+            if (getBehaviour() instanceof FireballBehavior.Thrown) {
                 for (int i = 0; i < 4; i++) {
                     Vec3d pos = Vector.getOrthogonalVector(getLookVec(), i * 90 + (ticksExisted % 360) * 10, getAvgSize() / 1.25F).toMinecraft();
                     Vec3d velocity;
@@ -157,18 +144,21 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
                     pos = pos.add(entityPos);
                     velocity = pos.subtract(entityPos).normalize();
                     velocity = velocity.scale(AvatarUtils.getSqrMagnitude(getVelocity()) / 400000);
+
                     double spawnX = pos.x;
                     double spawnY = pos.y;
                     double spawnZ = pos.z;
+
                     ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 100 + velocity.x,
                             world.rand.nextGaussian() / 100 + velocity.y, world.rand.nextGaussian() / 60 + velocity.z)
-                            .time(4 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(1F, 10 / 255F, 5 / 255F, 0.85F)
+                            .time(4 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(rgb[0], rgb[1], rgb[2])
+                            .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175))
                             .scale(getAvgSize()).element(getElement()).spawnEntity(getOwner())
                             .spawn(world);
                     ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 100 + velocity.x,
                             world.rand.nextGaussian() / 100 + velocity.y, world.rand.nextGaussian() / 60 + velocity.z)
-                            .time(4 + AvatarUtils.getRandomNumberInRange(0, 4)).clr((235 + AvatarUtils.getRandomNumberInRange(0, 20)) / 255F,
-                            (20 + AvatarUtils.getRandomNumberInRange(0, 60)) / 255F, 10 / 255F, 0.85F)
+                            .time(4 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(rgb[0], rgb[1], rgb[2])
+                            .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175))
                             .scale(getAvgSize()).element(getElement()).spawnEntity(getOwner())
                             .spawn(world);
 
@@ -176,10 +166,6 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
             }
 
         }
-
-        //I'm using 0.03125, because that results in a size of 0.5F when rendering, as the default size for the fireball is actually 16.
-        //This is due to weird rendering shenanigans
-        setEntitySize(getSize() * 0.03125F, getSize() * 0.03125F);
     }
 
     @Override
@@ -195,27 +181,16 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
         return false;
     }
 
-    public FireballBehavior getBehavior() {
-        return dataManager.get(SYNC_BEHAVIOR);
-    }
-
-    public void setBehavior(FireballBehavior behavior) {
-        dataManager.set(SYNC_BEHAVIOR, behavior);
-    }
-
     @Override
     public EntityLivingBase getController() {
-        return getBehavior() instanceof FireballBehavior.PlayerControlled ? getOwner() : null;
+        return this.getBehaviour() instanceof FireballBehavior.PlayerControlled ? getOwner() : null;
     }
 
 
     public int getSize() {
-        return dataManager.get(SYNC_SIZE);
+        return (int) (getAvgSize() * 16);
     }
 
-    public void setSize(int size) {
-        dataManager.set(SYNC_SIZE, size);
-    }
 
     public int getOrbitID() {
         return dataManager.get(SYNC_ORBIT_ID);
@@ -249,7 +224,7 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
 
     @Override
     public boolean shouldExplode() {
-        return getBehavior() instanceof FireballBehavior.Thrown;
+        return getBehaviour() instanceof FireballBehavior.Thrown;
     }
 
     @Override
@@ -260,19 +235,31 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
     @Override
     public void spawnExplosionParticles(World world, Vec3d pos) {
         if (world.isRemote && getOwner() != null) {
-            for (double h = 0; h < width * 2; h += 0.2) {
+            int[] fade = getFade();
+            int[] rgb = getRGB();
+            int rRandom = fade[0] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[0] * 2) : AvatarUtils.getRandomNumberInRange(fade[0] / 2,
+                    fade[0] * 2);
+            int gRandom = fade[1] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[1] * 2) : AvatarUtils.getRandomNumberInRange(fade[1] / 2,
+                    fade[1] * 2);
+            int bRandom = fade[2] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[2] * 2) : AvatarUtils.getRandomNumberInRange(fade[2] / 2,
+                    fade[2] * 2);
+
+            for (double h = 0; h < width * 2; h += 0.2 / getExplosionHitboxGrowth()) {
                 Random random = new Random();
                 AxisAlignedBB boundingBox = getEntityBoundingBox();
                 double spawnX = boundingBox.minX + random.nextDouble() * (boundingBox.maxX - boundingBox.minX);
                 double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
                 double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
-                ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 10, world.rand.nextGaussian() / 10,
-                        world.rand.nextGaussian() / 10).time(12).clr(255, 10, 5)
+                ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 10 * getExplosionHitboxGrowth(),
+                        world.rand.nextGaussian() / 10 * getExplosionHitboxGrowth(), world.rand.nextGaussian() / 10 * getExplosionHitboxGrowth())
+                        .time(12 + AvatarUtils.getRandomNumberInRange(0, 4) + (int) getExplosionHitboxGrowth()).clr(rgb[0], rgb[1], rgb[2])
+                        .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175))
                         .scale(getSize() * 0.03125F).element(getElement()).spawnEntity(getOwner())
                         .spawn(world);
-                ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 10, world.rand.nextGaussian() / 10,
-                        world.rand.nextGaussian() / 10).time(12).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
-                        20 + AvatarUtils.getRandomNumberInRange(0, 60), 10)
+                ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 10 * getExplosionHitboxGrowth(),
+                        world.rand.nextGaussian() / 10 * getExplosionHitboxGrowth(), world.rand.nextGaussian() / 10 * getExplosionHitboxGrowth())
+                        .time(12 + AvatarUtils.getRandomNumberInRange(0, 4) + (int) getExplosionHitboxGrowth()).clr(rgb[0], rgb[1], rgb[2])
+                        .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175))
                         .scale(getSize() * 0.03125F).element(getElement()).spawnEntity(getOwner())
                         .spawn(world);
             }
@@ -284,6 +271,11 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
     public void setDead() {
         super.setDead();
         removeStatCtrl();
+    }
+
+    @Override
+    public boolean onCollideWithSolid() {
+        return super.onCollideWithSolid();
     }
 
     @Override
@@ -311,6 +303,11 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
     @Override
     public double getExpandedHitboxHeight() {
         return getHeight() / 4;
+    }
+
+    @Override
+    public boolean isInRangeToRender3d(double x, double y, double z) {
+        return true;
     }
 
     @Override
@@ -349,14 +346,14 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
 
     @Override
     public boolean canCollideWith(Entity entity) {
-        if (getBehavior() instanceof FireballBehavior.Thrown)
+        if (getBehaviour() instanceof FireballBehavior.Thrown)
             return super.canCollideWith(entity);
         else return false;
     }
 
     @Override
     public boolean canBeCollidedWith() {
-        if (getBehavior() instanceof FireballBehavior.Thrown)
+        if (getBehaviour() instanceof FireballBehavior.Thrown)
             return super.canBeCollidedWith();
         else return false;
     }

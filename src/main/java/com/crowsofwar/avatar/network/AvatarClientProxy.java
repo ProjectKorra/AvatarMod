@@ -164,6 +164,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		AvatarFovChanger.register();
 		ParticleBehaviour.registerBehaviours();
 		AvatarControl.initControls();
+		ResourceManager.load();
 
 		clientFetcher = new PlayerDataFetcherClient<>(AvatarPlayerData.class, (data) -> {
 			AvatarMod.network.sendToServer(new PacketSRequestData(data.getPlayerID()));
@@ -198,7 +199,6 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 		registerEntityRenderingHandler(EntityExplosionSpawner.class, RenderNothing::new);
 		registerEntityRenderingHandler(EntityLightningSpawner.class, RenderLightningSpawner::new);
 		registerEntityRenderingHandler(EntityAvatarLightning.class, RenderAvatarLightning::new);
-		registerEntityRenderingHandler(EntityFlame.class, RenderNothing::new);
 		//registerEntityRenderingHandler(EntityPlayer.class, RenderSlipstreamInvisibility::new);
 
 		// Renderers dependent on CodeChickenLib. 

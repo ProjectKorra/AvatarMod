@@ -27,8 +27,8 @@ import com.crowsofwar.avatar.entity.EntityFlames;
 import com.crowsofwar.avatar.entity.EntityOffensive;
 import com.crowsofwar.avatar.entity.EntityShockwave;
 import com.crowsofwar.avatar.entity.data.OffensiveBehaviour;
+import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
-import com.crowsofwar.avatar.util.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
@@ -40,8 +40,11 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import java.util.Random;
 
 /**
  * @author CrowsOfWar
@@ -79,30 +82,29 @@ public class AbilityFireShot extends Ability {
         float size = getProperty(SIZE, ctx).floatValue();
         float damage = getProperty(DAMAGE, ctx).floatValue();
         float chi = getChiCost(ctx);
+        float chiHit = getProperty(CHI_HIT, ctx).floatValue();
         float xp = getProperty(XP_HIT, ctx).floatValue();
 
         int fireTime = getProperty(FIRE_TIME, ctx).intValue();
         int lifeTime = getProperty(LIFETIME, ctx).intValue();
         int performance = getProperty(PERFORMANCE, ctx).intValue();
 
-        double damageMult = bender.getDamageMult(Firebending.ID);
-        double powerrating = bender.calcPowerRating(Firebending.ID);
+        double damageMult = abilityData.getDamageMult();
 
         damage *= abilityData.getXpModifier() * damageMult;
-        size *= (abilityData.getXpModifier() * (powerrating / 100) + 1);
+        size *= (abilityData.getXpModifier() * damageMult);
         speed *= abilityData.getXpModifier() * damageMult;
         knockback *= abilityData.getXpModifier() * damageMult;
         fireTime *= Math.min(abilityData.getXpModifier() * damageMult, 0.25F);
         lifeTime *= Math.min(abilityData.getXpModifier() * damageMult, 0.25F);
+        chiHit *= damageMult * abilityData.getXpModifier();
 
         if (bender.consumeChi(chi)) {
             if (!getBooleanProperty(SHOCKWAVE, ctx)) {
-                //TODO: Fix trailing fire and piercing
-
                 EntityFlames flames = new EntityFlames(world);
                 flames.setVelocity(Vector.getLookRectangular(entity).times(speed));
                 flames.setOwner(entity);
-                flames.setPosition(pos.minusY(0.05));
+                flames.setPosition(pos.minusY(size / 2));
                 flames.rotationYaw = entity.rotationYaw;
                 flames.rotationPitch = entity.rotationPitch;
                 flames.setEntitySize(size);
@@ -112,8 +114,9 @@ public class AbilityFireShot extends Ability {
                 flames.setPerformanceAmount(performance);
                 flames.setTier(getCurrentTier(ctx));
                 flames.setXp(xp);
+                flames.setSmelts(getBooleanProperty(SMELTS, ctx));
                 flames.setLifeTime(lifeTime);
-                flames.setTrailingFire(getBooleanProperty(TRAILING_FIRE, ctx));
+                flames.setTrailingFires(getBooleanProperty(TRAILING_FIRE, ctx));
                 flames.setFireTime(fireTime);
                 flames.setFires(getBooleanProperty(SETS_FIRES, ctx));
                 flames.setDamage(damage);
@@ -121,6 +124,8 @@ public class AbilityFireShot extends Ability {
                 flames.setFade(getProperty(FADE_R, ctx).intValue(), getProperty(FADE_G, ctx).intValue(), getProperty(FADE_B, ctx).intValue());
                 flames.setElement(new Firebending());
                 flames.setPush(knockback);
+                flames.setChiHit(chiHit);
+                flames.setBehaviour(new FireShockwaveBehaviour());
                 flames.setDamageSource("avatar_Fire_fireShot");
                 world.playSound(entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 1.75F +
                         world.rand.nextFloat(), 0.5F + world.rand.nextFloat(), false);
@@ -140,12 +145,12 @@ public class AbilityFireShot extends Ability {
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x(),
                                 world.rand.nextGaussian() / 80 + velocity.y(), world.rand.nextGaussian() / 80 + velocity.z())
                                 .time(8 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(1F, 10 / 255F, 5 / 255F, 0.75F).spawnEntity(entity)
-                                .scale(size / 2F).element(new Firebending()).collide(true).ability(this).spawn(world);
+                                .scale(size / 2F).element(new Firebending()).collide(true).collideParticles(true).ability(this).spawn(world);
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x(),
                                 world.rand.nextGaussian() / 80 + velocity.y(), world.rand.nextGaussian() / 80 + velocity.z())
                                 .time(12 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(1F, (40 + AvatarUtils.getRandomNumberInRange(0, 60)) / 255F,
                                 10 / 255F, 0.75F).spawnEntity(entity)
-                                .scale(size / 2F).element(new Firebending()).collide(true).ability(this).spawn(world);
+                                .scale(size / 2F).element(new Firebending()).collide(true).collideParticles(true).ability(this).spawn(world);
                     }
                 }
             } else {
@@ -209,6 +214,35 @@ public class AbilityFireShot extends Ability {
                                 int time = entity.ticksExisted * ((EntityShockwave) entity).getSpeed() >= ((EntityShockwave) entity).getRange() - 0.2 ? 120 : 10;
                                 BlockTemp.createTempBlock(entity.world, spawnPos, time, Blocks.FIRE.getDefaultState());
                             }
+                        }
+                    }
+                } else if (entity instanceof EntityFlames) {
+                    if (entity.world.isRemote && entity.ticksExisted > 1) {
+                        int[] fade = entity.getFade();
+                        int[] rgb = entity.getRGB();
+                        for (double i = 0; i < entity.width; i += 0.1 * entity.getAvgSize() * 4) {
+                            int rRandom = fade[0] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[0] * 2) : AvatarUtils.getRandomNumberInRange(fade[0] / 2,
+                                    fade[0] * 2);
+                            int gRandom = fade[1] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[1] * 2) : AvatarUtils.getRandomNumberInRange(fade[1] / 2,
+                                    fade[1] * 2);
+                            int bRandom = fade[2] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[2] * 2) : AvatarUtils.getRandomNumberInRange(fade[2] / 2,
+                                    fade[2] * 2);
+                            Random random = new Random();
+                            AxisAlignedBB boundingBox = entity.getEntityBoundingBox();
+                            double spawnX = boundingBox.minX + random.nextDouble() * (boundingBox.maxX - boundingBox.minX);
+                            double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
+                            double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
+                            ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 60,
+                                    entity.world.rand.nextGaussian() / 60, entity.world.rand.nextGaussian() / 60).time(12 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(rgb[0], rgb[1], rgb[2])
+                                    .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).scale(entity.getAvgSize() * 1.5F).element(entity.getElement())
+                                    .ability(entity.getAbility()).spawnEntity(entity.getOwner()).spawn(entity.world);
+                            ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 60,
+                                    entity.world.rand.nextGaussian() / 60, entity.world.rand.nextGaussian() / 60).time(12 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(rgb[0], rgb[1], rgb[2])
+                                    .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).scale(entity.getAvgSize() * 1.5F).element(entity.getElement())
+                                    .ability(entity.getAbility()).spawnEntity(entity.getOwner()).spawn(entity.world);
+                            ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(AvatarEntityUtils.getMiddleOfEntity(entity)).vel(entity.world.rand.nextGaussian() / 40,
+                                    entity.world.rand.nextGaussian() / 40, entity.world.rand.nextGaussian() / 40).time(12 + AvatarUtils.getRandomNumberInRange(0, 4)).scale(entity.getAvgSize() / 2)
+                                    .element(entity.getElement()).ability(entity.getAbility()).spawnEntity(entity.getOwner()).spawn(entity.world);
                         }
                     }
                 }

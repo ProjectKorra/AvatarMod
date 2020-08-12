@@ -46,8 +46,10 @@ public class AbilityData {
 	//Whether to switch the path of the ability
 	private final boolean switchPath;
 	private int abilityCooldown;
+	private double powerRating;
 	//How much exhaustion to add to the player (affects the hunger bar, like sprinting or fighting)
 	private float exhaustion;
+	private boolean shouldRegenBurnout;
 	/**
 	 * Current burnout amount of the ability.
 	 * <p>
@@ -84,6 +86,8 @@ public class AbilityData {
 		this.abilityCooldown = 0;
 		this.burnOut = 0;
 		this.exhaustion = 0;
+		this.powerRating = 0;
+		this.shouldRegenBurnout = false;
 	}
 
 	public AbilityData(BendingData data, String abilityName, boolean switchPath) {
@@ -96,6 +100,8 @@ public class AbilityData {
 		this.abilityCooldown = 0;
 		this.burnOut = 0;
 		this.exhaustion = 0;
+		this.powerRating = 0;
+		this.shouldRegenBurnout = false;
 	}
 
 	/**
@@ -121,6 +127,13 @@ public class AbilityData {
 		return BendingData.get(world, playerName).getAbilityData(abilityName);
 	}
 
+	public void setRegenBurnout(boolean regen) {
+		this.shouldRegenBurnout = regen;
+	}
+
+	public boolean shouldRegenBurnout() {
+		return this.shouldRegenBurnout;
+	}
 
 	public void setBurnOut(float burnOut) {
 		this.burnOut = burnOut;
@@ -142,6 +155,43 @@ public class AbilityData {
 
 	public void decrementCooldown() {
 		abilityCooldown--;
+	}
+
+	public double getPowerRating() {
+		return powerRating;
+	}
+
+	public void setPowerRating(double power) {
+		this.powerRating = power;
+	}
+
+	/**
+	 * Gets the power rating, but in the range 0.5 to 1.5 for convenience in damage calculations.
+	 * <ul>
+	 * <li>-100 power rating gives 0.5; damage would be 1/2 of normal</li>
+	 * <li>0 power rating gives 1; damage would be the same as normal</li>
+	 * <li>100 power rating gives 1.5; damage would be 1.5 times as much as usual</li>
+	 * Powerrating goes from -1000 to 1000, to allow for insane buffs (avatar).
+	 */
+	//NOTE: Unlike the other methods, this works server-side and client-side! Use this in abilities and such.
+	public double getDamageMult() {
+		double powerRating = getPowerRating();
+		if (powerRating < 0) {
+			return 0.005 * powerRating + 1 < 0 ? 1 / 50F : 0.005 * powerRating + 1;
+		} else {
+			return 0.005 * powerRating + 1;
+		}
+	}
+
+
+	//NOTE: Unlike the other methods, this works server-side and client-side! Use this in abilities and such.
+	public double getPowerRatingMult() {
+		double powerRating = getPowerRating();
+		if (powerRating < 0) {
+			return 0.01 * powerRating + 1 < 0 ? 1 / 100F : 0.01 * powerRating + 1;
+		} else {
+			return 0.01 * powerRating + 1;
+		}
 	}
 
 	@Nullable
@@ -271,7 +321,7 @@ public class AbilityData {
 	 * @return Returns a modifier based on the current xp, from 1 to 1.36.
 	 */
 	public float getXpModifier() {
-		return getTotalXp() / 100 < 1 ? 1 : getTotalXp() / 100;
+		return (float) Math.min(getTotalXp() / 100 < 1 ? 1 : getTotalXp() / 100, 1.36);
 	}
 
 	public float getXp() {
@@ -387,6 +437,10 @@ public class AbilityData {
 		level = nbt.getInteger("Level");
 		path = AbilityTreePath.get(nbt.getInteger("Path"));
 		abilityCooldown = nbt.getInteger("AbilityCooldown");
+		powerRating = nbt.getDouble("PowerRating");
+		exhaustion = nbt.getFloat("Exhaustion");
+		burnOut = nbt.getFloat("Burnout");
+		shouldRegenBurnout = nbt.getBoolean("RegenBurnout");
 	}
 
 	public void writeToNbt(NBTTagCompound nbt) {
@@ -395,6 +449,10 @@ public class AbilityData {
 		nbt.setInteger("Level", level);
 		nbt.setInteger("Path", path.id());
 		nbt.setInteger("AbilityCooldown", abilityCooldown);
+		nbt.setDouble("PowerRating", powerRating);
+		nbt.setFloat("Exhaustion", exhaustion);
+		nbt.setFloat("Burnout", burnOut);
+		nbt.setBoolean("RegenBurnout", shouldRegenBurnout);
 	}
 
 	public void toBytes(ByteBuf buf) {
@@ -403,6 +461,10 @@ public class AbilityData {
 		buf.writeInt(level);
 		buf.writeInt(path.id());
 		buf.writeInt(abilityCooldown);
+		buf.writeDouble(powerRating);
+		buf.writeFloat(exhaustion);
+		buf.writeFloat(burnOut);
+		buf.writeBoolean(shouldRegenBurnout);
 	}
 
 	private void fromBytes(ByteBuf buf) {
@@ -410,6 +472,10 @@ public class AbilityData {
 		level = buf.readInt();
 		path = AbilityTreePath.get(buf.readInt());
 		abilityCooldown = buf.readInt();
+		powerRating = buf.readDouble();
+		exhaustion = buf.readFloat();
+		burnOut = buf.readFloat();
+		shouldRegenBurnout = buf.readBoolean();
 	}
 
 	/**

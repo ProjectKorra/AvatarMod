@@ -162,7 +162,7 @@ public class StatCtrlFireJump extends StatusControl {
 					ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(Vector.getEntityPos(entity).toMinecraft().add(x, 0, z))
 							.vel(x * range / 2.5 * world.rand.nextDouble(), world.rand.nextGaussian() / 15, z * range / 2.5 * world.rand.nextDouble())
 							.time(12 + AvatarUtils.getRandomNumberInRange(0, 4)).scale((float) range / 6F).element(new Firebending())
-							.spawnEntity(entity).collide(true).spawn(world);
+							.spawnEntity(entity).collide(true).collideParticles(true).spawn(world);
 				}
 			}
 			data.addTickHandler(FIRE_PARTICLE_SPAWNER);

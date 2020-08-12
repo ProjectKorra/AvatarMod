@@ -83,7 +83,6 @@ public class AbilityAirGust extends Ability {
         push *= (1 + 0.5 * ctx.getPowerRatingDamageMod() * ctx.getAbilityData().getXpModifier());
 
         if (bender.consumeChi(getChiCost(ctx))) {
-            //TODO: Fix piercing
             EntityAirGust gust = new EntityAirGust(world);
             gust.setVelocity(look.times(speed));
             gust.setPosition(pos.minusY(0.5));
@@ -102,9 +101,10 @@ public class AbilityAirGust extends Ability {
             gust.setPushIronTrapDoor(getBooleanProperty(PUSH_IRON_TRAPDOOR, ctx));
             gust.setDestroyProjectiles(getBooleanProperty(DESTROY_PROJECTILES, ctx));
             gust.setSlowProjectiles(getBooleanProperty(SLOW_PROJECTILES, ctx));
-            gust.setPiercesEnemies(getBooleanProperty(PIERCES_ENEMIES, ctx));
+            gust.setPiercing(getBooleanProperty(PIERCES_ENEMIES, ctx));
             gust.setAbility(this);
             gust.setTier(getCurrentTier(ctx));
+            gust.setChiHit(getProperty(CHI_HIT, ctx).floatValue());
             gust.setXp(getProperty(XP_HIT).floatValue());
             gust.setBehaviour(new AirGustBehaviour());
             if (!world.isRemote)
@@ -123,11 +123,11 @@ public class AbilityAirGust extends Ability {
                     ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x(),
                             world.rand.nextGaussian() / 80 + velocity.y(), world.rand.nextGaussian() / 80 + velocity.z())
                             .time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(0.95F, 0.95F, 0.95F, 0.1F).spawnEntity(entity)
-                            .scale(size * (1 / size)).element(new Airbending()).collide(true).spawn(world);
+                            .scale(size * (1 / size)).element(new Airbending()).collide(true).collideParticles(true).spawn(world);
                     ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x(),
                             world.rand.nextGaussian() / 80 + velocity.y(), world.rand.nextGaussian() / 80 + velocity.z())
                             .time(10 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(0.95F, 0.95F, 0.95F, 0.1F).spawnEntity(entity)
-                            .scale(size * (1 / size)).element(new Airbending()).collide(true).spawn(world);
+                            .scale(size * (1 / size)).element(new Airbending()).collide(true).collideParticles(true).spawn(world);
                 }
             }
             entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_FIREWORK_LAUNCH, entity.getSoundCategory(), 1.0F + Math.max(ctx.getLevel(), 0) / 2F, 0.9F + world.rand.nextFloat() / 10);
@@ -159,11 +159,11 @@ public class AbilityAirGust extends Ability {
                         double spawnZ = mid.z + world.rand.nextGaussian() / 20;
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45,
                                 world.rand.nextGaussian() / 45).time(4 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(0.95F, 0.95F, 0.95F, 0.075F).spawnEntity(entity)
-                                .scale(entity.getAvgSize() * (1 / entity.getAvgSize() + 1)).element(entity.getElement()).collide(true).spawn(world);
+                                .scale(entity.getAvgSize() * (1 / entity.getAvgSize() + 1)).element(entity.getElement()).collide(true).collideParticles(true).spawn(world);
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 45 + entity.motionX,
                                 world.rand.nextGaussian() / 45 + entity.motionY, world.rand.nextGaussian() / 45 + entity.motionZ)
                                 .time(14 + AvatarUtils.getRandomNumberInRange(0, 10)).clr(0.95F, 0.95F, 0.95F, 0.075F).spawnEntity(entity)
-                                .scale(entity.getAvgSize() * (1 / entity.getAvgSize() + 0.5F)).element(entity.getElement()).collide(true).spawn(world);
+                                .scale(entity.getAvgSize() * (1 / entity.getAvgSize() + 0.5F)).element(entity.getElement()).collide(true).collideParticles(true).spawn(world);
                     }
                     for (int i = 0; i < 2; i++) {
                         Vec3d pos = Vector.getOrthogonalVector(entity.getLookVec(), i * 180 + (entity.ticksExisted % 360) * 20 *
@@ -180,11 +180,11 @@ public class AbilityAirGust extends Ability {
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x,
                                 world.rand.nextGaussian() / 80 + velocity.y, world.rand.nextGaussian() / 80 + velocity.z)
                                 .time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(0.95F, 0.95F, 0.95F, 0.1F).spawnEntity(entity)
-                                .scale(0.75F * entity.getAvgSize() * (1 / entity.getAvgSize())).element(new Airbending()).collide(true).spawn(world);
+                                .scale(0.75F * entity.getAvgSize() * (1 / entity.getAvgSize())).element(new Airbending()).collide(true).collideParticles(true).spawn(world);
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x,
                                 world.rand.nextGaussian() / 80 + velocity.y, world.rand.nextGaussian() / 80 + velocity.z)
                                 .time(10 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(0.95F, 0.95F, 0.95F, 0.1F).spawnEntity(entity)
-                                .scale(0.75F * entity.getAvgSize() * (1 / entity.getAvgSize())).element(new Airbending()).collide(true).spawn(world);
+                                .scale(0.75F * entity.getAvgSize() * (1 / entity.getAvgSize())).element(new Airbending()).collide(true).collideParticles(true).spawn(world);
 
                     }
                     entity.setVelocity(entity.velocity().times(0.95));

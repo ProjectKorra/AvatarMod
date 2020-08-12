@@ -4,6 +4,8 @@ import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.client.particles.newparticles.renderlayers.RenderLayer;
 import com.crowsofwar.avatar.client.particles.newparticles.renderlayers.RenderLayerBlockSheet;
 
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -34,6 +36,19 @@ public class ParticleSnow extends ParticleAvatar {
 		for(ResourceLocation texture : TEXTURES){
 			event.getMap().registerSprite(texture);
 		}
+	}
+	
+	@Override
+	public void onUpdate() {
+		// TODO Auto-generated method stub
+		super.onUpdate();
+	}
+	
+	@Override
+	public void renderParticle(BufferBuilder buffer, Entity viewer, float partialTicks, float lookZ, float lookY,
+			float lookX, float lookXY, float lookYZ) {
+		// TODO Auto-generated method stub
+		super.renderParticle(buffer, viewer, partialTicks, lookZ, lookY, lookX, lookXY, lookYZ);
 	}
 	
 	@Override

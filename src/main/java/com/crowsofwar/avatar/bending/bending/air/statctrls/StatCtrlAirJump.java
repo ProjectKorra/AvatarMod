@@ -122,7 +122,7 @@ public class StatCtrlAirJump extends StatusControl {
 
             if (world.isRemote) {
                 for (int i = 0; i < numberOfParticles; i++)
-                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).collide(true).pos(AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(0, 0.1, 0))
+                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).collide(true).collideParticles(true).pos(AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(0, 0.1, 0))
                             .clr(0.8F, 0.8F, 0.8F).time(14).vel(world.rand.nextGaussian() * particleSpeed / 10, world.rand.nextGaussian() * particleSpeed / 20,
                             world.rand.nextGaussian() * particleSpeed / 10).scale(1F + (float) particleSpeed).spawn(world);
             }

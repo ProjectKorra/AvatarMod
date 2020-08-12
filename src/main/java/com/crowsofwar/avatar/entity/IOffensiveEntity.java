@@ -6,6 +6,7 @@ import com.crowsofwar.avatar.util.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
+import com.crowsofwar.avatar.util.data.BendingData;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.boss.EntityDragon;
@@ -60,9 +61,9 @@ public interface IOffensiveEntity {
                     }
                 }
             }
-
+            entity.setDead();
         }
-        entity.setDead();
+
     }
 
 
@@ -90,7 +91,6 @@ public interface IOffensiveEntity {
 
     default void attackEntity(AvatarEntity attacker, Entity hit, boolean explosionDamage, Vec3d vel) {
         vel = new Vec3d(vel.x * getKnockbackMult().x, vel.y * getKnockbackMult().y, vel.z * getKnockbackMult().z);
-        vel = vel.scale(getPush());
         if (attacker.getOwner() != null && hit != null && hit != attacker && !attacker.world.isRemote) {
             AbilityData data = AbilityData.get(attacker.getOwner(), attacker.getAbility().getName());
             if ((explosionDamage ? getAoeDamage() > 0 : getDamage() > 0) && attacker.canDamageEntity(hit)) {
@@ -103,6 +103,12 @@ public interface IOffensiveEntity {
                      //   if (multiHit())
                       //      ((EntityLivingBase) hit).hurtResistantTime = 10;
                         data.addXp(getXpPerHit());
+                        if (attacker.getOwner() != null) {
+                            BendingData bendingData = BendingData.getFromEntity(attacker.getOwner());
+                            if (bendingData != null && bendingData.chi() != null) {
+                                bendingData.chi().changeAvailableChi(getChiHit());
+                            }
+                        }
 
                     } else if (ds) {
                         BattlePerformanceScore.addScore(attacker.getOwner(), getPerformanceAmount());
@@ -114,6 +120,12 @@ public interface IOffensiveEntity {
                      //   if (multiHit() && hit instanceof EntityLivingBase)
                      //       ((EntityLivingBase) hit).hurtResistantTime = 10;
                         AvatarUtils.afterVelocityAdded(hit);
+                        if (attacker.getOwner() != null) {
+                            BendingData bendingData = BendingData.getFromEntity(attacker.getOwner());
+                            if (bendingData != null && bendingData.chi() != null) {
+                                bendingData.chi().changeAvailableChi(getChiHit());
+                            }
+                        }
                     }
                 }
             } else if (attacker.canCollideWith(hit)) {
@@ -134,6 +146,13 @@ public interface IOffensiveEntity {
                 if (multiHit() && hit instanceof EntityLivingBase)
                     ((EntityLivingBase) hit).hurtResistantTime = 15;
                 AvatarUtils.afterVelocityAdded(hit);
+
+                if (attacker.getOwner() != null) {
+                    BendingData bendingData = BendingData.getFromEntity(attacker.getOwner());
+                    if (bendingData != null && bendingData.chi() != null) {
+                        bendingData.chi().changeAvailableChi(getChiHit());
+                    }
+                }
             }
         }
     }
@@ -150,6 +169,10 @@ public interface IOffensiveEntity {
         return 3;
     }
 
+    default float getChiHit() {
+        return 1;
+    }
+
     default float getPush() {
         return 1;
     }
@@ -163,7 +186,7 @@ public interface IOffensiveEntity {
     }
 
     default Vec3d getKnockbackMult() {
-        return new Vec3d(1, 1, 1);
+        return new Vec3d(getPush(), getPush() / 2, getPush());
     }
 
     default Vec3d getExplosionKnockbackMult() {
@@ -200,7 +223,7 @@ public interface IOffensiveEntity {
         if (getSounds() != null)
             for (int i = 0; i < getSounds().length; i++)
                 entity.world.playSound(null, new BlockPos(entity), getSounds()[i],
-                        entity.getSoundCategory(), getPitch(), getVolume());
+                        entity.getSoundCategory(), getVolume(), getPitch());
     }
 
     //Only called when a piercing projectile hits an entity.
@@ -208,14 +231,14 @@ public interface IOffensiveEntity {
         if (getSounds() != null)
             for (int i = 0; i < getSounds().length; i++)
                 entity.world.playSound(null, new BlockPos(entity), getSounds()[i],
-                        entity.getSoundCategory(), getPitch(), getVolume());
+                        entity.getSoundCategory(), getVolume(), getPitch());
     }
 
     default void playDissipateSounds(Entity entity) {
         if (getSounds() != null)
             for (int i = 0; i < getSounds().length; i++)
                 entity.world.playSound(null, new BlockPos(entity), getSounds()[i],
-                        entity.getSoundCategory(), getPitch(), getVolume());
+                        entity.getSoundCategory(), getVolume(), getPitch());
     }
 
     //TODO: Get rid of these particle methods as they're unnecessary with the ease of the new particle system.
