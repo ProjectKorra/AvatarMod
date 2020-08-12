@@ -24,7 +24,8 @@ public class AbilityFireJump extends Ability {
 	@Override
 	public void init() {
 		super.init();
-		addProperties(JUMPS, JUMP_HEIGHT, FIRE_R, FIRE_G, FIRE_B, FADE_R, FADE_G, FADE_B);
+		addProperties(JUMPS, JUMP_HEIGHT, FIRE_R, FIRE_G, FIRE_B, FADE_R, FADE_G, FADE_B,
+				FALL_ABSORPTION);
 		addBooleanProperties(STOP_SHOCKWAVE, JET_STREAM);
 	}
 

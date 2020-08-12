@@ -283,6 +283,13 @@ public class EntityShockwave extends EntityOffensive {
 	}
 
 	@Override
+	public void setDead() {
+		super.setDead();
+//		if (!world.isRemote && this.isDead)
+//			Thread.dumpStack();
+	}
+
+	@Override
 	public double getExpandedHitboxWidth() {
 		return (ticksExisted * getSpeed() * 0.5);
 	}
@@ -299,7 +306,7 @@ public class EntityShockwave extends EntityOffensive {
 		velocity = velocity.scale(dist).add(0, getKnockbackHeight(), 0);
 		double y = velocity.y;
 		y = getKnockbackHeight() != 0 ? Math.min(y * getKnockbackMult().y, getKnockbackHeight()) : y;
-		return new Vec3d(velocity.x, y, velocity.z);
+		return new Vec3d(velocity.x * getPush() * getSpeed(), y * getPush() * getSpeed(), velocity.z * getPush() * getSpeed());
 	}
 
 	@Override

@@ -57,13 +57,13 @@ public class FireParticleSpawner extends TickHandler {
                 int bRandom = fadeB < 100 ? AvatarUtils.getRandomNumberInRange(0, fadeB * 2) : AvatarUtils.getRandomNumberInRange(fadeB / 2,
                         fadeB * 2);
 
-                ParticleBuilder.create(ParticleBuilder.Type.FLASH).clr(r, g, b, 180 + AvatarUtils.getRandomNumberInRange(0, 40))
-                        .fade(rRandom, gRandom, bRandom, 100 + AvatarUtils.getRandomNumberInRange(0, 40))
+                ParticleBuilder.create(ParticleBuilder.Type.FLASH).clr(r, g, b, 215 + AvatarUtils.getRandomNumberInRange(0, 40))
+                        .fade(rRandom, gRandom, bRandom, 160 + AvatarUtils.getRandomNumberInRange(0, 40))
                         .pos(pos.toMinecraft()).vel(world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40)
                         .scale(size).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(new Firebending()).collide(true)
                         .ability(jump).spawnEntity(target).spawn(world);
-                ParticleBuilder.create(ParticleBuilder.Type.FLASH).clr(r, g * 8, b * 2, 180 + AvatarUtils.getRandomNumberInRange(0, 40))
-                        .fade(rRandom, gRandom, bRandom, 100 + AvatarUtils.getRandomNumberInRange(0, 40))
+                ParticleBuilder.create(ParticleBuilder.Type.FLASH).clr(r, g * 8, b * 2, 215 + AvatarUtils.getRandomNumberInRange(0, 40))
+                        .fade(rRandom, gRandom, bRandom, 160 + AvatarUtils.getRandomNumberInRange(0, 40))
                         .pos(pos.toMinecraft()).vel(world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40)
                         .scale(size).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(new Firebending()).collide(true)
                         .ability(jump).spawnEntity(target).spawn(world);
@@ -130,7 +130,7 @@ public class FireParticleSpawner extends TickHandler {
             wave.setPush(knockback);
             wave.setBehaviour(new FireJumpShockwave());
             wave.setParticleWaves(3);
-            wave.setParticleSpeed(speed);
+            wave.setParticleSpeed(speed / 10);
             wave.setParticleAmount(4);
             wave.setRGB(r, g, b);
             wave.setFade(fadeR, fadeG, fadeB);
@@ -140,16 +140,18 @@ public class FireParticleSpawner extends TickHandler {
         }
     }
 
+    //TODO: Fire entity for visual fx/sparks/embers from fire
     public static class FireJumpShockwave extends OffensiveBehaviour {
 
         @Override
         public OffensiveBehaviour onUpdate(EntityOffensive entity) {
+            System.out.println("Hm");
             if (entity instanceof EntityShockwave && entity.world.isRemote) {
                 World world = entity.world;
                 if (entity.getOwner() != null) {
                     EntityLivingBase owner = entity.getOwner();
 
-                    if (entity.ticksExisted <= ((EntityShockwave) entity).getParticleWaves()) {
+               //     if (entity.ticksExisted <= ((EntityShockwave) entity).getParticleWaves()) {
                         int[] fade = entity.getFade();
                         int[] rgb = entity.getRGB();
                         for (double angle = 0; angle < 2 * Math.PI; angle += Math.PI / (((EntityShockwave) entity).getRange() *
@@ -163,22 +165,22 @@ public class FireParticleSpawner extends TickHandler {
 
                             //Even though the maths is technically wrong, you use sin if you want a shockwave, and cos if you want a sphere (for x).
                             double x2 = entity.posX + (entity.ticksExisted * ((EntityShockwave) entity).getSpeed()) * Math.cos(angle);
-                            double y2 = entity.posY;
+                            double y2 = entity.posY - 0.5;
                             double z2 = entity.posZ + (entity.ticksExisted * ((EntityShockwave) entity).getSpeed()) * Math.sin(angle);
                             Vector speed = new Vector((entity.ticksExisted * ((EntityShockwave) entity).getSpeed()) * Math.cos(angle) *
                                     (entity.getParticleSpeed() * 10), entity.getParticleSpeed() / 2, (entity.ticksExisted *
                                     ((EntityShockwave) entity).getSpeed()) * Math.sin(angle) * (entity.getParticleSpeed() * 10));
 
                             ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Firebending()).vel(speed.toMinecraft())
-                                    .spawnEntity(owner).collide(world.rand.nextBoolean()).clr(rgb[0], rgb[1], rgb[2], 180 + AvatarUtils.getRandomNumberInRange(0, 40)).
-                                    fade(rRandom, gRandom, bRandom, 100 + AvatarUtils.getRandomNumberInRange(0, 40)).pos(x2, y2, z2).
-                                    scale(entity.getAvgSize() / 4).spawn(world);
+                                    .spawnEntity(owner).collide(true).clr(rgb[0], rgb[1], rgb[2], 180 + AvatarUtils.getRandomNumberInRange(0, 40)).
+                                    fade(rRandom, gRandom, bRandom, 160 + AvatarUtils.getRandomNumberInRange(0, 40)).pos(x2, y2, z2).
+                                    scale(entity.getAvgSize() / 1.125F).time(6 + AvatarUtils.getRandomNumberInRange(0, 2)).spawn(world);
                             ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Firebending()).vel(speed.toMinecraft())
-                                    .spawnEntity(owner).collide(world.rand.nextBoolean()).clr(250, 80, 20, 180 + AvatarUtils.getRandomNumberInRange(0, 40)).
-                                    fade(rRandom, gRandom, bRandom, 100 + AvatarUtils.getRandomNumberInRange(0, 40)).pos(x2, y2, z2).
-                                    scale(entity.getAvgSize() / 4).spawn(world);
+                                    .spawnEntity(owner).collide(true).clr(rgb[0], rgb[1] * 8, rgb[2] * 4, 180 + AvatarUtils.getRandomNumberInRange(0, 40)).
+                                    fade(rRandom, gRandom * 2, bRandom, 160 + AvatarUtils.getRandomNumberInRange(0, 40)).pos(x2, y2, z2).
+                                    scale(entity.getAvgSize() / 1.125F).time(6 + AvatarUtils.getRandomNumberInRange(0, 2)).spawn(world);
                         }
-                    }
+                   // }
                 }
             }
             return this;

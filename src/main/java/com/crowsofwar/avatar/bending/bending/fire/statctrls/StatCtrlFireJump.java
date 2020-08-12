@@ -17,9 +17,10 @@ import com.crowsofwar.avatar.util.data.StatusControl;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockLiquid;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -68,16 +69,10 @@ public class StatCtrlFireJump extends StatusControl {
             boolean onGround = !collideWithGround.isEmpty() || entity.collidedVertically;
 
             if (onGround || (allowDoubleJump && bender.consumeChi(chiCost))) {
-                
+
                 double jumpMultiplier = jump.getProperty(JUMP_HEIGHT, abilityData).doubleValue() / 10;
                 float fallAbsorption = jump.getProperty(FALL_ABSORPTION, abilityData).floatValue();
 
-
-                if (abilityData.getLevel() == 2 || abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-                    data.addTickHandler(SMASH_GROUND_FIRE, ctx);
-                } else if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-                    data.addTickHandler(SMASH_GROUND_FIRE_BIG, ctx);
-                }
 
                 // Calculate direction to jump -- in the direction the player is currently already going
 
@@ -116,8 +111,9 @@ public class StatCtrlFireJump extends StatusControl {
                 entity.addVelocity(velocity.x(), velocity.y(), velocity.z());
                 AvatarUtils.afterVelocityAdded(entity);
 
-                Block currentBlock = world.getBlockState(entity.getPosition()).getBlock();
-                if (currentBlock == Blocks.AIR) {
+                IBlockState state = world.getBlockState(entity.getPosition());
+                Block currentBlock = state.getBlock();
+                if (!(currentBlock instanceof BlockLiquid) && !state.isFullBlock() && !state.isFullCube()) {
                     damageNearbyEntities(ctx);
                 }
 
@@ -149,7 +145,7 @@ public class StatCtrlFireJump extends StatusControl {
         AbilityData abilityData = ctx.getData().getAbilityData("fire_jump");
         AbilityFireJump jump = (AbilityFireJump) Abilities.get("fire_jump");
 
-        if (jump != null && jump.getBooleanProperty(STOP_SHOCKWAVE)) {
+        if (jump != null) {
             float speed = jump.getProperty(SPEED, abilityData).floatValue() / 10;
             float size = jump.getProperty(SIZE, abilityData).floatValue();
             int lifetime = (int) (speed / size * 10);
@@ -179,7 +175,7 @@ public class StatCtrlFireJump extends StatusControl {
             EntityShockwave wave = new EntityShockwave(world);
             wave.setOwner(entity);
             wave.setDamageSource("avatar_Fire_shockwave");
-            wave.setPosition(AvatarEntityUtils.getBottomMiddleOfEntity(entity));
+            wave.setPosition(AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(0, 1, 0));
             wave.setFireTime(fireTime);
             wave.setEntitySize(size / 2);
             wave.setElement(new Firebending());
@@ -193,11 +189,10 @@ public class StatCtrlFireJump extends StatusControl {
             wave.setLifeTime(lifetime);
             wave.setChiHit(chiHit);
             wave.setPerformanceAmount(performance);
-            wave.setPush(knockback);
+            wave.setPush(knockback / 3F);
             wave.setBehaviour(new FireParticleSpawner.FireJumpShockwave());
-            wave.setParticleWaves(3);
-            wave.setParticleSpeed(speed);
-            wave.setParticleAmount(4);
+            wave.setParticleSpeed(speed / 30F);
+            wave.setParticleAmount(30);
             wave.setRGB(r, g, b);
             wave.setFade(fadeR, fadeG, fadeB);
             if (!world.isRemote)

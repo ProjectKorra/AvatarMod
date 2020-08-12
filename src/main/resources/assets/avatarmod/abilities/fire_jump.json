@@ -60,7 +60,8 @@
       "chiOnHit": 1.75,
       "damage": 4.5,
       "jumpHeight": 6.5,
-      "fallAbsorption": 5
+      "fallAbsorption": 5,
+      "stopShockwave": true
     },
     "level4_1": {
       "tier": 4,
@@ -78,7 +79,8 @@
       "damage": 5,
       "jumpHeight": 7,
       "numberOfJumps": 3,
-      "fallAbsorption": 8
+      "fallAbsorption": 8,
+      "stopShockwave": false
     },
     "level4_2": {
       "tier": 4,
