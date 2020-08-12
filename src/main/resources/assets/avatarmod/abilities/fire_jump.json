@@ -58,7 +58,7 @@
       "speed": 4,
       "knockback": 4,
       "chiOnHit": 1.75,
-      "damage": 4.5,
+      "damage": 4,
       "jumpHeight": 6.5,
       "fallAbsorption": 5,
       "stopShockwave": true
@@ -76,7 +76,7 @@
       "speed": 6,
       "knockback": 5,
       "chiOnHit": 1.875,
-      "damage": 5,
+      "damage": 3.5,
       "jumpHeight": 7,
       "numberOfJumps": 3,
       "fallAbsorption": 8,

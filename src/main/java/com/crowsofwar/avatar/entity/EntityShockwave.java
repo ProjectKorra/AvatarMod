@@ -303,7 +303,7 @@ public class EntityShockwave extends EntityOffensive {
 	public Vec3d getKnockback(Entity target) {
 		double dist = (getExpandedHitboxWidth() - target.getDistance(this)) > 1 ? (getExpandedHitboxWidth() - target.getDistance(this)) : 1;
 		Vec3d velocity = target.getPositionVector().subtract(getPositionVector());
-		velocity = velocity.scale(dist).add(0, getKnockbackHeight(), 0);
+		velocity = velocity.scale(1 / dist).add(0, getKnockbackHeight(), 0);
 		double y = velocity.y;
 		y = getKnockbackHeight() != 0 ? Math.min(y * getKnockbackMult().y, getKnockbackHeight()) : y;
 		return new Vec3d(velocity.x * getPush() * getSpeed(), y * getPush() * getSpeed(), velocity.z * getPush() * getSpeed());
@@ -311,7 +311,7 @@ public class EntityShockwave extends EntityOffensive {
 
 	@Override
 	public Vec3d getKnockbackMult() {
-		double amount = getSphere() ? (ticksExisted * getSpeed()) * 2.55 : ticksExisted * 3 * getSpeed();
+		double amount = getSphere() ? (2F / ticksExisted * getSpeed()) : 3F / ticksExisted * getSpeed();
 		return new Vec3d(amount * knockbackMult.x, amount * knockbackMult.y, amount * knockbackMult.z);
 	}
 

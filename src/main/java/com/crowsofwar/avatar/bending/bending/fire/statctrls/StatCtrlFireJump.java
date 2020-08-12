@@ -175,9 +175,9 @@ public class StatCtrlFireJump extends StatusControl {
             EntityShockwave wave = new EntityShockwave(world);
             wave.setOwner(entity);
             wave.setDamageSource("avatar_Fire_shockwave");
-            wave.setPosition(AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(0, 1, 0));
+            wave.setPosition(AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(0, 0.5, 0));
             wave.setFireTime(fireTime);
-            wave.setEntitySize(size / 2);
+            wave.setEntitySize(size / 5);
             wave.setElement(new Firebending());
             wave.setAbility(new AbilityFireJump());
             wave.setDamage(damage);
@@ -189,7 +189,8 @@ public class StatCtrlFireJump extends StatusControl {
             wave.setLifeTime(lifetime);
             wave.setChiHit(chiHit);
             wave.setPerformanceAmount(performance);
-            wave.setPush(knockback / 3F);
+            wave.setPush(knockback);
+            wave.setParticleWaves(lifetime * 5);
             wave.setBehaviour(new FireParticleSpawner.FireJumpShockwave());
             wave.setParticleSpeed(speed / 30F);
             wave.setParticleAmount(30);
