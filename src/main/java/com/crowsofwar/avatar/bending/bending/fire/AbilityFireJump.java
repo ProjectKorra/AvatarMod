@@ -15,7 +15,7 @@ import static com.crowsofwar.avatar.util.data.TickHandlerController.FIRE_PARTICL
 
 public class AbilityFireJump extends Ability {
 
-	private static final String JET_STREAM = "jetStream";
+	public static final String JET_STREAM = "jetStream";
 
 	public AbilityFireJump() {
 		super(Firebending.ID, "fire_jump");

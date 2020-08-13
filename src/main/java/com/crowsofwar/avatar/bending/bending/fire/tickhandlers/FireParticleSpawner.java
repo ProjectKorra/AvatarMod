@@ -7,6 +7,7 @@ import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.entity.EntityOffensive;
 import com.crowsofwar.avatar.entity.EntityShockwave;
 import com.crowsofwar.avatar.entity.data.OffensiveBehaviour;
+import com.crowsofwar.avatar.entity.mob.EntityBender;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.data.AbilityData;
@@ -15,11 +16,14 @@ import com.crowsofwar.avatar.util.data.TickHandler;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.bending.bending.Ability.*;
+import static com.crowsofwar.avatar.bending.bending.fire.AbilityFireJump.JET_STREAM;
 
 public class FireParticleSpawner extends TickHandler {
 
@@ -69,6 +73,30 @@ public class FireParticleSpawner extends TickHandler {
                         .ability(jump).spawnEntity(target).spawn(world);
             }
         }
+        int duration = 40;
+        if (jump != null) {
+            duration = (int) (jump.getProperty(JUMP_HEIGHT, data).floatValue() * 5);
+            duration *= data.getDamageMult() * data.getXpModifier();
+        }
+
+        if (jump != null && jump.getBooleanProperty(JET_STREAM, data) && ctx.getData().getTickHandlerDuration(this) < duration ) {
+            if (bender.consumeChi(jump.getChiCost(data) / 20)) {
+                Vec3d vel = target.getLookVec().scale(0.75);
+                if (!world.isRemote) {
+                    target.motionX = vel.x;
+                    target.motionY = vel.y;
+                    target.motionZ = vel.z;
+                    target.isAirBorne = true;
+                }
+                AvatarUtils.afterVelocityAdded(target);
+                if (target instanceof EntityBender || target instanceof EntityPlayer && !((EntityPlayer) target).isCreative())
+                    data.addBurnout(jump.getBurnOut(data) / 20);
+                if (target instanceof EntityPlayer)
+                    ((EntityPlayer) target).addExhaustion(jump.getExhaustion(data) / 20);
+
+            }
+        }
+
 
 
         return target.isInWater() || target.onGround || bender.isFlying();
