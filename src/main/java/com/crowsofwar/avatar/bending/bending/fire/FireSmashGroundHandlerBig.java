@@ -96,7 +96,7 @@ public class FireSmashGroundHandlerBig extends SmashGroundHandler {
 
 	@Override
 	protected Ability getAbility() {
-		return new AbilityFireJump();
+		return new AbilityFlameGlide();
 	}
 
 	@Override

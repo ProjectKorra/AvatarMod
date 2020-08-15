@@ -119,7 +119,7 @@ public class AvatarMod {
         Abilities.register(new AbilityFlamethrower());
         Abilities.register(new AbilityFireball());
         Abilities.register(new AbilityFireRedirect());
-        Abilities.register(new AbilityFireJump());
+        Abilities.register(new AbilityFlameGlide());
         Abilities.register(new AbilityImmolate());
         /*    			Water	  			*/
         Abilities.register(new AbilityWaterArc());

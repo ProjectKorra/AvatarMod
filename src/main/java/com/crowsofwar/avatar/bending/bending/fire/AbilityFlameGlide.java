@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.bending.bending.fire;
 
 import com.crowsofwar.avatar.bending.bending.Ability;
+import com.crowsofwar.avatar.bending.bending.BendingAi;
 import com.crowsofwar.avatar.util.Raytrace;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
@@ -8,17 +9,18 @@ import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.StatusControl;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 
 import static com.crowsofwar.avatar.util.data.StatusControlController.FIRE_JUMP;
 import static com.crowsofwar.avatar.util.data.TickHandlerController.FLAME_GLIDE_HANDLER;
 
-public class AbilityFireJump extends Ability {
+public class AbilityFlameGlide extends Ability {
 
     public static final String JET_STREAM = "jetStream";
 
-    public AbilityFireJump() {
-        super(Firebending.ID, "fire_jump");
+    public AbilityFlameGlide() {
+        super(Firebending.ID, "flame_glide");
     }
 
     @Override
@@ -76,6 +78,11 @@ public class AbilityFireJump extends Ability {
     @Override
     public float getExhaustion(AbilityContext ctx) {
         return 0;
+    }
+
+    @Override
+    public BendingAi getAi(EntityLiving entity, Bender bender) {
+        return new AiFlameGlide(this, entity, bender);
     }
 }
 

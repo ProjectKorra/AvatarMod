@@ -237,13 +237,13 @@ avatar.ability.fireball.lvl3=Tons more damage upon direct hit, wayy faster!
 avatar.ability.fireball.lvl4_1=§c§l§oFlaming §c§l§oBarrage ;; Summon up to 3 fireballs that orbit around you!
 avatar.ability.fireball.lvl4_2=§c§l§oCondensed §c§l§oRage ;; Takes a few seconds to charge, larger explosion when charged
 
-avatar.ability.fire_jump=§c§lFire Jump
-avatar.ability.fire_jump.desc=Use fire propulsion to jump a short distance, damaging players when you jump!
-avatar.ability.fire_jump.lvl1=Feet of fire!
-avatar.ability.fire_jump.lvl2=Jump slightly farther
-avatar.ability.fire_jump.lvl3=Also attack targets upon landing, light them on fire
-avatar.ability.fire_jump.lvl4_1=§c§l§oCombustion §c§l§olaunch ;; Super huge attack when you jump AND land!
-avatar.ability.fire_jump.lvl4_2=§c§l§oWall §c§l§ojumping ;; Gain the ability to wall jump once after fire jumping
+avatar.ability.flame_glide=§c§lFlame Glide
+avatar.ability.flame_glide.desc=Use fire propulsion to jump a short distance, damaging players when you jump!
+avatar.ability.flame_glide.lvl1=Feet of fire!
+avatar.ability.flame_glide.lvl2=Travel slightly further!
+avatar.ability.flame_glide.lvl3=Also attack targets upon stoppign!
+avatar.ability.flame_glide.lvl4_1=§c§l§oFlame Burst ;; Extremely fast and short dashes from fire! Shockwaves upon starting and stopping, lower cooldown.
+avatar.ability.flame_glide.lvl4_2=§c§l§oFlying Dragon ;; Travel slowly, but for longer and higher. Multicoloured flames!
 
 avatar.ability.immolate=§c§lImmolate
 avatar.ability.immolate.desc=Temporarily boost your firebending powers for a short period of time, but you may burn yourself in the process

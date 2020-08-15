@@ -1,7 +1,7 @@
 package com.crowsofwar.avatar.bending.bending.fire.statctrls;
 
 import com.crowsofwar.avatar.bending.bending.Abilities;
-import com.crowsofwar.avatar.bending.bending.fire.AbilityFireJump;
+import com.crowsofwar.avatar.bending.bending.fire.AbilityFlameGlide;
 import com.crowsofwar.avatar.bending.bending.fire.Firebending;
 import com.crowsofwar.avatar.bending.bending.fire.tickhandlers.FlameGlideHandler;
 import com.crowsofwar.avatar.client.controls.AvatarControl;
@@ -43,8 +43,8 @@ public class StatCtrlFireJump extends StatusControl {
         BendingData data = ctx.getData();
         World world = ctx.getWorld();
 
-        AbilityData abilityData = data.getAbilityData("fire_jump");
-        AbilityFireJump jump = (AbilityFireJump) Abilities.get("fire_jump");
+        AbilityData abilityData = data.getAbilityData("flame_glide");
+        AbilityFlameGlide jump = (AbilityFlameGlide) Abilities.get("flame_glide");
 
         if (jump != null) {
             float chiCost, exhaustion, burnOut;
@@ -132,7 +132,7 @@ public class StatCtrlFireJump extends StatusControl {
         World world = ctx.getWorld();
         EntityLivingBase entity = ctx.getBenderEntity();
         AbilityData abilityData = ctx.getData().getAbilityData("fire_jump");
-        AbilityFireJump jump = (AbilityFireJump) Abilities.get("fire_jump");
+        AbilityFlameGlide jump = (AbilityFlameGlide) Abilities.get("fire_jump");
 
         if (jump != null) {
             float speed = jump.getProperty(SPEED, abilityData).floatValue() / 10;
@@ -168,7 +168,7 @@ public class StatCtrlFireJump extends StatusControl {
             wave.setFireTime(fireTime);
             wave.setEntitySize(size / 5);
             wave.setElement(new Firebending());
-            wave.setAbility(new AbilityFireJump());
+            wave.setAbility(new AbilityFlameGlide());
             wave.setDamage(damage);
             wave.setOwner(entity);
             wave.setSphere(false);

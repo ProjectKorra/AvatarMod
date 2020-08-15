@@ -1,7 +1,7 @@
 package com.crowsofwar.avatar.bending.bending.fire.tickhandlers;
 
 import com.crowsofwar.avatar.bending.bending.Abilities;
-import com.crowsofwar.avatar.bending.bending.fire.AbilityFireJump;
+import com.crowsofwar.avatar.bending.bending.fire.AbilityFlameGlide;
 import com.crowsofwar.avatar.bending.bending.fire.Firebending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.entity.EntityOffensive;
@@ -36,8 +36,8 @@ public class FlameGlideHandler extends TickHandler {
         EntityLivingBase target = ctx.getBenderEntity();
         Bender bender = ctx.getBender();
         World world = ctx.getWorld();
-        AbilityData data = ctx.getData().getAbilityData(new AbilityFireJump());
-        AbilityFireJump jump = (AbilityFireJump) Abilities.get(new AbilityFireJump().getName());
+        AbilityData data = ctx.getData().getAbilityData(new AbilityFlameGlide());
+        AbilityFlameGlide jump = (AbilityFlameGlide) Abilities.get(new AbilityFlameGlide().getName());
         Vector pos = Vector.getEntityPos(target).minusY(0.05);
 
         if (world.isRemote && jump != null) {
@@ -148,7 +148,7 @@ public class FlameGlideHandler extends TickHandler {
         World world = ctx.getWorld();
         EntityLivingBase entity = ctx.getBenderEntity();
         AbilityData abilityData = ctx.getData().getAbilityData("fire_jump");
-        AbilityFireJump jump = (AbilityFireJump) Abilities.get("fire_jump");
+        AbilityFlameGlide jump = (AbilityFlameGlide) Abilities.get("fire_jump");
 
         if (jump != null && jump.getBooleanProperty(STOP_SHOCKWAVE, abilityData)) {
             float speed = jump.getProperty(SPEED, abilityData).floatValue() / 5;
@@ -184,7 +184,7 @@ public class FlameGlideHandler extends TickHandler {
             wave.setFireTime(fireTime);
             wave.setEntitySize(size / 5F);
             wave.setElement(new Firebending());
-            wave.setAbility(new AbilityFireJump());
+            wave.setAbility(new AbilityFlameGlide());
             wave.setDamage(damage);
             wave.setOwner(entity);
             wave.setSphere(false);
