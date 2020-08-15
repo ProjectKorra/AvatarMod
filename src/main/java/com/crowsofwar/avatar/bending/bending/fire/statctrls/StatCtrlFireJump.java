@@ -3,9 +3,8 @@ package com.crowsofwar.avatar.bending.bending.fire.statctrls;
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.fire.AbilityFireJump;
 import com.crowsofwar.avatar.bending.bending.fire.Firebending;
-import com.crowsofwar.avatar.bending.bending.fire.tickhandlers.FireParticleSpawner;
+import com.crowsofwar.avatar.bending.bending.fire.tickhandlers.FlameGlideHandler;
 import com.crowsofwar.avatar.client.controls.AvatarControl;
-import com.crowsofwar.avatar.config.ConfigSkills;
 import com.crowsofwar.avatar.entity.EntityShockwave;
 import com.crowsofwar.avatar.entity.mob.EntityBender;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
@@ -23,19 +22,18 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import java.util.List;
-
 import static com.crowsofwar.avatar.bending.bending.Ability.*;
-import static com.crowsofwar.avatar.util.data.TickHandlerController.*;
+import static com.crowsofwar.avatar.util.data.TickHandlerController.FLAME_GLIDE_HANDLER;
 
 public class StatCtrlFireJump extends StatusControl {
+
     public StatCtrlFireJump() {
         super(15, AvatarControl.CONTROL_JUMP, CrosshairPosition.BELOW_CROSSHAIR);
     }
+
 
     @Override
     public boolean execute(BendingContext ctx) {
@@ -56,21 +54,16 @@ public class StatCtrlFireJump extends StatusControl {
             burnOut = jump.getBurnOut(abilityData);
             cooldown = jump.getCooldown(abilityData);
 
+
             if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative())
                 chiCost = exhaustion = burnOut = cooldown = 0;
             if (entity instanceof EntityBender)
                 chiCost = 0;
 
-            boolean allowDoubleJump = abilityData.getLevel() == 3 && abilityData.getPath() == AbilityData.AbilityTreePath.SECOND;
+            if (abilityData.getAbilityCooldown() == 0 && bender.consumeChi(chiCost)) {
 
-            // Figure out whether entity is on ground by finding collisions with
-            // ground - if found a collision box, then is not on ground
-            List<AxisAlignedBB> collideWithGround = world.getCollisionBoxes(entity, entity.getEntityBoundingBox().grow(0.2, 1, 0.2));
-            boolean onGround = !collideWithGround.isEmpty() || entity.collidedVertically;
 
-            if (onGround || (allowDoubleJump && bender.consumeChi(chiCost))) {
-
-                double jumpMultiplier = jump.getProperty(JUMP_HEIGHT, abilityData).doubleValue() / 10;
+                double jumpMultiplier = jump.getProperty(SPEED, abilityData).doubleValue() / 20;
                 float fallAbsorption = jump.getProperty(FALL_ABSORPTION, abilityData).floatValue();
 
 
@@ -98,16 +91,10 @@ public class StatCtrlFireJump extends StatusControl {
                 Vector velocity = rotations.toRectangular();
 
                 velocity = velocity.withX(velocity.x() * 2);
+                velocity = velocity.withY(velocity.y() * 0.25F);
                 velocity = velocity.withZ(velocity.z() * 2);
 
                 velocity = velocity.times(jumpMultiplier);
-                entity.onGround = false;
-                if (!onGround) {
-                    velocity = velocity.times(1);
-                    entity.motionX = 0;
-                    entity.motionY = 0;
-                    entity.motionZ = 0;
-                }
                 entity.addVelocity(velocity.x(), velocity.y(), velocity.z());
                 AvatarUtils.afterVelocityAdded(entity);
 
@@ -118,17 +105,19 @@ public class StatCtrlFireJump extends StatusControl {
                 }
 
 
-                data.addTickHandler(FIRE_PARTICLE_SPAWNER, ctx);
+                data.addTickHandler(FLAME_GLIDE_HANDLER, ctx);
                 data.getMiscData().setFallAbsorption(fallAbsorption);
 
-                abilityData.addXp(ConfigSkills.SKILLS_CONFIG.fireJump);
+                abilityData.addXp(jump.getProperty(XP_USE, abilityData).floatValue());
 
                 entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 1, .7f);
 
                 if (entity instanceof EntityPlayer)
                     ((EntityPlayer) entity).addExhaustion(exhaustion);
                 abilityData.addBurnout(burnOut);
-                abilityData.setAbilityCooldown(cooldown);
+                //Ensure the ability can't be spammed after activating.
+                abilityData.setAbilityCooldown(cooldown == 0 ? 0 : jump.getCooldown(abilityData) - jump.getProperty(DURATION, abilityData).intValue());
+
                 return true;
 
             }
@@ -147,7 +136,7 @@ public class StatCtrlFireJump extends StatusControl {
 
         if (jump != null) {
             float speed = jump.getProperty(SPEED, abilityData).floatValue() / 10;
-            float size = jump.getProperty(SIZE, abilityData).floatValue();
+            float size = jump.getProperty(SIZE, abilityData).floatValue() / 2;
             int lifetime = (int) (speed / size * 10);
             float knockback = jump.getProperty(KNOCKBACK, abilityData).floatValue();
             float damage = jump.getProperty(DAMAGE, abilityData).floatValue();
@@ -191,11 +180,12 @@ public class StatCtrlFireJump extends StatusControl {
             wave.setPerformanceAmount(performance);
             wave.setPush(knockback);
             wave.setParticleWaves(lifetime * 5);
-            wave.setBehaviour(new FireParticleSpawner.FireJumpShockwave());
+            wave.setBehaviour(new FlameGlideHandler.FireJumpShockwave());
             wave.setParticleSpeed(speed / 30F);
             wave.setParticleAmount(30);
             wave.setRGB(r, g, b);
             wave.setFade(fadeR, fadeG, fadeB);
+            wave.setXp(jump.getProperty(XP_HIT, abilityData).floatValue());
             if (!world.isRemote)
                 world.spawnEntity(wave);
         }

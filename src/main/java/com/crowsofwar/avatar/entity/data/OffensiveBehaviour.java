@@ -1,7 +1,6 @@
 package com.crowsofwar.avatar.entity.data;
 
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.air.AbilityAirGust;
 import com.crowsofwar.avatar.bending.bending.air.AbilityAirblade;
 import com.crowsofwar.avatar.bending.bending.air.tickhandlers.AirBurstHandler;
@@ -11,16 +10,14 @@ import com.crowsofwar.avatar.bending.bending.fire.AbilityFireRedirect;
 import com.crowsofwar.avatar.bending.bending.fire.AbilityFireShot;
 import com.crowsofwar.avatar.bending.bending.fire.AbilityFlamethrower;
 import com.crowsofwar.avatar.bending.bending.fire.statctrls.StatCtrlFlameStrike;
-import com.crowsofwar.avatar.bending.bending.fire.tickhandlers.FireParticleSpawner;
+import com.crowsofwar.avatar.bending.bending.fire.tickhandlers.FlameGlideHandler;
 import com.crowsofwar.avatar.bending.bending.fire.tickhandlers.FlamethrowerUpdateTick;
 import com.crowsofwar.avatar.entity.EntityFireball;
 import com.crowsofwar.avatar.entity.EntityFlames;
 import com.crowsofwar.avatar.entity.EntityOffensive;
 import com.crowsofwar.avatar.util.PlayerViewRegistry;
-import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -46,7 +43,7 @@ public abstract class OffensiveBehaviour extends Behavior<EntityOffensive> {
         registerBehavior(AbilityAirblade.AirBladeBehaviour.class);
         registerBehavior(FlamethrowerUpdateTick.FlamethrowerBehaviour.class);
         registerBehavior(StatCtrlFlameStrike.FlameStrikeBehaviour.class);
-        registerBehavior(FireParticleSpawner.FireJumpShockwave.class);
+        registerBehavior(FlameGlideHandler.FireJumpShockwave.class);
         FireballBehavior.register();
         registerBehavior(Redirect.class);
         registerBehavior(AbilityFireRedirect.AbsorbBehaviour.class);
@@ -125,7 +122,7 @@ public abstract class OffensiveBehaviour extends Behavior<EntityOffensive> {
 
 
                 if (rotateRight) {
-                    int angle = (owner.ticksExisted * 10)  % 360;
+                    int angle = (owner.ticksExisted * 10) % 360;
                     double radians = Math.toRadians(angle);
                     double x = 1.75 * Math.cos(radians);
                     double y = height.y;

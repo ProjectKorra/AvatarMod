@@ -44,12 +44,14 @@ public class AbilityData {
 	private float lastXp;
 	private float xp;
 	//Whether to switch the path of the ability
-	private final boolean switchPath;
+	private boolean switchPath;
 	private int abilityCooldown;
 	private double powerRating;
 	//How much exhaustion to add to the player (affects the hunger bar, like sprinting or fighting)
 	private float exhaustion;
 	private boolean shouldRegenBurnout;
+	//This is the most small brain solution ever, but we're rewriting later so who really cares
+	private int jumpNumber;
 	/**
 	 * Current burnout amount of the ability.
 	 * <p>
@@ -88,6 +90,7 @@ public class AbilityData {
 		this.exhaustion = 0;
 		this.powerRating = 0;
 		this.shouldRegenBurnout = true;
+		this.jumpNumber = 0;
 	}
 
 	public AbilityData(BendingData data, String abilityName, boolean switchPath) {
@@ -102,6 +105,7 @@ public class AbilityData {
 		this.exhaustion = 0;
 		this.powerRating = 0;
 		this.shouldRegenBurnout = true;
+		this.jumpNumber = 0;
 	}
 
 	/**
@@ -125,6 +129,22 @@ public class AbilityData {
 
 	public static AbilityData get(World world, String playerName, String abilityName) {
 		return BendingData.get(world, playerName).getAbilityData(abilityName);
+	}
+
+	public void setJumpNumber(int number) {
+		this.jumpNumber = number;
+	}
+
+	public int getJumpNumber() {
+		return this.jumpNumber;
+	}
+
+	public void setSwitchPath(boolean switchPath) {
+		this.switchPath = switchPath;
+	}
+
+	public boolean shouldSwitchPath() {
+		return switchPath;
 	}
 
 	public void setRegenBurnout(boolean regen) {
@@ -446,6 +466,7 @@ public class AbilityData {
 		exhaustion = nbt.getFloat("Exhaustion");
 		burnOut = nbt.getFloat("Burnout");
 		shouldRegenBurnout = nbt.getBoolean("RegenBurnout");
+		jumpNumber = nbt.getInteger("Jumps");
 	}
 
 	public void writeToNbt(NBTTagCompound nbt) {
@@ -458,6 +479,7 @@ public class AbilityData {
 		nbt.setFloat("Exhaustion", exhaustion);
 		nbt.setFloat("Burnout", burnOut);
 		nbt.setBoolean("RegenBurnout", shouldRegenBurnout);
+		nbt.setInteger("Jumps", jumpNumber);
 	}
 
 	public void toBytes(ByteBuf buf) {
@@ -470,6 +492,7 @@ public class AbilityData {
 		buf.writeFloat(exhaustion);
 		buf.writeFloat(burnOut);
 		buf.writeBoolean(shouldRegenBurnout);
+		buf.writeInt(jumpNumber);
 	}
 
 	private void fromBytes(ByteBuf buf) {
@@ -481,6 +504,7 @@ public class AbilityData {
 		exhaustion = buf.readFloat();
 		burnOut = buf.readFloat();
 		shouldRegenBurnout = buf.readBoolean();
+		jumpNumber = buf.readInt();
 	}
 
 	/**

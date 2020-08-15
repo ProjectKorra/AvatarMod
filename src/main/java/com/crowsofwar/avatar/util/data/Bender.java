@@ -220,6 +220,7 @@ public abstract class Bender {
             AbilityData.AbilityTreePath path = aD.getPath();
             AbilityContext abilityCtx = new AbilityContext(data, raytrace, ability,
                     entity, powerRating, switchPath);
+            aD.setSwitchPath(switchPath);
 
             if (ability.properties != null) {
                 if (canUseAbility(ability) && !MinecraftForge.EVENT_BUS.post(new AbilityUseEvent(entity, ability, level + 1, path))) {

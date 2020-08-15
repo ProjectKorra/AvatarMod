@@ -133,7 +133,9 @@ public class StatCtrlAirJump extends StatusControl {
             if (!world.isRemote) {
                 if (!onGround) {
                     velocity = velocity.times(0.875);
-                    entity.setVelocity(velocity.x(), velocity.y(), velocity.z());
+                    entity.motionX = velocity.x();
+                    entity.motionY = velocity.y();
+                    entity.motionZ = velocity.z();
                 } else
                     entity.addVelocity(velocity.x(), velocity.y(), velocity.z());
             }

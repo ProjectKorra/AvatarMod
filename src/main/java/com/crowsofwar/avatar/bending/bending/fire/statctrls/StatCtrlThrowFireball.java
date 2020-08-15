@@ -116,6 +116,7 @@ public class StatCtrlThrowFireball extends StatusControl {
                 abilityData.addBurnout(burnOut);
 
                 Vector vel = lookPos.minus(Vector.getEntityPos(fireball));
+                Vector entityVel = Vector.getVelocity(entity).withY(0);
 
                 //Drillgon200: Why deal with orbit ids when there's already two other ids you can organize them by?
                 //FD: No clue
@@ -129,13 +130,13 @@ public class StatCtrlThrowFireball extends StatusControl {
                                 ball.setOrbitID(ball.getOrbitID() - 1);
                         }
                         if (fireballs.size() > 1)
-                            fireball.setVelocity(vel.normalize().times(speedMult));
+                            fireball.setVelocity(vel.normalize().times(speedMult).plus(entityVel));
                         else {
-                            fireball.setVelocity(Vector.getLookRectangular(entity).times(speedMult));
+                            fireball.setVelocity(Vector.getLookRectangular(entity).times(speedMult).plus(entityVel));
                             abilityData.setRegenBurnout(true);
                         }
                     } else {
-                        fireball.setVelocity(Vector.getLookRectangular(entity).times(speedMult));
+                        fireball.setVelocity(Vector.getLookRectangular(entity).times(speedMult).plus(entityVel));
                         abilityData.setRegenBurnout(true);
                     }
                 //}

@@ -139,7 +139,7 @@ public class AbilityFireball extends Ability {
                 fireball.setBehaviour(fireballs.size() < 1 ? new FireballOrbitController() : new FireballBehavior.PlayerControlled());
                 fireball.setDamage(damage);
                 fireball.setPowerRating(bender.calcPowerRating(Firebending.ID));
-                fireball.setEntitySize(size / 2F);
+                fireball.setEntitySize(size);
                 fireball.setLifeTime(lifetime);
                 fireball.setOrbitID(fireballs.size() + 1);
                 fireball.setPerformanceAmount(performance);

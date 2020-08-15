@@ -6,24 +6,17 @@ import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.fire.AbilityFlameStrike;
 import com.crowsofwar.avatar.bending.bending.fire.Firebending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
-import com.crowsofwar.avatar.entity.*;
+import com.crowsofwar.avatar.entity.EntityFlames;
+import com.crowsofwar.avatar.entity.EntityOffensive;
 import com.crowsofwar.avatar.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
-import com.crowsofwar.avatar.util.damageutils.AvatarDamageSource;
-import com.crowsofwar.avatar.util.damageutils.DamageUtils;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.StatusControl;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
-import com.crowsofwar.avatar.util.event.ParticleCollideEvent;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityEnderCrystal;
-import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.projectile.EntityArrow;
-import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
@@ -33,7 +26,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.HashMap;
 import java.util.Random;
@@ -42,8 +34,6 @@ import java.util.UUID;
 import static com.crowsofwar.avatar.bending.bending.fire.AbilityFlameStrike.STRIKES;
 import static com.crowsofwar.avatar.client.controls.AvatarControl.CONTROL_LEFT_CLICK;
 import static com.crowsofwar.avatar.client.controls.AvatarControl.CONTROL_RIGHT_CLICK;
-import static com.crowsofwar.avatar.config.ConfigSkills.SKILLS_CONFIG;
-import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.util.data.StatusControlController.FLAME_STRIKE_MAIN;
 import static com.crowsofwar.avatar.util.data.StatusControlController.FLAME_STRIKE_OFF;
 import static com.crowsofwar.avatar.util.data.TickHandlerController.FLAME_STRIKE_HANDLER;
@@ -82,119 +72,6 @@ public class StatCtrlFlameStrike extends StatusControl {
     }
 
 
-    @SubscribeEvent
-    public static void particleCollision(ParticleCollideEvent event) {
-        if (event.getAbility() instanceof AbilityFlameStrike) {
-            if (event.getSpawner() != event.getEntity()) {
-                if (event.getSpawner() instanceof EntityLivingBase && event.getEntity() != null && event.getVelocity() != null) {
-                    if (AvatarUtils.getMagnitude(event.getVelocity()) > 0.5)
-                        attackEntity((EntityLivingBase) event.getSpawner(), event.getEntity(), event.getVelocity());
-                }
-            }
-        }
-    }
-
-    private static void attackEntity(EntityLivingBase attacker, Entity target, Vec3d vel) {
-        AbilityData abilityData = AbilityData.get(attacker, new AbilityFlameStrike().getName());
-        Bender bender = Bender.get(attacker);
-        World world = attacker.world;
-        if (abilityData != null && bender != null && !world.isRemote) {
-            float powerModifier = (float) (bender.getDamageMult(Firebending.ID));
-            float xpMod = abilityData.getXpModifier();
-
-            float damage = STATS_CONFIG.flameStrikeSettings.damage;
-            int performance = STATS_CONFIG.flameStrikeSettings.performanceAmount;
-            float knockBack = STATS_CONFIG.flameStrikeSettings.knockback;
-            int fireTime = STATS_CONFIG.flameStrikeSettings.fireTime;
-            float xp = SKILLS_CONFIG.flameStrikeHit;
-
-            if (abilityData.getLevel() == 1) {
-                damage *= 1.25F;
-                knockBack *= 1.125F;
-                fireTime += 2;
-                performance += 2;
-            }
-            if (abilityData.getLevel() == 2) {
-                damage *= 2F;
-                knockBack *= 1.25F;
-                fireTime += 4;
-                performance += 5;
-            }
-            if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-                damage *= 2.5F;
-                performance += 10;
-                fireTime += 3;
-            }
-            if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-                damage *= 4;
-                performance += 2;
-                fireTime += 5;
-            }
-
-            damage *= powerModifier * xpMod;
-            knockBack *= powerModifier * xpMod;
-            fireTime *= powerModifier * xpMod;
-            performance *= powerModifier * xpMod;
-
-            vel = vel.scale(0.0005).scale(knockBack);
-
-
-            if (canDamageEntity(target, attacker)) {
-                if (!(target instanceof EntityLivingBase) || ((EntityLivingBase) target).attackable() &&
-                        ((EntityLivingBase) target).hurtTime == 0)
-                    DamageUtils.attackEntity(attacker, target, AvatarDamageSource.causeFireDamage(target, attacker), damage, performance,
-                            new AbilityFlameStrike(), xp);
-                else {
-                    //NOTE: Add velocity like this is great for stuff like a water blast!
-                    target.addVelocity(vel.x, vel.y + 0.15, vel.z);
-                    target.motionY = Math.min(0.15, target.motionY);
-                }
-
-            } else if (canCollideWithEntity(target, attacker)) {
-                //NOTE: Add velocity like this is great for stuff like a water blast!
-                target.addVelocity(vel.x, vel.y + 0.15, vel.z);
-                target.motionY = Math.min(0.15, target.motionY);
-            }
-            target.setFire(fireTime);
-
-        }
-    }
-
-    private static boolean canCollideWithEntity(Entity entity, Entity owner) {
-        if (entity instanceof AvatarEntity) {
-            if (((AvatarEntity) entity).getOwner() == owner)
-                return false;
-            else if (!entity.canBeCollidedWith())
-                return false;
-            else if (entity instanceof EntityShield)
-                return true;
-        } else if (entity.isOnSameTeam(owner))
-            return false;
-        else if (entity instanceof EntityTameable && ((EntityTameable) entity).getOwner() == owner)
-            return false;
-        else if (entity.getRidingEntity() == owner)
-            return false;
-        return entity instanceof EntityLivingBase || entity instanceof EntityEnderCrystal || entity.canBeCollidedWith() || entity instanceof EntityArrow
-                || entity instanceof EntityThrowable;
-    }
-
-    private static boolean canDamageEntity(Entity entity, Entity owner) {
-        if (entity instanceof AvatarEntity) {
-            if (((AvatarEntity) entity).getOwner() == owner)
-                return false;
-            else if (!entity.canBeCollidedWith())
-                return false;
-            else if (entity instanceof EntityShield || entity instanceof IShieldEntity)
-                return true;
-        } else if (entity.isOnSameTeam(owner))
-            return false;
-        else if (entity instanceof EntityTameable && ((EntityTameable) entity).getOwner() == owner)
-            return false;
-        else if (entity.getRidingEntity() == owner)
-            return false;
-        return entity instanceof EntityLivingBase || entity instanceof EntityEnderCrystal || entity.canBeCollidedWith() && entity.canBeAttackedWithItem();
-    }
-
     @Override
     public boolean execute(BendingContext ctx) {
         EntityLivingBase entity = ctx.getBenderEntity();
@@ -214,7 +91,7 @@ public class StatCtrlFlameStrike extends StatusControl {
         int particleCount = 3;
 
         double powerFactor = ctx.getBender().calcPowerRating(Firebending.ID) / 100D;
-        float powerModifier = (float) (bender.getDamageMult(Firebending.ID));
+        float powerModifier = (float) abilityData.getDamageMult();
         float xpMod = abilityData.getXpModifier();
 
         float damage = strike.getProperty(Ability.DAMAGE, abilityData).floatValue();
@@ -257,11 +134,12 @@ public class StatCtrlFlameStrike extends StatusControl {
         //Boosting factors
         lifeTime += powerFactor * 3 * xpMod;
         mult += powerFactor / 10 * xpMod;
-        size *= (1 + powerFactor * 0.5 * xpMod);
+        size *= powerModifier * xpMod;
         damage *= powerModifier * xpMod;
         fireTime *= powerModifier * xpMod;
         performance *= (powerModifier * xpMod * 0.5 + 1);
 
+        System.out.println(xpMod);
 
         Vec3d look = entity.getLookVec();
         double eyePos = entity.getEyeHeight() + entity.getEntityBoundingBox().minY;
@@ -279,9 +157,9 @@ public class StatCtrlFlameStrike extends StatusControl {
 
             //Spawn particles
             for (int i = 0; i < 24 + particleCount * 2; i++) {
-                double x1 = entity.posX + look.x * i / 50 + world.rand.nextGaussian() * accuracyMult;
+                double x1 = entity.posX + look.x * i / 50 + world.rand.nextGaussian() * accuracyMult + entity.motionX;
                 double y1 = eyePos - 0.4F + world.rand.nextGaussian() * accuracyMult;
-                double z1 = entity.posZ + look.z * i / 50 + world.rand.nextGaussian() * accuracyMult;
+                double z1 = entity.posZ + look.z * i / 50 + world.rand.nextGaussian() * accuracyMult + entity.motionZ;
 
                 //140, 90, 90 = rainbow of fun
                 int rRandom = fadeR < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeR * 2) : AvatarUtils.getRandomNumberInRange(fadeR / 2,
@@ -339,9 +217,9 @@ public class StatCtrlFlameStrike extends StatusControl {
                     flames.setPosition(x1, y1, z1);
                     flames.setDamageSource("avatar_Fire_flameStrike");
                     flames.setChiHit(strike.getProperty(Ability.CHI_HIT, abilityData).floatValue());
-                    flames.setVelocity(new Vec3d(look.x * mult + world.rand.nextGaussian() * accuracyMult,
+                    flames.setVelocity(new Vec3d(look.x * mult + world.rand.nextGaussian() * accuracyMult + entity.motionX,
                             look.y * mult + world.rand.nextGaussian() * accuracyMult,
-                            look.z * mult + world.rand.nextGaussian() * accuracyMult));
+                            look.z * mult + world.rand.nextGaussian() * accuracyMult + entity.motionZ));
                     flames.setEntitySize(size / 8);
                     if (!world.isRemote)
                         world.spawnEntity(flames);

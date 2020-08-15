@@ -19,15 +19,15 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.bending.bending.Ability.*;
-import static com.crowsofwar.avatar.bending.bending.fire.AbilityFireJump.JET_STREAM;
+import static com.crowsofwar.gorecore.util.Vector.toRectangular;
+import static java.lang.Math.toRadians;
 
-public class FireParticleSpawner extends TickHandler {
+public class FlameGlideHandler extends TickHandler {
 
-    public FireParticleSpawner(int id) {
+    public FlameGlideHandler(int id) {
         super(id);
     }
 
@@ -41,6 +41,9 @@ public class FireParticleSpawner extends TickHandler {
         Vector pos = Vector.getEntityPos(target).minusY(0.05);
 
         if (world.isRemote && jump != null) {
+            double minY = target.getEntityBoundingBox().minY;
+            pos = pos.plus(Vector.getVelocity(target).times(0.1));
+            pos = pos.withY(Math.max(pos.y(), minY));
             float size = jump.getProperty(SIZE, data).floatValue() / 2;
             int r, g, b, fadeR, fadeG, fadeB;
 
@@ -53,7 +56,7 @@ public class FireParticleSpawner extends TickHandler {
 
             size *= data.getDamageMult() * data.getXpModifier();
 
-            for (int i = 0; i < 2 + AvatarUtils.getRandomNumberInRange(0, 4); i++) {
+            for (int i = 0; i < 6 + AvatarUtils.getRandomNumberInRange(0, 2); i++) {
                 int rRandom = fadeR < 100 ? AvatarUtils.getRandomNumberInRange(0, fadeR * 2) : AvatarUtils.getRandomNumberInRange(fadeR / 2,
                         fadeR * 2);
                 int gRandom = fadeG < 100 ? AvatarUtils.getRandomNumberInRange(0, fadeG * 2) : AvatarUtils.getRandomNumberInRange(fadeG / 2,
@@ -63,31 +66,68 @@ public class FireParticleSpawner extends TickHandler {
 
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).clr(r, g, b, 215 + AvatarUtils.getRandomNumberInRange(0, 40))
                         .fade(rRandom, gRandom, bRandom, 160 + AvatarUtils.getRandomNumberInRange(0, 40))
-                        .pos(pos.toMinecraft()).vel(world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40)
+                        .pos(pos.toMinecraft()).vel(world.rand.nextGaussian() / 10, world.rand.nextGaussian() / 10, world.rand.nextGaussian() / 10)
                         .scale(size).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(new Firebending()).collide(true)
                         .ability(jump).spawnEntity(target).spawn(world);
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).clr(r, g * 8, b * 2, 215 + AvatarUtils.getRandomNumberInRange(0, 40))
                         .fade(rRandom, gRandom, bRandom, 160 + AvatarUtils.getRandomNumberInRange(0, 40))
-                        .pos(pos.toMinecraft()).vel(world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40)
+                        .pos(pos.toMinecraft()).vel(world.rand.nextGaussian() / 10, world.rand.nextGaussian() / 10, world.rand.nextGaussian() / 10)
                         .scale(size).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(new Firebending()).collide(true)
                         .ability(jump).spawnEntity(target).spawn(world);
             }
         }
         int duration = 40;
         if (jump != null) {
-            duration = (int) (jump.getProperty(JUMP_HEIGHT, data).floatValue() * 5);
+            duration = jump.getProperty(DURATION, data).intValue();
             duration *= data.getDamageMult() * data.getXpModifier();
         }
 
-        if (jump != null && jump.getBooleanProperty(JET_STREAM, data) && ctx.getData().getTickHandlerDuration(this) < duration ) {
+        if (jump != null && ctx.getData().getTickHandlerDuration(this) < duration) {
+
             if (bender.consumeChi(jump.getChiCost(data) / 20)) {
-                Vec3d vel = target.getLookVec().scale(0.75);
-                if (!world.isRemote) {
-                    target.motionX = vel.x;
-                    target.motionY = vel.y;
-                    target.motionZ = vel.z;
-                    target.isAirBorne = true;
+                double targetSpeed = jump.getProperty(SPEED, data).floatValue() / 4;
+                targetSpeed *= data.getDamageMult() * data.getXpModifier();
+
+                if (target.moveForward != 0) {
+                    if (target.moveForward < 0) {
+                        targetSpeed /= 2;
+                    } else {
+                        targetSpeed *= 1.3;
+                    }
                 }
+
+                double posY = target.onGround ? target.getEntityBoundingBox().minY + 0.25 : target.getEntityBoundingBox().minY;
+                target.setPosition(target.posX, posY, target.posZ);
+                Vector currentVelocity = new Vector(target.motionX, target.motionY, target.motionZ);
+                Vector targetVelocity = toRectangular(toRadians(target.rotationYaw), 0).times(targetSpeed);
+
+                double targetWeight = 0.1;
+                currentVelocity = currentVelocity.times(1 - targetWeight);
+                targetVelocity = targetVelocity.times(targetWeight);
+
+                double targetSpeedWeight = 0.2;
+                double speed = currentVelocity.magnitude() * (1 - targetSpeedWeight)
+                        + targetSpeed * targetSpeedWeight;
+
+                Vector newVelocity = currentVelocity.plus(targetVelocity).normalize().times(speed);
+
+                Vector playerMovement = toRectangular(toRadians(target.rotationYaw - 90),
+                        toRadians(target.rotationPitch)).times(target.moveStrafing * 0.02);
+
+                newVelocity = newVelocity.plus(playerMovement);
+
+                target.motionX = newVelocity.x();
+                if (target.onGround)
+                    target.motionY += 0.1;
+                else
+                    target.motionY += Math.max(target.getLookVec().scale(speed / 5).y * 2, 0.05);
+                target.motionZ = newVelocity.z();
+
+                target.motionY *= 0.5;
+
+                if (!target.onGround)
+                    target.isAirBorne = true;
+
                 AvatarUtils.afterVelocityAdded(target);
                 if (target instanceof EntityBender || target instanceof EntityPlayer && !((EntityPlayer) target).isCreative())
                     data.addBurnout(jump.getBurnOut(data) / 20);
@@ -97,9 +137,7 @@ public class FireParticleSpawner extends TickHandler {
             }
         }
 
-
-
-        return target.isInWater() || target.onGround || bender.isFlying();
+        return target.isInWater() || target.isSneaking() || bender.isFlying() || duration <= ctx.getData().getTickHandlerDuration(this);
 
     }
 
@@ -115,7 +153,7 @@ public class FireParticleSpawner extends TickHandler {
         if (jump != null && jump.getBooleanProperty(STOP_SHOCKWAVE, abilityData)) {
             float speed = jump.getProperty(SPEED, abilityData).floatValue() / 5;
             float size = jump.getProperty(SIZE, abilityData).floatValue() * 1.25F;
-            int lifetime = (int) (speed / size * 10);
+            int lifetime = (int) (speed / size * 10) / 2;
             float knockback = jump.getProperty(KNOCKBACK, abilityData).floatValue();
             float damage = jump.getProperty(DAMAGE, abilityData).floatValue();
             int fireTime = jump.getProperty(FIRE_TIME, abilityData).intValue();
@@ -166,6 +204,8 @@ public class FireParticleSpawner extends TickHandler {
             if (!world.isRemote)
                 world.spawnEntity(wave);
         }
+        if (jump != null)
+            abilityData.setAbilityCooldown(jump.getCooldown(abilityData));
     }
 
     //TODO: Fire entity for visual fx/sparks/embers from fire
