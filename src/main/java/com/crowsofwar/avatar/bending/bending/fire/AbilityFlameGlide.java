@@ -41,6 +41,7 @@ public class AbilityFlameGlide extends Ability {
         return true;
     }
 
+    //Todo: Add waves of fire that follow the player
     @Override
     public void execute(AbilityContext ctx) {
 

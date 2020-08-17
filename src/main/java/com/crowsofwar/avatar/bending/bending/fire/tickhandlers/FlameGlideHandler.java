@@ -69,8 +69,8 @@ public class FlameGlideHandler extends TickHandler {
                         .pos(pos.toMinecraft()).vel(world.rand.nextGaussian() / 10, world.rand.nextGaussian() / 10, world.rand.nextGaussian() / 10)
                         .scale(size).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(new Firebending()).collide(true)
                         .ability(jump).spawnEntity(target).spawn(world);
-                ParticleBuilder.create(ParticleBuilder.Type.FLASH).clr(r, g * 8, b * 2, 215 + AvatarUtils.getRandomNumberInRange(0, 40))
-                        .fade(rRandom, gRandom, bRandom, 160 + AvatarUtils.getRandomNumberInRange(0, 40))
+                ParticleBuilder.create(ParticleBuilder.Type.FLASH).clr(r, g * 4, b, 215 + AvatarUtils.getRandomNumberInRange(0, 40))
+                        .fade(rRandom, gRandom * 4, bRandom, 160 + AvatarUtils.getRandomNumberInRange(0, 40))
                         .pos(pos.toMinecraft()).vel(world.rand.nextGaussian() / 10, world.rand.nextGaussian() / 10, world.rand.nextGaussian() / 10)
                         .scale(size).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(new Firebending()).collide(true)
                         .ability(jump).spawnEntity(target).spawn(world);
