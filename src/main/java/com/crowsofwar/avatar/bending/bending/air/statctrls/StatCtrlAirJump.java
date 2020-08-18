@@ -17,6 +17,7 @@
 
 package com.crowsofwar.avatar.bending.bending.air.statctrls;
 
+import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.air.AbilityAirJump;
 import com.crowsofwar.avatar.bending.bending.air.Airbending;
 import com.crowsofwar.avatar.bending.bending.air.powermods.AirJumpPowerModifier;
@@ -69,13 +70,14 @@ public class StatCtrlAirJump extends StatusControl {
         EntityLivingBase entity = ctx.getBenderEntity();
         BendingData data = ctx.getData();
         World world = ctx.getWorld();
+        AbilityData abilityData = data.getAbilityData("air_jump");
+        AbilityAirJump jump = (AbilityAirJump) Abilities.get("air_jump");
 
         String uuid = Objects.requireNonNull(bender.getInfo().getId()).toString();
 
 
         if (!timesJumped.containsKey(uuid)) timesJumped.put(uuid, 0);
 
-        AbilityData abilityData = data.getAbilityData("air_jump");
         boolean allowDoubleJump = abilityData.getLevel() == 3 && abilityData.getPath() == AbilityTreePath.FIRST && timesJumped.get(uuid) < 2;
 
 
@@ -86,7 +88,7 @@ public class StatCtrlAirJump extends StatusControl {
         boolean onGround = !collideWithGround.isEmpty() || entity.collidedVertically || world.getBlockState(entity.getPosition()).getBlock() == Blocks.WEB;
 
         if (onGround || entity instanceof EntityPlayer && getIsGliderDeployed((EntityPlayer) entity) ||
-                (allowDoubleJump && bender.consumeChi(new AbilityAirJump().getChiCost(abilityData)))) {
+                (allowDoubleJump && bender.consumeChi(jump.getChiCost(abilityData)))) {
 
             int lvl = abilityData.getLevel();
             double multiplier = 0.65;

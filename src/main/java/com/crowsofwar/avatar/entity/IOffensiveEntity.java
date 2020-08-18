@@ -2,6 +2,7 @@ package com.crowsofwar.avatar.entity;
 
 import com.crowsofwar.avatar.bending.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.client.particle.AvatarParticles;
+import com.crowsofwar.avatar.entity.mob.EntityBender;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.damageutils.AvatarDamageSource;
@@ -11,6 +12,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.init.SoundEvents;
@@ -106,7 +108,9 @@ public interface IOffensiveEntity {
                         if (attacker.getOwner() != null) {
                             BendingData bendingData = BendingData.getFromEntity(attacker.getOwner());
                             if (bendingData != null && bendingData.chi() != null) {
-                                bendingData.chi().changeAvailableChi(getChiHit());
+                                if (attacker.getOwner() instanceof EntityBender
+                                        || !(attacker.getOwner() instanceof EntityPlayer && ((EntityPlayer) attacker.getOwner()).isCreative()))
+                                    bendingData.chi().changeAvailableChi(getChiHit());
                             }
                         }
 
@@ -123,7 +127,9 @@ public interface IOffensiveEntity {
                         if (attacker.getOwner() != null) {
                             BendingData bendingData = BendingData.getFromEntity(attacker.getOwner());
                             if (bendingData != null && bendingData.chi() != null) {
-                                bendingData.chi().changeAvailableChi(getChiHit());
+                                if (attacker.getOwner() instanceof EntityBender
+                                        || !(attacker.getOwner() instanceof EntityPlayer && ((EntityPlayer) attacker.getOwner()).isCreative()))
+                                    bendingData.chi().changeAvailableChi(getChiHit());
                             }
                         }
                     }
@@ -151,7 +157,9 @@ public interface IOffensiveEntity {
                 if (attacker.getOwner() != null) {
                     BendingData bendingData = BendingData.getFromEntity(attacker.getOwner());
                     if (bendingData != null && bendingData.chi() != null) {
-                        bendingData.chi().changeAvailableChi(getChiHit());
+                        if (attacker.getOwner() instanceof EntityBender
+                                || !(attacker.getOwner() instanceof EntityPlayer && ((EntityPlayer) attacker.getOwner()).isCreative()))
+                            bendingData.chi().changeAvailableChi(getChiHit());
                     }
                 }
             }
