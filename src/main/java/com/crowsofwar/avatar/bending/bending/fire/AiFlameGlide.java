@@ -1,6 +1,5 @@
 package com.crowsofwar.avatar.bending.bending.fire;
 
-import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingAi;
 import com.crowsofwar.avatar.util.data.Bender;
