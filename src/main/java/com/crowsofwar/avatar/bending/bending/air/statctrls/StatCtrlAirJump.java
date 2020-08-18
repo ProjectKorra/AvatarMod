@@ -18,6 +18,7 @@
 package com.crowsofwar.avatar.bending.bending.air.statctrls;
 
 import com.crowsofwar.avatar.bending.bending.Abilities;
+import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.air.AbilityAirJump;
 import com.crowsofwar.avatar.bending.bending.air.Airbending;
 import com.crowsofwar.avatar.bending.bending.air.powermods.AirJumpPowerModifier;
@@ -76,6 +77,9 @@ public class StatCtrlAirJump extends StatusControl {
         String uuid = Objects.requireNonNull(bender.getInfo().getId()).toString();
 
 
+        if (jump == null)
+            return true;
+
         if (!timesJumped.containsKey(uuid)) timesJumped.put(uuid, 0);
 
         boolean allowDoubleJump = abilityData.getLevel() == 3 && abilityData.getPath() == AbilityTreePath.FIRST && timesJumped.get(uuid) < 2;
@@ -91,7 +95,7 @@ public class StatCtrlAirJump extends StatusControl {
                 (allowDoubleJump && bender.consumeChi(jump.getChiCost(abilityData)))) {
 
             int lvl = abilityData.getLevel();
-            double multiplier = 0.65;
+            double multiplier = jump.getProperty(Ability.JUMP_HEIGHT, abilityData).floatValue() / 5;
             double powerModifier = 10;
             double powerDuration = 3;
             int numberOfParticles = 10;
@@ -117,10 +121,7 @@ public class StatCtrlAirJump extends StatusControl {
             if (abilityData.isMasterPath(AbilityTreePath.SECOND)) {
                 numberOfParticles = 35;
                 particleSpeed = 0.5;
-                multiplier = 1.2;
             }
-            if (abilityData.isMasterPath(AbilityTreePath.FIRST))
-                multiplier = 1.0F;
 
             if (world.isRemote) {
                 for (int i = 0; i < numberOfParticles; i++)
@@ -143,34 +144,23 @@ public class StatCtrlAirJump extends StatusControl {
             }
             AvatarUtils.afterVelocityAdded(entity);
 
-            float fallAbsorption = 0;
-            float xVel = 0, yVel = 0, zVel = 0;
-            if (lvl <= 0) {
-                fallAbsorption = 8;
-                xVel = zVel = 0.4F;
-                yVel = 1F;
-            } else if (lvl == 1) {
-                fallAbsorption = 13;
-                xVel = zVel = 0.6F;
-                yVel = 1.4F;
-            } else if (lvl == 2) {
-                fallAbsorption = 16;
-                xVel = zVel = 0.8F;
-                yVel = 1.8F;
-            } else if (lvl == 3) {
-                fallAbsorption = 19;
-                xVel = zVel = 1F;
-                yVel = 2.0F;
-            }
+            float fallAbsorption = jump.getProperty(Ability.FALL_ABSORPTION, abilityData).floatValue();
+            float speed = jump.getProperty(Ability.KNOCKBACK, abilityData).floatValue() / 3;
+            float size = jump.getProperty(Ability.EFFECT_RADIUS, abilityData).floatValue();
+            float chiCost, chiOnHit, exhaustion, burnout;
+            int cooldown;
+
+            speed *= abilityData.getDamageMult() * abilityData.getXpModifier();
+            size *= abilityData.getDamageMult() * abilityData.getXpModifier();
 
             data.getMiscData().setFallAbsorption(fallAbsorption);
 
             data.addTickHandler(AIR_PARTICLE_SPAWNER, ctx);
-            if (abilityData.getLevel() == 3 && abilityData.getPath() == AbilityTreePath.SECOND) {
+            if (jump.getBooleanProperty(Ability.GROUND_POUND, abilityData)) {
                 data.addTickHandler(SMASH_GROUND, ctx);
             }
 
-            abilityData.addXp(SKILLS_CONFIG.airJump);
+            abilityData.addXp(jump.getProperty(Ability.XP_USE, abilityData).floatValue());
 
             entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_FIREWORK_LAUNCH, SoundCategory.PLAYERS, 1, .7f);
 
@@ -191,12 +181,14 @@ public class StatCtrlAirJump extends StatusControl {
             wave.setKnockbackMult(new Vec3d(0.5, 0.2, 0.5));
             wave.setParticleAmount(2);
             wave.setDamageSource("avatar_Air_shockwave");
-            wave.setAbility(new AbilityAirJump());
+            wave.setAbility(jump);
             wave.setElement(new Airbending());
             wave.setParticleSpeed(lvl > 0 ? 0.02F + lvl / 40F : 0.02F);
             wave.setPosition(entity.getPositionVector().add(0, 0.5, 0));
             wave.setOwner(entity);
-            wave.setKnockbackMult(new Vec3d(xVel, yVel, zVel));
+            wave.setRenderNormal(false);
+            wave.setKnockbackMult(new Vec3d(speed, speed * 2, speed));
+            wave.setXp(jump.getProperty(Ability.XP_HIT, abilityData).floatValue());
             if (!world.isRemote) {
                 world.spawnEntity(wave);
                 jumps++;
@@ -205,6 +197,7 @@ public class StatCtrlAirJump extends StatusControl {
             //If you return when it's greater than 1, it resets, and you can double jump infinitely.
             boolean isDone = jumps > 2;
             if (isDone) timesJumped.replace(uuid, 0);
+            abilityData.setRegenBurnout(true);
             return true;
 
         }

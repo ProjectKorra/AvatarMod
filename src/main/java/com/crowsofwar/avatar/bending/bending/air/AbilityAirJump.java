@@ -53,7 +53,8 @@ public class AbilityAirJump extends Ability {
 	@Override
 	public void init() {
 		super.init();
-		addProperties(JUMP_HEIGHT, JUMPS, SPEED, KNOCKBACK, SIZE, PERFORMANCE);
+		addProperties(JUMP_HEIGHT, JUMPS, KNOCKBACK, EFFECT_RADIUS, PERFORMANCE, FALL_ABSORPTION, XP_HIT);
+		addBooleanProperties(GROUND_POUND);
 	}
 
 	@Override

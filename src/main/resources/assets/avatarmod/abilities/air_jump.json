@@ -1,6 +1,7 @@
 {
   "custom_properties": {
     "xpOnUse": 2,
+    "xpOnHit": 2,
     "level1": {
       "tier": 1,
       "chiCost": 3.0,
@@ -9,10 +10,11 @@
       "burnOut": 10.0,
       "burnOutRecoverTick": 0.18,
       "performanceAmount": 10,
-      "effectSize": 0.5,
-      "knockback": 0.5,
-      "jumpHeight": 2,
+      "effectRadius": 0.5,
+      "knockback": 0.75,
+      "jumpHeight": 3.5,
       "numberOfJumps": 1,
+      "fallAbsorption": 5,
       "groundPound": false
     },
     "level2": {
@@ -23,9 +25,10 @@
       "burnOut": 15.0,
       "burnOutRecoverTick": 0.22,
       "performanceAmount": 15,
-      "effectSize": 0.75,
-      "jumpHeight": 3,
-      "knockback": 1.0
+      "effectRadius": 0.75,
+      "jumpHeight": 4.5,
+      "knockback": 1.0,
+      "fallAbsorption": 9
     },
     "level3": {
       "tier": 2,
@@ -35,9 +38,10 @@
       "burnOut": 20.0,
       "burnOutRecoverTick": 0.25,
       "performanceAmount": 20,
-      "effectSize": 1.0,
-      "jumpHeight": 4,
-      "knockback": 1.5
+      "effectRadius": 1.0,
+      "jumpHeight": 6,
+      "knockback": 1.5,
+      "fallAbsorption": 15
     },
     "level4_1": {
       "tier": 3,
@@ -47,10 +51,11 @@
       "burnOut": 27.0,
       "burnOutRecoverTick": 0.4,
       "performanceAmount": 25,
-      "effectSize": 1.25,
+      "effectRadius": 1.25,
       "jumpHeight": 5.5,
       "numberOfJumps": 2,
-      "knockback": 2
+      "knockback": 2,
+      "fallAbsorption": 13
     },
     "level4_2": {
       "tier": 3,
@@ -60,10 +65,11 @@
       "burnOut": 30.0,
       "burnOutRecoverTick": 0.4,
       "performanceAmount": 27,
-      "effectSize": 1.5,
-      "jumpHeight": 6,
+      "effectRadius": 1.5,
+      "jumpHeight": 8,
       "numberOfJumps": 1,
       "knockback": 3,
+      "fallAbsorption": 19,
       "groundPound": true
     }
   }
