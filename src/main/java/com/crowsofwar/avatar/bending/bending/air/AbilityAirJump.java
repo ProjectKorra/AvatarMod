@@ -51,15 +51,21 @@ public class AbilityAirJump extends Ability {
 	}
 
 	@Override
+	public void init() {
+		super.init();
+		addProperties(JUMP_HEIGHT, JUMPS, SPEED, KNOCKBACK, SIZE, PERFORMANCE);
+	}
+
+	@Override
 	public void execute(AbilityContext ctx) {
 
 		EntityLivingBase entity = ctx.getBenderEntity();
 		BendingData data = ctx.getData();
 		Bender bender = ctx.getBender();
 		World world = ctx.getWorld();
+		AbilityData abilityData = ctx.getAbilityData();
 
-		boolean allowDoubleJump = ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST) &&
-				timesJumped.getOrDefault(bender.getInfo().getId().toString(), 0) < 2;
+		boolean allowDoubleJump = abilityData.getJumpNumber() < getProperty(JUMPS).intValue();
 		List<AxisAlignedBB> collideWithGround = world.getCollisionBoxes(entity, entity.getEntityBoundingBox().grow(0.2, 0.5, 0.2));
 		boolean onGround = !collideWithGround.isEmpty() || entity.collidedVertically || world.getBlockState(entity.getPosition()).getBlock() == Blocks.WEB;
 

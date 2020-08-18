@@ -202,18 +202,19 @@ public class AbilityAirblade extends Ability {
                                     world.rand.nextGaussian() / 60).collide(true).time(6 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(0.96F, 0.96F, 0.96F, 0.075F)
                                     .scale(entity.getAvgSize() / 5).element(entity.getElement()).spawn(world);
                         }**/
-
-                        for (double i = -90; i <= 90; i += 2) {
-                            Vec3d pos = AvatarEntityUtils.getMiddleOfEntity(entity);
-                            Vec3d newDir = entity.getLookVec().scale(entity.getHeight() / 1.75 * Math.cos(Math.toRadians(i)));
-                            pos = pos.add(newDir);
-                            pos = new Vec3d(pos.x, pos.y + (entity.getHeight() / 1.75 * Math.sin(Math.toRadians(i))), pos.z);
-                            ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(pos).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
-                                    world.rand.nextGaussian() / 60).collide(true).time(1 + AvatarUtils.getRandomNumberInRange(0, 1)).clr(0.95F, 095F, 0.95F, 0.05F)
-                                    .scale(entity.getWidth()).element(entity.getElement()).spawnEntity(entity).spawn(world);
-                            ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(pos).vel(entity.motionX * 0.98, entity.motionY * 0.98, entity.motionZ * 0.98).collide(true)
-                                    .time(8 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(0.95F, 0.95F, 0.95F, 0.075F)
-                                    .scale(entity.getWidth() * 2).spawnEntity(entity).element(entity.getElement()).spawn(world);
+                        if (entity.ticksExisted % 2 == 0 || entity.ticksExisted <= 2) {
+                            for (double i = -90; i <= 90; i += 20) {
+                                Vec3d pos = AvatarEntityUtils.getMiddleOfEntity(entity);
+                                Vec3d newDir = entity.getLookVec().scale(entity.getHeight() / 1.75 * Math.cos(Math.toRadians(i)));
+                                pos = pos.add(newDir);
+                                pos = new Vec3d(pos.x, pos.y + (entity.getHeight() / 1.75 * Math.sin(Math.toRadians(i))), pos.z);
+                                ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(pos).vel(world.rand.nextGaussian() / 30, world.rand.nextGaussian() / 30,
+                                        world.rand.nextGaussian() / 30).collide(true).time(12 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(0.95F, 095F, 0.95F, 0.2F)
+                                        .scale(entity.getWidth() * 1.5F).element(entity.getElement()).spawnEntity(entity).spawn(world);
+                                ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(pos).vel(entity.motionX, entity.motionY, entity.motionZ).collide(true)
+                                        .time(4 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(0.95F, 0.95F, 0.95F, 0.2F)
+                                        .scale(entity.getWidth() * 2F).spawnEntity(entity).element(entity.getElement()).spawn(world);
+                            }
                         }
                     }
                     entity.motionX *= 0.975;

@@ -122,11 +122,11 @@ public class AbilityAirGust extends Ability {
                     double spawnZ = position.z();
                     ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x(),
                             world.rand.nextGaussian() / 80 + velocity.y(), world.rand.nextGaussian() / 80 + velocity.z())
-                            .time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(0.95F, 0.95F, 0.95F, 0.1F).spawnEntity(entity)
+                            .time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(0.95F, 0.95F, 0.95F, 0.05F).spawnEntity(entity)
                             .scale(size * (1 / size)).element(new Airbending()).collide(true).spawn(world);
                     ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x(),
                             world.rand.nextGaussian() / 80 + velocity.y(), world.rand.nextGaussian() / 80 + velocity.z())
-                            .time(10 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(0.95F, 0.95F, 0.95F, 0.1F).spawnEntity(entity)
+                            .time(10 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(0.95F, 0.95F, 0.95F, 0.05F).spawnEntity(entity)
                             .scale(size * (1 / size)).element(new Airbending()).collide(true).spawn(world);
                 }
             }
@@ -157,12 +157,12 @@ public class AbilityAirGust extends Ability {
                         double spawnX = mid.x + world.rand.nextGaussian() / 20;
                         double spawnY = mid.y + world.rand.nextGaussian() / 20;
                         double spawnZ = mid.z + world.rand.nextGaussian() / 20;
-                        ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45,
-                                world.rand.nextGaussian() / 45).time(4 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(0.95F, 0.95F, 0.95F, 0.075F).spawnEntity(entity)
+                        ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 25, world.rand.nextGaussian() / 25,
+                                world.rand.nextGaussian() / 25).time(4 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(0.95F, 0.95F, 0.95F, 0.05F).spawnEntity(entity)
                                 .scale(entity.getAvgSize() * (1 / entity.getAvgSize() + 1)).element(entity.getElement()).collide(true).spawn(world);
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 45 + entity.motionX,
                                 world.rand.nextGaussian() / 45 + entity.motionY, world.rand.nextGaussian() / 45 + entity.motionZ)
-                                .time(14 + AvatarUtils.getRandomNumberInRange(0, 10)).clr(0.95F, 0.95F, 0.95F, 0.075F).spawnEntity(entity)
+                                .time(14 + AvatarUtils.getRandomNumberInRange(0, 10)).clr(0.95F, 0.95F, 0.95F, 0.05F).spawnEntity(entity)
                                 .scale(entity.getAvgSize() * (1 / entity.getAvgSize() + 0.5F)).element(entity.getElement()).collide(true).spawn(world);
                     }
                     for (int i = 0; i < 2; i++) {
