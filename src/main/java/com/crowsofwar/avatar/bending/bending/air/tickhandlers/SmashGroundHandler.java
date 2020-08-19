@@ -39,6 +39,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 /**
@@ -77,17 +78,18 @@ public class SmashGroundHandler extends TickHandler {
 		shockwave.setOwner(entity);
 		shockwave.setPosition(entity.posX, entity.getEntityBoundingBox().minY + 0.4, entity.posZ);
 		shockwave.setKnockbackHeight(getKnockbackHeight());
-		shockwave.setSpeed((float) getSpeed() / 5);
-		shockwave.setRange((float) getRange());
+		shockwave.setSpeed((float) getSpeed() / 4);
+		shockwave.setKnockbackMult(new Vec3d(2, 2, 2));
+		shockwave.setRange((float) getRange() * 2);
 		shockwave.setRenderNormal(false);
 		shockwave.setElement(getElement());
 		shockwave.setParticle(getParticle());
-		shockwave.setParticleAmount(getParticleAmount());
-		shockwave.setParticleSpeed((float) getParticleSpeed());
+		shockwave.setParticleAmount(getParticleAmount() / 4);
+		shockwave.setParticleSpeed((float) getParticleSpeed() / 4);
 		shockwave.setFireTime(fireTime());
 		shockwave.setDamageSource(getDamageSource().getDamageType() + "_shockwave");
 		shockwave.setAbility(getAbility());
-		shockwave.setParticleWaves(getParticleWaves());
+		shockwave.setParticleWaves(getParticleWaves() / 2);
 		shockwave.setPerformanceAmount(getPerformanceAmount());
 		shockwave.setRenderNormal(spawnNormalShockwave());
 		shockwave.setBehaviour(getBehaviour());
@@ -167,15 +169,15 @@ public class SmashGroundHandler extends TickHandler {
 		public OffensiveBehaviour onUpdate(EntityOffensive entity) {
 			if (entity.world.isRemote) {
 				if (entity instanceof EntityShockwave) {
-					for (double angle = 0; angle < 2 * Math.PI; angle += Math.PI / (((EntityShockwave) entity).getRange() * ((EntityShockwave) entity).getParticleAmount() * entity.ticksExisted * 0.45)) {
+					for (double angle = 0; angle < 2 * Math.PI; angle += Math.PI / (((EntityShockwave) entity).getRange() * ((EntityShockwave) entity).getParticleAmount() * entity.ticksExisted * 0.675)) {
 						//Even though the maths is technically wrong, you use sin if you want a shockwave, and cos if you want a sphere (for x).
 						double x2 = entity.posX + (entity.ticksExisted * ((EntityShockwave) entity).getSpeed()) * Math.sin(angle);
 						double y2 = entity.getEntityBoundingBox().minY + 0.3;
 						double z2 = entity.posZ + (entity.ticksExisted * ((EntityShockwave) entity).getSpeed()) * Math.cos(angle);
-						Vector speed = new Vector((entity.ticksExisted * ((EntityShockwave) entity).getSpeed()) * Math.sin(angle) * (entity.getParticleSpeed() * 8.25),
-								entity.getParticleSpeed() / 6, (entity.ticksExisted * ((EntityShockwave) entity).getSpeed()) * Math.cos(angle) * (entity.getParticleSpeed() * 8.25));
-						ParticleBuilder.create(ParticleBuilder.Type.FLASH).clr(0.95F, 0.95F, 0.95F, 0.2F).pos(x2, y2, z2).vel(speed.toMinecraft())
-								.collide(true).scale(2F).time(10 + AvatarUtils.getRandomNumberInRange(0, 4)).spawn(entity.world);
+						Vector speed = new Vector((entity.ticksExisted * ((EntityShockwave) entity).getSpeed()) * Math.sin(angle) * (entity.getParticleSpeed() * 7),
+								entity.getParticleSpeed() / 2 * entity.world.rand.nextGaussian(), (entity.ticksExisted * ((EntityShockwave) entity).getSpeed()) * Math.cos(angle) * (entity.getParticleSpeed() * 7));
+						ParticleBuilder.create(ParticleBuilder.Type.FLASH).clr(0.95F, 0.95F, 0.95F, 0.15F).pos(x2, y2, z2).vel(speed.toMinecraft())
+								.collide(true).scale((float) ((EntityShockwave) entity).getSpeed() * 2F).time(8 + AvatarUtils.getRandomNumberInRange(0, 2)).spawn(entity.world);
 					}
 				}
 				}

@@ -149,13 +149,16 @@ public class StatCtrlAirJump extends StatusControl {
                 wave.setAbility(jump);
                 wave.setChiHit(chiOnHit);
                 wave.setElement(new Airbending());
-                wave.setParticleSpeed(lvl > 0 ? 0.02F + lvl / 40F : 0.02F);
+                wave.setParticleSpeed(speed / 60);
                 wave.setPosition(entity.getPositionVector().add(0, 0.5, 0));
                 wave.setOwner(entity);
                 wave.setBehaviour(new SmashGroundHandler.AirGroundPoundShockwave());
                 wave.setRenderNormal(false);
                 wave.setKnockbackMult(new Vec3d(speed, speed * 2, speed));
                 wave.setXp(jump.getProperty(Ability.XP_HIT, abilityData).floatValue());
+                if (!world.isRemote)
+                    world.spawnEntity(wave);
+
                 abilityData.addXp(jump.getProperty(Ability.XP_USE, abilityData).floatValue());
 
                 abilityData.setJumpNumber(abilityData.getJumpNumber() + 1);

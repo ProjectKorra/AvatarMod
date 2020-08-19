@@ -277,8 +277,6 @@ public class ClientInput implements IControlsHandler {
 								//Client side
 								Bender.get(player).executeAbility(ability, raytrace, isSwitchPathKeyDown);
 								//Automatically done server-side
-//								//Server side
-//								AvatarMod.network.sendToServer(new PacketSUseAbility(ability, raytrace, isSwitchPathKeyDown));
 							}
 						}
 						wasAbilityDown[i] = down;
