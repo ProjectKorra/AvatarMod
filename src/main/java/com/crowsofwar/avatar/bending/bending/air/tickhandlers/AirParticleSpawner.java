@@ -52,7 +52,7 @@ public class AirParticleSpawner extends TickHandler {
 
         if (jump != null && data != null) {
             Vector pos = Vector.getEntityPos(entity).minusY(0.05);
-            float size = jump.getProperty(Ability.SIZE, data).floatValue() * 1.5F;
+            float size = jump.getProperty(Ability.EFFECT_RADIUS, data).floatValue() * 1.5F;
             size *= data.getDamageMult() * data.getXpModifier();
 
             if (world.isRemote)

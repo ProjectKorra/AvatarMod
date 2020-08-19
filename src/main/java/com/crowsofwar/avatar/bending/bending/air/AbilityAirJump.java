@@ -18,12 +18,12 @@
 package com.crowsofwar.avatar.bending.bending.air;
 
 import com.crowsofwar.avatar.bending.bending.Ability;
+import com.crowsofwar.avatar.util.Raytrace;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
-import com.crowsofwar.avatar.util.Raytrace;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -31,7 +31,6 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-import static com.crowsofwar.avatar.bending.bending.air.statctrls.StatCtrlAirJump.timesJumped;
 import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.util.data.StatusControlController.AIR_JUMP;
 import static com.crowsofwar.avatar.util.data.TickHandlerController.AIR_PARTICLE_SPAWNER;
@@ -53,7 +52,7 @@ public class AbilityAirJump extends Ability {
 	@Override
 	public void init() {
 		super.init();
-		addProperties(JUMP_HEIGHT, JUMPS, KNOCKBACK, EFFECT_RADIUS, PERFORMANCE, FALL_ABSORPTION, XP_HIT);
+		addProperties(JUMP_HEIGHT, JUMPS, KNOCKBACK, EFFECT_RADIUS, PERFORMANCE, FALL_ABSORPTION, XP_HIT, POWERRATING, DURATION, CHI_HIT);
 		addBooleanProperties(GROUND_POUND);
 	}
 

@@ -150,8 +150,8 @@ public interface IOffensiveEntity {
                         hit.addVelocity(vel.x / 5, vel.y / 2.5, vel.z / 5);
                     else hit.addVelocity(vel.x, vel.y, vel.z);
                 }
-                if (multiHit() && hit instanceof EntityLivingBase)
-                    hit.hurtResistantTime = 10;
+//                if (multiHit() && hit instanceof EntityLivingBase)
+//                    hit.hurtResistantTime = 15;
                 AvatarUtils.afterVelocityAdded(hit);
 
                 if (attacker.getOwner() != null) {

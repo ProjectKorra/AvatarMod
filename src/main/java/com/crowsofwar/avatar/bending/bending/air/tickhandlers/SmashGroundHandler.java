@@ -79,6 +79,7 @@ public class SmashGroundHandler extends TickHandler {
 		shockwave.setKnockbackHeight(getKnockbackHeight());
 		shockwave.setSpeed((float) getSpeed() / 5);
 		shockwave.setRange((float) getRange());
+		shockwave.setRenderNormal(false);
 		shockwave.setElement(getElement());
 		shockwave.setParticle(getParticle());
 		shockwave.setParticleAmount(getParticleAmount());
@@ -163,7 +164,7 @@ public class SmashGroundHandler extends TickHandler {
 	public static class AirGroundPoundShockwave extends OffensiveBehaviour {
 
 		@Override
-		public Behavior onUpdate(EntityOffensive entity) {
+		public OffensiveBehaviour onUpdate(EntityOffensive entity) {
 			if (entity.world.isRemote) {
 				if (entity instanceof EntityShockwave) {
 					for (double angle = 0; angle < 2 * Math.PI; angle += Math.PI / (((EntityShockwave) entity).getRange() * ((EntityShockwave) entity).getParticleAmount() * entity.ticksExisted * 0.45)) {
