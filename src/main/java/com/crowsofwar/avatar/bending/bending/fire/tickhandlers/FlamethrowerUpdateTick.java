@@ -141,38 +141,38 @@ public class FlamethrowerUpdateTick extends TickHandler {
                 Vector look = Vector.toRectangular(toRadians(yawRandom), toRadians(pitchRandom));
                 Vector start = look.times(range).plus(eye.minusY(0.45));
 
-                if (entity.ticksExisted % 2 == 0) {
-                    EntityFlames flames = new EntityFlames(world);
-                    flames.setPosition(start);
-                    flames.setOwner(entity);
-                    flames.setDynamicSpreadingCollision(true);
-                    flames.setAbility(new AbilityFlamethrower());
-                    flames.setDamageSource(abilityData.isDynamicMasterLevel(AbilityTreePath.FIRST) ? AvatarDamageSource.FIRE.getDamageType() + "_dragonFire"
-                            : AvatarDamageSource.FIRE.getDamageType() + "_flamethrower");
-                    flames.setTier(flamethrower.getCurrentTier(abilityData));
-                    flames.setXp(flamethrower.getProperty(XP_HIT, abilityData).floatValue());
-                    flames.setVelocity(look.times(speedMult / 29.5F).toMinecraft());
-                    flames.setLifeTime(lifetime + AvatarUtils.getRandomNumberInRange(0, 4));
-                    flames.setTrailingFires(flamethrower.getBooleanProperty(SETS_FIRES, abilityData));
-                    flames.setFires(flamethrower.getBooleanProperty(SETS_FIRES, abilityData));
-                    flames.setFireTime(fireTime);
-                    flames.setChiHit(chiHit);
-                    flames.setXp(xp);
-                    flames.setDamage(damage);
-                    flames.setPush(knockback);
-                    flames.setRGB(r, g, b);
-                    flames.setFade(fadeR, fadeG, fadeB);
-                    flames.setSmelts(flamethrower.getBooleanProperty(SMELTS, abilityData));
-                    flames.setFireTime(fireTime);
-                    flames.setPerformanceAmount((int) performanceAmount);
-                    flames.setElement(new Firebending());
-                    flames.setRedirectable(true);
-                    flames.setBehaviour(new FlamethrowerBehaviour());
-                    flames.setChiHit(flamethrower.getProperty(CHI_HIT, abilityData).floatValue());
-                    flames.setEntitySize(size / 4);
-                    if (!world.isRemote)
-                        world.spawnEntity(flames);
-                }
+
+                EntityFlames flames = new EntityFlames(world);
+                flames.setPosition(start);
+                flames.setOwner(entity);
+                flames.setDynamicSpreadingCollision(true);
+                flames.setAbility(new AbilityFlamethrower());
+                flames.setDamageSource(abilityData.isDynamicMasterLevel(AbilityTreePath.FIRST) ? AvatarDamageSource.FIRE.getDamageType() + "_dragonFire"
+                        : AvatarDamageSource.FIRE.getDamageType() + "_flamethrower");
+                flames.setTier(flamethrower.getCurrentTier(abilityData));
+                flames.setXp(flamethrower.getProperty(XP_HIT, abilityData).floatValue());
+                flames.setVelocity(look.times(speedMult / 29.5F).toMinecraft());
+                flames.setLifeTime(lifetime + AvatarUtils.getRandomNumberInRange(0, 4));
+                flames.setTrailingFires(flamethrower.getBooleanProperty(SETS_FIRES, abilityData));
+                flames.setFires(flamethrower.getBooleanProperty(SETS_FIRES, abilityData));
+                flames.setFireTime(fireTime);
+                flames.setChiHit(chiHit);
+                flames.setXp(xp);
+                flames.setDamage(damage);
+                flames.setPush(knockback);
+                flames.setRGB(r, g, b);
+                flames.setFade(fadeR, fadeG, fadeB);
+                flames.setSmelts(flamethrower.getBooleanProperty(SMELTS, abilityData));
+                flames.setFireTime(fireTime);
+                flames.setPerformanceAmount((int) performanceAmount);
+                flames.setElement(new Firebending());
+                flames.setRedirectable(true);
+                flames.setBehaviour(new FlamethrowerBehaviour());
+                flames.setChiHit(flamethrower.getProperty(CHI_HIT, abilityData).floatValue());
+                flames.setEntitySize(size / 4);
+                if (!world.isRemote)
+                    world.spawnEntity(flames);
+
 
                 //Particle code.
                 if (world.isRemote && (flamethrower.getCurrentTier(abilityData) < 4 || !isRaining)) {
@@ -276,7 +276,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
                             double spawnZ = box.z + random.nextDouble() * 0.125 * (boundingBox.maxZ - boundingBox.minZ);
                             ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 20 * entity.getAvgSize() * 3,
                                     entity.world.rand.nextGaussian() / 20 * entity.getAvgSize() * 3, entity.world.rand.nextGaussian() / 20 * entity.getAvgSize() * 3)
-                                    .time(6  - (int) (entity.velocity().magnitude() / 20) + AvatarUtils.getRandomNumberInRange(2, 4)).clr(rgb[0], rgb[1], rgb[2])
+                                    .time(6 - (int) (entity.velocity().magnitude() / 20) + AvatarUtils.getRandomNumberInRange(2, 4)).clr(rgb[0], rgb[1], rgb[2])
                                     .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).scale(entity.getAvgSize() * 1.5F).element(entity.getElement())
                                     .ability(entity.getAbility()).spawnEntity(entity.getOwner()).spawn(entity.world);
                             ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 20 * entity.getAvgSize() * 3,

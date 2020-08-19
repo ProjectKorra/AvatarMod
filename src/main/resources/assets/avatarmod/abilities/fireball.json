@@ -27,7 +27,8 @@
       "fireB": 14,
       "fadeR": 255,
       "fadeG": 95,
-      "fadeB": 14
+      "fadeB": 14,
+      "fireballs": 1
     },
     "level2": {
       "tier": 3,
@@ -81,7 +82,7 @@
       "performanceAmount": 25,
       "fireTime": 6,
       "lifeTime": 35,
-      "size": 1.25,
+      "size": 0.75,
       "speed": 11,
       "knockback": 2.5,
       "chiOnHit": 1.875,
@@ -90,7 +91,8 @@
       "explosionDamage": 2,
       "fadeR": 250,
       "fadeG": 50,
-      "fadeB": 20
+      "fadeB": 20,
+      "fireballs": 3
     },
     "level4_2": {
       "tier": 5,
@@ -116,7 +118,8 @@
       "explosionDamage": 3,
       "fadeR": 250,
       "fadeG": 48,
-      "fadeB": 20
+      "fadeB": 20,
+      "fireballs": 1
     }
   }
 }

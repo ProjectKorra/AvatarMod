@@ -112,4 +112,9 @@ public class AbilityAirBubble extends Ability {
 		return new AiAirBubble(this, entity, bender);
 	}
 
+	//We want cooldown applied when the entity dies
+	@Override
+	public int getCooldown(AbilityContext ctx) {
+		return 0;
+	}
 }

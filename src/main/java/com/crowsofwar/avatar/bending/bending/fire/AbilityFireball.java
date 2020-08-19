@@ -49,6 +49,7 @@ import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
  */
 public class AbilityFireball extends Ability {
 
+    public static final String FIREBALLS = "fireballs";
 
     public AbilityFireball() {
         super(Firebending.ID, "fireball");
@@ -59,7 +60,7 @@ public class AbilityFireball extends Ability {
     public void init() {
         super.init();
         addProperties(FIRE_R, FIRE_G, FIRE_B, FADE_R, FADE_G, FADE_B, EXPLOSION_SIZE, EXPLOSION_DAMAGE,
-                MAX_BURNOUT, MAX_DAMAGE, MAX_SIZE, MAX_EXHAUSTION);
+                MAX_BURNOUT, MAX_DAMAGE, MAX_SIZE, MAX_EXHAUSTION, FIREBALLS);
     }
 
     //We want these to be applied manually upon executing the status control.
@@ -103,6 +104,7 @@ public class AbilityFireball extends Ability {
             float damage = getProperty(DAMAGE, ctx).floatValue();
             float size = getProperty(SIZE, ctx).floatValue();
             int lifetime = getProperty(LIFETIME, ctx).intValue();
+            int fireballAmount = getProperty(FIREBALLS, ctx).intValue();
             int performance = getProperty(PERFORMANCE, ctx).intValue();
             int fireTime = getProperty(FIRE_TIME, ctx).intValue();
             float chiHit = getProperty(CHI_HIT, ctx).floatValue();
@@ -120,7 +122,7 @@ public class AbilityFireball extends Ability {
             List<EntityFireball> fireballs = world.getEntitiesWithinAABB(EntityFireball.class,
                     entity.getEntityBoundingBox().grow(3.5, 3.5, 3.5));
             fireballs = fireballs.stream().filter(entityFireball -> entityFireball.getOwner() == entity).collect(Collectors.toList());
-            canUse |= fireballs.size() < 3 && ctx.isDynamicMasterLevel(AbilityTreePath.FIRST);
+            canUse |= fireballs.size() < fireballAmount;
 
             size *= abilityData.getDamageMult() * abilityData.getXpModifier();
             damage *= abilityData.getDamageMult() * abilityData.getXpModifier();

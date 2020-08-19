@@ -11,7 +11,10 @@
       "exhaustionOnHit": 1,
       "burnOut": 10.0,
       "burnOutRecoverTick": 0.5,
-      "burnOutOnHit": 5
+      "burnOutOnHit": 5,
+      "size": 5,
+      "maxHealth": 5,
+      "hover": false
     },
     "level2": {
       "tier": 3,
@@ -23,7 +26,9 @@
       "exhaustionOnHit": 1,
       "burnOut": 15.0,
       "burnOutRecoverTick": 0.75,
-      "burnOutOnHit": 5
+      "burnOutOnHit": 5,
+      "size": 5,
+      "maxHealth": 5
     },
     "level3": {
       "tier": 4,
@@ -35,7 +40,9 @@
       "exhaustionOnHit": 1,
       "burnOut": 20.0,
       "burnOutRecoverTick": 1.0,
-      "burnOutOnHit": 5
+      "burnOutOnHit": 5,
+      "size": 5,
+      "maxHealth": 5
     },
     "level4_1": {
       "tier": 5,
@@ -47,7 +54,9 @@
       "exhaustionOnHit": 1.5,
       "burnOut": 20.0,
       "burnOutRecoverTick": 1.0,
-      "burnOutOnHit": 5
+      "burnOutOnHit": 5,
+      "size": 5,
+      "maxHealth": 5
     },
     "level4_2": {
       "tier": 5,
@@ -59,7 +68,9 @@
       "exhaustionOnHit": 1.5,
       "burnOut": 20.0,
       "burnOutRecoverTick": 1.0,
-      "burnOutOnHit": 5
+      "burnOutOnHit": 5,
+      "size": 5,
+      "maxHealth": 5
     }
   }
 }
