@@ -98,11 +98,6 @@ public class EntityAirGust extends EntityOffensive {
     }
 
     @Override
-    public DamageSource getDamageSource(Entity target, EntityLivingBase owner) {
-        return AvatarDamageSource.causeAirDamage(target, owner);
-    }
-
-    @Override
     public void onUpdate() {
         super.onUpdate();
 

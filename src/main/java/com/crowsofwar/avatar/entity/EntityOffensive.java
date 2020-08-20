@@ -647,19 +647,19 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
     }
 
     @Override
-    public DamageSource getDamageSource(Entity target, EntityLivingBase owner) {
-        DamageSource source = AvatarDamageSource.FIRE;
+    public DamageSource getDamageSource(Entity source, EntityLivingBase owner) {
+        DamageSource dmgSource = AvatarDamageSource.FIRE;
         if (damageSource.startsWith("avatar_")) {
-            source = new EntityDamageSourceIndirect(damageSource, target, owner);
+            dmgSource = new EntityDamageSourceIndirect(damageSource, this, owner);
             if (isProjectile())
-                source.setProjectile();
-            source.setMagicDamage();
+                dmgSource.setProjectile();
+            dmgSource.setMagicDamage();
             if (getElement() instanceof Lightningbending)
-                source.setDamageBypassesArmor();
+                dmgSource.setDamageBypassesArmor();
             if (getElement() instanceof Combustionbending)
-                source.setExplosion();
+                dmgSource.setExplosion();
         }
-        return source;
+        return dmgSource;
     }
 
     @Override

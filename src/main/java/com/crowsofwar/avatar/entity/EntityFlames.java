@@ -27,19 +27,16 @@ import com.crowsofwar.avatar.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.Raytrace;
-import com.crowsofwar.avatar.util.damageutils.AvatarDamageSource;
 import com.crowsofwar.gorecore.util.Vector;
 import com.zeitheron.hammercore.api.lighting.ColoredLight;
 import com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -212,11 +209,6 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
         nbt.setIntArray("RGB", getRGB());
         nbt.setBoolean("Reflect", getReflect());
         nbt.setBoolean("TrailingFires", getTrailingFires());
-    }
-
-    @Override
-    public DamageSource getDamageSource(Entity target, EntityLivingBase owner) {
-        return AvatarDamageSource.causeFireShotDamage(target, owner);
     }
 
     @Override

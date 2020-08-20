@@ -132,6 +132,7 @@ public class ShootAirBurstHandler extends TickHandler {
 			gust.setTier(Math.min(new AbilityAirBurst().getCurrentTier(data), charge));
 			gust.setVelocity(look.times(speed + 40));
 			gust.setBehaviour(new AirBurstBeamBehaviour());
+			gust.setDamageSource("avatar_Air");
 			world.spawnEntity(gust);
 
 			entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_FIREWORK_LAUNCH, entity.getSoundCategory(),

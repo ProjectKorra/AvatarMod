@@ -287,8 +287,8 @@ public interface IOffensiveEntity {
 
     }
 
-    default DamageSource getDamageSource(Entity target, EntityLivingBase owner) {
-        return AvatarDamageSource.causeFireDamage(target, owner);
+    default DamageSource getDamageSource(Entity source, EntityLivingBase owner) {
+        return AvatarDamageSource.causeFireDamage(source, owner);
     }
 
     default double getExpandedHitboxWidth() {

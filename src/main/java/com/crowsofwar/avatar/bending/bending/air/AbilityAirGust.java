@@ -107,6 +107,7 @@ public class AbilityAirGust extends Ability {
             gust.setChiHit(getProperty(CHI_HIT, ctx).floatValue());
             gust.setXp(getProperty(XP_HIT).floatValue());
             gust.setBehaviour(new AirGustBehaviour());
+            gust.setDamageSource("avatar_Air");
             if (!world.isRemote)
                 world.spawnEntity(gust);
 

@@ -193,15 +193,6 @@ public class AbilityAirblade extends Ability {
                     }
                 } else {
                     if (world.isRemote) {
-                        /*for (double i = 0; i < 0.75; i += 1 / entity.getHeight()) {
-                            AxisAlignedBB boundingBox = entity.getEntityBoundingBox();
-                            double spawnX = boundingBox.minX + world.rand.nextDouble() * (boundingBox.maxX - boundingBox.minX);
-                            double spawnY = boundingBox.minY + world.rand.nextDouble() * (boundingBox.maxY - boundingBox.minY);
-                            double spawnZ = boundingBox.minZ + world.rand.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
-                            ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
-                                    world.rand.nextGaussian() / 60).collide(true).time(6 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(0.96F, 0.96F, 0.96F, 0.075F)
-                                    .scale(entity.getAvgSize() / 5).element(entity.getElement()).spawn(world);
-                        }**/
                         if (entity.ticksExisted % 2 == 0 || entity.ticksExisted <= 2) {
                             for (double i = -90; i <= 90; i += 20) {
                                 Vec3d pos = AvatarEntityUtils.getMiddleOfEntity(entity);

@@ -113,11 +113,6 @@ public class EntityAirblade extends EntityOffensive {
         }
     }
 
-	@Override
-	public DamageSource getDamageSource(Entity target, EntityLivingBase owner) {
-		DamageSource ds = AvatarDamageSource.causeAirbladeDamage(target, getOwner());
-		return pierceArmor ? ds.setDamageBypassesArmor() : ds;
-	}
 
     /**
      * When the airblade can break blocks, checks any blocks that the airblade
