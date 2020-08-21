@@ -364,7 +364,7 @@ avatar.ability.air_bubble.desc=Create a bubble of air around you to protect your
 avatar.ability.air_bubble.lvl1=*Can't touch this*
 avatar.ability.air_bubble.lvl2=Medium-sized air bubble
 avatar.ability.air_bubble.lvl3=More knockback.
-avatar.ability.air_bubble.lvl4_1=§f§l§oPressured §f§l§obubble ;; Very large size
+avatar.ability.air_bubble.lvl4_1=§f§l§oTempest Wall ;; Infinite health, dies when damage exceeds chi cost.
 avatar.ability.air_bubble.lvl4_2=§f§l§oUndercurrent ;; Limited hovering, disabled by sneak
 
 avatar.ability.air_burst=§f§lAir Burst

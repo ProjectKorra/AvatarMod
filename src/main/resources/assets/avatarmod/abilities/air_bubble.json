@@ -5,14 +5,14 @@
       "tier": 3,
       "chiCost": 3.0,
       "chiPercentOnHit": 0.50,
-      "chiPerSecond": 2,
+      "chiPerSecond": 2.25,
       "cooldown": 80,
       "exhaustion": 2.0,
       "exhaustionOnHit": 1,
       "burnOut": 10.0,
       "burnOutRecoverTick": 0.5,
       "burnOutOnHit": 5,
-      "size": 5,
+      "size": 2,
       "maxHealth": 5,
       "hover": false
     },
@@ -27,8 +27,8 @@
       "burnOut": 15.0,
       "burnOutRecoverTick": 0.75,
       "burnOutOnHit": 5,
-      "size": 5,
-      "maxHealth": 5
+      "size": 3,
+      "maxHealth": 6
     },
     "level3": {
       "tier": 4,
@@ -41,22 +41,22 @@
       "burnOut": 20.0,
       "burnOutRecoverTick": 1.0,
       "burnOutOnHit": 5,
-      "size": 5,
+      "size": 4,
       "maxHealth": 5
     },
     "level4_1": {
       "tier": 5,
       "chiCost": 4.0,
-      "chiPercentOnHit": 0.30,
-      "chiPerSecond": 1.25,
-      "cooldown": 60,
+      "chiPercentOnHit": 0.50,
+      "chiPerSecond": 2,
+      "cooldown": 80,
       "exhaustion": 3.0,
-      "exhaustionOnHit": 1.5,
+      "exhaustionOnHit": 2.0,
       "burnOut": 20.0,
-      "burnOutRecoverTick": 1.0,
-      "burnOutOnHit": 5,
+      "burnOutRecoverTick": 2.0,
+      "burnOutOnHit": 7.5,
       "size": 5,
-      "maxHealth": 5
+      "maxHealth": -1
     },
     "level4_2": {
       "tier": 5,
@@ -69,8 +69,9 @@
       "burnOut": 20.0,
       "burnOutRecoverTick": 1.0,
       "burnOutOnHit": 5,
-      "size": 5,
-      "maxHealth": 5
+      "size": 4.5,
+      "maxHealth": 8,
+      "hover": true
     }
   }
 }

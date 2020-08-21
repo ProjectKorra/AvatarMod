@@ -18,6 +18,7 @@ package com.crowsofwar.avatar.entity;
 
 import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import com.crowsofwar.avatar.bending.bending.air.Airbending;
+import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.StatusControlController;
@@ -34,6 +35,7 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
@@ -130,7 +132,7 @@ public class EntityAirBubble extends EntityShield {
 		EntityLivingBase owner = getOwner();
 		if (owner == null && !isDissipating()) {
 			this.setDead();
-			removeStatCtrl();
+			cleanup();
 		}
 
 		if (owner == null) {
@@ -139,7 +141,7 @@ public class EntityAirBubble extends EntityShield {
 
 		if (owner.isDead) {
 			dissipateSmall();
-			removeStatCtrl();
+			cleanup();
 			return;
 		}
 
@@ -351,7 +353,7 @@ public class EntityAirBubble extends EntityShield {
 	@Override
 	public void setDead() {
 		super.setDead();
-		removeStatCtrl();
+		cleanup();
 	}
 
 	@Override
@@ -437,7 +439,7 @@ public class EntityAirBubble extends EntityShield {
 
 	@Override
 	protected String getAbilityName() {
-		return "air_bubble";
+		return getAbility().getName();
 	}
 
 	@Override
@@ -460,12 +462,12 @@ public class EntityAirBubble extends EntityShield {
 
 	public void dissipateLarge() {
 		if (!isDissipating()) setDissipateTime(1);
-		removeStatCtrl();
+		cleanup();
 	}
 
 	public void dissipateSmall() {
 		if (!isDissipating()) setDissipateTime(-1);
-		removeStatCtrl();
+		cleanup();
 	}
 
 	private boolean isDissipating() {
@@ -480,6 +482,19 @@ public class EntityAirBubble extends EntityShield {
 		return getDissipateTime() < 0;
 	}
 
+	private void cleanup() {
+		if (getOwner() != null && getAbility() != null) {
+			AbilityData abilityData = AbilityData.get(getOwner(), getAbilityName());
+			if (abilityData != null) {
+				int cooldown = getAbility().getCooldown(abilityData);
+				if (getOwner() instanceof EntityPlayer && ((EntityPlayer) getOwner()).isCreative())
+					cooldown = 0;
+				abilityData.setAbilityCooldown(cooldown);
+				abilityData.setRegenBurnout(true);
+			}
+		}
+		removeStatCtrl();
+	}
 	private void removeStatCtrl() {
 		if (getOwner() != null) {
 			BendingData data = Bender.get(getOwner()).getData();
