@@ -44,6 +44,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -399,13 +400,35 @@ public class EntityAirBubble extends EntityShield {
 
             if (getOwner().hurtTime == 0) {
                 float damage = 1;
+                DamageSource source = DamageSource.GENERIC;
                 if (entity instanceof EntityLivingBase) {
                     IAttributeInstance attribute = getOwner()
                             .getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
                     damage = (float) attribute.getAttributeValue();
-                } else if (entity instanceof IOffensiveEntity)
+                } else if (entity instanceof EntityOffensive && ((EntityOffensive) entity).getOwner() != null) {
                     damage = ((IOffensiveEntity) entity).getDamage();
-                setHealth(getHealth() - damage);
+                    source = ((IOffensiveEntity) entity).getDamageSource(entity, ((EntityOffensive) entity).getOwner());
+                }
+
+                if (!world.isRemote) {
+                    EntityLivingBase owner = getOwner();
+                    if (!UNPROTECTED_DAMAGE.contains(source.getDamageType())) {
+                        if (!owner.isEntityInvulnerable(source)) {
+                            if (Bender.isBenderSupported(owner)) {
+                                Bender bender = Bender.get(owner);
+                                if (bender != null) {
+                                    BendingData data = bender.getData();
+                                    if (bender.consumeChi(getChiDamageCost() * damage)) {
+                                        AbilityData aData = data.getAbilityData(getAbilityName());
+                                        aData.addXp(getProtectionXp());
+                                        aData.addBurnout(getAbility().getBurnOut(aData));
+                                        setHealth(getHealth() - damage);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }
