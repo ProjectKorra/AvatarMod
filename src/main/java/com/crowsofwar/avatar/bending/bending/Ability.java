@@ -135,6 +135,13 @@ public abstract class Ability {
             GROUND_POUND = "groundPound",
             JUMPS = "numberOfJumps",
             FALL_ABSORPTION = "fallAbsorption";
+    //Shiled stuff
+    public static final String
+            CHI_PERCENT = "chiPercentOnHit",
+            CHI_PER_SECOND = "chiPerSecond",
+            BURNOUT_HIT = "burnoutOnHit",
+            EXHAUSTION_HIT = "exhaustionHit",
+            MAX_HEALTH = "maxHealth";
 
 
     private final UUID type;

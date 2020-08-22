@@ -130,6 +130,8 @@ public class AbilityAirblade extends Ability {
             airblade.setBehaviour(new AirBladeBehaviour());
             if (!world.isRemote)
                 world.spawnEntity(airblade);
+
+            abilityData.setRegenBurnout(true);
         }
 
         super.execute(ctx);

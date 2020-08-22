@@ -145,8 +145,8 @@ public abstract class EntityShield extends AvatarEntity implements ICustomHitbox
         super.readEntityFromNBT(nbt);
         setHealth(nbt.getFloat("Health"));
         setMaxHealth(nbt.getFloat("MaxHealth"));
-        assert getOwner() != null;
-        setPosition(Vector.getEntityPos(getOwner()));
+        if (getOwner() != null)
+            setPosition(Vector.getEntityPos(getOwner()));
     }
 
     @Override
@@ -241,7 +241,7 @@ public abstract class EntityShield extends AvatarEntity implements ICustomHitbox
 
     public void setHealth(float health) {
         if (health <= 0)
-            if (getMaxHealth() >= 0)
+            if (getMaxHealth() > 0)
                 onDeath();
         if (health > getMaxHealth())
             health = getMaxHealth();

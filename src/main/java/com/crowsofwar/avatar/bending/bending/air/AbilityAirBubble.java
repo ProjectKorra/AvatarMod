@@ -18,10 +18,11 @@ package com.crowsofwar.avatar.bending.bending.air;
 
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingAi;
+import com.crowsofwar.avatar.entity.EntityAirBubble;
+import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
-import com.crowsofwar.avatar.entity.EntityAirBubble;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Items;
@@ -30,8 +31,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.avatar.util.data.AbilityData.AbilityTreePath.FIRST;
-import static com.crowsofwar.avatar.util.data.AbilityData.AbilityTreePath.SECOND;
 import static com.crowsofwar.avatar.util.data.StatusControlController.BUBBLE_CONTRACT;
 import static com.crowsofwar.avatar.util.data.StatusControlController.BUBBLE_EXPAND;
 
@@ -40,81 +39,85 @@ import static com.crowsofwar.avatar.util.data.StatusControlController.BUBBLE_EXP
  */
 public class AbilityAirBubble extends Ability {
 
-	public AbilityAirBubble() {
-		super(Airbending.ID, "air_bubble");
-	}
+    private static final String HOVER = "hover";
 
-	@Override
-	public void execute(AbilityContext ctx) {
-		EntityLivingBase entity = ctx.getBenderEntity();
-		Bender bender = ctx.getBender();
-		World world = ctx.getWorld();
-		BendingData data = ctx.getData();
+    public AbilityAirBubble() {
+        super(Airbending.ID, "air_bubble");
+    }
 
-		ItemStack chest = entity.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
-		boolean elytraOk = (STATS_CONFIG.allowAirBubbleElytra || chest.getItem() != Items.ELYTRA);
+    @Override
+    public void init() {
+        super.init();
+        addProperties(CHI_PER_SECOND, CHI_PERCENT, BURNOUT_HIT, EXHAUSTION_HIT, MAX_HEALTH, SIZE);
+        addBooleanProperties(HOVER);
+    }
 
-		if (!elytraOk) {
-			ctx.getBender().sendMessage("avatar.airBubbleElytra");
-		}
+    @Override
+    public void execute(AbilityContext ctx) {
+        EntityLivingBase entity = ctx.getBenderEntity();
+        Bender bender = ctx.getBender();
+        World world = ctx.getWorld();
+        BendingData data = ctx.getData();
+        AbilityData abilityData = ctx.getAbilityData();
 
-		if (!data.hasStatusControl(BUBBLE_CONTRACT) && elytraOk) {
+        ItemStack chest = entity.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
+        boolean elytraOk = (STATS_CONFIG.allowAirBubbleElytra || chest.getItem() != Items.ELYTRA);
 
-			if (!bender.consumeChi(STATS_CONFIG.chiAirBubble)) return;
+        if (!elytraOk) {
+            ctx.getBender().sendMessage("avatar.airBubbleElytra");
+        }
 
-			float powerRating = (float) bender.calcPowerRating(Airbending.ID) / 100;
+        if (!data.hasStatusControl(BUBBLE_CONTRACT) && elytraOk) {
 
-			float size = 1.5f + powerRating;
-			float health = 12 + powerRating;
-			if (ctx.getLevel() > 1) {
-				size = 2.5f + powerRating;
-				health = 18 + powerRating;
-			}
-			if (ctx.isMasterLevel(FIRST)) {
-				size = 4f + powerRating;
-				health = 24 + powerRating;
-			}
-			if (ctx.isMasterLevel(SECOND)) health = 10f + powerRating;
+            if (!bender.consumeChi(getChiCost(ctx))) return;
 
-			EntityAirBubble bubble = new EntityAirBubble(world);
-			bubble.setOwner(entity);
-			bubble.setPosition(entity.posX, entity.getEntityBoundingBox().minY, entity.posZ);
-			bubble.setHealth(health);
-			bubble.setMaxHealth(health);
-			bubble.setSize(size);
-			bubble.rotationYaw = entity.rotationYaw;
-			bubble.rotationPitch = entity.rotationPitch;
-			bubble.motionX = bubble.motionY = bubble.motionZ = 0;
-			bubble.setAllowHovering(ctx.isMasterLevel(SECOND));
-			bubble.setAbility(this);
-			if (!world.isRemote)
-				world.spawnEntity(bubble);
+            float health = getProperty(MAX_HEALTH, ctx).floatValue();
+            float size = getProperty(SIZE, ctx).floatValue();
 
-			data.addStatusControl(BUBBLE_EXPAND);
-			data.addStatusControl(BUBBLE_CONTRACT);
-		}
-		super.execute(ctx);
 
-	}
+            size *= abilityData.getDamageMult() * abilityData.getXpModifier();
+            if (health > 0)
+                health *= abilityData.getDamageMult() * abilityData.getXpModifier();
 
-	@Override
-	public boolean isUtility() {
-		return true;
-	}
+            EntityAirBubble bubble = new EntityAirBubble(world);
+            bubble.setOwner(entity);
+            bubble.setPosition(entity.posX, entity.getEntityBoundingBox().minY, entity.posZ);
+            bubble.setMaxHealth(health);
+            bubble.setHealth(health);
+            bubble.setSize(size);
+            bubble.rotationYaw = entity.rotationYaw;
+            bubble.rotationPitch = entity.rotationPitch;
+            bubble.motionX = bubble.motionY = bubble.motionZ = 0;
+            bubble.setAllowHovering(getBooleanProperty(HOVER, ctx));
+            bubble.setAbility(this);
+            if (!world.isRemote)
+                world.spawnEntity(bubble);
 
-	@Override
-	public int getBaseTier() {
-		return 3;
-	}
+            data.addStatusControl(BUBBLE_EXPAND);
+            data.addStatusControl(BUBBLE_CONTRACT);
+        }
+        super.execute(ctx);
 
-	@Override
-	public BendingAi getAi(EntityLiving entity, Bender bender) {
-		return new AiAirBubble(this, entity, bender);
-	}
+    }
 
-	//We want cooldown applied when the entity dies
-	@Override
-	public int getCooldown(AbilityContext ctx) {
-		return 0;
-	}
+    @Override
+    public boolean isUtility() {
+        return true;
+    }
+
+    @Override
+    public int getBaseTier() {
+        return 3;
+    }
+
+    @Override
+    public BendingAi getAi(EntityLiving entity, Bender bender) {
+        return new AiAirBubble(this, entity, bender);
+    }
+
+    //We want cooldown applied when the entity dies
+    @Override
+    public int getCooldown(AbilityContext ctx) {
+        return 0;
+    }
 }

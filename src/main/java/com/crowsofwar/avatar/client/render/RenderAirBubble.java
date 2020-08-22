@@ -80,8 +80,8 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
             alpha = ticks / 10f;
         }
         sizeMult *= entity.getSize() / 2.5f;
-        
-        alpha *=2;
+
+        alpha *= 2.25F;
 
         if (CLIENT_CONFIG.shaderSettings.bslActive || CLIENT_CONFIG.shaderSettings.sildursActive)
             GlStateManager.color(0.35F, 0.35F, 0.35F, 0.10f * alpha);
