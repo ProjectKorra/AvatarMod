@@ -184,7 +184,7 @@ public class FlameGlideHandler extends TickHandler {
             wave.setFireTime(fireTime);
             wave.setEntitySize(size / 5F);
             wave.setElement(new Firebending());
-            wave.setAbility(new AbilityFlameGlide());
+            wave.setAbility(jump);
             wave.setDamage(damage);
             wave.setOwner(entity);
             wave.setSphere(false);

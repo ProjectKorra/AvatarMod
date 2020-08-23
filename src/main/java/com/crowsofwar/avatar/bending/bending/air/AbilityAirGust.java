@@ -74,7 +74,7 @@ public class AbilityAirGust extends Ability {
         float size = getProperty(SIZE, ctx.getLevel(), ctx.getDynamicPath()).floatValue();
         int lifetime = getProperty(LIFETIME, ctx.getLevel(), ctx.getDynamicPath()).intValue();
         int performance = getProperty(PERFORMANCE, ctx).intValue();
-        float push = getProperty(KNOCKBACK, ctx).floatValue();
+        float push = getProperty(KNOCKBACK, ctx).floatValue() / 2;
 
         //Xp and powerrating integration
         size *= ctx.getPowerRatingDamageMod() * ctx.getAbilityData().getXpModifier();

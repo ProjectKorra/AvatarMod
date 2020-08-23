@@ -142,7 +142,7 @@ public abstract class Ability {
             CHI_PERCENT = "chiPercentOnHit",
             CHI_PER_SECOND = "chiPerSecond",
             BURNOUT_HIT = "burnoutOnHit",
-            EXHAUSTION_HIT = "exhaustionHit",
+            EXHAUSTION_HIT = "exhaustionOnHit",
             MAX_HEALTH = "maxHealth";
 
 

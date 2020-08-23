@@ -103,6 +103,7 @@ public class ShootAirBurstHandler extends TickHandler {
             gust.setOwner(entity);
             gust.setEntitySize(size);
             gust.setDamage(damage);
+            gust.setChiHit((float) (burst.getProperty(Ability.CHI_HIT, abilityData).floatValue() * abilityData.getDamageMult() * abilityData.getXpModifier()));
             gust.setPerformanceAmount(performance);
             gust.setXp(xp);
             gust.setLifeTime(lifetime);
@@ -112,6 +113,7 @@ public class ShootAirBurstHandler extends TickHandler {
             gust.setPushIronDoor(true);
             gust.setPushIronTrapDoor(true);
             gust.setDestroyProjectiles(true);
+            gust.setDynamicSpreadingCollision(true);
             gust.setPush(speed * 20);
             gust.setPiercing(abilityData.getLevel() >= 2);
             gust.setAbility(Objects.requireNonNull(Abilities.get("air_burst")));
@@ -121,6 +123,7 @@ public class ShootAirBurstHandler extends TickHandler {
             gust.setDamageSource("avatar_Air");
             if (!world.isRemote)
                 world.spawnEntity(gust);
+
             abilityData.addBurnout(burnout);
             if (entity instanceof EntityPlayer)
                 ((EntityPlayer) entity).addExhaustion(exhaustion);

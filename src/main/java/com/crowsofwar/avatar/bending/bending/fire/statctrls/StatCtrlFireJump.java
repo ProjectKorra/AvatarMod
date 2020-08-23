@@ -168,7 +168,7 @@ public class StatCtrlFireJump extends StatusControl {
             wave.setFireTime(fireTime);
             wave.setEntitySize(size / 5);
             wave.setElement(new Firebending());
-            wave.setAbility(new AbilityFlameGlide());
+            wave.setAbility(jump);
             wave.setDamage(damage);
             wave.setOwner(entity);
             wave.setSphere(false);
