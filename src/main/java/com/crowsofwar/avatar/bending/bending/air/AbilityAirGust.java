@@ -91,7 +91,7 @@ public class AbilityAirGust extends Ability {
             gust.setDamage(0);
             gust.setDynamicSpreadingCollision(true);
             gust.setLifeTime(lifetime);
-            gust.setPush(push);
+            gust.setPush(push / 1.25F);
             gust.rotationPitch = entity.rotationPitch;
             gust.rotationYaw = entity.rotationYaw;
             gust.setPerformanceAmount(performance);

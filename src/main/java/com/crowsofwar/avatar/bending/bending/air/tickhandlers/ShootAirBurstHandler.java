@@ -66,7 +66,7 @@ public class ShootAirBurstHandler extends TickHandler {
 
             int lifetime = burst.getProperty(Ability.LIFETIME, abilityData).intValue();
             float damage = burst.getProperty(Ability.DAMAGE, abilityData).floatValue();
-            float speed = burst.getProperty(Ability.SPEED, abilityData).floatValue() * 7;
+            float speed = burst.getProperty(Ability.SPEED, abilityData).floatValue() * 5;
             float size = burst.getProperty(Ability.SIZE, abilityData).floatValue();
             int performance = burst.getProperty(Ability.PERFORMANCE, abilityData).intValue();
             float xp = burst.getProperty(Ability.XP_HIT, abilityData).intValue();
@@ -99,9 +99,11 @@ public class ShootAirBurstHandler extends TickHandler {
             lifetime *= (0.80 + 0.05 * charge);
 
             EntityAirGust gust = new EntityAirGust(world);
+            gust.setVelocity(look.times(speed));
             gust.setPosition(pos.minusY(0.5));
             gust.setOwner(entity);
             gust.setEntitySize(size);
+            gust.setAbility(Objects.requireNonNull(Abilities.get("air_burst")));
             gust.setDamage(damage);
             gust.setChiHit((float) (burst.getProperty(Ability.CHI_HIT, abilityData).floatValue() * abilityData.getDamageMult() * abilityData.getXpModifier()));
             gust.setPerformanceAmount(performance);
@@ -114,11 +116,9 @@ public class ShootAirBurstHandler extends TickHandler {
             gust.setPushIronTrapDoor(true);
             gust.setDestroyProjectiles(true);
             gust.setDynamicSpreadingCollision(true);
-            gust.setPush(speed * 20);
+            gust.setPush(speed / 20);
             gust.setPiercing(abilityData.getLevel() >= 2);
-            gust.setAbility(Objects.requireNonNull(Abilities.get("air_burst")));
             gust.setTier(burst.getCurrentTier(abilityData));
-            gust.setVelocity(look.times(speed));
             gust.setBehaviour(new AirBurstBeamBehaviour());
             gust.setDamageSource("avatar_Air");
             if (!world.isRemote)
@@ -146,9 +146,9 @@ public class ShootAirBurstHandler extends TickHandler {
     public static class AirBurstBeamBehaviour extends OffensiveBehaviour {
 
         @Override
-        public Behavior<EntityOffensive> onUpdate(EntityOffensive entity) {
+        public OffensiveBehaviour onUpdate(EntityOffensive entity) {
             World world = entity.world;
-            if (world.isRemote && entity.getOwner() != null) {
+            if (world.isRemote && entity.getOwner() != null && entity instanceof EntityAirGust) {
                 for (int i = 0; i < 4; i++) {
                     Vec3d mid = AvatarEntityUtils.getMiddleOfEntity(entity);
                     double spawnX = mid.x + world.rand.nextGaussian() / 20;

@@ -92,7 +92,6 @@ public interface IOffensiveEntity {
     }
 
     default void attackEntity(AvatarEntity attacker, Entity hit, boolean explosionDamage, Vec3d vel) {
-        System.out.println("Hm");
         vel = new Vec3d(vel.x * getKnockbackMult().x, vel.y * getKnockbackMult().y, vel.z * getKnockbackMult().z);
         if (attacker.getOwner() != null && hit != null && hit != attacker && !attacker.world.isRemote) {
             AbilityData data = AbilityData.get(attacker.getOwner(), attacker.getAbility().getName());

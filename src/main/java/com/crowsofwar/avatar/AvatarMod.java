@@ -99,7 +99,7 @@ public class AvatarMod {
 
     public static SimpleNetworkWrapper network;
 
-    public static boolean codeChickenLibCompat, realFirstPersonRender2Compat, cubicChunks;
+    public static boolean codeChickenLibCompat, realFirstPersonRender2Compat, cubicChunks, hammerCore;
 
     private int nextMessageID = 1;
     private int nextEntityID = 1;
@@ -173,6 +173,8 @@ public class AvatarMod {
         realFirstPersonRender2Compat = Loader.isModLoaded("rfp2");
         //Prevents sky bison crashing
         cubicChunks = Loader.isModLoaded("cubicchunkscore");
+        //Light orbs
+        hammerCore = Loader.isModLoaded("hammercore");
 
         AvatarLog.log = e.getModLog();
 

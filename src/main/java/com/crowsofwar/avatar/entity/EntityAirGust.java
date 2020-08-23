@@ -349,6 +349,10 @@ public class EntityAirGust extends EntityOffensive {
         return new Vec3d(x * scale, y * scale, z * scale);
     }
 
+    @Override
+    public Vec3d getKnockbackMult() {
+        return new Vec3d(getPush(), getPush(), getPush());
+    }
 
     @Override
     public boolean canDamageEntity(Entity entity) {

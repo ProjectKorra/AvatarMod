@@ -109,7 +109,7 @@ public class AbilityAirblade extends Ability {
             airblade.rotationPitch = entity.rotationPitch;
             airblade.rotationYaw = yaw;
             airblade.setPiercing(getBooleanProperty(PIERCES, ctx));
-            airblade.setPush(knockback);
+            airblade.setPush(knockback / 3.5F);
             airblade.setLifeTime(lifetime);
             airblade.setOwner(entity);
             airblade.setTier(getCurrentTier(ctx));
@@ -122,10 +122,9 @@ public class AbilityAirblade extends Ability {
                 airblade.setExpandedWidth(sizeMult / 10);
                 airblade.setExpandedHeight(sizeMult / 20);
             } else {
-                airblade.setExpandedHeight(sizeMult / 10);
-                airblade.setExpandedWidth(sizeMult / 20);
+                airblade.setExpandedHeight(sizeMult / 4);
+                airblade.setExpandedWidth(sizeMult / 8);
                 airblade.setEntitySize(sizeMult, 0.25F * sizeMult);
-
             }
             airblade.setBehaviour(new AirBladeBehaviour());
             if (!world.isRemote)
