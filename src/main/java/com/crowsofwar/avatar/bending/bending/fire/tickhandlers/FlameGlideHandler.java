@@ -147,8 +147,8 @@ public class FlameGlideHandler extends TickHandler {
 
         World world = ctx.getWorld();
         EntityLivingBase entity = ctx.getBenderEntity();
-        AbilityData abilityData = ctx.getData().getAbilityData("fire_jump");
-        AbilityFlameGlide jump = (AbilityFlameGlide) Abilities.get("fire_jump");
+        AbilityData abilityData = ctx.getData().getAbilityData("flame_glide");
+        AbilityFlameGlide jump = (AbilityFlameGlide) Abilities.get("flame_glide");
 
         if (jump != null && jump.getBooleanProperty(STOP_SHOCKWAVE, abilityData)) {
             float speed = jump.getProperty(SPEED, abilityData).floatValue() / 5;
