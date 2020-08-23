@@ -19,14 +19,16 @@
       "effectRadius": 3,
       "effectDamage": 4,
       "blastLevel": 4,
-      "pullsEnemies": false,
-      "potionEffects": false,
       "weaknessLevel": 0,
       "weaknessDuration": 0,
       "slownessLevel": 0,
       "slownessDuration": 0,
       "blindnessLevel": 0,
-      "blindnessDuration": 0
+      "blindnessDuration": 0,
+      "slowMult": 0.55,
+      "pullsEnemies": false,
+      "potionEffects": false
+
     },
     "level2": {
       "tier": 4,
@@ -45,7 +47,8 @@
       "chargeTime": 50,
       "effectRadius": 4,
       "effectDamage": 4,
-      "blastLevel": 3
+      "blastLevel": 3,
+      "slowMult": 0.65
     },
     "level3": {
       "tier": 5,
@@ -64,7 +67,8 @@
       "chargeTime": 40,
       "effectRadius": 5,
       "effectDamage": 5,
-      "blastLevel": 2
+      "blastLevel": 2,
+      "slowMult": 0.7
     },
     "level4_1": {
       "tier": 6,
@@ -84,6 +88,7 @@
       "effectRadius": 6,
       "effectDamage": 6,
       "blastLevel": 1,
+      "slowMult": 0.65,
       "potionEffects": true,
       "weaknessLevel": 2,
       "weaknessDuration": 20,
@@ -110,14 +115,15 @@
       "effectRadius": 10,
       "effectDamage": 6,
       "blastLevel": 0,
-      "pullsEnemies": true,
-      "potionEffects": false,
+      "slowMult": 0.8,
       "weaknessLevel": 0,
       "weaknessDuration": 0,
       "slownessLevel": 0,
       "slownessDuration": 0,
       "blindnessLevel": 0,
-      "blindnessDuration": 0
+      "blindnessDuration": 0,
+      "pullsEnemies": true,
+      "potionEffects": false
     }
   }
 }

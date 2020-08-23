@@ -56,7 +56,7 @@ public class AbilityAirGust extends Ability {
     @Override
     public void init() {
         super.init();
-        addBooleanProperties(PUSH_IRON_TRAPDOOR, KNOCKBACK, PUSH_IRONDOOR, PUSH_STONE, PUSH_REDSTONE, PIERCES_ENEMIES, DESTROY_PROJECTILES, SLOW_PROJECTILES);
+        addBooleanProperties(PUSH_IRON_TRAPDOOR, PUSH_IRONDOOR, PUSH_STONE, PUSH_REDSTONE, PIERCES_ENEMIES, DESTROY_PROJECTILES, SLOW_PROJECTILES);
     }
 
     @Override

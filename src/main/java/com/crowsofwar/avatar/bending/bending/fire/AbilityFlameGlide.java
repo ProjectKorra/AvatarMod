@@ -25,7 +25,8 @@ public class AbilityFlameGlide extends Ability {
 
     @Override
     public void init() {
-        super.init();
+        addProperties(TIER, CHI_COST, BURNOUT, BURNOUT_REGEN, COOLDOWN, EXHAUSTION,
+                SPEED, CHI_HIT, PERFORMANCE, XP_HIT, SIZE, KNOCKBACK, DAMAGE, XP_USE, FIRE_TIME);
         addProperties(DURATION, FIRE_R, FIRE_G, FIRE_B, FADE_R, FADE_G, FADE_B,
                 FALL_ABSORPTION);
         addBooleanProperties(STOP_SHOCKWAVE, JET_STREAM);

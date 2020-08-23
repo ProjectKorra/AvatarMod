@@ -518,7 +518,7 @@ death.attack.avatar_Water_waterBlast=%1$s couldn't handle the §9§lpressure of 
 death.attack.avatar_Water_shockWave=%2$s was §9§ldrowned by %1$s's hydrowave!
 death.attack.avatar_Water_sphere_shockWave=%2$s was §9§lblasted by %1$s's §9§ltorrential burst!
 
-death.attack.avatar_Air=%1$s was blasted away with %2$s's §f§lairbending!
+death.attack.avatar_Air=%1$s was blown away with %2$s's §f§lairbending!
 death.attack.avatar_Air_airblade=%1$s was §f§lsliced by %2$s !
 death.attack.avatar_Air_shockWave=%2$s was §f§lblown away by %1$s's shockwave!
 death.attack.avatar_Air_sphere_shockWave=%2$s was §f§lripped apart by %1$s's air burst!

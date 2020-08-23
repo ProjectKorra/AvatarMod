@@ -214,12 +214,6 @@ public class EntityAirGust extends EntityOffensive {
     }
 
     @Override
-    public Vec3d getKnockbackMult() {
-        return new Vec3d(0.625F, 0.625F, 0.625F);
-    }
-
-
-    @Override
     public void setDead() {
         super.setDead();
     }
@@ -268,7 +262,7 @@ public class EntityAirGust extends EntityOffensive {
 
     @Override
     public boolean multiHit() {
-        return getAbility() instanceof AbilityAirblade && getOwner() != null && AbilityData.get(getOwner(), getAbility().getName()).isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND);
+        return false;
     }
 
     @Override

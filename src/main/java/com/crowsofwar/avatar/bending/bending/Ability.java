@@ -81,11 +81,13 @@ public abstract class Ability {
             CHARGE_TIME = "chargeTime",
             RADIUS = "radius",
             EFFECT_RADIUS = "effectRadius",
+            EFFECT_DAMAGE = "effectDamage",
             AIM_ASSIST = "aimAssist",
             RANGE = "range",
             COLOUR_R = "colouR",
             COLOUR_G = "colourG",
-            COLOUR_B = "colourB";
+            COLOUR_B = "colourB",
+            POTION_EFFECTS = "potionEffects";
     //Airbending stuff
     public static final String
             PUSH_REDSTONE = "pushRedstone",
