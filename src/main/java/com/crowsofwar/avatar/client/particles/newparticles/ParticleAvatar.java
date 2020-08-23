@@ -34,6 +34,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL20;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -553,6 +554,7 @@ public abstract class ParticleAvatar extends Particle {
     public void renderParticle(BufferBuilder buffer, Entity viewer, float partialTicks, float lookZ, float lookY,
                                float lookX, float lookXY, float lookYZ) {
 
+        GL20.glUseProgram(0);
         updateEntityLinking(partialTicks);
 
         if (Float.isNaN(this.yaw) || Float.isNaN(this.pitch)) {
