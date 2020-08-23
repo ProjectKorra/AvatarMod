@@ -62,7 +62,7 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
         disableAlpha();
 
         //My brain is massive
-        GlStateManager.depthMask(false);
+       GlStateManager.depthMask(false);
 
         int i = 15728880;
         int j = i % 65536;
