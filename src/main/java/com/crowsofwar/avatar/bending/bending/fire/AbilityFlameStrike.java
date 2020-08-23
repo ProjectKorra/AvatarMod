@@ -108,22 +108,24 @@ public class AbilityFlameStrike extends Ability {
             Vec3d rightSide = Vector.toRectangular(Math.toRadians(entity.rotationYaw + 90), 0).times(0.05).withY(0).toMinecraft();
             rightSide = rightSide.add(height);
 
-            EntityLightOrb orb = new EntityLightOrb(world);
-            orb.setOwner(entity);
-            orb.setAbility(new AbilityFlameStrike());
-            orb.setPosition(rightSide);
-            orb.setOrbSize(orbSize);
-            orb.setInitialSize(orbSize);
-            orb.setSpinning(true);
-            orb.setColor(1F, 0.3F, 0F, 1F);
-            orb.setLightRadius(lightRadius);
-            orb.setEmittingEntity(entity);
-            orb.setColourShiftRange(0.8F);
-            orb.setColourShiftInterval(0.15F);
-            orb.setBehavior(new FlameStrikeLightOrb());
-            orb.setType(CLIENT_CONFIG.fireRenderSettings.flameStrikeSphere ? EntityLightOrb.EnumType.COLOR_SPHERE : EntityLightOrb.EnumType.COLOR_CUBE);
-            if (!world.isRemote)
-                world.spawnEntity(orb);
+            if (AvatarMod.hammerCore) {
+                EntityLightOrb orb = new EntityLightOrb(world);
+                orb.setOwner(entity);
+                orb.setAbility(new AbilityFlameStrike());
+                orb.setPosition(rightSide);
+                orb.setOrbSize(orbSize);
+                orb.setInitialSize(orbSize);
+                orb.setSpinning(true);
+                orb.setColor(1F, 0.3F, 0F, 1F);
+                orb.setLightRadius(lightRadius);
+                orb.setEmittingEntity(entity);
+                orb.setColourShiftRange(0.8F);
+                orb.setColourShiftInterval(0.15F);
+                orb.setBehavior(new FlameStrikeLightOrb());
+                orb.setType(CLIENT_CONFIG.fireRenderSettings.flameStrikeSphere ? EntityLightOrb.EnumType.COLOR_SPHERE : EntityLightOrb.EnumType.COLOR_CUBE);
+                if (!world.isRemote)
+                    world.spawnEntity(orb);
+            }
         }
 
         ctx.getAbilityData().setRegenBurnout(false);

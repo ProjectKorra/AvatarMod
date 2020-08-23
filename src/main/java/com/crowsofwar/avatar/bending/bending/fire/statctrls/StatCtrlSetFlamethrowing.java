@@ -18,14 +18,11 @@
 package com.crowsofwar.avatar.bending.bending.fire.statctrls;
 
 import com.crowsofwar.avatar.bending.bending.fire.Firebending;
-import com.crowsofwar.avatar.entity.AvatarEntity;
-import com.crowsofwar.avatar.entity.EntityLightOrb;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.StatusControl;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.bending.bending.fire.tickhandlers.FlamethrowerUpdateTick.FLAMETHROWER_MOVEMENT_MODIFIER_ID;
 import static com.crowsofwar.avatar.client.controls.AvatarControl.CONTROL_RIGHT_CLICK_DOWN;
@@ -52,8 +49,6 @@ public class StatCtrlSetFlamethrowing extends StatusControl {
 
         BendingData data = ctx.getData();
         EntityLivingBase bender = ctx.getBenderEntity();
-        World world = ctx.getWorld();
-        EntityLightOrb existing = AvatarEntity.lookupControlledEntity(world, EntityLightOrb.class, bender);
 
         if (data.hasBendingId(Firebending.ID)) {
             if (setting) {
