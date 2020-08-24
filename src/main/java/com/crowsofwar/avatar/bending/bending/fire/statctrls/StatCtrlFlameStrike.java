@@ -139,7 +139,6 @@ public class StatCtrlFlameStrike extends StatusControl {
         fireTime *= powerModifier * xpMod;
         performance *= (powerModifier * xpMod * 0.5 + 1);
 
-        System.out.println(xpMod);
 
         Vec3d look = entity.getLookVec();
         double eyePos = entity.getEyeHeight() + entity.getEntityBoundingBox().minY;
@@ -148,6 +147,8 @@ public class StatCtrlFlameStrike extends StatusControl {
         if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
             chiCost = burnout = exhaustion = cooldown = 0;
         }
+
+        System.out.println(chiCost);
 
         if (bender.consumeChi(chiCost)) {
             abilityData.addBurnout(abilityData.getBurnOut() + burnout);
@@ -243,6 +244,10 @@ public class StatCtrlFlameStrike extends StatusControl {
 
             world.playSound(entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 1.0F + Math.max(abilityData.getLevel() * 0.5F, 0),
                     1.25F * world.rand.nextFloat(), false);
+        }
+        else {
+            abilityData.setAbilityCooldown(cooldown);
+            abilityData.setRegenBurnout(true);
         }
         return true;
     }

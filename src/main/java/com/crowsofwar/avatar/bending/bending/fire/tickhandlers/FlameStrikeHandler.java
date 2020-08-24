@@ -21,6 +21,7 @@ import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.bending.bending.Ability.*;
 import static com.crowsofwar.avatar.bending.bending.fire.AbilityFlameStrike.STRIKES;
+import static com.crowsofwar.avatar.bending.bending.fire.statctrls.StatCtrlFlameStrike.setTimesUsed;
 import static com.crowsofwar.avatar.util.data.StatusControlController.FLAME_STRIKE_MAIN;
 import static com.crowsofwar.avatar.util.data.StatusControlController.FLAME_STRIKE_OFF;
 
@@ -144,4 +145,9 @@ public class FlameStrikeHandler extends TickHandler {
         return false;
     }
 
+    @Override
+    public void onRemoved(BendingContext ctx) {
+        super.onRemoved(ctx);
+        setTimesUsed(ctx.getBenderEntity().getPersistentID(), 0);
+    }
 }
