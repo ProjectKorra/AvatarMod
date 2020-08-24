@@ -82,6 +82,7 @@ public class AbilitySlipstream extends Ability {
             Objects.requireNonNull(data.getPowerRatingManager(getBendingId())).addModifier(modifier, ctx);
             abilityData.addXp(xp);
         }
+        abilityData.setRegenBurnout(true);
         super.execute(ctx);
 
     }

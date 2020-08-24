@@ -96,9 +96,9 @@ public class AiFireball extends BendingAi {
 
     @Override
     public StatusControl[] getStatusControls() {
-        StatusControl[] controls = new StatusControl[1];
-        controls[0] = THROW_FIREBALL;
-        return controls;
+        return new StatusControl[] {
+                THROW_FIREBALL
+        };
     }
 
     @Override

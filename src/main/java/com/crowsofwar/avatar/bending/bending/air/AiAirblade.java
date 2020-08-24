@@ -19,61 +19,52 @@ package com.crowsofwar.avatar.bending.bending.air;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingAi;
 import com.crowsofwar.avatar.util.data.Bender;
-import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
-
-import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
-import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
-import static java.lang.Math.toDegrees;
 
 /**
  * @author CrowsOfWar
  */
 public class AiAirblade extends BendingAi {
 
-	/**
-	 * @param ability
-	 * @param entity
-	 * @param bender
-	 */
-	protected AiAirblade(Ability ability, EntityLiving entity, Bender bender) {
-		super(ability, entity, bender);
-	}
+    AiAirblade(Ability ability, EntityLiving entity, Bender bender) {
+        super(ability, entity, bender);
+        setMutexBits(3);
+    }
 
-	@Override
-	protected void startExec() {
-		EntityLivingBase target = entity.getAttackTarget();
-		Vector rotations = getRotationTo(getEntityPos(entity), getEntityPos(target));
-		entity.rotationYaw = (float) toDegrees(rotations.y());
-		entity.rotationPitch = (float) toDegrees(rotations.x());
-	}
+    @Override
+    protected boolean shouldExec() {
+        return entity.getAttackTarget() != null && entity.world.rand.nextBoolean();
+    }
 
-	@Override
-	public boolean shouldContinueExecuting() {
-		entity.rotationYaw = entity.rotationYawHead;
-		if (timeExecuting >= 40 && entity.getAttackTarget() != null) {
-			Vector rotations = getRotationTo(getEntityPos(entity), getEntityPos(entity.getAttackTarget()));
-			entity.rotationYaw = (float) toDegrees(rotations.y());
-			entity.rotationPitch = (float) toDegrees(rotations.x());
-			execAbility();
-			return false;
-		}
-		return true;
-	}
+    @Override
+    protected void startExec() {
 
-	@Override
-	protected boolean shouldExec() {
+    }
 
-		EntityLivingBase target = entity.getAttackTarget();
 
-		if (target != null) {
-			double dist = entity.getDistanceSq(target);
-			return dist >= 4 * 4;
-		}
+    @Override
+    public float getMaxTargetRange() {
+        return 9;
+    }
 
-		return false;
+    @Override
+    public float getMinTargetRange() {
+        return 2;
+    }
 
-	}
+    @Override
+    public int getWaitDuration() {
+        return 2;
+    }
+
+    @Override
+    public int getTotalDuration() {
+        return 10;
+    }
+
+    @Override
+    public boolean shouldExecAbility() {
+        return timeExecuting >= getWaitDuration();
+    }
 
 }

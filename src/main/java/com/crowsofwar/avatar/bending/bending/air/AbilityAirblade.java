@@ -34,6 +34,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -130,6 +131,7 @@ public class AbilityAirblade extends Ability {
             if (!world.isRemote)
                 world.spawnEntity(airblade);
 
+            entity.swingArm(EnumHand.MAIN_HAND);
             abilityData.setRegenBurnout(true);
         }
 

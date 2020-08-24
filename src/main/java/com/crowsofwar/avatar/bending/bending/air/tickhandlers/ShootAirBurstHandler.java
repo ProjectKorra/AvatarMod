@@ -143,6 +143,14 @@ public class ShootAirBurstHandler extends TickHandler {
         return true;
     }
 
+    @Override
+    public void onRemoved(BendingContext ctx) {
+        super.onRemoved(ctx);
+        AbilityData abilityData = AbilityData.get(ctx.getBenderEntity(), "air_burst");
+        if (abilityData != null)
+            abilityData.setRegenBurnout(true);
+    }
+
     public static class AirBurstBeamBehaviour extends OffensiveBehaviour {
 
         @Override

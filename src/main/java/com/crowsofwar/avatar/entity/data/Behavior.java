@@ -65,7 +65,6 @@ public abstract class Behavior<E extends Entity> {
 		WallBehavior.register();
 		EarthspikesBehavior.register();
 		FireballBehavior.register();
-		CloudburstBehavior.register();
 		LightningSpearBehavior.register();
 		LightOrbBehavior.register();
 		LightCylinderBehaviour.register();

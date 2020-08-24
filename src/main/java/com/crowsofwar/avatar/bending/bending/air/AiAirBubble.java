@@ -18,13 +18,14 @@ package com.crowsofwar.avatar.bending.bending.air;
 
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingAi;
-import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.entity.AvatarEntity;
 import com.crowsofwar.avatar.entity.EntityAirBubble;
+import com.crowsofwar.avatar.util.data.Bender;
+import com.crowsofwar.avatar.util.data.StatusControl;
 import net.minecraft.entity.EntityLiving;
 
-import java.util.Random;
-
+import static com.crowsofwar.avatar.bending.bending.BendingAi.AbilityType.DEFENSIVE;
+import static com.crowsofwar.avatar.util.data.StatusControlController.BUBBLE_CONTRACT;
 import static com.crowsofwar.avatar.util.data.StatusControlController.BUBBLE_EXPAND;
 
 /**
@@ -32,45 +33,78 @@ import static com.crowsofwar.avatar.util.data.StatusControlController.BUBBLE_EXP
  */
 public class AiAirBubble extends BendingAi {
 
-	private final Random random;
+    /**
+     * @param ability
+     * @param entity
+     * @param bender
+     */
+    protected AiAirBubble(Ability ability, EntityLiving entity, Bender bender) {
+        super(ability, entity, bender);
+        setMutexBits(3);
+    }
 
-	/**
-	 * @param ability
-	 * @param entity
-	 * @param bender
-	 */
-	protected AiAirBubble(Ability ability, EntityLiving entity, Bender bender) {
-		super(ability, entity, bender);
-		this.random = new Random();
-	}
+    @Override
+    protected boolean shouldExec() {
+        return entity.getAttackTarget() != null && entity.world.rand.nextBoolean() && entity.getHealth() < entity.getMaxHealth() * 0.75F;
+    }
 
-	@Override
-	protected void startExec() {
-		execAbility();
-	}
+    @Override
+    protected void startExec() {
 
-	@Override
-	protected boolean shouldExec() {
-
-		boolean underAttack = entity.getCombatTracker().getCombatDuration() <= 100;
-		boolean already = AvatarEntity.lookupEntity(entity.world, EntityAirBubble.class,
-				bubble -> bubble.getOwner() == entity) != null;
-		boolean lowHealth = entity.getHealth() / entity.getMaxHealth() <= 0.5f;
-
-		if (timeExecuting > 200 || (entity.getAttackTarget() != null && entity.getDistance(entity.getAttackTarget()) < 3) && entity.getRNG().nextBoolean()) {
-			execStatusControl(BUBBLE_EXPAND);
-			return false;
-
-		}
-		// 50% chance to get air bubble every tick
-		return !already && (underAttack && lowHealth && random.nextDouble() < 0.5);
-
-	}
-
-	@Override
-	public void updateTask() {
-		timeExecuting++;
-	}
+    }
 
 
+    @Override
+    public float getMaxTargetRange() {
+        return 7;
+    }
+
+    @Override
+    public float getMinTargetRange() {
+        return 0;
+    }
+
+    @Override
+    public int getWaitDuration() {
+        return 2;
+    }
+
+    @Override
+    public int getTotalDuration() {
+        return 80;
+    }
+
+    @Override
+    public boolean shouldExecAbility() {
+        return timeExecuting >= getWaitDuration();
+    }
+
+    @Override
+    public AbilityType[] getAbilityTypes() {
+        return new AbilityType[]{
+                DEFENSIVE
+        };
+    }
+
+    @Override
+    public StatusControl[] getStatusControls() {
+        return new StatusControl[]{
+                BUBBLE_EXPAND,
+                BUBBLE_CONTRACT
+        };
+    }
+
+    @Override
+    public boolean shouldExecStatCtrl(StatusControl statusControl) {
+        EntityAirBubble airBubble = AvatarEntity.lookupOwnedEntity(entity.world, EntityAirBubble.class, entity);
+
+        if (timeExecuting >= 200)
+            return true;
+        else if (airBubble != null && airBubble.getHealth() < 1)
+            return true;
+        else if (entity.getAttackTarget() != null && entity.getDistance(entity.getAttackTarget()) < 2 && entity.world.rand.nextBoolean() && timeExecuting >= 20)
+            return true;
+
+        return super.shouldExecStatCtrl(statusControl);
+    }
 }

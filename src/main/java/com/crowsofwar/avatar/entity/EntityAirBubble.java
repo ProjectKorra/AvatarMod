@@ -399,7 +399,7 @@ public class EntityAirBubble extends EntityShield {
             AvatarUtils.afterVelocityAdded(entity);
 
             if (getOwner().hurtTime == 0) {
-                float damage = 1;
+                float damage = 0;
                 DamageSource source = DamageSource.GENERIC;
                 if (entity instanceof EntityLivingBase) {
                     IAttributeInstance attribute = getOwner()

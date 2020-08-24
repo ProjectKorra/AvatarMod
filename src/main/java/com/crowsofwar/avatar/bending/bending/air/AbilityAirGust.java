@@ -34,6 +34,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -111,6 +112,8 @@ public class AbilityAirGust extends Ability {
             if (!world.isRemote)
                 world.spawnEntity(gust);
 
+            entity.swingArm(EnumHand.MAIN_HAND);
+
             if (world.isRemote) {
                 for (double angle = 0; angle < 360; angle += Math.max((int) (size * 15), 15)) {
                     Vector position = Vector.getOrthogonalVector(entity.getLookVec(), angle, size / 20F);
@@ -131,6 +134,8 @@ public class AbilityAirGust extends Ability {
                             .scale(size * (1 / size)).element(new Airbending()).collide(true).spawn(world);
                 }
             }
+
+            ctx.getAbilityData().setRegenBurnout(true);
             entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_FIREWORK_LAUNCH, entity.getSoundCategory(), 1.0F + Math.max(ctx.getLevel(), 0) / 2F, 0.9F + world.rand.nextFloat() / 10);
             super.execute(ctx);
         }

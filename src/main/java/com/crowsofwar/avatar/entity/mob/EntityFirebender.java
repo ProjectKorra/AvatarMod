@@ -19,9 +19,9 @@ package com.crowsofwar.avatar.entity.mob;
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import com.crowsofwar.avatar.bending.bending.fire.Firebending;
-import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.item.scroll.Scrolls;
 import com.crowsofwar.avatar.util.AvatarUtils;
+import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.gorecore.format.FormattedMessage;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -31,7 +31,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.DifficultyInstance;
@@ -49,153 +48,148 @@ import static com.crowsofwar.avatar.network.AvatarChatMessages.MSG_NEED_FIRE_TRA
  */
 public class EntityFirebender extends EntityHumanBender {
 
-	private static final ResourceLocation LOOT_TABLE = LootTableList
-			.register(new ResourceLocation("avatarmod", "firebender"));
+    private static final ResourceLocation LOOT_TABLE = LootTableList
+            .register(new ResourceLocation("avatarmod", "firebender"));
 
-	public EntityFirebender(World world) {
-		super(world);
-	}
+    public EntityFirebender(World world) {
+        super(world);
+    }
 
-	@Override
-	protected void entityInit() {
-		super.entityInit();
-	}
+    @Override
+    protected void entityInit() {
+        super.entityInit();
+    }
 
-	@Override
-	public void applyAbilityLevels(int level) {
-		boolean flameStrikePath = world.rand.nextBoolean();
-		boolean flamethrowerPath = world.rand.nextBoolean();
-		//	boolean infernoPunchPath = world.rand.nextBoolean();
-		boolean fireBlastPath = world.rand.nextBoolean();
-		boolean fireballPath = world.rand.nextBoolean();
-		switch (level) {
-			case 2:
-				getData().getAbilityData("fireball").setLevel(-1);
-				getData().getAbilityData("flamethrower").setLevel(0);
-				getData().getAbilityData("flame_strike").setLevel(0);
-				getData().getAbilityData("fire_shot").setLevel(1);
-				break;
-			case 3:
-				getData().getAbilityData("fireball").setLevel(-1);
-				getData().getAbilityData("flamethrower").setLevel(0);
-				getData().getAbilityData("flame_strike").setLevel(1);
-				getData().getAbilityData("fire_shot").setLevel(1);
-				break;
-			case 4:
-				getData().getAbilityData("fireball").setLevel(0);
-				getData().getAbilityData("flamethrower").setLevel(1);
-				getData().getAbilityData("flame_strike").setLevel(1);
-				getData().getAbilityData("fire_shot").setLevel(2);
-				break;
-			case 5:
-				getData().getAbilityData("fireball").setLevel(1);
-				getData().getAbilityData("flamethrower").setLevel(2);
-				getData().getAbilityData("flame_strike").setLevel(2);
-				getData().getAbilityData("fire_shot").setPath(flameStrikePath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
-				break;
-			case 6:
-				getData().getAbilityData("fireball").setLevel(2);
-				getData().getAbilityData("flamethrower").setLevel(2);
-				getData().getAbilityData("flame_strike").setPath(fireBlastPath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
-				getData().getAbilityData("fire_shot").setPath(flameStrikePath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
-				break;
-			case 7:
-				getData().getAbilityData("fireball").setPath(fireballPath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
-				getData().getAbilityData("flamethrower").setPath(flamethrowerPath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
-				getData().getAbilityData("flame_strike").setPath(fireBlastPath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
-				getData().getAbilityData("fire_shot").setPath(flameStrikePath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
-				break;
-			default:
-				getData().getAbilityData("fireball").setLevel(-1);
-				getData().getAbilityData("flamethrower").setLevel(-1);
-				getData().getAbilityData("flame_strike").setLevel(0);
-				getData().getAbilityData("fire_shot").setLevel(0);
-				break;
-		}
+    @Override
+    public void applyAbilityLevels(int level) {
+        boolean flameStrikePath = world.rand.nextBoolean();
+        boolean flamethrowerPath = world.rand.nextBoolean();
+        //	boolean infernoPunchPath = world.rand.nextBoolean();
+        boolean fireBlastPath = world.rand.nextBoolean();
+        boolean fireballPath = world.rand.nextBoolean();
+        boolean flameGlidePath = world.rand.nextBoolean();
+        switch (level) {
+            case 2:
+                getData().getAbilityData("fireball").setLevel(-1);
+                getData().getAbilityData("flamethrower").setLevel(0);
+                getData().getAbilityData("flame_strike").setLevel(0);
+                getData().getAbilityData("fire_shot").setLevel(1);
+                getData().getAbilityData("flame_glide").setLevel(0);
+                break;
+            case 3:
+                getData().getAbilityData("fireball").setLevel(-1);
+                getData().getAbilityData("flamethrower").setLevel(0);
+                getData().getAbilityData("flame_strike").setLevel(1);
+                getData().getAbilityData("fire_shot").setLevel(1);
+				getData().getAbilityData("flame_glide").setLevel(1);
+                break;
+            case 4:
+                getData().getAbilityData("fireball").setLevel(0);
+                getData().getAbilityData("flamethrower").setLevel(1);
+                getData().getAbilityData("flame_strike").setLevel(1);
+                getData().getAbilityData("fire_shot").setLevel(2);
+				getData().getAbilityData("flame_glide").setLevel(1);
+                break;
+            case 5:
+                getData().getAbilityData("fireball").setLevel(1);
+                getData().getAbilityData("flamethrower").setLevel(2);
+                getData().getAbilityData("flame_strike").setLevel(2);
+                getData().getAbilityData("fire_shot").setPath(flameStrikePath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
+				getData().getAbilityData("flame_glide").setLevel(2);
+                break;
+            case 6:
+                getData().getAbilityData("fireball").setLevel(2);
+                getData().getAbilityData("flamethrower").setLevel(2);
+                getData().getAbilityData("flame_strike").setPath(fireBlastPath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
+                getData().getAbilityData("fire_shot").setPath(flameStrikePath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
+				getData().getAbilityData("flame_glide").setPath(flameGlidePath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
+                break;
+            case 7:
+                getData().getAbilityData("fireball").setPath(fireballPath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
+                getData().getAbilityData("flamethrower").setPath(flamethrowerPath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
+                getData().getAbilityData("flame_strike").setPath(fireBlastPath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
+                getData().getAbilityData("fire_shot").setPath(flameStrikePath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
+				getData().getAbilityData("flame_glide").setPath(flameGlidePath ? AbilityData.AbilityTreePath.FIRST : AbilityData.AbilityTreePath.SECOND);
+                break;
+            default:
+                getData().getAbilityData("fireball").setLevel(-1);
+                getData().getAbilityData("flamethrower").setLevel(-1);
+                getData().getAbilityData("flame_strike").setLevel(0);
+                getData().getAbilityData("fire_shot").setLevel(0);
+				getData().getAbilityData("flame_glide").setLevel(0);
+                break;
+        }
 
-	}
+    }
 
-	@Override
-	public BendingStyle getElement() {
-		return new Firebending();
-	}
+    @Override
+    public BendingStyle getElement() {
+        return new Firebending();
+    }
 
-	@Override
-	protected FormattedMessage getTradeFailMessage() {
-		return MSG_NEED_FIRE_TRADE_ITEM;
-	}
-
-
-	@Override
-	protected void applyEntityAttributes() {
-		super.applyEntityAttributes();
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(40);
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.3);
-	}
-
-	@Override
-	protected void addBendingTasks() {
-		this.tasks.addTask(2 , Objects.requireNonNull(Abilities.getAi("flamethrower", this, getBender())));
-		this.tasks.addTask(2, Objects.requireNonNull(Abilities.getAi("fireball", this, getBender())));
-		this.tasks.addTask(1, Objects.requireNonNull(Abilities.getAi("fire_shot", this, getBender())));
-		this.tasks.addTask(2, Objects.requireNonNull(Abilities.getAi("flame_strike", this, getBender())));
-		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1.8, true));
-	}
-
-	@Override
-	protected ResourceLocation getLootTable() {
-		return LOOT_TABLE;
-	}
-
-	@Override
-	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata) {
-		getData().addBendingId(Firebending.ID);
-		return super.onInitialSpawn(difficulty, livingdata);
-	}
+    @Override
+    protected FormattedMessage getTradeFailMessage() {
+        return MSG_NEED_FIRE_TRADE_ITEM;
+    }
 
 
-	@Override
-	protected int getNumSkins() {
-		return 1;
-	}
+    @Override
+    protected void applyEntityAttributes() {
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(40);
+        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.3);
+    }
 
-	@Override
-	public boolean processInteract(EntityPlayer player, EnumHand hand) {
-		return super.processInteract(player, hand);
-	}
+    @Override
+    protected void addBendingTasks() {
+        this.tasks.addTask(2, Objects.requireNonNull(Abilities.getAi("flamethrower", this, getBender())));
+        this.tasks.addTask(2, Objects.requireNonNull(Abilities.getAi("fireball", this, getBender())));
+        this.tasks.addTask(1, Objects.requireNonNull(Abilities.getAi("fire_shot", this, getBender())));
+        this.tasks.addTask(2, Objects.requireNonNull(Abilities.getAi("flame_strike", this, getBender())));
+		this.tasks.addTask(2, Objects.requireNonNull(Abilities.getAi("flame_glide", this, getBender())));
+        this.tasks.addTask(4, new EntityAIAttackMelee(this, 1.4, true));
+    }
 
-	@Nonnull
-	@Override
-	public ITextComponent getDisplayName() {
-		TextComponentString textcomponentstring = new TextComponentString("Level " + getLevel() + " " + ScorePlayerTeam.formatPlayerName(this.getTeam(), this.getName()));
-		textcomponentstring.getStyle().setHoverEvent(this.getHoverEvent());
-		textcomponentstring.getStyle().setInsertion(this.getCachedUniqueIdString());
-		return textcomponentstring;
-		//return super.getDisplayName();
-	}
+    @Override
+    protected ResourceLocation getLootTable() {
+        return LOOT_TABLE;
+    }
 
-	@Override
-	public World getWorld() {
-		return null;
-	}
+    @Override
+    public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata) {
+        getData().addBendingId(Firebending.ID);
+        return super.onInitialSpawn(difficulty, livingdata);
+    }
 
-	@Override
-	public BlockPos getPos() {
-		return null;
-	}
 
-	@Override
-	public void setDead() {
-		super.setDead();
-		ItemStack stack = new ItemStack(Scrolls.FIRE, 1, getLevel());
-		if (AvatarUtils.getRandomNumberInRange(1, 100) < 50 && !world.isRemote) {
-			this.entityDropItem(stack, 1.0F);
-		}
-	}
+    @Override
+    protected int getNumSkins() {
+        return 1;
+    }
 
-	@Override
-	protected void onDeathUpdate() {
-		super.onDeathUpdate();
-	}
+    @Override
+    public boolean processInteract(EntityPlayer player, EnumHand hand) {
+        return super.processInteract(player, hand);
+    }
+
+    @Nonnull
+    @Override
+    public ITextComponent getDisplayName() {
+        TextComponentString textcomponentstring = new TextComponentString("Level " + getLevel() + " " + ScorePlayerTeam.formatPlayerName(this.getTeam(), this.getName()));
+        textcomponentstring.getStyle().setHoverEvent(this.getHoverEvent());
+        textcomponentstring.getStyle().setInsertion(this.getCachedUniqueIdString());
+        return textcomponentstring;
+        //return super.getDisplayName();
+    }
+
+    @Override
+    public void setDead() {
+        super.setDead();
+        ItemStack stack = new ItemStack(Scrolls.FIRE, 1, getLevel());
+        if (AvatarUtils.getRandomNumberInRange(1, 100) < 50 && !world.isRemote) {
+            this.entityDropItem(stack, 1.0F);
+        }
+    }
+
 }
 

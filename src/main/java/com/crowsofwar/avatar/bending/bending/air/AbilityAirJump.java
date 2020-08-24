@@ -79,6 +79,7 @@ public class AbilityAirJump extends Ability {
 				}
 			}
 		}
+		abilityData.setRegenBurnout(true);
 		super.execute(ctx);
 	}
 

@@ -170,7 +170,7 @@ public abstract class BendingAi extends EntityAIBase {
     }
 
     public AbilityType[] getAbilityTypes() {
-        return new AbilityType[]{
+        return new AbilityType[] {
                 PROJECTILE
         };
     }

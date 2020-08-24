@@ -45,6 +45,7 @@ public abstract class OffensiveBehaviour extends Behavior<EntityOffensive> {
         registerBehavior(StatCtrlFlameStrike.FlameStrikeBehaviour.class);
         registerBehavior(FlameGlideHandler.FireJumpShockwave.class);
         FireballBehavior.register();
+        CloudburstBehavior.register();
         registerBehavior(Redirect.class);
         registerBehavior(AbilityFireRedirect.AbsorbBehaviour.class);
     }

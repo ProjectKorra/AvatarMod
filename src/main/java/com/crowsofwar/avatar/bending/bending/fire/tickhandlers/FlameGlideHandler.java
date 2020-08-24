@@ -56,7 +56,7 @@ public class FlameGlideHandler extends TickHandler {
 
             size *= data.getDamageMult() * data.getXpModifier();
 
-            for (int i = 0; i < 6 + AvatarUtils.getRandomNumberInRange(0, 2); i++) {
+            for (int i = 0; i < 8 + AvatarUtils.getRandomNumberInRange(2, 4); i++) {
                 int rRandom = fadeR < 100 ? AvatarUtils.getRandomNumberInRange(0, fadeR * 2) : AvatarUtils.getRandomNumberInRange(fadeR / 2,
                         fadeR * 2);
                 int gRandom = fadeG < 100 ? AvatarUtils.getRandomNumberInRange(0, fadeG * 2) : AvatarUtils.getRandomNumberInRange(fadeG / 2,
@@ -66,12 +66,12 @@ public class FlameGlideHandler extends TickHandler {
 
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).clr(r, g, b, 215 + AvatarUtils.getRandomNumberInRange(0, 40))
                         .fade(rRandom, gRandom, bRandom, 160 + AvatarUtils.getRandomNumberInRange(0, 40))
-                        .pos(pos.toMinecraft()).vel(world.rand.nextGaussian() / 10, world.rand.nextGaussian() / 10, world.rand.nextGaussian() / 10)
+                        .pos(pos.toMinecraft()).vel(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20)
                         .scale(size).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(new Firebending()).collide(true)
                         .ability(jump).spawnEntity(target).spawn(world);
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).clr(r, g * 4, b, 215 + AvatarUtils.getRandomNumberInRange(0, 40))
                         .fade(rRandom, gRandom * 4, bRandom, 160 + AvatarUtils.getRandomNumberInRange(0, 40))
-                        .pos(pos.toMinecraft()).vel(world.rand.nextGaussian() / 10, world.rand.nextGaussian() / 10, world.rand.nextGaussian() / 10)
+                        .pos(pos.toMinecraft()).vel(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20)
                         .scale(size).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(new Firebending()).collide(true)
                         .ability(jump).spawnEntity(target).spawn(world);
             }
