@@ -137,8 +137,10 @@ public class AbilityProperties {
                         try {
                             baseValues.put(baseValueName, JsonUtils.getFloat(baseValueObject, baseValueName));
                         } catch (JsonSyntaxException e) {
-                            if (!baseValues.containsKey(baseValueName))
+                            if (!baseValues.containsKey(baseValueName)) {
                                 AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Either someone's been lazy and left out a value, or your properties file is screwed.");
+                                AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, baseValueName + ", Ability: " + ability.getName());
+                            }
                             else {
                                 //Adds placeholder values to the list for each variable, making sure to prevent some weird reading issues.
                                 List<Number> vals = new ArrayList<>(baseValues.get(baseValueName));

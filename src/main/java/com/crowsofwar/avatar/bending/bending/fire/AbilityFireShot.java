@@ -156,6 +156,9 @@ public class AbilityFireShot extends Ability {
                     }
                 }
             } else {
+                float radius = getProperty(EFFECT_RADIUS, ctx).floatValue();
+                radius *= abilityData.getDamageMult() * abilityData.getXpModifier();
+
                 EntityShockwave wave = new EntityShockwave(world);
                 wave.setOwner(entity);
                 wave.rotationPitch = entity.rotationPitch;
@@ -174,6 +177,7 @@ public class AbilityFireShot extends Ability {
                 wave.setParticleSpeed(0.18F);
                 wave.setParticleWaves(2);
                 wave.setParticleAmount(10);
+                wave.setRange(radius);
                 world.playSound(entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 1.75F +
                         world.rand.nextFloat(), 0.5F + world.rand.nextFloat(), false);
                 if (!world.isRemote)

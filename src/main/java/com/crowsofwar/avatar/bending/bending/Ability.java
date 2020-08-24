@@ -141,7 +141,7 @@ public abstract class Ability {
     public static final String
             CHI_PERCENT = "chiPercentOnHit",
             CHI_PER_SECOND = "chiPerSecond",
-            BURNOUT_HIT = "burnoutOnHit",
+            BURNOUT_HIT = "burnOutOnHit",
             EXHAUSTION_HIT = "exhaustionOnHit",
             MAX_HEALTH = "maxHealth";
 

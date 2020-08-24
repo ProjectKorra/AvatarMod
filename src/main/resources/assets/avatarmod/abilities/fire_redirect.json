@@ -15,6 +15,7 @@
       "radius": 0.5,
       "powerBoost": 0,
       "powerDuration": 0,
+      "absorbTier": 0,
       "absorbFires": false
     },
     "level2": {
