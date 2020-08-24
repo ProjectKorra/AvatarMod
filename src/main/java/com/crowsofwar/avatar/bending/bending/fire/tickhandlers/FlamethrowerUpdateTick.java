@@ -274,19 +274,19 @@ public class FlamethrowerUpdateTick extends TickHandler {
                             double spawnX = box.x + random.nextDouble() * 0.125 * (boundingBox.maxX - boundingBox.minX);
                             double spawnY = box.y + random.nextDouble() * 0.125 * (boundingBox.maxY - boundingBox.minY);
                             double spawnZ = box.z + random.nextDouble() * 0.125 * (boundingBox.maxZ - boundingBox.minZ);
-                            ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 20 * entity.getAvgSize() * 3,
-                                    entity.world.rand.nextGaussian() / 20 * entity.getAvgSize() * 3, entity.world.rand.nextGaussian() / 20 * entity.getAvgSize() * 3)
-                                    .time(6 - (int) (entity.velocity().magnitude() / 20) + AvatarUtils.getRandomNumberInRange(2, 4)).clr(rgb[0], rgb[1], rgb[2])
-                                    .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).scale(entity.getAvgSize() * 1.5F).element(entity.getElement())
+                            ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 20 * entity.getAvgSize(),
+                                    entity.world.rand.nextGaussian() / 20 * entity.getAvgSize(), entity.world.rand.nextGaussian() / 20 * entity.getAvgSize())
+                                    .time(7 - (int) (entity.velocity().magnitude() / 20) + AvatarUtils.getRandomNumberInRange(2, 4)).clr(rgb[0], rgb[1], rgb[2])
+                                    .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).scale(entity.getAvgSize()).element(entity.getElement())
                                     .ability(entity.getAbility()).spawnEntity(entity.getOwner()).spawn(entity.world);
-                            ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 20 * entity.getAvgSize() * 3,
-                                    entity.world.rand.nextGaussian() / 20 * entity.getAvgSize() * 3, entity.world.rand.nextGaussian() / 20 * entity.getAvgSize() * 3)
-                                    .time(6 - (int) (entity.velocity().magnitude() / 20) + AvatarUtils.getRandomNumberInRange(2, 4)).clr(rgb[0], rgb[1], rgb[2])
-                                    .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).scale(entity.getAvgSize() * 1.5F).element(entity.getElement())
+                            ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 20 * entity.getAvgSize(),
+                                    entity.world.rand.nextGaussian() / 20 * entity.getAvgSize(), entity.world.rand.nextGaussian() / 20 * entity.getAvgSize())
+                                    .time(7 - (int) (entity.velocity().magnitude() / 20) + AvatarUtils.getRandomNumberInRange(2, 4)).clr(rgb[0], rgb[1], rgb[2])
+                                    .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).scale(entity.getAvgSize()).element(entity.getElement())
                                     .ability(entity.getAbility()).spawnEntity(entity.getOwner()).spawn(entity.world);
-                            ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 15 * entity.getAvgSize() * 2,
-                                    entity.world.rand.nextGaussian() / 15 * entity.getAvgSize() * 2, entity.world.rand.nextGaussian() / 15 * entity.getAvgSize() * 2)
-                                    .time(6 - (int) (entity.velocity().magnitude() / 20) + AvatarUtils.getRandomNumberInRange(2, 4)).scale(entity.getAvgSize() / 2)
+                            ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 15 * entity.getAvgSize(),
+                                    entity.world.rand.nextGaussian() / 15 * entity.getAvgSize(), entity.world.rand.nextGaussian() / 15 * entity.getAvgSize())
+                                    .time(7 - (int) (entity.velocity().magnitude() / 20) + AvatarUtils.getRandomNumberInRange(2, 4)).scale(entity.getAvgSize() / 4)
                                     .element(entity.getElement()).ability(entity.getAbility()).spawnEntity(entity.getOwner()).spawn(entity.world);
                         }
                     }
