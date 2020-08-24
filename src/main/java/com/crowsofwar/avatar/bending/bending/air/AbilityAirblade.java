@@ -123,15 +123,15 @@ public class AbilityAirblade extends Ability {
                 airblade.setExpandedWidth(sizeMult / 10);
                 airblade.setExpandedHeight(sizeMult / 20);
             } else {
-                airblade.setExpandedHeight(sizeMult / 4);
-                airblade.setExpandedWidth(sizeMult / 8);
+                airblade.setExpandedHeight(sizeMult / 2);
+                airblade.setExpandedWidth(sizeMult / 4);
                 airblade.setEntitySize(sizeMult, 0.25F * sizeMult);
             }
             airblade.setBehaviour(new AirBladeBehaviour());
             if (!world.isRemote)
                 world.spawnEntity(airblade);
 
-            entity.swingArm(EnumHand.MAIN_HAND);
+            entity.swingArm(world.rand.nextBoolean() ? EnumHand.MAIN_HAND : EnumHand.OFF_HAND);
             abilityData.setRegenBurnout(true);
         }
 

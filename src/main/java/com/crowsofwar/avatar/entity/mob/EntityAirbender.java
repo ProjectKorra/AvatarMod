@@ -17,6 +17,7 @@
 package com.crowsofwar.avatar.entity.mob;
 
 import com.crowsofwar.avatar.bending.bending.Abilities;
+import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
@@ -153,6 +154,14 @@ public class EntityAirbender extends EntityHumanBender {
 
 	}
 
+
+	@Override
+	public void modifyAbilities(Ability ability) {
+		super.modifyAbilities(ability);
+		AbilityData abilityData = AbilityData.get(this, ability.getName());
+		if (abilityData != null)
+			abilityData.setAbilityCooldown((int) (abilityData.getAbilityCooldown() * 1.25));
+	}
 
 	@Override
 	public void setDead() {

@@ -135,6 +135,7 @@ public class AbilityAirGust extends Ability {
                 }
             }
 
+            entity.swingArm(world.rand.nextBoolean() ? EnumHand.MAIN_HAND : EnumHand.OFF_HAND);
             ctx.getAbilityData().setRegenBurnout(true);
             entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_FIREWORK_LAUNCH, entity.getSoundCategory(), 1.0F + Math.max(ctx.getLevel(), 0) / 2F, 0.9F + world.rand.nextFloat() / 10);
             super.execute(ctx);
