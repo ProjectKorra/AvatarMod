@@ -140,8 +140,11 @@ public abstract class OffensiveBehaviour extends Behavior<EntityOffensive> {
                             z + entity.posZ).subtract(entity.getPositionVector()).scale(0.25));
 
                 }
-                if (entity instanceof EntityFireball)
-                    BendingData.getFromEntity(owner).addStatusControl(THROW_FIREBALL);
+                if (entity instanceof EntityFireball) {
+                    BendingData data = BendingData.getFromEntity(entity.getOwner());
+                    if (data != null)
+                        data.addStatusControl(THROW_FIREBALL);
+                }
                 //280 degrees
                 if (ticks >= 28)
                     if (entity instanceof EntityFlames && entity.getAbility() instanceof AbilityFlamethrower) {

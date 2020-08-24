@@ -185,7 +185,7 @@ public class EntityFirebender extends EntityHumanBender {
     @Override
     public void setDead() {
         super.setDead();
-        ItemStack stack = new ItemStack(Scrolls.FIRE, 1, getLevel());
+        ItemStack stack = new ItemStack(Scrolls.FIRE, 1, getLevel() - 1);
         if (AvatarUtils.getRandomNumberInRange(1, 100) < 50 && !world.isRemote) {
             this.entityDropItem(stack, 1.0F);
         }
