@@ -1,22 +1,28 @@
 package com.crowsofwar.avatar.util.data;
 
+import com.crowsofwar.avatar.bending.bending.Ability;
+import com.crowsofwar.avatar.bending.bending.BendingStyle;
+import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.air.Airbending;
-import com.crowsofwar.avatar.client.particle.AvatarParticles;
-import com.crowsofwar.avatar.client.particle.NetworkParticleSpawner;
+import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.avatar.util.data.TickHandlerController.FLAME_GLIDE_HANDLER;
 
 /**
  * Contains all wall jump related logic for a Bender. These methods would normally be in the
@@ -33,7 +39,7 @@ public class WallJumpManager {
         this.bender = bender;
     }
 
-    public void doWallJump(EnumParticleTypes particles) {
+    public void doWallJump(ResourceLocation particleType) {
 
         World world = bender.getWorld();
         EntityLivingBase entity = bender.getEntity();
@@ -60,13 +66,38 @@ public class WallJumpManager {
             entity.motionZ += n.z();
             AvatarUtils.afterVelocityAdded(entity);
 
-            new NetworkParticleSpawner().spawnParticles(world, particles, 4, 10, new Vector
-                    (entity).plus(n), n.times(3), true);
+            if (world.isRemote) {
+
+                float size;
+                BendingStyle style = BendingStyles.get(Airbending.ID);
+                int totalLevel = 0;
+
+                if (BendingData.getFromEntity(entity) != null && style != null) {
+                    List<Ability> abilities = style.getAllAbilities();
+                    abilities = abilities.stream().filter(ability -> AbilityData.get(entity, ability.getName()).getLevel() > -1).collect(Collectors.toList());
+                    for (Ability ability : abilities) {
+                        AbilityData aD = AbilityData.get(entity, ability.getName());
+                        if (aD.getLevel() > -1) {
+                            totalLevel += aD.getLevel() + 1;
+                        }
+                    }
+                }
+
+                List<Ability> abilities = style.getAllAbilities();
+                int maxLevel = abilities.size() * 4;
+                int level = Math.min(3, (int) ((float) totalLevel / maxLevel * 4));
+
+                size = 0.75F + level * 0.125F;
+                for (int i = 0; i < 8 + AvatarUtils.getRandomNumberInRange(0, 4); i++)
+                    ParticleBuilder.create(particleType).spawnEntity(entity).clr(0.95F, 0.95F, 0.95F, 0.1F)
+                            .vel(world.rand.nextGaussian() / 10, world.rand.nextGaussian() / 10, world.rand.nextGaussian() / 10)
+                            .time(10 + AvatarUtils.getRandomNumberInRange(0, 4)).scale(size).spawn(world);
+            }
             world.playSound(null, new BlockPos(entity), block.getSoundType().getBreakSound(),
                     SoundCategory.PLAYERS, 1, 0.6f);
 
             bender.getData().getMiscData().addFallAbsorption(3);
-            if (particles == EnumParticleTypes.CLOUD && STATS_CONFIG.allowMultiAirbendingWalljump) {
+            if (particleType == ParticleBuilder.Type.FLASH && STATS_CONFIG.allowMultiAirbendingWalljump) {
                 bender.getData().getMiscData().setWallJumping(true);
             }
 
@@ -115,19 +146,11 @@ public class WallJumpManager {
      * @see #knowsWallJump()
      */
     @Nullable
-    public EnumParticleTypes getWallJumpParticleType() {
-
-        // Fire jumping?
-        AbilityData fireJumpData = bender.getData().getAbilityData("fire_jump");
-        boolean learnedSkill = fireJumpData.isMasterPath(AbilityData.AbilityTreePath.SECOND);
-        boolean isFireJumping = bender.getData().hasTickHandler(FLAME_GLIDE_HANDLER);
-        if (isFireJumping && learnedSkill) {
-            return AvatarParticles.getParticleFlames();
-        }
+    public ResourceLocation getWallJumpParticleType() {
 
         // Airbender?
         if (bender.getData().hasBending(new Airbending())) {
-            return AvatarParticles.getParticleAir();
+            return ParticleBuilder.Type.FLASH;
         }
 
         return null;
