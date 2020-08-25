@@ -237,7 +237,7 @@ public abstract class Bender {
                             aD.addBurnout(ability.getBurnOut(abilityCtx));
 
                             //Fixes bugs that crop up that screw with cooldown and such
-                            if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
+                            if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative() && !getWorld().isRemote) {
                                 aD.setAbilityCooldown(0);
                                 aD.setBurnOut(0);
                             }

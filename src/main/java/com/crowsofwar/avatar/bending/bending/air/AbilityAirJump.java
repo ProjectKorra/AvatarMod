@@ -69,7 +69,7 @@ public class AbilityAirJump extends Ability {
 		List<AxisAlignedBB> collideWithGround = world.getCollisionBoxes(entity, entity.getEntityBoundingBox().grow(0.2, 0.5, 0.2));
 		boolean onGround = !collideWithGround.isEmpty() || entity.collidedVertically || world.getBlockState(entity.getPosition()).getBlock() == Blocks.WEB;
 
-		if (!data.hasStatusControl(AIR_JUMP) && bender.consumeChi(STATS_CONFIG.chiAirJump)) {
+		if (!data.hasStatusControl(AIR_JUMP) && bender.consumeChi(getChiCost(ctx) / 4)) {
 			data.addStatusControl(AIR_JUMP);
 			if (data.hasTickHandler(AIR_PARTICLE_SPAWNER) || allowDoubleJump && !onGround) {
 				Raytrace.Result raytrace = Raytrace.getTargetBlock(ctx.getBenderEntity(), -1);
@@ -83,5 +83,18 @@ public class AbilityAirJump extends Ability {
 		super.execute(ctx);
 	}
 
+	@Override
+	public int getCooldown(AbilityContext ctx) {
+		return 0;
+	}
 
+	@Override
+	public float getBurnOut(AbilityContext ctx) {
+		return 0;
+	}
+
+	@Override
+	public float getExhaustion(AbilityContext ctx) {
+		return 0;
+	}
 }

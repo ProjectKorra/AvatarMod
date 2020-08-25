@@ -66,33 +66,6 @@ public class WallJumpManager {
             entity.motionZ += n.z();
             AvatarUtils.afterVelocityAdded(entity);
 
-            if (world.isRemote) {
-
-                float size;
-                BendingStyle style = BendingStyles.get(Airbending.ID);
-                int totalLevel = 0;
-
-                if (BendingData.getFromEntity(entity) != null && style != null) {
-                    List<Ability> abilities = style.getAllAbilities();
-                    abilities = abilities.stream().filter(ability -> AbilityData.get(entity, ability.getName()).getLevel() > -1).collect(Collectors.toList());
-                    for (Ability ability : abilities) {
-                        AbilityData aD = AbilityData.get(entity, ability.getName());
-                        if (aD.getLevel() > -1) {
-                            totalLevel += aD.getLevel() + 1;
-                        }
-                    }
-                }
-
-                List<Ability> abilities = style.getAllAbilities();
-                int maxLevel = abilities.size() * 4;
-                int level = Math.min(3, (int) ((float) totalLevel / maxLevel * 4));
-
-                size = 0.75F + level * 0.125F;
-                for (int i = 0; i < 8 + AvatarUtils.getRandomNumberInRange(0, 4); i++)
-                    ParticleBuilder.create(particleType).spawnEntity(entity).clr(0.95F, 0.95F, 0.95F, 0.1F)
-                            .vel(world.rand.nextGaussian() / 10, world.rand.nextGaussian() / 10, world.rand.nextGaussian() / 10)
-                            .time(10 + AvatarUtils.getRandomNumberInRange(0, 4)).scale(size).spawn(world);
-            }
             world.playSound(null, new BlockPos(entity), block.getSoundType().getBreakSound(),
                     SoundCategory.PLAYERS, 1, 0.6f);
 

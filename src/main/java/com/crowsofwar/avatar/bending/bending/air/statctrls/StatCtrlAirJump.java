@@ -81,7 +81,6 @@ public class StatCtrlAirJump extends StatusControl {
         if (onGround || entity instanceof EntityPlayer && getIsGliderDeployed((EntityPlayer) entity) ||
                 allowDoubleJump) {
 
-            int lvl = abilityData.getLevel();
             double multiplier = jump.getProperty(Ability.JUMP_HEIGHT, abilityData).floatValue() / 5;
             double powerModifier = jump.getProperty(Ability.POWERRATING, abilityData).doubleValue();
             double powerDuration = jump.getProperty(Ability.DURATION, abilityData).doubleValue();
@@ -108,7 +107,9 @@ public class StatCtrlAirJump extends StatusControl {
             if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative())
                 exhaustion = burnout = cooldown = 0;
 
-            if (bender.consumeChi(chiCost) && abilityData.getAbilityCooldown() == 0) {
+            System.out.println(abilityData.getAbilityCooldown());
+
+            if (bender.consumeChi(chiCost) && abilityData.getAbilityCooldown() <= 0) {
                 data.addTickHandler(AIR_PARTICLE_SPAWNER, ctx);
                 if (jump.getBooleanProperty(Ability.GROUND_POUND, abilityData)) {
                     data.addTickHandler(SMASH_GROUND, ctx);
@@ -182,6 +183,7 @@ public class StatCtrlAirJump extends StatusControl {
                                 world.rand.nextGaussian() * particleSpeed / 10).scale(1F + (float) particleSpeed).spawn(world);
                 }
             }
+            else bender.sendMessage("avatar.abilityCooldown");
             return true;
 
         }

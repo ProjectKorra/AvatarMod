@@ -377,7 +377,7 @@ public abstract class Ability {
         if (ctx.getBenderEntity() instanceof EntityPlayer && ((EntityPlayer) ctx.getBenderEntity()).isCreative())
             return 0;
         int coolDown = getProperty(COOLDOWN, ctx.getLevel(), ctx.getDynamicPath()).intValue();
-        coolDown *= (2 - ctx.getPowerRatingDamageMod()) * (1 - ctx.getAbilityData().getXpModifier());;
+        coolDown *= (2 - ctx.getAbilityData().getDamageMult()) * (1 /  ctx.getAbilityData().getXpModifier());
         //Cooldown has a 1.5x multiplier with max burnout
         return (int) (coolDown * (1 + ctx.getAbilityData().getBurnOut() / 200));
     }
@@ -386,7 +386,7 @@ public abstract class Ability {
         if (ctx.getBenderEntity() instanceof EntityPlayer && ((EntityPlayer) ctx.getBenderEntity()).isCreative())
             return 0;
         float burnout = getProperty(BURNOUT, ctx.getLevel(), ctx.getDynamicPath()).floatValue();
-        burnout *= (2 - ctx.getPowerRatingDamageMod()) * (1 - ctx.getAbilityData().getXpModifier());;
+        burnout *= (2 - ctx.getAbilityData().getDamageMult()) * (1 / ctx.getAbilityData().getXpModifier());
         return burnout;
     }
 
@@ -394,7 +394,7 @@ public abstract class Ability {
         if (ctx.getBenderEntity() instanceof EntityPlayer && ((EntityPlayer) ctx.getBenderEntity()).isCreative())
             return 0;
         float exhaustion = getProperty(EXHAUSTION, ctx.getLevel(), ctx.getDynamicPath()).floatValue();
-        exhaustion *= (2 - ctx.getPowerRatingDamageMod()) * (1 / ctx.getAbilityData().getXpModifier());
+        exhaustion *= (2 - ctx.getAbilityData().getDamageMult()) * (1 / ctx.getAbilityData().getXpModifier());
         //Burnout has a 2x multiplier on exhaustion
         return exhaustion * (1 + ctx.getAbilityData().getBurnOut() / 100F);
     }
@@ -408,7 +408,7 @@ public abstract class Ability {
         if (ctx.getBenderEntity() instanceof EntityPlayer && ((EntityPlayer) ctx.getBenderEntity()).isCreative() || ctx.getBenderEntity() instanceof EntityHumanBender)
             return 0;
         float chi = getProperty(CHI_COST, ctx.getLevel(), ctx.getDynamicPath()).floatValue();
-        chi *= (2 - ctx.getPowerRatingDamageMod()) * (1 / ctx.getAbilityData().getXpModifier());
+        chi *= (2 - ctx.getAbilityData().getDamageMult()) * (1 / ctx.getAbilityData().getXpModifier());
         //Burnout has a 1.5x multipler on chi cost
         return chi * (1 + ctx.getAbilityData().getBurnOut() / 200);
     }
