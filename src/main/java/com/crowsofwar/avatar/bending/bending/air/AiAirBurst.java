@@ -46,7 +46,7 @@ public class AiAirBurst extends BendingAi {
     @Override
     public int getTotalDuration() {
         return getAbility().getProperty(Ability.CHARGE_TIME, bender.getData().getAbilityData("air_burst")).intValue() - AvatarUtils.getRandomNumberInRange(0,
-                getAbility().getProperty(Ability.CHARGE_TIME, bender.getData().getAbilityData("air_burst")).intValue()) + getWaitDuration();
+                (int) (getAbility().getProperty(Ability.CHARGE_TIME, bender.getData().getAbilityData("air_burst")).intValue() * 0.75)) + getWaitDuration();
     }
 
     @Override

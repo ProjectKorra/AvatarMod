@@ -45,7 +45,7 @@ public class AiFlamethrower extends BendingAi {
         EntityLivingBase target = entity.getAttackTarget();
         double chance = 1 - timeExecuting / (double) getTotalDuration();
         //Chance to end while using it
-        return target != null && Math.random() / 2 < chance;
+        return target != null && Math.random() / 3 < chance;
     }
 
     @Override
