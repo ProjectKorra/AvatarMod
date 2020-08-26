@@ -165,12 +165,12 @@ avatar.ability.earth_control.lvl4_1=§2§l§oBlocky §2§l§oboomerang ;; Block 
 avatar.ability.earth_control.lvl4_2=§2§l§oLarge §2§l§oimpact ;; 1/2 chance to create an explosion on landing
 
 avatar.ability.mine_blocks=§2§lMine §2§lBlocks
-avatar.ability.mine_blocks.desc=Quickly destroy blocks to mine out tunnels
-avatar.ability.mine_blocks.lvl1=Mine a few blocks
+avatar.ability.mine_blocks.desc=Quickly destroy blocks to mine out tunnels!
+avatar.ability.mine_blocks.lvl1=Mine a few blocks.
 avatar.ability.mine_blocks.lvl2=Mine out even more blocks
-avatar.ability.mine_blocks.lvl3=Fortune level I when mining
-avatar.ability.mine_blocks.lvl4_1=Mine very far, level III fortune
-avatar.ability.mine_blocks.lvl4_2=Mine out ore veins, level IV fortune
+avatar.ability.mine_blocks.lvl3=Fortune level I when mining! More blocks!
+avatar.ability.mine_blocks.lvl4_1=§2§lSoul of the Badgermole ;; Mine very far, level III fortune
+avatar.ability.mine_blocks.lvl4_2=§2§lPluto's Greed ;; Mine out ore veins, level IV fortune
 
 avatar.ability.ravine=§2§lRavine
 avatar.ability.ravine.desc=Create a powerful yet small fissure in the ground. Only works on level ground and earth, but can do plenty of damage.
