@@ -17,13 +17,14 @@
 
 package com.crowsofwar.avatar.bending.bending.earth;
 
+import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
+import com.crowsofwar.avatar.entity.EntityFloatingBlock;
+import com.crowsofwar.avatar.entity.data.FloatingBlockBehavior;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
-import com.crowsofwar.avatar.entity.EntityFloatingBlock;
-import com.crowsofwar.avatar.entity.data.FloatingBlockBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
 import net.minecraft.block.Block;
@@ -40,7 +41,6 @@ import net.minecraft.world.World;
 import java.util.List;
 import java.util.Random;
 
-import static com.crowsofwar.avatar.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.util.data.StatusControlController.PLACE_BLOCK;
 import static com.crowsofwar.avatar.util.data.StatusControlController.THROW_BLOCK;
@@ -49,6 +49,8 @@ import static com.crowsofwar.avatar.util.data.StatusControlController.THROW_BLOC
  * @author CrowsOfWar
  */
 public class AbilityEarthControl extends Ability {
+
+	private static final String BOOMERANG = "boomerang";
 
 	private final Random random;
 
@@ -59,18 +61,18 @@ public class AbilityEarthControl extends Ability {
 	}
 
 	@Override
+	public void init() {
+		super.init();
+		addBooleanProperties(BOOMERANG);
+	}
+
+	@Override
 	public boolean isUtility() {
 		return true;
 	}
 
 	@Override
 	public void execute(AbilityContext ctx) {
-
-		BendingData data = ctx.getData();
-		EntityLivingBase entity = ctx.getBenderEntity();
-		//Bender bender = ctx.getBender();
-		//World world = ctx.getWorld();
-
 
 		VectorI target = ctx.getLookPosI();
 		if (target != null) {
@@ -85,6 +87,7 @@ public class AbilityEarthControl extends Ability {
 		Bender bender = ctx.getBender();
 		EntityLivingBase entity = ctx.getBenderEntity();
 		BendingData data = ctx.getData();
+		AbilityEarthControl control = (AbilityEarthControl) Abilities.get("earth_control");
 
 		IBlockState ibs = world.getBlockState(pos);
 		if (!ibs.isFullBlock() && !STATS_CONFIG.bendableBlocks.contains(ibs.getBlock()))
@@ -110,9 +113,9 @@ public class AbilityEarthControl extends Ability {
 		boolean bendable = STATS_CONFIG.bendableBlocks.contains(block);
 		bendable |= !bendable && STATS_CONFIG.bendableBlocks.contains(world.getBlockState(pos.down()).getBlock())
 		&& !(block instanceof BlockSnow || ibs.isFullCube() && ibs.isFullBlock());
-		if (!world.isAirBlock(pos) && bendable && heldBlocks < maxBlocks) {
+		if (!world.isAirBlock(pos) && bendable && heldBlocks < maxBlocks && control != null) {
 
-			if (bender.consumeChi(STATS_CONFIG.chiPickUpBlock)) {
+			if (bender.consumeChi(getChiCost(ctx) / 4)) {
 
 				AbilityData abilityData = ctx.getData().getAbilityData(this);
 
@@ -120,8 +123,11 @@ public class AbilityEarthControl extends Ability {
 				floating.setPosition(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
 				floating.setItemDropsEnabled(!bender.isCreativeMode());
 
-				float damageMult = abilityData.getLevel() >= 2 ? 1.5F : 1;
-				damageMult *= ctx.getPowerRatingDamageMod();
+				float damageMult = control.getProperty(DAMAGE, abilityData).floatValue();
+				float chiOnHit = control.getProperty(CHI_HIT, abilityData).floatValue();
+				float knockback = control.getProperty(KNOCKBACK, abilityData).floatValue() / 2;
+
+				damageMult *= abilityData.getDamageMult() * abilityData.getXpModifier();
 
 				double dist = 2.5;
 				Vector force = new Vector(0, Math.sqrt(20 * dist), 0);
@@ -130,9 +136,11 @@ public class AbilityEarthControl extends Ability {
 				floating.setOwner(entity);
 				floating.setAbility(this);
 				floating.setDamageMult(damageMult);
-				floating.setXp(SKILLS_CONFIG.blockThrowHit);
-				floating.setFireTime(0);
-				floating.setLifeTime(150);
+				floating.setXp(getProperty(XP_HIT, abilityData).floatValue());
+				floating.setLifeTime((int) (control.getProperty(LIFETIME, abilityData).intValue() *  abilityData.getXpModifier() * abilityData.getDamageMult()));
+				floating.setChiHit(chiOnHit);
+				floating.setPush(knockback);
+
 
 				if (STATS_CONFIG.preventPickupBlockGriefing) {
 					floating.setItemDropsEnabled(false);
@@ -171,5 +179,20 @@ public class AbilityEarthControl extends Ability {
 	@Override
 	public boolean isOffensive() {
 		return true;
+	}
+
+	@Override
+	public int getCooldown(AbilityContext ctx) {
+		return 0;
+	}
+
+	@Override
+	public float getBurnOut(AbilityContext ctx) {
+		return 0;
+	}
+
+	@Override
+	public float getExhaustion(AbilityContext ctx) {
+		return 0;
 	}
 }

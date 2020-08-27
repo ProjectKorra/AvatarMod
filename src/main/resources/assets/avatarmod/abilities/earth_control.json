@@ -64,7 +64,7 @@
       "speed": 8,
       "knockback": 5,
       "chiOnHit": 1.5,
-      "damage": 6,
+      "damage": 3,
       "boomerang": true
     },
     "level4_2": {
@@ -76,7 +76,7 @@
       "burnOutRecoverTick": 1.0,
       "performanceAmount": 40,
       "lifeTime": 40,
-      "size": 1.5,
+      "size": 1.0,
       "speed": 8,
       "knockback": 6,
       "chiOnHit": 2.0,

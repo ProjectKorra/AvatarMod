@@ -75,9 +75,10 @@ public class EntityFloatingBlock extends EntityOffensive {
             EntityFloatingBlock.class, DataSerializers.OPTIONAL_BLOCK_STATE);
     private static final DataParameter<Integer> SYNC_HITS_LEFT = createKey(EntityFloatingBlock.class,
             DataSerializers.VARINT);
-
     private static final DataParameter<FloatingBlockBehavior> SYNC_BEHAVIOR = createKey(
             EntityFloatingBlock.class, FloatingBlockBehavior.DATA_SERIALIZER);
+    private static final DataParameter<Boolean> SYNC_BOOMERANG = createKey(
+            EntityFloatingBlock.class, DataSerializers.BOOLEAN);
 
     private static int nextBlockID = 0;
 
@@ -182,6 +183,14 @@ public class EntityFloatingBlock extends EntityOffensive {
 
     public void setBlock(Block block) {
         setBlockState(block.getDefaultState());
+    }
+
+    public void setBoomerang(boolean boomerang) {
+        dataManager.set(SYNC_BOOMERANG, boomerang);
+    }
+
+    public boolean shouldBoomerang() {
+        return dataManager.get(SYNC_BOOMERANG);
     }
 
     public IBlockState getBlockState() {
@@ -326,7 +335,7 @@ public class EntityFloatingBlock extends EntityOffensive {
 
     @Override
     public boolean shouldDissipate() {
-        return getBehavior() instanceof FloatingBlockBehavior.Thrown;
+        return getBehavior() instanceof FloatingBlockBehavior.Thrown && !shouldBoomerang();
     }
 
     @Override
@@ -348,11 +357,8 @@ public class EntityFloatingBlock extends EntityOffensive {
     public void applyPiercingCollision() {
         super.applyPiercingCollision();
         if (getOwner() != null) {
-            AbilityData abilityData = AbilityData.get(getOwner(), new AbilityEarthControl().getName());
-            if (abilityData != null) {
-                if (abilityData.isMasterPath(AbilityTreePath.FIRST))
-                    setBehavior(new FloatingBlockBehavior.PlayerControlled());
-            }
+            if (shouldBoomerang())
+                setBehavior(new FloatingBlockBehavior.Thrown());
         }
     }
 
@@ -437,8 +443,7 @@ public class EntityFloatingBlock extends EntityOffensive {
 
     @Override
     public float getDamage() {
-        return (float) (AvatarUtils.getMagnitude(velocity().toMinecraft()) / 25 * STATS_CONFIG.floatingBlockSettings.damage
-                * getDamageMult());
+        return (float) (AvatarUtils.getMagnitude(velocity().toMinecraft()) / 25 * getDamageMult());
     }
 
     @Override

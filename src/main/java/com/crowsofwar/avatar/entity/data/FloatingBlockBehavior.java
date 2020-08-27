@@ -159,24 +159,6 @@ public abstract class FloatingBlockBehavior extends OffensiveBehaviour {
 
 			entity.addVelocity(Vector.DOWN.times(9.81 / 30));
 
-			World world = entity.world;
-			/*if (!entity.isDead) {
-				List<Entity> collidedList = world.getEntitiesWithinAABBExcludingEntity(entity,
-						entity.getExpandedHitbox());
-				if (!collidedList.isEmpty()) {
-					Entity collided = collidedList.get(0);
-					if (collided instanceof EntityLivingBase && collided != entity.getOwner()) {
-						return collision((EntityLivingBase) collided, entity);
-					} else if (collided != entity.getOwner()) {
-						Vector motion = new Vector(collided).minus(new Vector(entity));
-						motion = motion.times(0.3).withY(0.08);
-						collided.addVelocity(motion.x(), motion.y(), motion.z());
-					}
-
-				}
-				entity.setBehavior(new FloatingBlockBehavior.PlayerControlled());
-			}**/
-
 			return this;
 
 		}

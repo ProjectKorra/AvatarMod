@@ -17,8 +17,8 @@
 
 package com.crowsofwar.avatar.bending.bending.earth.statctrls;
 
-import static com.crowsofwar.avatar.util.data.StatusControlController.PLACE_BLOCK;
-
+import com.crowsofwar.avatar.bending.bending.Abilities;
+import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.earth.AbilityEarthControl;
 import com.crowsofwar.avatar.client.controls.AvatarControl;
 import com.crowsofwar.avatar.entity.AvatarEntity;
@@ -30,13 +30,13 @@ import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.StatusControl;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
 import com.crowsofwar.gorecore.util.Vector;
-import com.google.common.base.Predicates;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+
+import static com.crowsofwar.avatar.util.data.StatusControlController.PLACE_BLOCK;
 
 /**
  * @author CrowsOfWar
@@ -53,28 +53,22 @@ public class StatCtrlThrowBlock extends StatusControl {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		World world = entity.world;
 		BendingData data = ctx.getData();
-		AbilityData abilityData = AbilityData.get(entity, new AbilityEarthControl().getName());
+		AbilityData abilityData = AbilityData.get(entity, "earth_control");
+		AbilityEarthControl control = (AbilityEarthControl) Abilities.get("earth_control");
 
 		EntityFloatingBlock floating = AvatarEntity.lookupControlledEntity(world, EntityFloatingBlock.class,
 				entity);
 
-		if (floating != null) {
+		if (floating != null && abilityData != null && control != null) {
 			float yaw = (float) Math.toRadians(entity.rotationYaw);
 			float pitch = (float) Math.toRadians(entity.rotationPitch);
 
 			// Calculate force and everything
-			double forceMult = 20;
-			if (abilityData.getLevel() == 1)
-				forceMult += 8;
-			if (abilityData.getLevel() == 2)
-				forceMult += 14;
-			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST))
-				forceMult += 16;
-			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND))
-				forceMult += 30;
+			float forceMult = control.getProperty(Ability.SPEED, abilityData).floatValue();
+			forceMult *= abilityData.getDamageMult() * abilityData.getXpModifier();
 
 			Vector direction;
-			Vec3d look = entity.getLook(1.0F);
+			Vec3d look = entity.getLookVec();
 			Vec3d pos = entity.getPositionEyes(1.0F);
 			
 			//Drillgon200: Raytrace from the bender's line of sight and if it hit anything, use the vector from the 
