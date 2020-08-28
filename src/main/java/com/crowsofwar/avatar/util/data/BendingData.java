@@ -267,12 +267,23 @@ public class BendingData {
         }
     }
 
+    public void addStatusControls(StatusControl... controls) {
+        for (StatusControl sc : controls)
+            if (statusControls.add(sc))
+                save(DataCategory.STATUS_CONTROLS);
+    }
+
     public void removeStatusControl(StatusControl control) {
         if (statusControls.remove(control)) {
             save(DataCategory.STATUS_CONTROLS);
         }
     }
 
+    public void removeStatusControls(StatusControl... controls) {
+        for (StatusControl sc : controls)
+            if (statusControls.remove(sc))
+                save(DataCategory.STATUS_CONTROLS);
+    }
     public List<StatusControl> getAllStatusControls() {
         return new ArrayList<>(statusControls);
     }

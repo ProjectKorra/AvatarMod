@@ -20,13 +20,13 @@ package com.crowsofwar.avatar.entity;
 import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import com.crowsofwar.avatar.bending.bending.earth.AbilityEarthControl;
 import com.crowsofwar.avatar.bending.bending.earth.Earthbending;
-import com.crowsofwar.avatar.util.data.AbilityData;
-import com.crowsofwar.avatar.util.data.AbilityData.AbilityTreePath;
-import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.entity.data.Behavior;
 import com.crowsofwar.avatar.entity.data.FloatingBlockBehavior;
 import com.crowsofwar.avatar.util.AvatarDataSerializers;
 import com.crowsofwar.avatar.util.AvatarUtils;
+import com.crowsofwar.avatar.util.data.AbilityData;
+import com.crowsofwar.avatar.util.data.AbilityData.AbilityTreePath;
+import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.base.Optional;
 import net.minecraft.block.Block;
@@ -52,10 +52,8 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.Objects;
 import java.util.Random;
 
-import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.util.data.StatusControlController.PLACE_BLOCK;
 import static com.crowsofwar.avatar.util.data.StatusControlController.THROW_BLOCK;
 import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
@@ -79,6 +77,8 @@ public class EntityFloatingBlock extends EntityOffensive {
             EntityFloatingBlock.class, FloatingBlockBehavior.DATA_SERIALIZER);
     private static final DataParameter<Boolean> SYNC_BOOMERANG = createKey(
             EntityFloatingBlock.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> SYNC_TURN_SOLID = createKey(
+            EntityFloatingBlock.class, DataSerializers.BOOLEAN);
 
     private static int nextBlockID = 0;
 
@@ -101,16 +101,18 @@ public class EntityFloatingBlock extends EntityOffensive {
     private AxisAlignedBB expandedHitbox;
 
     private float damageMult;
+    private int ticksGround;
 
     public EntityFloatingBlock(World world) {
         super(world);
-        float size = .9f;
+        float size = 1.25f;
         setSize(size, size);
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
             setID(nextBlockID++);
         }
         this.enableItemDrops = true;
         this.damageMult = 1;
+        this.ticksGround = 0;
 
     }
 
@@ -145,6 +147,8 @@ public class EntityFloatingBlock extends EntityOffensive {
         dataManager.register(SYNC_BLOCK, Optional.of(DEFAULT_BLOCK.getDefaultState()));
         dataManager.register(SYNC_BEHAVIOR, new FloatingBlockBehavior.Idle());
         dataManager.register(SYNC_HITS_LEFT, 3);
+        dataManager.register(SYNC_BOOMERANG, false);
+        dataManager.register(SYNC_TURN_SOLID, false);
 
     }
 
@@ -157,6 +161,8 @@ public class EntityFloatingBlock extends EntityOffensive {
         setItemDropsEnabled(nbt.getBoolean("DropItems"));
         setBehavior((FloatingBlockBehavior) Behavior.lookup(nbt.getInteger("Behavior"), this));
         getBehavior().load(nbt.getCompoundTag("BehaviorData"));
+        setBoomerang(nbt.getBoolean("Boomerang"));
+        setHitsLeft(nbt.getInteger("HitsLeft"));
         damageMult = nbt.getFloat("DamageMultiplier");
     }
 
@@ -169,6 +175,8 @@ public class EntityFloatingBlock extends EntityOffensive {
         nbt.setBoolean("DropItems", areItemDropsEnabled());
         nbt.setInteger("Behavior", getBehavior().getId());
         getBehavior().save(nestedCompound(nbt, "BehaviorData"));
+        nbt.setBoolean("Boomerang", shouldBoomerang());
+        nbt.setInteger("HitsLeft", getHitsLeft());
         nbt.setFloat("DamageMultiplier", damageMult);
     }
 
@@ -185,12 +193,28 @@ public class EntityFloatingBlock extends EntityOffensive {
         setBlockState(block.getDefaultState());
     }
 
+    public void setTurnSolid(boolean solid) {
+        dataManager.set(SYNC_TURN_SOLID, solid);
+    }
+
+    public boolean shouldTurnSolid() {
+        return dataManager.get(SYNC_TURN_SOLID);
+    }
+
     public void setBoomerang(boolean boomerang) {
         dataManager.set(SYNC_BOOMERANG, boomerang);
     }
 
     public boolean shouldBoomerang() {
         return dataManager.get(SYNC_BOOMERANG);
+    }
+
+    public int getHitsLeft() {
+        return dataManager.get(SYNC_HITS_LEFT);
+    }
+
+    public void setHitsLeft(int hits) {
+        dataManager.set(SYNC_HITS_LEFT, hits);
     }
 
     public IBlockState getBlockState() {
@@ -248,6 +272,16 @@ public class EntityFloatingBlock extends EntityOffensive {
         super.onUpdate();
         extinguish();
 
+        if ((getVelocity() == Vec3d.ZERO || onGround) && getBehavior() instanceof FloatingBlockBehavior.Thrown)
+            ticksGround++;
+        if (ticksGround > 5 && velocity().magnitude() < 0.25) {
+            Dissipate();
+            if (!world.isRemote)
+                world.setBlockState(getPosition(), getBlockState());
+        }
+
+        setBehavior((FloatingBlockBehavior) getBehavior().onUpdate(this));
+
         if (ticksExisted == 1) {
             for (int i = 0; i < 10; i++) {
                 double spawnX = posX + (rand.nextDouble() - 0.5);
@@ -261,23 +295,29 @@ public class EntityFloatingBlock extends EntityOffensive {
             setVelocity(velocity().times(getFriction()));
         }
 
-        if (getOwner() != null) {
-            EntityFloatingBlock block = AvatarEntity.lookupControlledEntity(world, EntityFloatingBlock.class, getOwner());
-            BendingData bD = BendingData.get(getOwner());
-            if (block == null && (bD.hasStatusControl(THROW_BLOCK) || bD.hasStatusControl(PLACE_BLOCK))) {
-                bD.removeStatusControl(THROW_BLOCK);
-                bD.removeStatusControl(PLACE_BLOCK);
-            }
-            if (block != null && block.getBehavior() instanceof FloatingBlockBehavior.PlayerControlled && !(bD.hasStatusControl(THROW_BLOCK))) {
-                bD.addStatusControl(THROW_BLOCK);
-                bD.addStatusControl(PLACE_BLOCK);
-            }
+    }
 
+    @Override
+    public void onCollideWithEntity(Entity entity) {
+        super.onCollideWithEntity(entity);
+        if (canCollideWith(entity)) {
+            if (shouldBoomerang() && getOwner() != null) {
+                setBehavior(new FloatingBlockBehavior.PlayerControlled());
+                Vec3d forward = getOwner().getLook(1.0F);
+                Vec3d eye = getOwner().getPositionEyes(1.0F);
+                Vec3d target = forward.scale(2.5).add(eye);
+                Vec3d motion = target.subtract(entity.getPositionVector()).scale(0.05);
+                setVelocity(motion);
+            }
+            setHitsLeft(getHitsLeft() - 1);
         }
+        if (getHitsLeft() == 0)
+            Dissipate();
+    }
 
-        FloatingBlockBehavior nextBehavior = (FloatingBlockBehavior) Objects.requireNonNull(getBehavior()).onUpdate(this);
-        if (nextBehavior != getBehavior()) setBehavior(nextBehavior);
-
+    @Override
+    public int getFireTime() {
+        return 0;
     }
 
     @Override
@@ -335,7 +375,7 @@ public class EntityFloatingBlock extends EntityOffensive {
 
     @Override
     public boolean shouldDissipate() {
-        return getBehavior() instanceof FloatingBlockBehavior.Thrown && !shouldBoomerang();
+        return getHitsLeft() == 0 || !shouldTurnSolid();
     }
 
     @Override
@@ -345,7 +385,7 @@ public class EntityFloatingBlock extends EntityOffensive {
 
     @Override
     public boolean isPiercing() {
-        return true;
+        return shouldBoomerang();
     }
 
     @Override
@@ -353,14 +393,6 @@ public class EntityFloatingBlock extends EntityOffensive {
         return getBehavior() instanceof FloatingBlockBehavior.Thrown;
     }
 
-    @Override
-    public void applyPiercingCollision() {
-        super.applyPiercingCollision();
-        if (getOwner() != null) {
-            if (shouldBoomerang())
-                setBehavior(new FloatingBlockBehavior.Thrown());
-        }
-    }
 
     @Override
     public void spawnDissipateParticles(World world, Vec3d pos) {

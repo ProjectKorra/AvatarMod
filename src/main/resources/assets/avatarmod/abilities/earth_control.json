@@ -13,11 +13,14 @@
       "performanceAmount": 20,
       "lifeTime": 20,
       "size": 1.0,
-      "speed": 8,
+      "speed": 4,
       "knockback": 2,
       "chiOnHit": 1.5,
       "damage": 4,
-      "boomerang": false
+      "blockHits": 1,
+      "boomerang": false,
+      "turnSolid": false
+
     },
     "level2": {
       "tier": 1,
@@ -29,11 +32,12 @@
       "performanceAmount": 25,
       "lifeTime": 25,
       "size": 1.0,
-      "speed": 8,
+      "speed": 5,
       "knockback": 3,
       "chiOnHit": 1.5,
       "damage": 5,
-      "boomerang": false
+      "boomerang": false,
+      "turnSolid": true
     },
     "level3": {
       "tier": 2,
@@ -45,7 +49,7 @@
       "performanceAmount": 30,
       "lifeTime": 30,
       "size": 1.0,
-      "speed": 8,
+      "speed": 6,
       "knockback": 4,
       "chiOnHit": 1.5,
       "damage": 6,
@@ -65,6 +69,7 @@
       "knockback": 5,
       "chiOnHit": 1.5,
       "damage": 3,
+      "blockHits": 2,
       "boomerang": true
     },
     "level4_2": {
@@ -77,11 +82,13 @@
       "performanceAmount": 40,
       "lifeTime": 40,
       "size": 1.0,
-      "speed": 8,
+      "speed": 10,
       "knockback": 6,
       "chiOnHit": 2.0,
       "damage": 8,
-      "boomerang": false
+      "blockHits": 1,
+      "boomerang": false,
+      "turnSolid": false
     }
   }
 }

@@ -63,8 +63,7 @@ public class AiFireball extends BendingAi {
 
         for (int i = 0; i < 3; i++) {
             EntityFireball fireball = AvatarEntity.lookupEntity(entity.world, EntityFireball.class, //
-                    fire -> (fire.getBehaviour() instanceof FireballBehavior.PlayerControlled
-                            || fire.getBehaviour() instanceof AbilityFireball.FireballOrbitController)
+                    fire -> (fire.getBehaviour() instanceof FireballBehavior.PlayerControlled)
                             && fire.getOwner() == entity);
 
             if (fireball != null) {
@@ -96,7 +95,7 @@ public class AiFireball extends BendingAi {
 
     @Override
     public StatusControl[] getStatusControls() {
-        return new StatusControl[] {
+        return new StatusControl[]{
                 THROW_FIREBALL
         };
     }

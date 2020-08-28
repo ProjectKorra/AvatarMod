@@ -35,6 +35,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.List;
 import java.util.function.Predicate;
 
+import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
+
 public abstract class EntityOffensive extends AvatarEntity implements IOffensiveEntity {
 
     //Used for all entities that damage things
@@ -281,6 +283,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
         setDamage(nbt.getFloat("Damage"));
         setLifeTime(nbt.getInteger("Lifetime"));
         setBehaviour((OffensiveBehaviour) Behavior.lookup(nbt.getInteger("Behaviour"), this));
+        getBehaviour().load(nbt.getCompoundTag("BehaviorData"));
         setDynamicSpreadingCollision(nbt.getBoolean("Dynamic Collision"));
         setXp(nbt.getFloat("XP"));
     }
@@ -291,6 +294,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
         nbt.setFloat("Damage", getDamage());
         nbt.setInteger("Lifetime", getLifeTime());
         nbt.setInteger("Behaviour", getBehaviour().getId());
+        getBehaviour().save(nestedCompound(nbt, "BehaviorData"));
         nbt.setBoolean("Dynamic Collision", getDynamicSpreadingCollision());
         nbt.setFloat("XP", getXpPerHit());
     }

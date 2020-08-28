@@ -31,6 +31,7 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSnow;
 import net.minecraft.block.SoundType;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
@@ -58,7 +59,6 @@ public class StatCtrlPlaceBlock extends StatusControl {
 	@Override
 	public boolean execute(BendingContext ctx) {
 
-		BendingStyle controller = BendingStyles.get(Earthbending.ID);
 		World world = ctx.getWorld();
 		EntityLivingBase entity = ctx.getBenderEntity();
 
@@ -69,13 +69,14 @@ public class StatCtrlPlaceBlock extends StatusControl {
 						&& fb.getOwner() == ctx.getBenderEntity());
 
 		if (floating != null && !world.isRemote) {
-			Vec3d start = Vector.getEntityPos(entity).toMinecraft().add(0, entity.getEyeHeight(), 0);
+			Vec3d start = entity.getPositionEyes(1.0F);
 			Vec3d end = start.add(entity.getLookVec().scale(5));
 
 			RayTraceResult result = world.rayTraceBlocks(start, end);
 			if (result != null && result.sideHit != null) {
 				BlockPos pos = result.getBlockPos().offset(result.sideHit);
-				Block block = world.getBlockState(pos).getBlock();
+				IBlockState state = world.getBlockState(pos);
+				Block block = state.getBlock();
 
 				if (block instanceof BlockSnow)
 					pos = pos.down();

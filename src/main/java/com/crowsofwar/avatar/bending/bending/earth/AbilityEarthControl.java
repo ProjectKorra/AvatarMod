@@ -50,7 +50,10 @@ import static com.crowsofwar.avatar.util.data.StatusControlController.THROW_BLOC
  */
 public class AbilityEarthControl extends Ability {
 
-	private static final String BOOMERANG = "boomerang";
+	private static final String
+			BOOMERANG = "boomerang",
+			BLOCK_HITS = "blockHits",
+			TURN_SOLID = "turnSolid";
 
 	private final Random random;
 
@@ -63,7 +66,8 @@ public class AbilityEarthControl extends Ability {
 	@Override
 	public void init() {
 		super.init();
-		addBooleanProperties(BOOMERANG);
+		addProperties(BLOCK_HITS);
+		addBooleanProperties(BOOMERANG, TURN_SOLID);
 	}
 
 	@Override
@@ -114,18 +118,19 @@ public class AbilityEarthControl extends Ability {
 		bendable |= !bendable && STATS_CONFIG.bendableBlocks.contains(world.getBlockState(pos.down()).getBlock())
 		&& !(block instanceof BlockSnow || ibs.isFullCube() && ibs.isFullBlock());
 		if (!world.isAirBlock(pos) && bendable && heldBlocks < maxBlocks && control != null) {
+			AbilityData abilityData = ctx.getData().getAbilityData(this);
 
-			if (bender.consumeChi(getChiCost(ctx) / 4)) {
+			if (bender.consumeChi(getChiCost(abilityData) / 4)) {
 
-				AbilityData abilityData = ctx.getData().getAbilityData(this);
+
 
 				EntityFloatingBlock floating = new EntityFloatingBlock(world, ibs);
 				floating.setPosition(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
 				floating.setItemDropsEnabled(!bender.isCreativeMode());
 
-				float damageMult = control.getProperty(DAMAGE, abilityData).floatValue();
-				float chiOnHit = control.getProperty(CHI_HIT, abilityData).floatValue();
-				float knockback = control.getProperty(KNOCKBACK, abilityData).floatValue() / 2;
+				float damageMult = control.getProperty(DAMAGE, ctx).floatValue();
+				float chiOnHit = control.getProperty(CHI_HIT, ctx).floatValue();
+				float knockback = control.getProperty(KNOCKBACK, ctx).floatValue() / 8;
 
 				damageMult *= abilityData.getDamageMult() * abilityData.getXpModifier();
 
@@ -136,10 +141,15 @@ public class AbilityEarthControl extends Ability {
 				floating.setOwner(entity);
 				floating.setAbility(this);
 				floating.setDamageMult(damageMult);
-				floating.setXp(getProperty(XP_HIT, abilityData).floatValue());
-				floating.setLifeTime((int) (control.getProperty(LIFETIME, abilityData).intValue() *  abilityData.getXpModifier() * abilityData.getDamageMult()));
+				floating.setHitsLeft(getProperty(BLOCK_HITS, ctx).intValue());
+				floating.setXp(getProperty(XP_HIT, ctx).floatValue());
+				floating.setLifeTime((int) (control.getProperty(LIFETIME, ctx).intValue() *  abilityData.getXpModifier() * abilityData.getDamageMult()));
 				floating.setChiHit(chiOnHit);
+				floating.setBoomerang(getBooleanProperty(BOOMERANG, ctx));
 				floating.setPush(knockback);
+				floating.setTurnSolid(getBooleanProperty(TURN_SOLID, ctx));
+				floating.setDamageSource("avatar_Earth_floatingBlock");
+				floating.setTier(getCurrentTier(ctx));
 
 
 				if (STATS_CONFIG.preventPickupBlockGriefing) {

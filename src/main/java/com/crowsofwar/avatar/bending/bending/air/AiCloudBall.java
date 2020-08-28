@@ -42,16 +42,13 @@ public class AiCloudBall extends BendingAi {
     public void resetTask() {
         super.resetTask();
 
-        for (int i = 0; i < 3; i++) {
-            EntityCloudBall cloudball = AvatarEntity.lookupEntity(entity.world, EntityCloudBall.class, //
-                    cloudBall -> (cloudBall.getBehaviour() instanceof CloudburstBehavior.PlayerControlled
-                            || cloudBall.getBehaviour() instanceof AbilityFireball.FireballOrbitController)
-                            && cloudBall.getOwner() == entity);
+        EntityCloudBall cloudball = AvatarEntity.lookupEntity(entity.world, EntityCloudBall.class, //
+                cloudBall -> (cloudBall.getBehaviour() instanceof CloudburstBehavior.PlayerControlled)
+                        && cloudBall.getOwner() == entity);
 
-            if (cloudball != null) {
-                cloudball.setDead();
-                cleanUp();
-            }
+        if (cloudball != null) {
+            cloudball.setDead();
+            cleanUp();
         }
     }
 
