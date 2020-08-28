@@ -26,7 +26,10 @@ import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockSnow;
+import net.minecraft.block.BlockTallGrass;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
@@ -35,7 +38,6 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.List;
 import java.util.Random;
@@ -124,6 +126,20 @@ public class AbilityEarthControl extends Ability {
         }
 
         boolean bendable = Earthbending.isBendable(ibs);
+        bendable |= !bendable && !Earthbending.isBendable(world.getBlockState(pos.down()))
+                && !(block instanceof BlockSnow || block instanceof BlockTallGrass) && world.getBlockState(pos).isNormalCube();
+
+        if (!bendable)
+            if (Earthbending.getClosestEarthbendableBlock(entity, ctx, this) != null)
+                pos = Earthbending.getClosestEarthbendableBlock(entity, ctx, this).toBlockPos();
+
+        ibs = world.getBlockState(pos);
+        if (!ibs.isFullBlock() && !Earthbending.isBendable(ibs))
+            ibs = world.getBlockState(pos.down());
+
+        block = ibs.getBlock();
+
+        bendable = Earthbending.isBendable(ibs);
         bendable |= !bendable && !Earthbending.isBendable(world.getBlockState(pos.down()))
                 && !(block instanceof BlockSnow || block instanceof BlockTallGrass) && world.getBlockState(pos).isNormalCube();
 
