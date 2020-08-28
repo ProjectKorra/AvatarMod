@@ -25,14 +25,19 @@ import com.crowsofwar.avatar.client.gui.MenuTheme.ThemeColor;
 import com.crowsofwar.avatar.util.Raytrace;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockOre;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.Biomes;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
+import net.minecraftforge.oredict.OreDictionary;
 
 import java.awt.*;
 import java.util.UUID;
@@ -58,6 +63,14 @@ public class Earthbending extends BendingStyle {
         ThemeColor icon = new ThemeColor(gray, light);
         menu = new BendingMenuInfo(new MenuTheme(background, edge, icon, 0xB09B7F), this);
 
+    }
+
+    public static boolean isBendable(IBlockState state) {
+        Block block = state.getBlock();
+        if (STATS_CONFIG.bendableBlocks.contains(block))
+            return true;
+        else return block.getRegistryName() != null && !block.getRegistryName().getNamespace().equals("minecraft") &&
+                (OreDictionary.doesOreNameExist(block.getTranslationKey()) || block instanceof BlockOre);
     }
 
     public static Vector getClosestEarthbendableBlock(EntityLivingBase entity, AbilityContext ctx, Ability ability) {

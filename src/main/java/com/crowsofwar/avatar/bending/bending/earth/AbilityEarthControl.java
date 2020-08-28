@@ -103,11 +103,10 @@ public class AbilityEarthControl extends Ability {
         BendingData data = ctx.getData();
 
         IBlockState ibs = world.getBlockState(pos);
-        if (!ibs.isFullBlock() && !STATS_CONFIG.bendableBlocks.contains(ibs.getBlock()))
+        if (!ibs.isFullBlock() && !Earthbending.isBendable(ibs))
             ibs = world.getBlockState(pos.down());
 
         Block block = ibs.getBlock();
-        Block downBlock = world.getBlockState(pos.down()).getBlock();
 
         int maxBlocks = 1;
         int heldBlocks = 0;
@@ -124,12 +123,10 @@ public class AbilityEarthControl extends Ability {
                 heldBlocks++;
         }
 
-        boolean bendable = STATS_CONFIG.bendableBlocks.contains(block);
-        bendable |= !bendable && STATS_CONFIG.bendableBlocks.contains(world.getBlockState(pos.down()).getBlock())
+        boolean bendable = Earthbending.isBendable(ibs);
+        bendable |= !bendable && !Earthbending.isBendable(world.getBlockState(pos.down()))
                 && !(block instanceof BlockSnow || block instanceof BlockTallGrass) && world.getBlockState(pos).isNormalCube();
-        //Todo: replace with oredict
-        bendable |= !STATS_CONFIG.bendableBlocks.contains(block) && block instanceof BlockOre;
-        bendable |= !STATS_CONFIG.bendableBlocks.contains(downBlock) && block instanceof BlockOre;
+
         if (!world.isAirBlock(pos) && bendable && heldBlocks < maxBlocks) {
             AbilityData abilityData = ctx.getData().getAbilityData(this);
 

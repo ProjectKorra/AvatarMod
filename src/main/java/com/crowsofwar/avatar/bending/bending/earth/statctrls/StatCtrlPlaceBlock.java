@@ -105,7 +105,7 @@ public class StatCtrlPlaceBlock extends StatusControl {
 					IBlockState state = world.getBlockState(pos);
 					Block block = state.getBlock();
 
-					if (block instanceof BlockSnow)
+					if (block instanceof BlockSnow || !state.isNormalCube())
 						pos = pos.down();
 
 					Vector force = new Vector(pos).minus(floating.velocity()).normalize();
