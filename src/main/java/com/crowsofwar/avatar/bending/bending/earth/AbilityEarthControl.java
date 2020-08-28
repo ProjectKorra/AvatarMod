@@ -26,17 +26,16 @@ import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockSnow;
-import net.minecraft.block.BlockTallGrass;
-import net.minecraft.block.SoundType;
+import net.minecraft.block.*;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.List;
 import java.util.Random;
@@ -53,7 +52,8 @@ public class AbilityEarthControl extends Ability {
     private static final String
             BOOMERANG = "boomerang",
             BLOCK_HITS = "blockHits",
-            TURN_SOLID = "turnSolid";
+            TURN_SOLID = "turnSolid",
+            EXPLOSION = "explosion";
 
     private final Random random;
 
@@ -67,7 +67,7 @@ public class AbilityEarthControl extends Ability {
     public void init() {
         super.init();
         addProperties(BLOCK_HITS, RANGE, RADIUS);
-        addBooleanProperties(BOOMERANG, TURN_SOLID);
+        addBooleanProperties(BOOMERANG, TURN_SOLID, EXPLOSION);
     }
 
     @Override
@@ -78,13 +78,15 @@ public class AbilityEarthControl extends Ability {
     @Override
     public void execute(AbilityContext ctx) {
 
-        Vector lookPos = ctx.getLookPos();
+        VectorI targetPos = ctx.getLookPosI();
+        Vec3d lookPos = ctx.getBenderEntity().getPositionEyes(1.0F);
+        VectorI entityPos = new VectorI((int) lookPos.x, (int) lookPos.y, (int) lookPos.z);
         Vector pos;
         EntityLivingBase entity = ctx.getBenderEntity();
         int range = getProperty(RANGE, ctx).intValue();
 
-        if (lookPos != null && lookPos.dist(Vector.getEntityPos(entity)) <= range) {
-            pickupBlock(ctx, lookPos.toBlockPos());
+        if (targetPos != null && targetPos.dist(entityPos) <= range) {
+            pickupBlock(ctx, targetPos.toBlockPos());
         } else {
             pos = Earthbending.getClosestEarthbendableBlock(entity, ctx, this);
             if (pos != null) {
@@ -105,6 +107,7 @@ public class AbilityEarthControl extends Ability {
             ibs = world.getBlockState(pos.down());
 
         Block block = ibs.getBlock();
+        Block downBlock = world.getBlockState(pos.down()).getBlock();
 
         int maxBlocks = 1;
         int heldBlocks = 0;
@@ -124,6 +127,9 @@ public class AbilityEarthControl extends Ability {
         boolean bendable = STATS_CONFIG.bendableBlocks.contains(block);
         bendable |= !bendable && STATS_CONFIG.bendableBlocks.contains(world.getBlockState(pos.down()).getBlock())
                 && !(block instanceof BlockSnow || block instanceof BlockTallGrass) && world.getBlockState(pos).isNormalCube();
+        //Todo: replace with oredict
+        bendable |= !STATS_CONFIG.bendableBlocks.contains(block) && block instanceof BlockOre;
+        bendable |= !STATS_CONFIG.bendableBlocks.contains(downBlock) && block instanceof BlockOre;
         if (!world.isAirBlock(pos) && bendable && heldBlocks < maxBlocks) {
             AbilityData abilityData = ctx.getData().getAbilityData(this);
 
@@ -153,7 +159,11 @@ public class AbilityEarthControl extends Ability {
                 floating.setChiHit(chiOnHit);
                 floating.setBoomerang(getBooleanProperty(BOOMERANG, ctx));
                 floating.setPush(knockback);
+                floating.setExplosionDamage(damageMult / 4);
+                floating.setExplosionSize(damageMult / 6);
+                floating.setExplosionStrength(damageMult / 6);
                 floating.setTurnSolid(getBooleanProperty(TURN_SOLID, ctx));
+                floating.setExplosion(getBooleanProperty(EXPLOSION, ctx));
                 floating.setDamageSource("avatar_Earth_floatingBlock");
                 floating.setTier(getCurrentTier(ctx));
 

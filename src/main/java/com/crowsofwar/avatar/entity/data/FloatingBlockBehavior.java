@@ -96,6 +96,8 @@ public abstract class FloatingBlockBehavior extends OffensiveBehaviour {
         public FloatingBlockBehavior onUpdate(EntityOffensive entity) {
 
             if (entity instanceof EntityFloatingBlock) {
+                entity.noClip = true;
+
                 Vector placeAtVec = new Vector(placeAt.getX() + 0.5, placeAt.getY(), placeAt.getZ() + 0.5);
                 Vector thisPos = new Vector(entity);
                 Vector force = placeAtVec.minus(thisPos);
@@ -106,6 +108,7 @@ public abstract class FloatingBlockBehavior extends OffensiveBehaviour {
 
                     entity.setDead();
                     entity.world.setBlockState(new BlockPos(entity), ((EntityFloatingBlock) entity).getBlockState());
+                    entity.world.scheduleBlockUpdate(entity.getPosition(), ((EntityFloatingBlock) entity).getBlock(), 0, 1);
 
                     SoundType sound = ((EntityFloatingBlock) entity).getBlock().getSoundType();
                     if (sound != null) {

@@ -28,11 +28,9 @@ import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.base.Optional;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityFallingBlock;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -49,6 +47,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.List;
 
 import static com.crowsofwar.avatar.util.data.StatusControlController.PLACE_BLOCK;
 import static com.crowsofwar.avatar.util.data.StatusControlController.THROW_BLOCK;
@@ -75,6 +75,9 @@ public class EntityFloatingBlock extends EntityOffensive {
             EntityFloatingBlock.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Boolean> SYNC_TURN_SOLID = createKey(
             EntityFloatingBlock.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> SYNC_EXPLOSION = createKey(
+            EntityFloatingBlock.class, DataSerializers.BOOLEAN);
+
 
     private static int nextBlockID = 0;
 
@@ -147,6 +150,7 @@ public class EntityFloatingBlock extends EntityOffensive {
         dataManager.register(SYNC_HITS_LEFT, 3);
         dataManager.register(SYNC_BOOMERANG, false);
         dataManager.register(SYNC_TURN_SOLID, false);
+        dataManager.register(SYNC_EXPLOSION, false);
 
     }
 
@@ -189,6 +193,15 @@ public class EntityFloatingBlock extends EntityOffensive {
 
     public void setBlock(Block block) {
         setBlockState(block.getDefaultState());
+    }
+
+    public void setExplosion(boolean explosion) {
+        this.noClip = explosion;
+        dataManager.set(SYNC_EXPLOSION, explosion);
+    }
+
+    public boolean doesExplode() {
+        return dataManager.get(SYNC_EXPLOSION);
     }
 
     public void setTurnSolid(boolean solid) {
@@ -265,10 +278,10 @@ public class EntityFloatingBlock extends EntityOffensive {
     }
 
     private void placeBlock() {
-         if (!world.isRemote) {
-             Vec3d middle = AvatarEntityUtils.getMiddleOfEntity(this);
-             BlockPos pos = new BlockPos(middle.x, middle.y, middle.z);
-             //Using getPosition sometimes results in weird stuff
+        if (!world.isRemote) {
+            Vec3d middle = AvatarEntityUtils.getMiddleOfEntity(this);
+            BlockPos pos = new BlockPos(middle.x, middle.y, middle.z);
+            //Using getPosition sometimes results in weird stuff
             world.setBlockState(pos, getBlockState());
         }
     }
@@ -281,12 +294,16 @@ public class EntityFloatingBlock extends EntityOffensive {
 
         extinguish();
 
-        if (onGround && getBehavior() instanceof FloatingBlockBehavior.Thrown)
+        if ((onGround || doesExplode() && onCollideWithSolid()) && getBehavior() instanceof FloatingBlockBehavior.Thrown)
             ticksGround++;
+
+        if ((ticksGround > 1 || velocity().magnitude() < 10) && doesExplode() && onCollideWithSolid())
+            Explode();
+
         if (ticksGround > 15 && velocity().magnitude() < 0.5) {
             setPosition(getPositionVector());
             placeBlock();
-            world.scheduleBlockUpdate(getPosition(), getBlock(),0, 1);
+            world.scheduleBlockUpdate(getPosition(), getBlock(), 0, 1);
         }
 
         if (ticksGround > 25 && velocity().magnitude() < 0.5)
@@ -339,25 +356,19 @@ public class EntityFloatingBlock extends EntityOffensive {
             setPosition(getPositionVector());
 
 
-        if (!shouldTurnSolid() && areItemDropsEnabled()) {
-            EntityItem entity = new EntityItem(world, posX, posY, posZ, new ItemStack(Item.getItemFromBlock(getBlock()), 1));
-            entity.setDefaultPickupDelay();
-            if (getOwner() != null)
-                entity.setOwner(getOwner().getName());
-            if (!world.isRemote)
-                world.spawnEntity(entity);
-        }
         if (getBehavior() instanceof FloatingBlockBehavior.Fall)
             placeBlock();
+
 
         boolean collide = getBehavior() instanceof FloatingBlockBehavior.Thrown || getBehavior() instanceof FloatingBlockBehavior.Fall && velocity().magnitude() < 0.5;
         return super.onCollideWithSolid() && collide;
 
     }
 
+
     @Override
     public boolean shouldDissipate() {
-        return getHitsLeft() == 0 || !shouldTurnSolid();
+        return (getHitsLeft() == 0 || !shouldTurnSolid()) && getBehavior() instanceof FloatingBlockBehavior.Thrown && !doesExplode();
     }
 
     @Override
@@ -377,13 +388,37 @@ public class EntityFloatingBlock extends EntityOffensive {
 
 
     @Override
+    public void Dissipate() {
+        super.Dissipate();
+        if (!shouldTurnSolid() && areItemDropsEnabled()) {
+            EntityItem entity = new EntityItem(world, posX, posY, posZ, new ItemStack(Item.getItemFromBlock(getBlock()), 1));
+            entity.setDefaultPickupDelay();
+            if (getOwner() != null)
+                entity.setOwner(getOwner().getName());
+            if (!world.isRemote)
+                world.spawnEntity(entity);
+        }
+    }
+
+    @Override
+    public boolean canBePushed() {
+        return !doesExplode();
+    }
+
+
+    @Override
     public void spawnDissipateParticles(World world, Vec3d pos) {
 
     }
 
     @Override
     public void spawnExplosionParticles(World world, Vec3d pos) {
-
+        if (world.isRemote)
+            for (int i = 0; i < 50; i++)
+                world.spawnParticle(EnumParticleTypes.BLOCK_CRACK, posX + world.rand.nextGaussian() * 0.75,
+                        posY + world.rand.nextGaussian() * 0.875, posZ + world.rand.nextGaussian() * 0.75,
+                        world.rand.nextGaussian() * 0.75, world.rand.nextDouble() * 0.75, world.rand.nextGaussian() * 0.75,
+                        Block.getStateId(getBlockState()));
     }
 
     @Override
@@ -456,6 +491,8 @@ public class EntityFloatingBlock extends EntityOffensive {
     public void setDead() {
         super.setDead();
         removeStatCtrl();
+        if (!world.isRemote && isDead)
+            Thread.dumpStack();
     }
 
     @Override

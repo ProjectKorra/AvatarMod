@@ -18,9 +18,10 @@
       "chiOnHit": 1.5,
       "damage": 4,
       "radius": 2,
-      "range": 3,
+      "range": 4,
       "blockHits": 1,
       "boomerang": false,
+      "explosion": false,
       "turnSolid": true
 
     },
@@ -37,7 +38,7 @@
       "speed": 5,
       "knockback": 3,
       "chiOnHit": 1.5,
-      "damage": 5,
+      "damage": 4,
       "radius": 3,
       "range": 4
     },
@@ -54,7 +55,7 @@
       "speed": 6,
       "knockback": 4,
       "chiOnHit": 1.5,
-      "damage": 6,
+      "damage": 5,
       "radius": 3,
       "range": 5
     },
@@ -68,13 +69,13 @@
       "performanceAmount": 35,
       "lifeTime": 35,
       "size": 1.0,
-      "speed": 8,
+      "speed": 7,
       "knockback": 5,
       "chiOnHit": 1.5,
       "damage": 3,
       "blockHits": 2,
       "radius": 4,
-      "range": 5,
+      "range": 6,
       "boomerang": true
     },
     "level4_2": {
@@ -90,12 +91,13 @@
       "speed": 10,
       "knockback": 6,
       "chiOnHit": 2.0,
-      "damage": 8,
+      "damage": 4,
       "blockHits": 1,
       "radius": 5,
-      "range": 3,
+      "range": 5,
       "boomerang": false,
-      "turnSolid": false
+      "turnSolid": false,
+      "explosion": true
     }
   }
 }

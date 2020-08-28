@@ -158,12 +158,12 @@ avatar.specialtyScroll.alreadyHave=[error]You have already unlocked [translate=a
 avatar.specialtyScroll.tooltip=[aqua]Can be used to unlock or upgrade [translate=avatar.${bending}].[/aqua]
 
 avatar.ability.earth_control=§2§lEarth §2§lControl
-avatar.ability.earth_control.desc=Use earthbending to move bendable blocks. Place them in the desired position, or throw them at your enemies.
-avatar.ability.earth_control.lvl1=Move and throw bendable blocks
-avatar.ability.earth_control.lvl2=Faster and farther when thrown
-avatar.ability.earth_control.lvl3=Twice the damage
-avatar.ability.earth_control.lvl4_1=§2§l§oBlocky §2§l§oboomerang ;; Block comes back after successful mob hit
-avatar.ability.earth_control.lvl4_2=§2§l§oLarge §2§l§oimpact ;; 1/2 chance to create an explosion on landing
+avatar.ability.earth_control.desc=Use earthbending to move bendable blocks. Place them in the desired position, or throw them at your enemies!
+avatar.ability.earth_control.lvl1=Trickshot!
+avatar.ability.earth_control.lvl2=Faster and farther when thrown! Bigger pickup radius and range!
+avatar.ability.earth_control.lvl3=More damage, more speed, larger pickup range! You can carry up to 2 blocks at a time!
+avatar.ability.earth_control.lvl4_1=§2§l§oBlocky §2§l§oboomerang ;; Block comes back after successful mob hit! Have 3 blocks rotating around you!
+avatar.ability.earth_control.lvl4_2=§2§l§oLarge §2§l§oimpact ;; Create an explosion of earth upon hitting a solid surface! You can still trickshot, though :)
 
 avatar.ability.mine_blocks=§2§lMine §2§lBlocks
 avatar.ability.mine_blocks.desc=Quickly destroy blocks to mine out tunnels!
