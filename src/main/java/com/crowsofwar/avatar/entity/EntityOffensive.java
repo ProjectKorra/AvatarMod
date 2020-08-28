@@ -300,6 +300,11 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
     }
 
     @Override
+    public AxisAlignedBB getCollisionBox(Entity entityIn) {
+        return getExpandedHitbox();
+    }
+
+    @Override
     public void onUpdate() {
         super.onUpdate();
 
@@ -549,6 +554,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
         IBlockState state;
         boolean collision = !world.getCollisionBoxes(this, getExpandedHitbox()).isEmpty();
 
+
         for (double x = 0; x <= 1; x += 0.5) {
             for (double z = 0; z <= 1; z += 0.5) {
                 for (double y = 0; y <= 1; y += 0.5) {
@@ -565,6 +571,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
                 }
             }
         }
+
         for (double x = 0; x >= -1; x -= 0.5) {
             for (double z = 0; z >= -1; z -= 0.5) {
                 for (double y = 0; y >= -1; y -= 0.5) {

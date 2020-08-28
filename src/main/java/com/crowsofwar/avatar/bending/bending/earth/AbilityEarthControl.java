@@ -17,7 +17,6 @@
 
 package com.crowsofwar.avatar.bending.bending.earth;
 
-import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.entity.data.FloatingBlockBehavior;
@@ -29,6 +28,7 @@ import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSnow;
+import net.minecraft.block.BlockTallGrass;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -50,159 +50,165 @@ import static com.crowsofwar.avatar.util.data.StatusControlController.THROW_BLOC
  */
 public class AbilityEarthControl extends Ability {
 
-	private static final String
-			BOOMERANG = "boomerang",
-			BLOCK_HITS = "blockHits",
-			TURN_SOLID = "turnSolid";
+    private static final String
+            BOOMERANG = "boomerang",
+            BLOCK_HITS = "blockHits",
+            TURN_SOLID = "turnSolid";
 
-	private final Random random;
+    private final Random random;
 
-	public AbilityEarthControl() {
-		super(Earthbending.ID, "earth_control");
-		this.random = new Random();
-		requireRaytrace(-1, true);
-	}
+    public AbilityEarthControl() {
+        super(Earthbending.ID, "earth_control");
+        this.random = new Random();
+        requireRaytrace(-1, true);
+    }
 
-	@Override
-	public void init() {
-		super.init();
-		addProperties(BLOCK_HITS);
-		addBooleanProperties(BOOMERANG, TURN_SOLID);
-	}
+    @Override
+    public void init() {
+        super.init();
+        addProperties(BLOCK_HITS, RANGE, RADIUS);
+        addBooleanProperties(BOOMERANG, TURN_SOLID);
+    }
 
-	@Override
-	public boolean isUtility() {
-		return true;
-	}
+    @Override
+    public boolean isUtility() {
+        return true;
+    }
 
-	@Override
-	public void execute(AbilityContext ctx) {
+    @Override
+    public void execute(AbilityContext ctx) {
 
-		VectorI target = ctx.getLookPosI();
-		if (target != null) {
-			pickupBlock(ctx, target.toBlockPos());
+        Vector lookPos = ctx.getLookPos();
+        Vector pos;
+        EntityLivingBase entity = ctx.getBenderEntity();
+        int range = getProperty(RANGE, ctx).intValue();
 
-		}
-	}
+        if (lookPos != null && lookPos.dist(Vector.getEntityPos(entity)) <= range) {
+            pickupBlock(ctx, lookPos.toBlockPos());
+        } else {
+            pos = Earthbending.getClosestEarthbendableBlock(entity, ctx, this);
+            if (pos != null) {
+                pickupBlock(ctx, pos.toBlockPos());
+            }
+        }
+    }
 
-	private void pickupBlock(AbilityContext ctx, BlockPos pos) {
+    private void pickupBlock(AbilityContext ctx, BlockPos pos) {
 
-		World world = ctx.getWorld();
-		Bender bender = ctx.getBender();
-		EntityLivingBase entity = ctx.getBenderEntity();
-		BendingData data = ctx.getData();
-		AbilityEarthControl control = (AbilityEarthControl) Abilities.get("earth_control");
+        World world = ctx.getWorld();
+        Bender bender = ctx.getBender();
+        EntityLivingBase entity = ctx.getBenderEntity();
+        BendingData data = ctx.getData();
 
-		IBlockState ibs = world.getBlockState(pos);
-		if (!ibs.isFullBlock() && !STATS_CONFIG.bendableBlocks.contains(ibs.getBlock()))
-			ibs = world.getBlockState(pos.down());
+        IBlockState ibs = world.getBlockState(pos);
+        if (!ibs.isFullBlock() && !STATS_CONFIG.bendableBlocks.contains(ibs.getBlock()))
+            ibs = world.getBlockState(pos.down());
 
-		Block block = ibs.getBlock();
+        Block block = ibs.getBlock();
 
-		int maxBlocks = 1;
-		int heldBlocks = 0;
+        int maxBlocks = 1;
+        int heldBlocks = 0;
 
-		if (ctx.getLevel() == 2)
-			maxBlocks = 2;
-		else if (ctx.getDynamicPath().equals(AbilityData.AbilityTreePath.FIRST))
-			maxBlocks = 3;
+        if (ctx.getLevel() == 2)
+            maxBlocks = 2;
+        else if (ctx.getDynamicPath().equals(AbilityData.AbilityTreePath.FIRST))
+            maxBlocks = 3;
 
-		List<EntityFloatingBlock> blocks = world.getEntitiesWithinAABB(EntityFloatingBlock.class,
-				entity.getEntityBoundingBox().grow(3, 2, 3));
-		for (EntityFloatingBlock b : blocks) {
-			if (b.getController() == entity)
-				heldBlocks++;
-		}
+        List<EntityFloatingBlock> blocks = world.getEntitiesWithinAABB(EntityFloatingBlock.class,
+                entity.getEntityBoundingBox().grow(3, 2, 3));
+        for (EntityFloatingBlock b : blocks) {
+            if (b.getController() == entity)
+                heldBlocks++;
+        }
 
-		boolean bendable = STATS_CONFIG.bendableBlocks.contains(block);
-		bendable |= !bendable && STATS_CONFIG.bendableBlocks.contains(world.getBlockState(pos.down()).getBlock())
-		&& !(block instanceof BlockSnow || ibs.isFullCube() && ibs.isFullBlock());
-		if (!world.isAirBlock(pos) && bendable && heldBlocks < maxBlocks && control != null) {
-			AbilityData abilityData = ctx.getData().getAbilityData(this);
+        boolean bendable = STATS_CONFIG.bendableBlocks.contains(block);
+        bendable |= !bendable && STATS_CONFIG.bendableBlocks.contains(world.getBlockState(pos.down()).getBlock())
+                && !(block instanceof BlockSnow || block instanceof BlockTallGrass) && world.getBlockState(pos).isNormalCube();
+        if (!world.isAirBlock(pos) && bendable && heldBlocks < maxBlocks) {
+            AbilityData abilityData = ctx.getData().getAbilityData(this);
 
-			if (bender.consumeChi(getChiCost(abilityData) / 4)) {
-
-
-
-				EntityFloatingBlock floating = new EntityFloatingBlock(world, ibs);
-				floating.setPosition(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
-				floating.setItemDropsEnabled(!bender.isCreativeMode());
-
-				float damageMult = control.getProperty(DAMAGE, ctx).floatValue();
-				float chiOnHit = control.getProperty(CHI_HIT, ctx).floatValue();
-				float knockback = control.getProperty(KNOCKBACK, ctx).floatValue() / 8;
-
-				damageMult *= abilityData.getDamageMult() * abilityData.getXpModifier();
-
-				double dist = 2.5;
-				Vector force = new Vector(0, Math.sqrt(20 * dist), 0);
-				floating.setVelocity(force);
-				floating.setBehavior(new FloatingBlockBehavior.PickUp());
-				floating.setOwner(entity);
-				floating.setAbility(this);
-				floating.setDamageMult(damageMult);
-				floating.setHitsLeft(getProperty(BLOCK_HITS, ctx).intValue());
-				floating.setXp(getProperty(XP_HIT, ctx).floatValue());
-				floating.setLifeTime((int) (control.getProperty(LIFETIME, ctx).intValue() *  abilityData.getXpModifier() * abilityData.getDamageMult()));
-				floating.setChiHit(chiOnHit);
-				floating.setBoomerang(getBooleanProperty(BOOMERANG, ctx));
-				floating.setPush(knockback);
-				floating.setTurnSolid(getBooleanProperty(TURN_SOLID, ctx));
-				floating.setDamageSource("avatar_Earth_floatingBlock");
-				floating.setTier(getCurrentTier(ctx));
+            if (bender.consumeChi(getChiCost(abilityData) / 4)) {
 
 
-				if (STATS_CONFIG.preventPickupBlockGriefing) {
-					floating.setItemDropsEnabled(false);
-				} else {
-					world.setBlockState(pos, Blocks.AIR.getDefaultState());
-				}
+                EntityFloatingBlock floating = new EntityFloatingBlock(world, ibs);
+                floating.setPosition(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
+                floating.setItemDropsEnabled(!bender.isCreativeMode());
 
-				if (!world.isRemote)
-					world.spawnEntity(floating);
+                float damageMult = getProperty(DAMAGE, ctx).floatValue();
+                float chiOnHit = getProperty(CHI_HIT, ctx).floatValue();
+                float knockback = getProperty(KNOCKBACK, ctx).floatValue() / 8;
 
-				SoundType sound = block.getSoundType();
-				if (sound != null) {
-					world.playSound(null, floating.getPosition(), sound.getBreakSound(),
-							SoundCategory.PLAYERS, sound.getVolume(), sound.getPitch());
-				}
+                damageMult *= abilityData.getDamageMult() * abilityData.getXpModifier();
 
-				if (!data.hasStatusControl(PLACE_BLOCK))
-					data.addStatusControl(PLACE_BLOCK);
-				if (!data.hasStatusControl(THROW_BLOCK))
-					data.addStatusControl(THROW_BLOCK);
+                double dist = 2.5;
+                Vector force = new Vector(0, Math.sqrt(20 * dist), 0);
+                floating.setVelocity(force);
+                floating.setBehavior(new FloatingBlockBehavior.PickUp());
+                floating.setOwner(entity);
+                floating.setAbility(this);
+                floating.setDamageMult(damageMult);
+                floating.setHitsLeft(getProperty(BLOCK_HITS, ctx).intValue());
+                floating.setXp(getProperty(XP_HIT, ctx).floatValue());
+                floating.setLifeTime((int) (getProperty(LIFETIME, ctx).intValue() * abilityData.getXpModifier() * abilityData.getDamageMult()));
+                floating.setChiHit(chiOnHit);
+                floating.setBoomerang(getBooleanProperty(BOOMERANG, ctx));
+                floating.setPush(knockback);
+                floating.setTurnSolid(getBooleanProperty(TURN_SOLID, ctx));
+                floating.setDamageSource("avatar_Earth_floatingBlock");
+                floating.setTier(getCurrentTier(ctx));
 
-			}
 
-		} else {
-			world.playSound(null, entity.getPosition(), SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.PLAYERS,
-					1, (float) (random.nextGaussian() / 0.25 + 0.375));
-		}
+                if (STATS_CONFIG.preventPickupBlockGriefing) {
+                    floating.setItemDropsEnabled(false);
+                } else {
+                    world.setBlockState(pos, Blocks.AIR.getDefaultState());
+                }
 
-	}
+                if (!world.isRemote)
+                    world.spawnEntity(floating);
 
-	@Override
-	public boolean isProjectile() {
-		return true;
-	}
+                SoundType sound = block.getSoundType();
+                if (sound != null) {
+                    world.playSound(null, floating.getPosition(), sound.getBreakSound(),
+                            SoundCategory.PLAYERS, sound.getVolume(), sound.getPitch());
+                }
 
-	@Override
-	public boolean isOffensive() {
-		return true;
-	}
+                if (!data.hasStatusControl(PLACE_BLOCK))
+                    data.addStatusControl(PLACE_BLOCK);
+                if (!data.hasStatusControl(THROW_BLOCK))
+                    data.addStatusControl(THROW_BLOCK);
 
-	@Override
-	public int getCooldown(AbilityContext ctx) {
-		return 0;
-	}
+            }
 
-	@Override
-	public float getBurnOut(AbilityContext ctx) {
-		return 0;
-	}
+        } else {
+            world.playSound(null, entity.getPosition(), SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.PLAYERS,
+                    1, (float) (random.nextGaussian() / 0.25 + 0.375));
+        }
 
-	@Override
-	public float getExhaustion(AbilityContext ctx) {
-		return 0;
-	}
+    }
+
+    @Override
+    public boolean isProjectile() {
+        return true;
+    }
+
+    @Override
+    public boolean isOffensive() {
+        return true;
+    }
+
+    @Override
+    public int getCooldown(AbilityContext ctx) {
+        return 0;
+    }
+
+    @Override
+    public float getBurnOut(AbilityContext ctx) {
+        return 0;
+    }
+
+    @Override
+    public float getExhaustion(AbilityContext ctx) {
+        return 0;
+    }
 }

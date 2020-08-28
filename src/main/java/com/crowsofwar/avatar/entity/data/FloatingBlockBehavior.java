@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.entity.data;
 
 import com.crowsofwar.avatar.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.entity.EntityOffensive;
+import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.StatusControlController;
 import com.crowsofwar.gorecore.util.Vector;
@@ -147,6 +148,7 @@ public abstract class FloatingBlockBehavior extends OffensiveBehaviour {
         @Override
         public FloatingBlockBehavior onUpdate(EntityOffensive entity) {
 
+            entity.setEntitySize(1.0F);
             if (entity.collided && entity instanceof EntityFloatingBlock) {
 
                 World world = entity.world;
@@ -191,8 +193,15 @@ public abstract class FloatingBlockBehavior extends OffensiveBehaviour {
             entity.addVelocity(Vector.DOWN.times(9.81 / 20));
 
             Vector velocity = entity.velocity();
-            if (velocity.y() <= 0) {
+            if (velocity.y() <= 0 && entity.getOwner() != null) {
                 entity.setVelocity(velocity.withY(0));
+
+                Vec3d forward = entity.getOwner().getLook(1.0F);
+                Vec3d eye = entity.getOwner().getPositionEyes(1.0F);
+                Vec3d target = forward.scale(2.5).add(eye);
+                Vec3d motion = target.subtract(entity.getPositionVector()).scale(0.05);
+                entity.setVelocity(motion);
+
                 return new PlayerControlled();
             }
 
@@ -228,10 +237,12 @@ public abstract class FloatingBlockBehavior extends OffensiveBehaviour {
 
             if (owner == null || !(entity instanceof EntityFloatingBlock)) return this;
 
+            entity.setEntitySize(0.9F);
+
             Vec3d forward = owner.getLook(1.0F);
             Vec3d eye = owner.getPositionEyes(1.0F);
             Vec3d target = forward.scale(2.5).add(eye);
-            Vec3d motion = target.subtract(entity.getPositionVector()).scale(0.5);
+            Vec3d motion = target.subtract(AvatarEntityUtils.getBottomMiddleOfEntity(entity)).scale(0.5);
             int angle = (int) entity.world.getWorldTime();
             List<EntityFloatingBlock> blocks = entity.world.getEntitiesWithinAABB(EntityFloatingBlock.class,
                     owner.getEntityBoundingBox().grow(4, 4, 4));
@@ -249,7 +260,7 @@ public abstract class FloatingBlockBehavior extends OffensiveBehaviour {
                 double z = 2.5 * Math.sin(radians);
                 Vec3d pos = new Vec3d(x, 0, z);
                 pos = pos.add(owner.posX, owner.getEntityBoundingBox().minY + 1.5, owner.posZ);
-                motion = pos.subtract(entity.getPositionVector()).scale(.5);
+                motion = pos.subtract(AvatarEntityUtils.getBottomMiddleOfEntity(entity)).scale(.5);
             }
 
             entity.setVelocity(motion);
@@ -287,10 +298,12 @@ public abstract class FloatingBlockBehavior extends OffensiveBehaviour {
         public FloatingBlockBehavior onUpdate(EntityOffensive entity) {
             if (entity instanceof EntityFloatingBlock) {
                 entity.addVelocity(Vector.DOWN.times(9.81 / 20));
-                if (entity.collided) {
-                    if (!entity.world.isRemote) entity.setDead();
-                    entity.onCollideWithSolid();
+                if (entity.onCollideWithSolid()) {
+                    if (!entity.world.isRemote)
+                        entity.Dissipate();
+
                 }
+                entity.setEntitySize(0.9F);
             }
             return this;
         }

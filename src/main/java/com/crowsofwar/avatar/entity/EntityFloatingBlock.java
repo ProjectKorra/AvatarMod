@@ -18,41 +18,37 @@
 package com.crowsofwar.avatar.entity;
 
 import com.crowsofwar.avatar.bending.bending.BendingStyle;
-import com.crowsofwar.avatar.bending.bending.earth.AbilityEarthControl;
 import com.crowsofwar.avatar.bending.bending.earth.Earthbending;
 import com.crowsofwar.avatar.entity.data.Behavior;
 import com.crowsofwar.avatar.entity.data.FloatingBlockBehavior;
 import com.crowsofwar.avatar.util.AvatarDataSerializers;
+import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
-import com.crowsofwar.avatar.util.data.AbilityData;
-import com.crowsofwar.avatar.util.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.base.Optional;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityFallingBlock;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
-import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.Random;
 
 import static com.crowsofwar.avatar.util.data.StatusControlController.PLACE_BLOCK;
 import static com.crowsofwar.avatar.util.data.StatusControlController.THROW_BLOCK;
@@ -105,15 +101,17 @@ public class EntityFloatingBlock extends EntityOffensive {
 
     public EntityFloatingBlock(World world) {
         super(world);
-        float size = 1.25f;
-        setSize(size, size);
+        float size = 0.9f;
+        setEntitySize(size, size);
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
             setID(nextBlockID++);
         }
         this.enableItemDrops = true;
         this.damageMult = 1;
         this.ticksGround = 0;
-
+        this.width = size;
+        this.height = size;
+        this.ignoreFrustumCheck = true;
     }
 
     public EntityFloatingBlock(World world, IBlockState blockState) {
@@ -266,21 +264,33 @@ public class EntityFloatingBlock extends EntityOffensive {
                 Block.getStateId(getBlockState()));
     }
 
+    private void placeBlock() {
+         if (!world.isRemote) {
+             Vec3d middle = AvatarEntityUtils.getMiddleOfEntity(this);
+             BlockPos pos = new BlockPos(middle.x, middle.y, middle.z);
+             //Using getPosition sometimes results in weird stuff
+            world.setBlockState(pos, getBlockState());
+        }
+    }
+
     @Override
     public void onUpdate() {
 
         super.onUpdate();
+        setBehavior((FloatingBlockBehavior) getBehavior().onUpdate(this));
+
         extinguish();
 
-        if ((getVelocity() == Vec3d.ZERO || onGround) && getBehavior() instanceof FloatingBlockBehavior.Thrown)
+        if (onGround && getBehavior() instanceof FloatingBlockBehavior.Thrown)
             ticksGround++;
-        if (ticksGround > 5 && velocity().magnitude() < 0.25) {
-            Dissipate();
-            if (!world.isRemote)
-                world.setBlockState(getPosition(), getBlockState());
+        if (ticksGround > 15 && velocity().magnitude() < 0.5) {
+            setPosition(getPositionVector());
+            placeBlock();
+            world.scheduleBlockUpdate(getPosition(), getBlock(),0, 1);
         }
 
-        setBehavior((FloatingBlockBehavior) getBehavior().onUpdate(this));
+        if (ticksGround > 25 && velocity().magnitude() < 0.5)
+            Dissipate();
 
         if (ticksExisted == 1) {
             for (int i = 0; i < 10; i++) {
@@ -292,7 +302,9 @@ public class EntityFloatingBlock extends EntityOffensive {
         }
 
         if (getBehavior() != null && getBehavior() instanceof FloatingBlockBehavior.Thrown) {
-            setVelocity(velocity().times(getFriction()));
+            if (onGround)
+                setVelocity(velocity().times(getFriction() / 1.25));
+            else setVelocity(velocity().times(getFriction()));
         }
 
     }
@@ -300,6 +312,7 @@ public class EntityFloatingBlock extends EntityOffensive {
     @Override
     public void onCollideWithEntity(Entity entity) {
         super.onCollideWithEntity(entity);
+
         if (canCollideWith(entity)) {
             if (shouldBoomerang() && getOwner() != null) {
                 setBehavior(new FloatingBlockBehavior.PlayerControlled());
@@ -311,8 +324,7 @@ public class EntityFloatingBlock extends EntityOffensive {
             }
             setHitsLeft(getHitsLeft() - 1);
         }
-        if (getHitsLeft() == 0)
-            Dissipate();
+
     }
 
     @Override
@@ -323,53 +335,23 @@ public class EntityFloatingBlock extends EntityOffensive {
     @Override
     public boolean onCollideWithSolid() {
 
-        FloatingBlockBehavior behavior = getBehavior();
-        if (!(behavior instanceof FloatingBlockBehavior.Fall || behavior instanceof
-                FloatingBlockBehavior.Thrown)) {
+        if (super.onCollideWithSolid() && getBehavior() instanceof FloatingBlockBehavior.Thrown)
+            setPosition(getPositionVector());
 
-            return false;
 
+        if (!shouldTurnSolid() && areItemDropsEnabled()) {
+            EntityItem entity = new EntityItem(world, posX, posY, posZ, new ItemStack(Item.getItemFromBlock(getBlock()), 1));
+            entity.setDefaultPickupDelay();
+            if (getOwner() != null)
+                entity.setOwner(getOwner().getName());
+            if (!world.isRemote)
+                world.spawnEntity(entity);
         }
+        if (getBehavior() instanceof FloatingBlockBehavior.Fall)
+            placeBlock();
 
-        if (collided) {
-            // Spawn particles
-            Random random = new Random();
-            for (int i = 0; i < 7; i++) {
-                spawnCrackParticle(posX, posY + 0.3, posZ, random.nextGaussian() * 0.1,
-                        random.nextGaussian() * 0.1, random.nextGaussian() * 0.1);
-            }
-            if (getOwner() != null && getAbility() instanceof AbilityEarthControl) {
-                AbilityData data = BendingData.get(getOwner()).getAbilityData("earth_control");
-
-                if (data.isMasterPath(AbilityTreePath.SECOND) && rand.nextBoolean()) {
-
-                    Explosion explosion = new Explosion(world, this, posX, posY, posZ, 2, false, false);
-                    if (!ForgeEventFactory.onExplosionStart(world, explosion)) {
-                        explosion.doExplosionA();
-                        explosion.doExplosionB(true);
-                    }
-
-                }
-                if (!data.isMasterPath(AbilityTreePath.FIRST)) {
-                    setDead();
-                }
-                if (!world.isRemote && areItemDropsEnabled()) {
-                    NonNullList<ItemStack> drops = NonNullList.create();
-                    getBlock().getDrops(drops, world, new BlockPos(this), getBlockState(), 0);
-                    int i = 0;
-                    for (ItemStack is : drops) {
-                        if (i < 1) {
-                            EntityItem ei = new EntityItem(world, posX, posY, posZ, is);
-                            world.spawnEntity(ei);
-                        }
-                        i++;
-                    }
-                }
-
-            }
-        }
-
-        return collided;
+        boolean collide = getBehavior() instanceof FloatingBlockBehavior.Thrown || getBehavior() instanceof FloatingBlockBehavior.Fall && velocity().magnitude() < 0.5;
+        return super.onCollideWithSolid() && collide;
 
     }
 
@@ -385,7 +367,7 @@ public class EntityFloatingBlock extends EntityOffensive {
 
     @Override
     public boolean isPiercing() {
-        return shouldBoomerang();
+        return true;
     }
 
     @Override
@@ -439,14 +421,6 @@ public class EntityFloatingBlock extends EntityOffensive {
     }
 
     @Override
-    public Vec3d getKnockback() {
-        double x = Math.min(getKnockbackMult().x * motionX, motionX * 2);
-        double y = Math.min(0.15, (motionY + 0.1) * getKnockbackMult().y);
-        double z = Math.min(getKnockbackMult().z * motionZ, motionZ * 2);
-        return new Vec3d(x, y, z);
-    }
-
-    @Override
     public EntityLivingBase getController() {
         return getBehavior() instanceof FloatingBlockBehavior.PlayerControlled ? getOwner() : null;
     }
@@ -475,7 +449,7 @@ public class EntityFloatingBlock extends EntityOffensive {
 
     @Override
     public float getDamage() {
-        return (float) (AvatarUtils.getMagnitude(velocity().toMinecraft()) / 25 * getDamageMult());
+        return (float) (AvatarUtils.getMagnitude(velocity().toMinecraft()) / 20 * getDamageMult());
     }
 
     @Override
@@ -492,8 +466,7 @@ public class EntityFloatingBlock extends EntityOffensive {
     private void removeStatCtrl() {
         if (getOwner() != null) {
             BendingData bD = BendingData.get(getOwner());
-            bD.removeStatusControl(THROW_BLOCK);
-            bD.removeStatusControl(PLACE_BLOCK);
+            bD.removeStatusControls(THROW_BLOCK, PLACE_BLOCK);
         }
 
     }

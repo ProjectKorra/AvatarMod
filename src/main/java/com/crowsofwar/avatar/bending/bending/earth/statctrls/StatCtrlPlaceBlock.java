@@ -17,10 +17,14 @@
 
 package com.crowsofwar.avatar.bending.bending.earth.statctrls;
 
+import com.crowsofwar.avatar.bending.bending.Abilities;
+import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.earth.AbilityEarthControl;
 import com.crowsofwar.avatar.bending.bending.earth.Earthbending;
+import com.crowsofwar.avatar.util.data.AbilityData;
+import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.StatusControl;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
@@ -33,11 +37,15 @@ import net.minecraft.block.BlockSnow;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.crowsofwar.avatar.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.client.controls.AvatarControl.CONTROL_RIGHT_CLICK_DOWN;
@@ -61,43 +69,72 @@ public class StatCtrlPlaceBlock extends StatusControl {
 
 		World world = ctx.getWorld();
 		EntityLivingBase entity = ctx.getBenderEntity();
-
 		BendingData data = ctx.getData();
+		Bender bender = ctx.getBender();
+		AbilityData abilityData = AbilityData.get(entity, "earth_control");
+		AbilityEarthControl control = (AbilityEarthControl) Abilities.get("earth_control");
 
 		EntityFloatingBlock floating = AvatarEntity.lookupEntity(ctx.getWorld(), EntityFloatingBlock.class,
 				fb -> fb.getBehavior() instanceof FloatingBlockBehavior.PlayerControlled
 						&& fb.getOwner() == ctx.getBenderEntity());
+		List<EntityFloatingBlock> blocks = world.getEntitiesWithinAABB(EntityFloatingBlock.class,
+				entity.getEntityBoundingBox().grow(3.5, 3, 3.5));
 
-		if (floating != null && !world.isRemote) {
-			Vec3d start = entity.getPositionEyes(1.0F);
-			Vec3d end = start.add(entity.getLookVec().scale(5));
 
-			RayTraceResult result = world.rayTraceBlocks(start, end);
-			if (result != null && result.sideHit != null) {
-				BlockPos pos = result.getBlockPos().offset(result.sideHit);
-				IBlockState state = world.getBlockState(pos);
-				Block block = state.getBlock();
+		if (abilityData != null && control != null) {
+			float chiCost = control.getChiCost(abilityData);
+			float exhaustion = control.getExhaustion(abilityData);
+			float burnout = control.getBurnOut(abilityData);
+			int cooldown = control.getCooldown(abilityData);
 
-				if (block instanceof BlockSnow)
-					pos = pos.down();
+			chiCost *= abilityData.getDamageMult() * abilityData.getXpModifier();
+			exhaustion *= abilityData.getDamageMult() * abilityData.getXpModifier();
+			burnout *= abilityData.getDamageMult() * abilityData.getXpModifier();
+			cooldown *= abilityData.getDamageMult() * abilityData.getXpModifier();
 
-				floating.setBehavior(new FloatingBlockBehavior.Place(pos));
-				Vector force = new Vector(pos).minus(floating.velocity()).normalize();
-				floating.addVelocity(force);
+			if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative())
+				chiCost = exhaustion = burnout = cooldown = 0;
 
-				SoundType sound = floating.getBlock().getSoundType();
-				if (sound != null) {
-					floating.world.playSound(null, floating.getPosition(), sound.getPlaceSound(),
-							SoundCategory.PLAYERS, sound.getVolume(), sound.getPitch());
+			if (floating != null && !world.isRemote) {
+				Vec3d start = entity.getPositionEyes(1.0F);
+				Vec3d end = start.add(entity.getLookVec().scale(5));
+
+				RayTraceResult result = world.rayTraceBlocks(start, end);
+				if (result != null && result.sideHit != null) {
+					BlockPos pos = result.getBlockPos().offset(result.sideHit);
+					IBlockState state = world.getBlockState(pos);
+					Block block = state.getBlock();
+
+					if (block instanceof BlockSnow)
+						pos = pos.down();
+
+					Vector force = new Vector(pos).minus(floating.velocity()).normalize();
+
+					if (bender.consumeChi(chiCost)) {
+						abilityData.addXp(control.getProperty(Ability.XP_USE).floatValue());
+						abilityData.addBurnout(burnout);
+						abilityData.setAbilityCooldown(cooldown);
+						if (entity instanceof EntityPlayer)
+							((EntityPlayer) entity).addExhaustion(exhaustion);
+
+						blocks = blocks.stream().filter(floatingBlock -> floating.getBehavior() instanceof FloatingBlockBehavior.PlayerControlled).collect(Collectors.toList());
+						if (blocks.isEmpty())
+							abilityData.setRegenBurnout(true);
+
+						floating.setBehavior(new FloatingBlockBehavior.Place(pos));
+						floating.addVelocity(force);
+
+						SoundType sound = floating.getBlock().getSoundType();
+						floating.world.playSound(null, floating.getPosition(), sound.getPlaceSound(),
+								SoundCategory.PLAYERS, sound.getVolume(), sound.getPitch());
+
+						data.removeStatusControl(THROW_BLOCK);
+					}
+
+					return true;
 				}
-
-				data.removeStatusControl(THROW_BLOCK);
-
-				data.getAbilityData(new AbilityEarthControl()).addXp(SKILLS_CONFIG.blockPlaced);
-
-				return true;
+				return false;
 			}
-			return false;
 		}
 
 		return true;
