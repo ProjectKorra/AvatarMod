@@ -104,12 +104,9 @@ public abstract class FloatingBlockBehavior extends OffensiveBehaviour {
                 force = force.normalize().times(3);
                 entity.setVelocity(force);
 
-                if (!entity.world.isRemote && placeAtVec.sqrDist(thisPos) < 0.01) {
-
-                    entity.setDead();
-                    entity.world.setBlockState(new BlockPos(entity), ((EntityFloatingBlock) entity).getBlockState());
-                    entity.world.scheduleBlockUpdate(entity.getPosition(), ((EntityFloatingBlock) entity).getBlock(), 0, 1);
-
+                if (placeAtVec.sqrDist(thisPos) < 0.005) {
+                    ((EntityFloatingBlock) entity).placeBlock();
+                    entity.Dissipate();
                     SoundType sound = ((EntityFloatingBlock) entity).getBlock().getSoundType();
                     if (sound != null) {
                         entity.world.playSound(null, entity.getPosition(), sound.getPlaceSound(),

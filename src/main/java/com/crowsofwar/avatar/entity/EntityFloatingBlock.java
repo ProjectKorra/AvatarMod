@@ -277,7 +277,7 @@ public class EntityFloatingBlock extends EntityOffensive {
                 Block.getStateId(getBlockState()));
     }
 
-    private void placeBlock() {
+    public void placeBlock() {
         if (!world.isRemote) {
             Vec3d middle = AvatarEntityUtils.getMiddleOfEntity(this);
             BlockPos pos = new BlockPos(middle.x, middle.y, middle.z);
