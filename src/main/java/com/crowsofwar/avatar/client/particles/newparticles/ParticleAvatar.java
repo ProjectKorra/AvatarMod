@@ -76,7 +76,7 @@ import java.util.stream.Collectors;
 // @SideOnly(Side.CLIENT)
 public abstract class ParticleAvatar extends Particle {
 
-    public static final float MAX_PARTICLE_SIZE = 0.5F;
+    public static final float MAX_PARTICLE_SIZE = 0.25F;
 
     // TODO: How to adjust Electroblob's particle system for av2.
     /**
