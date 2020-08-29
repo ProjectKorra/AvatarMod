@@ -202,6 +202,34 @@ public class FlamethrowerUpdateTick extends TickHandler {
                     }
                 }
 
+                //Particle code.
+                if (world.isRemote && (flamethrower.getCurrentTier(abilityData) < 4 || !isRaining)) {
+                    speedMult /= 29.5F;
+                    for (int i = 0; i < flamesPerSecond; i++) {
+                        int rRandom = fadeR < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeR * 2) : AvatarUtils.getRandomNumberInRange(fadeR / 2,
+                                fadeR * 2);
+                        int gRandom = fadeG < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeG * 2) : AvatarUtils.getRandomNumberInRange(fadeG / 2,
+                                fadeG * 2);
+                        int bRandom = fadeB < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeB * 2) : AvatarUtils.getRandomNumberInRange(fadeB / 2,
+                                fadeB * 2);
+
+                        if (CLIENT_CONFIG.fireRenderSettings.solidFlamethrowerParticles) {
+                            ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start.toMinecraft()).scale(size * 0.75F).time(lifetime - AvatarUtils.getRandomNumberInRange(0, 2)).collide(true).vel(look.times(speedMult / 1.25).toMinecraft()).
+                                    ability(new AbilityFlamethrower()).collide(true).collideParticles(true).spawnEntity(entity).spawn(world);
+                        }
+
+                        ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start.toMinecraft()).time(lifetime + AvatarUtils.getRandomNumberInRange(4, 8)).vel(look.times(speedMult).toMinecraft()).
+                                clr(r, g, b, 180).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(40, 100)).collide(true).collideParticles(true).spawnEntity(entity).scale(size * 1.75F).element(new Firebending())
+                                .ability(flamethrower).spawn(world);
+                        ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start.toMinecraft()).time(lifetime + AvatarUtils.getRandomNumberInRange(4, 8)).vel(look.times(speedMult).toMinecraft()).
+                                clr(r, g + 15, b, 180).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(40, 100)).collide(true).collideParticles(true).spawnEntity(entity).scale(size * 1.75F).element(new Firebending())
+                                .ability(flamethrower).spawn(world);
+                        ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start.toMinecraft()).time(lifetime + AvatarUtils.getRandomNumberInRange(4, 8)).vel(look.times(speedMult).toMinecraft()).
+                                clr(r, g + 60, b * 2, 180).fade(rRandom, gRandom + 60, bRandom * 2, AvatarUtils.getRandomNumberInRange(40, 100)).collide(true).collideParticles(true).spawnEntity(entity).scale(size * 1.75F).element(new Firebending())
+                                .ability(flamethrower).spawn(world);
+                    }
+                }
+
                 if (ctx.getData().getTickHandlerDuration(this) % 4 == 0)
                     world.playSound(null, entity.getPosition(), SoundEvents.ITEM_FIRECHARGE_USE,
                             SoundCategory.PLAYERS, 0.2f, 0.8f);

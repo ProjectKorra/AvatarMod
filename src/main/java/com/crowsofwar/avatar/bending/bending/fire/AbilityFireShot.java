@@ -147,12 +147,12 @@ public class AbilityFireShot extends Ability {
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x(),
                                 world.rand.nextGaussian() / 80 + velocity.y(), world.rand.nextGaussian() / 80 + velocity.z())
                                 .time(8 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(1F, 10 / 255F, 5 / 255F, 0.75F).spawnEntity(entity)
-                                .scale(size / 2F).element(new Firebending()).collide(true).ability(this).spawn(world);
+                                .scale(size / 2F).element(new Firebending()).collide(true).collideParticles(true).ability(this).spawn(world);
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x(),
                                 world.rand.nextGaussian() / 80 + velocity.y(), world.rand.nextGaussian() / 80 + velocity.z())
                                 .time(12 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(1F, (40 + AvatarUtils.getRandomNumberInRange(0, 60)) / 255F,
                                 10 / 255F, 0.75F).spawnEntity(entity)
-                                .scale(size / 2F).element(new Firebending()).collide(true).ability(this).spawn(world);
+                                .scale(size / 2F).element(new Firebending()).collide(true).collideParticles(true).ability(this).spawn(world);
                     }
                 }
             } else {

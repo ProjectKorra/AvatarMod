@@ -17,6 +17,8 @@
 
 package com.crowsofwar.avatar.client.render;
 
+import com.crowsofwar.avatar.client.ResourceManager;
+import com.crowsofwar.avatar.client.TestModel;
 import com.crowsofwar.avatar.entity.EntityWaterBubble;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -25,6 +27,7 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
+import org.lwjgl.opengl.GL11;
 
 import static com.crowsofwar.avatar.client.render.RenderUtils.drawQuad;
 import static net.minecraft.util.math.MathHelper.cos;
@@ -45,7 +48,13 @@ public class RenderWaterBubble extends Render<EntityWaterBubble> {
 	@Override
 	public void doRender(EntityWaterBubble bubble, double x, double y, double z, float entityYaw,
 						 float partialTicks) {
-
+		Minecraft.getMinecraft().getTextureManager().bindTexture(water);
+		GL11.glPushMatrix();
+		GL11.glTranslated(x, y, z);
+		TestModel.test.render();
+		GL11.glPopMatrix();
+		if(true)
+			return;
 		float ticks = bubble.ticksExisted + partialTicks;
 		float colorEnhancement = 1.2f;
 		float size = bubble.getSize();

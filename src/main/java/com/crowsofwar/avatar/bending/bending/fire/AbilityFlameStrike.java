@@ -100,6 +100,8 @@ public class AbilityFlameStrike extends Ability {
             orbSize += 0.15F;
 
         }
+        
+        if(bender.consumeChi(getChiCost(ctx) / 4)) {
 
         if (bender.consumeChi(getChiCost(ctx) / 4)) {
 

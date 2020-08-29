@@ -92,6 +92,7 @@ public final class ParticleBuilder {
 	private boolean gravity;
 	private boolean shaded;
 	private boolean collide;
+	private boolean collideParticles;
 	private float scale;
 	private Entity entity, spawnEntity;
 	private float yaw, pitch;
@@ -644,6 +645,12 @@ public final class ParticleBuilder {
 		this.collide = collide;
 		return this;
 	}
+	
+	public ParticleBuilder collideParticles(boolean collide){
+		if (!building) throw new IllegalStateException("Not building yet!");
+		this.collideParticles = collide;
+		return this;
+	}
 
 	// ============================================= Targeted-only methods =============================================
 
@@ -894,6 +901,7 @@ public final class ParticleBuilder {
 		particle.setGlowing(glow);
 		particle.setSparkle(sparkle);
 		particle.setCollisions(collide);
+		particle.canCollideParticles = collideParticles;
 		particle.setEntity(entity);
 		particle.setSpawnEntity(spawnEntity);
 		particle.setTargetPosition(tx, ty, tz);
@@ -936,6 +944,7 @@ public final class ParticleBuilder {
 		gravity = false;
 		shaded = false;
 		collide = false;
+		collideParticles = false;
 		sparkle = false;
 		glow = false;
 		scale = 1;

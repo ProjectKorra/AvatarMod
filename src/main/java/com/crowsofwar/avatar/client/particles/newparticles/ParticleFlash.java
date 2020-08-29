@@ -1,6 +1,5 @@
 package com.crowsofwar.avatar.client.particles.newparticles;
 
-import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import com.crowsofwar.avatar.bending.bending.air.Airbending;
 import com.crowsofwar.avatar.bending.bending.fire.Firebending;
 
@@ -8,22 +7,10 @@ import com.crowsofwar.avatar.client.particles.newparticles.renderlayers.RenderLa
 import com.crowsofwar.avatar.client.particles.newparticles.renderlayers.RenderLayerFlashParticle;
 import com.crowsofwar.avatar.client.particles.newparticles.renderlayers.RenderLayerFlashParticleGlow;
 
-import com.crowsofwar.avatar.config.ConfigClient.ParticleRenderSettings;
-
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity ;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.Loader;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL20;
-
 import static com.crowsofwar.avatar.config.ConfigClient.CLIENT_CONFIG;
 
 /**
@@ -36,7 +23,6 @@ import static com.crowsofwar.avatar.config.ConfigClient.CLIENT_CONFIG;
 //@SideOnly(Side.CLIENT)
 //@Optional.Interface(iface = "com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity", modid = "hammercore")
 public class ParticleFlash extends ParticleAvatar /*implements IGlowingEntity*/ {
-    private static final ResourceLocation PARTICLE_TEXTURES = new ResourceLocation("minecraft", "textures/particle/particles.png");
 
     public ParticleFlash(World world, double x, double y, double z) {
         super(world, x, y, z);

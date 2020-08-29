@@ -40,6 +40,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
@@ -131,7 +132,7 @@ public class AbilityEarthControl extends Ability {
 
         if (!bendable)
             if (Earthbending.getClosestEarthbendableBlock(entity, ctx, this) != null)
-                pos = Earthbending.getClosestEarthbendableBlock(entity, ctx, this).toBlockPos();
+                pos = Objects.requireNonNull(Earthbending.getClosestEarthbendableBlock(entity, ctx, this)).toBlockPos();
 
         ibs = world.getBlockState(pos);
         if (!ibs.isFullBlock() && !Earthbending.isBendable(ibs))
@@ -146,7 +147,7 @@ public class AbilityEarthControl extends Ability {
         if (!world.isAirBlock(pos) && bendable && heldBlocks < maxBlocks) {
             AbilityData abilityData = ctx.getData().getAbilityData(this);
 
-            if (bender.consumeChi(getChiCost(abilityData) / 4)) {
+            if (bender.consumeChi(getChiCost(ctx) / 4)) {
 
 
                 EntityFloatingBlock floating = new EntityFloatingBlock(world, ibs);
@@ -190,11 +191,9 @@ public class AbilityEarthControl extends Ability {
                 if (!world.isRemote)
                     world.spawnEntity(floating);
 
-                SoundType sound = block.getSoundType();
-                if (sound != null) {
-                    world.playSound(null, floating.getPosition(), sound.getBreakSound(),
-                            SoundCategory.PLAYERS, sound.getVolume(), sound.getPitch());
-                }
+                SoundType sound = block.getSoundType(ibs, world, pos, entity);
+                world.playSound(null, floating.getPosition(), sound.getBreakSound(),
+                        SoundCategory.PLAYERS, sound.getVolume(), sound.getPitch());
 
                 if (!data.hasStatusControl(PLACE_BLOCK))
                     data.addStatusControl(PLACE_BLOCK);

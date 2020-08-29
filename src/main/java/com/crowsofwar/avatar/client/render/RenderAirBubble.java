@@ -90,6 +90,8 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
             alpha = ticks / 10f;
         }
         sizeMult *= entity.getSize() / 2.5f;
+        
+        alpha *=2;
 
         alpha *= 1.5F;
 
