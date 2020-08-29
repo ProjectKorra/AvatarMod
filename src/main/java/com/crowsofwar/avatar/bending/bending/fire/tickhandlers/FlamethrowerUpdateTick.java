@@ -281,21 +281,22 @@ public class FlamethrowerUpdateTick extends TickHandler {
                             double spawnY = box.y + random.nextDouble() * 0.125 * (boundingBox.maxY - boundingBox.minY);
                             double spawnZ = box.z + random.nextDouble() * 0.125 * (boundingBox.maxZ - boundingBox.minZ);
                             int time = 10 - (int) (entity.velocity().magnitude() / 20) + AvatarUtils.getRandomNumberInRange(0, 2);
+                            float scale = entity.getOwner() instanceof EntityBender ? 2.0F : 1.0F;
                             if (entity.getOwner() instanceof EntityPlayer)
                                 time = 4 - (int) (entity.velocity().magnitude() / 20) + AvatarUtils.getRandomNumberInRange(0, 2);
                             ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 10 * entity.getAvgSize(),
                                     entity.world.rand.nextGaussian() / 10 * entity.getAvgSize(), entity.world.rand.nextGaussian() / 10 * entity.getAvgSize())
-                                    .time(time).clr(rgb[0], rgb[1], rgb[2]).scale(entity.getAvgSize())
+                                    .time(time).clr(rgb[0], rgb[1], rgb[2]).scale(entity.getAvgSize() * scale)
                                     .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).element(entity.getElement())
                                     .ability(entity.getAbility()).spawnEntity(entity.getOwner()).collide(true).collideParticles(entity.getOwner() instanceof EntityBender).spawn(entity.world);
                             ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 10 * entity.getAvgSize(),
                                     entity.world.rand.nextGaussian() / 10 * entity.getAvgSize(), entity.world.rand.nextGaussian() / 10 * entity.getAvgSize())
-                                    .time(time).clr(rgb[0], rgb[1], rgb[2]).scale(entity.getAvgSize())
+                                    .time(time).clr(rgb[0], rgb[1], rgb[2]).scale(entity.getAvgSize() * scale)
                                     .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).element(entity.getElement())
                                     .ability(entity.getAbility()).spawnEntity(entity.getOwner()).collide(true).collideParticles(entity.getOwner() instanceof EntityBender).spawn(entity.world);
                             ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 7.5 * entity.getAvgSize(),
                                     entity.world.rand.nextGaussian() / 7.5 * entity.getAvgSize(), entity.world.rand.nextGaussian() / 7.5 * entity.getAvgSize())
-                                    .time(time + 2).clr(rgb[0], rgb[1], rgb[2]).scale(entity.getAvgSize() / 1.25F)
+                                    .time(time + 2).clr(rgb[0], rgb[1], rgb[2]).scale(entity.getAvgSize() / 1.25F * scale)
                                     .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).element(entity.getElement())
                                     .ability(entity.getAbility()).spawnEntity(entity.getOwner()).collide(true).collideParticles(entity.getOwner() instanceof EntityBender).spawn(entity.world);
                         }

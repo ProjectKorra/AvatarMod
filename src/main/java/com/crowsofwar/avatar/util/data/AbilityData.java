@@ -286,6 +286,8 @@ public class AbilityData {
 	 */
 	public void setPath(AbilityTreePath path) {
 		this.path = path;
+		if (path != AbilityTreePath.MAIN)
+			setLevel(3);
 		checkPath();
 		save();
 	}
