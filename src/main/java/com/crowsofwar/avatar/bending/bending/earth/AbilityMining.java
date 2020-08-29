@@ -196,7 +196,7 @@ public class AbilityMining extends Ability {
         Block block = world.getBlockState(pos).getBlock();
         AvatarWorldData wd = AvatarWorldData.getDataFromWorld(world);
 
-        boolean bendable = Earthbending.isBendable(world.getBlockState(pos)) && block != AIR;
+        boolean bendable = Earthbending.isBendable(world, pos, world.getBlockState(pos), 2) && block != AIR;
         if (bendable) {
 
             boolean drop = !ctx.getBender().isCreativeMode();

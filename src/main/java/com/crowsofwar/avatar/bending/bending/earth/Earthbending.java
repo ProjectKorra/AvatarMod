@@ -43,6 +43,7 @@ import java.util.UUID;
 import java.util.function.BiPredicate;
 
 import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
+import static java.lang.Math.max;
 import static java.lang.Math.toRadians;
 
 public class Earthbending extends BendingStyle {
@@ -88,6 +89,47 @@ public class Earthbending extends BendingStyle {
                 double pitch = entity.rotationPitch + j * 360.0 / angle;
 
                 BiPredicate<BlockPos, IBlockState> isWater = (pos, state) -> isBendable(state)
+                        && state.getBlock() != Blocks.AIR;
+
+                Vector angleVec = Vector.toRectangular(toRadians(yaw), toRadians(pitch));
+                Raytrace.Result result = Raytrace.predicateRaytrace(world, eye, angleVec, range, isWater);
+                if (result.hitSomething()) {
+                    return result.getPosPrecise();
+                }
+
+            }
+
+        }
+
+        ctx.getBender().sendMessage("avatar.earthSourceFail");
+        return null;
+
+    }
+
+    public static boolean isBendable(World world, BlockPos pos, IBlockState state, int maxHardness) {
+        Block block = state.getBlock();
+        if (STATS_CONFIG.bendableBlocks.contains(block))
+            return true;
+        else return STATS_CONFIG.enableAutoModCompat && state.getBlockHardness(world, pos) <= maxHardness && block.getRegistryName() != null && !block.getRegistryName().getNamespace().equals("minecraft") &&
+                (OreDictionary.doesOreNameExist(block.getTranslationKey()) || block instanceof BlockOre || block instanceof BlockRedstoneOre ||
+                        OreDictionary.doesOreNameExist(block.getLocalizedName()));
+    }
+
+    public static Vector getClosestEarthbendableBlock(EntityLivingBase entity, AbilityContext ctx, Ability ability, int maxHardness) {
+        World world = entity.world;
+        Vector eye = Vector.getEyePos(entity);
+
+        float range = ability.getProperty(Ability.RADIUS, ctx).floatValue();
+        range *= ctx.getAbilityData().getDamageMult() * ctx.getAbilityData().getXpModifier();
+
+        int angle = 12;
+        for (int i = 0; i < angle; i++) {
+            for (int j = 0; j < angle; j++) {
+
+                double yaw = entity.rotationYaw + i * 360.0 / angle;
+                double pitch = entity.rotationPitch + j * 360.0 / angle;
+
+                BiPredicate<BlockPos, IBlockState> isWater = (pos, state) -> isBendable(world, pos, state, maxHardness)
                         && state.getBlock() != Blocks.AIR;
 
                 Vector angleVec = Vector.toRectangular(toRadians(yaw), toRadians(pitch));

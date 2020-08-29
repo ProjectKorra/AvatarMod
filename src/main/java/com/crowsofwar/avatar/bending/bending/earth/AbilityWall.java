@@ -43,7 +43,13 @@ public class AbilityWall extends Ability {
 
     public AbilityWall() {
         super(Earthbending.ID, "wall");
-        requireRaytrace(6, false);
+        requireRaytrace(20, false);
+    }
+
+    @Override
+    public void init() {
+        super.init();
+        addProperties(LIFETIME, RANGE, SIZE);
     }
 
     @Override
@@ -51,7 +57,7 @@ public class AbilityWall extends Ability {
 
         Bender bender = ctx.getBender();
 
-        if (bender.consumeChi(STATS_CONFIG.chiWall)) {
+        if (bender.consumeChi(getChiCost(ctx))) {
 
             EntityLivingBase entity = ctx.getBenderEntity();
             World world = ctx.getWorld();
@@ -61,7 +67,7 @@ public class AbilityWall extends Ability {
             AbilityData abilityData = data.getAbilityData(this);
             // This "power" variable is the player's experience, but power rating can boost
             // power by up to 25 points
-            float power = abilityData.getTotalXp() + (float) ctx.getPowerRating() / 100 * 25;
+            float power = abilityData.getTotalXp() + (float) abilityData.getPowerRating() / 100 * 25;
 
             int reach = Math.round(SKILLS_CONFIG.wallReach);
 
