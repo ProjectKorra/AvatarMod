@@ -27,6 +27,7 @@ import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockOre;
+import net.minecraft.block.BlockRedstoneOre;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
@@ -68,7 +69,7 @@ public class Earthbending extends BendingStyle {
         if (STATS_CONFIG.bendableBlocks.contains(block))
             return true;
         else return STATS_CONFIG.enableAutoModCompat && block.getRegistryName() != null && !block.getRegistryName().getNamespace().equals("minecraft") &&
-                (OreDictionary.doesOreNameExist(block.getTranslationKey()) || block instanceof BlockOre ||
+                (OreDictionary.doesOreNameExist(block.getTranslationKey()) || block instanceof BlockOre || block instanceof BlockRedstoneOre ||
                         OreDictionary.doesOreNameExist(block.getLocalizedName()));
     }
 

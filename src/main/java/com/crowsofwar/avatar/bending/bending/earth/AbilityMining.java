@@ -34,7 +34,6 @@ import net.minecraft.world.World;
 
 import java.util.*;
 
-import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
 import static net.minecraft.init.Blocks.AIR;
 
 /**
@@ -197,7 +196,7 @@ public class AbilityMining extends Ability {
         Block block = world.getBlockState(pos).getBlock();
         AvatarWorldData wd = AvatarWorldData.getDataFromWorld(world);
 
-        boolean bendable = STATS_CONFIG.bendableBlocks.contains(block) && block != AIR;
+        boolean bendable = Earthbending.isBendable(world.getBlockState(pos)) && block != AIR;
         if (bendable) {
 
             boolean drop = !ctx.getBender().isCreativeMode();
@@ -217,9 +216,9 @@ public class AbilityMining extends Ability {
      * and flags any ores for mining. Finally, recursively calls mineNextOre again so the
      * floodfill process continues.
      *
-     * @param queue The queue
+     * @param queue            The queue
      * @param alreadyInspected Self-explanatory
-     * @param ctx Ability context
+     * @param ctx              Ability context
      * @param oresMined        How many ores have been mined so far. When calling this method from
      *                         outside, should be 0. When the method recursively calls itself, this
      *                         parameter increases. This allows the method to know when it has mined
@@ -261,7 +260,7 @@ public class AbilityMining extends Ability {
 
     private boolean isBreakableOre(World world, BlockPos pos) {
         Block block = world.getBlockState(pos).getBlock();
-        return block instanceof BlockOre || block instanceof BlockRedstoneOre;
+        return (block instanceof BlockOre || block instanceof BlockRedstoneOre) && Earthbending.isBendable(world.getBlockState(pos));
     }
 
 
