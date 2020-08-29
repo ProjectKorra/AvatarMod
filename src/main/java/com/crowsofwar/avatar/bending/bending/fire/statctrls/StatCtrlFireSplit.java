@@ -7,7 +7,6 @@ import com.crowsofwar.avatar.bending.bending.fire.Firebending;
 import com.crowsofwar.avatar.client.controls.AvatarControl;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.entity.EntityOffensive;
-import com.crowsofwar.avatar.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.entity.mob.EntityBender;
 import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.Raytrace;
@@ -24,11 +23,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
-import static com.crowsofwar.avatar.bending.bending.Ability.RANGE;
 import static com.crowsofwar.avatar.bending.bending.fire.AbilityFireRedirect.DESTROY_TIER;
-import static com.crowsofwar.avatar.bending.bending.fire.AbilityFireRedirect.REDIRECT_TIER;
 
 public class StatCtrlFireSplit extends StatusControl {
 
@@ -76,13 +72,13 @@ public class StatCtrlFireSplit extends StatusControl {
                                             .time((int) range * 4 + AvatarUtils.getRandomNumberInRange(0, 4)).scale(0.25F + range / 10)
                                             .pos(Vector.getEyePos(entity).toMinecraft()).clr(235 + AvatarUtils.getRandomNumberInRange(0, 20),
                                             60 + AvatarUtils.getRandomNumberInRange(10, 40), 25 + AvatarUtils.getRandomNumberInRange(0, 10),
-                                            170 + AvatarUtils.getRandomNumberInRange(0, 20)).element(new Firebending()).spawn(world);
+                                            170 + AvatarUtils.getRandomNumberInRange(0, 20)).collide(true).collideParticles(true).element(new Firebending()).spawn(world);
                                     ParticleBuilder.create(ParticleBuilder.Type.FLASH).vel(entity.getLookVec().scale(range / 7.5)
                                             .add(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20))
                                             .time((int) range * 4 + AvatarUtils.getRandomNumberInRange(0, 4)).scale(0.25F + range / 10)
                                             .pos(Vector.getEyePos(entity).toMinecraft()).clr(255,
                                             20 + AvatarUtils.getRandomNumberInRange(0, 20), 5 + AvatarUtils.getRandomNumberInRange(0, 10),
-                                            120 + AvatarUtils.getRandomNumberInRange(0, 20)).element(new Firebending()).spawn(world);
+                                            120 + AvatarUtils.getRandomNumberInRange(0, 20)).collide(true).collideParticles(true).element(new Firebending()).spawn(world);
                                 }
                             }
                             if (bender.consumeChi(chiCost)) {

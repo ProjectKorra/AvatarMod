@@ -420,8 +420,8 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
             //Handles if it's colliding with something.
             double x = motionX, y = motionY, z = motionZ;
             double origX = x, origY = y, origZ = z;
-            List<AxisAlignedBB> list = this.world.getCollisionBoxes(null, this.getEntityBoundingBox().expand(x, y, z).grow(0.1));
-            List<Entity> entityList = this.world.getEntitiesWithinAABB(Entity.class, getEntityBoundingBox().expand(x, y, z).grow(0.15));
+            List<AxisAlignedBB> list = this.world.getCollisionBoxes(null, this.getEntityBoundingBox().expand(x, y, z).shrink(0.2));
+            List<Entity> entityList = this.world.getEntitiesWithinAABB(Entity.class, getEntityBoundingBox().expand(x, y, z).shrink(0.3));
 
             for (Entity hit : entityList) {
                 if (hit != getOwner()) {

@@ -16,6 +16,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -906,6 +907,9 @@ public final class ParticleBuilder {
 		particle.setSpawnEntity(spawnEntity);
 		particle.setTargetPosition(tx, ty, tz);
 		particle.setTargetEntity(target);
+
+		float width = scale / 8;
+		particle.setBoundingBox(new AxisAlignedBB(x - width, y, z - width, x + width, y + scale / 4, z + width));
 
 
 		if(particle.getCustomRenderLayer() != null){

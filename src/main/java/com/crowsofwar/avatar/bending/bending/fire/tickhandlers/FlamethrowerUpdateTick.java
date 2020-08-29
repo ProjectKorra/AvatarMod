@@ -23,6 +23,7 @@ import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.entity.EntityFlames;
 import com.crowsofwar.avatar.entity.EntityOffensive;
 import com.crowsofwar.avatar.entity.data.OffensiveBehaviour;
+import com.crowsofwar.avatar.entity.mob.EntityBender;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.damageutils.AvatarDamageSource;
@@ -38,6 +39,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
@@ -78,7 +80,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
         Bender bender = ctx.getBender();
         World world = ctx.getWorld();
         AbilityData abilityData = data.getAbilityData("flamethrower");
-        AbilityFlamethrower flamethrower = (AbilityFlamethrower) Abilities.get(new AbilityFlamethrower().getName());
+        AbilityFlamethrower flamethrower = (AbilityFlamethrower) Abilities.get("flamethrower");
 
         if (flamethrower == null)
             return false;
@@ -141,7 +143,6 @@ public class FlamethrowerUpdateTick extends TickHandler {
                 Vector look = Vector.toRectangular(toRadians(yawRandom), toRadians(pitchRandom));
                 Vector start = look.times(range).plus(eye.minusY(0.45));
 
-
                 EntityFlames flames = new EntityFlames(world);
                 flames.setPosition(start);
                 flames.setOwner(entity);
@@ -187,45 +188,20 @@ public class FlamethrowerUpdateTick extends TickHandler {
 
                         if (CLIENT_CONFIG.fireRenderSettings.solidFlamethrowerParticles) {
                             ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start.toMinecraft()).scale(size * 0.75F).time(lifetime - AvatarUtils.getRandomNumberInRange(0, 2)).collide(true).vel(look.times(speedMult / 1.25).toMinecraft()).
-                                    ability(new AbilityFlamethrower()).collide(true).spawnEntity(entity).spawn(world);
+                                    ability(flamethrower).collide(true).spawnEntity(entity).spawn(world);
                         }
 
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start.toMinecraft()).time(lifetime + AvatarUtils.getRandomNumberInRange(4, 8)).vel(look.times(speedMult).toMinecraft()).
-                                clr(r, g, b, 180).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(40, 100)).collide(true).spawnEntity(entity).scale(size * 1.75F).element(new Firebending())
+                                clr(r, g, b, 180).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(40, 100)).collide(true).collideParticles(true)
+                                .spawnEntity(entity).scale(size * 1.75F).element(new Firebending())
                                 .ability(flamethrower).spawn(world);
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start.toMinecraft()).time(lifetime + AvatarUtils.getRandomNumberInRange(4, 8)).vel(look.times(speedMult).toMinecraft()).
-                                clr(r, g + 15, b, 180).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(40, 100)).collide(true).spawnEntity(entity).scale(size * 1.75F).element(new Firebending())
+                                clr(r, g + 15, b, 180).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(40, 100)).collide(true).collideParticles(true)
+                                .spawnEntity(entity).scale(size * 1.75F).element(new Firebending())
                                 .ability(flamethrower).spawn(world);
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start.toMinecraft()).time(lifetime + AvatarUtils.getRandomNumberInRange(4, 8)).vel(look.times(speedMult).toMinecraft()).
-                                clr(r, g + 60, b * 2, 180).fade(rRandom, gRandom + 60, bRandom * 2, AvatarUtils.getRandomNumberInRange(40, 100)).collide(true).spawnEntity(entity).scale(size * 1.75F).element(new Firebending())
-                                .ability(flamethrower).spawn(world);
-                    }
-                }
-
-                //Particle code.
-                if (world.isRemote && (flamethrower.getCurrentTier(abilityData) < 4 || !isRaining)) {
-                    speedMult /= 29.5F;
-                    for (int i = 0; i < flamesPerSecond; i++) {
-                        int rRandom = fadeR < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeR * 2) : AvatarUtils.getRandomNumberInRange(fadeR / 2,
-                                fadeR * 2);
-                        int gRandom = fadeG < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeG * 2) : AvatarUtils.getRandomNumberInRange(fadeG / 2,
-                                fadeG * 2);
-                        int bRandom = fadeB < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeB * 2) : AvatarUtils.getRandomNumberInRange(fadeB / 2,
-                                fadeB * 2);
-
-                        if (CLIENT_CONFIG.fireRenderSettings.solidFlamethrowerParticles) {
-                            ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start.toMinecraft()).scale(size * 0.75F).time(lifetime - AvatarUtils.getRandomNumberInRange(0, 2)).collide(true).vel(look.times(speedMult / 1.25).toMinecraft()).
-                                    ability(new AbilityFlamethrower()).collide(true).collideParticles(true).spawnEntity(entity).spawn(world);
-                        }
-
-                        ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start.toMinecraft()).time(lifetime + AvatarUtils.getRandomNumberInRange(4, 8)).vel(look.times(speedMult).toMinecraft()).
-                                clr(r, g, b, 180).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(40, 100)).collide(true).collideParticles(true).spawnEntity(entity).scale(size * 1.75F).element(new Firebending())
-                                .ability(flamethrower).spawn(world);
-                        ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start.toMinecraft()).time(lifetime + AvatarUtils.getRandomNumberInRange(4, 8)).vel(look.times(speedMult).toMinecraft()).
-                                clr(r, g + 15, b, 180).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(40, 100)).collide(true).collideParticles(true).spawnEntity(entity).scale(size * 1.75F).element(new Firebending())
-                                .ability(flamethrower).spawn(world);
-                        ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start.toMinecraft()).time(lifetime + AvatarUtils.getRandomNumberInRange(4, 8)).vel(look.times(speedMult).toMinecraft()).
-                                clr(r, g + 60, b * 2, 180).fade(rRandom, gRandom + 60, bRandom * 2, AvatarUtils.getRandomNumberInRange(40, 100)).collide(true).collideParticles(true).spawnEntity(entity).scale(size * 1.75F).element(new Firebending())
+                                clr(r, g + 60, b * 2, 180).fade(rRandom, gRandom + 60, bRandom * 2, AvatarUtils.getRandomNumberInRange(40, 100)).collide(true).collideParticles(true)
+                                .spawnEntity(entity).scale(size * 1.75F).element(new Firebending())
                                 .ability(flamethrower).spawn(world);
                     }
                 }
@@ -288,8 +264,8 @@ public class FlamethrowerUpdateTick extends TickHandler {
                 if (entity.world.isRemote && entity.ticksExisted > 1) {
                     int[] fade = entity.getFade();
                     int[] rgb = entity.getRGB();
-                    for (int h = 0; h < Math.max(1, entity.velocity().magnitude() / 10); h++) {
-                        for (double i = 0; i < entity.width; i += 0.1 * entity.getAvgSize() * 4) {
+                    for (int h = 0; h < Math.max(1, entity.getOwner() instanceof EntityPlayer ? 1 : entity.velocity().magnitude() / 10); h++) {
+                        for (double i = 0; i < entity.width; i += entity.getOwner() instanceof EntityPlayer ? entity.width / 4 : 0.25 * entity.getAvgSize() * 2) {
                             int rRandom = fade[0] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[0] * 2) : AvatarUtils.getRandomNumberInRange(fade[0] / 2,
                                     fade[0] * 2);
                             int gRandom = fade[1] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[1] * 2) : AvatarUtils.getRandomNumberInRange(fade[1] / 2,
@@ -302,20 +278,24 @@ public class FlamethrowerUpdateTick extends TickHandler {
                             double spawnX = box.x + random.nextDouble() * 0.125 * (boundingBox.maxX - boundingBox.minX);
                             double spawnY = box.y + random.nextDouble() * 0.125 * (boundingBox.maxY - boundingBox.minY);
                             double spawnZ = box.z + random.nextDouble() * 0.125 * (boundingBox.maxZ - boundingBox.minZ);
-                            ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 20 * entity.getAvgSize(),
-                                    entity.world.rand.nextGaussian() / 20 * entity.getAvgSize(), entity.world.rand.nextGaussian() / 20 * entity.getAvgSize())
-                                    .time(7 - (int) (entity.velocity().magnitude() / 20) + AvatarUtils.getRandomNumberInRange(2, 4)).clr(rgb[0], rgb[1], rgb[2])
-                                    .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).scale(entity.getAvgSize()).element(entity.getElement())
-                                    .ability(entity.getAbility()).spawnEntity(entity.getOwner()).spawn(entity.world);
-                            ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 20 * entity.getAvgSize(),
-                                    entity.world.rand.nextGaussian() / 20 * entity.getAvgSize(), entity.world.rand.nextGaussian() / 20 * entity.getAvgSize())
-                                    .time(7 - (int) (entity.velocity().magnitude() / 20) + AvatarUtils.getRandomNumberInRange(2, 4)).clr(rgb[0], rgb[1], rgb[2])
-                                    .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).scale(entity.getAvgSize()).element(entity.getElement())
-                                    .ability(entity.getAbility()).spawnEntity(entity.getOwner()).spawn(entity.world);
-                            ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 15 * entity.getAvgSize(),
-                                    entity.world.rand.nextGaussian() / 15 * entity.getAvgSize(), entity.world.rand.nextGaussian() / 15 * entity.getAvgSize())
-                                    .time(7 - (int) (entity.velocity().magnitude() / 20) + AvatarUtils.getRandomNumberInRange(2, 4)).scale(entity.getAvgSize() / 4)
-                                    .element(entity.getElement()).ability(entity.getAbility()).spawnEntity(entity.getOwner()).spawn(entity.world);
+                            int time = 10 - (int) (entity.velocity().magnitude() / 20) + AvatarUtils.getRandomNumberInRange(0, 2);
+                            if (entity.getOwner() instanceof EntityPlayer)
+                                time = 4 - (int) (entity.velocity().magnitude() / 20) + AvatarUtils.getRandomNumberInRange(0, 2);
+                            ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 10 * entity.getAvgSize(),
+                                    entity.world.rand.nextGaussian() / 10 * entity.getAvgSize(), entity.world.rand.nextGaussian() / 10 * entity.getAvgSize())
+                                    .time(time).clr(rgb[0], rgb[1], rgb[2]).scale(entity.getAvgSize())
+                                    .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).element(entity.getElement())
+                                    .ability(entity.getAbility()).spawnEntity(entity.getOwner()).collide(true).collideParticles(entity.getOwner() instanceof EntityBender).spawn(entity.world);
+                            ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 10 * entity.getAvgSize(),
+                                    entity.world.rand.nextGaussian() / 10 * entity.getAvgSize(), entity.world.rand.nextGaussian() / 10 * entity.getAvgSize())
+                                    .time(time).clr(rgb[0], rgb[1], rgb[2]).scale(entity.getAvgSize())
+                                    .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).element(entity.getElement())
+                                    .ability(entity.getAbility()).spawnEntity(entity.getOwner()).collide(true).collideParticles(entity.getOwner() instanceof EntityBender).spawn(entity.world);
+                            ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 7.5 * entity.getAvgSize(),
+                                    entity.world.rand.nextGaussian() / 7.5 * entity.getAvgSize(), entity.world.rand.nextGaussian() / 7.5 * entity.getAvgSize())
+                                    .time(time + 2).clr(rgb[0], rgb[1], rgb[2]).scale(entity.getAvgSize() / 1.25F)
+                                    .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).element(entity.getElement())
+                                    .ability(entity.getAbility()).spawnEntity(entity.getOwner()).collide(true).collideParticles(entity.getOwner() instanceof EntityBender).spawn(entity.world);
                         }
                     }
                 }

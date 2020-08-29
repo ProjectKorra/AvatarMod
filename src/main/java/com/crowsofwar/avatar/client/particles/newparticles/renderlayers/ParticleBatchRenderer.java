@@ -95,7 +95,7 @@ public class ParticleBatchRenderer {
 					layers.add(layer);
 				}
 				
-				if(layer.particles.size() > 16384)
+				if(layer.particles.size() > 8192)
 					layer.particles.removeFirst();
 				
 				layer.particles.add(particle);
