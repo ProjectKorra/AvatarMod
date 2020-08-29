@@ -19,10 +19,10 @@ package com.crowsofwar.avatar.entity;
 
 import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import com.crowsofwar.avatar.bending.bending.earth.Earthbending;
-import com.crowsofwar.avatar.config.ConfigStats;
 import com.crowsofwar.avatar.util.damageutils.AvatarDamageSource;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockAir;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -31,6 +31,9 @@ import net.minecraft.init.Blocks;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.EntityEquipmentSlot.Type;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
@@ -47,271 +50,260 @@ import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
  */
 public class EntityRavine extends EntityOffensive {
 
-	private Vector initialPosition;
+    private static final DataParameter<Boolean> SYNC_BREAK_BLOCKS = EntityDataManager.createKey(EntityRavine.class,
+            DataSerializers.BOOLEAN);
 
-	private float damageMult;
-	private double maxTravelDistanceSq;
-	private boolean breakBlocks;
-	private boolean dropEquipment;
+    private Vector initialPosition;
+    private double maxTravelDistanceSq;
+    private boolean dropEquipment;
 
-	/**
-	 * @param world
-	 */
-	public EntityRavine(World world) {
-		super(world);
-		setSize(0.125F, 0.125F);
-		this.damageMult = 1;
-		this.noClip = true;
-	}
+    /**
+     * @param world
+     */
+    public EntityRavine(World world) {
+        super(world);
+        setSize(0.125F, 0.125F);
+        this.noClip = true;
+    }
 
-	@Override
-	public boolean isInRangeToRender3d(double x, double y, double z) {
-		return true;
-	}
+    @Override
+    protected void entityInit() {
+        super.entityInit();
+        dataManager.register(SYNC_BREAK_BLOCKS, false);
+    }
 
-	@Override
-	public boolean isInRangeToRenderDist(double distance) {
-		return true;
-	}
+    @Override
+    public boolean isInRangeToRender3d(double x, double y, double z) {
+        return true;
+    }
 
-	@Override
-	public boolean shouldRenderInPass(int pass) {
-		return true;
-	}
+    @Override
+    public boolean isInRangeToRenderDist(double distance) {
+        return true;
+    }
 
-	@Override
-	public double getExpandedHitboxWidth() {
-		return 0.5;
-	}
+    @Override
+    public boolean shouldRenderInPass(int pass) {
+        return true;
+    }
 
-	@Override
-	public double getExpandedHitboxHeight() {
-		return 0.5;
-	}
+    @Override
+    public double getExpandedHitboxWidth() {
+        return 0.5;
+    }
 
-	public void setDamageMult(float mult) {
-		this.damageMult = mult;
-	}
-
-	public void setDistance(double dist) {
-		maxTravelDistanceSq = dist * dist;
-	}
-
-	public void setBreakBlocks(boolean breakBlocks) {
-		this.breakBlocks = breakBlocks;
-	}
-
-	public void setDropEquipment(boolean dropEquipment) {
-		this.dropEquipment = dropEquipment;
-	}
-
-	public double getSqrDistanceTravelled() {
-		return position().sqrDist(initialPosition);
-	}
+    @Override
+    public double getExpandedHitboxHeight() {
+        return 0.5;
+    }
 
 
-	@Override
-	public boolean isProjectile() {
-		return true;
-	}
+    public void setDistance(double dist) {
+        maxTravelDistanceSq = dist * dist;
+    }
 
-	@Override
-	public Vec3d getKnockback() {
-		return super.getKnockback();
-	}
+    public void setBreakBlocks(boolean breakBlocks) {
+        dataManager.set(SYNC_BREAK_BLOCKS, breakBlocks);
+    }
 
-	@Override
-	public Vec3d getKnockbackMult() {
-		return new Vec3d(STATS_CONFIG.ravineSettings.push, STATS_CONFIG.ravineSettings.push * 2,
-				STATS_CONFIG.ravineSettings.push);
-	}
+    public boolean shouldBreakBlocks() {
+        return dataManager.get(SYNC_BREAK_BLOCKS);
+    }
 
-	private void spawnEntity() {
-		if (!world.isRemote) {
-			BlockPos pos = new BlockPos(prevPosX, prevPosY, prevPosZ);
+    public void setDropEquipment(boolean dropEquipment) {
+        this.dropEquipment = dropEquipment;
+    }
 
-			if (world.getBlockState(pos.down()).getBlockHardness(world, pos.down()) != -1 && !world.isAirBlock(pos.down()) && world.isBlockNormalCube(pos.down(), false)
-					// Checks that the block above is not solid, since this causes the falling sand to vanish.
-					&& !world.isBlockNormalCube(pos, false)) {
+    public double getSqrDistanceTravelled() {
+        return position().sqrDist(initialPosition);
+    }
 
-				// Falling blocks do the setting block to air themselves.
-				EntityFallingBlock fallingblock = new EntityFallingBlock(world, prevPosX, prevPosY - 1, prevPosZ,
-						world.getBlockState(new BlockPos(prevPosX, prevPosY - 1, prevPosZ)));
-				fallingblock.motionY = 0.3;
-				world.spawnEntity(fallingblock);
-			}
-		}
-	}
-	@Override
-	public void onEntityUpdate() {
-		super.onEntityUpdate();
 
-		if (initialPosition == null) {
-			initialPosition = position();
-		}
+    @Override
+    public boolean isProjectile() {
+        return true;
+    }
 
-		if (ticksExisted % 2 == 0)
-			spawnEntity();
+    @Override
+    public Vec3d getKnockback() {
+        return super.getKnockback();
+    }
 
-		if (!world.isRemote && getSqrDistanceTravelled() > maxTravelDistanceSq) {
-			Dissipate();
-		}
+    @Override
+    public Vec3d getKnockbackMult() {
+        return new Vec3d(STATS_CONFIG.ravineSettings.push, STATS_CONFIG.ravineSettings.push * 2,
+                STATS_CONFIG.ravineSettings.push);
+    }
 
-		BlockPos below = getPosition().offset(EnumFacing.DOWN);
-		Block belowBlock = world.getBlockState(below).getBlock();
+    private void spawnEntity() {
+        if (!world.isRemote) {
+            BlockPos pos = new BlockPos(prevPosX, prevPosY, prevPosZ);
 
-		if (ticksExisted % 3 == 0) world.playSound(posX, posY, posZ,
-				world.getBlockState(below).getBlock().getSoundType().getBreakSound(),
-				SoundCategory.PLAYERS, 1, 1, false);
+            if (world.getBlockState(pos.down()).getBlockHardness(world, pos.down()) != -1 && !world.isAirBlock(pos.down()) && world.isBlockNormalCube(pos.down(), false)
+                    // Checks that the block above is not solid, since this causes the falling sand to vanish.
+                    && !world.isBlockNormalCube(pos, false)) {
 
-		//Lowers the ravine if there's a step below
-		if (!ConfigStats.STATS_CONFIG.bendableBlocks.contains(belowBlock) && world.getEntitiesWithinAABB(EntityFallingBlock.class,
-				getEntityBoundingBox().grow(1, 1, 1)).isEmpty()) {
-			if (!STATS_CONFIG.bendableBlocks.contains(world.getBlockState(getPosition().down(2)).getBlock()))
-				Dissipate();
-			else {
-				setPosition(position().minusY(1));
-			}
-		}
+                // Falling blocks do the setting block to air themselves.
+                EntityFallingBlock fallingblock = new EntityFallingBlock(world, prevPosX, prevPosY - 1, prevPosZ,
+                        world.getBlockState(new BlockPos(prevPosX, prevPosY - 1, prevPosZ)));
+                fallingblock.motionY = 0.3;
+                world.spawnEntity(fallingblock);
+            }
+        }
+    }
 
-		// Destroy non-solid blocks in the ravine
-		IBlockState inBlock = world.getBlockState(getPosition());
-		if (inBlock.getBlock() != Blocks.AIR && !inBlock.isFullBlock()) {
-			if (inBlock.getBlockHardness(world, getPosition()) == 0) {
-				breakBlock(getPosition());
-			} else {
-				Dissipate();
-			}
-		}
-		if (STATS_CONFIG.bendableBlocks.contains(inBlock.getBlock()))
-			setPosition(position().plusY(1));
+    @Override
+    public void onEntityUpdate() {
+        super.onEntityUpdate();
 
-		if (!world.isRemote && breakBlocks) {
-			BlockPos last = new BlockPos(prevPosX, prevPosY, prevPosZ);
-			if (!last.equals(getPosition()) && !last.equals(initialPosition.toBlockPos())) {
+        if (initialPosition == null) {
+            initialPosition = position();
+        }
 
-				world.destroyBlock(last.down(), true);
 
-				double travel = Math.sqrt(getSqrDistanceTravelled() / maxTravelDistanceSq);
-				double chance = -(travel - 0.5) * (travel - 0.5) + 0.25;
-				chance *= 2;
+        spawnEntity();
 
-				if (rand.nextDouble() <= chance) {
-					world.destroyBlock(last.down(2), true);
-				}
+        if (!world.isRemote && getSqrDistanceTravelled() > maxTravelDistanceSq) {
+            Dissipate();
+        }
 
-			}
-		}
+        BlockPos below = getPosition().offset(EnumFacing.DOWN);
+        Block belowBlock = world.getBlockState(below).getBlock();
 
-	}
+        if (ticksExisted % 3 == 0) world.playSound(posX, posY, posZ,
+                world.getBlockState(below).getBlock().getSoundType().getBreakSound(),
+                SoundCategory.PLAYERS, 1, 1, false);
+        if (shouldBreakBlocks()) {
+            BlockPos pos = new BlockPos(posX, posY, posZ);
+            breakBlock(pos, 2);
 
-	@Override
-	public float getDamage() {
-		return damageMult * STATS_CONFIG.ravineSettings.damage;
-	}
+        }
 
-	@Override
-	public boolean isPiercing() {
-		return true;
-	}
 
-	@Override
-	public boolean shouldDissipate() {
-		return true;
-	}
+        //Lowers the ravine if there's a step below
+        if (!Earthbending.isBendable(world.getBlockState(below)) && world.getEntitiesWithinAABB(EntityFallingBlock.class,
+                getEntityBoundingBox().grow(1, 1, 1)).isEmpty()) {
+            if (!Earthbending.isBendable(world.getBlockState(below.down())))
+                Dissipate();
+            else {
+                setPosition(position().minusY(1));
+            }
+        }
 
-	@Override
-	public int getFireTime() {
-		return 0;
-	}
 
-	@Override
-	public void Dissipate() {
-		if (onCollideWithSolid()) {
-			if (world.isRemote && world.getBlockState(getPosition()) != null)
-				world.spawnParticle(EnumParticleTypes.BLOCK_CRACK, posX, posY, posZ, world.rand.nextGaussian() / 20,
-						world.rand.nextDouble() / 20, world.rand.nextGaussian() / 20,
-						Block.getStateId(world.getBlockState(getPosition())));
-			setDead();
-		}
-	}
+        // Destroy non-solid blocks in the ravine
+        IBlockState inBlock = world.getBlockState(getPosition());
+        if (inBlock.getBlock() != Blocks.AIR && !inBlock.isFullBlock()) {
+            if (inBlock.getBlockHardness(world, getPosition()) == 0) {
+                breakBlock(getPosition());
+            } else {
+                if (!shouldBreakBlocks())
+                    Dissipate();
+            }
+        }
+        if (Earthbending.isBendable(world.getBlockState(getPosition())))
+            setPosition(position().plusY(1));
 
-	@Override
-	public float getXpPerHit() {
-		return SKILLS_CONFIG.ravineHit;
-	}
+        if (world.isRemote)
+            if (!(world.getBlockState(getPosition().down()).getBlock() instanceof BlockAir))
+                for (int i = 0; i < 6; i++) {
+                    world.spawnParticle(EnumParticleTypes.BLOCK_CRACK, posX + world.rand.nextGaussian() * 0.5, posY + world.rand.nextDouble() * 0.5, posZ + world.rand.nextGaussian() * 0.5,
+                            world.rand.nextGaussian() * 0.75, world.rand.nextGaussian() * 0.75, world.rand.nextGaussian() * 0.75,
+                            Block.getStateId(world.getBlockState(getPosition().down())));
+                }
 
-	@Override
-	public DamageSource getDamageSource(Entity target, EntityLivingBase owner) {
-		return AvatarDamageSource.causeRavineDamage(target, owner);
-	}
+    }
 
-	@Override
-	public void spawnExplosionParticles(World world, Vec3d pos) {
+    @Override
+    public boolean isPiercing() {
+        return true;
+    }
 
-	}
+    @Override
+    public boolean shouldDissipate() {
+        return true;
+    }
 
-	@Override
-	public void spawnDissipateParticles(World world, Vec3d pos) {
+    @Override
+    public int getFireTime() {
+        return 0;
+    }
 
-	}
+    @Override
+    public void Dissipate() {
+        if (onCollideWithSolid()) {
+            if (world.isRemote && world.getBlockState(getPosition()) != null)
+                world.spawnParticle(EnumParticleTypes.BLOCK_CRACK, posX, posY, posZ, world.rand.nextGaussian() / 20,
+                        world.rand.nextDouble() / 20, world.rand.nextGaussian() / 20,
+                        Block.getStateId(world.getBlockState(getPosition())));
+            setDead();
+        }
+    }
 
-	@Override
-	public void spawnPiercingParticles(World world, Vec3d pos) {
+    @Override
+    public DamageSource getDamageSource(Entity target, EntityLivingBase owner) {
+        return AvatarDamageSource.causeRavineDamage(target, owner);
+    }
 
-	}
+    @Override
+    public void spawnExplosionParticles(World world, Vec3d pos) {
 
-	@Override
-	public void onCollideWithEntity(Entity entity) {
-		super.onCollideWithEntity(entity);
-		if (canCollideWith(entity)) {
-			if (dropEquipment && entity instanceof EntityLivingBase) {
+    }
 
-				EntityLivingBase living = (EntityLivingBase) entity;
+    @Override
+    public void spawnDissipateParticles(World world, Vec3d pos) {
 
-				for (EntityEquipmentSlot slot : EntityEquipmentSlot.values()) {
+    }
 
-					ItemStack stack = living.getItemStackFromSlot(slot);
-					if (!stack.isEmpty()) {
-						double chance = slot.getSlotType() == Type.HAND ? 40 : 20;
-						if (rand.nextDouble() * 100 <= chance) {
-							living.entityDropItem(stack, 0);
-							living.setItemStackToSlot(slot, ItemStack.EMPTY);
-						}
-					}
+    @Override
+    public void spawnPiercingParticles(World world, Vec3d pos) {
 
-				}
+    }
 
-			}
-		}
-	}
+    @Override
+    public void onCollideWithEntity(Entity entity) {
+        super.onCollideWithEntity(entity);
+        if (canCollideWith(entity)) {
+            if (dropEquipment && entity instanceof EntityLivingBase) {
 
-	@Override
-	public void setDead() {
-		super.setDead();
-		if (!world.isRemote && isDead)
-			Thread.dumpStack();
-	}
+                EntityLivingBase living = (EntityLivingBase) entity;
 
-	@Override
-	public boolean onCollideWithSolid() {
-		// Destroy if in a block
-		IBlockState inBlock = world.getBlockState(getPosition());
-		if (inBlock.isFullBlock()) {
-			inBlock = world.getBlockState(getPosition().up());
-			if ((inBlock.getBlock() == Blocks.AIR || !inBlock.isFullBlock() && inBlock.getBlockHardness(world, getPosition()) == 0) &&
-			STATS_CONFIG.bendableBlocks.contains(world.getBlockState(getPosition()).getBlock())) {
-				setPosition(position().plusY(1));
-				return false;
-			}
-			else return true;
+                for (EntityEquipmentSlot slot : EntityEquipmentSlot.values()) {
 
-		}
-		return false;
-	}
+                    ItemStack stack = living.getItemStackFromSlot(slot);
+                    if (!stack.isEmpty()) {
+                        double chance = slot.getSlotType() == Type.HAND ? 40 : 20;
+                        if (rand.nextDouble() * 100 <= chance) {
+                            living.entityDropItem(stack, 0);
+                            living.setItemStackToSlot(slot, ItemStack.EMPTY);
+                        }
+                    }
 
-	@Override
-	public BendingStyle getElement() {
-		return new Earthbending();
-	}
+                }
+
+            }
+        }
+    }
+    
+
+    @Override
+    public boolean onCollideWithSolid() {
+        // Destroy if in a block
+        IBlockState inBlock = world.getBlockState(getPosition());
+        if (inBlock.isFullBlock()) {
+            inBlock = world.getBlockState(getPosition().up());
+            if ((inBlock.getBlock() == Blocks.AIR || !inBlock.isFullBlock() && inBlock.getBlockHardness(world, getPosition()) == 0) &&
+                    Earthbending.isBendable(inBlock)) {
+                setPosition(position().plusY(1));
+                return false;
+            } else return !shouldBreakBlocks();
+
+        }
+        return false;
+    }
+
+    @Override
+    public BendingStyle getElement() {
+        return new Earthbending();
+    }
 }

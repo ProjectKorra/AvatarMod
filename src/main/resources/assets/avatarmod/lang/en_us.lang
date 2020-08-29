@@ -174,12 +174,12 @@ avatar.ability.mine_blocks.lvl4_1=§2§lSoul of the Badgermole ;; Mine very far,
 avatar.ability.mine_blocks.lvl4_2=§2§lPluto's Greed ;; Mine out ore veins, level IV fortune
 
 avatar.ability.ravine=§2§lRavine
-avatar.ability.ravine.desc=Create a powerful yet small fissure in the ground. Only works on level ground and earth, but can do plenty of damage.
-avatar.ability.ravine.lvl1=Slow, basic ravine
-avatar.ability.ravine.lvl2=Faster speed
-avatar.ability.ravine.lvl3=Ravine travels farther unless there is an obstacle, more damage
-avatar.ability.ravine.lvl4_1=§2§l§oFissure ;; Destroys blocks under it, hit multiple enemies, but costs 1.5x chi
-avatar.ability.ravine.lvl4_2=§2§l§oShaking §2§l§oearth ;; Chance to knock armor and weapons off hit enemies
+avatar.ability.ravine.desc=Create a powerful yet small fissure in the ground. Goes up and down blocks!
+avatar.ability.ravine.lvl1=Slow, basic ravine.
+avatar.ability.ravine.lvl2=Faster speed!
+avatar.ability.ravine.lvl3=Destroys nonsolid blocks!
+avatar.ability.ravine.lvl4_1=§2§l§oFissure ;; Plows through everything in its path! Doesn't need to go up blocks because it just destroys them.
+avatar.ability.ravine.lvl4_2=§2§l§oShaking §2§l§oearth ;; Chance to knock armor and weapons off hit enemies!
 
 avatar.ability.wall=§2§lWall
 avatar.ability.wall.desc=Raise a protective barrier in front of yourself. It can block incoming projectiles and mobs.

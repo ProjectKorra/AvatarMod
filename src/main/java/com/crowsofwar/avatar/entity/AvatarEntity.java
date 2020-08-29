@@ -21,10 +21,7 @@ import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import com.crowsofwar.avatar.bending.bending.air.Airbending;
-import com.crowsofwar.avatar.client.particle.ClientParticleSpawner;
-import com.crowsofwar.avatar.client.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
-import com.crowsofwar.avatar.client.particle.ParticleSpawner;
 import com.crowsofwar.avatar.entity.data.SyncedEntity;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
@@ -32,6 +29,7 @@ import com.crowsofwar.avatar.util.data.AvatarWorldData;
 import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.base.Optional;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockAir;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.BlockTNT;
 import net.minecraft.block.state.IBlockState;
@@ -741,36 +739,83 @@ public abstract class AvatarEntity extends Entity {
 
         Block destroyed = blockState.getBlock();
         SoundEvent sound;
-        if (destroyed == Blocks.FIRE) {
-            sound = SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE;
-        } else {
-            sound = destroyed.getSoundType().getBreakSound();
-        }
-        world.playSound(null, position, sound, SoundCategory.BLOCKS, 1, 1);
+        if (!(destroyed instanceof BlockAir)) {
+            if (destroyed == Blocks.FIRE) {
+                sound = SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE;
+            } else {
+                sound = destroyed.getSoundType().getBreakSound();
+            }
+            world.playSound(null, position, sound, SoundCategory.BLOCKS, 1, 1);
 
-        // Spawn particles
+            // Spawn particles
 
-        for (int i = 0; i < 7; i++) {
-            world.spawnParticle(EnumParticleTypes.BLOCK_CRACK, posX, posY, posZ,
-                    3 * (rand.nextGaussian() - 0.5), rand.nextGaussian() * 2 + 1,
-                    3 * (rand.nextGaussian() - 0.5), Block.getStateId(blockState));
-        }
-        world.setBlockToAir(position);
+            for (int i = 0; i < 7; i++) {
+                world.spawnParticle(EnumParticleTypes.BLOCK_CRACK, posX, posY, posZ,
+                        3 * (rand.nextGaussian() - 0.5), rand.nextGaussian() * 2 + 1,
+                        3 * (rand.nextGaussian() - 0.5), Block.getStateId(blockState));
+            }
+            if (!world.isRemote)
+                world.setBlockToAir(position);
+            world.scheduleBlockUpdate(position, blockState.getBlock(), 0, 1);
+            // Create drops
 
-        // Create drops
-
-        if (!world.isRemote) {
-            List<ItemStack> drops = blockState.getBlock().getDrops(world, position, blockState, 0);
-            for (ItemStack stack : drops) {
-                EntityItem item = new EntityItem(world, posX, posY, posZ, stack);
-                item.setDefaultPickupDelay();
-                item.motionX *= 2;
-                item.motionY *= 1.2;
-                item.motionZ *= 2;
-                world.spawnEntity(item);
+            if (!world.isRemote) {
+                List<ItemStack> drops = blockState.getBlock().getDrops(world, position, blockState, 0);
+                for (ItemStack stack : drops) {
+                    EntityItem item = new EntityItem(world, posX, posY, posZ, stack);
+                    item.setDefaultPickupDelay();
+                    item.motionX *= 2;
+                    item.motionY *= 1.2;
+                    item.motionZ *= 2;
+                    world.spawnEntity(item);
+                }
             }
         }
+    }
 
+    /**
+     * Break the block at the given position, playing sound/particles, and
+     * dropping item
+     */
+    protected void breakBlock(BlockPos position, int hardness) {
+
+        IBlockState blockState = world.getBlockState(position);
+
+        Block destroyed = blockState.getBlock();
+        SoundEvent sound;
+
+        if (blockState.getBlockHardness(world, position) <= hardness && !(destroyed instanceof BlockAir)) {
+            if (destroyed == Blocks.FIRE) {
+                sound = SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE;
+            } else {
+                sound = destroyed.getSoundType().getBreakSound();
+            }
+            world.playSound(null, position, sound, SoundCategory.BLOCKS, 1, 1);
+
+            // Spawn particles
+
+            for (int i = 0; i < 7; i++) {
+                world.spawnParticle(EnumParticleTypes.BLOCK_CRACK, posX, posY, posZ,
+                        3 * (rand.nextGaussian() - 0.5), rand.nextGaussian() * 2 + 1,
+                        3 * (rand.nextGaussian() - 0.5), Block.getStateId(blockState));
+            }
+            if (!world.isRemote)
+                world.setBlockToAir(position);
+            world.scheduleBlockUpdate(position, blockState.getBlock(), 0, 1);
+            // Create drops
+
+            if (!world.isRemote) {
+                List<ItemStack> drops = blockState.getBlock().getDrops(world, position, blockState, 0);
+                for (ItemStack stack : drops) {
+                    EntityItem item = new EntityItem(world, posX, posY, posZ, stack);
+                    item.setDefaultPickupDelay();
+                    item.motionX *= 2;
+                    item.motionY *= 1.2;
+                    item.motionZ *= 2;
+                    world.spawnEntity(item);
+                }
+            }
+        }
     }
 
     /**

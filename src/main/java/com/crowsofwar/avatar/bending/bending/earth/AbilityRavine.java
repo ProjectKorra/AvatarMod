@@ -18,81 +18,85 @@
 package com.crowsofwar.avatar.bending.bending.earth;
 
 import com.crowsofwar.avatar.bending.bending.Ability;
+import com.crowsofwar.avatar.entity.EntityRavine;
 import com.crowsofwar.avatar.util.data.AbilityData;
-import com.crowsofwar.avatar.util.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
-import com.crowsofwar.avatar.entity.EntityRavine;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
-
-import static com.crowsofwar.avatar.config.ConfigSkills.SKILLS_CONFIG;
-import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
 
 /**
  * @author CrowsOfWar
  */
 public class AbilityRavine extends Ability {
 
-	public AbilityRavine() {
-		super(Earthbending.ID, "ravine");
-	}
+    private static final String
+            DESTRUCTION = "destruction",
+            DROP_EQUIPMENT = "dropEquipment";
 
-	@Override
-	public void execute(AbilityContext ctx) {
+    public AbilityRavine() {
+        super(Earthbending.ID, "ravine");
+    }
 
-		Bender bender = ctx.getBender();
+    @Override
+    public void init() {
+        super.init();
+        addBooleanProperties(DESTRUCTION, DROP_EQUIPMENT);
+    }
 
-		float chi = STATS_CONFIG.chiRavine;
-		if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
-			chi = STATS_CONFIG.chiRavineLvl4_1;
-		}
+    @Override
+    public void execute(AbilityContext ctx) {
 
-		if (bender.consumeChi(chi)) {
+        Bender bender = ctx.getBender();
+        EntityLivingBase entity = ctx.getBenderEntity();
+        World world = ctx.getWorld();
 
-			AbilityData abilityData = ctx.getData().getAbilityData(this);
-			float xp = abilityData.getTotalXp();
-			EntityLivingBase entity = ctx.getBenderEntity();
-			World world = ctx.getWorld();
 
-			Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
-			Vector position = Vector.getLookRectangular(entity).times(1.1);
+        if (bender.consumeChi(getChiCost(ctx))) {
 
-			double speed = ctx.getLevel() >= 1 ? 14 : 8;
-			speed += ctx.getPowerRating() / 25;
+            AbilityData abilityData = ctx.getData().getAbilityData(this);
 
-			float damage = 0.75f + xp / 100;
-			damage *= ctx.getPowerRatingDamageMod();
 
-			EntityRavine ravine = new EntityRavine(world);
-			ravine.setOwner(entity);
-			ravine.setDamageMult(damage);
-			ravine.setPosition(Vector.getEntityPos(entity).plus(Vector.getLookRectangular(entity).withY(0)));
-			ravine.setVelocity(look.times(speed));
-			ravine.setDamage(damage * STATS_CONFIG.ravineSettings.damage);
-			ravine.setAbility(this);
-			ravine.setElement(new Earthbending());
-			ravine.setLifeTime(80);
-			ravine.setEntitySize(0.125F);
-			ravine.setXp(SKILLS_CONFIG.ravineHit);
-			ravine.setDistance(ctx.getLevel() >= 2 ? 16 : 10);
-			ravine.setBreakBlocks(ctx.isMasterLevel(AbilityTreePath.FIRST));
-			ravine.setDropEquipment(ctx.isMasterLevel(AbilityTreePath.SECOND));
-			if (!world.isRemote) {
-				world.spawnEntity(ravine);
-			}
+            Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
 
-		}
-	}
+            double speed = getProperty(SPEED, ctx).floatValue() * 3;
+            float damage = getProperty(DAMAGE, ctx).floatValue();
+            int lifetime = getProperty(LIFETIME, ctx).intValue();
+            float size = getProperty(SIZE, ctx).floatValue() / 2;
 
-	@Override
-	public boolean isOffensive() {
-		return true;
-	}
+            speed *= abilityData.getDamageMult() * abilityData.getXpModifier();
+            damage *= abilityData.getDamageMult() * abilityData.getXpModifier();
+            lifetime *= abilityData.getDamageMult() * abilityData.getXpModifier();
+            size *= abilityData.getDamageMult() * abilityData.getXpModifier();
 
-	@Override
-	public int getBaseTier() {
-		return 2;
-	}
+            EntityRavine ravine = new EntityRavine(world);
+            ravine.setOwner(entity);
+            ravine.setDamage(damage);
+            ravine.setPosition(Vector.getEntityPos(entity).plus(Vector.getLookRectangular(entity).withY(0)));
+            ravine.setVelocity(look.times(speed));
+            ravine.setAbility(this);
+            ravine.setElement(new Earthbending());
+            ravine.setLifeTime(lifetime);
+            ravine.setEntitySize(size);
+            ravine.setXp(getProperty(XP_HIT).floatValue());
+            ravine.setDistance(speed);
+            ravine.setBreakBlocks(getBooleanProperty(DESTRUCTION, ctx));
+            ravine.setDropEquipment(getBooleanProperty(DROP_EQUIPMENT, ctx));
+            if (!world.isRemote) {
+                world.spawnEntity(ravine);
+            }
+
+        }
+    }
+
+    @Override
+    public boolean isOffensive() {
+        return true;
+    }
+
+    @Override
+    public int getBaseTier() {
+        return 2;
+    }
 }
