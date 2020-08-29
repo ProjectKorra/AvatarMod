@@ -27,12 +27,10 @@ import com.crowsofwar.avatar.entity.mob.EntityBender;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.PlayerViewRegistry;
-import com.crowsofwar.avatar.util.Raytrace;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
-import com.crowsofwar.avatar.util.data.ctx.BendingContext;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -100,8 +98,6 @@ public class AbilityFlameStrike extends Ability {
             orbSize += 0.15F;
 
         }
-        
-        if(bender.consumeChi(getChiCost(ctx) / 4)) {
 
         if (bender.consumeChi(getChiCost(ctx) / 4)) {
 
