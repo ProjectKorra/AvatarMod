@@ -16,7 +16,8 @@
       "chiOnHit": 1.5,
       "damage": 5,
       "destruction": false,
-      "dropEquipment": false
+      "dropEquipment": false,
+      "wave": false
     },
     "level2": {
       "tier": 2,
@@ -57,7 +58,7 @@
       "burnOutRecoverTick": 0.375,
       "performanceAmount": 40,
       "lifeTime": 40,
-      "size": 1.5,
+      "size": 1.25,
       "speed": 6,
       "knockback": 5,
       "chiOnHit": 2.875,
@@ -73,13 +74,14 @@
       "burnOutRecoverTick": 0.375,
       "performanceAmount": 35,
       "lifeTime": 45,
-      "size": 1.25,
+      "size": 1.5,
       "speed": 7,
       "knockback": 4,
       "chiOnHit": 2.0,
       "damage": 7,
       "destruction": false,
-      "dropEquipment": true
+      "dropEquipment": true,
+      "wave": true
     }
   }
 }

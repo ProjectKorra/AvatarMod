@@ -42,7 +42,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import static com.crowsofwar.avatar.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
 
 /**
@@ -146,7 +145,7 @@ public class EntityRavine extends EntityOffensive {
                 // Falling blocks do the setting block to air themselves.
                 EntityFallingBlock fallingblock = new EntityFallingBlock(world, prevPosX, prevPosY - 1, prevPosZ,
                         world.getBlockState(new BlockPos(prevPosX, prevPosY - 1, prevPosZ)));
-                fallingblock.motionY = 0.3;
+                fallingblock.motionY = 0.2 + getAvgSize() / 10;
                 world.spawnEntity(fallingblock);
             }
         }
@@ -167,6 +166,9 @@ public class EntityRavine extends EntityOffensive {
             Dissipate();
         }
 
+        if (ticksExisted >= getLifeTime())
+            setDead();
+
         BlockPos below = getPosition().offset(EnumFacing.DOWN);
         Block belowBlock = world.getBlockState(below).getBlock();
 
@@ -181,15 +183,27 @@ public class EntityRavine extends EntityOffensive {
 
 
         //Lowers the ravine if there's a step below
-        if (!Earthbending.isBendable(world.getBlockState(below)) && world.getEntitiesWithinAABB(EntityFallingBlock.class,
+        if (!Earthbending.isBendable(world, below, world.getBlockState(below), 2) && world.getEntitiesWithinAABB(EntityFallingBlock.class,
                 getEntityBoundingBox().grow(1, 1, 1)).isEmpty()) {
-            if (!Earthbending.isBendable(world.getBlockState(below.down())))
+            if (!Earthbending.isBendable(world, below.down(), world.getBlockState(below.down()), 2))
                 Dissipate();
             else {
                 setPosition(position().minusY(1));
             }
         }
 
+
+        if (Earthbending.isBendable(world, getPosition(), world.getBlockState(getPosition()), 2) && !shouldBreakBlocks())
+            setPosition(position().plusY(1));
+
+
+        if (world.isRemote)
+            if (!(world.getBlockState(getPosition().down()).getBlock() instanceof BlockAir))
+                for (int i = 0; i < 6; i++) {
+                    world.spawnParticle(EnumParticleTypes.BLOCK_CRACK, posX + world.rand.nextGaussian() * 0.5, posY + world.rand.nextDouble() * 0.5, posZ + world.rand.nextGaussian() * 0.5,
+                            world.rand.nextGaussian() * 0.75, world.rand.nextGaussian() * 0.75, world.rand.nextGaussian() * 0.75,
+                            Block.getStateId(world.getBlockState(getPosition().down())));
+                }
 
         // Destroy non-solid blocks in the ravine
         IBlockState inBlock = world.getBlockState(getPosition());
@@ -201,17 +215,6 @@ public class EntityRavine extends EntityOffensive {
                     Dissipate();
             }
         }
-        if (Earthbending.isBendable(world.getBlockState(getPosition())))
-            setPosition(position().plusY(1));
-
-        if (world.isRemote)
-            if (!(world.getBlockState(getPosition().down()).getBlock() instanceof BlockAir))
-                for (int i = 0; i < 6; i++) {
-                    world.spawnParticle(EnumParticleTypes.BLOCK_CRACK, posX + world.rand.nextGaussian() * 0.5, posY + world.rand.nextDouble() * 0.5, posZ + world.rand.nextGaussian() * 0.5,
-                            world.rand.nextGaussian() * 0.75, world.rand.nextGaussian() * 0.75, world.rand.nextGaussian() * 0.75,
-                            Block.getStateId(world.getBlockState(getPosition().down())));
-                }
-
     }
 
     @Override
@@ -240,9 +243,12 @@ public class EntityRavine extends EntityOffensive {
         }
     }
 
+
     @Override
-    public DamageSource getDamageSource(Entity target, EntityLivingBase owner) {
-        return AvatarDamageSource.causeRavineDamage(target, owner);
+    public void setDead() {
+        super.setDead();
+        if (!world.isRemote && this.isDead)
+            Thread.dumpStack();
     }
 
     @Override
@@ -284,16 +290,16 @@ public class EntityRavine extends EntityOffensive {
             }
         }
     }
-    
+
 
     @Override
     public boolean onCollideWithSolid() {
         // Destroy if in a block
         IBlockState inBlock = world.getBlockState(getPosition());
-        if (inBlock.isFullBlock()) {
+        if (inBlock.isFullBlock() && Earthbending.isBendable(world, getPosition(), inBlock, 2)) {
             inBlock = world.getBlockState(getPosition().up());
-            if ((inBlock.getBlock() == Blocks.AIR || !inBlock.isFullBlock() && inBlock.getBlockHardness(world, getPosition()) == 0) &&
-                    Earthbending.isBendable(inBlock)) {
+            if ((inBlock.getBlock() == Blocks.AIR || !inBlock.isNormalCube() && inBlock.getBlockHardness(world, getPosition().up()) == 0) &&
+                    Earthbending.isBendable(world, getPosition(), world.getBlockState(getPosition()), 2)) {
                 setPosition(position().plusY(1));
                 return false;
             } else return !shouldBreakBlocks();

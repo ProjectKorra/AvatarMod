@@ -26,6 +26,7 @@ import com.crowsofwar.avatar.util.Raytrace;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.BlockOre;
 import net.minecraft.block.BlockRedstoneOre;
 import net.minecraft.block.state.IBlockState;
@@ -71,7 +72,7 @@ public class Earthbending extends BendingStyle {
             return true;
         else return STATS_CONFIG.enableAutoModCompat && block.getRegistryName() != null && !block.getRegistryName().getNamespace().equals("minecraft") &&
                 (OreDictionary.doesOreNameExist(block.getTranslationKey()) || block instanceof BlockOre || block instanceof BlockRedstoneOre ||
-                        OreDictionary.doesOreNameExist(block.getLocalizedName()));
+                        OreDictionary.doesOreNameExist(block.getLocalizedName())) && !(block instanceof BlockLiquid);
     }
 
     public static Vector getClosestEarthbendableBlock(EntityLivingBase entity, AbilityContext ctx, Ability ability) {
@@ -112,7 +113,7 @@ public class Earthbending extends BendingStyle {
             return true;
         else return STATS_CONFIG.enableAutoModCompat && state.getBlockHardness(world, pos) <= maxHardness && block.getRegistryName() != null && !block.getRegistryName().getNamespace().equals("minecraft") &&
                 (OreDictionary.doesOreNameExist(block.getTranslationKey()) || block instanceof BlockOre || block instanceof BlockRedstoneOre ||
-                        OreDictionary.doesOreNameExist(block.getLocalizedName()));
+                        OreDictionary.doesOreNameExist(block.getLocalizedName())) && !(block instanceof BlockLiquid);
     }
 
     public static Vector getClosestEarthbendableBlock(EntityLivingBase entity, AbilityContext ctx, Ability ability, int maxHardness) {

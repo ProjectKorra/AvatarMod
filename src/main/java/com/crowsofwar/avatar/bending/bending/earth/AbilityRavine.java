@@ -33,7 +33,8 @@ public class AbilityRavine extends Ability {
 
     private static final String
             DESTRUCTION = "destruction",
-            DROP_EQUIPMENT = "dropEquipment";
+            DROP_EQUIPMENT = "dropEquipment",
+            WAVE = "wave";
 
     public AbilityRavine() {
         super(Earthbending.ID, "ravine");
@@ -42,7 +43,7 @@ public class AbilityRavine extends Ability {
     @Override
     public void init() {
         super.init();
-        addBooleanProperties(DESTRUCTION, DROP_EQUIPMENT);
+        addBooleanProperties(DESTRUCTION, DROP_EQUIPMENT, WAVE);
     }
 
     @Override
@@ -58,7 +59,7 @@ public class AbilityRavine extends Ability {
             AbilityData abilityData = ctx.getData().getAbilityData(this);
 
 
-            Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
+
 
             double speed = getProperty(SPEED, ctx).floatValue() * 3;
             float damage = getProperty(DAMAGE, ctx).floatValue();
@@ -70,21 +71,34 @@ public class AbilityRavine extends Ability {
             lifetime *= abilityData.getDamageMult() * abilityData.getXpModifier();
             size *= abilityData.getDamageMult() * abilityData.getXpModifier();
 
-            EntityRavine ravine = new EntityRavine(world);
-            ravine.setOwner(entity);
-            ravine.setDamage(damage);
-            ravine.setPosition(Vector.getEntityPos(entity).plus(Vector.getLookRectangular(entity).withY(0)));
-            ravine.setVelocity(look.times(speed));
-            ravine.setAbility(this);
-            ravine.setElement(new Earthbending());
-            ravine.setLifeTime(lifetime);
-            ravine.setEntitySize(size);
-            ravine.setXp(getProperty(XP_HIT).floatValue());
-            ravine.setDistance(speed);
-            ravine.setBreakBlocks(getBooleanProperty(DESTRUCTION, ctx));
-            ravine.setDropEquipment(getBooleanProperty(DROP_EQUIPMENT, ctx));
-            if (!world.isRemote) {
-                world.spawnEntity(ravine);
+            int ravines = getBooleanProperty(WAVE, ctx) ? 3 : 1;
+            for (int i = 0; i < ravines; i++) {
+                Vector pos = Vector.getEntityPos(entity);
+                Vector side = Vector.getLookRectangular(entity).withY(0);
+                Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
+
+                if (getBooleanProperty(WAVE, ctx)) {
+                    side = Vector.toRectangular(Math.toRadians(entity.rotationYaw - 90 + i * 90), 0).times(size * 1.5).withY(0);
+                }
+                pos = pos.plus(side).plus(Vector.getLookRectangular(entity).times(0.5 * size).withY(0));
+
+                EntityRavine ravine = new EntityRavine(world);
+                ravine.setOwner(entity);
+                ravine.setDamage(damage);
+                ravine.setPosition(pos);
+                ravine.setVelocity(look.times(speed));
+                ravine.setAbility(this);
+                ravine.setElement(new Earthbending());
+                ravine.setLifeTime(lifetime);
+                ravine.setEntitySize(size);
+                ravine.setXp(getProperty(XP_HIT).floatValue());
+                ravine.setDistance(speed);
+                ravine.setBreakBlocks(getBooleanProperty(DESTRUCTION, ctx));
+                ravine.setDropEquipment(getBooleanProperty(DROP_EQUIPMENT, ctx));
+                ravine.setDamageSource("avatar_Earth_ravine");
+                if (!world.isRemote) {
+                    world.spawnEntity(ravine);
+                }
             }
 
         }

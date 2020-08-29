@@ -91,7 +91,7 @@ public class AbilityEarthControl extends Ability {
         if (targetPos != null && targetPos.dist(entityPos) <= range) {
             pickupBlock(ctx, targetPos.toBlockPos());
         } else {
-            pos = Earthbending.getClosestEarthbendableBlock(entity, ctx, this);
+            pos = Earthbending.getClosestEarthbendableBlock(entity, ctx, this, 2);
             if (pos != null) {
                 pickupBlock(ctx, pos.toBlockPos());
             }
@@ -127,21 +127,21 @@ public class AbilityEarthControl extends Ability {
         }
 
         boolean bendable = Earthbending.isBendable(ibs);
-        bendable |= !bendable && !Earthbending.isBendable(world.getBlockState(pos.down()))
+        bendable |= !bendable && !Earthbending.isBendable(world, pos.down(), world.getBlockState(pos.down()), 2)
                 && !(block instanceof BlockSnow || block instanceof BlockTallGrass) && world.getBlockState(pos).isNormalCube();
 
         if (!bendable)
-            if (Earthbending.getClosestEarthbendableBlock(entity, ctx, this) != null)
-                pos = Objects.requireNonNull(Earthbending.getClosestEarthbendableBlock(entity, ctx, this)).toBlockPos();
+            if (Earthbending.getClosestEarthbendableBlock(entity, ctx, this, 2) != null)
+                pos = Objects.requireNonNull(Earthbending.getClosestEarthbendableBlock(entity, ctx, this, 2)).toBlockPos();
 
         ibs = world.getBlockState(pos);
-        if (!ibs.isFullBlock() && !Earthbending.isBendable(ibs))
+        if (!ibs.isFullBlock() && !Earthbending.isBendable(world, pos, ibs, 2))
             ibs = world.getBlockState(pos.down());
 
         block = ibs.getBlock();
 
-        bendable = Earthbending.isBendable(ibs);
-        bendable |= !bendable && !Earthbending.isBendable(world.getBlockState(pos.down()))
+        bendable = Earthbending.isBendable(world, pos, ibs, 2);
+        bendable |= !bendable && !Earthbending.isBendable(world, pos.down(), world.getBlockState(pos.down()), 2)
                 && !(block instanceof BlockSnow || block instanceof BlockTallGrass) && world.getBlockState(pos).isNormalCube();
 
         if (!world.isAirBlock(pos) && bendable && heldBlocks < maxBlocks) {
@@ -182,7 +182,7 @@ public class AbilityEarthControl extends Ability {
                 floating.setTier(getCurrentTier(ctx));
 
 
-                if (STATS_CONFIG.preventPickupBlockGriefing) {
+                if (STATS_CONFIG.preventEarthGriefing) {
                     floating.setItemDropsEnabled(false);
                 } else {
                     world.setBlockState(pos, Blocks.AIR.getDefaultState());

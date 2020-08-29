@@ -108,7 +108,7 @@ public class AbilityMining extends Ability {
                     }
 
                     // Actually break the block here
-                    boolean success = breakBlock(pos, ctx, i * breakBlockTime, fortune);
+                    boolean success = breakBlock(pos, ctx, (i - 1) * breakBlockTime + breakBlockTime, fortune);
                     // Stop at non-breakable blocks
                     if (!success && block != Blocks.AIR) {
                         break;

@@ -165,7 +165,7 @@ public class ConfigStats {
 	public boolean addDungeonLoot = true;
 
 	@Load
-	public boolean preventPickupBlockGriefing = false;
+	public boolean preventEarthGriefing = false;
 
 	@Load
 	public float cleanseChiGroupBonus = 2f;

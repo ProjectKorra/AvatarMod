@@ -326,7 +326,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 
         if (noClip) {
             IBlockState state = world.getBlockState(getPosition());
-            if (state.getBlock() != Blocks.AIR && !(state.getBlock() instanceof BlockLiquid) && state.isFullBlock()) {
+            if (onCollideWithSolid()) {
                 ticks++;
             }
             if (ticks > 0 || onCollideWithSolid()) {

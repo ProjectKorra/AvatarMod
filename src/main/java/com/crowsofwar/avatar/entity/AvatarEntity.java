@@ -59,6 +59,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Predicate;
 
+import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
 import static net.minecraft.block.BlockTNT.EXPLODE;
 
 /**
@@ -739,7 +740,7 @@ public abstract class AvatarEntity extends Entity {
 
         Block destroyed = blockState.getBlock();
         SoundEvent sound;
-        if (!(destroyed instanceof BlockAir)) {
+        if (!STATS_CONFIG.preventEarthGriefing && !(destroyed instanceof BlockAir)) {
             if (destroyed == Blocks.FIRE) {
                 sound = SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE;
             } else {
@@ -784,7 +785,7 @@ public abstract class AvatarEntity extends Entity {
         Block destroyed = blockState.getBlock();
         SoundEvent sound;
 
-        if (blockState.getBlockHardness(world, position) <= hardness && !(destroyed instanceof BlockAir)) {
+        if (!STATS_CONFIG.preventEarthGriefing && blockState.getBlockHardness(world, position) <= hardness && !(destroyed instanceof BlockAir)) {
             if (destroyed == Blocks.FIRE) {
                 sound = SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE;
             } else {

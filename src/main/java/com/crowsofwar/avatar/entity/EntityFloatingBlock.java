@@ -50,6 +50,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
+import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.util.data.StatusControlController.PLACE_BLOCK;
 import static com.crowsofwar.avatar.util.data.StatusControlController.THROW_BLOCK;
 import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
@@ -278,7 +279,7 @@ public class EntityFloatingBlock extends EntityOffensive {
     }
 
     public void placeBlock() {
-        if (!world.isRemote) {
+        if (!world.isRemote && !STATS_CONFIG.preventEarthGriefing) {
             Vec3d middle = AvatarEntityUtils.getMiddleOfEntity(this);
             BlockPos pos = new BlockPos(middle.x, middle.y, middle.z);
             //Using getPosition sometimes results in weird stuff
