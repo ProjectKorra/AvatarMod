@@ -70,7 +70,8 @@ public class Earthbending extends BendingStyle {
         if (STATS_CONFIG.bendableBlocks.contains(block))
             return true;
         else return block.getRegistryName() != null && !block.getRegistryName().getNamespace().equals("minecraft") &&
-                (OreDictionary.doesOreNameExist(block.getTranslationKey()) || block instanceof BlockOre);
+                (OreDictionary.doesOreNameExist(block.getTranslationKey()) || block instanceof BlockOre ||
+                        OreDictionary.doesOreNameExist(block.getLocalizedName()));
     }
 
     public static Vector getClosestEarthbendableBlock(EntityLivingBase entity, AbilityContext ctx, Ability ability) {
@@ -87,7 +88,7 @@ public class Earthbending extends BendingStyle {
                 double yaw = entity.rotationYaw + i * 360.0 / angle;
                 double pitch = entity.rotationPitch + j * 360.0 / angle;
 
-                BiPredicate<BlockPos, IBlockState> isWater = (pos, state) -> STATS_CONFIG.bendableBlocks.contains(state.getBlock())
+                BiPredicate<BlockPos, IBlockState> isWater = (pos, state) -> isBendable(state)
                         && state.getBlock() != Blocks.AIR;
 
                 Vector angleVec = Vector.toRectangular(toRadians(yaw), toRadians(pitch));
