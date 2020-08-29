@@ -67,7 +67,7 @@ public class Earthbending extends BendingStyle {
         Block block = state.getBlock();
         if (STATS_CONFIG.bendableBlocks.contains(block))
             return true;
-        else return block.getRegistryName() != null && !block.getRegistryName().getNamespace().equals("minecraft") &&
+        else return STATS_CONFIG.enableAutoModCompat && block.getRegistryName() != null && !block.getRegistryName().getNamespace().equals("minecraft") &&
                 (OreDictionary.doesOreNameExist(block.getTranslationKey()) || block instanceof BlockOre ||
                         OreDictionary.doesOreNameExist(block.getLocalizedName()));
     }

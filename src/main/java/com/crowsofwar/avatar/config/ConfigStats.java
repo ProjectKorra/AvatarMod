@@ -173,6 +173,10 @@ public class ConfigStats {
 	@Load
 	public boolean allowMultiAirbendingWalljump = false;
 
+	//Automatically provides compatiblity with mods that aren't included in the config, for lazy people.
+	@Load
+	public boolean enableAutoModCompat = true;
+
 	@Load
 	public List<String> sandBlocksNames = Arrays.asList(
 			"minecraft:sand",
@@ -195,6 +199,7 @@ public class ConfigStats {
 			"minecraft:coal_ore",
 			"minecraft:iron_ore",
 			"minecraft:emerald_ore",
+			"minecraft:diamond_ore",
 			"minecraft:gold_ore",
 			"minecraft:lapis_ore",
 			"minecraft:redstone_ore",
