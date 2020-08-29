@@ -23,6 +23,7 @@ import com.crowsofwar.avatar.util.damageutils.AvatarDamageSource;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAir;
+import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -211,6 +212,8 @@ public class EntityRavine extends EntityOffensive {
         IBlockState inBlock = world.getBlockState(getPosition());
         if (inBlock.getBlock() != Blocks.AIR && !inBlock.isFullBlock()) {
             if (inBlock.getBlockHardness(world, getPosition()) == 0) {
+                if (inBlock.getBlock() instanceof BlockLiquid)
+                    Dissipate();
                 breakBlock(getPosition());
             } else {
                 if (!shouldBreakBlocks())
@@ -239,7 +242,7 @@ public class EntityRavine extends EntityOffensive {
 
     @Override
     public void Dissipate() {
-        if (onCollideWithSolid()) {
+        if (onCollideWithSolid() || !Earthbending.isBendable(world, getPosition().down(), world.getBlockState(getPosition().down()), 2)) {
             if (world.isRemote && world.getBlockState(getPosition()) != null)
                 world.spawnParticle(EnumParticleTypes.BLOCK_CRACK, posX, posY, posZ, world.rand.nextGaussian() / 20,
                         world.rand.nextDouble() / 20, world.rand.nextGaussian() / 20,
@@ -248,13 +251,6 @@ public class EntityRavine extends EntityOffensive {
         }
     }
 
-
-    @Override
-    public void setDead() {
-        super.setDead();
-        if (!world.isRemote && this.isDead)
-            Thread.dumpStack();
-    }
 
     @Override
     public void spawnExplosionParticles(World world, Vec3d pos) {
