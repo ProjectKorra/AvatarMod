@@ -160,7 +160,10 @@ public class EntityRavine extends EntityOffensive {
         }
 
 
-        spawnEntity();
+        int frequency = 2 - (int) Math.min(velocity().magnitude() / 20, 1);
+        if (ticksExisted % frequency == 0) {
+            spawnEntity();
+        }
 
         if (!world.isRemote && getSqrDistanceTravelled() > maxTravelDistanceSq) {
             Dissipate();
@@ -178,7 +181,6 @@ public class EntityRavine extends EntityOffensive {
         if (shouldBreakBlocks()) {
             BlockPos pos = new BlockPos(posX, posY, posZ);
             breakBlock(pos, 2);
-
         }
 
 
@@ -215,6 +217,9 @@ public class EntityRavine extends EntityOffensive {
                     Dissipate();
             }
         }
+
+        if (!Earthbending.isBendable(world.getBlockState(below)))
+            Dissipate();
     }
 
     @Override

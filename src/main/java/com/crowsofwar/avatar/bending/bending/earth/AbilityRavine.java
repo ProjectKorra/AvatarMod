@@ -24,6 +24,7 @@ import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
@@ -82,23 +83,32 @@ public class AbilityRavine extends Ability {
                 }
                 pos = pos.plus(side).plus(Vector.getLookRectangular(entity).times(0.5 * size).withY(0));
 
-                EntityRavine ravine = new EntityRavine(world);
-                ravine.setOwner(entity);
-                ravine.setDamage(damage);
-                ravine.setPosition(pos);
-                ravine.setVelocity(look.times(speed));
-                ravine.setAbility(this);
-                ravine.setElement(new Earthbending());
-                ravine.setLifeTime(lifetime);
-                ravine.setEntitySize(size);
-                ravine.setXp(getProperty(XP_HIT).floatValue());
-                ravine.setDistance(speed);
-                ravine.setBreakBlocks(getBooleanProperty(DESTRUCTION, ctx));
-                ravine.setDropEquipment(getBooleanProperty(DROP_EQUIPMENT, ctx));
-                ravine.setDamageSource("avatar_Earth_ravine");
-                if (!world.isRemote) {
-                    world.spawnEntity(ravine);
+                BlockPos targetPos = pos.toBlockPos().down();
+                BlockPos secondPos = pos.toBlockPos().down(2);
+
+                boolean targetBendable = Earthbending.isBendable(world, targetPos, world.getBlockState(targetPos), 2);
+                boolean secondBendable = Earthbending.isBendable(world, secondPos, world.getBlockState(secondPos), 2);
+
+                if (targetBendable || secondBendable) {
+                    EntityRavine ravine = new EntityRavine(world);
+                    ravine.setOwner(entity);
+                    ravine.setDamage(damage);
+                    ravine.setPosition(targetBendable ? pos : pos.minusY(1));
+                    ravine.setVelocity(look.times(speed));
+                    ravine.setAbility(this);
+                    ravine.setElement(new Earthbending());
+                    ravine.setLifeTime(lifetime);
+                    ravine.setEntitySize(size);
+                    ravine.setXp(getProperty(XP_HIT).floatValue());
+                    ravine.setDistance(speed);
+                    ravine.setBreakBlocks(getBooleanProperty(DESTRUCTION, ctx));
+                    ravine.setDropEquipment(getBooleanProperty(DROP_EQUIPMENT, ctx));
+                    ravine.setDamageSource("avatar_Earth_ravine");
+                    if (!world.isRemote) {
+                        world.spawnEntity(ravine);
+                    }
                 }
+                else bender.sendMessage("avatar.earthSourceFail");
             }
 
         }
