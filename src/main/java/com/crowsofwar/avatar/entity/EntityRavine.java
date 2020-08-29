@@ -220,9 +220,6 @@ public class EntityRavine extends EntityOffensive {
                     Dissipate();
             }
         }
-
-        if (!Earthbending.isBendable(world.getBlockState(below)))
-            Dissipate();
     }
 
     @Override
