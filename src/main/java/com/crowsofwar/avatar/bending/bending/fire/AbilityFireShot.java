@@ -99,16 +99,18 @@ public class AbilityFireShot extends Ability {
         lifeTime *= Math.min(abilityData.getXpModifier() * damageMult, 0.25F);
         chiHit *= damageMult * abilityData.getXpModifier();
 
+        Vector vel = Vector.getVelocity(entity).withY(0);
+
         if (bender.consumeChi(chi)) {
             if (!getBooleanProperty(SHOCKWAVE, ctx)) {
                 EntityFlames flames = new EntityFlames(world);
-                flames.setVelocity(Vector.getLookRectangular(entity).times(speed));
+                flames.setVelocity((Vector.getLookRectangular(entity).times(speed)).plus(vel));
                 flames.setOwner(entity);
                 flames.setPosition(pos.minusY(size / 2));
                 flames.rotationYaw = entity.rotationYaw;
                 flames.rotationPitch = entity.rotationPitch;
                 flames.setEntitySize(size);
-                flames.setDynamicSpreadingCollision(true);
+                flames.setDynamicSpreadingCollision(false);
                 flames.setReflect(getBooleanProperty(REFLECT, ctx));
                 flames.setAbility(this);
                 flames.setPerformanceAmount(performance);
@@ -154,6 +156,9 @@ public class AbilityFireShot extends Ability {
                     }
                 }
             } else {
+                float radius = getProperty(EFFECT_RADIUS, ctx).floatValue();
+                radius *= abilityData.getDamageMult() * abilityData.getXpModifier();
+
                 EntityShockwave wave = new EntityShockwave(world);
                 wave.setOwner(entity);
                 wave.rotationPitch = entity.rotationPitch;
@@ -172,6 +177,7 @@ public class AbilityFireShot extends Ability {
                 wave.setParticleSpeed(0.18F);
                 wave.setParticleWaves(2);
                 wave.setParticleAmount(10);
+                wave.setRange(radius);
                 world.playSound(entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 1.75F +
                         world.rand.nextFloat(), 0.5F + world.rand.nextFloat(), false);
                 if (!world.isRemote)
@@ -220,29 +226,31 @@ public class AbilityFireShot extends Ability {
                     if (entity.world.isRemote && entity.ticksExisted > 1) {
                         int[] fade = entity.getFade();
                         int[] rgb = entity.getRGB();
-                        for (double i = 0; i < entity.width; i += 0.1 * entity.getAvgSize() * 4) {
-                            int rRandom = fade[0] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[0] * 2) : AvatarUtils.getRandomNumberInRange(fade[0] / 2,
-                                    fade[0] * 2);
-                            int gRandom = fade[1] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[1] * 2) : AvatarUtils.getRandomNumberInRange(fade[1] / 2,
-                                    fade[1] * 2);
-                            int bRandom = fade[2] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[2] * 2) : AvatarUtils.getRandomNumberInRange(fade[2] / 2,
-                                    fade[2] * 2);
-                            Random random = new Random();
-                            AxisAlignedBB boundingBox = entity.getEntityBoundingBox();
-                            double spawnX = boundingBox.minX + random.nextDouble() * (boundingBox.maxX - boundingBox.minX);
-                            double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
-                            double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
-                            ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 60,
-                                    entity.world.rand.nextGaussian() / 60, entity.world.rand.nextGaussian() / 60).time(12 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(rgb[0], rgb[1], rgb[2])
-                                    .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).scale(entity.getAvgSize() * 1.5F).element(entity.getElement())
-                                    .ability(entity.getAbility()).spawnEntity(entity.getOwner()).spawn(entity.world);
-                            ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 60,
-                                    entity.world.rand.nextGaussian() / 60, entity.world.rand.nextGaussian() / 60).time(12 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(rgb[0], rgb[1], rgb[2])
-                                    .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).scale(entity.getAvgSize() * 1.5F).element(entity.getElement())
-                                    .ability(entity.getAbility()).spawnEntity(entity.getOwner()).spawn(entity.world);
-                            ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(AvatarEntityUtils.getMiddleOfEntity(entity)).vel(entity.world.rand.nextGaussian() / 40,
-                                    entity.world.rand.nextGaussian() / 40, entity.world.rand.nextGaussian() / 40).time(12 + AvatarUtils.getRandomNumberInRange(0, 4)).scale(entity.getAvgSize() / 2)
-                                    .element(entity.getElement()).ability(entity.getAbility()).spawnEntity(entity.getOwner()).spawn(entity.world);
+                        for (int h = 0; h < Math.max(entity.velocity().magnitude() / 10, 1); h++) {
+                            for (double i = 0; i < entity.width; i += 0.1 * entity.getAvgSize() * 4) {
+                                int rRandom = fade[0] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[0] * 2) : AvatarUtils.getRandomNumberInRange(fade[0] / 2,
+                                        fade[0] * 2);
+                                int gRandom = fade[1] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[1] * 2) : AvatarUtils.getRandomNumberInRange(fade[1] / 2,
+                                        fade[1] * 2);
+                                int bRandom = fade[2] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[2] * 2) : AvatarUtils.getRandomNumberInRange(fade[2] / 2,
+                                        fade[2] * 2);
+                                Random random = new Random();
+                                AxisAlignedBB boundingBox = entity.getEntityBoundingBox();
+                                double spawnX = boundingBox.minX + random.nextDouble() * (boundingBox.maxX - boundingBox.minX);
+                                double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
+                                double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
+                                ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 60,
+                                        entity.world.rand.nextGaussian() / 60, entity.world.rand.nextGaussian() / 60).time(12 - (int) (entity.velocity().magnitude() / 10) + AvatarUtils.getRandomNumberInRange(2, 4)).clr(rgb[0], rgb[1], rgb[2])
+                                        .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).scale(entity.getAvgSize() * 1.75F).element(entity.getElement())
+                                        .ability(entity.getAbility()).spawnEntity(entity.getOwner()).spawn(entity.world);
+                                ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 60,
+                                        entity.world.rand.nextGaussian() / 60, entity.world.rand.nextGaussian() / 60).time(12 - (int) (entity.velocity().magnitude() / 10) + AvatarUtils.getRandomNumberInRange(2, 4)).clr(rgb[0], rgb[1], rgb[2])
+                                        .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).scale(entity.getAvgSize() * 1.75F).element(entity.getElement())
+                                        .ability(entity.getAbility()).spawnEntity(entity.getOwner()).spawn(entity.world);
+                                ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(AvatarEntityUtils.getMiddleOfEntity(entity)).vel(entity.world.rand.nextGaussian() / 40,
+                                        entity.world.rand.nextGaussian() / 40, entity.world.rand.nextGaussian() / 40).time(12 - (int) (entity.velocity().magnitude() / 10) + AvatarUtils.getRandomNumberInRange(2, 4)).scale(entity.getAvgSize() / 2)
+                                        .element(entity.getElement()).ability(entity.getAbility()).spawnEntity(entity.getOwner()).spawn(entity.world);
+                            }
                         }
                     }
                 }

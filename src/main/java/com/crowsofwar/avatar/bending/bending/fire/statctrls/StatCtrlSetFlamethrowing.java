@@ -17,18 +17,12 @@
 
 package com.crowsofwar.avatar.bending.bending.fire.statctrls;
 
-import com.crowsofwar.avatar.bending.bending.fire.AbilityFlamethrower;
 import com.crowsofwar.avatar.bending.bending.fire.Firebending;
-import com.crowsofwar.avatar.bending.bending.fire.tickhandlers.FlamethrowerUpdateTick;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.StatusControl;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
-import com.crowsofwar.avatar.entity.AvatarEntity;
-import com.crowsofwar.avatar.entity.EntityLightOrb;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.bending.bending.fire.tickhandlers.FlamethrowerUpdateTick.FLAMETHROWER_MOVEMENT_MODIFIER_ID;
 import static com.crowsofwar.avatar.client.controls.AvatarControl.CONTROL_RIGHT_CLICK_DOWN;
@@ -42,34 +36,32 @@ import static com.crowsofwar.avatar.util.data.TickHandlerController.FLAMETHROWER
  */
 public class StatCtrlSetFlamethrowing extends StatusControl {
 
-	private final boolean setting;
+    private final boolean setting;
 
-	public StatCtrlSetFlamethrowing(boolean setting) {
-		super(setting ? 4 : 5, setting ? CONTROL_RIGHT_CLICK_DOWN : CONTROL_RIGHT_CLICK_UP,
-				RIGHT_OF_CROSSHAIR);
-		this.setting = setting;
-	}
+    public StatCtrlSetFlamethrowing(boolean setting) {
+        super(setting ? 4 : 5, setting ? CONTROL_RIGHT_CLICK_DOWN : CONTROL_RIGHT_CLICK_UP,
+                RIGHT_OF_CROSSHAIR);
+        this.setting = setting;
+    }
 
-	@Override
-	public boolean execute(BendingContext ctx) {
+    @Override
+    public boolean execute(BendingContext ctx) {
 
-		BendingData data = ctx.getData();
-		EntityLivingBase bender = ctx.getBenderEntity();
-		World world = ctx.getWorld();
-		EntityLightOrb existing = AvatarEntity.lookupControlledEntity(world, EntityLightOrb.class, bender);
+        BendingData data = ctx.getData();
+        EntityLivingBase bender = ctx.getBenderEntity();
 
-		if (data.hasBendingId(Firebending.ID)) {
-			if (setting) {
-				data.addStatusControl(STOP_FLAMETHROW);
-				data.addTickHandler(FLAMETHROWER);
-			} else {
-				if (bender.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(FLAMETHROWER_MOVEMENT_MODIFIER_ID) != null)
-					bender.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(FLAMETHROWER_MOVEMENT_MODIFIER_ID);
-				data.removeTickHandler(FLAMETHROWER);
-			}
-		}
+        if (data.hasBendingId(Firebending.ID)) {
+            if (setting) {
+                data.addStatusControl(STOP_FLAMETHROW);
+                data.addTickHandler(FLAMETHROWER, ctx);
+            } else {
+                if (bender.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(FLAMETHROWER_MOVEMENT_MODIFIER_ID) != null)
+                    bender.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(FLAMETHROWER_MOVEMENT_MODIFIER_ID);
+                data.removeTickHandler(FLAMETHROWER, ctx);
+            }
+        }
 
-		return true;
-	}
+        return true;
+    }
 
 }

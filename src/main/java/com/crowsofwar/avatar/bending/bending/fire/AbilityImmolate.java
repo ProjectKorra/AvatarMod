@@ -37,7 +37,7 @@ public class AbilityImmolate extends Ability {
     public void init() {
         super.init();
         addProperties(FIRE_CHANCE, STRENGTH_LEVEL, STRENGTH_DURATION, HEALTH_LEVEL, HEALTH_DURATION, SPEED_LEVEL, SPEED_DURATION,
-                FIRE_R, FIRE_G, FIRE_B, FADE_R, FADE_G, FADE_B, POWERRATING);
+                FIRE_R, FIRE_G, FIRE_B, FADE_R, FADE_G, FADE_B);
         addBooleanProperties(INCINERATE_PROJECTILES);
     }
 
@@ -129,9 +129,10 @@ public class AbilityImmolate extends Ability {
             if (!world.isRemote)
                 world.spawnEntity(orb);
             abilityData.addXp(getProperty(XP_USE, ctx).floatValue());
-            data.addTickHandler(PURIFY_PARTICLE_SPAWNER);
+            data.addTickHandler(PURIFY_PARTICLE_SPAWNER, ctx);
 
         }
+
     }
 
 

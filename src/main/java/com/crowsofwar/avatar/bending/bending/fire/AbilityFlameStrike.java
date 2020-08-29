@@ -21,11 +21,8 @@ import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingAi;
 import com.crowsofwar.avatar.bending.bending.fire.statctrls.StatCtrlFlameStrike;
-import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.entity.EntityLightOrb;
-import com.crowsofwar.avatar.entity.EntityOffensive;
 import com.crowsofwar.avatar.entity.data.LightOrbBehavior;
-import com.crowsofwar.avatar.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.entity.mob.EntityBender;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
@@ -101,35 +98,37 @@ public class AbilityFlameStrike extends Ability {
             orbSize += 0.15F;
 
         }
-        
-        if(bender.consumeChi(getChiCost(ctx) / 4)) {
+
+        if (bender.consumeChi(getChiCost(ctx) / 4)) {
 
             //Light orb model translating is currently whack
             Vec3d height = entity.getPositionVector().add(0, 1.8, 0);
             Vec3d rightSide = Vector.toRectangular(Math.toRadians(entity.rotationYaw + 90), 0).times(0.05).withY(0).toMinecraft();
             rightSide = rightSide.add(height);
 
-            EntityLightOrb orb = new EntityLightOrb(world);
-            orb.setOwner(entity);
-            orb.setAbility(new AbilityFlameStrike());
-            orb.setPosition(rightSide);
-            orb.setOrbSize(orbSize);
-            orb.setInitialSize(orbSize);
-            orb.setSpinning(true);
-            orb.setColor(1F, 0.3F, 0F, 1F);
-            orb.setLightRadius(lightRadius);
-            orb.setEmittingEntity(entity);
-            orb.setColourShiftRange(0.8F);
-            orb.setColourShiftInterval(0.15F);
-            orb.setBehavior(new FlameStrikeLightOrb());
-            orb.setType(CLIENT_CONFIG.fireRenderSettings.flameStrikeSphere ? EntityLightOrb.EnumType.COLOR_SPHERE : EntityLightOrb.EnumType.COLOR_CUBE);
-            if (!world.isRemote)
-                world.spawnEntity(orb);
+            if (AvatarMod.hammerCore) {
+                EntityLightOrb orb = new EntityLightOrb(world);
+                orb.setOwner(entity);
+                orb.setAbility(new AbilityFlameStrike());
+                orb.setPosition(rightSide);
+                orb.setOrbSize(orbSize);
+                orb.setInitialSize(orbSize);
+                orb.setSpinning(true);
+                orb.setColor(1F, 0.3F, 0F, 1F);
+                orb.setLightRadius(lightRadius);
+                orb.setEmittingEntity(entity);
+                orb.setColourShiftRange(0.8F);
+                orb.setColourShiftInterval(0.15F);
+                orb.setBehavior(new FlameStrikeLightOrb());
+                orb.setType(CLIENT_CONFIG.fireRenderSettings.flameStrikeSphere ? EntityLightOrb.EnumType.COLOR_SPHERE : EntityLightOrb.EnumType.COLOR_CUBE);
+                if (!world.isRemote)
+                    world.spawnEntity(orb);
+            }
         }
 
         ctx.getAbilityData().setRegenBurnout(false);
         StatCtrlFlameStrike.setTimesUsed(ctx.getBenderEntity().getPersistentID(), 0);
-        data.addTickHandler(FLAME_STRIKE_HANDLER);
+        data.addTickHandler(FLAME_STRIKE_HANDLER, ctx);
         data.addStatusControl(FLAME_STRIKE_MAIN);
         super.execute(ctx);
     }
@@ -137,7 +136,8 @@ public class AbilityFlameStrike extends Ability {
 
     @Override
     public BendingAi getAi(EntityLiving entity, Bender bender) {
-        return new AiFlameStrike(this, entity, bender);
+        return new AiFlameStrike(this, entity, bender,
+                1.2, false);
     }
 
     @Override

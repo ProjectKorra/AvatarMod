@@ -19,8 +19,10 @@ package com.crowsofwar.avatar.network;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.bending.bending.air.Airbending;
+import com.crowsofwar.avatar.client.particle.ParticleBuilder;
+import com.crowsofwar.avatar.util.*;
 import com.crowsofwar.avatar.util.helper.GliderHelper;
-import com.crowsofwar.avatar.util.TransferConfirmHandler;
 import com.crowsofwar.avatar.util.analytics.AnalyticEvent;
 import com.crowsofwar.avatar.util.analytics.AnalyticEvents;
 import com.crowsofwar.avatar.util.analytics.AvatarAnalytics;
@@ -48,15 +50,13 @@ import com.crowsofwar.avatar.item.scroll.Scrolls;
 import com.crowsofwar.avatar.item.scroll.Scrolls.ScrollType;
 import com.crowsofwar.avatar.network.packets.*;
 import com.crowsofwar.avatar.network.packets.glider.PacketSServerGliding;
-import com.crowsofwar.avatar.util.AvatarEntityUtils;
-import com.crowsofwar.avatar.util.PlayerViewRegistry;
-import com.crowsofwar.avatar.util.Raytrace;
 import com.crowsofwar.gorecore.util.AccountUUIDs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -66,6 +66,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static com.crowsofwar.avatar.network.AvatarChatMessages.*;
 import static com.crowsofwar.avatar.util.analytics.AnalyticEvents.getAbilityExecutionEvent;
@@ -251,7 +252,7 @@ public class PacketHandlerServer implements IPacketHandler {
 		Bender bender = Bender.get(player);
 		WallJumpManager jumpManager = bender.getWallJumpManager();
 
-		if (jumpManager.knowsWallJump()) {
+		if (jumpManager.knowsWallJump() && jumpManager.getWallJumpParticleType() != null) {
 
 			//noinspection ConstantConditions
 			if (jumpManager.canWallJump()) {

@@ -4,7 +4,6 @@ import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
-import com.crowsofwar.avatar.bending.bending.fire.AbilityFlameStrike;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
@@ -31,7 +30,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class AbilityProperties {
 
@@ -137,9 +135,10 @@ public class AbilityProperties {
                         try {
                             baseValues.put(baseValueName, JsonUtils.getFloat(baseValueObject, baseValueName));
                         } catch (JsonSyntaxException e) {
-                            if (!baseValues.containsKey(baseValueName))
+                            if (!baseValues.containsKey(baseValueName)) {
                                 AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Either someone's been lazy and left out a value, or your properties file is screwed.");
-                            else {
+                                AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, baseValueName + ", Ability: " + ability.getName());
+                            } else {
                                 //Adds placeholder values to the list for each variable, making sure to prevent some weird reading issues.
                                 List<Number> vals = new ArrayList<>(baseValues.get(baseValueName));
                                 baseValues.put(baseValueName, vals.get(vals.size() - 1));
@@ -226,8 +225,10 @@ public class AbilityProperties {
 
         File abilityJsonDir = new File("avatar/abilities");
 
-        if (!abilityJsonDir.exists() || !abilityJsonDir.mkdir())
+        if (!abilityJsonDir.exists() || !abilityJsonDir.mkdir()) {
+            AvatarLog.info("No override config found, default values will be used unless there's world-specific properties.");
             return true; // If there's no global spell properties folder, do nothing
+        }
 
         return loadAbilityPropertiesFromDir(abilityJsonDir);
     }

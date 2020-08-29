@@ -39,6 +39,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -58,10 +59,14 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
     private static final DataParameter<Integer> SYNC_ORBIT_ID = EntityDataManager.createKey(EntityFireball.class,
             DataSerializers.VARINT);
 
+    private static int nextFireballID = 0;
 
     public EntityFireball(World world) {
         super(world);
         setSize(.8f, .8f);
+        if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
+            setOrbitID(nextFireballID++);
+        }
         this.lightTnt = true;
     }
 

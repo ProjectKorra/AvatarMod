@@ -198,12 +198,12 @@ public class AvatarDamageSource {
 	/**
 	 * Create a DamageSource for damage generic fire damage.
 	 *
-	 * @param hit   Who was hit by the fire
+	 * @param source Source entity of the fire
 	 * @param owner Who created the fire
 	 * @return DamageSource for the fire
 	 */
-	public static DamageSource causeFireDamage(Entity hit, @Nullable Entity owner) {
-		return new EntityDamageSourceIndirect(FIRE.getDamageType(), hit, owner);
+	public static DamageSource causeFireDamage(Entity source, @Nullable Entity owner) {
+		return new EntityDamageSourceIndirect(FIRE.getDamageType(), source, owner);
 	}
 
 	/**

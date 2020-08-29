@@ -18,12 +18,12 @@
 package com.crowsofwar.avatar.bending.bending.air;
 
 import com.crowsofwar.avatar.bending.bending.Ability;
+import com.crowsofwar.avatar.util.Raytrace;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
-import com.crowsofwar.avatar.util.Raytrace;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -31,7 +31,6 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-import static com.crowsofwar.avatar.bending.bending.air.statctrls.StatCtrlAirJump.timesJumped;
 import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.util.data.StatusControlController.AIR_JUMP;
 import static com.crowsofwar.avatar.util.data.TickHandlerController.AIR_PARTICLE_SPAWNER;
@@ -51,19 +50,26 @@ public class AbilityAirJump extends Ability {
 	}
 
 	@Override
+	public void init() {
+		super.init();
+		addProperties(JUMP_HEIGHT, JUMPS, KNOCKBACK, EFFECT_RADIUS, PERFORMANCE, FALL_ABSORPTION, XP_HIT, POWERRATING, DURATION, CHI_HIT);
+		addBooleanProperties(GROUND_POUND);
+	}
+
+	@Override
 	public void execute(AbilityContext ctx) {
 
 		EntityLivingBase entity = ctx.getBenderEntity();
 		BendingData data = ctx.getData();
 		Bender bender = ctx.getBender();
 		World world = ctx.getWorld();
+		AbilityData abilityData = ctx.getAbilityData();
 
-		boolean allowDoubleJump = ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST) &&
-				timesJumped.getOrDefault(bender.getInfo().getId().toString(), 0) < 2;
+		boolean allowDoubleJump = abilityData.getJumpNumber() < getProperty(JUMPS).intValue();
 		List<AxisAlignedBB> collideWithGround = world.getCollisionBoxes(entity, entity.getEntityBoundingBox().grow(0.2, 0.5, 0.2));
 		boolean onGround = !collideWithGround.isEmpty() || entity.collidedVertically || world.getBlockState(entity.getPosition()).getBlock() == Blocks.WEB;
 
-		if (!data.hasStatusControl(AIR_JUMP) && bender.consumeChi(STATS_CONFIG.chiAirJump)) {
+		if (!data.hasStatusControl(AIR_JUMP) && bender.consumeChi(getChiCost(ctx) / 4)) {
 			data.addStatusControl(AIR_JUMP);
 			if (data.hasTickHandler(AIR_PARTICLE_SPAWNER) || allowDoubleJump && !onGround) {
 				Raytrace.Result raytrace = Raytrace.getTargetBlock(ctx.getBenderEntity(), -1);
@@ -73,8 +79,22 @@ public class AbilityAirJump extends Ability {
 				}
 			}
 		}
+		abilityData.setRegenBurnout(true);
 		super.execute(ctx);
 	}
 
+	@Override
+	public int getCooldown(AbilityContext ctx) {
+		return 0;
+	}
 
+	@Override
+	public float getBurnOut(AbilityContext ctx) {
+		return 0;
+	}
+
+	@Override
+	public float getExhaustion(AbilityContext ctx) {
+		return 0;
+	}
 }

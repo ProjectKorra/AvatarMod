@@ -25,7 +25,7 @@ public class TickHandlerController {
 	/** @formatter:on**/
 
 	public static TickHandler AIR_PARTICLE_SPAWNER = new AirParticleSpawner(0);
-	public static TickHandler FIRE_PARTICLE_SPAWNER = new FireParticleSpawner(1);
+	public static TickHandler FLAME_GLIDE_HANDLER = new FlameGlideHandler(1);
 	public static TickHandler FLAMETHROWER = new FlamethrowerUpdateTick(2);
 	public static TickHandler WATER_SKATE = new WaterSkateHandler(3);
 	public static TickHandler BISON_SUMMONER = new BisonSummonHandler(4);

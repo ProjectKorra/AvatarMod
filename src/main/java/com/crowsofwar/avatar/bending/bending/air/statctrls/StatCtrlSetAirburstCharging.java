@@ -54,7 +54,7 @@ public class StatCtrlSetAirburstCharging extends StatusControl {
 		if (data.hasBendingId(Airbending.ID)) {
 			if (setting) {
 				data.addStatusControl(RELEASE_AIR_BURST);
-				data.addTickHandler(AIRBURST_CHARGE_HANDLER);
+				data.addTickHandler(AIRBURST_CHARGE_HANDLER, ctx);
 			} else {
 				if (bender.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(AIRBURST_MOVEMENT_MODIFIER_ID) != null)
 					bender.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(AIRBURST_MOVEMENT_MODIFIER_ID);

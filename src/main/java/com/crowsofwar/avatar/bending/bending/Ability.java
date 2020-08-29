@@ -80,9 +80,14 @@ public abstract class Ability {
             DURATION = "duration",
             CHARGE_TIME = "chargeTime",
             RADIUS = "radius",
-            EFFECT_RADIUS = "effect_radius",
-            AIM_ASSIST = "aim_assist",
-            RANGE = "range";
+            EFFECT_RADIUS = "effectRadius",
+            EFFECT_DAMAGE = "effectDamage",
+            AIM_ASSIST = "aimAssist",
+            RANGE = "range",
+            COLOUR_R = "colouR",
+            COLOUR_G = "colourG",
+            COLOUR_B = "colourB",
+            POTION_EFFECTS = "potionEffects";
     //Airbending stuff
     public static final String
             PUSH_REDSTONE = "pushRedstone",
@@ -125,6 +130,20 @@ public abstract class Ability {
             MAX_BURNOUT = "maxBurnout",
             MAX_EXHAUSTION = "maxExhaustion",
             MAX_COOLDOWN = "maxCooldown";
+    //Jump stuff
+    public static final String
+            JUMP_HEIGHT = "jumpHeight",
+            STOP_SHOCKWAVE = "stopShockwave",
+            GROUND_POUND = "groundPound",
+            JUMPS = "numberOfJumps",
+            FALL_ABSORPTION = "fallAbsorption";
+    //Shiled stuff
+    public static final String
+            CHI_PERCENT = "chiPercentOnHit",
+            CHI_PER_SECOND = "chiPerSecond",
+            BURNOUT_HIT = "burnOutOnHit",
+            EXHAUSTION_HIT = "exhaustionOnHit",
+            MAX_HEALTH = "maxHealth";
 
 
     private final UUID type;
@@ -358,7 +377,7 @@ public abstract class Ability {
         if (ctx.getBenderEntity() instanceof EntityPlayer && ((EntityPlayer) ctx.getBenderEntity()).isCreative())
             return 0;
         int coolDown = getProperty(COOLDOWN, ctx.getLevel(), ctx.getDynamicPath()).intValue();
-        coolDown *= (2 - ctx.getPowerRatingDamageMod()) * ctx.getAbilityData().getXpModifier();
+        coolDown *= (2 - ctx.getAbilityData().getDamageMult()) * (1 /  ctx.getAbilityData().getXpModifier());
         //Cooldown has a 1.5x multiplier with max burnout
         return (int) (coolDown * (1 + ctx.getAbilityData().getBurnOut() / 200));
     }
@@ -367,7 +386,7 @@ public abstract class Ability {
         if (ctx.getBenderEntity() instanceof EntityPlayer && ((EntityPlayer) ctx.getBenderEntity()).isCreative())
             return 0;
         float burnout = getProperty(BURNOUT, ctx.getLevel(), ctx.getDynamicPath()).floatValue();
-        burnout *= (2 - ctx.getPowerRatingDamageMod()) * ctx.getAbilityData().getXpModifier();
+        burnout *= (2 - ctx.getAbilityData().getDamageMult()) * (1 / ctx.getAbilityData().getXpModifier());
         return burnout;
     }
 
@@ -375,7 +394,7 @@ public abstract class Ability {
         if (ctx.getBenderEntity() instanceof EntityPlayer && ((EntityPlayer) ctx.getBenderEntity()).isCreative())
             return 0;
         float exhaustion = getProperty(EXHAUSTION, ctx.getLevel(), ctx.getDynamicPath()).floatValue();
-        exhaustion *= (2 - ctx.getPowerRatingDamageMod()) * ctx.getAbilityData().getXpModifier();
+        exhaustion *= (2 - ctx.getAbilityData().getDamageMult()) * (1 / ctx.getAbilityData().getXpModifier());
         //Burnout has a 2x multiplier on exhaustion
         return exhaustion * (1 + ctx.getAbilityData().getBurnOut() / 100F);
     }
@@ -389,7 +408,7 @@ public abstract class Ability {
         if (ctx.getBenderEntity() instanceof EntityPlayer && ((EntityPlayer) ctx.getBenderEntity()).isCreative() || ctx.getBenderEntity() instanceof EntityHumanBender)
             return 0;
         float chi = getProperty(CHI_COST, ctx.getLevel(), ctx.getDynamicPath()).floatValue();
-        chi *= (2 - ctx.getPowerRatingDamageMod()) * ctx.getAbilityData().getXpModifier();
+        chi *= (2 - ctx.getAbilityData().getDamageMult()) * (1 / ctx.getAbilityData().getXpModifier());
         //Burnout has a 1.5x multipler on chi cost
         return chi * (1 + ctx.getAbilityData().getBurnOut() / 200);
     }
@@ -405,20 +424,20 @@ public abstract class Ability {
     //and call these when you need to apply them.
     public int getCooldown(AbilityData data) {
         int coolDown = getProperty(COOLDOWN, data.getLevel(), data.getDynamicPath()).intValue();
-        coolDown *= (2 - data.getDamageMult()) * data.getXpModifier();
+        coolDown *= (2 - data.getDamageMult()) * (1 / data.getXpModifier());
         //Cooldown has a 1.5x multiplier with max burnout
         return (int) (coolDown * (1 + data.getBurnOut() / 200));
     }
 
     public float getBurnOut(AbilityData data) {
         float burnout = getProperty(BURNOUT, data.getLevel(), data.getDynamicPath()).floatValue();
-        burnout *= (2 - data.getDamageMult()) * data.getXpModifier();
+        burnout *= (2 - data.getDamageMult()) * (1 / data.getXpModifier());
         return burnout;
     }
 
     public float getExhaustion(AbilityData data) {
         float exhaustion = getProperty(EXHAUSTION, data.getLevel(), data.getDynamicPath()).floatValue();
-        exhaustion *= (2 - data.getDamageMult()) * data.getXpModifier();
+        exhaustion *= (2 - data.getDamageMult()) * (1 / data.getXpModifier());
         //Burnout has a 2x multiplier on exhaustion
         return exhaustion * (1 + data.getBurnOut() / 100F);
     }
@@ -430,7 +449,7 @@ public abstract class Ability {
      */
     public float getChiCost(AbilityData data) {
         float chi = getProperty(CHI_COST, data.getLevel(), data.getDynamicPath()).floatValue();
-        chi *= (2 - data.getDamageMult()) * data.getXpModifier();
+        chi *= (2 - data.getDamageMult()) * (1 / data.getXpModifier());
         //Burnout has a 1.5x multipler on chi cost
         return chi * (1 + data.getBurnOut() / 200);
     }

@@ -102,7 +102,7 @@ public class AvatarMod {
 
     public static SimpleNetworkWrapper network;
 
-    public static boolean codeChickenLibCompat, realFirstPersonRender2Compat, cubicChunks;
+    public static boolean codeChickenLibCompat, realFirstPersonRender2Compat, cubicChunks, hammerCore;
 
     private int nextMessageID = 1;
     private int nextEntityID = 1;
@@ -121,7 +121,8 @@ public class AvatarMod {
         Abilities.register(new AbilityFlameStrike());
         Abilities.register(new AbilityFlamethrower());
         Abilities.register(new AbilityFireball());
-        Abilities.register(new AbilityFireJump());
+        Abilities.register(new AbilityFireRedirect());
+        Abilities.register(new AbilityFlameGlide());
         Abilities.register(new AbilityImmolate());
         /*    			Water	  			*/
         Abilities.register(new AbilityWaterArc());
@@ -182,6 +183,8 @@ public class AvatarMod {
         realFirstPersonRender2Compat = Loader.isModLoaded("rfp2");
         //Prevents sky bison crashing
         cubicChunks = Loader.isModLoaded("cubicchunkscore");
+        //Light orbs
+        hammerCore = Loader.isModLoaded("hammercore");
 
         AvatarLog.log = e.getModLog();
 
@@ -199,13 +202,9 @@ public class AvatarMod {
         //register capabilities
         CapabilityRegistry.registerAllCapabilities();
 
-        //AvatarControl.initControls();
-
         registerAbilities();
         Abilities.all().forEach(Ability::init);
         AbilityProperties.init();
-
-       // AbilityProperties.init();
         registerBendingStyles();
 
         AvatarItems.init();
@@ -364,7 +363,7 @@ public class AvatarMod {
         registerEntity(EntityWallSegment.class, "WallSegment", 128, 3, true);
         registerEntity(EntityFireball.class, "Fireball", 128, 1000, true);
         registerEntity(EntityAirblade.class, "Airblade", 128, 1000, true);
-        registerEntity(EntityAirBubble.class, "AirBubble", 128, 1000, false);
+        registerEntity(EntityAirBubble.class, "AirBubble", 256, 1000, false);
         registerEntity(EntityFirebender.class, "Firebender", 0xB0171F, 0xFFFF00);
         registerEntity(EntityAirbender.class, "Airbender", 0xffffff, 0xDDA0DD);
         registerEntity(EntitySkyBison.class, "SkyBison", 0xffffff, 0x8B5A00);
@@ -387,7 +386,6 @@ public class AvatarMod {
         registerEntity(EntityShockwave.class, "Shockwave", 128, 1000, false);
         registerEntity(EntityLightOrb.class, "LightOrb", 128, 1000, true);
         registerEntity(EntityLightCylinder.class, "LightCylinder", 128, 1000, true);
-        registerEntity(EntityFlame.class, "Flamethrower", 128, 1000, true);
 
         EntityRegistry.addSpawn(EntitySkyBison.class, 5, 1, 3, EnumCreatureType.CREATURE, //
                 SAVANNA_PLATEAU, EXTREME_HILLS, BIRCH_FOREST_HILLS, TAIGA_HILLS, ICE_MOUNTAINS, REDWOOD_TAIGA_HILLS, MUTATED_EXTREME_HILLS,

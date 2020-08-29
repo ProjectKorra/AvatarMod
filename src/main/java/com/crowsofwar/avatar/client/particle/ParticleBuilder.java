@@ -207,8 +207,9 @@ public final class ParticleBuilder {
 	}
 
 
-	public void glow(boolean glow) {
+	public ParticleBuilder glow(boolean glow) {
 		this.glow = glow;
+		return this;
 	}
 
 	public void sparkle(boolean sparkle) {

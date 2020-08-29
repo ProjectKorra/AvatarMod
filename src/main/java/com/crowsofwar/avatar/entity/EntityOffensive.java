@@ -35,6 +35,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.List;
 import java.util.function.Predicate;
 
+import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
+
 public abstract class EntityOffensive extends AvatarEntity implements IOffensiveEntity {
 
     //Used for all entities that damage things
@@ -64,6 +66,8 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
             DataSerializers.VARINT);
     private static final DataParameter<Integer> SYNC_FADE_B = EntityDataManager.createKey(EntityOffensive.class,
             DataSerializers.VARINT);
+    private static final DataParameter<Boolean> SYNC_REDIRECTABLE = EntityDataManager.createKey(EntityOffensive.class,
+            DataSerializers.BOOLEAN);
 
     /**
      * The fraction of the impact velocity that should be the maximum spread speed added on impact.
@@ -233,6 +237,14 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
         dataManager.set(SYNC_FADE_B, fade[2]);
     }
 
+    public void setRedirectable(boolean redirectable) {
+        dataManager.set(SYNC_REDIRECTABLE, redirectable);
+    }
+
+    public boolean isRedirectable() {
+        return dataManager.get(SYNC_REDIRECTABLE);
+    }
+
     //This just makes the methods easier to use.
     public void Explode() {
         Explode(world, this, getOwner());
@@ -251,8 +263,8 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
         super.entityInit();
         dataManager.register(SYNC_DAMAGE, 1F);
         dataManager.register(SYNC_LIFETIME, 20);
-        dataManager.register(SYNC_WIDTH, 1.0F);
-        dataManager.register(SYNC_HEIGHT, 1.0F);
+        dataManager.register(SYNC_WIDTH, 0.1F);
+        dataManager.register(SYNC_HEIGHT, 0.1F);
         dataManager.register(SYNC_BEHAVIOR, new OffensiveBehaviour.Idle());
         dataManager.register(SYNC_PIERCES, false);
         dataManager.register(SYNC_EXPLOSION_SIZE, 1F);
@@ -262,6 +274,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
         dataManager.register(SYNC_FADE_R, 255);
         dataManager.register(SYNC_FADE_G, 255);
         dataManager.register(SYNC_FADE_B, 255);
+        dataManager.register(SYNC_REDIRECTABLE, false);
     }
 
     @Override
@@ -270,6 +283,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
         setDamage(nbt.getFloat("Damage"));
         setLifeTime(nbt.getInteger("Lifetime"));
         setBehaviour((OffensiveBehaviour) Behavior.lookup(nbt.getInteger("Behaviour"), this));
+        getBehaviour().load(nbt.getCompoundTag("BehaviorData"));
         setDynamicSpreadingCollision(nbt.getBoolean("Dynamic Collision"));
         setXp(nbt.getFloat("XP"));
     }
@@ -280,8 +294,14 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
         nbt.setFloat("Damage", getDamage());
         nbt.setInteger("Lifetime", getLifeTime());
         nbt.setInteger("Behaviour", getBehaviour().getId());
+        getBehaviour().save(nestedCompound(nbt, "BehaviorData"));
         nbt.setBoolean("Dynamic Collision", getDynamicSpreadingCollision());
         nbt.setFloat("XP", getXpPerHit());
+    }
+
+    @Override
+    public AxisAlignedBB getCollisionBox(Entity entityIn) {
+        return getExpandedHitbox();
     }
 
     @Override
@@ -534,6 +554,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
         IBlockState state;
         boolean collision = !world.getCollisionBoxes(this, getExpandedHitbox()).isEmpty();
 
+
         for (double x = 0; x <= 1; x += 0.5) {
             for (double z = 0; z <= 1; z += 0.5) {
                 for (double y = 0; y <= 1; y += 0.5) {
@@ -550,6 +571,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
                 }
             }
         }
+
         for (double x = 0; x >= -1; x -= 0.5) {
             for (double z = 0; z >= -1; z -= 0.5) {
                 for (double y = 0; y >= -1; y -= 0.5) {
@@ -636,19 +658,19 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
     }
 
     @Override
-    public DamageSource getDamageSource(Entity target, EntityLivingBase owner) {
-        DamageSource source = AvatarDamageSource.FIRE;
+    public DamageSource getDamageSource(Entity source, EntityLivingBase owner) {
+        DamageSource dmgSource = AvatarDamageSource.FIRE;
         if (damageSource.startsWith("avatar_")) {
-            source = new EntityDamageSourceIndirect(damageSource, target, owner);
+            dmgSource = new EntityDamageSourceIndirect(damageSource, this, owner);
             if (isProjectile())
-                source.setProjectile();
-            source.setMagicDamage();
+                dmgSource.setProjectile();
+            dmgSource.setMagicDamage();
             if (getElement() instanceof Lightningbending)
-                source.setDamageBypassesArmor();
+                dmgSource.setDamageBypassesArmor();
             if (getElement() instanceof Combustionbending)
-                source.setExplosion();
+                dmgSource.setExplosion();
         }
-        return source;
+        return dmgSource;
     }
 
     @Override
@@ -695,7 +717,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 
     @Override
     public double getExplosionHitboxGrowth() {
-        return (double) dataManager.get(SYNC_EXPLOSION_SIZE);
+        return dataManager.get(SYNC_EXPLOSION_SIZE);
     }
 
     @Override

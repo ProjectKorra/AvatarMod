@@ -220,11 +220,12 @@ public abstract class Bender {
             AbilityData.AbilityTreePath path = aD.getPath();
             AbilityContext abilityCtx = new AbilityContext(data, raytrace, ability,
                     entity, powerRating, switchPath);
+            aD.setSwitchPath(switchPath);
 
             if (ability.properties != null) {
                 if (canUseAbility(ability) && !MinecraftForge.EVENT_BUS.post(new AbilityUseEvent(entity, ability, level + 1, path))) {
                     if (data.getMiscData().getCanUseAbilities()) {
-                        if (aD.getAbilityCooldown() == 0 || entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
+                        if (getData().chi().getAvailableChi() >= ability.getChiCost(abilityCtx) && aD.getAbilityCooldown() == 0 || entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
                             aD.setPowerRating(calcPowerRating(ability.getBendingId()));
                             //This lets the ability disable burnout regeneration
                             aD.setRegenBurnout(true);
@@ -233,7 +234,13 @@ public abstract class Bender {
                                 ((EntityPlayer) entity).addExhaustion(ability.getExhaustion(abilityCtx));
                             aD.setAbilityCooldown(ability.getCooldown(abilityCtx));
                             //We set the burnout last as it affects all of the other inhibiting stats
-                            aD.setBurnOut(ability.getBurnOut(abilityCtx));
+                            aD.addBurnout(ability.getBurnOut(abilityCtx));
+
+                            //Fixes bugs that crop up that screw with cooldown and such
+                            if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative() && !getWorld().isRemote) {
+                                aD.setAbilityCooldown(0);
+                                aD.setBurnOut(0);
+                            }
 
                         } else {
                             Objects.requireNonNull(Bender.get(getEntity())).sendMessage("avatar.abilityCooldown");
@@ -355,7 +362,7 @@ public abstract class Bender {
                     if (handler.tick(ctx)) {
                         // Can use this since the list is a COPY of the
                         // underlying list
-                        data.removeTickHandler(handler);
+                        data.removeTickHandler(handler, ctx);
                     } else {
                         int newDuration = data.getTickHandlerDuration(handler) + 1;
                         data.setTickHandlerDuration(handler, newDuration);
@@ -388,7 +395,7 @@ public abstract class Bender {
         if (entity.ticksExisted - entity.getLastAttackedEntityTime() > 3)
             data.getPerformance().update();
 
-        if (entity instanceof EntityPlayer && !world.isRemote && entity.ticksExisted % 20 == 0) {
+        if (entity instanceof EntityPlayer && !world.isRemote && entity.ticksExisted % 10 == 0) {
             syncPowerRating();
         }
 

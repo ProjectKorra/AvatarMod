@@ -20,6 +20,7 @@ import com.crowsofwar.avatar.entity.EntityAirBubble;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -61,9 +62,18 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
         disableAlpha();
 
         //My brain is massive
-        GlStateManager.depthMask(false);
+       GlStateManager.depthMask(false);
 
-        GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE);
+        int i = 15728880;
+        int j = i % 65536;
+        int k = i / 65536;
+
+
+        if (!CLIENT_CONFIG.shaderSettings.bslActive)
+            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j, k);
+
+
+         GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE);
 
         float ticks = entity.ticksExisted + partialTicks;
         float sizeMult = 1, alpha = 1;
@@ -82,6 +92,8 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
         sizeMult *= entity.getSize() / 2.5f;
         
         alpha *=2;
+
+        alpha *= 1.5F;
 
         if (CLIENT_CONFIG.shaderSettings.bslActive || CLIENT_CONFIG.shaderSettings.sildursActive)
             GlStateManager.color(0.35F, 0.35F, 0.35F, 0.10f * alpha);

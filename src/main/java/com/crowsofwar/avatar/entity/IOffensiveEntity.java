@@ -1,16 +1,18 @@
 package com.crowsofwar.avatar.entity;
 
-import com.crowsofwar.avatar.client.particle.AvatarParticles;
 import com.crowsofwar.avatar.bending.bending.BattlePerformanceScore;
-import com.crowsofwar.avatar.util.damageutils.AvatarDamageSource;
-import com.crowsofwar.avatar.util.data.AbilityData;
+import com.crowsofwar.avatar.client.particle.AvatarParticles;
+import com.crowsofwar.avatar.entity.mob.EntityBender;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
+import com.crowsofwar.avatar.util.damageutils.AvatarDamageSource;
+import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.BendingData;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.init.SoundEvents;
@@ -100,13 +102,15 @@ public interface IOffensiveEntity {
                         ((EntityDragon) hit).attackEntityFromPart(((EntityDragon) hit).dragonPartBody, getDamageSource(hit, attacker.getOwner()),
                                 explosionDamage ? getAoeDamage() : getDamage());
                         BattlePerformanceScore.addScore(attacker.getOwner(), getPerformanceAmount());
-                     //   if (multiHit())
-                      //      ((EntityLivingBase) hit).hurtResistantTime = 10;
+                        //   if (multiHit())
+                        //      ((EntityLivingBase) hit).hurtResistantTime = 10;
                         data.addXp(getXpPerHit());
                         if (attacker.getOwner() != null) {
                             BendingData bendingData = BendingData.getFromEntity(attacker.getOwner());
                             if (bendingData != null && bendingData.chi() != null) {
-                                bendingData.chi().changeAvailableChi(getChiHit());
+                                if (attacker.getOwner() instanceof EntityBender
+                                        || !(attacker.getOwner() instanceof EntityPlayer && ((EntityPlayer) attacker.getOwner()).isCreative()))
+                                    bendingData.chi().changeAvailableChi(getChiHit());
                             }
                         }
 
@@ -117,13 +121,15 @@ public interface IOffensiveEntity {
                         if (setVelocity())
                             AvatarUtils.setVelocity(hit, vel);
                         else hit.addVelocity(vel.x, vel.y, vel.z);
-                     //   if (multiHit() && hit instanceof EntityLivingBase)
-                     //       ((EntityLivingBase) hit).hurtResistantTime = 10;
+                        //   if (multiHit() && hit instanceof EntityLivingBase)
+                        //       ((EntityLivingBase) hit).hurtResistantTime = 10;
                         AvatarUtils.afterVelocityAdded(hit);
                         if (attacker.getOwner() != null) {
                             BendingData bendingData = BendingData.getFromEntity(attacker.getOwner());
                             if (bendingData != null && bendingData.chi() != null) {
-                                bendingData.chi().changeAvailableChi(getChiHit());
+                                if (attacker.getOwner() instanceof EntityBender
+                                        || !(attacker.getOwner() instanceof EntityPlayer && ((EntityPlayer) attacker.getOwner()).isCreative()))
+                                    bendingData.chi().changeAvailableChi(getChiHit());
                             }
                         }
                     }
@@ -131,7 +137,8 @@ public interface IOffensiveEntity {
             } else if (attacker.canCollideWith(hit)) {
                 if (hit instanceof EntityItem)
                     vel = vel.scale(0.05);
-                BattlePerformanceScore.addScore(attacker.getOwner(), getPerformanceAmount());
+                if (!(hit instanceof AvatarEntity))
+                    BattlePerformanceScore.addScore(attacker.getOwner(), getPerformanceAmount());
                 data.addXp(getXpPerHit());
                 hit.setFire(getFireTime());
                 if (hit instanceof EntityOffensive)
@@ -143,14 +150,16 @@ public interface IOffensiveEntity {
                         hit.addVelocity(vel.x / 5, vel.y / 2.5, vel.z / 5);
                     else hit.addVelocity(vel.x, vel.y, vel.z);
                 }
-                if (multiHit() && hit instanceof EntityLivingBase)
-                    ((EntityLivingBase) hit).hurtResistantTime = 15;
+//                if (multiHit() && hit instanceof EntityLivingBase)
+//                    hit.hurtResistantTime = 15;
                 AvatarUtils.afterVelocityAdded(hit);
 
                 if (attacker.getOwner() != null) {
                     BendingData bendingData = BendingData.getFromEntity(attacker.getOwner());
                     if (bendingData != null && bendingData.chi() != null) {
-                        bendingData.chi().changeAvailableChi(getChiHit());
+                        if (attacker.getOwner() instanceof EntityBender
+                                || !(attacker.getOwner() instanceof EntityPlayer && ((EntityPlayer) attacker.getOwner()).isCreative()))
+                            bendingData.chi().changeAvailableChi(getChiHit());
                     }
                 }
             }
@@ -278,8 +287,8 @@ public interface IOffensiveEntity {
 
     }
 
-    default DamageSource getDamageSource(Entity target, EntityLivingBase owner) {
-        return AvatarDamageSource.causeFireDamage(target, owner);
+    default DamageSource getDamageSource(Entity source, EntityLivingBase owner) {
+        return AvatarDamageSource.causeFireDamage(source, owner);
     }
 
     default double getExpandedHitboxWidth() {

@@ -124,8 +124,8 @@ avatar.lightningRedirected=You redirected ${lightningbender}'s §l§blightning!
 avatar.canUpgradeAbility=[bold]\[AvatarMod2] Did you know [aqua]you can upgrade your ability [translate=avatar.ability.${ability}] to [translate=avatar.spec.lvl${newLevel}]?[/aqua][/bold]
 avatar.canUpgradeAbility2=\[AvatarMod2] To do so, in the radial menu, just hover over the ability and right click!
 avatar.canUpgradeAbility3=\[AvatarMod2] You'll need a [yellow]Universal or [translate=avatar.${bendingType}] scroll[/yellow] to do so!
-avatar.waterBlastFail=Need to look directly at a water source or be nearby one!
-avatar.cleanseFail=Need to look at or get near a water source block!
+avatar.earthSourceFail=You need to be in range of earthbendable blocks to use that ability!
+avatar.waterSourceFail=Need to look directly at a water source or be nearby one, depending on your ability's level!
 avatar.onCooldown=This ability is still on cooldown!
 
 avatar.announcement.today=[bold][red]\[AvatarMod Announcement][/red] \[today]:[/bold] ${announcement}
@@ -158,20 +158,20 @@ avatar.specialtyScroll.alreadyHave=[error]You have already unlocked [translate=a
 avatar.specialtyScroll.tooltip=[aqua]Can be used to unlock or upgrade [translate=avatar.${bending}].[/aqua]
 
 avatar.ability.earth_control=§2§lEarth §2§lControl
-avatar.ability.earth_control.desc=Use earthbending to move bendable blocks. Place them in the desired position, or throw them at your enemies.
-avatar.ability.earth_control.lvl1=Move and throw bendable blocks
-avatar.ability.earth_control.lvl2=Faster and farther when thrown
-avatar.ability.earth_control.lvl3=Twice the damage
-avatar.ability.earth_control.lvl4_1=§2§l§oBlocky §2§l§oboomerang ;; Block comes back after successful mob hit
-avatar.ability.earth_control.lvl4_2=§2§l§oLarge §2§l§oimpact ;; 1/2 chance to create an explosion on landing
+avatar.ability.earth_control.desc=Use earthbending to move bendable blocks. Place them in the desired position, or throw them at your enemies!
+avatar.ability.earth_control.lvl1=Trickshot!
+avatar.ability.earth_control.lvl2=Faster and farther when thrown! Bigger pickup radius and range!
+avatar.ability.earth_control.lvl3=More damage, more speed, larger pickup range! You can carry up to 2 blocks at a time!
+avatar.ability.earth_control.lvl4_1=§2§l§oBlocky §2§l§oboomerang ;; Block comes back after successful mob hit! Have 3 blocks rotating around you!
+avatar.ability.earth_control.lvl4_2=§2§l§oLarge §2§l§oimpact ;; Create an explosion of earth upon hitting a solid surface! You can still trickshot, though :)
 
 avatar.ability.mine_blocks=§2§lMine §2§lBlocks
-avatar.ability.mine_blocks.desc=Quickly destroy blocks to mine out tunnels
-avatar.ability.mine_blocks.lvl1=Mine a few blocks
+avatar.ability.mine_blocks.desc=Quickly destroy blocks to mine out tunnels!
+avatar.ability.mine_blocks.lvl1=Mine a few blocks.
 avatar.ability.mine_blocks.lvl2=Mine out even more blocks
-avatar.ability.mine_blocks.lvl3=Fortune level I when mining
-avatar.ability.mine_blocks.lvl4_1=Mine very far, level III fortune
-avatar.ability.mine_blocks.lvl4_2=Mine out ore veins, level IV fortune
+avatar.ability.mine_blocks.lvl3=Fortune level I when mining! More blocks!
+avatar.ability.mine_blocks.lvl4_1=§2§lSoul of the Badgermole ;; Mine very far, level III fortune
+avatar.ability.mine_blocks.lvl4_2=§2§lPluto's Greed ;; Mine out ore veins, level IV fortune
 
 avatar.ability.ravine=§2§lRavine
 avatar.ability.ravine.desc=Create a powerful yet small fissure in the ground. Only works on level ground and earth, but can do plenty of damage.
@@ -238,13 +238,13 @@ avatar.ability.fireball.lvl3=Tons more damage upon direct hit, wayy faster!
 avatar.ability.fireball.lvl4_1=§c§l§oFlaming §c§l§oBarrage ;; Summon up to 3 fireballs that orbit around you!
 avatar.ability.fireball.lvl4_2=§c§l§oCondensed §c§l§oRage ;; Takes a few seconds to charge, larger explosion when charged
 
-avatar.ability.fire_jump=§c§lFire Jump
-avatar.ability.fire_jump.desc=Use fire propulsion to jump a short distance, damaging players when you jump!
-avatar.ability.fire_jump.lvl1=Feet of fire!
-avatar.ability.fire_jump.lvl2=Jump slightly farther
-avatar.ability.fire_jump.lvl3=Also attack targets upon landing, light them on fire
-avatar.ability.fire_jump.lvl4_1=§c§l§oCombustion §c§l§olaunch ;; Super huge attack when you jump AND land!
-avatar.ability.fire_jump.lvl4_2=§c§l§oWall §c§l§ojumping ;; Gain the ability to wall jump once after fire jumping
+avatar.ability.flame_glide=§c§lFlame Glide
+avatar.ability.flame_glide.desc=Use fire propulsion to jump a short distance, damaging players when you jump!
+avatar.ability.flame_glide.lvl1=Feet of fire!
+avatar.ability.flame_glide.lvl2=Travel slightly further!
+avatar.ability.flame_glide.lvl3=Also attack targets upon stoppign!
+avatar.ability.flame_glide.lvl4_1=§c§l§oFlame Burst ;; Extremely fast and short dashes from fire! Shockwaves upon starting and stopping, lower cooldown.
+avatar.ability.flame_glide.lvl4_2=§c§l§oFlying Dragon ;; Travel slowly, but for longer and higher. Multicoloured flames!
 
 avatar.ability.immolate=§c§lImmolate
 avatar.ability.immolate.desc=Temporarily boost your firebending powers for a short period of time, but you may burn yourself in the process
@@ -261,7 +261,6 @@ avatar.ability.fire_wall.lvl2=Increased duration, damage, and health!
 avatar.ability.fire_wall.lvl3=Significantly increased size; destroy tier and slow tier both increased! Health increased again.
 avatar.ability.fire_wall.lvl4_1=§c§l§oCrimson Raze ;; Gain the ability to send your wall forwards after creating it! Significant damage increase, and a destroy tier increase!
 avatar.ability.fire_wall.lvl4_2=§c§l§oPillar of the Sun ;; Wall now forms a circular barrier around you! Temporarily increases powerrating, rainbow.
-
 
 avatar.ability.swirling_inferno=§c§lSwirling Inferno
 avatar.ability.swirling_inferno.desc=Charge up dual devastating fireballs!
@@ -287,6 +286,7 @@ avatar.ability.water_bubble.lvl3=Can create a permament water source when lobbed
 avatar.ability.water_bubble.lvl4_1=§9§l§oTidal Bomb ;; Massively increased offensive and charging capabilities; shield is incredibly strong.
 avatar.ability.water_bubble.lvl4_2=§9§l§oWhirling Vortex ;; Bubble turns into a ring around you, shield also wraps around. Projectiles can be shot from it.
 
+
 avatar.ability.water_arc=§9§lWater §9§lArc
 avatar.ability.water_arc.desc=One of waterbending's most basic attacks. Shoot a trailing arc of water at your enemy, but only when water is nearby. Can be spun around oneself to deflect projectiles.
 avatar.ability.water_arc.lvl1=Basic water arc.
@@ -296,32 +296,32 @@ avatar.ability.water_arc.lvl4_1=§9§l§oCascading Falls ;; You can now release 
 avatar.ability.water_arc.lvl4_2=§9§l§oCurve of the Moon ;; Spins in all directions like a swimming fish, deflects more projectiles, and can be released into a shockwave or a high-pressure arc.
 
 avatar.ability.wave=§9§lWave
-avatar.ability.wave.desc=Summon a wave of water to destroy your enemies, travels a little on land.
-avatar.ability.wave.lvl1=Make your enemies wave goodbye
-avatar.ability.wave.lvl2=A lot more damage
-avatar.ability.wave.lvl3=Much larger
+avatar.ability.wave.desc=Summon a wave of water to push nearby enemies away!
+avatar.ability.wave.lvl1=F l o w
+avatar.ability.wave.lvl2=Bigger, badder, faster, stronger
+avatar.ability.wave.lvl3=Increase in size
 avatar.ability.wave.lvl4_1=§9§l§oTsunami ;; Creates a massive wave
 avatar.ability.wave.lvl4_2=§9§l§oEbb and Flow ;; Gain the ability to summon waves pulling enemies towards you.
 
 avatar.ability.water_skate=§9§lWater §9§lSkate
-avatar.ability.water_skate.desc=Run on the surface of water. Useful as an evasive ability, or just to get around.
+avatar.ability.water_skate.desc=Run on the surface of water, or compatible blocks. Useful as an evasive ability, or just to get around.
 avatar.ability.water_skate.lvl1=Slip across the water, can't use abilities
-avatar.ability.water_skate.lvl2=Can use abilities while skating
-avatar.ability.water_skate.lvl3=Much faster, and you can now skate on flowing water!
-avatar.ability.water_skate.lvl4_1=§9§l§oBalanced §9§l§oskating ;; Can skate even on solid blocks!
-avatar.ability.water_skate.lvl4_2=§9§l§oWatery §9§l§oimpact ;; Smash the ground after jumping
+avatar.ability.water_skate.lvl2=Can use abilities while skating, faster!
+avatar.ability.water_skate.lvl3=Much faster, and you can now skate on flowing water! Block projectiles coming near you!
+avatar.ability.water_skate.lvl4_1=§9§l§oStillness in Woe;; Can skate even on solid, nonbendable blocks!
+avatar.ability.water_skate.lvl4_2=§9§l§oRaging Seas ;; You can jump and repeatedly create shockwaves after landing.
 
 avatar.ability.water_blast=§9§lWater §9§lBlast
 avatar.ability.water_blast.desc=Make a continuous stream of water acts as crowd control. It takes a while to charge up, and takes 3 water charges out of water pouches.
 avatar.ability.water_blast.lvl1=Basic charge, projectile, and burst.
 avatar.ability.water_blast.lvl2=Deals more damage, slightly larger. Can use snow and ice.
 avatar.ability.water_blast.lvl3=Deals even more damage; you can now just be near a waterbendable block to use water cannon, you don't have to look at one!
-avatar.ability.water_blast.lvl4_1=§9§l§oTitanium §9§l§oTearer ;; Unleash a hydro-powered beam of such force that it can tear through steel!
-avatar.ability.water_blast.lvl4_2=§9§l§oRapidfire ;; Rapidly create many smaller streams of water that pierces through enemies!
+avatar.ability.water_blast.lvl4_1=§9§l§oBoom and Burst ;; Charging speed and size reduced, but damage and knockback increased!
+avatar.ability.water_blast.lvl4_2=§9§l§Push and Pull ;; Gain a shield while charging, and the charge is holdable indefinitely. Enemies are pulled towards you when charging.
 
 avatar.ability.cleanse=§9§lCleanse
 avatar.ability.cleanse.desc=Grant yourself and nearby players restorative health effects, plus bending buffs
-avatar.ability.cleanse.lvl1=§oIt's §olike §oa §ofree §oshower!
+avatar.ability.cleanse.lvl1=§oIt's like a free shower!
 avatar.ability.cleanse.lvl2=Share regeneration with nearby players
 avatar.ability.cleanse.lvl3=Give yourself saturation
 avatar.ability.cleanse.lvl4_1=§9§l§oInvigoration ;; Also receive instant health boost
@@ -365,7 +365,7 @@ avatar.ability.air_bubble.desc=Create a bubble of air around you to protect your
 avatar.ability.air_bubble.lvl1=*Can't touch this*
 avatar.ability.air_bubble.lvl2=Medium-sized air bubble
 avatar.ability.air_bubble.lvl3=More knockback.
-avatar.ability.air_bubble.lvl4_1=§f§l§oPressured §f§l§obubble ;; Very large size
+avatar.ability.air_bubble.lvl4_1=§f§l§oTempest Wall ;; Infinite health, dies when damage exceeds chi cost.
 avatar.ability.air_bubble.lvl4_2=§f§l§oUndercurrent ;; Limited hovering, disabled by sneak
 
 avatar.ability.air_burst=§f§lAir Burst
@@ -519,7 +519,7 @@ death.attack.avatar_Water_waterBlast=%1$s couldn't handle the §9§lpressure of 
 death.attack.avatar_Water_shockWave=%2$s was §9§ldrowned by %1$s's hydrowave!
 death.attack.avatar_Water_sphere_shockWave=%2$s was §9§lblasted by %1$s's §9§ltorrential burst!
 
-death.attack.avatar_Air=%1$s was blasted away with %2$s's §f§lairbending!
+death.attack.avatar_Air=%1$s was blown away with %2$s's §f§lairbending!
 death.attack.avatar_Air_airblade=%1$s was §f§lsliced by %2$s !
 death.attack.avatar_Air_shockWave=%2$s was §f§lblown away by %1$s's shockwave!
 death.attack.avatar_Air_sphere_shockWave=%2$s was §f§lripped apart by %1$s's air burst!

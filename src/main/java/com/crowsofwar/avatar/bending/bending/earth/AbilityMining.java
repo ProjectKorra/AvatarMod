@@ -18,7 +18,6 @@ package com.crowsofwar.avatar.bending.bending.earth;
 
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.util.data.AbilityData;
-import com.crowsofwar.avatar.util.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.util.data.AvatarWorldData;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.ScheduledDestroyBlock;
@@ -32,14 +31,10 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.*;
 
-import static com.crowsofwar.avatar.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.avatar.util.data.AbilityData.AbilityTreePath.FIRST;
-import static com.crowsofwar.avatar.util.data.AbilityData.AbilityTreePath.SECOND;
 import static net.minecraft.init.Blocks.AIR;
 
 /**
@@ -47,250 +42,227 @@ import static net.minecraft.init.Blocks.AIR;
  */
 public class AbilityMining extends Ability {
 
-	public AbilityMining() {
-		super(Earthbending.ID, "mine_blocks");
-	}
+    private static final String
+            MINING_DELAY = "miningDelay",
+            MINE_ORES = "oreVein",
+            FORTUNE = "fortune";
 
-	@Override
-	public boolean isUtility() {
-		return true;
-	}
+    public AbilityMining() {
+        super(Earthbending.ID, "mine_blocks");
+    }
 
-	@Override
-	public void execute(AbilityContext ctx) {
+    @Override
+    public boolean isUtility() {
+        return true;
+    }
 
-		Bender bender = ctx.getBender();
-		float chi = ctx.isMasterLevel(FIRST) ? STATS_CONFIG.chiMiningMaster : STATS_CONFIG.chiMining;
+    @Override
+    public void init() {
+        super.init();
+        addProperties(RANGE, FORTUNE, MINING_DELAY);
+        addBooleanProperties(MINE_ORES);
+    }
 
-		if (bender.consumeChi(chi) && !ctx.getWorld().isRemote) {
+    @Override
+    public void execute(AbilityContext ctx) {
 
-			EntityLivingBase entity = ctx.getBenderEntity();
-			World world = ctx.getWorld();
+        Bender bender = ctx.getBender();
 
-			AbilityData abilityData = ctx.getAbilityData();
-			abilityData.addXp(SKILLS_CONFIG.miningUse);
+        if (bender.consumeChi(getChiCost(ctx)) && !ctx.getWorld().isRemote) {
 
-			Vector direction = getDirection(entity);
-			List<Vector> rays = getRaysStartPos(entity, direction);
+            EntityLivingBase entity = ctx.getBenderEntity();
+            World world = ctx.getWorld();
 
-			int dist = getDistance(abilityData.getLevel(), abilityData.getPath());
-			dist += (int) (ctx.getPowerRating() / 40);
-			int fortune = getFortune(abilityData.getLevel(), abilityData.getPath());
-			fortune += (int) Math.ceil(ctx.getPowerRating() / 50);
-			int breakBlockTime = ctx.isMasterLevel(FIRST) ? 1 : 3;
+            AbilityData abilityData = ctx.getAbilityData();
 
-			// For keeping track of already inspected/to-be-inspected positions
-			// of ore blocks
-			// orePos: Position that needs to be inspected
-			// alreadyMinedOres: Position that was already inspected (since the
-			// queue items will be deleted)
-			Queue<BlockPos> oresToBeMined = new LinkedList<>();
-			Set<BlockPos> alreadyMinedOres = new HashSet<>();
+            Vector direction = getDirection(entity);
+            List<Vector> rays = getRaysStartPos(entity, direction);
 
-			for (Vector ray : rays) {
+            int dist = getDistance(ctx);
+            int fortune = getProperty(FORTUNE, ctx).intValue();
+            int breakBlockTime = getProperty(MINING_DELAY, ctx).intValue();
 
-				for (int i = 1; i <= dist; i++) {
 
-					BlockPos pos = ray.plus(direction.times(i)).toBlockPos();
-					Block block = world.getBlockState(pos).getBlock();
+            dist *= abilityData.getDamageMult() * abilityData.getXpModifier();
+            fortune *= abilityData.getDamageMult() * abilityData.getXpModifier();
+            breakBlockTime *= (2 - abilityData.getXpModifier()) * (1 / abilityData.getXpModifier());
 
-					// Mark any ores that were found; doesn't actually mine them yet
-					if (isBreakableOre(world, pos)) {
-						oresToBeMined.add(pos);
-						//alreadyMinedOres.add(pos);
-					}
+            // For keeping track of already inspected/to-be-inspected positions
+            // of ore blocks
+            // orePos: Position that needs to be inspected
+            // alreadyMinedOres: Position that was already inspected (since the
+            // queue items will be deleted)
+            Queue<BlockPos> oresToBeMined = new LinkedList<>();
+            Set<BlockPos> alreadyMinedOres = new HashSet<>();
 
-					// Actually break the block here
-					boolean success = breakBlock(pos, ctx, i * breakBlockTime, fortune);
-					// Stop at non-breakable blocks
-					if (!success && block != Blocks.AIR) {
-						break;
-					}
-					if (success)
-						abilityData.addXp(SKILLS_CONFIG.miningUse * ((float) 1 / dist));
+            for (Vector ray : rays) {
 
-				}
+                for (int i = 1; i <= dist; i++) {
 
-			}
+                    BlockPos pos = ray.plus(direction.times(i)).toBlockPos();
+                    Block block = world.getBlockState(pos).getBlock();
 
-			// Here is where ore floodfill mining is actually performed
-			if (abilityData.getPath() == SECOND) {
-				mineNextOre(ctx, oresToBeMined, alreadyMinedOres, 0);
-			}
+                    // Mark any ores that were found; doesn't actually mine them yet
+                    if (isBreakableOre(world, pos)) {
+                        oresToBeMined.add(pos);
+                        //alreadyMinedOres.add(pos);
+                    }
 
-		}
+                    // Actually break the block here
+                    boolean success = breakBlock(pos, ctx, i * breakBlockTime, fortune);
+                    // Stop at non-breakable blocks
+                    if (!success && block != Blocks.AIR) {
+                        break;
+                    }
+                    if (success)
+                        abilityData.addXp(getProperty(XP_USE, ctx).floatValue() * (0.25F / dist));
 
-	}
+                }
 
-	/**
-	 * Calculates a random distance to mine blocks based on the current level.
-	 */
-	private int getDistance(int level, AbilityTreePath path) {
+            }
 
-		int min, max;
-		if (level == 3 && path == FIRST) {
+            // Here is where ore floodfill mining is actually performed
+            if (getBooleanProperty(MINE_ORES, ctx)) {
+                mineNextOre(ctx, oresToBeMined, alreadyMinedOres, 0);
+            }
+        }
 
-			min = 5;
-			max = 7;
+    }
 
-		} else if (level == 3) {
+    /**
+     * Calculates a random distance to mine blocks based on the current level.
+     */
+    private int getDistance(AbilityContext ctx) {
 
-			min = 4;
-			max = 6;
+        float min, max;
 
-		} else if (level == 2) {
+        max = getProperty(RANGE, ctx).floatValue();
+        min = max * 0.5F;
 
-			min = 3;
-			max = 5;
+        return (int) (min + Math.random() * (max - min));
 
-		} else if (level == 1) {
+    }
 
-			min = 2;
-			max = 4;
+    /**
+     * Gets the direction the entity is facing. This is not a unit vector, but instead each
+     * component is either -1, 0, or 1.
+     */
+    private Vector getDirection(EntityLivingBase entity) {
 
-		} else {
+        // Just return the look vector, but each component is rounded (to either -1, 0, or 1)
 
-			min = 2;
-			max = 3;
+        Vector look = Vector.getLookRectangular(entity);
+        return new Vector(Math.round(look.x()), Math.round(look.y()), Math.round(look.z()));
 
-		}
+    }
 
-		return (int) (min + Math.random() * (max - min));
+    /**
+     * In the mining operation, the blocks are mined in multiple "rays", where one block gets
+     * mined first and then it continues in one direction. This method gets the starting position
+     * of each "ray", and then the same direction for every ray can be determined using
+     * {@link #getDirection(EntityLivingBase)}.
+     */
+    private List<Vector> getRaysStartPos(EntityLivingBase entity, Vector direction) {
 
-	}
+        // Each starting position of the ray to mine out
+        List<Vector> rays = new ArrayList<>();
+        rays.add(new Vector(entity.getPosition()));
+        rays.add(new Vector(entity.getPosition().up()));
 
-	private int getFortune(int level, AbilityTreePath path) {
-		if (level == 3) {
-			return path == SECOND ? 3 : 2;
-		} else if (level == 2) {
-			return 1;
-		} else {
-			return 0;
-		}
-	}
+        // When yaw is diagonal (not along cardinal direction), add another ray of excavation
+        // because the excavated blocks would only be diagonal and you wouldn't be able to walk
+        // through them
+        if (direction.x() != 0 && direction.z() != 0) {
+            rays.add(new Vector(entity.getPosition().east()));
+            rays.add(new Vector(entity.getPosition().east().up()));
+        }
+        // When excavating up/down (ie making a stairway), add height to so you don't bump
+        // your head
+        if (direction.y() != 0) {
+            rays.add(new Vector(entity.getPosition().up(2)));
+        }
 
-	/**
-	 * Gets the direction the entity is facing. This is not a unit vector, but instead each
-	 * component is either -1, 0, or 1.
-	 */
-	private Vector getDirection(EntityLivingBase entity) {
+        return rays;
 
-		// Just return the look vector, but each component is rounded (to either -1, 0, or 1)
+    }
 
-		Vector look = Vector.getLookRectangular(entity);
-		return new Vector(Math.round(look.x()), Math.round(look.y()), Math.round(look.z()));
+    /**
+     * Breaks the block at the specified position, but doesn't break
+     * non-bendable blocks. Returns false if not able to break (since the block
+     * isn't bendable).
+     */
+    private boolean breakBlock(BlockPos pos, AbilityContext ctx, int delay, int fortune) {
 
-	}
+        World world = ctx.getWorld();
+        Block block = world.getBlockState(pos).getBlock();
+        AvatarWorldData wd = AvatarWorldData.getDataFromWorld(world);
 
-	/**
-	 * In the mining operation, the blocks are mined in multiple "rays", where one block gets
-	 * mined first and then it continues in one direction. This method gets the starting position
-	 * of each "ray", and then the same direction for every ray can be determined using
-	 * {@link #getDirection(EntityLivingBase)}.
-	 */
-	private List<Vector> getRaysStartPos(EntityLivingBase entity, Vector direction) {
+        boolean bendable = STATS_CONFIG.bendableBlocks.contains(block) && block != AIR;
+        if (bendable) {
 
-		// Each starting position of the ray to mine out
-		List<Vector> rays = new ArrayList<>();
-		rays.add(new Vector(entity.getPosition()));
-		rays.add(new Vector(entity.getPosition().up()));
+            boolean drop = !ctx.getBender().isCreativeMode();
+            wd.getScheduledDestroyBlocks().add(new ScheduledDestroyBlock(wd, pos, delay, drop, fortune));
 
-		// When yaw is diagonal (not along cardinal direction), add another ray of excavation
-		// because the excavated blocks would only be diagonal and you wouldn't be able to walk
-		// through them
-		if (direction.x() != 0 && direction.z() != 0) {
-			rays.add(new Vector(entity.getPosition().east()));
-			rays.add(new Vector(entity.getPosition().east().up()));
-		}
-		// When excavating up/down (ie making a stairway), add height to so you don't bump
-		// your head
-		if (direction.y() != 0) {
-			rays.add(new Vector(entity.getPosition().up(2)));
-		}
+            return true;
 
-		return rays;
+        } else {
+            return false;
+        }
 
-	}
+    }
 
-	/**
-	 * Breaks the block at the specified position, but doesn't break
-	 * non-bendable blocks. Returns false if not able to break (since the block
-	 * isn't bendable).
-	 */
-	private boolean breakBlock(BlockPos pos, AbilityContext ctx, int delay, int fortune) {
+    /**
+     * Represents a step in the flood-fill algorithm to destroy ore veins. Looks
+     * on the next flagged ore block and mines it, then inspects nearby blocks
+     * and flags any ores for mining. Finally, recursively calls mineNextOre again so the
+     * floodfill process continues.
+     *
+     * @param queue The queue
+     * @param alreadyInspected Self-explanatory
+     * @param ctx Ability context
+     * @param oresMined        How many ores have been mined so far. When calling this method from
+     *                         outside, should be 0. When the method recursively calls itself, this
+     *                         parameter increases. This allows the method to know when it has mined
+     *                         enough ores and should stop
+     */
+    private void mineNextOre(AbilityContext ctx, Queue<BlockPos> queue, Set<BlockPos>
+            alreadyInspected, int oresMined) {
 
-		World world = ctx.getWorld();
-		Block block = world.getBlockState(pos).getBlock();
-		AvatarWorldData wd = AvatarWorldData.getDataFromWorld(world);
+        World world = ctx.getWorld();
+        BlockPos pos = queue.poll();
 
-		boolean bendable = STATS_CONFIG.bendableBlocks.contains(block) && block != AIR;
-		if (bendable) {
+        if (pos == null) return;
+        if (breakBlock(pos, ctx, oresMined * 2 + 20, 3)) {
+            oresMined++;
+        }
 
-			boolean drop = !ctx.getBender().isCreativeMode();
-			wd.getScheduledDestroyBlocks().add(new ScheduledDestroyBlock(wd, pos, delay, drop, fortune));
+        // Search nearby blocks, and flag ores for mining
 
-			return true;
+        for (int j = 0; j < 6; j++) {
 
-		} else {
-			return false;
-		}
+            EnumFacing facing = EnumFacing.values()[j];
+            BlockPos inspectingPos = pos.offset(facing);
 
-	}
+            if (isBreakableOre(world, inspectingPos) && !alreadyInspected.contains(inspectingPos)) {
 
-	/**
-	 * Represents a step in the flood-fill algorithm to destroy ore veins. Looks
-	 * on the next flagged ore block and mines it, then inspects nearby blocks
-	 * and flags any ores for mining. Finally, recursively calls mineNextOre again so the
-	 * floodfill process continues.
-	 *
-	 * @param queue
-	 * @param alreadyInspected
-	 * @param ctx
-	 * @param oresMined        How many ores have been mined so far. When calling this method from
-	 *                         outside, should be 0. When the method recursively calls itself, this
-	 *                         parameter increases. This allows the method to know when it has mined
-	 *                         enough ores and should stop
-	 */
-	private void mineNextOre(AbilityContext ctx, Queue<BlockPos> queue, Set<BlockPos>
-			alreadyInspected, int oresMined) {
+                queue.add(inspectingPos);
+                alreadyInspected.add(inspectingPos);
 
-		World world = ctx.getWorld();
-		BlockPos pos = queue.poll();
+            }
 
-		if (pos == null) return;
-		if (breakBlock(pos, ctx, oresMined * 2 + 20, 3)) {
-			oresMined++;
-			ctx.getAbilityData().addXp(SKILLS_CONFIG.miningBreakOre);
-		}
+        }
 
-		// Search nearby blocks, and flag ores for mining
+        // Inspect the next ore
+        if (!queue.isEmpty() && oresMined < 15) {
+            mineNextOre(ctx, queue, alreadyInspected, oresMined);
+        }
 
-		for (int j = 0; j < 6; j++) {
+    }
 
-			EnumFacing facing = EnumFacing.values()[j];
-			BlockPos inspectingPos = pos.offset(facing);
-			Block inspectingBlock = world.getBlockState(inspectingPos).getBlock();
-
-			if (isBreakableOre(world, inspectingPos) && !alreadyInspected.contains(inspectingPos)) {
-
-				queue.add(inspectingPos);
-				alreadyInspected.add(inspectingPos);
-
-			}
-
-		}
-
-		// Inspect the next ore
-		if (!queue.isEmpty() && oresMined < 15) {
-			mineNextOre(ctx, queue, alreadyInspected, oresMined);
-		}
-
-	}
-
-	private boolean isBreakableOre(World world, BlockPos pos) {
-		Block block = world.getBlockState(pos).getBlock();
-		return block instanceof BlockOre || block instanceof BlockRedstoneOre;
-	}
+    private boolean isBreakableOre(World world, BlockPos pos) {
+        Block block = world.getBlockState(pos).getBlock();
+        return block instanceof BlockOre || block instanceof BlockRedstoneOre;
+    }
 
 
 }

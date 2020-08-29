@@ -1,223 +1,195 @@
 package com.crowsofwar.avatar.bending.bending.fire.statctrls;
 
-import com.crowsofwar.avatar.bending.bending.BattlePerformanceScore;
+import com.crowsofwar.avatar.bending.bending.Abilities;
+import com.crowsofwar.avatar.bending.bending.fire.AbilityFlameGlide;
 import com.crowsofwar.avatar.bending.bending.fire.Firebending;
-import com.crowsofwar.avatar.config.ConfigSkills;
+import com.crowsofwar.avatar.bending.bending.fire.tickhandlers.FlameGlideHandler;
 import com.crowsofwar.avatar.client.controls.AvatarControl;
-import com.crowsofwar.avatar.util.damageutils.AvatarDamageSource;
+import com.crowsofwar.avatar.entity.EntityShockwave;
+import com.crowsofwar.avatar.entity.mob.EntityBender;
+import com.crowsofwar.avatar.util.AvatarEntityUtils;
+import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.StatusControl;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
-import com.crowsofwar.avatar.entity.AvatarEntity;
-import com.crowsofwar.avatar.client.particle.ParticleBuilder;
-import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityAreaEffectCloud;
-import net.minecraft.entity.EntityHanging;
+import net.minecraft.block.BlockLiquid;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityArmorStand;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.item.EntityXPOrb;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Blocks;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import java.util.List;
-
-import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.avatar.util.data.TickHandlerController.*;
+import static com.crowsofwar.avatar.bending.bending.Ability.*;
+import static com.crowsofwar.avatar.util.data.TickHandlerController.FLAME_GLIDE_HANDLER;
 
 public class StatCtrlFireJump extends StatusControl {
-	public StatCtrlFireJump() {
-		super(15, AvatarControl.CONTROL_JUMP, CrosshairPosition.BELOW_CROSSHAIR);
-	}
 
-	@Override
-	public boolean execute(BendingContext ctx) {
+    public StatCtrlFireJump() {
+        super(15, AvatarControl.CONTROL_JUMP, CrosshairPosition.BELOW_CROSSHAIR);
+    }
 
-		Bender bender = ctx.getBender();
-		EntityLivingBase entity = ctx.getBenderEntity();
-		BendingData data = ctx.getData();
-		World world = ctx.getWorld();
 
-		AbilityData abilityData = data.getAbilityData("fire_jump");
-		boolean allowDoubleJump = abilityData.getLevel() == 3 && abilityData.getPath() == AbilityData.AbilityTreePath.SECOND;
+    @Override
+    public boolean execute(BendingContext ctx) {
 
-		// Figure out whether entity is on ground by finding collisions with
-		// ground - if found a collision box, then is not on ground
-		List<AxisAlignedBB> collideWithGround = world.getCollisionBoxes(entity, entity.getEntityBoundingBox().grow(0.2, 1, 0.2));
-		boolean onGround = !collideWithGround.isEmpty() || entity.collidedVertically;
+        Bender bender = ctx.getBender();
+        EntityLivingBase entity = ctx.getBenderEntity();
+        BendingData data = ctx.getData();
+        World world = ctx.getWorld();
 
-		if (onGround || (allowDoubleJump && bender.consumeChi(STATS_CONFIG.chiFireJump))) {
+        AbilityData abilityData = data.getAbilityData("flame_glide");
+        AbilityFlameGlide jump = (AbilityFlameGlide) Abilities.get("flame_glide");
 
-			int lvl = abilityData.getLevel();
-			double jumpMultiplier = 0.4;
-			float fallAbsorption = 3;
-			double range = 2;
-			double speed = 1;
-			float damage = 1;
-			int numberOfParticles = 5;
-			double particleSpeed = 0.1;
-			if (lvl >= 1) {
-				jumpMultiplier = 0.5;
-				fallAbsorption = 4;
-				range = 2.5;
-				damage = 1.5F;
-				speed = 1.5;
-				numberOfParticles = 7;
-				particleSpeed = 0.125;
-			}
-			if (lvl >= 2) {
-				jumpMultiplier = 0.65;
-				fallAbsorption = 5;
-				speed = 2;
-				range = 3;
-				damage = 2;
-				numberOfParticles = 10;
-				particleSpeed = 0.15;
-			}
-			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-				jumpMultiplier = 0.8;
-				fallAbsorption = 8;
-				speed = 4;
-				range = 5;
-				damage = 3;
-				numberOfParticles = 12;
-				particleSpeed = 0.175;
+        if (jump != null) {
+            float chiCost, exhaustion, burnOut;
+            int cooldown;
+            chiCost = jump.getChiCost(abilityData);
+            exhaustion = jump.getExhaustion(abilityData);
+            burnOut = jump.getBurnOut(abilityData);
+            cooldown = jump.getCooldown(abilityData);
 
-			}
 
-			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-				jumpMultiplier = 0.4;
-				fallAbsorption = 15;
-				speed = 2.5;
-				range = 3;
-				damage = 2.5F;
-			}
+            if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative())
+                chiCost = exhaustion = burnOut = cooldown = 0;
+            if (entity instanceof EntityBender)
+                chiCost = 0;
 
-			if (abilityData.getLevel() == 2 || abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-				data.addTickHandler(SMASH_GROUND_FIRE);
-			} else if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-				data.addTickHandler(SMASH_GROUND_FIRE_BIG);
-			}
+            if (abilityData.getAbilityCooldown() == 0 && bender.consumeChi(chiCost)) {
 
-			// Calculate direction to jump -- in the direction the player is currently already going
 
-			// For some reason, velocity is 0 here when player is walking, so must instead
-			// calculate using delta position
-			Vector deltaPos = new Vector(entity.posX - entity.lastTickPosX, 0, entity.posZ - entity.lastTickPosZ);
-			double currentYaw = Vector.getRotationTo(Vector.ZERO, deltaPos).y();
+                double jumpMultiplier = jump.getProperty(SPEED, abilityData).doubleValue() / 20;
+                float fallAbsorption = jump.getProperty(FALL_ABSORPTION, abilityData).floatValue();
 
-			// Just go forwards if not moving right now
-			if (deltaPos.sqrMagnitude() <= 0.001) {
-				currentYaw = Math.toRadians(entity.rotationYaw);
-			}
 
-			float pitch = entity.rotationPitch;
-			if (pitch < -45) {
-				pitch = -45;
-			}
+                // Calculate direction to jump -- in the direction the player is currently already going
 
-			Vector rotations = new Vector(Math.toRadians(pitch), currentYaw, 0);
+                // For some reason, velocity is 0 here when player is walking, so must instead
+                // calculate using delta position
+                Vector deltaPos = new Vector(entity.posX - entity.lastTickPosX, 0, entity.posZ - entity.lastTickPosZ);
+                double currentYaw = Vector.getRotationTo(Vector.ZERO, deltaPos).y();
 
-			// Calculate velocity to move bender
+                // Just go forwards if not moving right now
+                if (deltaPos.sqrMagnitude() <= 0.001) {
+                    currentYaw = Math.toRadians(entity.rotationYaw);
+                }
 
-			Vector velocity = rotations.toRectangular();
+                float pitch = entity.rotationPitch;
+                if (pitch < -45) {
+                    pitch = -45;
+                }
 
-			velocity = velocity.withX(velocity.x() * 2);
-			velocity = velocity.withZ(velocity.z() * 2);
+                Vector rotations = new Vector(Math.toRadians(pitch), currentYaw, 0);
 
-			velocity = velocity.times(jumpMultiplier);
-			entity.onGround = false;
-			if (!onGround) {
-				velocity = velocity.times(1);
-				entity.motionX = 0;
-				entity.motionY = 0;
-				entity.motionZ = 0;
-			}
-			entity.addVelocity(velocity.x(), velocity.y(), velocity.z());
-			if (entity instanceof EntityPlayerMP) {
-				((EntityPlayerMP) entity).connection.sendPacket(new SPacketEntityVelocity(entity));
-			}
+                // Calculate velocity to move bender
 
-			Block currentBlock = world.getBlockState(entity.getPosition()).getBlock();
-			if (currentBlock == Blocks.AIR) {
-				damageNearbyEntities(ctx, range, speed, damage, numberOfParticles, particleSpeed);
-			}
+                Vector velocity = rotations.toRectangular();
 
-			for (int angle = 0; angle < 360; angle += 2) {
-				if (world.isRemote) {
-					double radians = Math.toRadians(angle);
-					double x = 0.25 * Math.cos(radians);
-					double z = 0.25 * Math.sin(radians);
-					ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(Vector.getEntityPos(entity).toMinecraft().add(x, 0, z))
-							.vel(x * range / 2.5 * world.rand.nextDouble(), world.rand.nextGaussian() / 15, z * range / 2.5 * world.rand.nextDouble())
-							.time(12 + AvatarUtils.getRandomNumberInRange(0, 4)).scale((float) range / 6F).element(new Firebending())
-							.spawnEntity(entity).collide(true).collideParticles(true).spawn(world);
-				}
-			}
-			data.addTickHandler(FIRE_PARTICLE_SPAWNER);
-			data.getMiscData().setFallAbsorption(fallAbsorption);
+                velocity = velocity.withX(velocity.x() * 2);
+                velocity = velocity.withY(velocity.y() * 0.25F);
+                velocity = velocity.withZ(velocity.z() * 2);
 
-			abilityData.addXp(ConfigSkills.SKILLS_CONFIG.fireJump);
+                velocity = velocity.times(jumpMultiplier);
+                entity.addVelocity(velocity.x(), velocity.y(), velocity.z());
+                AvatarUtils.afterVelocityAdded(entity);
 
-			entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 1, .7f);
+                IBlockState state = world.getBlockState(entity.getPosition());
+                Block currentBlock = state.getBlock();
+                if (!(currentBlock instanceof BlockLiquid) && !state.isFullBlock() && !state.isFullCube()) {
+                    damageNearbyEntities(ctx);
+                }
 
-			return true;
 
-		}
+                data.addTickHandler(FLAME_GLIDE_HANDLER, ctx);
+                data.getMiscData().setFallAbsorption(fallAbsorption);
 
-		return false;
+                abilityData.addXp(jump.getProperty(XP_USE, abilityData).floatValue());
 
-	}
+                entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 1, .7f);
 
-	private void damageNearbyEntities(BendingContext ctx, double range, double speed, float damage, int numberOfParticles, double particleSpeed) {
+                if (entity instanceof EntityPlayer)
+                    ((EntityPlayer) entity).addExhaustion(exhaustion);
+                abilityData.addBurnout(burnOut);
+                //Ensure the ability can't be spammed after activating.
+                abilityData.setAbilityCooldown(cooldown == 0 ? 0 : jump.getCooldown(abilityData) - jump.getProperty(DURATION, abilityData).intValue());
 
-		EntityLivingBase entity = ctx.getBenderEntity();
+                return true;
 
-		World world = entity.world;
-		AxisAlignedBB box = new AxisAlignedBB(entity.posX - range, entity.getEntityBoundingBox().minY, entity.posZ - range, entity.posX + range,
-											  entity.posY + entity.getEyeHeight(), entity.posZ + range);
+            }
+        }
 
-		List<EntityLivingBase> nearby = world.getEntitiesWithinAABB(EntityLivingBase.class, box);
-		for (EntityLivingBase target : nearby) {
-			if (target != entity && target.canBeCollidedWith() && target.canBePushed()) {
-				if (canDamageEntity(target)) {
-					target.attackEntityFrom(AvatarDamageSource.causeShockwaveDamage(target, entity, AvatarDamageSource.FIRE), damage);
-				}
-				BattlePerformanceScore.addMediumScore(entity);
+        return false;
 
-				Vector velocity = Vector.getEntityPos(target).minus(Vector.getEntityPos(entity));
-				double distance = Vector.getEntityPos(target).dist(Vector.getEntityPos(entity));
-				double direction = (range - distance) * (speed / 2) / range;
-				velocity = velocity.times(direction).withY(speed / 10);
-				target.addVelocity(velocity.x(), velocity.y(), velocity.z());
+    }
 
-				target.setFire(3);
+    private void damageNearbyEntities(BendingContext ctx) {
 
-			}
-		}
+        World world = ctx.getWorld();
+        EntityLivingBase entity = ctx.getBenderEntity();
+        AbilityData abilityData = ctx.getData().getAbilityData("flame_glide");
+        AbilityFlameGlide jump = (AbilityFlameGlide) Abilities.get("flame_glide");
 
-	}
+        if (jump != null) {
+            float speed = jump.getProperty(SPEED, abilityData).floatValue() / 10;
+            float size = jump.getProperty(SIZE, abilityData).floatValue() / 2;
+            int lifetime = (int) (speed / size * 10);
+            float knockback = jump.getProperty(KNOCKBACK, abilityData).floatValue();
+            float damage = jump.getProperty(DAMAGE, abilityData).floatValue();
+            int fireTime = jump.getProperty(FIRE_TIME, abilityData).intValue();
+            int performance = jump.getProperty(PERFORMANCE, abilityData).intValue() / 10;
+            float chiHit = jump.getProperty(CHI_HIT, abilityData).floatValue() / 4;
+            int r, g, b, fadeR, fadeG, fadeB;
 
-	private boolean canDamageEntity(Entity entity) {
-		if (entity instanceof AvatarEntity && ((AvatarEntity) entity).getOwner() != entity) {
-			return false;
-		}
-		if (entity instanceof EntityHanging || entity instanceof EntityXPOrb || entity instanceof EntityItem || entity instanceof EntityArmorStand
-						|| entity instanceof EntityAreaEffectCloud) {
-			return false;
-		} else return entity.canBeCollidedWith() && entity.canBePushed();
-	}
+            r = jump.getProperty(FIRE_R, abilityData).intValue();
+            g = jump.getProperty(FIRE_G, abilityData).intValue();
+            b = jump.getProperty(FIRE_B, abilityData).intValue();
+            fadeR = jump.getProperty(FADE_R, abilityData).intValue();
+            fadeG = jump.getProperty(FADE_G, abilityData).intValue();
+            fadeB = jump.getProperty(FADE_B, abilityData).intValue();
+
+            speed *= abilityData.getDamageMult() * abilityData.getXpModifier();
+            size *= abilityData.getDamageMult() * abilityData.getXpModifier();
+            lifetime *= abilityData.getDamageMult() * abilityData.getXpModifier();
+            knockback *= abilityData.getDamageMult() * abilityData.getXpModifier();
+            damage *= abilityData.getDamageMult() * abilityData.getXpModifier();
+            fireTime *= abilityData.getDamageMult() * abilityData.getXpModifier();
+            performance *= abilityData.getDamageMult() * abilityData.getXpModifier();
+            chiHit *= abilityData.getDamageMult() * abilityData.getXpModifier();
+
+            EntityShockwave wave = new EntityShockwave(world);
+            wave.setOwner(entity);
+            wave.setDamageSource("avatar_Fire_shockwave");
+            wave.setPosition(AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(0, 0.5, 0));
+            wave.setFireTime(fireTime);
+            wave.setEntitySize(size / 5);
+            wave.setElement(new Firebending());
+            wave.setAbility(jump);
+            wave.setDamage(damage);
+            wave.setOwner(entity);
+            wave.setSphere(false);
+            wave.setSpeed(speed);
+            wave.setRenderNormal(false);
+            wave.setRange(size);
+            wave.setLifeTime(lifetime);
+            wave.setChiHit(chiHit);
+            wave.setPerformanceAmount(performance);
+            wave.setPush(knockback);
+            wave.setParticleWaves(lifetime * 5);
+            wave.setBehaviour(new FlameGlideHandler.FireJumpShockwave());
+            wave.setParticleSpeed(speed / 30F);
+            wave.setParticleAmount(30);
+            wave.setRGB(r, g, b);
+            wave.setFade(fadeR, fadeG, fadeB);
+            wave.setXp(jump.getProperty(XP_HIT, abilityData).floatValue());
+            if (!world.isRemote)
+                world.spawnEntity(wave);
+        }
+    }
 
 }
 

@@ -16,8 +16,27 @@ import static com.crowsofwar.avatar.util.data.StatusControlController.RELEASE_AI
 
 public class AbilityAirBurst extends Ability {
 
+	public static final String
+			PULL_ENEMIES = "pullsEnemies",
+			BLINDNESS_LEVEL = "blindnessLevel",
+			BLINDNESS_DURATION = "blindnessDuration",
+			SLOWNESS_LEVEL = "slownessLevel",
+			SLOWNESS_DURATION = "slownessDuration",
+			WEAKNESS_LEVEL = "weaknessLevel",
+			WEAKNESS_DURATION = "weaknessDuration",
+			BLAST_LEVEL = "blastLevel",
+			SLOW_MULT = "slowMult";
+
 	public AbilityAirBurst() {
 		super(Airbending.ID, "air_burst");
+	}
+
+	@Override
+	public void init() {
+		super.init();
+		addProperties(BLINDNESS_LEVEL, BLINDNESS_DURATION, SLOWNESS_LEVEL, SLOWNESS_DURATION, WEAKNESS_LEVEL, WEAKNESS_DURATION,
+				BLAST_LEVEL, EFFECT_RADIUS, EFFECT_DAMAGE, SLOW_MULT);
+		addBooleanProperties(PULL_ENEMIES, POTION_EFFECTS);
 	}
 
 	@Override
@@ -26,31 +45,13 @@ public class AbilityAirBurst extends Ability {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		BendingData data = ctx.getData();
 
-		float chi = 6;
-		//6
 		//The charge status control adds the release status control, but the release status control doesn't activate until the right click button is released.
 
 		boolean hasAirCharge = data.hasStatusControl(RELEASE_AIR_BURST);
 
-		if (ctx.getLevel() == 1) {
-			chi = 7;
-		}
-
-		if (ctx.getLevel() == 2) {
-			chi = 9;
-			//7
-		}
-		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-			chi = STATS_CONFIG.chiAirBurst * 1.6F;
-			//11
-		}
-		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
-			chi = STATS_CONFIG.chiAirBurst * 1.4F;
-			//11
-		}
 
 
-		if (bender.consumeChi(chi) && !hasAirCharge) {
+		if (bender.consumeChi(getChiCost(ctx) / 4) && !hasAirCharge) {
 			data.addStatusControl(CHARGE_AIR_BURST);
 		} else if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
 			if (!hasAirCharge) {
@@ -78,6 +79,21 @@ public class AbilityAirBurst extends Ability {
 	@Override
 	public boolean isOffensive() {
 		return true;
+	}
+
+	@Override
+	public int getCooldown(AbilityContext ctx) {
+		return 0;
+	}
+
+	@Override
+	public float getBurnOut(AbilityContext ctx) {
+		return 0;
+	}
+
+	@Override
+	public float getExhaustion(AbilityContext ctx) {
+		return 0;
 	}
 
 	@Override

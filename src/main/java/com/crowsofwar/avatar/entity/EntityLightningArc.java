@@ -114,7 +114,7 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
 		wave.setParticleSpeed((getSizeMultiplier() / 4) / 5);
 		wave.setParticle(AvatarParticles.getParticleElectricity());
 		wave.setSpeed(0.5F + getSizeMultiplier() / 10);
-		wave.setDamageSource(AvatarDamageSource.LIGHTNING);
+		wave.setDamageSource("avatar_Lightning_shockwave");
 		wave.setPosition(x, y + 0.3, z);
 		wave.setParticleSpeed(0.05F);
 		wave.setParticleAmount(1);

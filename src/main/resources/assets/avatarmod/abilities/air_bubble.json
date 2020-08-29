@@ -1,50 +1,77 @@
 {
   "custom_properties": {
-    "xpOnUse": 2,
+    "xpOnUse": 1,
     "level1": {
       "tier": 3,
       "chiCost": 3.0,
-      "cooldown": 0,
+      "chiPercentOnHit": 0.30,
+      "chiPerSecond": 1.5,
+      "cooldown": 80,
       "exhaustion": 2.0,
+      "exhaustionOnHit": 1,
       "burnOut": 10.0,
       "burnOutRecoverTick": 0.5,
-      "performanceAmount": 20
+      "burnOutOnHit": 5,
+      "size": 1.5,
+      "maxHealth": 4,
+      "hover": false
     },
     "level2": {
       "tier": 3,
       "chiCost": 3.25,
-      "cooldown": 5,
-      "exhaustion": 2.5,
+      "chiPercentOnHit": 0.25,
+      "chiPerSecond": 1.25,
+      "cooldown": 70,
+      "exhaustion": 2.0,
+      "exhaustionOnHit": 1,
       "burnOut": 15.0,
       "burnOutRecoverTick": 0.75,
-      "performanceAmount": 25
+      "burnOutOnHit": 5,
+      "size": 1.75,
+      "maxHealth": 6
     },
     "level3": {
       "tier": 4,
       "chiCost": 3.5,
-      "cooldown": 10,
-      "exhaustion": 3.0,
+      "chiPercentOnHit": 0.20,
+      "chiPerSecond": 1,
+      "cooldown": 65,
+      "exhaustion": 1.5,
+      "exhaustionOnHit": 1,
       "burnOut": 20.0,
       "burnOutRecoverTick": 1.0,
-      "performanceAmount": 30
+      "burnOutOnHit": 5,
+      "size": 2,
+      "maxHealth": 8
     },
     "level4_1": {
       "tier": 5,
-      "chiCost": 3.75,
-      "cooldown": 15,
-      "exhaustion": 3.5,
-      "burnOut": 25.0,
-      "burnOutRecoverTick": 1.25,
-      "performanceAmount": 35
+      "chiCost": 4.0,
+      "chiPercentOnHit": 0.30,
+      "chiPerSecond": 1,
+      "cooldown": 80,
+      "exhaustion": 3.0,
+      "exhaustionOnHit": 2.0,
+      "burnOut": 20.0,
+      "burnOutRecoverTick": 2.0,
+      "burnOutOnHit": 7.5,
+      "size": 2.5,
+      "maxHealth": -1
     },
     "level4_2": {
       "tier": 5,
       "chiCost": 4.0,
-      "cooldown": 20,
-      "exhaustion": 4.0,
-      "burnOut": 30.0,
-      "burnOutRecoverTick": 1.5,
-      "performanceAmount": 40
+      "chiPercentOnHit": 0.25,
+      "chiPerSecond": 1.25,
+      "cooldown": 60,
+      "exhaustion": 3.0,
+      "exhaustionOnHit": 1.5,
+      "burnOut": 20.0,
+      "burnOutRecoverTick": 1.0,
+      "burnOutOnHit": 5,
+      "size": 3,
+      "maxHealth": 10,
+      "hover": true
     }
   }
 }

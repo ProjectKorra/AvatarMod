@@ -16,11 +16,13 @@
 */
 package com.crowsofwar.avatar.item;
 
+import com.crowsofwar.avatar.util.Raytrace;
 import com.crowsofwar.avatar.util.TransferConfirmHandler;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.entity.mob.EntitySkyBison;
 import com.crowsofwar.avatar.registry.AvatarItem;
 import com.crowsofwar.avatar.registry.AvatarItems;
+import com.crowsofwar.avatar.util.data.ctx.BendingContext;
 import com.crowsofwar.gorecore.util.AccountUUIDs;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
@@ -156,7 +158,7 @@ public class ItemBisonWhistle extends Item implements AvatarItem {
 
 						BendingData data = BendingData.get(entity);
 						data.getMiscData().setPetSummonCooldown((int) (seconds * 20));
-						data.addTickHandler(BISON_SUMMONER);
+						data.addTickHandler(BISON_SUMMONER, new BendingContext(data, entity, new Raytrace.Result()));
 
 						MSG_BISON_WHISTLE_SUMMON.send(entity, (int) seconds);
 					} else {

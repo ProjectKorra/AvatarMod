@@ -191,7 +191,7 @@ public class PlayerBender extends Bender {
 			if (lightningArc.getOwner() != null) {
 
 				data.getMiscData().setRedirectionSource(originalShooterInfo);
-				data.addTickHandler(LIGHTNING_REDIRECT);
+				data.addTickHandler(LIGHTNING_REDIRECT, new BendingContext(data, player, new Raytrace.Result()));
 
 			}
 

@@ -22,7 +22,7 @@
       "fadeR": 255,
       "fadeG": 95,
       "fadeB": 14,
-      "effect_radius": 0,
+      "effectRadius": 0,
       "smelts": true,
       "setsFires": true,
       "trailingFire": false,
@@ -106,7 +106,7 @@
       "fadeR": 250,
       "fadeG": 48,
       "fadeB": 20,
-      "effect_radius": 5.5,
+      "effectRadius": 5.5,
       "shockwave": true,
       "trailingFire": false,
       "reflect": false

@@ -19,48 +19,51 @@ package com.crowsofwar.avatar.bending.bending.air;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingAi;
 import com.crowsofwar.avatar.util.data.Bender;
-import com.crowsofwar.avatar.util.data.BendingData;
-import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
-
-import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
-import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
-import static java.lang.Math.toDegrees;
 
 /**
  * @author CrowsOfWar
  */
 public class AiAirGust extends BendingAi {
 
-	/**
-	 * @param ability
-	 * @param entity
-	 * @param bender
-	 */
-	protected AiAirGust(Ability ability, EntityLiving entity, Bender bender) {
-		super(ability, entity, bender);
-	}
+    AiAirGust(Ability ability, EntityLiving entity, Bender bender) {
+        super(ability, entity, bender);
+        setMutexBits(3);
+    }
 
-	@Override
-	protected void startExec() {
-		// EntityLivingBase entity = ctx.getBenderEntity();
-		EntityLivingBase target = entity.getAttackTarget();
-		BendingData data = bender.getData();
+    @Override
+    protected boolean shouldExec() {
+        return entity.getAttackTarget() != null && entity.world.rand.nextBoolean();
+    }
 
-		if (target != null) {
-			Vector rotations = getRotationTo(getEntityPos(entity), getEntityPos(target));
-			entity.rotationYaw = (float) toDegrees(rotations.y());
-			entity.rotationPitch = (float) toDegrees(rotations.x());
+    @Override
+    protected void startExec() {
 
-			execAbility();
-		}
-	}
+    }
 
-	@Override
-	protected boolean shouldExec() {
-		return entity.getAttackTarget() != null
-				&& entity.getDistanceSq(entity.getAttackTarget()) < 6 * 6;
-	}
 
+    @Override
+    public float getMaxTargetRange() {
+        return 7;
+    }
+
+    @Override
+    public float getMinTargetRange() {
+        return 0;
+    }
+
+    @Override
+    public int getWaitDuration() {
+        return 2;
+    }
+
+    @Override
+    public int getTotalDuration() {
+        return 10;
+    }
+
+    @Override
+    public boolean shouldExecAbility() {
+        return timeExecuting >= getWaitDuration();
+    }
 }

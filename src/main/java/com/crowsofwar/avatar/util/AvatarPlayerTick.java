@@ -22,6 +22,7 @@ import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.air.Airbending;
+import com.crowsofwar.avatar.config.AbilityProperties;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.event.AbilityUnlockEvent;
@@ -31,9 +32,11 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 
@@ -55,7 +58,9 @@ public class AvatarPlayerTick {
                 BendingData data = bender.getData();
                 EntityPlayer player = e.player;
 
-                if (!player.world.isRemote && player.ticksExisted % 1000 == 0) {
+                //Why's this here? (why is it server side)
+                //Note: originally every 50 seconds
+                if (player.ticksExisted % 20 == 0) {
                     data.saveAll();
                 }
 
@@ -64,6 +69,20 @@ public class AvatarPlayerTick {
                 }
 
             }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
+        if (Bender.isBenderSupported(event.player)) {
+            Ability.syncProperties(event.player);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerDeath(LivingDeathEvent event) {
+        if (event.getEntityLiving() instanceof EntityPlayer && Bender.isBenderSupported(event.getEntityLiving())) {
+            Ability.syncProperties((EntityPlayer) event.getEntityLiving());
         }
     }
 

@@ -4,47 +4,68 @@
     "level1": {
       "tier": 3,
       "chiCost": 3.0,
-      "cooldown": 0,
+      "cooldown": 50,
       "exhaustion": 2.0,
-      "burnOut": 10.0,
+      "burnOut": 20.0,
       "burnOutRecoverTick": 0.5,
-      "performanceAmount": 20
+      "performanceAmount": 6,
+      "multiWall": false,
+      "shootBlocks": false,
+      "sizeMin": 1,
+      "sizeMax": 3,
+      "wallReach": 2
     },
     "level2": {
       "tier": 3,
-      "chiCost": 3.25,
-      "cooldown": 5,
+      "chiCost": 3.5,
+      "cooldown": 60,
       "exhaustion": 2.5,
-      "burnOut": 15.0,
+      "burnOut": 25.0,
       "burnOutRecoverTick": 0.75,
-      "performanceAmount": 25
+      "performanceAmount": 7,
+      "sizeMin": 2,
+      "sizeMax": 4,
+      "wallReach": 3
     },
     "level3": {
       "tier": 4,
-      "chiCost": 3.5,
-      "cooldown": 10,
+      "chiCost": 4,
+      "cooldown": 75,
       "exhaustion": 3.0,
-      "burnOut": 20.0,
+      "burnOut": 30.0,
       "burnOutRecoverTick": 1.0,
-      "performanceAmount": 30
+      "performanceAmount": 8,
+      "sizeMin": 3,
+      "sizeMax": 5,
+      "wallReach": 4
     },
     "level4_1": {
       "tier": 5,
-      "chiCost": 3.75,
-      "cooldown": 15,
+      "chiCost": 4.25,
+      "cooldown": 80,
       "exhaustion": 3.5,
-      "burnOut": 25.0,
+      "burnOut": 37.5,
       "burnOutRecoverTick": 1.25,
-      "performanceAmount": 35
+      "performanceAmount": 9,
+      "shootBlocks": true,
+      "sizeMin": 5,
+      "sizeMax": 7,
+      "wallReach": 6
     },
     "level4_2": {
       "tier": 5,
-      "chiCost": 4.0,
-      "cooldown": 20,
+      "chiCost": 4.5,
+      "cooldown": 90,
       "exhaustion": 4.0,
-      "burnOut": 30.0,
+      "burnOut": 45.0,
       "burnOutRecoverTick": 1.5,
-      "performanceAmount": 40
+      "performanceAmount": 10,
+      "multiWall": true,
+      "shootBlocks": false,
+      "sizeMin": 2,
+      "sizeMax": 5,
+      "shootWall": true,
+      "wallReach": 5
     }
   }
 }

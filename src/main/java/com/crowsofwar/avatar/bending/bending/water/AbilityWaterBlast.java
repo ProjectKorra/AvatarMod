@@ -60,24 +60,24 @@ public class AbilityWaterBlast extends Ability {
 
 		if (ctx.consumeWater(waterAmount)) {
 			if (bender.consumeChi(chi) && !hasWaterCharge) {
-				ctx.getData().addTickHandler(WATER_CHARGE);
-				data.addTickHandler(WATER_PARTICLE_SPAWNER);
+				ctx.getData().addTickHandler(WATER_CHARGE, ctx);
+				data.addTickHandler(WATER_PARTICLE_SPAWNER, ctx);
 			}
 		} else if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
 			if (!hasWaterCharge) {
-				ctx.getData().addTickHandler(WATER_CHARGE);
-				data.addTickHandler(WATER_PARTICLE_SPAWNER);
+				ctx.getData().addTickHandler(WATER_CHARGE, ctx);
+				data.addTickHandler(WATER_PARTICLE_SPAWNER, ctx);
 			}
 		} else if (targetPos != null && ctx.getLevel() >= 2) {
 			if (bender.consumeChi(chi) && !hasWaterCharge) {
 				world.setBlockToAir(targetPos.toBlockPos());
 				//Vector look = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0);
 
-				ctx.getData().addTickHandler(WATER_CHARGE);
-				data.addTickHandler(WATER_PARTICLE_SPAWNER);
+				ctx.getData().addTickHandler(WATER_CHARGE, ctx);
+				data.addTickHandler(WATER_PARTICLE_SPAWNER, ctx);
 			}
 		} else {
-			bender.sendMessage("avatar.waterBlastFail");
+			bender.sendMessage("avatar.waterSourceFail");
 		}
 	}
 

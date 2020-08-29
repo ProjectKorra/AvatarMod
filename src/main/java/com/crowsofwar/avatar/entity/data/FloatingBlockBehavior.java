@@ -19,6 +19,9 @@ package com.crowsofwar.avatar.entity.data;
 
 import com.crowsofwar.avatar.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.entity.EntityOffensive;
+import com.crowsofwar.avatar.util.AvatarEntityUtils;
+import com.crowsofwar.avatar.util.data.BendingData;
+import com.crowsofwar.avatar.util.data.StatusControlController;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -39,288 +42,288 @@ import java.util.List;
  */
 public abstract class FloatingBlockBehavior extends OffensiveBehaviour {
 
-	public static final DataSerializer<FloatingBlockBehavior> DATA_SERIALIZER = new Behavior.BehaviorSerializer<>();
-
-	public static int ID_NOTHING, ID_FALL, ID_PICKUP, ID_PLACE, ID_PLAYER_CONTROL, ID_THROWN;
+    public static final DataSerializer<FloatingBlockBehavior> DATA_SERIALIZER = new Behavior.BehaviorSerializer<>();
+
+    public static int ID_NOTHING, ID_FALL, ID_PICKUP, ID_PLACE, ID_PLAYER_CONTROL, ID_THROWN;
+
+    public static void register() {
+        DataSerializers.registerSerializer(DATA_SERIALIZER);
+        ID_NOTHING = registerBehavior(Idle.class);
+        ID_FALL = registerBehavior(Fall.class);
+        ID_PICKUP = registerBehavior(PickUp.class);
+        ID_PLACE = registerBehavior(Place.class);
+        ID_PLAYER_CONTROL = registerBehavior(PlayerControlled.class);
+        ID_THROWN = registerBehavior(Thrown.class);
+    }
+
+    public static class Idle extends FloatingBlockBehavior {
+
+        @Override
+        public FloatingBlockBehavior onUpdate(EntityOffensive entity) {
+            return this;
+        }
+
+        @Override
+        public void fromBytes(PacketBuffer buf) {
+        }
 
-	public static void register() {
-		DataSerializers.registerSerializer(DATA_SERIALIZER);
-		ID_NOTHING = registerBehavior(Idle.class);
-		ID_FALL = registerBehavior(Fall.class);
-		ID_PICKUP = registerBehavior(PickUp.class);
-		ID_PLACE = registerBehavior(Place.class);
-		ID_PLAYER_CONTROL = registerBehavior(PlayerControlled.class);
-		ID_THROWN = registerBehavior(Thrown.class);
-	}
-
-	public static class Idle extends FloatingBlockBehavior {
-
-		@Override
-		public FloatingBlockBehavior onUpdate(EntityOffensive entity) {
-			return this;
-		}
+        @Override
+        public void toBytes(PacketBuffer buf) {
+        }
 
-		@Override
-		public void fromBytes(PacketBuffer buf) {
-		}
+        @Override
+        public void load(NBTTagCompound nbt) {
+        }
 
-		@Override
-		public void toBytes(PacketBuffer buf) {
-		}
-
-		@Override
-		public void load(NBTTagCompound nbt) {
-		}
-
-		@Override
-		public void save(NBTTagCompound nbt) {
-		}
-
-	}
-
-	public static class Place extends FloatingBlockBehavior {
-
-		private BlockPos placeAt;
-
-		public Place() {
-		}
-
-		public Place(BlockPos placeAt) {
-			this.placeAt = placeAt;
-		}
-
-		@Override
-		public FloatingBlockBehavior onUpdate(EntityOffensive entity) {
+        @Override
+        public void save(NBTTagCompound nbt) {
+        }
 
-			if (entity instanceof EntityFloatingBlock) {
-				Vector placeAtVec = new Vector(placeAt.getX() + 0.5, placeAt.getY(), placeAt.getZ() + 0.5);
-				Vector thisPos = new Vector(entity);
-				Vector force = placeAtVec.minus(thisPos);
-				force = force.normalize().times(3);
-				entity.setVelocity(force);
+    }
 
-				if (!entity.world.isRemote && placeAtVec.sqrDist(thisPos) < 0.01) {
+    public static class Place extends FloatingBlockBehavior {
 
-					entity.setDead();
-					entity.world.setBlockState(new BlockPos(entity), ((EntityFloatingBlock) entity).getBlockState());
+        private BlockPos placeAt;
 
-					SoundType sound = ((EntityFloatingBlock) entity).getBlock().getSoundType();
-					if (sound != null) {
-						entity.world.playSound(null, entity.getPosition(), sound.getPlaceSound(),
-								SoundCategory.PLAYERS, sound.getVolume(), sound.getPitch());
-					}
+        public Place() {
+        }
 
-				}
-			}
-			return this;
-		}
+        public Place(BlockPos placeAt) {
+            this.placeAt = placeAt;
+        }
 
-		@Override
-		public void fromBytes(PacketBuffer buf) {
-			placeAt = buf.readBlockPos();
-		}
+        @Override
+        public FloatingBlockBehavior onUpdate(EntityOffensive entity) {
 
-		@Override
-		public void toBytes(PacketBuffer buf) {
-			buf.writeBlockPos(placeAt);
-		}
+            if (entity instanceof EntityFloatingBlock) {
+                entity.noClip = true;
 
-		@Override
-		public void load(NBTTagCompound nbt) {
-			placeAt = new BlockPos(nbt.getInteger("PlaceX"), nbt.getInteger("PlaceY"),
-					nbt.getInteger("PlaceZ"));
-		}
+                Vector placeAtVec = new Vector(placeAt.getX() + 0.5, placeAt.getY(), placeAt.getZ() + 0.5);
+                Vector thisPos = new Vector(entity);
+                Vector force = placeAtVec.minus(thisPos);
+                force = force.normalize().times(3);
+                entity.setVelocity(force);
 
-		@Override
-		public void save(NBTTagCompound nbt) {
-			nbt.setInteger("PlaceX", placeAt.getX());
-			nbt.setInteger("PlaceY", placeAt.getY());
-			nbt.setInteger("PlaceZ", placeAt.getZ());
-		}
+                if (placeAtVec.sqrDist(thisPos) < 0.005) {
+                    ((EntityFloatingBlock) entity).placeBlock();
+                    entity.Dissipate();
+                    SoundType sound = ((EntityFloatingBlock) entity).getBlock().getSoundType();
+                    if (sound != null) {
+                        entity.world.playSound(null, entity.getPosition(), sound.getPlaceSound(),
+                                SoundCategory.PLAYERS, sound.getVolume(), sound.getPitch());
+                    }
 
-	}
+                }
+            }
+            return this;
+        }
 
-	public static class Thrown extends FloatingBlockBehavior {
+        @Override
+        public void fromBytes(PacketBuffer buf) {
+            placeAt = buf.readBlockPos();
+        }
 
-		@Override
-		public FloatingBlockBehavior onUpdate(EntityOffensive entity) {
+        @Override
+        public void toBytes(PacketBuffer buf) {
+            buf.writeBlockPos(placeAt);
+        }
 
-			if (entity.collided && entity instanceof EntityFloatingBlock) {
+        @Override
+        public void load(NBTTagCompound nbt) {
+            placeAt = new BlockPos(nbt.getInteger("PlaceX"), nbt.getInteger("PlaceY"),
+                    nbt.getInteger("PlaceZ"));
+        }
 
-				World world = entity.world;
-				Block block = ((EntityFloatingBlock) entity).getBlockState().getBlock();
-				SoundType sound = block.getSoundType();
-				if (sound != null) {
-					world.playSound(null, entity.getPosition(), sound.getBreakSound(),
-							SoundCategory.PLAYERS, sound.getVolume(), sound.getPitch());
-				}
+        @Override
+        public void save(NBTTagCompound nbt) {
+            nbt.setInteger("PlaceX", placeAt.getX());
+            nbt.setInteger("PlaceY", placeAt.getY());
+            nbt.setInteger("PlaceZ", placeAt.getZ());
+        }
 
-			}
+    }
 
-			entity.addVelocity(Vector.DOWN.times(9.81 / 30));
+    public static class Thrown extends FloatingBlockBehavior {
 
-			World world = entity.world;
-			/*if (!entity.isDead) {
-				List<Entity> collidedList = world.getEntitiesWithinAABBExcludingEntity(entity,
-						entity.getExpandedHitbox());
-				if (!collidedList.isEmpty()) {
-					Entity collided = collidedList.get(0);
-					if (collided instanceof EntityLivingBase && collided != entity.getOwner()) {
-						return collision((EntityLivingBase) collided, entity);
-					} else if (collided != entity.getOwner()) {
-						Vector motion = new Vector(collided).minus(new Vector(entity));
-						motion = motion.times(0.3).withY(0.08);
-						collided.addVelocity(motion.x(), motion.y(), motion.z());
-					}
-
-				}
-				entity.setBehavior(new FloatingBlockBehavior.PlayerControlled());
-			}**/
-
-			return this;
-
-		}
-
-
-		@Override
-		public void fromBytes(PacketBuffer buf) {
-		}
-
-		@Override
-		public void toBytes(PacketBuffer buf) {
-		}
-
-		@Override
-		public void load(NBTTagCompound nbt) {
-		}
+        @Override
+        public FloatingBlockBehavior onUpdate(EntityOffensive entity) {
 
-		@Override
-		public void save(NBTTagCompound nbt) {
-		}
-
-	}
-
-	public static class PickUp extends FloatingBlockBehavior {
-
-		@Override
-		public FloatingBlockBehavior onUpdate(EntityOffensive entity) {
-			entity.addVelocity(Vector.DOWN.times(9.81 / 20));
-
-			Vector velocity = entity.velocity();
-			if (velocity.y() <= 0) {
-				entity.setVelocity(velocity.withY(0));
-				return new PlayerControlled();
-			}
-
-			return this;
-		}
-
-		@Override
-		public void fromBytes(PacketBuffer buf) {
-		}
-
-		@Override
-		public void toBytes(PacketBuffer buf) {
-		}
-
-		@Override
-		public void load(NBTTagCompound nbt) {
-		}
-
-		@Override
-		public void save(NBTTagCompound nbt) {
-		}
-
-	}
-
-	public static class PlayerControlled extends FloatingBlockBehavior {
-
-		public PlayerControlled() {
-		}
-
-		@Override
-		public FloatingBlockBehavior onUpdate(EntityOffensive entity) {
-			EntityLivingBase owner = entity.getOwner();
-
-			if (owner == null || !(entity instanceof EntityFloatingBlock)) return this;
-
-			Vector forward = Vector.getLookRectangular(owner);
-			Vector eye = Vector.getEyePos(owner);
-			Vector target = forward.times(2.5).plus(eye);
-			Vec3d motion = target.minus(Vector.getEntityPos(entity)).times(0.5).toMinecraft();
-			int angle = (int) entity.world.getWorldTime();
-			List<EntityFloatingBlock> blocks = entity.world.getEntitiesWithinAABB(EntityFloatingBlock.class,
-					owner.getEntityBoundingBox().grow(3, 3, 3));
-			//Drillgon200: Sort the list by id so the blocks will always have the same orbit order.
-			blocks.sort((b1, b2) -> b1.getID()>b2.getID()?1:-1);
-			int index = blocks.indexOf(entity);
-			if(index < 0)
-				return this;
-			//S P I N
-			if (!blocks.isEmpty() && blocks.size() > 1) {
-				angle *= 5;
-				angle += ((360 / blocks.size())*index);
-				double radians = Math.toRadians(angle);
-				double x = 2.5 * Math.cos(radians);
-				double z = 2.5 * Math.sin(radians);
-				Vec3d pos = new Vec3d(x, 0, z);
-				pos = pos.add(owner.posX, owner.getEntityBoundingBox().minY + 1.5, owner.posZ);
-				motion = pos.subtract(entity.getPositionVector()).scale(.5);
-			}
-
-			entity.setVelocity(motion);
-			return this;
-
-		}
-
-		@Override
-		public void fromBytes(PacketBuffer buf) {
-		}
-
-		@Override
-		public void toBytes(PacketBuffer buf) {
-		}
-
-		@Override
-		public void load(NBTTagCompound nbt) {
-		}
-
-		@Override
-		public void save(NBTTagCompound nbt) {
-		}
-
-	}
-
-	public static class Fall extends FloatingBlockBehavior {
-
-		@Override
-		public FloatingBlockBehavior onUpdate(EntityOffensive entity) {
-			if (entity instanceof EntityFloatingBlock) {
-				entity.addVelocity(Vector.DOWN.times(9.81 / 20));
-				if (entity.collided) {
-					if (!entity.world.isRemote) entity.setDead();
-					entity.onCollideWithSolid();
-				}
-			}
-			return this;
-		}
-
-		@Override
-		public void fromBytes(PacketBuffer buf) {
-		}
-
-		@Override
-		public void toBytes(PacketBuffer buf) {
-		}
-
-		@Override
-		public void load(NBTTagCompound nbt) {
-		}
-
-		@Override
-		public void save(NBTTagCompound nbt) {
-		}
-
-	}
+            entity.setEntitySize(1.0F);
+            if (entity.collided && entity instanceof EntityFloatingBlock) {
+
+                World world = entity.world;
+                Block block = ((EntityFloatingBlock) entity).getBlockState().getBlock();
+                SoundType sound = block.getSoundType();
+                if (sound != null) {
+                    world.playSound(null, entity.getPosition(), sound.getBreakSound(),
+                            SoundCategory.PLAYERS, sound.getVolume(), sound.getPitch());
+                }
+
+            }
+
+            entity.addVelocity(Vector.DOWN.times(9.81 / 30));
+
+            return this;
+
+        }
+
+
+        @Override
+        public void fromBytes(PacketBuffer buf) {
+        }
+
+        @Override
+        public void toBytes(PacketBuffer buf) {
+        }
+
+        @Override
+        public void load(NBTTagCompound nbt) {
+        }
+
+        @Override
+        public void save(NBTTagCompound nbt) {
+        }
+
+    }
+
+    public static class PickUp extends FloatingBlockBehavior {
+
+        @Override
+        public FloatingBlockBehavior onUpdate(EntityOffensive entity) {
+            entity.addVelocity(Vector.DOWN.times(9.81 / 20));
+
+            Vector velocity = entity.velocity();
+            if (velocity.y() <= 0 && entity.getOwner() != null) {
+                entity.setVelocity(velocity.withY(0));
+
+                Vec3d forward = entity.getOwner().getLook(1.0F);
+                Vec3d eye = entity.getOwner().getPositionEyes(1.0F);
+                Vec3d target = forward.scale(2.5).add(eye);
+                Vec3d motion = target.subtract(entity.getPositionVector()).scale(0.05);
+                entity.setVelocity(motion);
+
+                return new PlayerControlled();
+            }
+
+            return this;
+        }
+
+        @Override
+        public void fromBytes(PacketBuffer buf) {
+        }
+
+        @Override
+        public void toBytes(PacketBuffer buf) {
+        }
+
+        @Override
+        public void load(NBTTagCompound nbt) {
+        }
+
+        @Override
+        public void save(NBTTagCompound nbt) {
+        }
+
+    }
+
+    public static class PlayerControlled extends FloatingBlockBehavior {
+
+        public PlayerControlled() {
+        }
+
+        @Override
+        public FloatingBlockBehavior onUpdate(EntityOffensive entity) {
+            EntityLivingBase owner = entity.getOwner();
+
+            if (owner == null || !(entity instanceof EntityFloatingBlock)) return this;
+
+            entity.setEntitySize(0.9F);
+
+            Vec3d forward = owner.getLook(1.0F);
+            Vec3d eye = owner.getPositionEyes(1.0F);
+            Vec3d target = forward.scale(2.5).add(eye);
+            Vec3d motion = target.subtract(AvatarEntityUtils.getBottomMiddleOfEntity(entity)).scale(0.5);
+            int angle = (int) entity.world.getWorldTime();
+            List<EntityFloatingBlock> blocks = entity.world.getEntitiesWithinAABB(EntityFloatingBlock.class,
+                    owner.getEntityBoundingBox().grow(4, 4, 4));
+            //Drillgon200: Sort the list by id so the blocks will always have the same orbit order.
+            blocks.sort((b1, b2) -> b1.getID() > b2.getID() ? 1 : -1);
+            int index = blocks.indexOf(entity);
+            if (index < 0)
+                return this;
+            //S P I N
+            if (!blocks.isEmpty() && blocks.size() > 1) {
+                angle *= 5;
+                angle += ((360 / blocks.size()) * index);
+                double radians = Math.toRadians(angle);
+                double x = 2.5 * Math.cos(radians);
+                double z = 2.5 * Math.sin(radians);
+                Vec3d pos = new Vec3d(x, 0, z);
+                pos = pos.add(owner.posX, owner.getEntityBoundingBox().minY + 1.5, owner.posZ);
+                motion = pos.subtract(AvatarEntityUtils.getBottomMiddleOfEntity(entity)).scale(.5);
+            }
+
+            entity.setVelocity(motion);
+
+            BendingData data = BendingData.getFromEntity(owner);
+            if (data != null)
+                if (!data.hasStatusControl(StatusControlController.THROW_BLOCK) || !data.hasStatusControl(StatusControlController.PLACE_BLOCK)) {
+                    data.addStatusControls(StatusControlController.THROW_BLOCK, StatusControlController.PLACE_BLOCK);
+                }
+            return this;
+
+        }
+
+        @Override
+        public void fromBytes(PacketBuffer buf) {
+        }
+
+        @Override
+        public void toBytes(PacketBuffer buf) {
+        }
+
+        @Override
+        public void load(NBTTagCompound nbt) {
+        }
+
+        @Override
+        public void save(NBTTagCompound nbt) {
+        }
+
+    }
+
+    public static class Fall extends FloatingBlockBehavior {
+
+        @Override
+        public FloatingBlockBehavior onUpdate(EntityOffensive entity) {
+            if (entity instanceof EntityFloatingBlock) {
+                entity.addVelocity(Vector.DOWN.times(9.81 / 20));
+                if (entity.onCollideWithSolid()) {
+                    if (!entity.world.isRemote)
+                        entity.Dissipate();
+
+                }
+                entity.setEntitySize(0.9F);
+            }
+            return this;
+        }
+
+        @Override
+        public void fromBytes(PacketBuffer buf) {
+        }
+
+        @Override
+        public void toBytes(PacketBuffer buf) {
+        }
+
+        @Override
+        public void load(NBTTagCompound nbt) {
+        }
+
+        @Override
+        public void save(NBTTagCompound nbt) {
+        }
+
+    }
 
 }

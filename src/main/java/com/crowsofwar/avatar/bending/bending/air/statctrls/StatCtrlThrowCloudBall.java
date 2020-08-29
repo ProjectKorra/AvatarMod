@@ -1,6 +1,11 @@
 package com.crowsofwar.avatar.bending.bending.air.statctrls;
 
+import com.crowsofwar.avatar.bending.bending.Abilities;
+import com.crowsofwar.avatar.bending.bending.Ability;
+import com.crowsofwar.avatar.bending.bending.air.AbilityCloudBurst;
+import com.crowsofwar.avatar.entity.mob.EntityBender;
 import com.crowsofwar.avatar.util.data.AbilityData;
+import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.StatusControl;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
 import com.crowsofwar.avatar.entity.AvatarEntity;
@@ -8,6 +13,7 @@ import com.crowsofwar.avatar.entity.EntityCloudBall;
 import com.crowsofwar.avatar.entity.data.CloudburstBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.client.controls.AvatarControl.CONTROL_LEFT_CLICK;
@@ -23,32 +29,38 @@ public class StatCtrlThrowCloudBall extends StatusControl {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		World world = ctx.getWorld();
 		AbilityData abilityData = ctx.getData().getAbilityData("cloudburst");
-		double speed = 12.5;
+		AbilityCloudBurst burst = (AbilityCloudBurst) Abilities.get("cloudburst");
+		Bender bender = ctx.getBender();
 
-		if (abilityData.getLevel() == 1) {
-			speed = 15;
-		}
+		if (abilityData != null && burst != null) {
+			double speed = burst.getProperty(Ability.SPEED, abilityData).floatValue() * 3;
+			float exhaustion, burnout, chiCost;
+			int cooldown;
+			exhaustion = burst.getExhaustion(abilityData);
+			burnout = burst.getBurnOut(abilityData);
+			cooldown = burst.getCooldown(abilityData);
+			chiCost = burst.getChiCost(abilityData);
 
-		if (abilityData.getLevel() == 2) {
-			speed = 17.5;
-		}
+			if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative())
+				burnout = exhaustion = chiCost = cooldown = 0;
 
-		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-			speed = 20;
-		}
+			speed *= abilityData.getDamageMult() * abilityData.getXpModifier();
 
-		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-			speed = 22.5;
-		}
+			if (bender.consumeChi(chiCost)) {
 
+				EntityCloudBall cloudBall = AvatarEntity.lookupControlledEntity(world, EntityCloudBall.class, entity);
 
-		EntityCloudBall cloudBall = AvatarEntity.lookupControlledEntity(world, EntityCloudBall.class, entity);
+				if (cloudBall != null) {
+					cloudBall.setBehavior(new CloudburstBehavior.Thrown());
+					cloudBall.setVelocity(Vector.getLookRectangular(entity).times(speed * 1.5F));
+					abilityData.setAbilityCooldown(cooldown);
+					if (entity instanceof EntityPlayer)
+						((EntityPlayer) entity).addExhaustion(exhaustion);
+					abilityData.addBurnout(burnout);
+				}
 
-		if (cloudBall != null) {
-			cloudBall.setBehavior(new CloudburstBehavior.Thrown());
-			cloudBall.setLifeTime(30);
-			cloudBall.setVelocity(Vector.getLookRectangular(entity).times(speed * 1.5F));
-			//ctx.getData().addTickHandler(AIR_STATCTRL_HANDLER);
+				abilityData.setRegenBurnout(true);
+			}
 		}
 
 		return true;

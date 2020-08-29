@@ -50,7 +50,9 @@ public class StatusControlController {
 			THROW_LIGHTNINGSPEAR = new StatCtrlThrowLightningSpear(),
 			THROW_WATER = new StatCtrlThrowWater(),
 			CHARGE_WATER = new StatCtrlChargeWaterBlast(true),
-			RELEASE_WATER = new StatCtrlChargeWaterBlast(false);
+			RELEASE_WATER = new StatCtrlChargeWaterBlast(false),
+			REDIRECT_FIRE = new StatCtrlFireRedirect(),
+			SPLIT_FIRE = new StatCtrlFireSplit();
 	// @formatter:on
 
 	public static StatusControl lookup(int id) {

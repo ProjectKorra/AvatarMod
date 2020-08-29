@@ -1,25 +1,25 @@
 package com.crowsofwar.avatar.bending.bending.air.tickhandlers;
 
+import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.air.AbilityAirBurst;
 import com.crowsofwar.avatar.bending.bending.air.Airbending;
-import com.crowsofwar.avatar.util.damageutils.AvatarDamageSource;
+import com.crowsofwar.avatar.client.particle.ParticleBuilder;
+import com.crowsofwar.avatar.entity.*;
+import com.crowsofwar.avatar.entity.data.OffensiveBehaviour;
+import com.crowsofwar.avatar.util.AvatarEntityUtils;
+import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.TickHandler;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
-import com.crowsofwar.avatar.entity.*;
-import com.crowsofwar.avatar.entity.data.Behavior;
-import com.crowsofwar.avatar.entity.data.OffensiveBehaviour;
-import com.crowsofwar.avatar.client.particle.ParticleBuilder;
-import com.crowsofwar.avatar.util.AvatarEntityUtils;
-import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
@@ -31,8 +31,11 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
+import static com.crowsofwar.avatar.bending.bending.Ability.*;
+import static com.crowsofwar.avatar.bending.bending.air.AbilityAirBurst.*;
 import static com.crowsofwar.avatar.config.ConfigClient.CLIENT_CONFIG;
 import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.util.data.StatusControlController.RELEASE_AIR_BURST;
@@ -53,93 +56,64 @@ public class AirBurstHandler extends TickHandler {
         BendingData data = ctx.getData();
         Bender bender = ctx.getBender();
         AbilityData abilityData = ctx.getData().getAbilityData("air_burst");
+        AbilityAirBurst burst = (AbilityAirBurst) Abilities.get("air_burst");
+
         float charge;
         //4 stages, max charge of 4.
         boolean shouldRemove = false;
 
         //TODO: Air Blast/Laser of Air! At level 1, it activates at charge level 4.
-        if (abilityData != null) {
+        if (abilityData != null && burst != null) {
 
-            float powerRating = ((float) bender.getDamageMult(Airbending.ID));
+            float powerMod = (float) abilityData.getDamageMult();
             float xpMod = abilityData.getXpModifier();
 
             int duration = data.getTickHandlerDuration(this);
-            double damage = STATS_CONFIG.airBurstSettings.damage;
-            //Default 5
-            float movementMultiplier = 0.6f - 0.7f * MathHelper.sqrt(duration / 40F);
-            double knockBack = STATS_CONFIG.airBurstSettings.push;
-            //Default 2 + Power rating
-            float radius = STATS_CONFIG.airBurstSettings.radius;
-            //Default 4
-            float durationToFire = STATS_CONFIG.airBurstSettings.durationToFire;
-            //Default 40
-            double upwardKnockback = STATS_CONFIG.airBurstSettings.push / 40;
+            float damage = burst.getProperty(EFFECT_DAMAGE, abilityData).floatValue();
+            float slowMult = burst.getProperty(SLOW_MULT, abilityData).floatValue();
+
+
+            float knockBack = burst.getProperty(KNOCKBACK, abilityData).floatValue() / 4;
+            float radius = burst.getProperty(EFFECT_RADIUS, abilityData).floatValue();
+            float durationToFire = burst.getProperty(CHARGE_TIME, abilityData).intValue();
             double suction = 0.05;
-            int performanceAmount = STATS_CONFIG.airBurstSettings.performanceAmount;
+            float speed = burst.getProperty(SPEED, abilityData).floatValue() / 5;
+            int performanceAmount = burst.getProperty(PERFORMANCE, abilityData).intValue();
             float shockwaveSpeed;
+
+            float exhaustion, burnout;
+            int cooldown;
+            exhaustion = burst.getExhaustion(abilityData);
+            burnout = burst.getBurnOut(abilityData);
+            cooldown = burst.getCooldown(abilityData);
+
+            if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
+                exhaustion = burnout = cooldown = 0;
+            }
 
             //Makes sure the charge is never 0.
             charge = Math.max((int) (3 * (duration / durationToFire)) + 1, 1);
             charge = Math.min(charge, 4);
             //We don't want the charge going over 4.
 
-
-            if (abilityData.getLevel() == 1) {
-                damage *= 1.5;
-                //7.5
-                knockBack *= 1.25;
-                radius *= 1.25;
-                //4
-                durationToFire *= 0.825F;
-                //30
-                upwardKnockback *= 1.5;
-                performanceAmount += 3;
-            }
-
-            if (abilityData.getLevel() >= 2) {
-                damage *= 2;
-                //8
-                knockBack *= 2;
-                radius *= 1.75F;
-                //7
-                durationToFire *= 0.75F;
-                //20
-                upwardKnockback *= 1.75;
-                performanceAmount += 5;
-            }
-
-            if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-                //Piercing Winds
-                damage *= 1.25;
-                //Blinds enemies
-
-            }
-
-            if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-                //Maximum Pressure
-                //Pulls enemies in then blasts them out
-                radius *= 1.5;
-                //10.5
-                upwardKnockback = STATS_CONFIG.airBurstSettings.push / 10;
-                durationToFire *= (4 / 3F);
-                //Back to the original amount.
-                performanceAmount += 2;
-            }
-
-            durationToFire *= (1 / powerRating);
+            durationToFire *= (2 - powerMod);
             durationToFire -= xpMod * 10;
-            damage *= powerRating * xpMod;
-            radius *= powerRating * xpMod;
-            knockBack *= powerRating * xpMod;
+            damage *= powerMod * xpMod;
+            radius *= powerMod * xpMod;
+            knockBack *= powerMod * xpMod;
+            slowMult *= powerMod * xpMod;
+            speed *= powerMod * xpMod;
 
+            float movementMultiplier = slowMult - 0.7f * MathHelper.sqrt(duration / 40F);
 
             //how fast the shockwave's particle speed is.
-            shockwaveSpeed = (float) knockBack;
+            shockwaveSpeed = knockBack;
             //Affect things by the charge. The charge, at stage 3, should set everything to its max.
             damage *= (0.20 + 0.20 * charge);
             //Results in a bigger radius so that it blocks projectiles.
             radius *= (0.60 + 0.10 * charge);
             knockBack *= (0.60 + 0.10 * charge);
+            speed *= (1F + charge / 4F);
             performanceAmount *= (0.20 + 0.20 * charge);
 
 
@@ -153,13 +127,13 @@ public class AirBurstHandler extends TickHandler {
                     Vector lookpos = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
                             i * 30), 0).times(inverseRadius).withY(entity.getEyeHeight() / 2);
                     ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(lookpos.toMinecraft()))
-                            .collide(true).collideParticles(true).scale(abilityData.getXpModifier() * 0.85F * charge).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
+                            .collide(true).scale(abilityData.getXpModifier() * 0.85F * charge).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
                             world.rand.nextGaussian() / 60).clr(0.975F, 0.975F, 0.975F, 0.05F).element(new Airbending()).spawn(world);
                 }
             }
             world.playSound(null, new BlockPos(entity), SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.PLAYERS, 0.25F * charge, 0.8F + world.rand.nextFloat() / 10);
 
-            if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+            if (burst.getBooleanProperty(PULL_ENEMIES, abilityData)) {
                 AxisAlignedBB box = new AxisAlignedBB(entity.posX + radius, entity.posY + radius, entity.posZ + radius, entity.posX - radius, entity.posY - radius, entity.posZ - radius);
                 List<Entity> collided = world.getEntitiesWithinAABB(Entity.class, box, entity1 -> entity1 != entity);
                 if (!collided.isEmpty()) {
@@ -172,63 +146,41 @@ public class AirBurstHandler extends TickHandler {
             }
 
             //Applies the proper status control based on level.
-            switch (abilityData.getLevel()) {
-                case -1:
-                case 0:
-                    if (charge == 4) {
-                        addStatCtrl(data);
-                        shouldRemove = true;
-                    }
-                    break;
-
-                case 1:
-                    if (charge >= 3) {
-                        addStatCtrl(data);
-                        shouldRemove = true;
-                    }
-                    break;
-                case 2:
-                    if (charge >= 2) {
-                        addStatCtrl(data);
-                        shouldRemove = true;
-                    }
-                    break;
-                case 3:
-                    if (charge > 0 && abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-                        addStatCtrl(data);
-                        shouldRemove = true;
-                    } else if (charge > 1) {
-                        addStatCtrl(data);
-                        shouldRemove = true;
-                    }
-                    break;
+            if (charge >= burst.getProperty(BLAST_LEVEL, abilityData).intValue()) {
+                addStatCtrl(data);
+                shouldRemove = true;
             }
 
 
-            if (!data.hasStatusControl(RELEASE_AIR_BURST)) {
+            if (!data.hasStatusControl(RELEASE_AIR_BURST) && bender.consumeChi(burst.getChiCost(abilityData))) {
 
-                int particleController = abilityData.getLevel() > 0 ? 45 - (4 * abilityData.getLevel()) : 45;
+                int particleController = abilityData.getLevel() > 0 ? 48 - (6 * Math.max(abilityData.getLevel(), 0)) : 48;
                 EntityShockwave shockwave = new EntityShockwave(world);
                 shockwave.setOwner(entity);
                 shockwave.setPosition(AvatarEntityUtils.getBottomMiddleOfEntity(entity));
                 shockwave.setRenderNormal(false);
                 shockwave.setElement(new Airbending());
-                shockwave.setParticleSpeed(0.5F * radius / STATS_CONFIG.airBurstSettings.radius);
-                shockwave.setDamageSource(AvatarDamageSource.AIR);
-                shockwave.setKnockbackHeight(upwardKnockback);
+                shockwave.setParticleSpeed(speed);
+                shockwave.setDamageSource("avatar_Air_sphere_shockwave");
                 shockwave.setKnockbackMult(new Vec3d(knockBack, knockBack / 2, knockBack));
-                shockwave.setDamage((float) damage);
+                shockwave.setDamage(damage);
                 shockwave.setParticleAmount(1);
                 shockwave.setRange(radius);
                 shockwave.setSphere(true);
+                shockwave.setTier(burst.getCurrentTier(abilityData));
+                shockwave.setXp(burst.getProperty(XP_HIT, abilityData).floatValue());
                 shockwave.setPerformanceAmount(performanceAmount);
-                shockwave.setParticleSpeed(Math.min((float) knockBack / shockwaveSpeed * 1.5F, shockwaveSpeed));
+                shockwave.setParticleSpeed(Math.min(knockBack / shockwaveSpeed * 1.5F, shockwaveSpeed));
                 shockwave.setParticleController(particleController);
-                shockwave.setAbility(new AbilityAirBurst());
-                shockwave.setSpeed((float) knockBack / 4);
+                shockwave.setAbility(Objects.requireNonNull(Abilities.get("air_burst")));
+                shockwave.setSpeed(speed / 2);
                 shockwave.setBehaviour(new AirburstShockwave());
                 if (!world.isRemote)
                     world.spawnEntity(shockwave);
+                abilityData.addBurnout(burnout);
+                abilityData.setAbilityCooldown(cooldown);
+                if (entity instanceof EntityPlayer)
+                    ((EntityPlayer) entity).addExhaustion(exhaustion);
 
 
                 entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(AIRBURST_MOVEMENT_MODIFIER_ID);
@@ -286,6 +238,17 @@ public class AirBurstHandler extends TickHandler {
         }
     }
 
+    @Override
+    public void onRemoved(BendingContext ctx) {
+        super.onRemoved(ctx);
+        AbilityData abilityData = AbilityData.get(ctx.getBenderEntity(), "air_burst");
+        if (abilityData != null)
+            abilityData.setRegenBurnout(true);
+        if (ctx.getBenderEntity().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(AIRBURST_MOVEMENT_MODIFIER_ID) != null)
+            ctx.getBenderEntity().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(AIRBURST_MOVEMENT_MODIFIER_ID);
+
+    }
+
     public static class AirburstShockwave extends OffensiveBehaviour {
 
         @Override
@@ -306,25 +269,25 @@ public class AirBurstHandler extends TickHandler {
                                     x1 = entity.ticksExisted * ((EntityShockwave) entity).getSpeed() * Math.cos(rphi) * Math.sin(rtheta);
                                     y1 = entity.ticksExisted * ((EntityShockwave) entity).getSpeed() * Math.sin(rphi) * Math.sin(rtheta);
                                     z1 = entity.ticksExisted * ((EntityShockwave) entity).getSpeed() * Math.cos(rtheta);
-                                    xVel = x1 * entity.getParticleSpeed() * 0.375F;
-                                    yVel = y1 * entity.getParticleSpeed() * 0.375F;
-                                    zVel = z1 * entity.getParticleSpeed() * 0.375F;
+                                    xVel = x1 * entity.getParticleSpeed() * 0.375 + world.rand.nextGaussian() / 16;
+                                    yVel = y1 * entity.getParticleSpeed() * 0.375 + world.rand.nextGaussian() / 16;
+                                    zVel = z1 * entity.getParticleSpeed() * 0.375 + world.rand.nextGaussian() / 16;
 
                                     ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(x1 + entity.posX, y1 + entity.posY, z1 + entity.posZ).vel(xVel, yVel, zVel)
-                                            .clr(0.95F, 0.95F, 0.95F, 0.035F).time(12 + AvatarUtils.getRandomNumberInRange(0, 10) + (int) (3 * ((EntityShockwave) entity).getRange() / STATS_CONFIG.airBurstSettings.radius)).collide(true).collideParticles(true)
-                                            .scale(0.325F + 0.5F * (float) ((EntityShockwave) entity).getRange() / STATS_CONFIG.airBurstSettings.radius)
+                                            .clr(0.95F, 0.95F, 0.95F, 0.05F).time(12 + AvatarUtils.getRandomNumberInRange(0, 10) + (int) (3 * ((EntityShockwave) entity).getRange() / STATS_CONFIG.airBurstSettings.radius)).collide(true)
+                                            .scale((float) (0.325F + 0.5F * ((EntityShockwave) entity).getSpeed() * (float) ((EntityShockwave) entity).getRange()))
                                             .element(new Airbending()).spawnEntity(entity.getOwner()).spawn(world);
 
                                 }
                             }
 
                         } //else {
-                        for (double i = 0; i < ((EntityShockwave) entity).getRange() + ((EntityShockwave) entity).getParticleAmount(); i += 0.02) {
+                        for (double i = 0; i < ((EntityShockwave) entity).getRange() + ((EntityShockwave) entity).getParticleAmount(); i += 0.5) {
                             Vec3d vel = new Vec3d(world.rand.nextGaussian(), world.rand.nextGaussian(), world.rand.nextGaussian());
-                            vel = vel.scale(0.275F * entity.getParticleSpeed());
+                            vel = vel.scale(0.3F * entity.getParticleSpeed());
                             ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(entity.posX, entity.posY, entity.posZ).vel(vel)
-                                    .clr(0.95F, 0.95F, 0.95F, 0.075F).time(12 + AvatarUtils.getRandomNumberInRange(0, 10)).collide(true).collideParticles(true)
-                                    .scale(0.4f + 0.575F * (float) ((EntityShockwave) entity).getRange() / STATS_CONFIG.airBurstSettings.radius).
+                                    .clr(0.95F, 0.95F, 0.95F, 0.075F).time(8 + AvatarUtils.getRandomNumberInRange(0, 10)).collide(true)
+                                    .scale((float) (0.4f + 0.575F * (float) ((EntityShockwave) entity).getRange() * ((EntityShockwave) entity).getSpeed())).
                                     element(new Airbending()).spawn(world);
 
                         }

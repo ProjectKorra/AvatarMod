@@ -18,7 +18,11 @@ package com.crowsofwar.avatar.bending.bending;
 
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.bending.bending.air.Airbending;
 import com.crowsofwar.avatar.client.controls.AvatarControl;
+import com.crowsofwar.avatar.client.particle.ParticleBuilder;
+import com.crowsofwar.avatar.util.AvatarUtils;
+import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.MiscData;
@@ -30,6 +34,9 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class WallJumpEvents {
 
@@ -40,6 +47,37 @@ public class WallJumpEvents {
 		if (player == GoreCore.proxy.getClientSidePlayer() && bender.getWallJumpManager()
 				.canWallJump()) {
 			if (AvatarControl.CONTROL_JUMP.isPressed()) {
+				if (bender.getWallJumpManager() != null) {
+					if (bender.getWallJumpManager().knowsWallJump()) {
+						if (world.isRemote) {
+
+							float size;
+							BendingStyle style = BendingStyles.get(Airbending.ID);
+							int totalLevel = 0;
+
+							if (BendingData.getFromEntity(player) != null && style != null) {
+								List<Ability> abilities = style.getAllAbilities();
+								abilities = abilities.stream().filter(ability -> AbilityData.get(player, ability.getName()).getLevel() > -1).collect(Collectors.toList());
+								for (Ability ability : abilities) {
+									AbilityData aD = AbilityData.get(player, ability.getName());
+									if (aD.getLevel() > -1) {
+										totalLevel += aD.getLevel() + 1;
+									}
+								}
+							}
+
+							List<Ability> abilities = style.getAllAbilities();
+							int maxLevel = abilities.size() * 4;
+							int level = Math.min(3, (int) ((float) totalLevel / maxLevel * 4));
+
+							size = 1.25F + level * 0.25F;
+							for (int i = 0; i < 8 + AvatarUtils.getRandomNumberInRange(0, 4); i++)
+								ParticleBuilder.create(bender.getWallJumpManager().getWallJumpParticleType()).spawnEntity(player).clr(0.95F, 0.95F, 0.95F, 0.15F)
+										.pos(player.posX, player.getEntityBoundingBox().minY, player.posZ).vel(world.rand.nextGaussian() / 10, world.rand.nextGaussian() / 10, world.rand.nextGaussian() / 10)
+										.time(10 + AvatarUtils.getRandomNumberInRange(0, 4)).scale(size).collide(true).spawn(world);
+						}
+					}
+				}
 				AvatarMod.network.sendToServer(new PacketSWallJump());
 			}
 		}

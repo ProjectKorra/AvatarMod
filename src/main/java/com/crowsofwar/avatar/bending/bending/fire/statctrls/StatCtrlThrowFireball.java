@@ -22,15 +22,19 @@ import com.crowsofwar.avatar.bending.bending.fire.AbilityFireball;
 import com.crowsofwar.avatar.entity.AvatarEntity;
 import com.crowsofwar.avatar.entity.EntityFireball;
 import com.crowsofwar.avatar.entity.data.FireballBehavior;
+import com.crowsofwar.avatar.util.Raytrace;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.StatusControl;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
 import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -66,8 +70,13 @@ public class StatCtrlThrowFireball extends StatusControl {
         if (fireball != null) {
 
             assert ability != null;
+
+            float yaw = (float) Math.toRadians(entity.rotationYaw);
+            float pitch = (float) Math.toRadians(entity.rotationPitch);
+
             double speedMult = ability.getProperty(Ability.SPEED, abilityData).floatValue() * 3.5;
             float chi = ability.getChiCost(abilityData);
+
             cooldown = ability.getCooldown(abilityData);
             burnOut = ability.getBurnOut(abilityData);
             exhaustion = ability.getExhaustion(abilityData);
@@ -85,7 +94,7 @@ public class StatCtrlThrowFireball extends StatusControl {
             float mult = fireball.getAvgSize() / size;
 
             maxBurnout *= (2 - abilityData.getDamageMult()) * abilityData.getXpModifier();
-            maxExhaustion  *= (2 - abilityData.getDamageMult()) * abilityData.getXpModifier();
+            maxExhaustion *= (2 - abilityData.getDamageMult()) * abilityData.getXpModifier();
 
             exhaustion *= mult;
             exhaustion = Math.min(exhaustion, maxExhaustion);
@@ -97,7 +106,22 @@ public class StatCtrlThrowFireball extends StatusControl {
             damage = Math.min(damage, maxDamage);
 
 
-            Vector lookPos = Vector.getEyePos(entity).plus(Vector.getLookRectangular(entity).times(15 + fireball.getAvgSize()));
+            Vector direction;
+            Vec3d look = entity.getLookVec();
+            Vec3d pos = entity.getPositionEyes(1.0F);
+
+            //Drillgon200: Raytrace from the bender's line of sight and if it hit anything, use the vector from the
+            //block to the hit point for the motion vector rather than the look vector. This improves accuracy when the
+            //block isn't directly in front of the bender.
+            RayTraceResult r = Raytrace.rayTrace(world, pos, look.scale(75).add(pos), 0, false, true, false,
+                    Entity.class, e -> e instanceof EntityFireball || e == entity);
+
+            if (r != null && r.hitVec != null) {
+                Vec3d dir = r.hitVec.subtract(fireball.getPositionVector()).normalize();
+                direction = new Vector(dir.x, dir.y, dir.z);
+            } else {
+                direction = Vector.toRectangular(yaw, pitch);
+            }
 
             //Sets it to 0 if the entity is in creative mode.
             if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
@@ -110,35 +134,19 @@ public class StatCtrlThrowFireball extends StatusControl {
                 fireball.rotationPitch = entity.rotationPitch;
                 fireball.rotationYaw = entity.rotationYaw;
                 fireball.setDamage(damage);
+                fireball.setVelocity(direction.times(speedMult));
                 abilityData.setAbilityCooldown(cooldown);
                 if (entity instanceof EntityPlayer)
                     ((EntityPlayer) entity).addExhaustion(exhaustion);
-                abilityData.setBurnOut(burnOut);
+                abilityData.addBurnout(burnOut);
 
-                Vector vel = lookPos.minus(Vector.getEntityPos(fireball));
 
-                //Drillgon200: Why deal with orbit ids when there's already two other ids you can organize them by?
-                //FD: No clue
-                if (!world.isRemote) {
-                    if (!fireballs.isEmpty()) {
-                        fireballs = fireballs.stream().filter(fireball1 -> !(fireball1.getBehaviour() instanceof FireballBehavior.Thrown
-                                || fireball1.getBehaviour() instanceof AbilityFireball.FireballOrbitController)).collect(Collectors.toList());
-                        if (!fireballs.isEmpty()) {
-                            fireballs.get(0).setBehaviour(new AbilityFireball.FireballOrbitController());
-                            for (EntityFireball ball : fireballs)
-                                ball.setOrbitID(ball.getOrbitID() - 1);
-                        }
-                        if (fireballs.size() > 1)
-                            fireball.setVelocity(vel.normalize().times(speedMult));
-                        else {
-                            fireball.setVelocity(Vector.getLookRectangular(entity).times(speedMult));
-                            abilityData.setRegenBurnout(true);
-                        }
-                    } else {
-                        fireball.setVelocity(Vector.getLookRectangular(entity).times(speedMult));
-                        abilityData.setRegenBurnout(true);
-                    }
-                }
+
+                fireballs = fireballs.stream().filter(fireball1 -> !(fireball1.getBehaviour() instanceof FireballBehavior.Thrown)).collect(Collectors.toList());
+                if (fireballs.isEmpty())
+                    abilityData.setRegenBurnout(true);
+
+
             }
             world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.HOSTILE, 4F, 0.8F);
         }

@@ -2,144 +2,136 @@ package com.crowsofwar.avatar.bending.bending.air;
 
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingAi;
+import com.crowsofwar.avatar.entity.EntityCloudBall;
+import com.crowsofwar.avatar.entity.data.CloudburstBehavior;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
-import com.crowsofwar.avatar.entity.EntityCloudBall;
-import com.crowsofwar.avatar.entity.data.CloudburstBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
-import static com.crowsofwar.avatar.config.ConfigSkills.SKILLS_CONFIG;
-import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.util.data.StatusControlController.THROW_CLOUDBURST;
 import static com.crowsofwar.gorecore.util.Vector.getEyePos;
 import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
 
 public class AbilityCloudBurst extends Ability {
 
-	public AbilityCloudBurst() {
-		super(Airbending.ID, "cloudburst");
-		requireRaytrace(2.5, false);
-	}
+    private static final String
+            CHI_SMASH = "chiSmash",
+            ABSORB = "absorb";
 
-	@Override
-	public void execute(AbilityContext ctx) {
+    public AbilityCloudBurst() {
+        super(Airbending.ID, "cloudburst");
+        requireRaytrace(2.5, false);
+    }
 
-		EntityLivingBase entity = ctx.getBenderEntity();
-		World world = ctx.getWorld();
-		Bender bender = ctx.getBender();
-		BendingData data = ctx.getData();
+    @Override
+    public void init() {
+        super.init();
+        addBooleanProperties(PUSH_IRON_TRAPDOOR, PUSH_IRONDOOR, PUSH_STONE, PUSH_REDSTONE, CHI_SMASH, ABSORB);
 
-		if (data.hasStatusControl(THROW_CLOUDBURST)) return;
+    }
 
-		float chi = STATS_CONFIG.chiCloudburst;
-		//2.5F
+    @Override
+    public void execute(AbilityContext ctx) {
 
-		float xp = SKILLS_CONFIG.cloudburstHit;
+        EntityLivingBase entity = ctx.getBenderEntity();
+        World world = ctx.getWorld();
+        Bender bender = ctx.getBender();
+        BendingData data = ctx.getData();
+        AbilityData abilityData = ctx.getAbilityData();
 
-		if (ctx.getLevel() == 1) {
-			chi += 1;
-		}
-
-		if (ctx.getLevel() == 2) {
-			chi += 1.5;
-		}
-
-		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-			chi *= 2;
-		}
-
-		if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
-			chi *= 2.5;
-		}
-
-		if (bender.consumeChi(chi)) {
-
-			Vector target;
-			if (ctx.isLookingAtBlock()) {
-				target = ctx.getLookPos();
-			} else {
-				Vector playerPos = getEyePos(entity);
-				target = playerPos.plus(getLookRectangular(entity).times(2.5));
-			}
-
-			double damage = STATS_CONFIG.cloudburstSettings.damage;
-			//2
-			int size = 16;
-			EntityCloudBall cloudball = new EntityCloudBall(world);
-
-			if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-				size = 30;
-				damage = STATS_CONFIG.cloudburstSettings.damage * 4;
-				//8
-				cloudball.setChiSmash(true);
-			}
-			if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
-				damage = STATS_CONFIG.cloudburstSettings.damage * 2;
-				//4
-				cloudball.setAbsorb(true);
-				size = 20;
-			}
-			if (ctx.getLevel() == 1) {
-				damage = STATS_CONFIG.cloudburstSettings.damage * 1.5;
-				//3
-				size += 4;
-			}
-
-			if (ctx.getLevel() == 2) {
-				damage = STATS_CONFIG.cloudburstSettings.damage * 2.25;
-				//4.5
-				size += 8;
-			}
-
-			damage *= ctx.getPowerRatingDamageMod();
-			damage += ctx.getAbilityData().getTotalXp() / 100;
+        if (data.hasStatusControl(THROW_CLOUDBURST)) return;
 
 
-			if (target != null) {
-				cloudball.setPosition(target);
-			}
-			cloudball.setOwner(entity);
-			cloudball.setSize(size);
-			cloudball.setPushStoneButton(ctx.getLevel() >= 1);
-			cloudball.setPushIronTrapDoor(ctx.getLevel() >= 2);
-			cloudball.setPushIronDoor(ctx.getLevel() >= 2);
-			cloudball.setBehavior(new CloudburstBehavior.PlayerControlled());
-			cloudball.setDamage((float) damage);
-			cloudball.setXp(xp);
-			cloudball.setAbility(this);
-			cloudball.setElement(new Airbending());
-			if (!world.isRemote)
-				world.spawnEntity(cloudball);
+        if (bender.consumeChi(getChiCost(ctx) / 4)) {
 
-			data.addStatusControl(THROW_CLOUDBURST);
-		}
-		super.execute(ctx);
+            Vector target;
+            if (ctx.isLookingAtBlock()) {
+                target = ctx.getLookPos();
+            } else {
+                Vector playerPos = getEyePos(entity);
+                target = playerPos.plus(getLookRectangular(entity).times(2.5));
+            }
 
-	}
+            float damage = getProperty(DAMAGE, ctx).floatValue();
+            int size = (int) (getProperty(SIZE, ctx).floatValue() * 32);
+            float chiHit = getProperty(CHI_HIT, ctx).floatValue();
+            int lifetime = getProperty(LIFETIME, ctx).intValue();
+            float knockback = getProperty(KNOCKBACK, ctx).floatValue() / 2;
 
-	@Override
-	public boolean isProjectile() {
-		return true;
-	}
+            damage *= abilityData.getDamageMult() * abilityData.getXpModifier();
+            size *= abilityData.getDamageMult() * abilityData.getXpModifier();
+            chiHit *= abilityData.getDamageMult() * abilityData.getXpModifier();
+            lifetime *= abilityData.getDamageMult() * abilityData.getXpModifier();
+            knockback *= abilityData.getDamageMult() * abilityData.getXpModifier();
 
-	@Override
-	public boolean isOffensive() {
-		return true;
-	}
+            EntityCloudBall cloudball = new EntityCloudBall(world);
 
-	@Override
-	public int getBaseTier() {
-		return 3;
-	}
+            if (target != null)
+                cloudball.setPosition(target);
 
-	@Override
-	public BendingAi getAi(EntityLiving entity, Bender bender) {
-		return new AiCloudBall(this, entity, bender);
-	}
+            cloudball.setOwner(entity);
+            cloudball.setSize(size);
+            cloudball.setPushStoneButton(getBooleanProperty(PUSH_STONE, ctx));
+            cloudball.setPushIronTrapDoor(getBooleanProperty(PUSH_IRON_TRAPDOOR, ctx));
+            cloudball.setPushIronDoor(getBooleanProperty(PUSH_IRONDOOR, ctx));
+            cloudball.setBehavior(new CloudburstBehavior.PlayerControlled());
+            cloudball.setDamage(damage);
+            cloudball.setXp(getProperty(XP_HIT, ctx).floatValue());
+            cloudball.setAbsorb(getBooleanProperty(ABSORB, ctx));
+            cloudball.setChiSmash(getBooleanProperty(CHI_SMASH, ctx));
+            cloudball.setAbility(this);
+            cloudball.setElement(new Airbending());
+            cloudball.setChiHit(chiHit);
+            cloudball.setDamageSource("avatar_Air");
+            cloudball.setTier(getCurrentTier(ctx));
+            cloudball.setLifeTime(lifetime);
+            cloudball.setPush(knockback);
+            if (!world.isRemote)
+                world.spawnEntity(cloudball);
 
+            data.addStatusControl(THROW_CLOUDBURST);
+        }
+        super.execute(ctx);
+
+    }
+
+    @Override
+    public boolean isProjectile() {
+        return true;
+    }
+
+    @Override
+    public boolean isOffensive() {
+        return true;
+    }
+
+    @Override
+    public int getBaseTier() {
+        return 3;
+    }
+
+    @Override
+    public BendingAi getAi(EntityLiving entity, Bender bender) {
+        return new AiCloudBall(this, entity, bender);
+    }
+
+    @Override
+    public int getCooldown(AbilityContext ctx) {
+        return 0;
+    }
+
+    @Override
+    public float getBurnOut(AbilityContext ctx) {
+        return 0;
+    }
+
+    @Override
+    public float getExhaustion(AbilityContext ctx) {
+        return 0;
+    }
 }

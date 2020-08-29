@@ -45,8 +45,9 @@ public class AvatarItemRenderRegister {
 		MinecraftForge.EVENT_BUS.register(new AvatarItemRenderRegister());
 
 		// Setup scrolls
-		locationsRegular = new ModelResourceLocation[ScrollType.amount()];
-		locationsGlow = new ModelResourceLocation[ScrollType.amount()];
+		//This stuff is broken rn
+		locationsRegular = new ModelResourceLocation[7];
+		locationsGlow = new ModelResourceLocation[7];
 
 		forScroll(Scrolls.ALL);
 		forScroll(Scrolls.AIR);

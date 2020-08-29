@@ -20,27 +20,38 @@ public class AiFireShot extends BendingAi {
 	}
 
 	@Override
+	protected boolean shouldExec() {
+		return entity.getAttackTarget() != null && entity.world.rand.nextBoolean();
+	}
+
+	@Override
 	protected void startExec() {
-		EntityLivingBase target = entity.getAttackTarget();
-		BendingData data = bender.getData();
 
-		if (target != null) {
-			Vector rotations = getRotationTo(getEntityPos(entity), getEntityPos(target));
-			entity.rotationYaw = (float) toDegrees(rotations.y());
-			entity.rotationPitch = (float) toDegrees(rotations.x());
-
-			execAbility();
-			data.getAbilityData(ability).setAbilityCooldown(40);
-
-		}
 	}
 
 
 	@Override
-	protected boolean shouldExec() {
-		EntityLivingBase target = entity.getAttackTarget();
-		return target != null && entity.getDistanceSq(target) < 9 * 9
-				&& bender.getData().getAbilityData(ability).getAbilityCooldown() == 0;
+	public float getMaxTargetRange() {
+		return 7;
 	}
 
+	@Override
+	public float getMinTargetRange() {
+		return 1;
+	}
+
+	@Override
+	public int getWaitDuration() {
+		return 2;
+	}
+
+	@Override
+	public int getTotalDuration() {
+		return 10;
+	}
+
+	@Override
+	public boolean shouldExecAbility() {
+		return timeExecuting >= getWaitDuration();
+	}
 }

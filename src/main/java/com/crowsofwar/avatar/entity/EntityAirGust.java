@@ -98,11 +98,6 @@ public class EntityAirGust extends EntityOffensive {
     }
 
     @Override
-    public DamageSource getDamageSource(Entity target, EntityLivingBase owner) {
-        return AvatarDamageSource.causeAirDamage(target, owner);
-    }
-
-    @Override
     public void onUpdate() {
         super.onUpdate();
 
@@ -219,12 +214,6 @@ public class EntityAirGust extends EntityOffensive {
     }
 
     @Override
-    public Vec3d getKnockbackMult() {
-        return new Vec3d(0.625F, 0.625F, 0.625F);
-    }
-
-
-    @Override
     public void setDead() {
         super.setDead();
     }
@@ -239,10 +228,10 @@ public class EntityAirGust extends EntityOffensive {
                 double spawnZ = mid.z + world.rand.nextGaussian() / 10;
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20,
                         world.rand.nextGaussian() / 20).time(4).clr(0.95F, 0.95F, 0.95F, 0.1F).spawnEntity(getOwner())
-                        .scale(getAvgSize() * 1.25F).element(getElement()).collide(true).collideParticles(true).spawn(world);
+                        .scale(getAvgSize() * 1.25F).element(getElement()).collide(true).spawn(world);
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20,
                         world.rand.nextGaussian() / 20).time(12).clr(0.95F, 0.95F, 0.95F, 0.1F).spawnEntity(getOwner())
-                        .scale(getAvgSize() * 1.25F).element(getElement()).collide(true).collideParticles(true).spawn(world);
+                        .scale(getAvgSize() * 1.25F).element(getElement()).collide(true).spawn(world);
             }
         }
     }
@@ -273,7 +262,7 @@ public class EntityAirGust extends EntityOffensive {
 
     @Override
     public boolean multiHit() {
-        return getAbility() instanceof AbilityAirblade && getOwner() != null && AbilityData.get(getOwner(), getAbility().getName()).isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND);
+        return false;
     }
 
     @Override
@@ -360,6 +349,10 @@ public class EntityAirGust extends EntityOffensive {
         return new Vec3d(x * scale, y * scale, z * scale);
     }
 
+    @Override
+    public Vec3d getKnockbackMult() {
+        return new Vec3d(getPush(), getPush(), getPush());
+    }
 
     @Override
     public boolean canDamageEntity(Entity entity) {

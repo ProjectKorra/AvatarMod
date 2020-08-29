@@ -13,8 +13,12 @@
       "size": 0.5,
       "speed": 7,
       "knockback": 0.75,
-      "chiOnHit": 1.4,
+      "chiOnHit": 1,
       "damage": 2,
+      "pushRedstone": true,
+      "pushStoneButton": false,
+      "pushIronDoor": false,
+      "pushIronTrapDoor": false,
       "chiSmash": false,
       "absorb": false
     },
@@ -30,8 +34,9 @@
       "size": 0.75,
       "speed": 10,
       "knockback": 1,
-      "chiOnHit": 1.1,
-      "damage": 3
+      "chiOnHit": 1.25,
+      "damage": 3,
+      "pushStoneButton": true
     },
     "level3": {
       "tier": 4,
@@ -45,8 +50,10 @@
       "size": 1.0,
       "speed": 12,
       "knockback": 2,
-      "chiOnHit": 1.25,
-      "damage": 5
+      "chiOnHit": 1.5,
+      "damage": 4,
+      "pushIronDoor": true,
+      "pushIronTrapDoor": true
     },
     "level4_1": {
       "tier": 5,
@@ -60,7 +67,7 @@
       "size": 1.25,
       "speed": 17,
       "knockback": 5,
-      "chiOnHit": 1.875,
+      "chiOnHit": 2,
       "damage": 6,
       "chiSmash": true
     },
@@ -77,7 +84,7 @@
       "speed": 15,
       "knockback": 6,
       "chiOnHit": 2.0,
-      "damage": 6.5,
+      "damage": 5,
       "chiSmash": false,
       "absorb": true
     }

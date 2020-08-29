@@ -64,7 +64,7 @@ public class AbilitySlipstream extends Ability {
             strengthDuration *= abilityData.getDamageMult() * abilityData.getXpModifier();
 
             if (getBooleanProperty(AIR_WALK, ctx))
-                data.addTickHandler(SLIPSTREAM_WALK_HANDLER);
+                data.addTickHandler(SLIPSTREAM_WALK_HANDLER, ctx);
 
 
             if (speedLevel > 0)
@@ -82,6 +82,7 @@ public class AbilitySlipstream extends Ability {
             Objects.requireNonNull(data.getPowerRatingManager(getBendingId())).addModifier(modifier, ctx);
             abilityData.addXp(xp);
         }
+        abilityData.setRegenBurnout(true);
         super.execute(ctx);
 
     }

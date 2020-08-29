@@ -57,10 +57,10 @@ public class ConfigMobs {
     static {
         TRADE_ITEMS.put("minecraft:diamond 1", "all");
         TRADE_ITEMS.put("minecraft:gold_ingot 1", "all");
-        TRADE_ITEMS.put("minecraft:emerald 1", "all");
+        TRADE_ITEMS.put("minecraft:emerald 2", "all");
         //Required items for trading for a airbending scroll
-        TRADE_ITEMS.put("minecraft:elytra 4", "air");
-        TRADE_ITEMS.put("minecraft:dragon_breath 5", "air");
+        TRADE_ITEMS.put("minecraft:elytra 5", "air");
+        TRADE_ITEMS.put("minecraft:dragon_breath 6", "air");
         TRADE_ITEMS.put("minecraft:totem_of_undying 3", "air");
         //Required items for trading for a firebending scroll
         TRADE_ITEMS.put("minecraft:magma_cream 2", "fire");
