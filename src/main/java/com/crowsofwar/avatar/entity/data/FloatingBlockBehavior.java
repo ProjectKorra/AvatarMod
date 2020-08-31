@@ -97,12 +97,15 @@ public abstract class FloatingBlockBehavior extends OffensiveBehaviour {
 
             if (entity instanceof EntityFloatingBlock) {
                 entity.noClip = true;
+                World world = entity.world;
+
 
                 Vector placeAtVec = new Vector(placeAt.getX() + 0.5, placeAt.getY(), placeAt.getZ() + 0.5);
                 Vector thisPos = new Vector(entity);
                 Vector force = placeAtVec.minus(thisPos);
                 force = force.normalize().times(3);
                 entity.setVelocity(force);
+
 
                 if (placeAtVec.sqrDist(thisPos) < 0.005) {
                     ((EntityFloatingBlock) entity).placeBlock();
@@ -112,6 +115,7 @@ public abstract class FloatingBlockBehavior extends OffensiveBehaviour {
                         entity.world.playSound(null, entity.getPosition(), sound.getPlaceSound(),
                                 SoundCategory.PLAYERS, sound.getVolume(), sound.getPitch());
                     }
+
 
                 }
             }

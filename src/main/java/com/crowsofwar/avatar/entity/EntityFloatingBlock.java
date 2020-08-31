@@ -492,8 +492,8 @@ public class EntityFloatingBlock extends EntityOffensive {
     public void setDead() {
         super.setDead();
         removeStatCtrl();
-        if (!world.isRemote && isDead)
-            Thread.dumpStack();
+//        if (!world.isRemote && isDead)
+//            Thread.dumpStack();
     }
 
     @Override

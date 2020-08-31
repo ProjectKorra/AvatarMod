@@ -11,6 +11,7 @@
       "performanceAmount": 6,
       "multiWall": false,
       "shootBlocks": false,
+      "shootWall": false,
       "sizeMin": 1,
       "sizeMax": 3,
       "wallReach": 2

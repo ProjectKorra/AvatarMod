@@ -23,6 +23,7 @@ import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.earth.AbilityEarthControl;
 import com.crowsofwar.avatar.bending.bending.earth.Earthbending;
+import com.crowsofwar.avatar.util.Raytrace;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
@@ -32,10 +33,9 @@ import com.crowsofwar.avatar.entity.AvatarEntity;
 import com.crowsofwar.avatar.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.entity.data.FloatingBlockBehavior;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockSnow;
-import net.minecraft.block.SoundType;
+import net.minecraft.block.*;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.SoundCategory;
@@ -99,13 +99,18 @@ public class StatCtrlPlaceBlock extends StatusControl {
 				Vec3d start = entity.getPositionEyes(1.0F);
 				Vec3d end = start.add(entity.getLookVec().scale(5));
 
-				RayTraceResult result = world.rayTraceBlocks(start, end);
-				if (result != null && result.sideHit != null) {
-					BlockPos pos = result.getBlockPos().offset(result.sideHit);
+				Raytrace.Result result = Raytrace.getTargetBlock(entity, 5);
+				if (result.hitSomething() && result.getPosPrecise() != null && result.getSide() != null) {
+					BlockPos pos = result.getPosPrecise().toBlockPos();
 					IBlockState state = world.getBlockState(pos);
+					IBlockState upState = world.getBlockState(pos.up());
 					Block block = state.getBlock();
+					Block upBlock = upState.getBlock();
 
-					if (block instanceof BlockSnow)
+					if (!(upBlock instanceof BlockBush || upBlock instanceof BlockSnow || block instanceof BlockAir))
+						pos = pos.up();
+
+					if (block instanceof BlockSnow || block instanceof BlockBush)
 						pos = pos.down();
 
 					Vector force = new Vector(pos).minus(floating.velocity()).normalize();
