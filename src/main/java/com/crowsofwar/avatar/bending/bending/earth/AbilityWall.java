@@ -109,7 +109,7 @@ public class AbilityWall extends Ability {
                 }
             } else {
 
-                wallCreated = createLinearWall(ctx, world, reach, cardinal, entity, whMin, whMax, reach + 2, 1, random);
+                wallCreated = createLinearWall(ctx, world, reach, cardinal, entity, whMin, whMax, 5, 5, random);
 
             }
 
