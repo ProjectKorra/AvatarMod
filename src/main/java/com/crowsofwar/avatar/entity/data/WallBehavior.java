@@ -53,7 +53,7 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 	public static class Drop extends WallBehavior {
 
 		@Override
-		public Behavior onUpdate(EntityWallSegment entity) {
+		public WallBehavior onUpdate(EntityWallSegment entity) {
 
 			if (entity == null) return this;
 			if (entity.getWall() == null) return this;
@@ -99,7 +99,7 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 		private int ticks = 0;
 
 		@Override
-		public Behavior onUpdate(EntityWallSegment entity) {
+		public WallBehavior onUpdate(EntityWallSegment entity) {
 
 			if (entity == null) return this;
 			if (entity.getWall() == null) return this;
@@ -137,7 +137,7 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 		private int ticks = 0;
 
 		@Override
-		public Behavior onUpdate(EntityWallSegment entity) {
+		public WallBehavior onUpdate(EntityWallSegment entity) {
 
 			if (entity == null) return this;
 			if (entity.getWall() == null) return this;
@@ -146,16 +146,16 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 			if (ticks == 1) {
 
 				int maxHeight = 0;
-				for (int i = 0; i < 5; i++) {
+				for (int i = 0; i < entity.getSegmentHeight(); i++) {
 					EntityWallSegment seg = entity.getWall().getSegment(i);
-					if (seg.height > maxHeight)
+					if (seg != null && seg.height > maxHeight)
 						maxHeight = (int) seg.height;
 				}
 
 				entity.motionY = STATS_CONFIG.wallMomentum / 5 * maxHeight / 20;
 
 			} else {
-				entity.motionY *= 0.9;
+				entity.motionY *= (entity.getSegmentHeight() * (1D / (entity.getSegmentHeight() + 1D)));
 			}
 
 			// For some reason, the same entity instance is on server/client,
