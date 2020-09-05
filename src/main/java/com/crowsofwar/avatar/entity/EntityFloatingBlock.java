@@ -307,7 +307,7 @@ public class EntityFloatingBlock extends EntityOffensive {
             world.scheduleBlockUpdate(getPosition(), getBlock(), 0, 1);
         }
 
-        if (ticksGround > 17 && velocity().magnitude() < 0.5)
+        if (ticksGround > 25 && velocity().magnitude() < 0.5)
             Dissipate();
 
         if (ticksExisted == 1) {

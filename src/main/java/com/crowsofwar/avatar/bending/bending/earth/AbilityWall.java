@@ -20,7 +20,6 @@ package com.crowsofwar.avatar.bending.bending.earth;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.entity.EntityWall;
 import com.crowsofwar.avatar.entity.EntityWallSegment;
-import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
@@ -109,7 +108,7 @@ public class AbilityWall extends Ability {
                     wallCreated = createSurroundingWalls(world, wallPos, wallBlock, entity, whMin, whMax, random);
                 }
             } else {
-                wallCreated = createLinearWall(ctx, world, reach, cardinal, entity, whMin, whMax, whMax, whMax + 1, random);
+                wallCreated = createLinearWall(ctx, world, reach, cardinal, entity, whMin, whMax, reach + 2, random);
 
             }
 
@@ -128,7 +127,7 @@ public class AbilityWall extends Ability {
     }
 
     private boolean createLinearWall(AbilityContext ctx, World world, int reach, EnumFacing cardinal,
-                                     EntityLivingBase entity, int whMin, int whMax, int height, int length, Random random) {
+                                     EntityLivingBase entity, int whMin, int whMax, int length, Random random) {
         // Used so that the wall can be more precisely placed if needed, useful when
         // used for building. However, during a fight, it will still spawn even if not
         // directly looking at the ground. However this won't override the maximum reach
@@ -164,7 +163,7 @@ public class AbilityWall extends Ability {
         }
 
         // The offset is used to re-center the wall
-        return createWall(world, lookPos.offset(cardinal.rotateY(), -1), lookBlock, cardinal, entity, whMin, whMax, height,
+        return createWall(world, lookPos.offset(cardinal.rotateY(), -1), lookBlock, cardinal, entity, whMin, whMax, 0,
                 length, random);
     }
 
@@ -196,15 +195,14 @@ public class AbilityWall extends Ability {
         if (Earthbending.isBendable(world, wallPos, world.getBlockState(wallPos), 2) || STATS_CONFIG.plantBendableBlocks.contains(wallBlock)) {
             wall.setPosition(wallPos.getX() + .5, wallPos.getY(), wallPos.getZ() + .5);
             wall.setOwner(entity);
-            width = AvatarUtils.getRandomNumberInRange(whMin, whMin) + width / 2;
             for (int i = 0; i < width; i++) {
 
-                int wallHeight = whMax + 1;
+                int wallHeight = whMin + random.nextInt(whMax - whMin + 1);
 
                 int horizMod = -2 + i;
                 int x = wallPos.getX()
                         + (direction == EnumFacing.NORTH || direction == EnumFacing.SOUTH ? horizMod : 0);
-                int y = wallPos.getY() - (height - 1);
+                int y = wallPos.getY() - 4;
                 int z = wallPos.getZ() + (direction == EnumFacing.EAST || direction == EnumFacing.WEST ? horizMod : 0);
 
                 EntityWallSegment seg = new EntityWallSegment(world);
@@ -212,12 +210,10 @@ public class AbilityWall extends Ability {
                 seg.setPosition(x + .5, y, z + .5);
                 seg.setDirection(direction);
                 seg.setOwner(entity);
-                seg.setTier(getCurrentTier(AbilityData.get(entity, getName())));
                 seg.setAbility(this);
-                seg.setSegmentHeight(height);
 
                 boolean foundAir = false, dontBreakMore = false;
-                for (int j = height - 1; j >= 0; j--) {
+                for (int j = EntityWallSegment.SEGMENT_HEIGHT - 1; j >= 0; j--) {
                     BlockPos pos = new BlockPos(x, y + j, z);
                     IBlockState state = world.getBlockState(pos);
                     boolean bendable = Earthbending.isBendable(world, pos, state, 2);
@@ -228,7 +224,6 @@ public class AbilityWall extends Ability {
 
                     if (!foundAir && state.getBlock() == Blocks.AIR) {
                         seg.setSize(seg.width, height - j - 1);
-                        seg.setSegmentHeight(height - j - 1);
                         seg.setBlocksOffset(-(j + 1));
                         seg.setPosition(seg.position().withY(y + j + 1));
                         foundAir = true;
@@ -236,7 +231,6 @@ public class AbilityWall extends Ability {
                     if (foundAir && state.getBlock() != Blocks.AIR) {
                         // Extend bounding box
                         seg.setSize(seg.width, height - j);
-                        seg.setSegmentHeight(height - j);
                         seg.setBlocksOffset(-j);
                         seg.setPosition(seg.position().withY(y + j));
                     }
@@ -245,7 +239,7 @@ public class AbilityWall extends Ability {
                     if (bendable && !dontBreakMore && !world.isRemote)
                         world.setBlockToAir(pos);
 
-                    if (j == height - wallHeight) {
+                    if (j == 5 - wallHeight) {
                         dontBreakMore = true;
                     }
 

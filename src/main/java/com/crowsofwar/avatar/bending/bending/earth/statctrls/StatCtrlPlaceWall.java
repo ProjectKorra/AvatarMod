@@ -29,13 +29,13 @@ public class StatCtrlPlaceWall extends StatusControl {
 		World world = ctx.getWorld();
 		EntityLivingBase entity = ctx.getBenderEntity();
 
+		// TODO: When upgrade to a5.0 , call setOwner on the wall itself , then lookup
 		// based on wall
 
-		//TODO: Make this search for the wall- wth is going on?
 		// Wall has no owner so we go for segments
 		EntityWallSegment wallSegment = AvatarEntity.lookupOwnedEntity(world, EntityWallSegment.class, entity);
 
-		if (wallSegment != null && wallSegment.getBehavior().getClass() == WallBehavior.Waiting.class) {
+		if (wallSegment.getBehavior().getClass() == WallBehavior.Waiting.class) {
 
 			List<EntityWallSegment> segments = world.getEntities(EntityWallSegment.class,
 					segment -> segment.getOwner() == entity);
