@@ -200,10 +200,10 @@ public class AbilityWall extends Ability {
 
                 int wallHeight = whMin + random.nextInt(whMax - whMin + 1);
 
-                int horizMod = -2 + i;
+                int horizMod =  -(height / 2) + i;
                 int x = wallPos.getX()
                         + (direction == EnumFacing.NORTH || direction == EnumFacing.SOUTH ? horizMod : 0);
-                int y = wallPos.getY() - 4;
+                int y = wallPos.getY() - (height - 1);
                 int z = wallPos.getZ() + (direction == EnumFacing.EAST || direction == EnumFacing.WEST ? horizMod : 0);
 
                 EntityWallSegment seg = new EntityWallSegment(world);
