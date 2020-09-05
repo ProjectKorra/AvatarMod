@@ -20,6 +20,7 @@ package com.crowsofwar.avatar.bending.bending.earth;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.entity.EntityWall;
 import com.crowsofwar.avatar.entity.EntityWallSegment;
+import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
@@ -109,7 +110,7 @@ public class AbilityWall extends Ability {
                 }
             } else {
 
-                wallCreated = createLinearWall(ctx, world, reach, cardinal, entity, whMin, whMax, 5, 5, random);
+                wallCreated = createLinearWall(ctx, world, reach, cardinal, entity, whMin, whMax, whMin + 1, whMax, random);
 
             }
 
@@ -198,7 +199,7 @@ public class AbilityWall extends Ability {
             wall.setOwner(entity);
             for (int i = 0; i < width; i++) {
 
-                int wallHeight = whMin + random.nextInt(whMax - whMin + 1);
+                int wallHeight = AvatarUtils.getRandomNumberInRange(1, height) + (whMax - whMin);
 
                 int horizMod =  -(height / 2) + i;
                 int x = wallPos.getX()
