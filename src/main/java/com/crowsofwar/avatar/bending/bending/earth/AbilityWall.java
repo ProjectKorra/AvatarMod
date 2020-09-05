@@ -108,7 +108,11 @@ public class AbilityWall extends Ability {
                     wallCreated = createSurroundingWalls(world, wallPos, wallBlock, entity, whMin, whMax, random);
                 }
             } else {
+<<<<<<< HEAD
+                wallCreated = createLinearWall(ctx, world, reach, cardinal, entity, whMin, whMax, whMax, whMax + 1, random);
+=======
                 wallCreated = createLinearWall(ctx, world, reach, cardinal, entity, whMin, whMax, reach + 2, random);
+>>>>>>> fa99121... fixed an issue with earth control
 
             }
 
@@ -127,7 +131,11 @@ public class AbilityWall extends Ability {
     }
 
     private boolean createLinearWall(AbilityContext ctx, World world, int reach, EnumFacing cardinal,
+<<<<<<< HEAD
+                                     EntityLivingBase entity, int whMin, int whMax, int height, int length, Random random) {
+=======
                                      EntityLivingBase entity, int whMin, int whMax, int length, Random random) {
+>>>>>>> fa99121... fixed an issue with earth control
         // Used so that the wall can be more precisely placed if needed, useful when
         // used for building. However, during a fight, it will still spawn even if not
         // directly looking at the ground. However this won't override the maximum reach
@@ -163,7 +171,11 @@ public class AbilityWall extends Ability {
         }
 
         // The offset is used to re-center the wall
+<<<<<<< HEAD
+        return createWall(world, lookPos.offset(cardinal.rotateY(), -1), lookBlock, cardinal, entity, whMin, whMax, height,
+=======
         return createWall(world, lookPos.offset(cardinal.rotateY(), -1), lookBlock, cardinal, entity, whMin, whMax, 0,
+>>>>>>> fa99121... fixed an issue with earth control
                 length, random);
     }
 
@@ -224,6 +236,10 @@ public class AbilityWall extends Ability {
 
                     if (!foundAir && state.getBlock() == Blocks.AIR) {
                         seg.setSize(seg.width, height - j - 1);
+<<<<<<< HEAD
+                        seg.setSegmentHeight(height - j - 1);
+=======
+>>>>>>> fa99121... fixed an issue with earth control
                         seg.setBlocksOffset(-(j + 1));
                         seg.setPosition(seg.position().withY(y + j + 1));
                         foundAir = true;
@@ -231,6 +247,10 @@ public class AbilityWall extends Ability {
                     if (foundAir && state.getBlock() != Blocks.AIR) {
                         // Extend bounding box
                         seg.setSize(seg.width, height - j);
+<<<<<<< HEAD
+                        seg.setSegmentHeight(height - j);
+=======
+>>>>>>> fa99121... fixed an issue with earth control
                         seg.setBlocksOffset(-j);
                         seg.setPosition(seg.position().withY(y + j));
                     }
