@@ -152,18 +152,22 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 						maxHeight = (int) seg.height;
 				}
 
-				entity.motionY = entity.getSegmentHeight() / 5F + 0.125F;
+				entity.motionY = Math.sqrt(entity.getSegmentHeight()) / 5.75F + 0.135F;
 
 			} else {
-				entity.motionY *= (entity.getSegmentHeight() * (1D / (entity.getSegmentHeight() + 1D)));
+				double height = entity.getPositionVector().y - entity.getInitialPos().y();
+				double vel = (entity.getSegmentHeight() * (1D / (entity.getSegmentHeight() + 1D)));
+				entity.motionY *= Math.sqrt(vel) * (1 - (height / entity.getSegmentHeight()) / 32);
 			}
 
 			// For some reason, the same entity instance is on server/client,
 			// but has different world reference when this is called...?
 			if (!entity.world.isRemote) ticks++;
 
-			return ticks > entity.getSegmentHeight() * 10
-					&& entity.velocity().y() < entity.getSegmentHeight() / 10F ? new Waiting() : this;
+			return (ticks > Math.sqrt(entity.getSegmentHeight()) * 50
+					&& entity.velocity().y() < Math.sqrt(entity.getSegmentHeight()) / 6.75F || entity.getInitialPos().toBlockPos().getY() + entity.getSegmentHeight()
+			+ 0.25 <= entity.getPositionVector().y)
+					? new Waiting() : this;
 		}
 
 		@Override
