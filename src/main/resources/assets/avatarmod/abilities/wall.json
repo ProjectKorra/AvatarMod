@@ -24,7 +24,7 @@
       "burnOut": 25.0,
       "burnOutRecoverTick": 0.75,
       "performanceAmount": 7,
-      "sizeMin": 2,
+      "sizeMin": 1,
       "sizeMax": 4,
       "wallReach": 3
     },
@@ -36,7 +36,7 @@
       "burnOut": 30.0,
       "burnOutRecoverTick": 1.0,
       "performanceAmount": 8,
-      "sizeMin": 3,
+      "sizeMin": 2,
       "sizeMax": 5,
       "wallReach": 4
     },
@@ -63,7 +63,7 @@
       "performanceAmount": 10,
       "multiWall": true,
       "shootBlocks": false,
-      "sizeMin": 2,
+      "sizeMin": 3,
       "sizeMax": 5,
       "shootWall": true,
       "wallReach": 5

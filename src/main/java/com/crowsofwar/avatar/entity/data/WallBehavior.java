@@ -137,7 +137,7 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 		private int ticks = 0;
 
 		@Override
-		public Behavior onUpdate(EntityWallSegment entity) {
+		public WallBehavior onUpdate(EntityWallSegment entity) {
 
 			if (entity == null) return this;
 			if (entity.getWall() == null) return this;
@@ -145,24 +145,25 @@ public abstract class WallBehavior extends Behavior<EntityWallSegment> {
 			// not 0 since client missed 0th tick
 			if (ticks == 1) {
 
-				int maxHeight = 0;
-				for (int i = 0; i < 5; i++) {
+				int maxHeight = entity.getSegmentHeight();
+				for (int i = 0; i < entity.getSegmentHeight(); i++) {
 					EntityWallSegment seg = entity.getWall().getSegment(i);
 					if (seg.height > maxHeight)
 						maxHeight = (int) seg.height;
 				}
 
-				entity.motionY = STATS_CONFIG.wallMomentum / 5 * maxHeight / 20;
+				entity.motionY = entity.getSegmentHeight() / 5F + 0.125F;
 
 			} else {
-				entity.motionY *= 0.9;
+				entity.motionY *= (entity.getSegmentHeight() * (1D / (entity.getSegmentHeight() + 1D)));
 			}
 
 			// For some reason, the same entity instance is on server/client,
 			// but has different world reference when this is called...?
 			if (!entity.world.isRemote) ticks++;
 
-			return ticks > 5 && entity.velocity().y() <= 0.2 ? new Waiting() : this;
+			return ticks > entity.getSegmentHeight() * 10
+					&& entity.velocity().y() < entity.getSegmentHeight() / 10F ? new Waiting() : this;
 		}
 
 		@Override

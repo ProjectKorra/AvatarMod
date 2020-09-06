@@ -20,6 +20,7 @@ package com.crowsofwar.avatar.bending.bending.earth;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.entity.EntityWall;
 import com.crowsofwar.avatar.entity.EntityWallSegment;
+import com.crowsofwar.avatar.entity.data.WallBehavior;
 import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
@@ -109,8 +110,7 @@ public class AbilityWall extends Ability {
                     wallCreated = createSurroundingWalls(world, wallPos, wallBlock, entity, whMin, whMax, random);
                 }
             } else {
-
-                wallCreated = createLinearWall(ctx, world, reach, cardinal, entity, whMin, whMax, whMin + 1, whMax, random);
+                wallCreated = createLinearWall(ctx, world, reach, cardinal, entity, whMin, whMax, whMax - 1, whMax, random);
 
             }
 
@@ -177,13 +177,13 @@ public class AbilityWall extends Ability {
         boolean wall0Created, wall1Created, wall2Created, wall3Created;
 
         wall0Created = createWall(world, lookPos.offset(EnumFacing.EAST, 3), lookBlock, EnumFacing.EAST, entity, whMin,
-                whMax, whMin + 2, whMax + 2, random);
+                whMax, whMax - 1, whMax, random);
         wall1Created = createWall(world, lookPos.offset(EnumFacing.NORTH, 3), lookBlock, EnumFacing.NORTH, entity,
-                whMin, whMax, whMin + 2, whMax + 2, random);
+                whMin, whMax, whMax - 1, whMax, random);
         wall2Created = createWall(world, lookPos.offset(EnumFacing.SOUTH, 3), lookBlock, EnumFacing.SOUTH, entity,
-                whMin, whMax, whMin + 2, whMax + 2, random);
+                whMin, whMax, whMax - 1, whMax, random);
         wall3Created = createWall(world, lookPos.offset(EnumFacing.WEST, 3), lookBlock, EnumFacing.WEST, entity, whMin,
-                whMax, whMin + 2, whMax + 2, random);
+                whMax, whMax - 1, whMax, random);
 
         return wall0Created || wall1Created || wall2Created || wall3Created;
     }
@@ -213,9 +213,11 @@ public class AbilityWall extends Ability {
                 seg.setDirection(direction);
                 seg.setOwner(entity);
                 seg.setAbility(this);
+                seg.setSegmentHeight(height);
+                seg.setBehavior(new WallBehavior.Rising());
 
                 boolean foundAir = false, dontBreakMore = false;
-                for (int j = EntityWallSegment.SEGMENT_HEIGHT - 1; j >= 0; j--) {
+                for (int j = seg.getSegmentHeight() - 1; j >= 0; j--) {
                     BlockPos pos = new BlockPos(x, y + j, z);
                     IBlockState state = world.getBlockState(pos);
                     boolean bendable = Earthbending.isBendable(world, pos, state, 2);
@@ -241,9 +243,12 @@ public class AbilityWall extends Ability {
                     if (bendable && !dontBreakMore && !world.isRemote)
                         world.setBlockToAir(pos);
 
-                    if (j == 5 - wallHeight) {
+                    if (j <= height - wallHeight || AvatarUtils.getRandomNumberInRange(1, whMax) / 10F * height < random.nextDouble()) {
                         dontBreakMore = true;
                     }
+
+                    if (seg.height > seg.getSegmentHeight())
+                        seg.setSize(seg.width, seg.getSegmentHeight());
 
                 }
 
