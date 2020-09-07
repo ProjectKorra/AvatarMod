@@ -19,7 +19,7 @@ import static com.crowsofwar.avatar.util.data.StatusControlController.PLACE_WALL
 public class StatCtrlPushWall extends StatusControl {
 
 	public StatCtrlPushWall() {
-		super(23, AvatarControl.CONTROL_LEFT_CLICK_DOWN, CrosshairPosition.LEFT_OF_CROSSHAIR);
+		super(23, AvatarControl.CONTROL_SHIFT, CrosshairPosition.LEFT_OF_CROSSHAIR);
 	}
 
 	@Override
@@ -27,13 +27,10 @@ public class StatCtrlPushWall extends StatusControl {
 		World world = ctx.getWorld();
 		EntityLivingBase entity = ctx.getBenderEntity();
 
-		// TODO: When upgrade to a5.0 , call setOwner on the wall itself , then lookup
-		// based on wall
-
 		// Wall has no owner so we go for segments
 		EntityWallSegment wallSegment = AvatarEntity.lookupOwnedEntity(world, EntityWallSegment.class, entity);
 
-		if (wallSegment.getBehavior().getClass() == WallBehavior.Waiting.class) {
+		if (wallSegment != null && wallSegment.getOwner() != null && wallSegment.getBehavior().getClass() == WallBehavior.Waiting.class) {
 
 			List<EntityWallSegment> segments = world.getEntities(EntityWallSegment.class,
 					segment -> segment.getOwner() == entity);

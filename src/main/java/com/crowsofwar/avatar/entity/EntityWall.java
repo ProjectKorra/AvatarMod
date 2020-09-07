@@ -25,6 +25,7 @@ import com.crowsofwar.avatar.entity.data.SyncedEntity;
 import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.base.Optional;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -85,6 +86,11 @@ public class EntityWall extends AvatarEntity {
 		for (DataParameter<Optional<UUID>> syncSegment : SYNC_SEGMENTS) {
 			dataManager.register(syncSegment, Optional.absent());
 		}
+	}
+
+	@Override
+	public EntityLivingBase getController() {
+		return getOwner();
 	}
 
 	@Override

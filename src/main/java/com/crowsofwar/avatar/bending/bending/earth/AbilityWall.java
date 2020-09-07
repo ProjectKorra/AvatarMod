@@ -108,7 +108,7 @@ public class AbilityWall extends Ability {
                 }
 
                 if (!Earthbending.isBendable(world, wallPos, world.getBlockState(wallPos), 2)) {
-                    Vector tempPos = Earthbending.getClosestEarthbendableBlock(entity, ctx, WALL_REACH,this, 2);
+                    Vector tempPos = Earthbending.getClosestEarthbendableBlock(entity, ctx, WALL_REACH, this, 2);
                     if (tempPos != null)
                         wallPos = tempPos.toBlockPos();
                     wallBlock = world.getBlockState(wallPos).getBlock();
@@ -116,7 +116,7 @@ public class AbilityWall extends Ability {
 
                 // Last safety check
                 if (wallBlock != Blocks.AIR) {
-                    wallCreated = createSurroundingWalls(world, wallPos, wallBlock, entity, whMin, whMax, random);
+                    wallCreated = createSurroundingWalls(ctx, world, wallPos, wallBlock, entity, whMin, whMax, random);
 
                 }
             } else {
@@ -176,12 +176,12 @@ public class AbilityWall extends Ability {
 
         if (Earthbending.isBendable(world, lookPos, world.getBlockState(lookPos), 2))
             // The offset is used to re-center the wall
-            return createWall(world, lookPos.offset(cardinal.rotateY(), -1), lookBlock, cardinal, entity, whMin, whMax, height,
+            return createWall(ctx, world, lookPos.offset(cardinal.rotateY(), -1), lookBlock, cardinal, entity, whMin, whMax, height,
                     length, random);
         else if (Earthbending.getClosestEarthbendableBlock(entity, ctx, this, 2) != null)
-            lookPos = Objects.requireNonNull(Earthbending.getClosestEarthbendableBlock(entity, ctx, WALL_REACH,this, 2)).toBlockPos();
+            lookPos = Objects.requireNonNull(Earthbending.getClosestEarthbendableBlock(entity, ctx, WALL_REACH, this, 2)).toBlockPos();
 
-        return createWall(world, lookPos.offset(cardinal.rotateY(), -1), lookBlock, cardinal, entity, whMin, whMax, height,
+        return createWall(ctx, world, lookPos.offset(cardinal.rotateY(), -1), lookBlock, cardinal, entity, whMin, whMax, height,
                 length, random);
 
     }
@@ -189,17 +189,17 @@ public class AbilityWall extends Ability {
     /*
      * Spawn 4 walls around the bender
      */
-    private boolean createSurroundingWalls(World world, BlockPos lookPos, Block lookBlock, EntityLivingBase entity,
+    private boolean createSurroundingWalls(AbilityContext ctx, World world, BlockPos lookPos, Block lookBlock, EntityLivingBase entity,
                                            int whMin, int whMax, Random random) {
         boolean wall0Created, wall1Created, wall2Created, wall3Created;
 
-        wall0Created = createWall(world, lookPos.offset(EnumFacing.EAST, 3), lookBlock, EnumFacing.EAST, entity, whMin,
+        wall0Created = createWall(ctx, world, lookPos.offset(EnumFacing.EAST, 3), lookBlock, EnumFacing.EAST, entity, whMin,
                 whMax, whMax - 1, whMax, random);
-        wall1Created = createWall(world, lookPos.offset(EnumFacing.NORTH, 3), lookBlock, EnumFacing.NORTH, entity,
+        wall1Created = createWall(ctx, world, lookPos.offset(EnumFacing.NORTH, 3), lookBlock, EnumFacing.NORTH, entity,
                 whMin, whMax, whMax - 1, whMax, random);
-        wall2Created = createWall(world, lookPos.offset(EnumFacing.SOUTH, 3), lookBlock, EnumFacing.SOUTH, entity,
+        wall2Created = createWall(ctx, world, lookPos.offset(EnumFacing.SOUTH, 3), lookBlock, EnumFacing.SOUTH, entity,
                 whMin, whMax, whMax - 1, whMax, random);
-        wall3Created = createWall(world, lookPos.offset(EnumFacing.WEST, 3), lookBlock, EnumFacing.WEST, entity, whMin,
+        wall3Created = createWall(ctx, world, lookPos.offset(EnumFacing.WEST, 3), lookBlock, EnumFacing.WEST, entity, whMin,
                 whMax, whMax - 1, whMax, random);
 
         return wall0Created || wall1Created || wall2Created || wall3Created;
@@ -208,12 +208,13 @@ public class AbilityWall extends Ability {
     /*
      * Spawn a wall with provided settings
      */
-    private boolean createWall(World world, BlockPos wallPos, Block wallBlock, EnumFacing direction,
+    private boolean createWall(AbilityContext ctx, World world, BlockPos wallPos, Block wallBlock, EnumFacing direction,
                                EntityLivingBase entity, int whMin, int whMax, int height, int width, Random random) {
         EntityWall wall = new EntityWall(world);
         if (Earthbending.isBendable(world, wallPos, world.getBlockState(wallPos), 2) || STATS_CONFIG.plantBendableBlocks.contains(wallBlock)) {
             wall.setPosition(wallPos.getX() + .5, wallPos.getY(), wallPos.getZ() + .5);
             wall.setOwner(entity);
+            wall.setTier(getCurrentTier(ctx));
             for (int i = 0; i < width; i++) {
 
                 int wallHeight = AvatarUtils.getRandomNumberInRange(1, height) + (whMax - whMin);
@@ -232,6 +233,7 @@ public class AbilityWall extends Ability {
                 seg.setAbility(this);
                 seg.setSegmentHeight(height);
                 seg.setBehavior(new WallBehavior.Rising());
+                seg.setTier(getCurrentTier(ctx));
 
                 boolean foundAir = false, dontBreakMore = false;
                 for (int j = seg.getSegmentHeight() - 1; j >= 0; j--) {

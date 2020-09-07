@@ -4,6 +4,7 @@ import akka.japi.Pair;
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.earth.AbilityWall;
 import com.crowsofwar.avatar.client.controls.AvatarControl;
+import com.crowsofwar.avatar.entity.AvatarEntity;
 import com.crowsofwar.avatar.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.entity.EntityWall;
 import com.crowsofwar.avatar.entity.EntityWallSegment;
@@ -21,16 +22,14 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
-import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 
 import static com.crowsofwar.avatar.bending.bending.Ability.DAMAGE;
 import static com.crowsofwar.avatar.bending.bending.earth.AbilityWall.SIZE_MAX;
 import static com.crowsofwar.avatar.bending.bending.earth.AbilityWall.WALL_REACH;
-import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
 
 /**
  * @author Aang23
@@ -60,32 +59,36 @@ public class StatCtrlShootWall extends StatusControl {
                     range = start.minus(stopAt).magnitude();
             }
 
-            Vector end = start.plus(direction.times(range));
-
-            // Exclude the bender itself
-            HashSet<Entity> toExlude = new HashSet<>();
-            toExlude.add(entity);
-
             // Do the actual raytracing
-            RayTraceResult result = AvatarUtils.tracePath(world, (float) start.x(), (float) start.y(), (float) start.z(),
-                    (float) end.x(), (float) end.y(), (float) end.z(), 1, toExlude, true, false);
+            List<Entity> result = Raytrace.entityRaytrace(world, start.toMinecraft(), entity.getLookVec(), range, 4.0F,
+                    entity1 -> (entity1 instanceof EntityWall || entity1 instanceof EntityWallSegment) && ((AvatarEntity) entity1).getOwner() == entity);
 
+            EntityWall controlledWall = AvatarEntity.lookupControlledEntity(world, EntityWall.class, entity);
             EntityWallSegment segment = null;
 
             // Process the result. The used segment is chosen randomly. Exit if that's not
             // an entity
-            if (result != null && result.typeOfHit.equals(RayTraceResult.Type.ENTITY)) {
-                EntityWall wall;
+            if (controlledWall != null) {
                 int width = ability.getProperty(SIZE_MAX, abilityData).intValue();
                 width *= abilityData.getDamageMult() * abilityData.getXpModifier();
 
                 int n = AvatarUtils.getRandomNumberInRange(0, width - 1);
-                if (result.entityHit instanceof EntityWallSegment) {
-                    wall = ((EntityWallSegment) result.entityHit).getWall();
-                    segment = wall.getSegment(n);
-                } else if (result.entityHit instanceof EntityWall) {
-                    wall = (EntityWall) result.entityHit;
-                    segment = wall.getSegment(n);
+                segment = controlledWall.getSegment(n);
+            }
+            else if (!result.isEmpty()) {
+                for (Entity w : result) {
+                    EntityWall wall;
+                    int width = ability.getProperty(SIZE_MAX, abilityData).intValue();
+                    width *= abilityData.getDamageMult() * abilityData.getXpModifier();
+
+                    int n = AvatarUtils.getRandomNumberInRange(0, width - 1);
+                    if (w instanceof EntityWallSegment) {
+                        wall = ((EntityWallSegment) w).getWall();
+                        segment = wall.getSegment(n);
+                    } else if (w instanceof EntityWall) {
+                        wall = (EntityWall) w;
+                        segment = wall.getSegment(n);
+                    }
                 }
             } else return false;
 
@@ -115,6 +118,7 @@ public class StatCtrlShootWall extends StatusControl {
             floating.setTurnSolid(true);
             floating.setDamageSource("avatar_Earth_floatingBlock");
             floating.setBoomerang(false);
+            floating.setChiHit(ability.getChiCost(abilityData) / 2);
             floating.setTier(ability.getCurrentTier(abilityData));
             floating.setDamage((float) (Objects.requireNonNull(Abilities.get("earth_control")).
                     getProperty(DAMAGE, 1).floatValue() * abilityData.getXpModifier() * abilityData.getDamageMult()));
