@@ -26,6 +26,7 @@ import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
+import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoublePlant;
 import net.minecraft.block.BlockTallGrass;
@@ -36,6 +37,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import java.util.Objects;
 import java.util.Random;
 
 import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
@@ -43,7 +45,7 @@ import static com.crowsofwar.avatar.util.data.StatusControlController.*;
 
 public class AbilityWall extends Ability {
 
-    private static final String
+    public static final String
             WALL_REACH = "wallReach",
             SIZE_MIN = "sizeMin",
             SIZE_MAX = "sizeMax",
@@ -105,9 +107,17 @@ public class AbilityWall extends Ability {
                     }
                 }
 
+                if (!Earthbending.isBendable(world, wallPos, world.getBlockState(wallPos), 2)) {
+                    Vector tempPos = Earthbending.getClosestEarthbendableBlock(entity, ctx, WALL_REACH,this, 2);
+                    if (tempPos != null)
+                        wallPos = tempPos.toBlockPos();
+                    wallBlock = world.getBlockState(wallPos).getBlock();
+                }
+
                 // Last safety check
                 if (wallBlock != Blocks.AIR) {
                     wallCreated = createSurroundingWalls(world, wallPos, wallBlock, entity, whMin, whMax, random);
+
                 }
             } else {
                 wallCreated = createLinearWall(ctx, world, reach, cardinal, entity, whMin, whMax, whMax - 1, whMax, random);
@@ -164,9 +174,16 @@ public class AbilityWall extends Ability {
             }
         }
 
-        // The offset is used to re-center the wall
+        if (Earthbending.isBendable(world, lookPos, world.getBlockState(lookPos), 2))
+            // The offset is used to re-center the wall
+            return createWall(world, lookPos.offset(cardinal.rotateY(), -1), lookBlock, cardinal, entity, whMin, whMax, height,
+                    length, random);
+        else if (Earthbending.getClosestEarthbendableBlock(entity, ctx, this, 2) != null)
+            lookPos = Objects.requireNonNull(Earthbending.getClosestEarthbendableBlock(entity, ctx, WALL_REACH,this, 2)).toBlockPos();
+
         return createWall(world, lookPos.offset(cardinal.rotateY(), -1), lookBlock, cardinal, entity, whMin, whMax, height,
                 length, random);
+
     }
 
     /*
@@ -201,7 +218,7 @@ public class AbilityWall extends Ability {
 
                 int wallHeight = AvatarUtils.getRandomNumberInRange(1, height) + (whMax - whMin);
 
-                int horizMod =  -(height / 2) + i;
+                int horizMod = -(height / 2) + i;
                 int x = wallPos.getX()
                         + (direction == EnumFacing.NORTH || direction == EnumFacing.SOUTH ? horizMod : 0);
                 int y = wallPos.getY() - (height - 1);

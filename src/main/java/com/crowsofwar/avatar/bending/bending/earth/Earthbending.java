@@ -148,6 +148,38 @@ public class Earthbending extends BendingStyle {
 
     }
 
+    public static Vector getClosestEarthbendableBlock(EntityLivingBase entity, AbilityContext ctx, String property, Ability ability, int maxHardness) {
+        World world = entity.world;
+        Vector eye = Vector.getEyePos(entity);
+
+        float range = ability.getProperty(property, ctx).floatValue();
+        range *= ctx.getAbilityData().getDamageMult() * ctx.getAbilityData().getXpModifier();
+
+        int angle = 12;
+        for (int i = 0; i < angle; i++) {
+            for (int j = 0; j < angle; j++) {
+
+                double yaw = entity.rotationYaw + i * 360.0 / angle;
+                double pitch = entity.rotationPitch + j * 360.0 / angle;
+
+                BiPredicate<BlockPos, IBlockState> isWater = (pos, state) -> isBendable(world, pos, state, maxHardness)
+                        && state.getBlock() != Blocks.AIR;
+
+                Vector angleVec = Vector.toRectangular(toRadians(yaw), toRadians(pitch));
+                Raytrace.Result result = Raytrace.predicateRaytrace(world, eye, angleVec, range, isWater);
+                if (result.hitSomething()) {
+                    return result.getPosPrecise();
+                }
+
+            }
+
+        }
+
+        ctx.getBender().sendMessage("avatar.earthSourceFail");
+        return null;
+
+    }
+
     @Override
     public int getTextColour() {
         return 0x663300;
