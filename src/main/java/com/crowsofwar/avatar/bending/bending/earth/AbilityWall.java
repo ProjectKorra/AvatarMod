@@ -93,7 +93,7 @@ public class AbilityWall extends Ability {
             boolean wallCreated = false;
 
             if (getBooleanProperty(MULTI_WALL, ctx)) {
-                BlockPos wallPos = entity.getPosition().down();
+                BlockPos wallPos = entity.getPosition().down().add(entity.getLookVec().x, 0, entity.getLookVec().z);
                 Block wallBlock = world.getBlockState(wallPos).getBlock();
 
                 // Allow bending even if the block is lower than the bender by 1-2 (by default)
@@ -178,7 +178,7 @@ public class AbilityWall extends Ability {
             // The offset is used to re-center the wall
             return createWall(ctx, world, lookPos.offset(cardinal.rotateY(), -1), lookBlock, cardinal, entity, whMin, whMax, height,
                     length, random);
-        else if (Earthbending.getClosestEarthbendableBlock(entity, ctx, this, 2) != null)
+        else if (Earthbending.getClosestEarthbendableBlock(entity, ctx, WALL_REACH,this, 2) != null)
             lookPos = Objects.requireNonNull(Earthbending.getClosestEarthbendableBlock(entity, ctx, WALL_REACH, this, 2)).toBlockPos();
 
         return createWall(ctx, world, lookPos.offset(cardinal.rotateY(), -1), lookBlock, cardinal, entity, whMin, whMax, height,
