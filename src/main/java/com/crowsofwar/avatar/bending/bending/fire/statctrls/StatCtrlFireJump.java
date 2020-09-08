@@ -60,7 +60,7 @@ public class StatCtrlFireJump extends StatusControl {
             if (entity instanceof EntityBender)
                 chiCost = 0;
 
-            if (abilityData.getAbilityCooldown() == 0 && bender.consumeChi(chiCost)) {
+            if (bender.consumeChi(chiCost)) {
 
 
                 double jumpMultiplier = jump.getProperty(SPEED, abilityData).doubleValue() / 20;
