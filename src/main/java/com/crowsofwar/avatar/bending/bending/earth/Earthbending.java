@@ -44,7 +44,6 @@ import java.util.UUID;
 import java.util.function.BiPredicate;
 
 import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
-import static java.lang.Math.max;
 import static java.lang.Math.toRadians;
 
 public class Earthbending extends BendingStyle {
@@ -70,9 +69,10 @@ public class Earthbending extends BendingStyle {
         Block block = state.getBlock();
         if (STATS_CONFIG.bendableBlocks.contains(block))
             return true;
-        else return STATS_CONFIG.enableAutoModCompat && block.getRegistryName() != null && !block.getRegistryName().getNamespace().equals("minecraft") &&
-                (OreDictionary.doesOreNameExist(block.getTranslationKey()) || block instanceof BlockOre || block instanceof BlockRedstoneOre ||
-                        OreDictionary.doesOreNameExist(block.getLocalizedName())) && !(block instanceof BlockLiquid);
+        else
+            return STATS_CONFIG.enableAutoModCompat && block.getRegistryName() != null && !block.getRegistryName().getNamespace().equals("minecraft") &&
+                    (OreDictionary.doesOreNameExist(block.getTranslationKey()) || block instanceof BlockOre || block instanceof BlockRedstoneOre ||
+                            OreDictionary.doesOreNameExist(block.getLocalizedName())) && !(block instanceof BlockLiquid);
     }
 
     public static Vector getClosestEarthbendableBlock(EntityLivingBase entity, AbilityContext ctx, Ability ability) {
@@ -81,6 +81,9 @@ public class Earthbending extends BendingStyle {
 
         float range = ability.getProperty(Ability.RADIUS, ctx).floatValue();
         range *= ctx.getAbilityData().getDamageMult() * ctx.getAbilityData().getXpModifier();
+
+        float dist = range;
+        Vector closestPos = null;
 
         int angle = 12;
         for (int i = 0; i < angle; i++) {
@@ -94,8 +97,11 @@ public class Earthbending extends BendingStyle {
 
                 Vector angleVec = Vector.toRectangular(toRadians(yaw), toRadians(pitch));
                 Raytrace.Result result = Raytrace.predicateRaytrace(world, eye, angleVec, range, isWater);
-                if (result.hitSomething()) {
-                    return result.getPosPrecise();
+                if (result.hitSomething() && result.getPosPrecise() != null) {
+                    if (result.getPosPrecise().dist(eye.withY(entity.getEntityBoundingBox().minY - 1)) < dist) {
+                        dist = (float) result.getPosPrecise().dist(eye.withY(entity.getEntityBoundingBox().minY));
+                        closestPos = result.getPosPrecise();
+                    }
                 }
 
             }
@@ -103,7 +109,7 @@ public class Earthbending extends BendingStyle {
         }
 
         ctx.getBender().sendMessage("avatar.earthSourceFail");
-        return null;
+        return closestPos;
 
     }
 
@@ -111,9 +117,10 @@ public class Earthbending extends BendingStyle {
         Block block = state.getBlock();
         if (STATS_CONFIG.bendableBlocks.contains(block))
             return true;
-        else return STATS_CONFIG.enableAutoModCompat && state.getBlockHardness(world, pos) <= maxHardness && block.getRegistryName() != null && !block.getRegistryName().getNamespace().equals("minecraft") &&
-                (OreDictionary.doesOreNameExist(block.getTranslationKey()) || block instanceof BlockOre || block instanceof BlockRedstoneOre ||
-                        OreDictionary.doesOreNameExist(block.getLocalizedName())) && !(block instanceof BlockLiquid);
+        else
+            return STATS_CONFIG.enableAutoModCompat && state.getBlockHardness(world, pos) <= maxHardness && block.getRegistryName() != null && !block.getRegistryName().getNamespace().equals("minecraft") &&
+                    (OreDictionary.doesOreNameExist(block.getTranslationKey()) || block instanceof BlockOre || block instanceof BlockRedstoneOre ||
+                            OreDictionary.doesOreNameExist(block.getLocalizedName())) && !(block instanceof BlockLiquid);
     }
 
     public static Vector getClosestEarthbendableBlock(EntityLivingBase entity, AbilityContext ctx, Ability ability, int maxHardness) {
@@ -122,6 +129,9 @@ public class Earthbending extends BendingStyle {
 
         float range = ability.getProperty(Ability.RADIUS, ctx).floatValue();
         range *= ctx.getAbilityData().getDamageMult() * ctx.getAbilityData().getXpModifier();
+
+        float dist = range;
+        Vector closestPos = null;
 
         int angle = 12;
         for (int i = 0; i < angle; i++) {
@@ -135,8 +145,11 @@ public class Earthbending extends BendingStyle {
 
                 Vector angleVec = Vector.toRectangular(toRadians(yaw), toRadians(pitch));
                 Raytrace.Result result = Raytrace.predicateRaytrace(world, eye, angleVec, range, isWater);
-                if (result.hitSomething()) {
-                    return result.getPosPrecise();
+                if (result.hitSomething() && result.getPosPrecise() != null) {
+                    if (result.getPosPrecise().dist(eye.withY(entity.getEntityBoundingBox().minY - 1)) < dist) {
+                        dist = (float) result.getPosPrecise().dist(eye.withY(entity.getEntityBoundingBox().minY));
+                        closestPos = result.getPosPrecise();
+                    }
                 }
 
             }
@@ -144,7 +157,7 @@ public class Earthbending extends BendingStyle {
         }
 
         ctx.getBender().sendMessage("avatar.earthSourceFail");
-        return null;
+        return closestPos;
 
     }
 
@@ -155,6 +168,9 @@ public class Earthbending extends BendingStyle {
         float range = ability.getProperty(property, ctx).floatValue();
         range *= ctx.getAbilityData().getDamageMult() * ctx.getAbilityData().getXpModifier();
 
+        float dist = range;
+        Vector closestPos = null;
+
         int angle = 12;
         for (int i = 0; i < angle; i++) {
             for (int j = 0; j < angle; j++) {
@@ -167,8 +183,11 @@ public class Earthbending extends BendingStyle {
 
                 Vector angleVec = Vector.toRectangular(toRadians(yaw), toRadians(pitch));
                 Raytrace.Result result = Raytrace.predicateRaytrace(world, eye, angleVec, range, isWater);
-                if (result.hitSomething()) {
-                    return result.getPosPrecise();
+                if (result.hitSomething() && result.getPosPrecise() != null) {
+                    if (result.getPosPrecise().dist(eye.withY(entity.getEntityBoundingBox().minY - 1)) < dist) {
+                        dist = (float) result.getPosPrecise().dist(eye.withY(entity.getEntityBoundingBox().minY));
+                        closestPos = result.getPosPrecise();
+                    }
                 }
 
             }
@@ -176,7 +195,7 @@ public class Earthbending extends BendingStyle {
         }
 
         ctx.getBender().sendMessage("avatar.earthSourceFail");
-        return null;
+        return closestPos;
 
     }
 

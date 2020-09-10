@@ -56,8 +56,6 @@ import java.util.*;
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public abstract class Ability {
 
-    //TODO: Implement burnout regeneration and cost
-
     ///Property time! How many different properties can I add??????
     public static final String
             CHI_COST = "chiCost",
@@ -110,6 +108,16 @@ public abstract class Ability {
             EFFECT_LEVEl = "effectLevel",
             EFFECT_STRENGTH = "effectStrength",
             EFFECT_DURATION = "effectDuration",
+            CHI_BOOST = "chiBoost",
+            CHI_REGEN_BOOST = "chiRegenBoost",
+            REGEN_LEVEL = "regenLevel",
+            REGEN_DURATION = "regenDuration",
+            RESISTANCE_LEVEL = "resistanceLevel",
+            RESISTANCE_DURATION = "resistanceDuration",
+            SLOWNESS_LEVEL = "slownessLevel",
+            SLOWNESS_DURATION = "slownessDuration",
+            SATURATION_LEVEL = "saturationLevel",
+            SATURATION_DURATION = "saturationDuration",
             STRENGTH_LEVEL = "strengthLevel",
             STRENGTH_DURATION = "strengthDuration",
             SPEED_LEVEL = "speedLevel",
@@ -377,7 +385,7 @@ public abstract class Ability {
         if (ctx.getBenderEntity() instanceof EntityPlayer && ((EntityPlayer) ctx.getBenderEntity()).isCreative())
             return 0;
         int coolDown = getProperty(COOLDOWN, ctx.getLevel(), ctx.getDynamicPath()).intValue();
-        coolDown *= (2 - ctx.getAbilityData().getDamageMult()) * (1 /  ctx.getAbilityData().getXpModifier());
+        coolDown *= (2 - ctx.getAbilityData().getDamageMult()) * (1 / ctx.getAbilityData().getXpModifier());
         //Cooldown has a 1.5x multiplier with max burnout
         return (int) (coolDown * (1 + ctx.getAbilityData().getBurnOut() / 200));
     }

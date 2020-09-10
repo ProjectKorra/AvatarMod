@@ -16,8 +16,16 @@ import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.util.data.TickHandlerController.RESTORE_PARTICLE_SPAWNER;
 
 public class AbilityRestore extends Ability {
+
 	public AbilityRestore() {
 		super(Earthbending.ID, "restore");
+	}
+
+	@Override
+	public void init() {
+		super.init();
+		addProperties(RADIUS, STRENGTH_DURATION, STRENGTH_LEVEL, SLOWNESS_DURATION, SLOWNESS_LEVEL, RESISTANCE_DURATION, RESISTANCE_LEVEL,
+				SATURATION_DURATION, SATURATION_LEVEL, CHI_BOOST, CHI_REGEN_BOOST);
 	}
 
 	@Override
@@ -36,18 +44,9 @@ public class AbilityRestore extends Ability {
 		EntityLivingBase entity = ctx.getBenderEntity();
 		Bender bender = ctx.getBender();
 
-		float chi = STATS_CONFIG.chiBuff;
-		if (abilityData.getLevel() == 1) {
-			chi = STATS_CONFIG.chiBuffLvl2;
-		} else if (abilityData.getLevel() == 2) {
-			chi = STATS_CONFIG.chiBuffLvl3;
-		} else if (abilityData.getLevel() == 3) {
-			chi = STATS_CONFIG.chiBuffLvl4;
-		}
+		if (bender.consumeChi(getChiCost(ctx)) && Earthbending.getClosestEarthbendableBlock(entity, ctx, this, 2) != null) {
 
-		if (bender.consumeChi(chi)) {
-
-			abilityData.addXp(SKILLS_CONFIG.buffUsed);
+			abilityData.addXp(getProperty(XP_USE).floatValue());
 
 			// 3s + 1.5s per level
 			int duration = ctx.getLevel() > 0 ? 60 + 30 * ctx.getLevel() : 60;
