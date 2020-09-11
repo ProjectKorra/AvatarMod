@@ -108,7 +108,8 @@ public class Earthbending extends BendingStyle {
 
         }
 
-        ctx.getBender().sendMessage("avatar.earthSourceFail");
+        if (closestPos == null)
+            ctx.getBender().sendMessage("avatar.earthSourceFail");
         return closestPos;
 
     }
@@ -156,7 +157,8 @@ public class Earthbending extends BendingStyle {
 
         }
 
-        ctx.getBender().sendMessage("avatar.earthSourceFail");
+        if (closestPos == null)
+            ctx.getBender().sendMessage("avatar.earthSourceFail");
         return closestPos;
 
     }
@@ -194,7 +196,8 @@ public class Earthbending extends BendingStyle {
 
         }
 
-        ctx.getBender().sendMessage("avatar.earthSourceFail");
+        if (closestPos == null)
+            ctx.getBender().sendMessage("avatar.earthSourceFail");
         return closestPos;
 
     }
