@@ -136,6 +136,7 @@ public class AvatarMod {
         Abilities.register(new AbilityMining());
         Abilities.register(new AbilityRavine());
         Abilities.register(new AbilityWall());
+        Abilities.register(new AbilityEarthRedirect());
         Abilities.register(new AbilityEarthspikes());
         Abilities.register(new AbilityRestore());
         /*    			Ice		  			*/

@@ -301,7 +301,7 @@ public class EntityFloatingBlock extends EntityOffensive {
         if ((ticksGround > 1 || velocity().magnitude() < 10) && doesExplode() && onCollideWithSolid())
             Explode();
 
-        if (ticksGround > 15 && velocity().magnitude() < 0.5) {
+        if (ticksGround > 13 && velocity().magnitude() < 0.5) {
             setPosition(getPositionVector());
             placeBlock();
             world.scheduleBlockUpdate(getPosition(), getBlock(), 0, 1);

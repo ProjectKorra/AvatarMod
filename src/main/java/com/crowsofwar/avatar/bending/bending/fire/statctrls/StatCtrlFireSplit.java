@@ -89,7 +89,6 @@ public class StatCtrlFireSplit extends StatusControl {
                                     ((EntityPlayer) entity).addExhaustion(exhaustion);
                                 abilityData.addXp(xp);
                                 entity.swingArm(EnumHand.MAIN_HAND);
-                                //TODO: Spawn particles and maybe an entity
                             }
                         }
                     }

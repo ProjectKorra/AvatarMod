@@ -98,6 +98,7 @@ public class Earthbending extends BendingStyle {
                 Vector angleVec = Vector.toRectangular(toRadians(yaw), toRadians(pitch));
                 Raytrace.Result result = Raytrace.predicateRaytrace(world, eye, angleVec, range, isWater);
                 if (result.hitSomething() && result.getPosPrecise() != null) {
+                    eye = eye.plus(Vector.getLookRectangular(entity));
                     if (result.getPosPrecise().dist(eye.withY(entity.getEntityBoundingBox().minY - 1)) < dist) {
                         dist = (float) result.getPosPrecise().dist(eye.withY(entity.getEntityBoundingBox().minY));
                         closestPos = result.getPosPrecise();
@@ -147,6 +148,7 @@ public class Earthbending extends BendingStyle {
                 Vector angleVec = Vector.toRectangular(toRadians(yaw), toRadians(pitch));
                 Raytrace.Result result = Raytrace.predicateRaytrace(world, eye, angleVec, range, isWater);
                 if (result.hitSomething() && result.getPosPrecise() != null) {
+                    eye = eye.plus(Vector.getLookRectangular(entity));
                     if (result.getPosPrecise().dist(eye.withY(entity.getEntityBoundingBox().minY - 1)) < dist) {
                         dist = (float) result.getPosPrecise().dist(eye.withY(entity.getEntityBoundingBox().minY));
                         closestPos = result.getPosPrecise();
@@ -186,6 +188,7 @@ public class Earthbending extends BendingStyle {
                 Vector angleVec = Vector.toRectangular(toRadians(yaw), toRadians(pitch));
                 Raytrace.Result result = Raytrace.predicateRaytrace(world, eye, angleVec, range, isWater);
                 if (result.hitSomething() && result.getPosPrecise() != null) {
+                    eye = eye.plus(Vector.getLookRectangular(entity));
                     if (result.getPosPrecise().dist(eye.withY(entity.getEntityBoundingBox().minY - 1)) < dist) {
                         dist = (float) result.getPosPrecise().dist(eye.withY(entity.getEntityBoundingBox().minY));
                         closestPos = result.getPosPrecise();

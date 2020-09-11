@@ -52,7 +52,9 @@ public class StatusControlController {
 			CHARGE_WATER = new StatCtrlChargeWaterBlast(true),
 			RELEASE_WATER = new StatCtrlChargeWaterBlast(false),
 			REDIRECT_FIRE = new StatCtrlFireRedirect(),
-			SPLIT_FIRE = new StatCtrlFireSplit();
+			SPLIT_FIRE = new StatCtrlFireSplit(),
+			EARTH_REDIRECT = new StatCtrlEarthRedirect(),
+			EARTH_REDIRECT_WAVE = new StatCtrlEarthRedirectWave();
 	// @formatter:on
 
 	public static StatusControl lookup(int id) {
