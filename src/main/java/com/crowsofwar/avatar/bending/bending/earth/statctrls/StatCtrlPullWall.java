@@ -1,11 +1,12 @@
 package com.crowsofwar.avatar.bending.bending.earth.statctrls;
 
 import com.crowsofwar.avatar.client.controls.AvatarControl;
-import com.crowsofwar.avatar.util.data.StatusControl;
-import com.crowsofwar.avatar.util.data.ctx.BendingContext;
 import com.crowsofwar.avatar.entity.AvatarEntity;
 import com.crowsofwar.avatar.entity.EntityWallSegment;
 import com.crowsofwar.avatar.entity.data.WallBehavior;
+import com.crowsofwar.avatar.util.data.AbilityData;
+import com.crowsofwar.avatar.util.data.StatusControl;
+import com.crowsofwar.avatar.util.data.ctx.BendingContext;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
@@ -16,34 +17,31 @@ import java.util.List;
  */
 public class StatCtrlPullWall extends StatusControl {
 
-	public StatCtrlPullWall() {
-		super(24, AvatarControl.CONTROL_LEFT_CLICK_DOWN, CrosshairPosition.LEFT_OF_CROSSHAIR);
-	}
+    public StatCtrlPullWall() {
+        super(24, AvatarControl.CONTROL_LEFT_CLICK_DOWN, CrosshairPosition.LEFT_OF_CROSSHAIR);
+    }
 
-	@Override
-	public boolean execute(BendingContext ctx) {
-		World world = ctx.getWorld();
-		EntityLivingBase entity = ctx.getBenderEntity();
+    @Override
+    public boolean execute(BendingContext ctx) {
+        World world = ctx.getWorld();
+        EntityLivingBase entity = ctx.getBenderEntity();
+        AbilityData abilityData = ctx.getData().getAbilityData("wall");
+        EntityWallSegment wallSegment = AvatarEntity.lookupOwnedEntity(world, EntityWallSegment.class, entity);
 
-		// TODO: When upgrade to a5.0 , call setOwner on the wall itself , then lookup
-		// based on wall
+        if (wallSegment.getBehavior().getClass() == WallBehavior.Waiting.class
+                && abilityData.getAbilityCooldown(entity) > 0) {
 
-		// Wall has no owner so we go for segments
-		EntityWallSegment wallSegment = AvatarEntity.lookupOwnedEntity(world, EntityWallSegment.class, entity);
+            List<EntityWallSegment> segments = world.getEntities(EntityWallSegment.class,
+                    segment -> segment.getOwner() == entity);
 
-		if (wallSegment.getBehavior().getClass() == WallBehavior.Waiting.class) {
+            for (EntityWallSegment segment : segments) {
+                if (segment.getBehavior().getClass().equals(WallBehavior.Waiting.class))
+                    segment.setBehavior(new WallBehavior.Pull());
+            }
 
-			List<EntityWallSegment> segments = world.getEntities(EntityWallSegment.class,
-					segment -> segment.getOwner() == entity);
-
-			for (EntityWallSegment segment : segments) {
-				if (segment.getBehavior().getClass().equals(WallBehavior.Waiting.class))
-					segment.setBehavior(new WallBehavior.Pull());
-			}
-
-			return true;
-		} else {
-			return false;
-		}
-	}
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

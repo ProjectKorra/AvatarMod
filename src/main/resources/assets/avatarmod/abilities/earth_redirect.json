@@ -18,7 +18,8 @@
       "absorbTier": 0,
       "damage": 1,
       "speed": 3,
-      "knockback": 1
+      "knockback": 1,
+      "chiHit": 0.5
     },
     "level2": {
       "tier": 3,
@@ -36,7 +37,8 @@
       "speed": 4,
       "knockback": 2,
       "powerBoost": 15,
-      "powerDuration": 60
+      "powerDuration": 60,
+      "chiHit": 1
     },
     "level3": {
       "tier": 4,
@@ -54,7 +56,8 @@
       "speed": 5,
       "knockback": 2,
       "powerBoost": 25,
-      "powerDuration": 80
+      "powerDuration": 80,
+      "chiHit": 1.25
     },
     "level4_1": {
       "tier": 5,
@@ -73,7 +76,8 @@
       "absorbTier": 3,
       "damage": 3,
       "speed": 6,
-      "knockback": 2
+      "knockback": 2,
+      "chiHit": 1.5
     },
     "level4_2": {
       "tier": 5,
@@ -91,7 +95,8 @@
       "powerDuration": 100,
       "damage": 3.5,
       "speed": 7,
-      "knockback": 3
+      "knockback": 3,
+      "chiHit": 1.75
     }
   }
 }

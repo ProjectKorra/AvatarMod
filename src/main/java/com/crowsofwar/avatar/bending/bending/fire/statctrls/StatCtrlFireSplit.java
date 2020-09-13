@@ -54,12 +54,13 @@ public class StatCtrlFireSplit extends StatusControl {
 
             xp *= abilityData.getDamageMult() * abilityData.getXpModifier();
 
-            if (entity instanceof EntityBender || entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative())
+            if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative())
                 chiCost = exhaustion = burnout = cooldown = 0;
+            if (entity instanceof EntityBender)
+                chiCost = 0;
 
             List<Entity> destructables = Raytrace.entityRaytrace(world, Vector.getEyePos(entity), Vector.getLookRectangular(entity),
-                     range, aimAssist, entity1 -> entity1 instanceof EntityOffensive && ((EntityOffensive) entity1).canCollideWith(entity)
-            && ((EntityOffensive) entity1).getElement() instanceof Firebending);
+                     range, aimAssist, entity1 -> entity1 instanceof EntityOffensive && ((EntityOffensive) entity1).canCollideWith(entity));
 
             if (!destructables.isEmpty()) {
                 for (Entity e : destructables) {

@@ -213,6 +213,14 @@ public class ConfigClient {
 		@Load
 		public final boolean solidFlameStrikeParticles = true;
 
+		//Only used for supporters
+		@Load
+		public final int fireR = 255, fireG = 50, fireB = 10;
+
+		//Only used for supporters
+		@Load
+		public final int lightningR = 135, lightningG = 255, lightningB = 252;
+
 
 	}
 

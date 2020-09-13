@@ -46,7 +46,7 @@ public class StatCtrlFireRedirect extends StatusControl {
         AbilityData abilityData = data.getAbilityData(new AbilityFireRedirect());
         AbilityFireRedirect redirect = (AbilityFireRedirect) Abilities.get("fire_redirect");
 
-        if (abilityData.getAbilityCooldown() > 0 && !(entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()))
+        if (abilityData.getAbilityCooldown(entity) > 0)
             return true;
 
         if (redirect != null) {

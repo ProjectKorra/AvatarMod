@@ -189,6 +189,13 @@ avatar.ability.wall.lvl3=Create a larger wall, even further away
 avatar.ability.wall.lvl4_1=Create a massive wall, and shoot pieces of it
 avatar.ability.wall.lvl4_2=Surround yourself by walls, and push your enemies away with them
 
+avatar.ability.earth_redirect=§2§lEarth Redirect
+avatar.ability.earth_redirect.desc=Either redirect blocks close to you with right clicking, or create a shockwave for crowd control by right clicking the ground!
+avatar.ability.earth_redirect.lvl1=
+avatar.ability.earth_redirect.lvl2=
+avatar.ability.earth_redirect.lvl3=
+avatar.ability.earth_redirect.lvl4_1=
+avatar.ability.earth_redirect.lvl4_2=
 
 avatar.ability.earth_spikes=§2§lEarth Spikes
 avatar.ability.earth_spikes.desc=Disrupt the ground and create a line of spikes that damage anything in its path.

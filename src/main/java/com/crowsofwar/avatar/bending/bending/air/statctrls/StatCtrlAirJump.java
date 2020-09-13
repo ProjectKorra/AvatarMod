@@ -107,8 +107,6 @@ public class StatCtrlAirJump extends StatusControl {
             if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative())
                 exhaustion = burnout = cooldown = 0;
 
-            System.out.println(abilityData.getAbilityCooldown());
-
             if (bender.consumeChi(chiCost) && abilityData.getAbilityCooldown() <= 0) {
                 data.addTickHandler(AIR_PARTICLE_SPAWNER, ctx);
                 if (jump.getBooleanProperty(Ability.GROUND_POUND, abilityData)) {

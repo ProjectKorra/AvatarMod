@@ -22,6 +22,7 @@ import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.gorecore.util.GoreCoreByteBufUtil;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -176,6 +177,11 @@ public class AbilityData {
 
 	public int getAbilityCooldown() {
 		return abilityCooldown;
+	}
+
+	public int getAbilityCooldown(EntityLivingBase entity) {
+		if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) return 0;
+		return getAbilityCooldown();
 	}
 
 	public void decrementCooldown() {

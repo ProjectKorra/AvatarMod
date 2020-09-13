@@ -69,59 +69,60 @@ public class StatCtrlThrowBlock extends StatusControl {
 
 
         if (floating != null && abilityData != null && control != null) {
-            float yaw = (float) Math.toRadians(entity.rotationYaw);
-            float pitch = (float) Math.toRadians(entity.rotationPitch);
+            if (abilityData.getAbilityCooldown(entity) > 0) {
+                float yaw = (float) Math.toRadians(entity.rotationYaw);
+                float pitch = (float) Math.toRadians(entity.rotationPitch);
 
-            // Calculate force and everything
-            float forceMult = control.getProperty(Ability.SPEED, abilityData).floatValue() * 4;
-            float chiCost = control.getChiCost(abilityData);
-            float exhaustion = control.getExhaustion(abilityData);
-            float burnout = control.getBurnOut(abilityData);
-            int cooldown = control.getCooldown(abilityData);
+                // Calculate force and everything
+                float forceMult = control.getProperty(Ability.SPEED, abilityData).floatValue() * 4;
+                float chiCost = control.getChiCost(abilityData);
+                float exhaustion = control.getExhaustion(abilityData);
+                float burnout = control.getBurnOut(abilityData);
+                int cooldown = control.getCooldown(abilityData);
 
-            chiCost *= abilityData.getDamageMult() * abilityData.getXpModifier();
-            exhaustion *= abilityData.getDamageMult() * abilityData.getXpModifier();
-            burnout *= abilityData.getDamageMult() * abilityData.getXpModifier();
-            cooldown *= abilityData.getDamageMult() * abilityData.getXpModifier();
-            forceMult *= abilityData.getDamageMult() * abilityData.getXpModifier();
+                chiCost *= abilityData.getDamageMult() * abilityData.getXpModifier();
+                exhaustion *= abilityData.getDamageMult() * abilityData.getXpModifier();
+                burnout *= abilityData.getDamageMult() * abilityData.getXpModifier();
+                cooldown *= abilityData.getDamageMult() * abilityData.getXpModifier();
+                forceMult *= abilityData.getDamageMult() * abilityData.getXpModifier();
 
-            if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative())
-                chiCost = exhaustion = burnout = cooldown = 0;
+                if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative())
+                    chiCost = exhaustion = burnout = cooldown = 0;
 
-            Vector direction;
-            Vec3d look = entity.getLookVec();
-            Vec3d pos = entity.getPositionEyes(1.0F);
+                Vector direction;
+                Vec3d look = entity.getLookVec();
+                Vec3d pos = entity.getPositionEyes(1.0F);
 
-            //Drillgon200: Raytrace from the bender's line of sight and if it hit anything, use the vector from the
-            //block to the hit point for the motion vector rather than the look vector. This improves accuracy when the
-            //block isn't directly in front of the bender.
-            RayTraceResult r = Raytrace.rayTrace(world, pos, look.scale(75).add(pos), 0, false, true, false,
-                    Entity.class, e -> e instanceof EntityFloatingBlock || e == entity);
+                //Drillgon200: Raytrace from the bender's line of sight and if it hit anything, use the vector from the
+                //block to the hit point for the motion vector rather than the look vector. This improves accuracy when the
+                //block isn't directly in front of the bender.
+                RayTraceResult r = Raytrace.rayTrace(world, pos, look.scale(75).add(pos), 0, false, true, false,
+                        Entity.class, e -> e instanceof EntityFloatingBlock || e == entity);
 
-            if (r != null && r.hitVec != null) {
-                Vec3d dir = r.hitVec.subtract(floating.getPositionVector()).normalize();
-                direction = new Vector(dir.x, dir.y, dir.z);
-            } else {
-                direction = Vector.toRectangular(yaw, pitch);
+                if (r != null && r.hitVec != null) {
+                    Vec3d dir = r.hitVec.subtract(floating.getPositionVector()).normalize();
+                    direction = new Vector(dir.x, dir.y, dir.z);
+                } else {
+                    direction = Vector.toRectangular(yaw, pitch);
+                }
+
+                if (bender.consumeChi(chiCost)) {
+                    abilityData.setAbilityCooldown(cooldown);
+                    abilityData.addBurnout(burnout);
+                    if (entity instanceof EntityPlayer)
+                        ((EntityPlayer) entity).addExhaustion(exhaustion);
+
+                    floating.setVelocity(direction.times(forceMult));
+                    floating.setBehavior(new FloatingBlockBehavior.Thrown());
+                }
+                data.removeStatusControl(PLACE_BLOCK);
+
+                blocks = blocks.stream().filter(block -> block.getBehavior() instanceof FloatingBlockBehavior.PlayerControlled).collect(Collectors.toList());
+                if (blocks.isEmpty())
+                    abilityData.setRegenBurnout(true);
+
+                return true;
             }
-
-            if (bender.consumeChi(chiCost)) {
-                abilityData.setAbilityCooldown(cooldown);
-                abilityData.addBurnout(burnout);
-                if (entity instanceof EntityPlayer)
-                    ((EntityPlayer) entity).addExhaustion(exhaustion);
-
-                floating.setVelocity(direction.times(forceMult));
-                floating.setBehavior(new FloatingBlockBehavior.Thrown());
-            }
-            data.removeStatusControl(PLACE_BLOCK);
-
-            blocks = blocks.stream().filter(block -> block.getBehavior() instanceof FloatingBlockBehavior.PlayerControlled).collect(Collectors.toList());
-            if (blocks.isEmpty())
-                abilityData.setRegenBurnout(true);
-
-            return true;
-
         }
 
         return false;
