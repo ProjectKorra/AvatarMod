@@ -16,11 +16,9 @@
 */
 package com.crowsofwar.avatar.client;
 
-import com.crowsofwar.avatar.item.scroll.ItemScrollAir;
+import com.crowsofwar.avatar.item.scroll.*;
 import com.crowsofwar.avatar.registry.AvatarItem;
 import com.crowsofwar.avatar.registry.AvatarItems;
-import com.crowsofwar.avatar.item.scroll.ItemScroll;
-import com.crowsofwar.avatar.item.scroll.Scrolls;
 import com.crowsofwar.avatar.item.scroll.Scrolls.ScrollType;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -80,7 +78,8 @@ public class AvatarItemRenderRegister {
 			locationsGlow[i] = new ModelResourceLocation("avatarmod:scroll_" + type.displayName() + "_glow" + "_" + (i + 1),
 					"inventory");
 			setCustomModelResourceLocation(scroll.item(), i, locationsGlow[i]);
-			if (!(scroll instanceof ItemScrollAir))
+			if (!(scroll instanceof ItemScrollAir || (scroll instanceof ItemScrollWater || scroll instanceof ItemScrollCombustion ||
+					scroll instanceof ItemScrollEarth) && i == 6))
 				setCustomModelResourceLocation(scroll.item(), i, locationsRegular[i]);
 		}
 	}

@@ -2,6 +2,7 @@ package com.crowsofwar.avatar.bending.bending.earth.statctrls;
 
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
+import com.crowsofwar.avatar.bending.bending.earth.AbilityEarthRedirect;
 import com.crowsofwar.avatar.bending.bending.earth.Earthbending;
 import com.crowsofwar.avatar.bending.bending.fire.AbilityFireRedirect;
 import com.crowsofwar.avatar.client.controls.AvatarControl;
@@ -24,7 +25,6 @@ import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.bending.bending.Ability.*;
 import static com.crowsofwar.avatar.bending.bending.fire.AbilityFireRedirect.DESTROY_TIER;
-import static com.crowsofwar.avatar.bending.bending.fire.AbilityFireRedirect.REDIRECT_TIER;
 
 public class StatCtrlEarthRedirectWave extends StatusControl {
 
@@ -34,12 +34,14 @@ public class StatCtrlEarthRedirectWave extends StatusControl {
 
     @Override
     public boolean execute(BendingContext ctx) {
+        //for now, just return true;
+        return true; /*
         EntityLivingBase entity = ctx.getBenderEntity();
         World world = ctx.getWorld();
         BendingData data = ctx.getData();
         Bender bender = ctx.getBender();
-        AbilityData abilityData = data.getAbilityData(new AbilityFireRedirect());
-        AbilityFireRedirect redirect = (AbilityFireRedirect) Abilities.get("earth_redirect");
+        AbilityData abilityData = data.getAbilityData(new AbilityEarthRedirect());
+        AbilityEarthRedirect redirect = (AbilityEarthRedirect) Abilities.get("earth_redirect");
 
         if (abilityData.getAbilityCooldown(entity) > 0) return true;
 
@@ -81,6 +83,8 @@ public class StatCtrlEarthRedirectWave extends StatusControl {
                 shockwave.setAbility(redirect);
                 shockwave.setElement(new Earthbending());
                 shockwave.setBehaviour(new EarthRedirectShockwave());
+                if (!world.isRemote)
+                    world.spawnEntity(shockwave);
 
                 //Inhibitors
                 if (entity instanceof EntityPlayer)
@@ -91,7 +95,7 @@ public class StatCtrlEarthRedirectWave extends StatusControl {
 
         }
         return true;
-    }
+    **/}
 
 
     public static class EarthRedirectShockwave extends OffensiveBehaviour {
@@ -99,7 +103,7 @@ public class StatCtrlEarthRedirectWave extends StatusControl {
         @Override
         public OffensiveBehaviour onUpdate(EntityOffensive entity) {
             if (entity instanceof EntityShockwave) {
-                
+
             }
             return this;
         }
