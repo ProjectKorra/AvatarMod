@@ -198,12 +198,12 @@ avatar.ability.earth_redirect.lvl4_1=
 avatar.ability.earth_redirect.lvl4_2=
 
 avatar.ability.earth_spikes=§2§lEarth Spikes
-avatar.ability.earth_spikes.desc=Disrupt the ground and create a line of spikes that damage anything in its path.
-avatar.ability.earth_spikes.lvl1=Create smoother, less dangerous spikes
-avatar.ability.earth_spikes.lvl2=More earth spikes, more damage
-avatar.ability.earth_spikes.lvl3=Faster earth spikes
-avatar.ability.earth_spikes.lvl4_1=§2§l§oOctopus §2§l§ofissure ;; Creates eight spikes in all directions
-avatar.ability.earth_spikes.lvl4_2=§2§l§oFlash §2§l§ofissure ;; Travels much faster and deals twice the damage
+avatar.ability.earth_spikes.desc=Charge and release a spike of earth!
+avatar.ability.earth_spikes.lvl1=Compact the earth and turn it into a deadly blade/
+avatar.ability.earth_spikes.lvl2=Bigger, stronger.
+avatar.ability.earth_spikes.lvl3=Bigger and stronger, spikes are now created in a line from you to the location
+avatar.ability.earth_spikes.lvl4_1=§2§l§oCataclysmic Capture ;; Create a ring of spikes around you or where you're looking, which also serve as a temporary wall.
+avatar.ability.earth_spikes.lvl4_2=§2§l§oTectonic Tear ;; Create  a field of earthspikes where you're looking, and shoot earth spikes towards that location.
 
 avatar.ability.restore=§2§lRestore
 avatar.ability.restore.desc=Use the energy of the earth to aid you in combat, increasing your toughness, chi, and chi regeneration.
