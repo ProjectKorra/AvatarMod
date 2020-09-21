@@ -186,8 +186,8 @@ avatar.ability.wall.desc=Raise a protective barrier in front of yourself. It can
 avatar.ability.wall.lvl1=Summon a small wall
 avatar.ability.wall.lvl2=Create a larger wall, further away
 avatar.ability.wall.lvl3=Create a larger wall, even further away
-avatar.ability.wall.lvl4_1=Create a massive wall, and shoot pieces of it
-avatar.ability.wall.lvl4_2=Surround yourself by walls, and push your enemies away with them
+avatar.ability.wall.lvl4_1=§2§l§oCrash and Smash ;;Create a massive wall, and shoot pieces of it
+avatar.ability.wall.lvl4_2=§2§l§oPillars of Protection ;; Surround yourself by walls, and push your enemies away with them
 
 avatar.ability.earth_redirect=§2§lEarth Redirect
 avatar.ability.earth_redirect.desc=Either redirect blocks close to you with right clicking, or create a shockwave for crowd control by right clicking the ground!
