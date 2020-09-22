@@ -54,7 +54,8 @@ public class StatusControlController {
 			REDIRECT_FIRE = new StatCtrlFireRedirect(),
 			SPLIT_FIRE = new StatCtrlFireSplit(),
 			EARTH_REDIRECT = new StatCtrlEarthRedirect(),
-			EARTH_REDIRECT_WAVE = new StatCtrlEarthRedirectWave();
+			CHARGE_EARTH_SPIKE = new StatCtrlChargeEarthspike(true),
+			RELEASE_EARTH_SPIKE = new StatCtrlChargeEarthspike(false);
 	// @formatter:on
 
 	public static StatusControl lookup(int id) {

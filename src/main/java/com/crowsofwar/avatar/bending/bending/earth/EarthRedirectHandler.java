@@ -2,7 +2,6 @@ package com.crowsofwar.avatar.bending.bending.earth;
 
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.bending.bending.fire.statctrls.StatCtrlFireRedirect;
-import com.crowsofwar.avatar.bending.bending.fire.statctrls.StatCtrlFireSplit;
 import com.crowsofwar.avatar.client.controls.AvatarControl;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.BendingData;
@@ -25,7 +24,6 @@ public class EarthRedirectHandler {
             BendingData data = BendingData.getFromEntity(entity);
             assert data != null;
             boolean removeRedirect = false;
-            boolean removeWave = false;
             if (data.hasBending(new Earthbending()) && !entity.world.isRemote) {
                 AbilityData abilityData = AbilityData.get(entity, "earth_redirect");
                 if (abilityData != null && !abilityData.isLocked()) {
@@ -39,14 +37,6 @@ public class EarthRedirectHandler {
                                         if (sc.getSubscribedControl() == AvatarControl.CONTROL_SHIFT)
                                             removeRedirect = true;
                                 }
-                            } if (controls.contains(StatusControlController.EARTH_REDIRECT_WAVE)) {
-                                for (StatusControl sc : controls) {
-                                    if (!(sc instanceof StatCtrlFireSplit))
-                                        if (sc.getSubscribedControl() == AvatarControl.CONTROL_RIGHT_CLICK
-                                                || sc.getSubscribedControl() == AvatarControl.CONTROL_RIGHT_CLICK_DOWN
-                                                || sc.getSubscribedControl() == AvatarControl.CONTROL_RIGHT_CLICK_UP)
-                                            removeWave = true;
-                                }
                             }
 
                         }
@@ -57,11 +47,6 @@ public class EarthRedirectHandler {
                     data.removeStatusControl(StatusControlController.EARTH_REDIRECT);
                 else if (entity.ticksExisted % 20 == 0)
                     data.addStatusControl(StatusControlController.EARTH_REDIRECT);
-
-                if (removeWave)
-                    data.removeStatusControl(StatusControlController.EARTH_REDIRECT_WAVE);
-                else if (entity.ticksExisted % 20 == 0)
-                    data.addStatusControl(StatusControlController.EARTH_REDIRECT_WAVE);
             }
         }
     }
