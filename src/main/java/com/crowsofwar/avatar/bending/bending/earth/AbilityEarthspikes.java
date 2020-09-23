@@ -14,8 +14,19 @@ import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
 
 public class AbilityEarthspikes extends Ability {
 
+	public static final String
+			TRACE_SPIKES = "traceSpikes",
+			SPREAD_CIRCULAR = "spreadCircular";
+
 	public AbilityEarthspikes() {
 		super(Earthbending.ID, "earth_spikes");
+	}
+
+	@Override
+	public void init() {
+		super.init();
+		addProperties(CHARGE_TIME, MAX_DAMAGE, MAX_SIZE, RANGE, RADIUS);
+		addBooleanProperties(TRACE_SPIKES, SPREAD_CIRCULAR);
 	}
 
 	@Override
