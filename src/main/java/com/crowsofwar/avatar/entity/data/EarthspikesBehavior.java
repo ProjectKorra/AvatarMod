@@ -148,10 +148,10 @@ public abstract class EarthspikesBehavior extends Behavior<EntityEarthspikeSpawn
 					earthspike.posY = entity.posY;
 					earthspike.posZ = entity.posZ;
 					earthspike.setAbility(Objects.requireNonNull(abilityData.getAbility()));
-					earthspike.setDamage(damage);
-					earthspike.setSize(size + ticks / (30f / size));
-					earthspike.setLifetime(duration);
-					earthspike.setOwner(owner);
+//					earthspike.setDamage(damage);
+//					earthspike.setSize(size + ticks / (30f / size));
+//					earthspike.setLifetime(duration);
+//					earthspike.setOwner(owner);
 					world.spawnEntity(earthspike);
 
 					BlockPos below = earthspike.getPosition().offset(EnumFacing.DOWN);
@@ -228,9 +228,9 @@ public abstract class EarthspikesBehavior extends Behavior<EntityEarthspikeSpawn
 							.withY(0);
 					EntityEarthspike earthspike = new EntityEarthspike(world);
 					earthspike.setPosition(direction1.x() + entity.posX, entity.posY, direction1.z() + entity.posZ);
-					earthspike.setDamage(damage);
-					earthspike.setSize(size);
-					earthspike.setOwner(owner);
+//					earthspike.setDamage(damage);
+//					earthspike.setSize(size);
+//					earthspike.setOwner(owner);
 					earthspike.setAbility(abilityData.getAbility());
 					world.spawnEntity(earthspike);
 					// Ring of instantaneous earthspikes.
@@ -263,10 +263,10 @@ public abstract class EarthspikesBehavior extends Behavior<EntityEarthspikeSpawn
 						earthspike.setPosition(direction1.x() + owner.posX, owner.posY, direction1.z() + owner.posZ);
 					}
 					// Necessary so that the player doesn't spawn a center earthspike
-					earthspike.setDamage(damage);
-					earthspike.setSize(size);
-					earthspike.setLifetime(20 + size * 2);
-					earthspike.setOwner(owner);
+//					earthspike.setDamage(damage);
+//					earthspike.setSize(size);
+//					earthspike.setLifetime(20 + size * 2);
+//					earthspike.setOwner(owner);
 					world.spawnEntity(earthspike);
 
 					BlockPos below = earthspike.getPosition().offset(EnumFacing.DOWN);

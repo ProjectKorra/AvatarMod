@@ -33,72 +33,68 @@ import net.minecraft.util.math.BlockPos;
 public class RenderEarthspikes extends RenderModel<EntityEarthspike> {
 
 
-	public static ResourceLocation TEXTURE;
+    public static ResourceLocation TEXTURE;
 
-	private ModelBase model;
+    private final ModelBase model;
 
-	/**
-	 * @param renderManager
-	 */
-	public RenderEarthspikes(RenderManager renderManager) {
-		super(renderManager, new ModelEarthspikes());
-		this.model = new ModelEarthspikes();
-	}
+    /**
+     * @param renderManager
+     */
+    public RenderEarthspikes(RenderManager renderManager) {
+        super(renderManager, new ModelEarthspikes());
+        this.model = new ModelEarthspikes();
+    }
 
-	@Override
-	public void doRender(EntityEarthspike entity, double x, double y, double z, float entityYaw,
-						 float partialTicks) {
-
-
-		BlockPos below = entity.getPosition().offset(EnumFacing.DOWN);
-		Block belowBlock = entity.world.getBlockState(below).getBlock();
-		if (belowBlock == Blocks.GRASS) {
-			TEXTURE = new ResourceLocation("avatarmod", "textures/entity/earthspike" + ".png");
-		}
-		else if (belowBlock == Blocks.DIRT) {
-			TEXTURE = new ResourceLocation("avatarmod", "textures/entity/earthspike_dirt" + ".png");
-		}
-	else 	if (belowBlock == Blocks.SAND) {
-			TEXTURE = new ResourceLocation("avatarmod", "textures/entity/earthspike_sand" + ".png");
-		}
-		else if (belowBlock == Blocks.SANDSTONE) {
-			TEXTURE = new ResourceLocation("avatarmod", "textures/entity/earthspike_sandstone" + ".png");
-		}
-		else if (belowBlock == Blocks.STONE) {
-			TEXTURE = new ResourceLocation("avatarmod", "textures/entity/earthspike_stone" + ".png");
-		} else {
-			TEXTURE = new ResourceLocation("avatarmod", "textures/entity/earthspike_stone" + ".png");
-		}
+    @Override
+    public void doRender(EntityEarthspike entity, double x, double y, double z, float entityYaw,
+                         float partialTicks) {
 
 
-		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
-		GlStateManager.enableBlend();
+        BlockPos below = entity.getPosition().offset(EnumFacing.DOWN);
+        Block belowBlock = entity.world.getBlockState(below).getBlock();
+        if (belowBlock == Blocks.GRASS) {
+            TEXTURE = new ResourceLocation("avatarmod", "textures/entity/earthspike" + ".png");
+        } else if (belowBlock == Blocks.DIRT) {
+            TEXTURE = new ResourceLocation("avatarmod", "textures/entity/earthspike_dirt" + ".png");
+        } else if (belowBlock == Blocks.SAND) {
+            TEXTURE = new ResourceLocation("avatarmod", "textures/entity/earthspike_sand" + ".png");
+        } else if (belowBlock == Blocks.SANDSTONE) {
+            TEXTURE = new ResourceLocation("avatarmod", "textures/entity/earthspike_sandstone" + ".png");
+        } else if (belowBlock == Blocks.STONE) {
+            TEXTURE = new ResourceLocation("avatarmod", "textures/entity/earthspike_stone" + ".png");
+        } else {
+            TEXTURE = new ResourceLocation("avatarmod", "textures/entity/earthspike_stone" + ".png");
+        }
 
-		GlStateManager.pushMatrix();
-		GlStateManager.translate(x, y, z);
 
-		GlStateManager.rotate(180, 1, 0, 0);
-		GlStateManager.rotate(entity.rotationPitch, 1, 0, 0);
+        Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
+        GlStateManager.enableBlend();
+
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(x, y, z);
+
+        GlStateManager.rotate(180, 1, 0, 0);
+        GlStateManager.rotate(entity.rotationPitch, 1, 0, 0);
 
 
-		model.render(entity, 0, 0, 0, 0, 0, 0.0625f);
-		GlStateManager.popMatrix();
+        model.render(entity, 0, 0, 0, 0, 0, 0.0625f);
+        GlStateManager.popMatrix();
 
-		GlStateManager.disableBlend();
+        GlStateManager.disableBlend();
 
-	}
+    }
 
-	@Override
-	protected void performGlTransforms(EntityEarthspike entity, double x, double y, double z, float entityYaw, float partialTicks) {
-		GlStateManager.pushMatrix();
-		GlStateManager.scale(entity.getSize(), entity.getSize(), entity.getSize());
-		GlStateManager.popMatrix();
-	}
+    @Override
+    protected void performGlTransforms(EntityEarthspike entity, double x, double y, double z, float entityYaw, float partialTicks) {
+        GlStateManager.pushMatrix();
+        GlStateManager.scale(entity.getWidth(), entity.getHeight(), entity.getWidth());
+        GlStateManager.popMatrix();
+    }
 
-	@Override
-	protected ResourceLocation getEntityTexture(EntityEarthspike entity) {
-		return TEXTURE;
-	}
+    @Override
+    protected ResourceLocation getEntityTexture(EntityEarthspike entity) {
+        return TEXTURE;
+    }
 }
 
 
