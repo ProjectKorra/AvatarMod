@@ -14,14 +14,6 @@ import net.minecraft.network.PacketBuffer;
 
 public class AbilityFireRedirect extends Ability {
 
-    public static final String
-            DESTROY_TIER = "destroyTier",
-            REDIRECT_TIER = "redirectTier",
-            ABSORB_FIRE = "absorbFires",
-            ABSORB_TIER = "absorbTier",
-            POWER_BOOST = "powerBoost",
-            POWER_DURATION = "powerDuration";
-
     public AbilityFireRedirect() {
         super(Firebending.ID, "fire_redirect");
     }

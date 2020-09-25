@@ -9,6 +9,12 @@ public class AbilityEarthRedirect extends Ability {
 		super(Earthbending.ID, "earth_redirect");
 	}
 
+	@Override
+	public void init() {
+		super.init();
+		addProperties(RADIUS, REDIRECT_TIER, DESTROY_TIER, AIM_ASSIST, RANGE, POWER_BOOST, POWER_DURATION);
+	}
+
 	//Creates a shockwave upon use.
 	@Override
 	public void execute(AbilityContext ctx) {
@@ -22,6 +28,11 @@ public class AbilityEarthRedirect extends Ability {
 
 	@Override
 	public boolean isUtility() {
+		return true;
+	}
+
+	@Override
+	public boolean isOffensive() {
 		return true;
 	}
 }

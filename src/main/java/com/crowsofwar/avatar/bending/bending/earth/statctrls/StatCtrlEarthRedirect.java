@@ -4,7 +4,6 @@ import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.earth.AbilityEarthRedirect;
 import com.crowsofwar.avatar.bending.bending.earth.Earthbending;
-import com.crowsofwar.avatar.bending.bending.fire.AbilityFireRedirect;
 import com.crowsofwar.avatar.client.controls.AvatarControl;
 import com.crowsofwar.avatar.entity.EntityOffensive;
 import com.crowsofwar.avatar.entity.data.OffensiveBehaviour;
@@ -41,7 +40,7 @@ public class StatCtrlEarthRedirect extends StatusControl {
         World world = ctx.getWorld();
         BendingData data = ctx.getData();
         Bender bender = ctx.getBender();
-        AbilityData abilityData = data.getAbilityData(new AbilityFireRedirect());
+        AbilityData abilityData = data.getAbilityData(new AbilityEarthRedirect());
         AbilityEarthRedirect redirect = (AbilityEarthRedirect) Abilities.get("earth_redirect");
 
         if (abilityData.getAbilityCooldown(entity) > 0)
@@ -81,8 +80,7 @@ public class StatCtrlEarthRedirect extends StatusControl {
                         }
                     }
                 }
-            }
-            else if (!rangedRedirectables.isEmpty()) {
+            } else if (!rangedRedirectables.isEmpty()) {
                 for (Entity e : rangedRedirectables) {
                     if (e instanceof EntityOffensive) {
                         if (((EntityOffensive) e).getTier() <= redirectTier) {

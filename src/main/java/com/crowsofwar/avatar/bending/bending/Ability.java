@@ -145,13 +145,21 @@ public abstract class Ability {
             GROUND_POUND = "groundPound",
             JUMPS = "numberOfJumps",
             FALL_ABSORPTION = "fallAbsorption";
-    //Shiled stuff
+    //Shield stuff
     public static final String
             CHI_PERCENT = "chiPercentOnHit",
             CHI_PER_SECOND = "chiPerSecond",
             BURNOUT_HIT = "burnOutOnHit",
-            EXHAUSTION_HIT = "exhaustionOnHit",
-            MAX_HEALTH = "maxHealth";
+            EXHAUSTION_HIT = "exhaustionOnHit";
+
+    //Redirect
+    public static final String
+            DESTROY_TIER = "destroyTier",
+            REDIRECT_TIER = "redirectTier",
+            ABSORB_FIRE = "absorbFires",
+            ABSORB_TIER = "absorbTier",
+            POWER_BOOST = "powerBoost",
+            POWER_DURATION = "powerDuration";
 
 
     private final UUID type;
