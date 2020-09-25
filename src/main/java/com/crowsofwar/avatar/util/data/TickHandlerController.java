@@ -1,5 +1,6 @@
 package com.crowsofwar.avatar.util.data;
 
+import com.crowsofwar.avatar.bending.bending.earth.tickhandlers.EarthSpikeHandler;
 import com.crowsofwar.avatar.client.gui.RenderElementHandler;
 import com.crowsofwar.avatar.bending.bending.air.tickhandlers.*;
 import com.crowsofwar.avatar.bending.bending.earth.tickhandlers.RestoreParticleHandler;
@@ -19,10 +20,9 @@ import java.util.Map;
  */
 public class TickHandlerController {
 	// NOTE: DO NOT MOVE THIS.
-	/** @formatter:off**/
-	//formatter off
+	/** @formatter:off **/
 	static Map<Integer, TickHandler> allHandlers = new HashMap<>();
-	/** @formatter:on**/
+	/** @formatter:on **/
 
 	public static TickHandler AIR_PARTICLE_SPAWNER = new AirParticleSpawner(0);
 	public static TickHandler FLAME_GLIDE_HANDLER = new FlameGlideHandler(1);
@@ -47,8 +47,9 @@ public class TickHandlerController {
 	public static TickHandler PURIFY_PARTICLE_SPAWNER = new ImmolateParticleHandler(21);
 	public static TickHandler RESTORE_PARTICLE_SPAWNER = new RestoreParticleHandler(22);
 	public static TickHandler SLIPSTREAM_WALK_HANDLER = new SlipstreamAirWalkHandler(23);
-	public static TickHandler WATERARC_COMBO_HANDLER = new WaterArcComboHandler(24);
+	public static TickHandler RELEASE_EARTHSPIKE = new EarthSpikeHandler(24);
 	public static TickHandler SHOOT_AIRBURST = new ShootAirBurstHandler(25);
+
 
 
 	public static TickHandler fromId(int id) {

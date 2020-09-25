@@ -2,6 +2,7 @@ package com.crowsofwar.avatar.bending.bending.earth.statctrls;
 
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
+import com.crowsofwar.avatar.bending.bending.earth.AbilityEarthRedirect;
 import com.crowsofwar.avatar.bending.bending.earth.Earthbending;
 import com.crowsofwar.avatar.bending.bending.fire.AbilityFireRedirect;
 import com.crowsofwar.avatar.client.controls.AvatarControl;
@@ -41,7 +42,7 @@ public class StatCtrlEarthRedirect extends StatusControl {
         BendingData data = ctx.getData();
         Bender bender = ctx.getBender();
         AbilityData abilityData = data.getAbilityData(new AbilityFireRedirect());
-        AbilityFireRedirect redirect = (AbilityFireRedirect) Abilities.get("earth_redirect");
+        AbilityEarthRedirect redirect = (AbilityEarthRedirect) Abilities.get("earth_redirect");
 
         if (abilityData.getAbilityCooldown(entity) > 0)
             return true;
