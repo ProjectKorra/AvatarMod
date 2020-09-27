@@ -45,8 +45,8 @@ public class EarthSpikeHandler extends TickHandler {
         EntityLivingBase entity = ctx.getBenderEntity();
         World world = ctx.getWorld();
         BendingData data = ctx.getData();
-        AbilityData abilityData = data.getAbilityData("earth_spike");
-        AbilityEarthspikes ability = (AbilityEarthspikes) Abilities.get("earth_spike");
+        AbilityData abilityData = data.getAbilityData("earth_spikes");
+        AbilityEarthspikes ability = (AbilityEarthspikes) Abilities.get("earth_spikes");
 
         if (ability != null) {
             VectorI targetPos = ctx.getLookPosI();

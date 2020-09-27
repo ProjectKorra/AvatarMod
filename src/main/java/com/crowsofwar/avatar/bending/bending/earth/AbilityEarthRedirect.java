@@ -12,6 +12,8 @@ public class AbilityEarthRedirect extends Ability {
 	@Override
 	public void init() {
 		super.init();
+		//Offensive utils
+		addProperties(SPEED, XP_HIT, CHI_HIT, KNOCKBACK);
 		addProperties(RADIUS, REDIRECT_TIER, DESTROY_TIER, AIM_ASSIST, RANGE, POWER_BOOST, POWER_DURATION);
 	}
 
@@ -33,6 +35,6 @@ public class AbilityEarthRedirect extends Ability {
 
 	@Override
 	public boolean isOffensive() {
-		return true;
+		return false;
 	}
 }

@@ -83,7 +83,7 @@ public class AvatarControl {
 		CONTROL_LEFT_CLICK_DOWN = new AvatarControl("LeftClickDown", false);
 		CONTROL_RIGHT_CLICK_DOWN = new AvatarControl("RightClickDown", false);
 		CONTROL_MIDDLE_CLICK_DOWN = new AvatarControl("MiddleClickDown", false);
-		CONTROL_JUMP = new AvatarControl(settings.keyBindJump.getKeyDescription(), true);
+		CONTROL_JUMP = new AvatarControl(settings.keyBindJump.getKeyDescription(), false);
 		CONTROL_LEFT_CLICK_UP = new AvatarControl("LeftClickUp", false);
 		CONTROL_RIGHT_CLICK_UP = new AvatarControl("RightClickUp", false);
 		CONTROL_MIDDLE_CLICK_UP = new AvatarControl("MiddleClickUp", false);

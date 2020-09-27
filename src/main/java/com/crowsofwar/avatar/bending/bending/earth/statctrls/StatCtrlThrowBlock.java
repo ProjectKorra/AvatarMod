@@ -37,6 +37,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.lwjgl.Sys;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -66,10 +67,9 @@ public class StatCtrlThrowBlock extends StatusControl {
                 entity);
         List<EntityFloatingBlock> blocks = world.getEntitiesWithinAABB(EntityFloatingBlock.class,
                 entity.getEntityBoundingBox().grow(3.5, 3, 3.5));
-
-
+        
         if (floating != null && abilityData != null && control != null) {
-            if (abilityData.getAbilityCooldown(entity) > 0) {
+            if (abilityData.getAbilityCooldown(entity) <= 0) {
                 float yaw = (float) Math.toRadians(entity.rotationYaw);
                 float pitch = (float) Math.toRadians(entity.rotationPitch);
 
@@ -116,6 +116,7 @@ public class StatCtrlThrowBlock extends StatusControl {
                     floating.setBehavior(new FloatingBlockBehavior.Thrown());
                 }
                 data.removeStatusControl(PLACE_BLOCK);
+
 
                 blocks = blocks.stream().filter(block -> block.getBehavior() instanceof FloatingBlockBehavior.PlayerControlled).collect(Collectors.toList());
                 if (blocks.isEmpty())

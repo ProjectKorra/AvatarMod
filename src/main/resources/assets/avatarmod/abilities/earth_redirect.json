@@ -1,6 +1,7 @@
 {
   "custom_properties": {
     "xpOnUse": 4,
+    "xpOnHit": 2,
     "level1": {
       "tier": 3,
       "chiCost": 2.5,
@@ -19,7 +20,7 @@
       "damage": 1,
       "speed": 3,
       "knockback": 1,
-      "chiHit": 0.5
+      "chiOnHit": 0.5
     },
     "level2": {
       "tier": 3,
@@ -38,7 +39,7 @@
       "knockback": 2,
       "powerBoost": 15,
       "powerDuration": 60,
-      "chiHit": 1
+      "chiOnHit": 1
     },
     "level3": {
       "tier": 4,
@@ -57,7 +58,7 @@
       "knockback": 2,
       "powerBoost": 25,
       "powerDuration": 80,
-      "chiHit": 1.25
+      "chiOnHit": 1.25
     },
     "level4_1": {
       "tier": 5,
@@ -77,7 +78,7 @@
       "damage": 3,
       "speed": 6,
       "knockback": 2,
-      "chiHit": 1.5
+      "chiOnHit": 1.5
     },
     "level4_2": {
       "tier": 5,
@@ -96,7 +97,7 @@
       "damage": 3.5,
       "speed": 7,
       "knockback": 3,
-      "chiHit": 1.75
+      "chiOnHit": 1.75
     }
   }
 }

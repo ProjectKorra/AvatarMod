@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.bending.bending.earth;
 
 import com.crowsofwar.avatar.AvatarInfo;
+import com.crowsofwar.avatar.bending.bending.earth.statctrls.StatCtrlEarthRedirect;
 import com.crowsofwar.avatar.bending.bending.fire.statctrls.StatCtrlFireRedirect;
 import com.crowsofwar.avatar.client.controls.AvatarControl;
 import com.crowsofwar.avatar.util.data.AbilityData;
@@ -33,7 +34,7 @@ public class EarthRedirectHandler {
 
                             if (controls.contains(StatusControlController.EARTH_REDIRECT)) {
                                 for (StatusControl sc : controls) {
-                                    if (!(sc instanceof StatCtrlFireRedirect))
+                                    if (!(sc instanceof StatCtrlEarthRedirect))
                                         if (sc.getSubscribedControl() == AvatarControl.CONTROL_SHIFT)
                                             removeRedirect = true;
                                 }
