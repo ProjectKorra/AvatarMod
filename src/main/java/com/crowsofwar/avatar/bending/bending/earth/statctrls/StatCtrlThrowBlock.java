@@ -67,7 +67,7 @@ public class StatCtrlThrowBlock extends StatusControl {
                 entity);
         List<EntityFloatingBlock> blocks = world.getEntitiesWithinAABB(EntityFloatingBlock.class,
                 entity.getEntityBoundingBox().grow(3.5, 3, 3.5));
-        
+
         if (floating != null && abilityData != null && control != null) {
             if (abilityData.getAbilityCooldown(entity) <= 0) {
                 float yaw = (float) Math.toRadians(entity.rotationYaw);

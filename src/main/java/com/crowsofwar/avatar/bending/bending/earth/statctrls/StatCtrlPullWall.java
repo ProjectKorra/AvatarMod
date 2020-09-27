@@ -29,7 +29,7 @@ public class StatCtrlPullWall extends StatusControl {
         EntityWallSegment wallSegment = AvatarEntity.lookupOwnedEntity(world, EntityWallSegment.class, entity);
 
         if (wallSegment.getBehavior().getClass() == WallBehavior.Waiting.class
-                && abilityData.getAbilityCooldown(entity) > 0) {
+                && abilityData.getAbilityCooldown(entity) <= 0) {
 
             List<EntityWallSegment> segments = world.getEntities(EntityWallSegment.class,
                     segment -> segment.getOwner() == entity);

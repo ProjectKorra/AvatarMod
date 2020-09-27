@@ -50,7 +50,7 @@ public class StatCtrlShootWall extends StatusControl {
         AbilityData abilityData = AbilityData.get(entity, "wall");
 
         if (ability != null && abilityData != null) {
-            if (abilityData.getAbilityCooldown(entity) > 0) {
+            if (abilityData.getAbilityCooldown(entity) <= 0) {
 
                 double range = ability.getProperty(WALL_REACH, abilityData).doubleValue() * abilityData.getDamageMult() * abilityData.getXpModifier();
                 Result raytrace = Raytrace.raytrace(world, start, direction, range, true);

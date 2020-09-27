@@ -76,7 +76,7 @@ public class StatCtrlPlaceBlock extends StatusControl {
 
 
         if (abilityData != null && control != null) {
-            if (abilityData.getAbilityCooldown(entity) > 0) {
+            if (abilityData.getAbilityCooldown(entity) <= 0) {
 				
                 float chiCost = control.getChiCost(abilityData);
                 float exhaustion = control.getExhaustion(abilityData);

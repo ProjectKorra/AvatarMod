@@ -31,7 +31,7 @@ public class StatCtrlPushWall extends StatusControl {
         EntityWallSegment wallSegment = AvatarEntity.lookupOwnedEntity(world, EntityWallSegment.class, entity);
 
         if (wallSegment != null && wallSegment.getOwner() != null &&
-                wallSegment.getBehavior().getClass() == WallBehavior.Waiting.class && abilityData.getAbilityCooldown(entity) > 0) {
+                wallSegment.getBehavior().getClass() == WallBehavior.Waiting.class && abilityData.getAbilityCooldown(entity) <= 0) {
 
             List<EntityWallSegment> segments = world.getEntities(EntityWallSegment.class,
                     segment -> segment.getOwner() == entity);
