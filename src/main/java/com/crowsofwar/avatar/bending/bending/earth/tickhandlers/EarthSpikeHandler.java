@@ -22,6 +22,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
@@ -58,11 +59,11 @@ public class EarthSpikeHandler extends TickHandler {
                     ability, abilityData.getPowerRating(), false);
 
             if (targetPos != null && targetPos.dist(entityPos) <= range) {
-                pickupBlock(ability, context, targetPos.toBlockPos());
+                abilityData.setSourceBlock(pickupBlock(ability, context, targetPos.toBlockPos()));
             } else {
                 pos = Earthbending.getClosestEarthbendableBlock(entity, context, ability, 2);
                 if (pos != null) {
-                    pickupBlock(ability, context, pos.toBlockPos());
+                    abilityData.setSourceBlock(pickupBlock(ability, context, pos.toBlockPos()));
                 }
             }
         }
@@ -95,33 +96,16 @@ public class EarthSpikeHandler extends TickHandler {
             entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(speedMod);
     }
 
-    private void pickupBlock(AbilityEarthspikes ability, AbilityContext ctx, BlockPos pos) {
+    private IBlockState pickupBlock(AbilityEarthspikes ability, AbilityContext ctx, BlockPos pos) {
 
         World world = ctx.getWorld();
-        Bender bender = ctx.getBender();
         EntityLivingBase entity = ctx.getBenderEntity();
-        BendingData data = ctx.getData();
 
         IBlockState ibs = world.getBlockState(pos);
         if (!ibs.isFullBlock() && !Earthbending.isBendable(ibs))
             ibs = world.getBlockState(pos.down());
 
         Block block = ibs.getBlock();
-
-        int maxBlocks = 1;
-        int heldBlocks = 0;
-
-        if (ctx.getLevel() == 2)
-            maxBlocks = 2;
-        else if (ctx.getDynamicPath().equals(AbilityData.AbilityTreePath.FIRST))
-            maxBlocks = 3;
-
-        List<EntityFloatingBlock> blocks = world.getEntitiesWithinAABB(EntityFloatingBlock.class,
-                entity.getEntityBoundingBox().grow(3, 2, 3));
-        for (EntityFloatingBlock b : blocks) {
-            if (b.getController() == entity)
-                heldBlocks++;
-        }
 
         boolean bendable = Earthbending.isBendable(ibs);
         bendable |= !bendable && !Earthbending.isBendable(world, pos.down(), world.getBlockState(pos.down()), 2)
@@ -141,13 +125,12 @@ public class EarthSpikeHandler extends TickHandler {
         bendable |= !bendable && !Earthbending.isBendable(world, pos.down(), world.getBlockState(pos.down()), 2)
                 && !(block instanceof BlockSnow || block instanceof BlockTallGrass) && world.getBlockState(pos).isNormalCube();
 
-        if (!world.isAirBlock(pos) && bendable && heldBlocks < maxBlocks) {
-
-
+        if (!world.isAirBlock(pos) && bendable) {
+            return ibs;
         } else {
             world.playSound(null, entity.getPosition(), SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.PLAYERS,
                     1, (float) (world.rand.nextGaussian() / 0.25 + 0.375));
         }
-
+        return Blocks.AIR.getDefaultState();
     }
 }

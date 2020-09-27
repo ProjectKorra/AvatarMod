@@ -21,8 +21,10 @@ import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.gorecore.util.GoreCoreByteBufUtil;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -53,6 +55,7 @@ public class AbilityData {
 	private boolean shouldRegenBurnout;
 	//This is the most small brain solution ever, but we're rewriting later so who really cares
 	private int jumpNumber;
+	private IBlockState sourceBlock;
 	/**
 	 * Current burnout amount of the ability.
 	 * <p>
@@ -92,6 +95,7 @@ public class AbilityData {
 		this.powerRating = 0;
 		this.shouldRegenBurnout = true;
 		this.jumpNumber = 1;
+		this.sourceBlock = Blocks.AIR.getDefaultState();
 	}
 
 	public AbilityData(BendingData data, String abilityName, boolean switchPath) {
@@ -107,6 +111,7 @@ public class AbilityData {
 		this.powerRating = 0;
 		this.shouldRegenBurnout = true;
 		this.jumpNumber = 1;
+		this.sourceBlock = Blocks.AIR.getDefaultState();
 	}
 
 	/**
@@ -186,6 +191,18 @@ public class AbilityData {
 
 	public void decrementCooldown() {
 		abilityCooldown--;
+	}
+
+	public void setSourceBlock(IBlockState state) {
+		this.sourceBlock = state;
+	}
+
+	public IBlockState getSourceBlock() {
+		return this.sourceBlock;
+	}
+
+	public void clearSourceBlock() {
+		this.sourceBlock = Blocks.AIR.getDefaultState();
 	}
 
 	public double getPowerRating() {
