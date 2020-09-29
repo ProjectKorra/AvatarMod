@@ -703,4 +703,9 @@ public abstract class Ability {
             AvatarLog.info("A mod attempted to set an ability's properties, but they were already initialised.");
         }
     }
+
+    public float powerModify(float val, AbilityData abilityData) {
+        val *= abilityData.getDamageMult() * abilityData.getXpModifier();
+        return val;
+    }
 }

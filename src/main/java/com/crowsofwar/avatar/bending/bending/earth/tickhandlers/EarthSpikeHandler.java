@@ -66,6 +66,9 @@ public class EarthSpikeHandler extends TickHandler {
                     abilityData.setSourceBlock(pickupBlock(ability, context, pos.toBlockPos()));
                 }
             }
+            if (Earthbending.isBendable(abilityData.getSourceBlock()))
+                abilityData.incrementSourceTime();
+            else abilityData.setSourceTime(0);
         }
         return false;
     }
@@ -73,16 +76,65 @@ public class EarthSpikeHandler extends TickHandler {
     @Override
     public void onRemoved(BendingContext ctx) {
         super.onRemoved(ctx);
+
         World world = ctx.getWorld();
+        Bender bender = ctx.getBender();
         EntityLivingBase entity = ctx.getBenderEntity();
         AbilityEarthspikes ability = (AbilityEarthspikes) Abilities.get("earth_spikes");
         AbilityData abilityData = AbilityData.get(entity, "earth_spikes");
 
         if (ability != null && abilityData != null) {
-            EntityEarthspike earthspike = new EntityEarthspike(world);
-            earthspike.setOwner(entity);
-            if (!world.isRemote)
-                world.spawnEntity(earthspike);
+            int chargeTime, chargedTime, cooldown, tier;
+            float damage, knockback, chiHit, chiCost, exhaustion, burnout, size, chargeMult,
+            maxSize, maxDamage;
+
+
+            chargeTime = ability.getProperty(Ability.CHARGE_TIME, abilityData).intValue();
+            cooldown = ability.getCooldown(abilityData);
+            chiCost = ability.getChiCost(abilityData);
+            exhaustion = ability.getExhaustion(abilityData);
+            burnout = ability.getBurnOut(abilityData);
+            chiHit = ability.getProperty(Ability.CHI_HIT, abilityData).floatValue();
+            size = ability.getProperty(Ability.SIZE, abilityData).floatValue();
+            damage = ability.getProperty(Ability.DAMAGE, abilityData).floatValue();
+            maxDamage = ability.getProperty(Ability.MAX_DAMAGE, abilityData).floatValue();
+            maxSize = ability.getProperty(Ability.MAX_SIZE, abilityData).floatValue();
+            tier = ability.getCurrentTier(abilityData);
+
+            chiHit = ability.powerModify(chiHit, abilityData);
+            size = ability.powerModify(size, abilityData);
+            damage = ability.powerModify(size, abilityData);
+            maxDamage = ability.powerModify(maxDamage, abilityData);
+            maxSize = ability.powerModify(maxSize, abilityData);
+            chargeTime = (int) ability.powerModify(chargeTime, abilityData);
+
+            chargedTime = Math.min(abilityData.getSourceTime(), chargeTime);
+
+            chargeMult = chargedTime / (float) chargeTime;
+
+            if (abilityData.getAbilityCooldown(entity) <= 0 && chargeMult > 0 && bender.consumeChi(chiCost)) {
+
+                damage *= (0.5 + chargeMult / 2);
+                size *= (0.5 + chargeMult / 2);
+                chiHit *= (0.5 + chargeMult / 2);
+
+                damage = Math.min(damage, maxDamage);
+                size = Math.min(size, maxSize);
+
+                EntityEarthspike earthspike = new EntityEarthspike(world);
+                earthspike.setOwner(entity);
+                earthspike.setTier(tier);
+                earthspike.setEntitySize(size, size / 2);
+                earthspike.setChiHit(chiHit);
+                earthspike.setDamage(damage);
+                earthspike.setPosition(abilityData.getSourceInfo().getBlockPos().add(0, 1, 0));
+                earthspike.setTier(tier);
+                earthspike.setAbility(ability);
+                earthspike.setDamageSource("avatar_Earth_earthSpike");
+                if (!world.isRemote)
+                    world.spawnEntity(earthspike);
+
+            }
         }
     }
 

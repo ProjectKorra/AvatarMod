@@ -245,6 +245,10 @@ public abstract class AvatarEntity extends Entity {
         setPosition(position.x, position.y, position.z);
     }
 
+    public void setPosition(BlockPos position) {
+        setPosition(position.getX(), position.getY(), position.getZ());
+    }
+
     public int getAvId() {
         return dataManager.get(SYNC_ID);
     }
