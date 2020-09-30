@@ -35,6 +35,8 @@ import javax.annotation.Nullable;
  */
 public class EntityEarthspike extends EntityOffensive {
 
+    int sizeTicks = 0;
+
     public EntityEarthspike(World world) {
         super(world);
         setPositionNonDirty();
@@ -52,7 +54,7 @@ public class EntityEarthspike extends EntityOffensive {
 
     @Override
     public boolean shouldDissipate() {
-        return true;
+        return ticksExisted >= getLifeTime();
     }
 
     @Override
@@ -86,15 +88,20 @@ public class EntityEarthspike extends EntityOffensive {
 
     @Override
     public void Dissipate() {
-        setEntitySize(getHeight() / 1.35F, getWidth() / 1.35F);
-        if (getHeight() < 0.5) {
+        float heightMult, widthMult;
+        heightMult = getHeight() >= 1 ? 0.8F * getHeight() : (float) Math.pow(getHeight(), 1.25);
+        widthMult = getWidth() >= 1 ? 0.8F * getWidth() : (float) Math.pow(getWidth(), 1.25);
+
+        setEntitySize(heightMult / 1.075F, widthMult / 1.125F);
+
+        if (getHeight() < 0.125 && shouldDissipate()) {
             spawnDissipateParticles(world, AvatarEntityUtils.getBottomMiddleOfEntity(this));
             setDead();
         }
-        if (ticksExisted > getLifeTime() + 20) {
-            setDead();
-            spawnDissipateParticles(world, AvatarEntityUtils.getBottomMiddleOfEntity(this));
-        }
+//        if (ticksExisted > getLifeTime() + 20) {
+//            setDead();
+//            spawnDissipateParticles(world, AvatarEntityUtils.getBottomMiddleOfEntity(this));
+//        }
     }
 
     @Nullable
@@ -104,9 +111,8 @@ public class EntityEarthspike extends EntityOffensive {
     }
 
     @Override
-    public void onEntityUpdate() {
-        // Add width and height stuff
-        super.onEntityUpdate();
+    public void onUpdate() {
+        super.onUpdate();
 
         this.motionX *= 0;
         this.motionY *= 0;
@@ -123,15 +129,31 @@ public class EntityEarthspike extends EntityOffensive {
             }
         }
 
-        if (!Earthbending.isBendable(world, getPosition(), world.getBlockState(getPosition().down()), 2))
-            this.Dissipate();
+        if (!shouldDissipate()) {
+            float heightMult, widthMult;
+            heightMult = getHeight() <= 1 ? 1.25F * getHeight() : (float) Math.pow(getHeight(), 1.25);
+            widthMult = getWidth() <= 1 ? 1.25F * getWidth() : (float) Math.pow(getWidth(), 1.25);
+            if (getHeight() < getMaxHeight())
+                setEntitySize(heightMult * 1.125F, getWidth());
+            else setEntitySize(getMaxHeight(), getWidth());
+
+            if (getWidth() < getMaxWidth())
+                setEntitySize(getHeight(), widthMult * 1.125F);
+            else setEntitySize(getHeight(), getMaxWidth());
+
+            if (!Earthbending.isBendable(world, getPosition(), world.getBlockState(getPosition().down()), 2))
+                this.Dissipate();
+
+            if (getMaxWidth() == getWidth())
+                sizeTicks++;
+            if (sizeTicks <= 1)
+                spawnDissipateParticles(world, AvatarEntityUtils.getBottomMiddleOfEntity(this));
+        }
     }
 
     @Override
     public void setDead() {
         super.setDead();
-        if (this.isDead && !world.isRemote)
-            Thread.dumpStack();
     }
 
     @Override

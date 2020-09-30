@@ -48,6 +48,10 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
             .createKey(EntityOffensive.class, DataSerializers.FLOAT);
     private static final DataParameter<Float> SYNC_WIDTH = EntityDataManager
             .createKey(EntityOffensive.class, DataSerializers.FLOAT);
+    private static final DataParameter<Float> SYNC_MAX_HEIGHT = EntityDataManager
+            .createKey(EntityOffensive.class, DataSerializers.FLOAT);
+    private static final DataParameter<Float> SYNC_MAX_WIDTH = EntityDataManager
+            .createKey(EntityOffensive.class, DataSerializers.FLOAT);
     private static final DataParameter<OffensiveBehaviour> SYNC_BEHAVIOR = EntityDataManager
             .createKey(EntityOffensive.class, OffensiveBehaviour.DATA_SERIALIZER);
     private static final DataParameter<Boolean> SYNC_PIERCES = EntityDataManager
@@ -161,6 +165,14 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
         return dataManager.get(SYNC_WIDTH);
     }
 
+    public float getMaxHeight() {
+        return dataManager.get(SYNC_MAX_HEIGHT);
+    }
+
+    public float getMaxWidth() {
+        return dataManager.get(SYNC_MAX_WIDTH);
+    }
+
     public float getAvgSize() {
         if (getHeight() == getWidth()) {
             return getHeight();
@@ -175,6 +187,16 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
     public void setEntitySize(float size) {
         dataManager.set(SYNC_HEIGHT, size);
         dataManager.set(SYNC_WIDTH, size);
+    }
+
+    public void setMaxEntitySize(float height, float width) {
+        dataManager.set(SYNC_MAX_HEIGHT, height);
+        dataManager.set(SYNC_MAX_WIDTH, width);
+    }
+
+    public void setMaxEntitySize(float size) {
+        dataManager.set(SYNC_MAX_HEIGHT, size);
+        dataManager.set(SYNC_MAX_WIDTH, size);
     }
 
     public float getDamage() {
@@ -265,6 +287,8 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
         dataManager.register(SYNC_LIFETIME, 20);
         dataManager.register(SYNC_WIDTH, 0.1F);
         dataManager.register(SYNC_HEIGHT, 0.1F);
+        dataManager.register(SYNC_MAX_WIDTH, 0.1F);
+        dataManager.register(SYNC_MAX_HEIGHT, 0.1F);
         dataManager.register(SYNC_BEHAVIOR, new OffensiveBehaviour.Idle());
         dataManager.register(SYNC_PIERCES, false);
         dataManager.register(SYNC_EXPLOSION_SIZE, 1F);

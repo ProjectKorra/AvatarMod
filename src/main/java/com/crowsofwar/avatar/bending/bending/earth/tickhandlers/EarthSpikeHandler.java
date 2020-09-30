@@ -6,8 +6,8 @@ import com.crowsofwar.avatar.bending.bending.SourceInfo;
 import com.crowsofwar.avatar.bending.bending.earth.AbilityEarthspikes;
 import com.crowsofwar.avatar.bending.bending.earth.Earthbending;
 import com.crowsofwar.avatar.entity.EntityEarthspike;
+import com.crowsofwar.avatar.entity.EntityEarthspikeSpawner;
 import com.crowsofwar.avatar.entity.mob.EntityBender;
-import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.Raytrace;
 import com.crowsofwar.avatar.util.data.*;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
@@ -128,8 +128,6 @@ public class EarthSpikeHandler extends TickHandler {
             else if (entity instanceof EntityBender)
                 chiCost = 0;
 
-            System.out.println(chargeMult);
-
             if (abilityData.getAbilityCooldown(entity) <= 0 && chargeMult > 0 && bender.consumeChi(chiCost)) {
                 if (Earthbending.isBendable(abilityData.getSourceBlock())) {
                     damage *= (1.0 + chargeMult / 2F);
@@ -154,11 +152,12 @@ public class EarthSpikeHandler extends TickHandler {
                         realPos = raytrace.getPosPrecise();
                     else realPos = realPos.plus(pos.getX(), pos.getY() + 0.5, pos.getZ());
 
-                    //if (realPos.toBlockPos().down() == pos) {
+                    if (Earthbending.isBendable(world, realPos.toBlockPos().down(), state, 2)) {
                         EntityEarthspike earthspike = new EntityEarthspike(world);
                         earthspike.setOwner(entity);
                         earthspike.setTier(tier);
-                        earthspike.setEntitySize(size, size / 1.5F);
+                        earthspike.setMaxEntitySize(size, size / 1.5F);
+                        earthspike.setEntitySize(0.05F, 0.05F);
                         earthspike.setChiHit(chiHit);
                         earthspike.setDamage(damage);
                         earthspike.setPosition(realPos);
@@ -171,19 +170,27 @@ public class EarthSpikeHandler extends TickHandler {
                         earthspike.setXp(xp);
                         if (!world.isRemote)
                             world.spawnEntity(earthspike);
-                        if (world.isRemote)
+                        else {
                             for (int i = 0; i < (int) (size * 30); i++)
                                 world.spawnParticle(EnumParticleTypes.BLOCK_CRACK, realPos.x(), realPos.y() + i / (size * 30),
-                                    realPos.z(), 0, 0, 0, Block.getStateId(state));
+                                        realPos.z(), 0, 0, 0, Block.getStateId(state));
+                        }
 
-                        abilityData.setAbilityCooldown(cooldown);
-                        if (entity instanceof EntityPlayer)
-                            ((EntityPlayer) entity).addExhaustion(exhaustion);
-                        abilityData.addBurnout(burnout);
-                        abilityData.clearSourceTime();
-                        abilityData.clearSourceBlock();
-                   // }
+                        if (ability.getBooleanProperty(AbilityEarthspikes.TRACE_SPIKES, abilityData)) {
+                           // EntityEarthspikeSpawner spawner = new EntityEarthspikeSpawner(world);
+                        }
+                    }
+                    else bender.sendMessage("avatar.earthSourceFail");
+
+                    //Inhibitors
+                    abilityData.setAbilityCooldown(cooldown);
+                    if (entity instanceof EntityPlayer)
+                        ((EntityPlayer) entity).addExhaustion(exhaustion);
+                    abilityData.addBurnout(burnout);
                 }
+                abilityData.clearSourceTime();
+                abilityData.clearSourceBlock();
+
             }
         }
     }
