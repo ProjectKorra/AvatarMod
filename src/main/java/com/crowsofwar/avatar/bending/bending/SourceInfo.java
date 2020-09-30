@@ -4,6 +4,7 @@ import com.crowsofwar.gorecore.util.GoreCoreByteBufUtil;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.BlockPos;
@@ -17,6 +18,9 @@ public class SourceInfo {
     private BlockPos pos;
 
     public SourceInfo() {
+        this.state = Blocks.AIR.getDefaultState();
+        this.time = -1;
+        this.pos = new BlockPos(0, 0, 0);
 
     }
 

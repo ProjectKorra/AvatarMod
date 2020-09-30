@@ -10,7 +10,7 @@
       "burnOutRecoverTick": 0.26,
       "performanceAmount": 20,
       "lifeTime": 30,
-      "size": 0.5,
+      "size": 0.75,
       "speed": 5,
       "knockback": 1,
       "chiOnHit": 1.5,
@@ -18,7 +18,7 @@
       "range": 5,
       "chargeTime": 40,
       "maxDamage": 6,
-      "maxSize": 0.75,
+      "maxSize": 1.25,
       "spreadCircular": false,
       "radius": 3,
       "traceSpikes": false
@@ -32,7 +32,7 @@
       "burnOutRecoverTick": 0.27,
       "performanceAmount": 25,
       "lifeTime": 35,
-      "size": 0.75,
+      "size": 1.0,
       "speed": 7,
       "knockback": 2,
       "chiOnHit": 1.625,
@@ -40,7 +40,7 @@
       "range": 8,
       "chargeTime": 50,
       "maxDamage": 8,
-      "maxSize": 1.0,
+      "maxSize": 1.5,
       "radius": 3.5
     },
     "level3": {
@@ -52,7 +52,7 @@
       "burnOutRecoverTick": 0.28,
       "performanceAmount": 30,
       "lifeTime": 40,
-      "size": 1.0,
+      "size": 1.25,
       "speed": 9,
       "knockback": 3,
       "chiOnHit": 1.75,
@@ -60,7 +60,7 @@
       "range": 10,
       "chargeTime": 55,
       "maxDamage": 10,
-      "maxSize": 1.25,
+      "maxSize": 1.75,
       "radius": 4,
       "traceSpikes": true
     },

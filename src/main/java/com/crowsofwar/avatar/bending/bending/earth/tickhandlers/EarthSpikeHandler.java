@@ -2,15 +2,14 @@ package com.crowsofwar.avatar.bending.bending.earth.tickhandlers;
 
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
+import com.crowsofwar.avatar.bending.bending.SourceInfo;
 import com.crowsofwar.avatar.bending.bending.earth.AbilityEarthspikes;
 import com.crowsofwar.avatar.bending.bending.earth.Earthbending;
 import com.crowsofwar.avatar.entity.EntityEarthspike;
-import com.crowsofwar.avatar.entity.EntityFloatingBlock;
+import com.crowsofwar.avatar.entity.mob.EntityBender;
+import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.Raytrace;
-import com.crowsofwar.avatar.util.data.AbilityData;
-import com.crowsofwar.avatar.util.data.Bender;
-import com.crowsofwar.avatar.util.data.BendingData;
-import com.crowsofwar.avatar.util.data.TickHandler;
+import com.crowsofwar.avatar.util.data.*;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
 import com.crowsofwar.gorecore.util.Vector;
@@ -22,14 +21,14 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.init.Blocks;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -55,22 +54,31 @@ public class EarthSpikeHandler extends TickHandler {
             VectorI entityPos = new VectorI((int) lookPos.x, (int) lookPos.y, (int) lookPos.z);
             Vector pos;
             int range = ability.getProperty(Ability.RANGE, abilityData).intValue();
-            AbilityContext context = new AbilityContext(data, entity, ctx.getBender(), Raytrace.getTargetBlock(entity, range, false),
+
+            range = (int) ability.powerModify(range, abilityData);
+
+            Raytrace.Result raytrace = Raytrace.raytrace(world, Vector.getEyePos(entity).toMinecraft(), entity.getLookVec(),
+                    range, false);
+            AbilityContext context = new AbilityContext(data, entity, ctx.getBender(), raytrace,
                     ability, abilityData.getPowerRating(), false);
 
+            if (raytrace.hitSomething())
+                targetPos = raytrace.getPos();
             if (targetPos != null && targetPos.dist(entityPos) <= range) {
-                abilityData.setSourceBlock(pickupBlock(ability, context, targetPos.toBlockPos()));
+                abilityData.getSourceInfo().setBlockPos(targetPos.toBlockPos());
+                abilityData.setSourceInfo(findBlock(ability, context, targetPos.toBlockPos(), abilityData.getSourceTime()));
             } else {
                 pos = Earthbending.getClosestEarthbendableBlock(entity, context, ability, 2);
                 if (pos != null) {
-                    abilityData.setSourceBlock(pickupBlock(ability, context, pos.toBlockPos()));
+                    abilityData.getSourceInfo().setBlockPos(pos.toBlockPos());
+                    abilityData.setSourceInfo(findBlock(ability, context, pos.toBlockPos(), abilityData.getSourceTime()));
                 }
             }
             if (Earthbending.isBendable(abilityData.getSourceBlock()))
                 abilityData.incrementSourceTime();
             else abilityData.setSourceTime(0);
         }
-        return false;
+        return !data.hasStatusControl(StatusControlController.RELEASE_EARTH_SPIKE);
     }
 
     @Override
@@ -86,7 +94,7 @@ public class EarthSpikeHandler extends TickHandler {
         if (ability != null && abilityData != null) {
             int chargeTime, chargedTime, cooldown, tier;
             float damage, knockback, chiHit, chiCost, exhaustion, burnout, size, chargeMult,
-            maxSize, maxDamage;
+                    maxSize, maxDamage, xp;
 
 
             chargeTime = ability.getProperty(Ability.CHARGE_TIME, abilityData).intValue();
@@ -95,45 +103,87 @@ public class EarthSpikeHandler extends TickHandler {
             exhaustion = ability.getExhaustion(abilityData);
             burnout = ability.getBurnOut(abilityData);
             chiHit = ability.getProperty(Ability.CHI_HIT, abilityData).floatValue();
-            size = ability.getProperty(Ability.SIZE, abilityData).floatValue();
+            size = ability.getProperty(Ability.SIZE, abilityData).floatValue() * 1.5F;
             damage = ability.getProperty(Ability.DAMAGE, abilityData).floatValue();
             maxDamage = ability.getProperty(Ability.MAX_DAMAGE, abilityData).floatValue();
-            maxSize = ability.getProperty(Ability.MAX_SIZE, abilityData).floatValue();
+            maxSize = ability.getProperty(Ability.MAX_SIZE, abilityData).floatValue() * 1.5F;
+            knockback = ability.getProperty(Ability.KNOCKBACK, abilityData).floatValue() / 10;
             tier = ability.getCurrentTier(abilityData);
+            xp = ability.getProperty(Ability.XP_HIT, abilityData).floatValue();
 
             chiHit = ability.powerModify(chiHit, abilityData);
             size = ability.powerModify(size, abilityData);
-            damage = ability.powerModify(size, abilityData);
+            damage = ability.powerModify(damage, abilityData);
             maxDamage = ability.powerModify(maxDamage, abilityData);
             maxSize = ability.powerModify(maxSize, abilityData);
             chargeTime = (int) ability.powerModify(chargeTime, abilityData);
+            knockback = ability.powerModify(knockback, abilityData);
 
             chargedTime = Math.min(abilityData.getSourceTime(), chargeTime);
 
             chargeMult = chargedTime / (float) chargeTime;
 
+            if (bender.isCreativeMode())
+                burnout = chiCost = exhaustion = cooldown = 0;
+            else if (entity instanceof EntityBender)
+                chiCost = 0;
+
+            System.out.println(chargeMult);
+
             if (abilityData.getAbilityCooldown(entity) <= 0 && chargeMult > 0 && bender.consumeChi(chiCost)) {
+                if (Earthbending.isBendable(abilityData.getSourceBlock())) {
+                    damage *= (1.0 + chargeMult / 2F);
+                    size *= (1.0 + chargeMult / 2F);
+                    chiHit *= (1.0 + chargeMult / 2F);
 
-                damage *= (0.5 + chargeMult / 2);
-                size *= (0.5 + chargeMult / 2);
-                chiHit *= (0.5 + chargeMult / 2);
+                    damage = Math.min(damage, maxDamage);
+                    size = Math.min(size, maxSize);
 
-                damage = Math.min(damage, maxDamage);
-                size = Math.min(size, maxSize);
+                    BlockPos pos = abilityData.getSourceInfo().getBlockPos();
+                    Vector realPos;
+                    IBlockState state = abilityData.getSourceBlock();
+                    int range = ability.getProperty(Ability.RANGE, abilityData).intValue();
 
-                EntityEarthspike earthspike = new EntityEarthspike(world);
-                earthspike.setOwner(entity);
-                earthspike.setTier(tier);
-                earthspike.setEntitySize(size, size / 2);
-                earthspike.setChiHit(chiHit);
-                earthspike.setDamage(damage);
-                earthspike.setPosition(abilityData.getSourceInfo().getBlockPos().add(0, 1, 0));
-                earthspike.setTier(tier);
-                earthspike.setAbility(ability);
-                earthspike.setDamageSource("avatar_Earth_earthSpike");
-                if (!world.isRemote)
-                    world.spawnEntity(earthspike);
+                    range = (int) ability.powerModify(range, abilityData);
 
+                    Raytrace.Result raytrace = Raytrace.raytrace(world, Vector.getEyePos(entity).toMinecraft(), entity.getLookVec(),
+                            range, false);
+
+                    realPos = Vector.ZERO;
+                    if (raytrace.hitSomething() && raytrace.getPosPrecise() != null)
+                        realPos = raytrace.getPosPrecise();
+                    else realPos = realPos.plus(pos.getX(), pos.getY() + 0.5, pos.getZ());
+
+                    //if (realPos.toBlockPos().down() == pos) {
+                        EntityEarthspike earthspike = new EntityEarthspike(world);
+                        earthspike.setOwner(entity);
+                        earthspike.setTier(tier);
+                        earthspike.setEntitySize(size, size / 1.5F);
+                        earthspike.setChiHit(chiHit);
+                        earthspike.setDamage(damage);
+                        earthspike.setPosition(realPos);
+                        earthspike.setTier(tier);
+                        earthspike.setVelocity(Vec3d.ZERO);
+                        earthspike.setLifeTime((int) (size * 30));
+                        earthspike.setAbility(ability);
+                        earthspike.setPush(knockback);
+                        earthspike.setDamageSource("avatar_Earth_earthSpike");
+                        earthspike.setXp(xp);
+                        if (!world.isRemote)
+                            world.spawnEntity(earthspike);
+                        if (world.isRemote)
+                            for (int i = 0; i < (int) (size * 30); i++)
+                                world.spawnParticle(EnumParticleTypes.BLOCK_CRACK, realPos.x(), realPos.y() + i / (size * 30),
+                                    realPos.z(), 0, 0, 0, Block.getStateId(state));
+
+                        abilityData.setAbilityCooldown(cooldown);
+                        if (entity instanceof EntityPlayer)
+                            ((EntityPlayer) entity).addExhaustion(exhaustion);
+                        abilityData.addBurnout(burnout);
+                        abilityData.clearSourceTime();
+                        abilityData.clearSourceBlock();
+                   // }
+                }
             }
         }
     }
@@ -148,8 +198,8 @@ public class EarthSpikeHandler extends TickHandler {
             entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(speedMod);
     }
 
-    private IBlockState pickupBlock(AbilityEarthspikes ability, AbilityContext ctx, BlockPos pos) {
-
+    private SourceInfo findBlock(AbilityEarthspikes ability, AbilityContext ctx, BlockPos pos, int time) {
+        SourceInfo sourceInfo = new SourceInfo();
         World world = ctx.getWorld();
         EntityLivingBase entity = ctx.getBenderEntity();
 
@@ -178,11 +228,14 @@ public class EarthSpikeHandler extends TickHandler {
                 && !(block instanceof BlockSnow || block instanceof BlockTallGrass) && world.getBlockState(pos).isNormalCube();
 
         if (!world.isAirBlock(pos) && bendable) {
-            return ibs;
+            sourceInfo.setState(ibs);
+            sourceInfo.setBlockPos(pos);
+            sourceInfo.setWorld(world);
+            sourceInfo.setTime(time);
         } else {
             world.playSound(null, entity.getPosition(), SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.PLAYERS,
                     1, (float) (world.rand.nextGaussian() / 0.25 + 0.375));
         }
-        return Blocks.AIR.getDefaultState();
+        return sourceInfo;
     }
 }

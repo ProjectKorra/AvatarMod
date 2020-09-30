@@ -50,6 +50,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import scala.collection.parallel.ParIterableLike;
 
 import java.util.*;
 
@@ -106,8 +107,8 @@ public class ClientInput implements IControlsHandler {
 	@Override
 	public boolean isControlPressed(AvatarControl control) {
 
-		if (control == CONTROL_LEFT_CLICK) return mouseLeft;
-		if (control == CONTROL_RIGHT_CLICK) return mouseRight;
+		if (control == CONTROL_LEFT_CLICK) return Minecraft.getMinecraft().gameSettings.keyBindAttack.isPressed();
+		if (control == CONTROL_RIGHT_CLICK) return Minecraft.getMinecraft().gameSettings.keyBindPickBlock.isPressed();
 		if (control == CONTROL_MIDDLE_CLICK) return mouseMiddle;
 		if (control == CONTROL_LEFT_CLICK_DOWN) return mouseLeft && !wasLeft;
 		if (control == CONTROL_RIGHT_CLICK_DOWN) return mouseRight && !wasRight;
@@ -115,7 +116,8 @@ public class ClientInput implements IControlsHandler {
 		if (control == CONTROL_LEFT_CLICK_UP) return !mouseLeft && wasLeft;
 		if (control == CONTROL_RIGHT_CLICK_UP) return !mouseRight && wasRight;
 		if (control == CONTROL_MIDDLE_CLICK_UP) return !mouseMiddle && wasMiddle;
-		if (control == CONTROL_SHIFT) return Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
+		if (control == CONTROL_SHIFT) return Minecraft.getMinecraft().gameSettings.keyBindSneak.isPressed();
+		if (control == CONTROL_JUMP) return Minecraft.getMinecraft().gameSettings.keyBindJump.isPressed();
 		AvatarLog.warn(AvatarLog.WarningType.INVALID_CODE, "ClientInput- Unknown control: " + control);
 		return false;
 
@@ -124,8 +126,8 @@ public class ClientInput implements IControlsHandler {
 	@Override
 	public boolean isControlDown(AvatarControl control) {
 
-		if (control == CONTROL_LEFT_CLICK) return mouseLeft;
-		if (control == CONTROL_RIGHT_CLICK) return mouseRight;
+		if (control == CONTROL_LEFT_CLICK) return Minecraft.getMinecraft().gameSettings.keyBindAttack.isKeyDown();
+		if (control == CONTROL_RIGHT_CLICK) return Minecraft.getMinecraft().gameSettings.keyBindPickBlock.isKeyDown();
 		if (control == CONTROL_MIDDLE_CLICK) return mouseMiddle;
 		if (control == CONTROL_LEFT_CLICK_DOWN) return mouseLeft;
 		if (control == CONTROL_RIGHT_CLICK_DOWN) return mouseRight;
@@ -133,7 +135,8 @@ public class ClientInput implements IControlsHandler {
 		if (control == CONTROL_LEFT_CLICK_UP) return !mouseLeft;
 		if (control == CONTROL_RIGHT_CLICK_UP) return !mouseRight;
 		if (control == CONTROL_MIDDLE_CLICK_UP) return !mouseMiddle;
-		if (control == CONTROL_SHIFT) return Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
+		if (control == CONTROL_SHIFT) return Minecraft.getMinecraft().gameSettings.keyBindSneak.isKeyDown();
+		if (control == CONTROL_JUMP) return Minecraft.getMinecraft().gameSettings.keyBindJump.isKeyDown();
 		AvatarLog.warn(AvatarLog.WarningType.INVALID_CODE, "ClientInput- Unknown control: " + control);
 		return false;
 

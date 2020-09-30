@@ -17,11 +17,18 @@
 
 package com.crowsofwar.avatar.entity;
 
+import com.crowsofwar.avatar.bending.bending.BendingStyle;
+import com.crowsofwar.avatar.bending.bending.earth.Earthbending;
+import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
 
 /**
  * @author CrowsOfWar
@@ -30,18 +37,80 @@ public class EntityEarthspike extends EntityOffensive {
 
     public EntityEarthspike(World world) {
         super(world);
-        this.noClip = true;
+        setPositionNonDirty();
     }
 
+    @Override
+    public void setPosition(double x, double y, double z) {
+        super.setPosition(x, y, z);
+    }
+
+    @Override
+    public boolean shouldExplode() {
+        return false;
+    }
+
+    @Override
+    public boolean shouldDissipate() {
+        return true;
+    }
+
+    @Override
+    public boolean isPiercing() {
+        return true;
+    }
+
+    @Override
+    public BendingStyle getElement() {
+        return new Earthbending();
+    }
+
+    @Override
+    public void spawnDissipateParticles(World world, Vec3d pos) {
+        if (world.isRemote) {
+            for (int i = 0; i < getLifeTime() * 0.5; i++)
+                world.spawnParticle(EnumParticleTypes.BLOCK_CRACK, pos.x, pos.y, pos.z, world.rand.nextGaussian() / 20,
+                        world.rand.nextDouble() / 20, world.rand.nextGaussian() / 20, Block.getStateId(world.getBlockState(getPosition().down())));
+        }
+    }
+
+    @Override
+    public void spawnExplosionParticles(World world, Vec3d pos) {
+
+    }
+
+    @Override
+    public void spawnPiercingParticles(World world, Vec3d pos) {
+
+    }
+
+    @Override
+    public void Dissipate() {
+        setEntitySize(getHeight() / 1.35F, getWidth() / 1.35F);
+        if (getHeight() < 0.5) {
+            spawnDissipateParticles(world, AvatarEntityUtils.getBottomMiddleOfEntity(this));
+            setDead();
+        }
+        if (ticksExisted > getLifeTime() + 20) {
+            setDead();
+            spawnDissipateParticles(world, AvatarEntityUtils.getBottomMiddleOfEntity(this));
+        }
+    }
+
+    @Nullable
+    @Override
+    public SoundEvent[] getSounds() {
+        return new SoundEvent[0];
+    }
 
     @Override
     public void onEntityUpdate() {
         // Add width and height stuff
-        super.onUpdate();
+        super.onEntityUpdate();
 
-        this.motionX = 0;
-        this.motionY = 0;
-        this.motionZ = 0;
+        this.motionX *= 0;
+        this.motionY *= 0;
+        this.motionZ *= 0;
 
 
         // Destroy non-solid blocks in the Earthspike
@@ -53,6 +122,35 @@ public class EntityEarthspike extends EntityOffensive {
                 setDead();
             }
         }
+
+        if (!Earthbending.isBendable(world, getPosition(), world.getBlockState(getPosition().down()), 2))
+            this.Dissipate();
     }
 
+    @Override
+    public void setDead() {
+        super.setDead();
+        if (this.isDead && !world.isRemote)
+            Thread.dumpStack();
+    }
+
+    @Override
+    public boolean canBePushed() {
+        return false;
+    }
+
+    @Override
+    public boolean canBeAttackedWithItem() {
+        return false;
+    }
+
+    @Override
+    public int getFireTime() {
+        return 0;
+    }
+
+    @Override
+    public void resetPositionToBB() {
+        //Fixes janky positioning
+    }
 }

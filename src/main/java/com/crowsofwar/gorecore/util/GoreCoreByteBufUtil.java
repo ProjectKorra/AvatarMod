@@ -56,10 +56,13 @@ public final class GoreCoreByteBufUtil {
     }
 
     public static void writeBlockPos(ByteBuf buf, BlockPos pos) {
-        buf.writeLong(pos.toLong());
+        if (pos != null)
+            buf.writeLong(pos.toLong());
     }
 
     public static BlockPos readBlockPos(ByteBuf buf) {
-        return BlockPos.fromLong(buf.readLong());
+        if (buf != null)
+            return BlockPos.fromLong(buf.readLong());
+        return new BlockPos(0, 0, 0);
     }
 }
