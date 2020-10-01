@@ -16,181 +16,205 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public class EntityEarthspikeSpawner extends AvatarEntity {
+import javax.annotation.Nullable;
 
-	private static final DataParameter<EarthspikesBehavior> SPIKES_BEHAVIOR = EntityDataManager
-			.createKey(EntityEarthspikeSpawner.class, EarthspikesBehavior.SERIALIZER);
-	private boolean unstoppable;
-	private double maxTicksAlive;
-	private SpikesType type;
-	private double spikeSize;
-	private double spikeDamage;
+public class EntityEarthspikeSpawner extends EntityOffensive {
 
-	/**
-	 * @param world
-	 */
-	public EntityEarthspikeSpawner(World world) {
-		super(world);
-		setSize(1, 1);
-	}
+    private static final DataParameter<EarthspikesBehavior> SPIKES_BEHAVIOR = EntityDataManager
+            .createKey(EntityEarthspikeSpawner.class, EarthspikesBehavior.SERIALIZER);
+    private boolean unstoppable;
+    private double maxTicksAlive;
+    private SpikesType type;
+    private double spikeSize;
+    private final BlockPos targetPos;
 
-	public SpikesType getType() {
-		return type;
-	}
+    /**
+     * @param world
+     */
+    public EntityEarthspikeSpawner(World world) {
+        super(world);
+        setSize(1, 1);
+        this.targetPos = new BlockPos(0, 0, 0);
+    }
 
-	public void setType(SpikesType isType) {
-		this.type = isType;
-	}
+    public SpikesType getType() {
+        return type;
+    }
 
-	public boolean getUnstoppable() {
-		return unstoppable;
-	}
+    public void setType(SpikesType isType) {
+        this.type = isType;
+    }
 
-	public void setUnstoppable(boolean isUnstoppable) {
-		this.unstoppable = isUnstoppable;
-	}
+    public boolean getUnstoppable() {
+        return unstoppable;
+    }
 
-	public double getDuration() {
-		return this.maxTicksAlive;
-	}
+    public void setUnstoppable(boolean isUnstoppable) {
+        this.unstoppable = isUnstoppable;
+    }
 
-	public void setDuration(double ticks) {
-		this.maxTicksAlive = ticks;
-	}
+    public double getDuration() {
+        return this.maxTicksAlive;
+    }
 
-	public double getSize() {
-		return this.spikeSize;
-	}
+    public void setDuration(double ticks) {
+        this.maxTicksAlive = ticks;
+    }
 
-	public void setSize(double size) {
-		this.spikeSize = size;
-	}
+    public double getSize() {
+        return this.spikeSize;
+    }
 
-	public double getDamage() {
-		return this.spikeDamage;
-	}
+    public void setSize(double size) {
+        this.spikeSize = size;
+    }
 
-	public void setDamage(double damages) {
-		this.spikeDamage = damages;
-	}
+    @Override
+    public float getDamage() {
+        return super.getDamage();
+    }
 
-	@Override
-	protected void readEntityFromNBT(NBTTagCompound nbt) {
-		super.readEntityFromNBT(nbt);
-	}
+    @Override
+    public void setDamage(float damage) {
+        super.setDamage(damage);
+    }
 
-	@Override
-	protected void writeEntityToNBT(NBTTagCompound nbt) {
-		super.writeEntityToNBT(nbt);
-	}
+    @Override
+    protected void readEntityFromNBT(NBTTagCompound nbt) {
+        super.readEntityFromNBT(nbt);
+    }
 
-	@Override
-	public EntityLivingBase getController() {
-		return getOwner();
-	}
+    @Override
+    protected void writeEntityToNBT(NBTTagCompound nbt) {
+        super.writeEntityToNBT(nbt);
+    }
 
-	@Override
-	public boolean canBeCollidedWith() {
-		return false;
-	}
+    @Override
+    public EntityLivingBase getController() {
+        return getOwner();
+    }
 
-	@Override
-	public boolean onCollideWithSolid() {
-		setDead();
-		return false;
-	}
+    @Override
+    public boolean canBeCollidedWith() {
+        return false;
+    }
 
-	@Override
-	public void entityInit() {
-		super.entityInit();
-		dataManager.register(SPIKES_BEHAVIOR, new EarthspikesBehavior.Init());
-	}
+    @Nullable
+    @Override
+    public SoundEvent[] getSounds() {
+        return new SoundEvent[0];
+    }
 
-	public EarthspikesBehavior getBehavior() {
-		return dataManager.get(SPIKES_BEHAVIOR);
-	}
+    @Override
+    public void spawnDissipateParticles(World world, Vec3d pos) {
 
-	public void setBehavior(EarthspikesBehavior behavior) {
-		dataManager.set(SPIKES_BEHAVIOR, behavior);
-	}
+    }
 
-	@Override
-	public void onUpdate() {
-		super.onUpdate();
+    @Override
+    public void entityInit() {
+        super.entityInit();
+        dataManager.register(SPIKES_BEHAVIOR, new EarthspikesBehavior.Init());
+    }
 
-		if (ticksExisted >= maxTicksAlive) {
-			setDead();
-		}
+    public EarthspikesBehavior getBehavior() {
+        return dataManager.get(SPIKES_BEHAVIOR);
+    }
 
-		BlockPos below = getPosition().offset(EnumFacing.DOWN);
-		Block belowBlock = world.getBlockState(below).getBlock();
+    public void setBehavior(EarthspikesBehavior behavior) {
+        dataManager.set(SPIKES_BEHAVIOR, behavior);
+    }
 
-		if (ticksExisted % 3 == 0) world.playSound(posX, posY, posZ,
-				world.getBlockState(below).getBlock().getSoundType().getBreakSound(),
-				SoundCategory.PLAYERS, 1, 1, false);
+    @Override
+    public boolean isPiercing() {
+        return true;
+    }
 
-		if (!world.getBlockState(below).isNormalCube()) {
-			setDead();
-		}
+    @Override
+    public void onCollideWithEntity(Entity entity) {
+    }
 
-		if (!world.isRemote && !ConfigStats.STATS_CONFIG.bendableBlocks.contains(belowBlock) && !unstoppable) {
-			setDead();
-		}
+    @Override
+    public void onUpdate() {
+        super.onUpdate();
 
-		if (!world.isRemote && belowBlock == Blocks.AIR) {
-			setDead();
-		}
+        if (ticksExisted >= maxTicksAlive) {
+            Dissipate();
+        }
 
-		// Destroy if in a block
-		IBlockState inBlock = world.getBlockState(getPosition());
-		if (inBlock.isFullBlock()) {
-			setDead();
-		}
+        if (this.getPosition() == targetPos || this.getDistanceSq(targetPos) < 1)
+            Dissipate();
 
-		// Destroy non-solid blocks in the earthspike
-		if (inBlock.getBlock() != Blocks.AIR && !inBlock.isFullBlock()) {
-			if (inBlock.getBlockHardness(world, getPosition()) == 0) {
-				breakBlock(getPosition());
-			} else {
-				setDead();
-			}
-		}
+        BlockPos below = getPosition().offset(EnumFacing.DOWN);
+        Block belowBlock = world.getBlockState(below).getBlock();
 
-		setBehavior((EarthspikesBehavior) getBehavior().onUpdate(this));
-	}
+        if (ticksExisted % 3 == 0) world.playSound(posX, posY, posZ,
+                world.getBlockState(below).getBlock().getSoundType().getBreakSound(),
+                SoundCategory.PLAYERS, 1, 1, false);
 
-	@Override
-	public void setDead() {
-		if (getOwner() != null) {
-			AttributeModifier modifier = getOwner().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(EarthspikesBehavior.MOVEMENT_MODIFIER_ID);
-			if (modifier != null && getOwner().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(modifier)) {
-				getOwner().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(EarthspikesBehavior.MOVEMENT_MODIFIER_ID);
-			}
-		}
-		super.setDead();
-	}
+        if (!world.getBlockState(below).isNormalCube()) {
+            setDead();
+        }
 
-	@Override
-	public boolean canCollideWith(Entity entity) {
-		return false;
-	}
+        if (!world.isRemote && !ConfigStats.STATS_CONFIG.bendableBlocks.contains(belowBlock) && !unstoppable) {
+            setDead();
+        }
 
-	@Override
-	public boolean canBePushed() {
-		return false;
-	}
+        if (!world.isRemote && belowBlock == Blocks.AIR) {
+            setDead();
+        }
 
-	@Override
-	public BendingStyle getElement() {
-		return new Earthbending();
-	}
+        // Destroy if in a block
+        IBlockState inBlock = world.getBlockState(getPosition());
+        if (inBlock.isFullBlock()) {
+            setDead();
+        }
 
-	// Allows setting the spikes type
-	public enum SpikesType {
-		LINE, OCTOPUS
-	}
+        // Destroy non-solid blocks in the earthspike
+        if (inBlock.getBlock() != Blocks.AIR && !inBlock.isFullBlock()) {
+            if (inBlock.getBlockHardness(world, getPosition()) == 0) {
+                breakBlock(getPosition());
+            } else {
+                setDead();
+            }
+        }
+
+        setBehavior((EarthspikesBehavior) getBehavior().onUpdate(this));
+    }
+
+    @Override
+    public void setDead() {
+        if (getOwner() != null) {
+            AttributeModifier modifier = getOwner().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(EarthspikesBehavior.MOVEMENT_MODIFIER_ID);
+            if (modifier != null && getOwner().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(modifier)) {
+                getOwner().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(EarthspikesBehavior.MOVEMENT_MODIFIER_ID);
+            }
+        }
+        super.setDead();
+    }
+
+    @Override
+    public boolean canCollideWith(Entity entity) {
+        return false;
+    }
+
+    @Override
+    public boolean canBePushed() {
+        return false;
+    }
+
+    @Override
+    public BendingStyle getElement() {
+        return new Earthbending();
+    }
+
+    // Allows setting the spikes type
+    public enum SpikesType {
+        LINE, OCTOPUS
+    }
 
 }

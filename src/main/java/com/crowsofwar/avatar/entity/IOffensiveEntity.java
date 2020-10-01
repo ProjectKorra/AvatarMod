@@ -270,9 +270,9 @@ public interface IOffensiveEntity {
 
     @Nullable
     default SoundEvent[] getSounds() {
-        SoundEvent[] events = new SoundEvent[1];
-        events[0] = SoundEvents.ENTITY_GHAST_SHOOT;
-        return events;
+        return new SoundEvent[] {
+                SoundEvents.ENTITY_GHAST_SHOOT
+        };
     }
 
     default float getVolume() {

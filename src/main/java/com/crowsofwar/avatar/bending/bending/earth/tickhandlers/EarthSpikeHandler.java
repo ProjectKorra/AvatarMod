@@ -8,6 +8,7 @@ import com.crowsofwar.avatar.bending.bending.earth.Earthbending;
 import com.crowsofwar.avatar.entity.EntityEarthspike;
 import com.crowsofwar.avatar.entity.EntityEarthspikeSpawner;
 import com.crowsofwar.avatar.entity.mob.EntityBender;
+import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.Raytrace;
 import com.crowsofwar.avatar.util.data.*;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
@@ -177,7 +178,13 @@ public class EarthSpikeHandler extends TickHandler {
                         }
 
                         if (ability.getBooleanProperty(AbilityEarthspikes.TRACE_SPIKES, abilityData)) {
-                           // EntityEarthspikeSpawner spawner = new EntityEarthspikeSpawner(world);
+                            EntityEarthspikeSpawner spawner = new EntityEarthspikeSpawner(world);
+                            spawner.setOwner(entity);
+                            spawner.setPosition(AvatarEntityUtils.getBottomMiddleOfEntity(entity));
+                            spawner.setType(EntityEarthspikeSpawner.SpikesType.LINE);
+                            spawner.setDamage(damage);
+                            spawner.setAbility(ability);
+                            
                         }
                     }
                     else bender.sendMessage("avatar.earthSourceFail");
