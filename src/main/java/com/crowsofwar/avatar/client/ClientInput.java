@@ -107,8 +107,8 @@ public class ClientInput implements IControlsHandler {
 	@Override
 	public boolean isControlPressed(AvatarControl control) {
 
-		if (control == CONTROL_LEFT_CLICK) return Minecraft.getMinecraft().gameSettings.keyBindAttack.isPressed();
-		if (control == CONTROL_RIGHT_CLICK) return Minecraft.getMinecraft().gameSettings.keyBindPickBlock.isPressed();
+		if (control == CONTROL_LEFT_CLICK) return mouseLeft;
+		if (control == CONTROL_RIGHT_CLICK) return mouseRight;
 		if (control == CONTROL_MIDDLE_CLICK) return mouseMiddle;
 		if (control == CONTROL_LEFT_CLICK_DOWN) return mouseLeft && !wasLeft;
 		if (control == CONTROL_RIGHT_CLICK_DOWN) return mouseRight && !wasRight;
@@ -126,8 +126,8 @@ public class ClientInput implements IControlsHandler {
 	@Override
 	public boolean isControlDown(AvatarControl control) {
 
-		if (control == CONTROL_LEFT_CLICK) return Minecraft.getMinecraft().gameSettings.keyBindAttack.isKeyDown();
-		if (control == CONTROL_RIGHT_CLICK) return Minecraft.getMinecraft().gameSettings.keyBindPickBlock.isKeyDown();
+		if (control == CONTROL_LEFT_CLICK) return mouseLeft;
+		if (control == CONTROL_RIGHT_CLICK) return mouseRight;
 		if (control == CONTROL_MIDDLE_CLICK) return mouseMiddle;
 		if (control == CONTROL_LEFT_CLICK_DOWN) return mouseLeft;
 		if (control == CONTROL_RIGHT_CLICK_DOWN) return mouseRight;
@@ -232,9 +232,9 @@ public class ClientInput implements IControlsHandler {
 		wasMiddle = mouseMiddle;
 
 		if (mc.inGameHasFocus) {
-			mouseLeft = Mouse.isButtonDown(0);
-			mouseRight = Mouse.isButtonDown(1);
-			mouseMiddle = Mouse.isButtonDown(2);
+			mouseLeft = Minecraft.getMinecraft().gameSettings.keyBindAttack.isKeyDown();
+			mouseRight = Minecraft.getMinecraft().gameSettings.keyBindUseItem.isKeyDown();
+			mouseMiddle = Minecraft.getMinecraft().gameSettings.keyBindPickBlock.isKeyDown();;
 		} else {
 			mouseLeft = mouseRight = mouseMiddle = false;
 		}

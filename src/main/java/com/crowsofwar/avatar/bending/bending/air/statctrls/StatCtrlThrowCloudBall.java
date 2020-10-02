@@ -62,7 +62,7 @@ public class StatCtrlThrowCloudBall extends StatusControl {
 				abilityData.setRegenBurnout(true);
 			}
 		}
-
+		
 		return true;
 	}
 

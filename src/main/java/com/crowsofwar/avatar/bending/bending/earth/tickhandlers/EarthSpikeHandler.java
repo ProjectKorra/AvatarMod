@@ -184,7 +184,9 @@ public class EarthSpikeHandler extends TickHandler {
                             spawner.setType(EntityEarthspikeSpawner.SpikesType.LINE);
                             spawner.setDamage(damage);
                             spawner.setAbility(ability);
-                            
+                            spawner.setVelocity(entity.getLookVec());
+                            if (!world.isRemote)
+                                world.spawnEntity(spawner);
                         }
                     }
                     else bender.sendMessage("avatar.earthSourceFail");
