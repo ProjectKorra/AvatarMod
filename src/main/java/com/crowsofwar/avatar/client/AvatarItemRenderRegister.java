@@ -49,13 +49,14 @@ public class AvatarItemRenderRegister {
 
 		forScroll(Scrolls.ALL);
 		forScroll(Scrolls.AIR);
-		forScroll(Scrolls.WATER);
+		//No water for you!
+		//forScroll(Scrolls.WATER);
 		forScroll(Scrolls.FIRE);
 		forScroll(Scrolls.EARTH);
 		forScroll(Scrolls.LIGHTNING);
 		forScroll(Scrolls.COMBUSTION);
 		forScroll(Scrolls.SAND);
-		forScroll(Scrolls.ICE);
+		//forScroll(Scrolls.ICE);
 
 		register(AvatarItems.itemBisonWhistle);
 
@@ -78,9 +79,9 @@ public class AvatarItemRenderRegister {
 			locationsGlow[i] = new ModelResourceLocation("avatarmod:scroll_" + type.displayName() + "_glow" + "_" + (i + 1),
 					"inventory");
 			setCustomModelResourceLocation(scroll.item(), i, locationsGlow[i]);
-			if (!(scroll instanceof ItemScrollAir || (scroll instanceof ItemScrollWater || scroll instanceof ItemScrollCombustion ||
-					scroll instanceof ItemScrollEarth) && i == 6))
-				setCustomModelResourceLocation(scroll.item(), i, locationsRegular[i]);
+//			if (!(scroll instanceof ItemScrollAir || (scroll instanceof ItemScrollWater || scroll instanceof ItemScrollCombustion ||
+//					scroll instanceof ItemScrollEarth) && i == 6))
+				//setCustomModelResourceLocation(scroll.item(), i, locationsRegular[i]);
 		}
 	}
 

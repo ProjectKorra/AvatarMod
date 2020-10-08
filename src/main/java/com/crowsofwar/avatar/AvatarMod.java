@@ -164,7 +164,7 @@ public class AvatarMod {
         //No waterbending for you! (Blame drillgon for why it's not done, btw)
         //BendingStyles.register(new Waterbending());
         BendingStyles.register(new Earthbending());
-        BendingStyles.register(new Icebending());
+        //BendingStyles.register(new Icebending());
         BendingStyles.register(new Sandbending());
         BendingStyles.register(new Lightningbending());
         BendingStyles.register(new Combustionbending());
