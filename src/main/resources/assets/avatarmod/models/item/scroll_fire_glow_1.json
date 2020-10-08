@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "avatarmod:items/scroll_fire_glow"
+        "layer0": "avatarmod:items/scroll_fire_glow_1"
     }
 }
