@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "avatarmod:items/scroll_ice_glow_7"
+        "layer0": "avatarmod:items/scroll_ice_glow_6"
     }
 }
