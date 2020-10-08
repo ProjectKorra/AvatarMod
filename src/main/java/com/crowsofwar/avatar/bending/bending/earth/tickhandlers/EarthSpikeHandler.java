@@ -6,7 +6,9 @@ import com.crowsofwar.avatar.bending.bending.SourceInfo;
 import com.crowsofwar.avatar.bending.bending.earth.AbilityEarthspikes;
 import com.crowsofwar.avatar.bending.bending.earth.Earthbending;
 import com.crowsofwar.avatar.entity.EntityEarthspike;
-import com.crowsofwar.avatar.entity.EntityEarthspikeSpawner;
+import com.crowsofwar.avatar.entity.EntityOffensive;
+import com.crowsofwar.avatar.entity.EntityRavine;
+import com.crowsofwar.avatar.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.entity.mob.EntityBender;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.Raytrace;
@@ -24,6 +26,8 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
@@ -39,6 +43,114 @@ public class EarthSpikeHandler extends TickHandler {
 
     public EarthSpikeHandler(int id) {
         super(id);
+    }
+
+    //For spike tracing
+    public static void spawnEarthspike(AbilityEarthspikes ability, EntityLivingBase owner, EntityRavine spawner) {
+        AbilityData abilityData = AbilityData.get(owner, ability.getName());
+        World world = owner.world;
+
+        if (abilityData != null) {
+            int tier;
+            float damage, knockback, chiHit, size, chargeMult,
+                    maxSize, maxDamage, xp, radius;
+
+            chiHit = ability.getProperty(Ability.CHI_HIT, abilityData).floatValue();
+            size = ability.getProperty(Ability.SIZE, abilityData).floatValue() * 1.5F;
+            damage = ability.getProperty(Ability.DAMAGE, abilityData).floatValue();
+            maxDamage = ability.getProperty(Ability.MAX_DAMAGE, abilityData).floatValue();
+            maxSize = ability.getProperty(Ability.MAX_SIZE, abilityData).floatValue() * 1.5F;
+            knockback = ability.getProperty(Ability.KNOCKBACK, abilityData).floatValue() / 4;
+            radius = ability.getProperty(Ability.RADIUS, abilityData).floatValue() / 4;
+            tier = ability.getCurrentTier(abilityData);
+            xp = ability.getProperty(Ability.XP_HIT, abilityData).floatValue();
+
+            chiHit = ability.powerModify(chiHit, abilityData);
+            size = ability.powerModify(size, abilityData);
+            damage = ability.powerModify(damage, abilityData);
+            maxDamage = ability.powerModify(maxDamage, abilityData);
+            maxSize = ability.powerModify(maxSize, abilityData);
+            knockback = ability.powerModify(knockback, abilityData);
+            radius = ability.powerModify(radius, abilityData);
+
+
+
+
+            //Basically multiplies the size and damage and such by the ravine's lifetime
+            chargeMult = (float) Math.min(Math.max((double) spawner.ticksExisted / spawner.getLifeTime(), 0.25), 0.75);
+            chargeMult *= world.rand.nextFloat() * 2;
+
+            damage *= (0.75 + chargeMult / 2F);
+            size *= (0.75 + chargeMult / 2F);
+            chiHit *= (0.75 + chargeMult / 2F);
+
+            damage = Math.min(damage, maxDamage);
+            size = Math.min(size, maxSize);
+
+            BlockPos pos = spawner.getPosition().down();
+            IBlockState state = world.getBlockState(pos);
+            Vector realPos = spawner.position();
+
+            if (Earthbending.isBendable(world, pos, state, 2)) {
+                //You spin me right 'round baby right 'round like a record baby round round round round
+                if (ability.getBooleanProperty(AbilityEarthspikes.SPREAD_CIRCULAR, abilityData)) {
+                    for (int a = 0; a < 8; a++) {
+                        double angle = Math.toRadians(a * 45);
+                        double x = Math.cos(angle);
+                        double z = Math.sin(angle);
+                        x *= radius;
+                        z *= radius;
+                        EntityEarthspike earthspike = new EntityEarthspike(world);
+                        earthspike.setOwner(owner);
+                        earthspike.setTier(tier);
+                        earthspike.setMaxEntitySize(size, size / 1.5F);
+                        earthspike.setEntitySize(0.05F, 0.05F);
+                        earthspike.setChiHit(chiHit);
+                        earthspike.setDamage(damage);
+                        earthspike.setPosition(pos.up().add(x, 0, z));
+                        earthspike.setTier(tier);
+                        earthspike.setVelocity(Vec3d.ZERO);
+                        earthspike.setLifeTime((int) (size * 30));
+                        earthspike.setAbility(ability);
+                        earthspike.setPush(knockback);
+                        earthspike.setDamageSource("avatar_Earth_earthSpike");
+                        earthspike.setXp(xp);
+                        if (!world.isRemote)
+                            world.spawnEntity(earthspike);
+                        else {
+                            for (int i = 0; i < (int) (size * 30); i++)
+                                world.spawnParticle(EnumParticleTypes.BLOCK_CRACK, realPos.x(), realPos.y() + i / (size * 30),
+                                        realPos.z(), 0, 0, 0, Block.getStateId(state));
+                        }
+                    }
+                }
+                else {
+                    EntityEarthspike earthspike = new EntityEarthspike(world);
+                    earthspike.setOwner(owner);
+                    earthspike.setTier(tier);
+                    earthspike.setMaxEntitySize(size, size / 1.5F);
+                    earthspike.setEntitySize(0.05F, 0.05F);
+                    earthspike.setChiHit(chiHit);
+                    earthspike.setDamage(damage);
+                    earthspike.setPosition(pos.up());
+                    earthspike.setTier(tier);
+                    earthspike.setVelocity(Vec3d.ZERO);
+                    earthspike.setLifeTime((int) (size * 30));
+                    earthspike.setAbility(ability);
+                    earthspike.setPush(knockback);
+                    earthspike.setDamageSource("avatar_Earth_earthSpike");
+                    earthspike.setXp(xp);
+                    if (!world.isRemote)
+                        world.spawnEntity(earthspike);
+                    else {
+                        for (int i = 0; i < (int) (size * 30); i++)
+                            world.spawnParticle(EnumParticleTypes.BLOCK_CRACK, realPos.x(), realPos.y() + i / (size * 30),
+                                    realPos.z(), 0, 0, 0, Block.getStateId(state));
+                    }
+                }
+            }
+
+        }
     }
 
     @Override
@@ -108,7 +220,7 @@ public class EarthSpikeHandler extends TickHandler {
             damage = ability.getProperty(Ability.DAMAGE, abilityData).floatValue();
             maxDamage = ability.getProperty(Ability.MAX_DAMAGE, abilityData).floatValue();
             maxSize = ability.getProperty(Ability.MAX_SIZE, abilityData).floatValue() * 1.5F;
-            knockback = ability.getProperty(Ability.KNOCKBACK, abilityData).floatValue() / 10;
+            knockback = ability.getProperty(Ability.KNOCKBACK, abilityData).floatValue() / 4;
             tier = ability.getCurrentTier(abilityData);
             xp = ability.getProperty(Ability.XP_HIT, abilityData).floatValue();
 
@@ -178,18 +290,26 @@ public class EarthSpikeHandler extends TickHandler {
                         }
 
                         if (ability.getBooleanProperty(AbilityEarthspikes.TRACE_SPIKES, abilityData)) {
-                            EntityEarthspikeSpawner spawner = new EntityEarthspikeSpawner(world);
+                            //Time to hack and use ravine. Or at least copy paste it.
+                            EntityRavine spawner = new EntityRavine(world);
                             spawner.setOwner(entity);
                             spawner.setPosition(AvatarEntityUtils.getBottomMiddleOfEntity(entity));
-                            spawner.setType(EntityEarthspikeSpawner.SpikesType.LINE);
-                            spawner.setDamage(damage);
+                            spawner.setTier(tier);
+                            spawner.setEntitySize(0.01F);
+                            spawner.setPush(0);
+                            spawner.setDamage(0);
                             spawner.setAbility(ability);
-                            spawner.setVelocity(entity.getLookVec());
+                            spawner.setVelocity(entity.getLookVec().scale(range / 20F));
+                            spawner.setLifeTime(range * 5);
+                            spawner.setDistance(range);
+                            spawner.setDamageSource("avatar_Earth_earthSpike");
+                            spawner.setBehaviour(new EarthspikeRavineBehaviour());
+                            spawner.setElement(new Earthbending());
                             if (!world.isRemote)
                                 world.spawnEntity(spawner);
                         }
-                    }
-                    else bender.sendMessage("avatar.earthSourceFail");
+
+                    } else bender.sendMessage("avatar.earthSourceFail");
 
                     //Inhibitors
                     abilityData.setAbilityCooldown(cooldown);
@@ -253,5 +373,45 @@ public class EarthSpikeHandler extends TickHandler {
                     1, (float) (world.rand.nextGaussian() / 0.25 + 0.375));
         }
         return sourceInfo;
+    }
+
+    public static class EarthspikeRavineBehaviour extends OffensiveBehaviour {
+
+        @Override
+        public OffensiveBehaviour onUpdate(EntityOffensive entity) {
+            if (entity instanceof EntityRavine) {
+                EntityRavine ravine = (EntityRavine) entity;
+                int frequency = 5 - (int) Math.min(entity.velocity().magnitude() / 20, 3);
+                if (ravine.ticksExisted % frequency == 0) {
+                    if (ravine.getAbility() instanceof AbilityEarthspikes) {
+                        AbilityEarthspikes spikes = (AbilityEarthspikes) Abilities.get("earth_spikes");
+                        assert spikes != null;
+                        spawnEarthspike(spikes, ravine.getOwner(), ravine);
+                    }
+                }
+
+            }
+            return this;
+        }
+
+        @Override
+        public void fromBytes(PacketBuffer buf) {
+
+        }
+
+        @Override
+        public void toBytes(PacketBuffer buf) {
+
+        }
+
+        @Override
+        public void load(NBTTagCompound nbt) {
+
+        }
+
+        @Override
+        public void save(NBTTagCompound nbt) {
+
+        }
     }
 }

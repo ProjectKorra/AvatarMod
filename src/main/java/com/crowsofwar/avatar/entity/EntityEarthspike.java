@@ -98,10 +98,6 @@ public class EntityEarthspike extends EntityOffensive {
             spawnDissipateParticles(world, AvatarEntityUtils.getBottomMiddleOfEntity(this));
             setDead();
         }
-//        if (ticksExisted > getLifeTime() + 20) {
-//            setDead();
-//            spawnDissipateParticles(world, AvatarEntityUtils.getBottomMiddleOfEntity(this));
-//        }
     }
 
     @Nullable
@@ -149,6 +145,13 @@ public class EntityEarthspike extends EntityOffensive {
             if (sizeTicks <= 1)
                 spawnDissipateParticles(world, AvatarEntityUtils.getBottomMiddleOfEntity(this));
         }
+    }
+
+    @Override
+    public Vec3d getKnockbackMult() {
+        Vec3d vec = getKnockbackMult();
+        vec = new Vec3d(vec.x / 2, vec.y * 4, vec.y / 2);
+        return vec;
     }
 
     @Override

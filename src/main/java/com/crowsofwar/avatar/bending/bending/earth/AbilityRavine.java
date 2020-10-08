@@ -18,12 +18,16 @@
 package com.crowsofwar.avatar.bending.bending.earth;
 
 import com.crowsofwar.avatar.bending.bending.Ability;
+import com.crowsofwar.avatar.entity.EntityOffensive;
 import com.crowsofwar.avatar.entity.EntityRavine;
+import com.crowsofwar.avatar.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -58,8 +62,6 @@ public class AbilityRavine extends Ability {
         if (bender.consumeChi(getChiCost(ctx))) {
 
             AbilityData abilityData = ctx.getData().getAbilityData(this);
-
-
 
 
             double speed = getProperty(SPEED, ctx).floatValue() * 3;
@@ -99,6 +101,7 @@ public class AbilityRavine extends Ability {
                     ravine.setElement(new Earthbending());
                     ravine.setLifeTime(lifetime);
                     ravine.setEntitySize(size);
+                    ravine.setBehaviour(new RavineBehaviour());
                     ravine.setXp(getProperty(XP_HIT).floatValue());
                     ravine.setDistance(speed);
                     ravine.setBreakBlocks(getBooleanProperty(DESTRUCTION, ctx));
@@ -107,8 +110,7 @@ public class AbilityRavine extends Ability {
                     if (!world.isRemote) {
                         world.spawnEntity(ravine);
                     }
-                }
-                else bender.sendMessage("avatar.earthSourceFail");
+                } else bender.sendMessage("avatar.earthSourceFail");
             }
 
         }
@@ -122,5 +124,39 @@ public class AbilityRavine extends Ability {
     @Override
     public int getBaseTier() {
         return 2;
+    }
+
+    public static class RavineBehaviour extends OffensiveBehaviour {
+
+        @Override
+        public OffensiveBehaviour onUpdate(EntityOffensive entity) {
+            if (entity instanceof EntityRavine) {
+                int frequency = 2 - (int) Math.min(entity.velocity().magnitude() / 20, 1);
+                if (entity.ticksExisted % frequency == 0) {
+                    ((EntityRavine) entity).spawnEntity();
+                }
+            }
+            return this;
+        }
+
+        @Override
+        public void fromBytes(PacketBuffer buf) {
+
+        }
+
+        @Override
+        public void toBytes(PacketBuffer buf) {
+
+        }
+
+        @Override
+        public void load(NBTTagCompound nbt) {
+
+        }
+
+        @Override
+        public void save(NBTTagCompound nbt) {
+
+        }
     }
 }

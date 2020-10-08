@@ -135,7 +135,7 @@ public class EntityRavine extends EntityOffensive {
                 STATS_CONFIG.ravineSettings.push);
     }
 
-    private void spawnEntity() {
+    public void spawnEntity() {
         if (!world.isRemote) {
             BlockPos pos = new BlockPos(prevPosX, prevPosY, prevPosZ);
 
@@ -160,11 +160,6 @@ public class EntityRavine extends EntityOffensive {
             initialPosition = position();
         }
 
-
-        int frequency = 2 - (int) Math.min(velocity().magnitude() / 20, 1);
-        if (ticksExisted % frequency == 0) {
-            spawnEntity();
-        }
 
         if (!world.isRemote && getSqrDistanceTravelled() > maxTravelDistanceSq) {
             Dissipate();

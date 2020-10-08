@@ -6,6 +6,8 @@ import com.crowsofwar.avatar.bending.bending.air.AbilityAirblade;
 import com.crowsofwar.avatar.bending.bending.air.tickhandlers.AirBurstHandler;
 import com.crowsofwar.avatar.bending.bending.air.tickhandlers.ShootAirBurstHandler;
 import com.crowsofwar.avatar.bending.bending.air.tickhandlers.SmashGroundHandler;
+import com.crowsofwar.avatar.bending.bending.earth.AbilityRavine;
+import com.crowsofwar.avatar.bending.bending.earth.tickhandlers.EarthSpikeHandler;
 import com.crowsofwar.avatar.bending.bending.fire.AbilityFireRedirect;
 import com.crowsofwar.avatar.bending.bending.fire.AbilityFireShot;
 import com.crowsofwar.avatar.bending.bending.fire.AbilityFlamethrower;
@@ -44,6 +46,8 @@ public abstract class OffensiveBehaviour extends Behavior<EntityOffensive> {
         registerBehavior(FlamethrowerUpdateTick.FlamethrowerBehaviour.class);
         registerBehavior(StatCtrlFlameStrike.FlameStrikeBehaviour.class);
         registerBehavior(FlameGlideHandler.FireJumpShockwave.class);
+        registerBehavior(AbilityRavine.RavineBehaviour.class);
+        registerBehavior(EarthSpikeHandler.EarthspikeRavineBehaviour.class);
         FireballBehavior.register();
         CloudburstBehavior.register();
         registerBehavior(Redirect.class);
