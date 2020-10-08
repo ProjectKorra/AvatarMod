@@ -149,7 +149,7 @@ public class EntityEarthspike extends EntityOffensive {
 
     @Override
     public Vec3d getKnockbackMult() {
-        Vec3d vec = getKnockbackMult();
+        Vec3d vec = super.getKnockbackMult();
         vec = new Vec3d(vec.x / 2, vec.y * 4, vec.y / 2);
         return vec;
     }

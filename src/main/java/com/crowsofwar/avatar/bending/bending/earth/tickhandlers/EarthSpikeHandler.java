@@ -53,7 +53,7 @@ public class EarthSpikeHandler extends TickHandler {
         if (abilityData != null) {
             int tier;
             float damage, knockback, chiHit, size, chargeMult,
-                    maxSize, maxDamage, xp, radius;
+                    maxSize, maxDamage, xp;
 
             chiHit = ability.getProperty(Ability.CHI_HIT, abilityData).floatValue();
             size = ability.getProperty(Ability.SIZE, abilityData).floatValue() * 1.5F;
@@ -61,7 +61,6 @@ public class EarthSpikeHandler extends TickHandler {
             maxDamage = ability.getProperty(Ability.MAX_DAMAGE, abilityData).floatValue();
             maxSize = ability.getProperty(Ability.MAX_SIZE, abilityData).floatValue() * 1.5F;
             knockback = ability.getProperty(Ability.KNOCKBACK, abilityData).floatValue() / 4;
-            radius = ability.getProperty(Ability.RADIUS, abilityData).floatValue() / 4;
             tier = ability.getCurrentTier(abilityData);
             xp = ability.getProperty(Ability.XP_HIT, abilityData).floatValue();
 
@@ -71,9 +70,6 @@ public class EarthSpikeHandler extends TickHandler {
             maxDamage = ability.powerModify(maxDamage, abilityData);
             maxSize = ability.powerModify(maxSize, abilityData);
             knockback = ability.powerModify(knockback, abilityData);
-            radius = ability.powerModify(radius, abilityData);
-
-
 
 
             //Basically multiplies the size and damage and such by the ravine's lifetime
@@ -91,62 +87,29 @@ public class EarthSpikeHandler extends TickHandler {
             IBlockState state = world.getBlockState(pos);
             Vector realPos = spawner.position();
 
+            ///Let's pretend that didn't happen ;)
             if (Earthbending.isBendable(world, pos, state, 2)) {
-                //You spin me right 'round baby right 'round like a record baby round round round round
-                if (ability.getBooleanProperty(AbilityEarthspikes.SPREAD_CIRCULAR, abilityData)) {
-                    for (int a = 0; a < 8; a++) {
-                        double angle = Math.toRadians(a * 45);
-                        double x = Math.cos(angle);
-                        double z = Math.sin(angle);
-                        x *= radius;
-                        z *= radius;
-                        EntityEarthspike earthspike = new EntityEarthspike(world);
-                        earthspike.setOwner(owner);
-                        earthspike.setTier(tier);
-                        earthspike.setMaxEntitySize(size, size / 1.5F);
-                        earthspike.setEntitySize(0.05F, 0.05F);
-                        earthspike.setChiHit(chiHit);
-                        earthspike.setDamage(damage);
-                        earthspike.setPosition(pos.up().add(x, 0, z));
-                        earthspike.setTier(tier);
-                        earthspike.setVelocity(Vec3d.ZERO);
-                        earthspike.setLifeTime((int) (size * 30));
-                        earthspike.setAbility(ability);
-                        earthspike.setPush(knockback);
-                        earthspike.setDamageSource("avatar_Earth_earthSpike");
-                        earthspike.setXp(xp);
-                        if (!world.isRemote)
-                            world.spawnEntity(earthspike);
-                        else {
-                            for (int i = 0; i < (int) (size * 30); i++)
-                                world.spawnParticle(EnumParticleTypes.BLOCK_CRACK, realPos.x(), realPos.y() + i / (size * 30),
-                                        realPos.z(), 0, 0, 0, Block.getStateId(state));
-                        }
-                    }
-                }
+                EntityEarthspike earthspike = new EntityEarthspike(world);
+                earthspike.setOwner(owner);
+                earthspike.setTier(tier);
+                earthspike.setMaxEntitySize(size, size / 1.5F);
+                earthspike.setEntitySize(0.05F, 0.05F);
+                earthspike.setChiHit(chiHit);
+                earthspike.setDamage(damage);
+                earthspike.setPosition(pos.up());
+                earthspike.setTier(tier);
+                earthspike.setVelocity(Vec3d.ZERO);
+                earthspike.setLifeTime((int) (size * 30));
+                earthspike.setAbility(ability);
+                earthspike.setPush(knockback);
+                earthspike.setDamageSource("avatar_Earth_earthSpike");
+                earthspike.setXp(xp);
+                if (!world.isRemote)
+                    world.spawnEntity(earthspike);
                 else {
-                    EntityEarthspike earthspike = new EntityEarthspike(world);
-                    earthspike.setOwner(owner);
-                    earthspike.setTier(tier);
-                    earthspike.setMaxEntitySize(size, size / 1.5F);
-                    earthspike.setEntitySize(0.05F, 0.05F);
-                    earthspike.setChiHit(chiHit);
-                    earthspike.setDamage(damage);
-                    earthspike.setPosition(pos.up());
-                    earthspike.setTier(tier);
-                    earthspike.setVelocity(Vec3d.ZERO);
-                    earthspike.setLifeTime((int) (size * 30));
-                    earthspike.setAbility(ability);
-                    earthspike.setPush(knockback);
-                    earthspike.setDamageSource("avatar_Earth_earthSpike");
-                    earthspike.setXp(xp);
-                    if (!world.isRemote)
-                        world.spawnEntity(earthspike);
-                    else {
-                        for (int i = 0; i < (int) (size * 30); i++)
-                            world.spawnParticle(EnumParticleTypes.BLOCK_CRACK, realPos.x(), realPos.y() + i / (size * 30),
-                                    realPos.z(), 0, 0, 0, Block.getStateId(state));
-                    }
+                    for (int i = 0; i < (int) (size * 30); i++)
+                        world.spawnParticle(EnumParticleTypes.BLOCK_CRACK, realPos.x(), realPos.y() + i / (size * 30),
+                                realPos.z(), 0, 0, 0, Block.getStateId(state));
                 }
             }
 
@@ -207,7 +170,7 @@ public class EarthSpikeHandler extends TickHandler {
         if (ability != null && abilityData != null) {
             int chargeTime, chargedTime, cooldown, tier;
             float damage, knockback, chiHit, chiCost, exhaustion, burnout, size, chargeMult,
-                    maxSize, maxDamage, xp;
+                    maxSize, maxDamage, xp, radius;
 
 
             chargeTime = ability.getProperty(Ability.CHARGE_TIME, abilityData).intValue();
@@ -221,6 +184,7 @@ public class EarthSpikeHandler extends TickHandler {
             maxDamage = ability.getProperty(Ability.MAX_DAMAGE, abilityData).floatValue();
             maxSize = ability.getProperty(Ability.MAX_SIZE, abilityData).floatValue() * 1.5F;
             knockback = ability.getProperty(Ability.KNOCKBACK, abilityData).floatValue() / 4;
+            radius = ability.getProperty(Ability.RADIUS, abilityData).floatValue();
             tier = ability.getCurrentTier(abilityData);
             xp = ability.getProperty(Ability.XP_HIT, abilityData).floatValue();
 
@@ -231,6 +195,7 @@ public class EarthSpikeHandler extends TickHandler {
             maxSize = ability.powerModify(maxSize, abilityData);
             chargeTime = (int) ability.powerModify(chargeTime, abilityData);
             knockback = ability.powerModify(knockback, abilityData);
+            radius = ability.powerModify(radius, abilityData);
 
             chargedTime = Math.min(abilityData.getSourceTime(), chargeTime);
 
@@ -266,27 +231,63 @@ public class EarthSpikeHandler extends TickHandler {
                     else realPos = realPos.plus(pos.getX(), pos.getY() + 0.5, pos.getZ());
 
                     if (Earthbending.isBendable(world, realPos.toBlockPos().down(), state, 2)) {
-                        EntityEarthspike earthspike = new EntityEarthspike(world);
-                        earthspike.setOwner(entity);
-                        earthspike.setTier(tier);
-                        earthspike.setMaxEntitySize(size, size / 1.5F);
-                        earthspike.setEntitySize(0.05F, 0.05F);
-                        earthspike.setChiHit(chiHit);
-                        earthspike.setDamage(damage);
-                        earthspike.setPosition(realPos);
-                        earthspike.setTier(tier);
-                        earthspike.setVelocity(Vec3d.ZERO);
-                        earthspike.setLifeTime((int) (size * 30));
-                        earthspike.setAbility(ability);
-                        earthspike.setPush(knockback);
-                        earthspike.setDamageSource("avatar_Earth_earthSpike");
-                        earthspike.setXp(xp);
-                        if (!world.isRemote)
-                            world.spawnEntity(earthspike);
-                        else {
-                            for (int i = 0; i < (int) (size * 30); i++)
-                                world.spawnParticle(EnumParticleTypes.BLOCK_CRACK, realPos.x(), realPos.y() + i / (size * 30),
-                                        realPos.z(), 0, 0, 0, Block.getStateId(state));
+                        //You spin me right 'round baby right 'round like a record baby round round round round
+                        if (ability.getBooleanProperty(AbilityEarthspikes.SPREAD_CIRCULAR, abilityData)) {
+                            for (int a = 0; a < 8; a++) {
+                                double angle = Math.toRadians(a * 45);
+                                double x = Math.sin(angle);
+                                double z = Math.cos(angle);
+                                x *= radius;
+                                z *= radius;
+                                if (Earthbending.isBendable(world, realPos.plus(x, -1, z).toBlockPos(),
+                                        world.getBlockState(realPos.plus(x, -1, z).toBlockPos()), 2)) {
+                                    EntityEarthspike earthspike = new EntityEarthspike(world);
+                                    earthspike.setOwner(entity);
+                                    earthspike.setTier(tier);
+                                    earthspike.setMaxEntitySize(size, size / 1.5F);
+                                    earthspike.setEntitySize(0.05F, 0.05F);
+                                    earthspike.setChiHit(chiHit);
+                                    earthspike.setDamage(damage);
+                                    earthspike.setPosition(realPos.plus(x, 0, z));
+                                    earthspike.setTier(tier);
+                                    earthspike.setVelocity(Vec3d.ZERO);
+                                    earthspike.setLifeTime((int) (size * 30));
+                                    earthspike.setAbility(ability);
+                                    earthspike.setPush(knockback);
+                                    earthspike.setDamageSource("avatar_Earth_earthSpike");
+                                    earthspike.setXp(xp);
+                                    if (!world.isRemote)
+                                        world.spawnEntity(earthspike);
+                                    else {
+                                        for (int i = 0; i < (int) (size * 30); i++)
+                                            world.spawnParticle(EnumParticleTypes.BLOCK_CRACK, realPos.x(), realPos.y() + i / (size * 30),
+                                                    realPos.z(), 0, 0, 0, Block.getStateId(world.getBlockState(realPos.toBlockPos().down())));
+                                    }
+                                }
+                            }
+                        } else {
+                            EntityEarthspike earthspike = new EntityEarthspike(world);
+                            earthspike.setOwner(entity);
+                            earthspike.setTier(tier);
+                            earthspike.setMaxEntitySize(size, size / 1.5F);
+                            earthspike.setEntitySize(0.05F, 0.05F);
+                            earthspike.setChiHit(chiHit);
+                            earthspike.setDamage(damage);
+                            earthspike.setPosition(realPos);
+                            earthspike.setTier(tier);
+                            earthspike.setVelocity(Vec3d.ZERO);
+                            earthspike.setLifeTime((int) (size * 30));
+                            earthspike.setAbility(ability);
+                            earthspike.setPush(knockback);
+                            earthspike.setDamageSource("avatar_Earth_earthSpike");
+                            earthspike.setXp(xp);
+                            if (!world.isRemote)
+                                world.spawnEntity(earthspike);
+                            else {
+                                for (int i = 0; i < (int) (size * 30); i++)
+                                    world.spawnParticle(EnumParticleTypes.BLOCK_CRACK, realPos.x(), realPos.y() + i / (size * 30),
+                                            realPos.z(), 0, 0, 0, Block.getStateId(state));
+                            }
                         }
 
                         if (ability.getBooleanProperty(AbilityEarthspikes.TRACE_SPIKES, abilityData)) {

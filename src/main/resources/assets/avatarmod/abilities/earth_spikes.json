@@ -20,7 +20,7 @@
       "maxDamage": 6,
       "maxSize": 1.25,
       "spreadCircular": false,
-      "radius": 3,
+      "radius": 1,
       "traceSpikes": false
     },
     "level2": {
@@ -83,7 +83,7 @@
       "maxDamage": 9,
       "maxSize": 1.5,
       "spreadCircular": true,
-      "radius": 5,
+      "radius": 2,
       "traceSpikes": false
     },
     "level4_2": {
