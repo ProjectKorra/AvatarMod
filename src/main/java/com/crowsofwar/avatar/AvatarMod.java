@@ -161,7 +161,8 @@ public class AvatarMod {
         //Same order as abilities or ability properties won't work!
         BendingStyles.register(new Airbending());
         BendingStyles.register(new Firebending());
-        BendingStyles.register(new Waterbending());
+        //No waterbending for you! (Blame drillgon for why it's not done, btw)
+        //BendingStyles.register(new Waterbending());
         BendingStyles.register(new Earthbending());
         BendingStyles.register(new Icebending());
         BendingStyles.register(new Sandbending());

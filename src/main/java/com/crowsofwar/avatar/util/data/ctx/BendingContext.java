@@ -134,7 +134,7 @@ public class BendingContext {
 	 */
 	private void verifyClientRaytrace() {
 
-		if (raytrace != null) {
+		/*if (raytrace != null) {
 
 			// Simply verify if the client's look-block is reasonable
 
@@ -151,7 +151,8 @@ public class BendingContext {
 
 			}
 
-		}
+		}**/
+		//To be honest I couldn't care less about anti-cheat, and this can break some other abilities.
 
 	}
 
