@@ -169,7 +169,7 @@ public class AbilityEarthControl extends Ability {
                 floating.setDamageMult(damageMult);
                 floating.setHitsLeft(getProperty(BLOCK_HITS, ctx).intValue());
                 floating.setXp(getProperty(XP_HIT, ctx).floatValue());
-                floating.setLifeTime((int) (getProperty(LIFETIME, ctx).intValue() * abilityData.getXpModifier() * abilityData.getDamageMult()));
+                floating.setLifeTime((int) (20 + getProperty(LIFETIME, ctx).intValue() * abilityData.getXpModifier() * abilityData.getDamageMult()));
                 floating.setChiHit(chiOnHit);
                 floating.setBoomerang(getBooleanProperty(BOOMERANG, ctx));
                 floating.setPush(knockback);

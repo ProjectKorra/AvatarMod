@@ -76,11 +76,12 @@ public interface IOffensiveEntity {
             for (Entity hit : collided) {
                 if (entity.getOwner() != null && hit != entity.getOwner() && hit != null && entity.canCollideWith(hit)) {
                     attackEntity(entity, hit, false, getKnockback());
+                    playPiercingSounds(entity);
+                    spawnPiercingParticles(entity.world, AvatarEntityUtils.getMiddleOfEntity(entity));
                 }
+
             }
         }
-        playPiercingSounds(entity);
-        spawnPiercingParticles(entity.world, AvatarEntityUtils.getMiddleOfEntity(entity));
     }
 
     default void Dissipate(AvatarEntity entity) {
@@ -270,7 +271,7 @@ public interface IOffensiveEntity {
 
     @Nullable
     default SoundEvent[] getSounds() {
-        return new SoundEvent[] {
+        return new SoundEvent[]{
                 SoundEvents.ENTITY_GHAST_SHOOT
         };
     }

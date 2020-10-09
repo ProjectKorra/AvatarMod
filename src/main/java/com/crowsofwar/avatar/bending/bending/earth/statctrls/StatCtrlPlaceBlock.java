@@ -36,6 +36,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -95,9 +96,9 @@ public class StatCtrlPlaceBlock extends StatusControl {
                     Vec3d start = entity.getPositionEyes(1.0F);
                     Vec3d end = start.add(entity.getLookVec().scale(5));
 
-                    Raytrace.Result result = Raytrace.getTargetBlock(entity, 5);
-                    if (result.hitSomething() && result.getPosPrecise() != null && result.getSide() != null) {
-                        BlockPos pos = result.getPosPrecise().toBlockPos();
+                    RayTraceResult result = entity.rayTrace(5, 1.0F);
+                    if (result != null) {
+                        BlockPos pos = result.getBlockPos();
                         IBlockState state = world.getBlockState(pos);
                         IBlockState upState = world.getBlockState(pos.up());
                         Block block = state.getBlock();

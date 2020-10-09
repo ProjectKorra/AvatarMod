@@ -40,6 +40,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -48,6 +49,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
@@ -324,6 +326,19 @@ public class EntityFloatingBlock extends EntityOffensive {
                 setVelocity(velocity().times(getFriction() / 1.25));
             else setVelocity(velocity().times(getFriction()));
         }
+
+    }
+
+    @Nullable
+    @Override
+    public SoundEvent[] getSounds() {
+        return new SoundEvent[] {
+                world.getBlockState(getPosition().down()).getBlock().getSoundType().getBreakSound()
+        };
+    }
+
+    @Override
+    public void playPiercingSounds(Entity entity) {
 
     }
 

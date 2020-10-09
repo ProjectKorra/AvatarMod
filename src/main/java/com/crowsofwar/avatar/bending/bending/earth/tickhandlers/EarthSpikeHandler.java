@@ -209,7 +209,7 @@ public class EarthSpikeHandler extends TickHandler {
             if (abilityData.getAbilityCooldown(entity) <= 0 && chargeMult > 0 && bender.consumeChi(chiCost)) {
                 if (Earthbending.isBendable(abilityData.getSourceBlock())) {
                     damage *= (1.0 + chargeMult / 2F);
-                    size *= (1.0 + chargeMult / 2F);
+                    size *= (0.75    + chargeMult / 2F);
                     chiHit *= (1.0 + chargeMult / 2F);
 
                     damage = Math.min(damage, maxDamage);

@@ -153,18 +153,6 @@ public abstract class FloatingBlockBehavior extends OffensiveBehaviour {
         public FloatingBlockBehavior onUpdate(EntityOffensive entity) {
 
             entity.setEntitySize(1.0F);
-            if (entity.collided && entity instanceof EntityFloatingBlock) {
-
-                World world = entity.world;
-                Block block = ((EntityFloatingBlock) entity).getBlockState().getBlock();
-                SoundType sound = block.getSoundType();
-                if (sound != null) {
-                    world.playSound(null, entity.getPosition(), sound.getBreakSound(),
-                            SoundCategory.PLAYERS, sound.getVolume(), sound.getPitch());
-                }
-
-            }
-
             entity.addVelocity(Vector.DOWN.times(9.81 / 30));
 
             return this;
