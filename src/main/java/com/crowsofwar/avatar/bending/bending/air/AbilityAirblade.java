@@ -167,7 +167,7 @@ public class AbilityAirblade extends Ability {
                 World world = entity.world;
                 AbilityData data = AbilityData.get(entity.getOwner(), entity.getAbility().getName());
 
-                if (data != null && entity.getAbility().getBooleanProperty(BOOMERANG, data)) {
+                if (data != null && entity.getAbility() instanceof AbilityAirblade && entity.getAbility().getBooleanProperty(BOOMERANG, data)) {
                     int lifetime = entity.getAbility().getProperty(LIFETIME, data).intValue();
                     if (entity.ticksExisted > lifetime / 4 && entity.ticksExisted < lifetime / 2) {
                         entity.motionX *= 0.75;
