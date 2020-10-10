@@ -197,7 +197,7 @@ public class EntityRavine extends EntityOffensive {
 
         if (world.isRemote)
             if (!(world.getBlockState(getPosition().down()).getBlock() instanceof BlockAir))
-                for (int i = 0; i < 6; i++) {
+                for (int i = 0; i < 2; i++) {
                     world.spawnParticle(EnumParticleTypes.BLOCK_CRACK, posX + world.rand.nextGaussian() * 0.5, posY + world.rand.nextDouble() * 0.5, posZ + world.rand.nextGaussian() * 0.5,
                             world.rand.nextGaussian() * 0.75, world.rand.nextGaussian() * 0.75, world.rand.nextGaussian() * 0.75,
                             Block.getStateId(world.getBlockState(getPosition().down())));

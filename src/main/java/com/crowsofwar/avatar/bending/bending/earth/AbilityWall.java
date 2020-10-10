@@ -61,7 +61,7 @@ public class AbilityWall extends Ability {
     @Override
     public void init() {
         super.init();
-        addProperties(LIFETIME, WALL_REACH, SIZE, SIZE_MIN, SIZE_MAX);
+        addProperties(WALL_REACH, SIZE_MIN, SIZE_MAX);
         addBooleanProperties(SHOOT_BLOCKS, MULTI_WALL, SHOOT_WALLS);
     }
 

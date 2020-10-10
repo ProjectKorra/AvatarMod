@@ -96,10 +96,10 @@ public class AvatarPlayerTick {
                 if (Bender.isBenderSupported(bender)) {
                     BendingData data = BendingData.getFromEntity(bender);
                     if (data != null && !data.hasElements()) {
-                        int elementID = AvatarUtils.getRandomNumberInRange(1, 4);
                         List<BendingStyle> elements = BendingStyles.all().stream()
                                 .filter(bendingStyle -> bendingStyle.isParentBending() && bendingStyle.canEntityUse())
                                 .collect(Collectors.toList());
+                        int elementID = AvatarUtils.getRandomNumberInRange(1, elements.size());
                         BendingStyle style = BendingStyles.get(elements.get(elementID - 1).getName());
                         if (!MinecraftForge.EVENT_BUS.post(new ElementUnlockEvent(bender, style))) {
                             data.addBending(style == null ? new Airbending() : style);

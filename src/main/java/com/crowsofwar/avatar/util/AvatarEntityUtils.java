@@ -53,6 +53,8 @@ public class AvatarEntityUtils {
         ItemStack smelted = FurnaceRecipes.instance().getSmeltingResult(stack);
         EntityItem item = new EntityItem(entity.world, entity.posX, entity.posY + 0.75, entity.posZ, smelted);
         item.setDefaultPickupDelay();
+        //This makes sure the stack count is reset between smelts
+        item.getItem().setCount(stack.getCount());
         item.setEntityInvulnerable(true);
         if (!entity.world.isRemote)
             entity.world.spawnEntity(item);
@@ -88,6 +90,8 @@ public class AvatarEntityUtils {
                 item.setDefaultPickupDelay();
                 item.setEntityInvulnerable(true);
                 item.setNoDespawn();
+                //This makes sure the stack count is reset between smelts
+                item.getItem().setCount(stack.getCount());
                 if (!entity.world.isRemote)
                     entity.world.spawnEntity(item);
                 entity.setDead();

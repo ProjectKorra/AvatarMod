@@ -2,6 +2,7 @@ package com.crowsofwar.avatar.config;
 
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarLog;
+import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.util.data.AbilityData;
@@ -207,6 +208,66 @@ public class AbilityProperties {
             AvatarLog.warn("Some ability property files did not load correctly; this will likely cause problems later!");
     }
 
+    public static boolean addPropertiesToConfig(File targetDirectory) {
+        //Literally adds ability properties externally so players can edit them more easily.
+        if (targetDirectory.mkdirs() || targetDirectory.exists() || targetDirectory.isDirectory()) {
+            AvatarLog.info("Starting to generate external config files.");
+
+            ModContainer mod = Loader.instance().getModList().stream().filter(modContainer -> modContainer.getModId().equals(AvatarInfo.MOD_ID)).findFirst()
+                    .orElse(null);
+            // Spells will be removed from this list as their properties are set
+            // If everything works properly, it should be empty by the end
+            List<Ability> abilities = new ArrayList<>(Abilities.all());
+
+            // This method is used by Forge to load mod recipes and advancements, so it's a fair bet it's the right one
+            // In the absence of Javadoc, here's what the non-obvious parameters do:
+            // - preprocessor is called once with just the root directory, allowing any global index files to be processed
+            // - processor is called once for each file in the directory so processing can be done
+            // - defaultUnfoundRoot is the default value to return if the root specified isn't found
+            // - visitAllFiles determines whether the method short-circuits; in other words, if the processor returns false
+            // at any point and visitAllFiles is false, the method returns immediately.
+            assert mod != null;
+            //If `mod` is null then av2 isn't loaded and you have other issues
+            CraftingHelper.findFiles(mod, "assets/" + AvatarInfo.MOD_ID + "/abilities", null,
+
+                    (root, file) -> {
+
+                        String relative = root.relativize(file).toString();
+                        if (!"json".equals(FilenameUtils.getExtension(file.toString())) || relative.startsWith("_"))
+                            return true; // True or it'll look like it failed just because it found a non-JSON file
+
+                        String name = FilenameUtils.removeExtension(relative).replaceAll("\\\\", "/");
+                        Ability ability = Abilities.get(name);
+
+                        // If no ability matches a particular file, log it and just ignore the file
+                        if (ability == null) {
+                            AvatarLog.error("Ability config file is for an ability that doesn't exist.");
+                            return true;
+                        }
+
+                        // We want to do this regardless of whether the JSON file got read properly, because that prints its
+                        // own separate warning
+                        if (!abilities.remove(ability)) AvatarLog.error("What's going on?!");
+
+                        try {
+                            File abilityFile = new File(targetDirectory.getPath(), ability.getName() + ".json");
+                            if (!abilityFile.exists())
+                                Files.copy(file, abilityFile.toPath());
+
+                        }  catch (IOException ioexception) {
+                            ioexception.printStackTrace();
+                            return false;
+                        }
+
+                        return true;
+
+                    },
+                    true, true);
+
+        }
+        return true;
+    }
+
     public static void loadWorldSpecificAbilityProperties(World world) {
 
         AvatarLog.info("Loading custom ability properties for world {" + world.getWorldInfo().getWorldName() + "}");
@@ -223,10 +284,11 @@ public class AbilityProperties {
 
         AvatarLog.info("Loading ability properties from config folder");
 
-        File abilityJsonDir = new File("avatar/abilities");
+        File abilityJsonDir = new File(AvatarMod.configDirectory, "abilities");
 
-        if (!abilityJsonDir.exists() || !abilityJsonDir.mkdir()) {
+        if (!abilityJsonDir.exists()) {
             AvatarLog.info("No override config found, default values will be used unless there's world-specific properties.");
+            addPropertiesToConfig(abilityJsonDir);
             return true; // If there's no global spell properties folder, do nothing
         }
 

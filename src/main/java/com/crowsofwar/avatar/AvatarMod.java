@@ -89,6 +89,8 @@ import static net.minecraftforge.fml.common.registry.EntityRegistry.registerEgg;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
+import java.io.File;
+
 @Mod(modid = AvatarInfo.MOD_ID, name = AvatarInfo.MOD_NAME, version = AvatarInfo.VERSION, dependencies = "required-after:gorecore",  //
         updateJSON = "http://av2.io/updates.json", acceptedMinecraftVersions = "1.12")
 
@@ -104,8 +106,11 @@ public class AvatarMod {
 
     public static boolean codeChickenLibCompat, realFirstPersonRender2Compat, cubicChunks, hammerCore;
 
+    public static File configDirectory;
+
     private int nextMessageID = 1;
     private int nextEntityID = 1;
+
 
     private static void registerAbilities() {
         /*    			Air		  			*/
@@ -187,6 +192,8 @@ public class AvatarMod {
         cubicChunks = Loader.isModLoaded("cubicchunkscore");
         //Light orbs
         hammerCore = Loader.isModLoaded("hammercore");
+
+        configDirectory = new File(e.getModConfigurationDirectory(), "avatar");
 
         AvatarLog.log = e.getModLog();
 
