@@ -17,8 +17,6 @@
 package com.crowsofwar.avatar.config;
 
 import akka.japi.Pair;
-import com.crowsofwar.avatar.AvatarLog;
-import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.item.scroll.Scrolls.ScrollType;
 import com.crowsofwar.gorecore.config.ConfigLoader;
 import com.crowsofwar.gorecore.config.Load;
@@ -26,15 +24,9 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
-import net.minecraft.entity.monster.*;
-import net.minecraft.entity.passive.EntityBat;
-import net.minecraft.entity.passive.EntityChicken;
-import net.minecraft.entity.passive.EntityParrot;
-import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.item.Item;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @author CrowsOfWar
@@ -99,25 +91,25 @@ public class ConfigMobs {
         //Fire
         //Some mob names are weird, don't change them.
         //Also, the classes here are just for example. I set them later.
-        DEFAULT_SCROLL_DROPS.put("pigzombie", new MobDrops(EntityPigZombie.class,
+        DEFAULT_SCROLL_DROPS.put("pigzombie", new MobDrops("pigzombie",
                 new DropInfo(ScrollType.FIRE, 1, 20, 2),
                 new DropInfo(ScrollType.FIRE, 2, 10),
                 new DropInfo(ScrollType.FIRE, 3, 5),
                 new DropInfo(ScrollType.FIRE, 4, 2.5)));
-        DEFAULT_SCROLL_DROPS.put("lavaslime", new MobDrops(EntityMagmaCube.class,
+        DEFAULT_SCROLL_DROPS.put("lavaslime", new MobDrops("lavaslime",
                 new DropInfo(ScrollType.FIRE, 1, 25, 3),
                 new DropInfo(ScrollType.FIRE, 2, 15, 2),
                 new DropInfo(ScrollType.FIRE, 3, 2.5)));
-        DEFAULT_SCROLL_DROPS.put("witherskeleton", new MobDrops(EntityWitherSkeleton.class,
+        DEFAULT_SCROLL_DROPS.put("witherskeleton", new MobDrops("witherskeleton",
                 new DropInfo(ScrollType.FIRE, 1, 30, 3),
                 new DropInfo(ScrollType.FIRE, 2, 15),
                 new DropInfo(ScrollType.FIRE, 3, 10),
                 new DropInfo(ScrollType.FIRE, 4, 5),
                 new DropInfo(ScrollType.FIRE, 5, 1)));
-        DEFAULT_SCROLL_DROPS.put("ghast", new MobDrops(EntityGhast.class,
+        DEFAULT_SCROLL_DROPS.put("ghast", new MobDrops("ghast",
                 new DropInfo(ScrollType.FIRE, 1, 40),
                 new DropInfo(ScrollType.FIRE, 2, 20)));
-        DEFAULT_SCROLL_DROPS.put("blaze", new MobDrops(EntityBlaze.class,
+        DEFAULT_SCROLL_DROPS.put("blaze", new MobDrops("blaze",
                 new DropInfo(ScrollType.FIRE, 1, 20, 3),
                 new DropInfo(ScrollType.FIRE, 2, 10, 2),
                 new DropInfo(ScrollType.FIRE, 3, 5, 2),
@@ -125,16 +117,16 @@ public class ConfigMobs {
                 new DropInfo(ScrollType.FIRE, 5, 0.5)));
 
         //Air
-        DEFAULT_SCROLL_DROPS.put("bat", new MobDrops(EntityBat.class,
+        DEFAULT_SCROLL_DROPS.put("bat", new MobDrops("bat",
                 new DropInfo(ScrollType.AIR, 1, 5),
                 new DropInfo(ScrollType.AIR, 2, 1)));
-        DEFAULT_SCROLL_DROPS.put("parrot", new MobDrops(EntityParrot.class,
+        DEFAULT_SCROLL_DROPS.put("parrot", new MobDrops("parrot",
                 new DropInfo(ScrollType.AIR, 1, 5)));
-        DEFAULT_SCROLL_DROPS.put("chicken", new MobDrops(EntityChicken.class,
+        DEFAULT_SCROLL_DROPS.put("chicken", new MobDrops("chicken",
                 new DropInfo(ScrollType.AIR, 1, 7.5)));
-        DEFAULT_SCROLL_DROPS.put("sheep", new MobDrops(EntitySheep.class,
+        DEFAULT_SCROLL_DROPS.put("sheep", new MobDrops("sheep",
                 new DropInfo(ScrollType.AIR, 1, 5)));
-        DEFAULT_SCROLL_DROPS.put("shulker", new MobDrops(EntityShulker.class,
+        DEFAULT_SCROLL_DROPS.put("shulker", new MobDrops("shulker",
                 new DropInfo(ScrollType.AIR, 1, 40, 4),
                 new DropInfo(ScrollType.AIR, 2, 20, 3),
                 new DropInfo(ScrollType.AIR, 3, 10, 2),
@@ -144,8 +136,12 @@ public class ConfigMobs {
 
 
         //Earth
-        DEFAULT_SCROLL_DROPS.put("mooshroom", 5.0);
-        DEFAULT_SCROLL_DROPS.put("cavespider", 10.0);
+        DEFAULT_SCROLL_DROPS.put("mooshroom", new MobDrops("mooshroom",
+                new DropInfo(ScrollType.EARTH, 1, 5.0),
+                new DropInfo(ScrollType.EARTH, 2, 2.5)));
+        DEFAULT_SCROLL_DROPS.put("cavespider", new MobDrops("cavespider",
+                new DropInfo(ScrollType.EARTH, 1, 10, 2),
+                new DropInfo(ScrollType.EARTH, 1, 5.0, 1)));
         DEFAULT_SCROLL_DROPS.put("silverfish", 12.5);
         DEFAULT_SCROLL_DROPS.put("spider", 5.0);
         DEFAULT_SCROLL_DROPS.put("skeleton", 5.0);
@@ -153,7 +149,6 @@ public class ConfigMobs {
 
         //Lightning
         DEFAULT_SCROLL_DROPS.put("creeper", 1.0);
-        DEFAULT_SCROLL_TYPE.put("creeper", "lightning");
 
         //Combustion
         DEFAULT_SCROLL_DROPS.put("creeper", 2.5);
@@ -183,14 +178,19 @@ public class ConfigMobs {
     @Load
     private Map<String, Integer> bisonFoods;
     private Map<Item, Integer> bisonFoodList;
+
     @Load
     private Map<String, Collection<Double>> scrollDropChances;
+    @Load
     private Map<String, Collection<Integer>> scrollDropAmounts;
-    private Map<String, Collections<Integer>> scrollDropTiers;
+    @Load
+    private Map<String, Collection<Integer>> scrollDropTiers;
     //List for transferring/letting the player write
+    @Load
     private Map<String, Collection<String>> scrollTypes;
     //Actually storing the data
-    private Map<Entity, MobDrops> scrollDrops;
+    private Map<Class<? extends Entity>, MobDrops> scrollDrops;
+
     @Load
     private Map<String, String> scrollTradeItems;
     private Map<Item, Pair<Integer, String>> tradeItems;
@@ -209,19 +209,31 @@ public class ConfigMobs {
 
         for (MobDrops drop : info) {
             //Scroll Types
-            MOBS_CONFIG.scrollTypes.put(drop.getScrollTypeEntry());
+            MOBS_CONFIG.scrollTypes.put(drop.getMobName(), drop.getDropTypes());
             //Scroll Amounts
-            MOBS_CONFIG.scrollDropAmounts.put(drop.getDropAmountEntry());
+            MOBS_CONFIG.scrollDropAmounts.put(drop.getMobName(), drop.getDropAmounts());
             //Scroll Tiers
-            MOBS_CONFIG.scrollDropTiers.put(drop.getDropTierEntry());
+            MOBS_CONFIG.scrollDropTiers.put(drop.getMobName(), drop.getDropTiers());
             //Scroll Chances
-            MOBS_CONFIG.scrollDropChances.put(drop.getDropChanceEntry());
+            MOBS_CONFIG.scrollDropChances.put(drop.getMobName(), drop.getDropChances());
         }
 
 
     }
 
     public void loadLists() {
+        //Turns information basic into a mob drop map
+        scrollDrops = new HashMap<>();
+        int i = 0;
+        for (String mobName : scrollTypes.keySet()) {
+            scrollDrops.put(EntityList.getClassFromName(mobName),
+                    MobDrops.fromCollections(mobName, new ArrayList<>(scrollTypes.values()).get(i),
+                            new ArrayList<>(scrollDropAmounts.values()).get(i), new ArrayList<>(scrollDropTiers.values()).get(i),
+                            new ArrayList<>(scrollDropChances.values()).get(i)));
+            i++;
+        }
+        //We did it gamers
+
        /* bisonFoodList = ArrayListMultimap.create();
         for (Map.Entry<String, Integer> entry : bisonFoods.entries()) {
             String name = entry.getKey();
@@ -292,45 +304,12 @@ public class ConfigMobs {
     }
 
     /**
-     * Gets the scroll type for that entity to drop. By default, is
-     * ScrollType.ALL.
+     * @param entity The entity's who's info we're getting
+     * @return The MobDrop information about the entity, containing an array of DropInfo for each drop
+     * (tier, amount, chance, type).
      */
-    public List<ScrollType> getScrollTypes(Entity entity) {
-
-        String entityName = EntityList.getEntityString(entity);
-        List<ScrollType> scrollTypes = new ArrayList<>();
-        if (entityName != null) {
-            String key = entityName.toLowerCase();
-            List<String> types = (new ArrayList<>(scrollType.get(key)));
-            for (String typeName : types) {
-                if (typeName != null) {
-                    ScrollType type = ScrollType.ALL;
-                    for (ScrollType t : ScrollType.values()) {
-                        if (t.name().toLowerCase().equals(typeName.toLowerCase())) {
-                            type = t;
-                            break;
-                        }
-                    }
-
-                    scrollTypes.add(type);
-                }
-            }
-        }
-
-        return scrollTypes;
-    }
-
-
-    /**
-     * Get the default scroll drop chance for that entity in percentage (0-100)
-     */
-    public double getScrollDropChance(Entity entity, int index) {
-        String entityName = EntityList.getEntityString(entity);
-        if (entityName != null) {
-            String key = entityName.toLowerCase();
-            return scrollDropChance.containsKey(key) ? new ArrayList<>(scrollDropChance.get(key)).get(index) : 0;
-        }
-        return 0;
+    public MobDrops getMobDropInfo(Entity entity) {
+        return MOBS_CONFIG.scrollDrops.get(entity.getClass());
     }
 
 
@@ -343,22 +322,6 @@ public class ConfigMobs {
     }
 
     public static class ScrollSettings {
-        //HOw much percent it takes to increase the tier.
-        @Load
-        public final double percentPerTier = 10.0;
-
-        //How much percent it takes to increase the amount of scrolls dropped.
-        @Load
-        public final double percentPerNumber = 10.0;
-
-        //How much the next chance to drop a tier above decreases by.
-        @Load
-        public final double tierChanceDecreaseMult = (1 / 2F);
-
-        //How much the chance to drop more scrolls decreases by.
-        @Load
-        public final double numberChanceDecreaseMult = (2 / 3F);
-
         //Randomises drop amount and tier.
         @Load
         public final boolean chaos = false;

@@ -185,5 +185,28 @@ public class Scrolls {
             return style.isSpecialtyBending();
 
         }
+
+        public static ScrollType getTypeFromString(String name) {
+            switch (name) {
+                case "airbending":
+                    return AIR;
+                case "firebending":
+                    return FIRE;
+                case "waterbending":
+                    return WATER;
+                case "earthbending":
+                    return EARTH;
+                case "combustionbending":
+                    return COMBUSTION;
+                case "icebending":
+                    return ICE;
+                case "sandbending":
+                    return SAND;
+                case "lightningbending":
+                    return LIGHTNING;
+                default:
+                    return ALL;
+            }
+        }
     }
 }

@@ -162,6 +162,7 @@ public abstract class Ability {
             POWER_BOOST = "powerBoost",
             POWER_DURATION = "powerDuration";
 
+    public static final int MAX_TIER = 7;
 
     private final UUID type;
     private final String name;
