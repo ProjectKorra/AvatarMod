@@ -133,6 +133,10 @@ public class Scrolls {
             return values()[id];
         }
 
+        public boolean equals(ScrollType type) {
+            return type.getBendingName().equalsIgnoreCase(getBendingName());
+        }
+
         public static int amount() {
             return values().length;
         }

@@ -26,11 +26,14 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.monster.*;
+import net.minecraft.entity.passive.EntityBat;
+import net.minecraft.entity.passive.EntityChicken;
+import net.minecraft.entity.passive.EntityParrot;
+import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.item.Item;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -40,17 +43,17 @@ public class ConfigMobs {
 
     //TODO: Make mobs drop support multiple scrolls
 
-    private static final Multimap<String, Integer> DEFAULT_FOODS = ArrayListMultimap.create();
+    private static final Map<String, Integer> DEFAULT_FOODS = new HashMap<>();
     private static final Multimap<String, String> TRADE_ITEMS = ArrayListMultimap.create();
     private static final Multimap<String, String> GLIDER_TRADES = ArrayListMultimap.create();
     private static final Multimap<String, Integer> AIRBENDING_TRADE_ITEMS = ArrayListMultimap.create();
     private static final Multimap<String, Integer> FIREBENDING_TRADE_ITEMS = ArrayListMultimap.create();
 
-    //Entity, type
-    private static final Multimap<String, String> DEFAULT_SCROLL_TYPE = ArrayListMultimap.create();
+//    //Entity, type
+//    private static final Multimap<String, String> DEFAULT_SCROLL_TYPE = ArrayListMultimap.create();
 
-    //Entity, drop chance.
-    private static final Multimap<String, Double> DEFAULT_SCROLL_DROPS = ArrayListMultimap.create();
+    //Entity, mob drop info
+    private static final Map<String, MobDrops> DEFAULT_SCROLL_DROPS = new HashMap<>();
 
     public static ConfigMobs MOBS_CONFIG = new ConfigMobs();
 
@@ -85,53 +88,68 @@ public class ConfigMobs {
         DEFAULT_FOODS.put("minecraft:sugar", 2);
 
         //Water.
-        DEFAULT_SCROLL_DROPS.put("polarbear", 10.0);
-        DEFAULT_SCROLL_TYPE.put("polarbear", "water");
-        DEFAULT_SCROLL_TYPE.put("squid", "water");
-        DEFAULT_SCROLL_DROPS.put("guardian", 15.0);
-        DEFAULT_SCROLL_TYPE.put("guardian", "water");
-        DEFAULT_SCROLL_DROPS.put("elderguardian", 40.0);
-        DEFAULT_SCROLL_TYPE.put("elderguardian", "water");
+//        DEFAULT_SCROLL_DROPS.put("polarbear", 10.0);
+//        DEFAULT_SCROLL_TYPE.put("polarbear", "water");
+//        DEFAULT_SCROLL_TYPE.put("squid", "water");
+//        DEFAULT_SCROLL_DROPS.put("guardian", 15.0);
+//        DEFAULT_SCROLL_TYPE.put("guardian", "water");
+//        DEFAULT_SCROLL_DROPS.put("elderguardian", 40.0);
+//        DEFAULT_SCROLL_TYPE.put("elderguardian", "water");
 
         //Fire
         //Some mob names are weird, don't change them.
-        DEFAULT_SCROLL_DROPS.put("pigzombie", 20.0);
-        DEFAULT_SCROLL_TYPE.put("pigzombie", "fire");
-        DEFAULT_SCROLL_DROPS.put("lavaslime", 15.0);
-        DEFAULT_SCROLL_TYPE.put("lavaslime", "fire");
-        DEFAULT_SCROLL_DROPS.put("witherskeleton", 25.0);
-        DEFAULT_SCROLL_TYPE.put("witherskeleton", "fire");
-        DEFAULT_SCROLL_DROPS.put("ghast", 40.0);
-        DEFAULT_SCROLL_TYPE.put("ghast", "fire");
-        DEFAULT_SCROLL_DROPS.put("blaze", 30.0);
-        DEFAULT_SCROLL_TYPE.put("blaze", "fire");
+        //Also, the classes here are just for example. I set them later.
+        DEFAULT_SCROLL_DROPS.put("pigzombie", new MobDrops(EntityPigZombie.class,
+                new DropInfo(ScrollType.FIRE, 1, 20, 2),
+                new DropInfo(ScrollType.FIRE, 2, 10),
+                new DropInfo(ScrollType.FIRE, 3, 5),
+                new DropInfo(ScrollType.FIRE, 4, 2.5)));
+        DEFAULT_SCROLL_DROPS.put("lavaslime", new MobDrops(EntityMagmaCube.class,
+                new DropInfo(ScrollType.FIRE, 1, 25, 3),
+                new DropInfo(ScrollType.FIRE, 2, 15, 2),
+                new DropInfo(ScrollType.FIRE, 3, 2.5)));
+        DEFAULT_SCROLL_DROPS.put("witherskeleton", new MobDrops(EntityWitherSkeleton.class,
+                new DropInfo(ScrollType.FIRE, 1, 30, 3),
+                new DropInfo(ScrollType.FIRE, 2, 15),
+                new DropInfo(ScrollType.FIRE, 3, 10),
+                new DropInfo(ScrollType.FIRE, 4, 5),
+                new DropInfo(ScrollType.FIRE, 5, 1)));
+        DEFAULT_SCROLL_DROPS.put("ghast", new MobDrops(EntityGhast.class,
+                new DropInfo(ScrollType.FIRE, 1, 40),
+                new DropInfo(ScrollType.FIRE, 2, 20)));
+        DEFAULT_SCROLL_DROPS.put("blaze", new MobDrops(EntityBlaze.class,
+                new DropInfo(ScrollType.FIRE, 1, 20, 3),
+                new DropInfo(ScrollType.FIRE, 2, 10, 2),
+                new DropInfo(ScrollType.FIRE, 3, 5, 2),
+                new DropInfo(ScrollType.FIRE, 4, 2.5, 2),
+                new DropInfo(ScrollType.FIRE, 5, 0.5)));
 
         //Air
-        DEFAULT_SCROLL_DROPS.put("bat", 5.0);
-        DEFAULT_SCROLL_TYPE.put("bat", "air");
-        DEFAULT_SCROLL_DROPS.put("parrot", 5.0);
-        DEFAULT_SCROLL_TYPE.put("parrot", "air");
-        DEFAULT_SCROLL_DROPS.put("chicken", 7.5);
-        DEFAULT_SCROLL_TYPE.put("chicken", "air");
-        DEFAULT_SCROLL_DROPS.put("sheep", 5.0);
-        DEFAULT_SCROLL_TYPE.put("sheep", "air");
-        DEFAULT_SCROLL_DROPS.put("shulker", 50.0);
-        DEFAULT_SCROLL_TYPE.put("shulker", "air");
+        DEFAULT_SCROLL_DROPS.put("bat", new MobDrops(EntityBat.class,
+                new DropInfo(ScrollType.AIR, 1, 5),
+                new DropInfo(ScrollType.AIR, 2, 1)));
+        DEFAULT_SCROLL_DROPS.put("parrot", new MobDrops(EntityParrot.class,
+                new DropInfo(ScrollType.AIR, 1, 5)));
+        DEFAULT_SCROLL_DROPS.put("chicken", new MobDrops(EntityChicken.class,
+                new DropInfo(ScrollType.AIR, 1, 7.5)));
+        DEFAULT_SCROLL_DROPS.put("sheep", new MobDrops(EntitySheep.class,
+                new DropInfo(ScrollType.AIR, 1, 5)));
+        DEFAULT_SCROLL_DROPS.put("shulker", new MobDrops(EntityShulker.class,
+                new DropInfo(ScrollType.AIR, 1, 40, 4),
+                new DropInfo(ScrollType.AIR, 2, 20, 3),
+                new DropInfo(ScrollType.AIR, 3, 10, 2),
+                new DropInfo(ScrollType.AIR, 4, 5),
+                new DropInfo(ScrollType.AIR, 5, 2.5),
+                new DropInfo(ScrollType.AIR, 6, 1)));
 
 
         //Earth
         DEFAULT_SCROLL_DROPS.put("mooshroom", 5.0);
-        DEFAULT_SCROLL_TYPE.put("mooshroom", "earth");
         DEFAULT_SCROLL_DROPS.put("cavespider", 10.0);
-        DEFAULT_SCROLL_TYPE.put("cavespider", "earth");
         DEFAULT_SCROLL_DROPS.put("silverfish", 12.5);
-        DEFAULT_SCROLL_TYPE.put("silverfish", "earth");
         DEFAULT_SCROLL_DROPS.put("spider", 5.0);
-        DEFAULT_SCROLL_TYPE.put("spider", "earth");
         DEFAULT_SCROLL_DROPS.put("skeleton", 5.0);
-        DEFAULT_SCROLL_TYPE.put("skeleton", "earth");
         DEFAULT_SCROLL_DROPS.put("zombie", 5.0);
-        DEFAULT_SCROLL_TYPE.put("zombie", "earth");
 
         //Lightning
         DEFAULT_SCROLL_DROPS.put("creeper", 1.0);
@@ -139,17 +157,16 @@ public class ConfigMobs {
 
         //Combustion
         DEFAULT_SCROLL_DROPS.put("creeper", 2.5);
-        DEFAULT_SCROLL_TYPE.put("creeper", "combustion");
+        DEFAULT_SCROLL_DROPS.put("blaze");
+        DEFAULT_SCROLL_DROPS.put("ghast");
 
         //Sand
         DEFAULT_SCROLL_DROPS.put("husk", 10.0);
-        DEFAULT_SCROLL_TYPE.put("husk", "sand");
-
         //Ice
-        DEFAULT_SCROLL_DROPS.put("polarbear", 10.0);
-        DEFAULT_SCROLL_TYPE.put("polarbear", "ice");
-        DEFAULT_SCROLL_DROPS.put("stray", 10.0);
-        DEFAULT_SCROLL_TYPE.put("stray", "ice");
+//        DEFAULT_SCROLL_DROPS.put("polarbear", 10.0);
+//        DEFAULT_SCROLL_TYPE.put("polarbear", "ice");
+//        DEFAULT_SCROLL_DROPS.put("stray", 10.0);
+//        DEFAULT_SCROLL_TYPE.put("stray", "ice");
 
         //All
         DEFAULT_SCROLL_DROPS.put("witch", 10.0);
@@ -164,28 +181,48 @@ public class ConfigMobs {
     @Load
     public BisonSettings bisonSettings = new BisonSettings();
     @Load
-    private Multimap<String, Integer> bisonFoods;
-    private Multimap<Item, Integer> bisonFoodList;
+    private Map<String, Integer> bisonFoods;
+    private Map<Item, Integer> bisonFoodList;
     @Load
-    private Multimap<String, Double> scrollDropChance;
+    private Map<String, Collection<Double>> scrollDropChances;
+    private Map<String, Collection<Integer>> scrollDropAmounts;
+    private Map<String, Collections<Integer>> scrollDropTiers;
+    //List for transferring/letting the player write
+    private Map<String, Collection<String>> scrollTypes;
+    //Actually storing the data
+    private Map<Entity, MobDrops> scrollDrops;
     @Load
-    private Multimap<String, String> scrollType;
-    @Load
-    private Multimap<String, String> scrollTradeItems;
-    private Multimap<Item, Pair<Integer, String>> tradeItems;
+    private Map<String, String> scrollTradeItems;
+    private Map<Item, Pair<Integer, String>> tradeItems;
 
     public static void load() {
         MOBS_CONFIG.scrollTradeItems = TRADE_ITEMS;
         MOBS_CONFIG.bisonFoods = DEFAULT_FOODS;
-        MOBS_CONFIG.scrollType = DEFAULT_SCROLL_TYPE;
-        MOBS_CONFIG.scrollDropChance = DEFAULT_SCROLL_DROPS;
+        loadPreLists();
         ConfigLoader.load(MOBS_CONFIG, "avatar/mobs.yml");
         MOBS_CONFIG.loadLists();
 
     }
 
+    public static void loadPreLists() {
+        List<MobDrops> info = new ArrayList<>(DEFAULT_SCROLL_DROPS.values());
+
+        for (MobDrops drop : info) {
+            //Scroll Types
+            MOBS_CONFIG.scrollTypes.put(drop.getScrollTypeEntry());
+            //Scroll Amounts
+            MOBS_CONFIG.scrollDropAmounts.put(drop.getDropAmountEntry());
+            //Scroll Tiers
+            MOBS_CONFIG.scrollDropTiers.put(drop.getDropTierEntry());
+            //Scroll Chances
+            MOBS_CONFIG.scrollDropChances.put(drop.getDropChanceEntry());
+        }
+
+
+    }
+
     public void loadLists() {
-        bisonFoodList = ArrayListMultimap.create();
+       /* bisonFoodList = ArrayListMultimap.create();
         for (Map.Entry<String, Integer> entry : bisonFoods.entries()) {
             String name = entry.getKey();
             Item item = Item.getByNameOrId(name);
@@ -213,12 +250,12 @@ public class ConfigMobs {
             } else {
                 AvatarLog.warn(WarningType.CONFIGURATION, "Invalid trade item; item " + name + " not found");
             }
-        }
+        }**/
     }
 
     public int getDomesticationValue(Item item) {
         if (bisonFoodList.containsKey(item))
-         return (int) bisonFoodList.get(item).toArray()[0];
+            return (int) bisonFoodList.get(item).toArray()[0];
         else return 0;
     }
 

@@ -19,6 +19,8 @@ package com.crowsofwar.gorecore.config;
 
 import com.crowsofwar.gorecore.GoreCore;
 import com.crowsofwar.gorecore.config.convert.ConverterRegistry;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.logging.log4j.Level;
 import org.yaml.snakeyaml.DumperOptions;
@@ -28,6 +30,7 @@ import org.yaml.snakeyaml.error.YAMLException;
 import org.yaml.snakeyaml.nodes.Tag;
 import org.yaml.snakeyaml.representer.Representer;
 import org.yaml.snakeyaml.scanner.ScannerException;
+import scala.collection.mutable.MultiMap;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -277,9 +280,10 @@ public class ConfigLoader {
 		// 2. from is instance of to (or vice versa), so no
 		// conversion is necessary
 		// 3. There is a converter to convert from->to.
-		// 4. from is a map. to is not. This means, there is an
+		// 4. from is a multimap. to is not.
+		// 5. from is a map. to is not. This means, there is an
 		// object that must be loaded from map. Use a load method.
-		// 5. cry
+		// 6. cry
 		
 		Class<Object> from = (Class<Object>) object.getClass();
 		
@@ -315,9 +319,7 @@ public class ConfigLoader {
 			return loadedObject;
 			
 		} else {
-			
 			throw new ConfigurationException.LoadingException("No way to convert " + from + " -> " + to);
-			
 		}
 	}
 	

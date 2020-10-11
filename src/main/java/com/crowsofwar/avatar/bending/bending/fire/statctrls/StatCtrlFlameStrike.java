@@ -237,13 +237,16 @@ public class StatCtrlFlameStrike extends StatusControl {
             if (!world.isRemote)
                 setTimesUsed(entity.getPersistentID(), getTimesUsed(entity.getPersistentID()) + 1);
 
-            if (!world.isRemote && getTimesUsed(entity.getPersistentID()) >= strike.getProperty(STRIKES, abilityData).intValue()) {
-                abilityData.setAbilityCooldown(cooldown);
-                abilityData.setRegenBurnout(true);
-            }
 
             world.playSound(entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 1.0F + Math.max(abilityData.getLevel() * 0.5F, 0),
                     1.25F * world.rand.nextFloat(), false);
+
+            if (!world.isRemote && getTimesUsed(entity.getPersistentID()) >= strike.getProperty(STRIKES, abilityData).intValue()) {
+                abilityData.setAbilityCooldown(cooldown);
+                abilityData.setRegenBurnout(true);
+                ctx.getData().removeTickHandler(FLAME_STRIKE_HANDLER, ctx);
+                return true;
+            }
         }
         else {
             abilityData.setAbilityCooldown(cooldown);
