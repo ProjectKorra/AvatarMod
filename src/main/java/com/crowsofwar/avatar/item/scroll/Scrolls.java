@@ -162,7 +162,7 @@ public class Scrolls {
         }
 
         public String getBendingName() {
-            return bendingId == null ? "all" : BendingStyles.get(bendingId).getName();
+            return BendingStyles.get(bendingId) == null ? "all" : BendingStyles.get(bendingId).getName();
         }
 
         /**

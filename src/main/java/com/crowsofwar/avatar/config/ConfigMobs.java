@@ -17,11 +17,10 @@
 package com.crowsofwar.avatar.config;
 
 import akka.japi.Pair;
+import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.item.scroll.Scrolls.ScrollType;
 import com.crowsofwar.gorecore.config.ConfigLoader;
 import com.crowsofwar.gorecore.config.Load;
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.item.Item;
@@ -36,10 +35,10 @@ public class ConfigMobs {
     //TODO: Make mobs drop support multiple scrolls
 
     private static final Map<String, Integer> DEFAULT_FOODS = new HashMap<>();
-    private static final Multimap<String, String> TRADE_ITEMS = ArrayListMultimap.create();
-    private static final Multimap<String, String> GLIDER_TRADES = ArrayListMultimap.create();
-    private static final Multimap<String, Integer> AIRBENDING_TRADE_ITEMS = ArrayListMultimap.create();
-    private static final Multimap<String, Integer> FIREBENDING_TRADE_ITEMS = ArrayListMultimap.create();
+    private static final Map<String, String> TRADE_ITEMS = new HashMap<>();
+    private static final Map<String, String> GLIDER_TRADES = new HashMap<>();
+    private static final Map<String, Integer> AIRBENDING_TRADE_ITEMS = new HashMap<>();
+    private static final Map<String, Integer> FIREBENDING_TRADE_ITEMS = new HashMap<>();
 
 //    //Entity, type
 //    private static final Multimap<String, String> DEFAULT_SCROLL_TYPE = ArrayListMultimap.create();
@@ -142,21 +141,51 @@ public class ConfigMobs {
         DEFAULT_SCROLL_DROPS.put("cavespider", new MobDrops("cavespider",
                 new DropInfo(ScrollType.EARTH, 1, 10, 2),
                 new DropInfo(ScrollType.EARTH, 1, 5.0, 1)));
-        DEFAULT_SCROLL_DROPS.put("silverfish", 12.5);
-        DEFAULT_SCROLL_DROPS.put("spider", 5.0);
-        DEFAULT_SCROLL_DROPS.put("skeleton", 5.0);
-        DEFAULT_SCROLL_DROPS.put("zombie", 5.0);
+        DEFAULT_SCROLL_DROPS.put("silverfish", new MobDrops("silverfish",
+                new DropInfo(ScrollType.EARTH, 1, 12.5, 2),
+                new DropInfo(ScrollType.EARTH, 2, 5.0),
+                new DropInfo(ScrollType.EARTH, 3, 2.5)));
+        DEFAULT_SCROLL_DROPS.put("spider", new MobDrops("spider",
+                new DropInfo(ScrollType.EARTH, 1, 5.0),
+                new DropInfo(ScrollType.EARTH, 2, 1)));
+        DEFAULT_SCROLL_DROPS.put("skeleton", new MobDrops("skeleton",
+                new DropInfo(ScrollType.EARTH, 1, 7.5),
+                new DropInfo(ScrollType.EARTH, 2, 5),
+                new DropInfo(ScrollType.EARTH, 3, 1)));
+        DEFAULT_SCROLL_DROPS.put("zombie", new MobDrops("zombie",
+                new DropInfo(ScrollType.EARTH, 1, 5.0),
+                new DropInfo(ScrollType.EARTH, 2, 2.5),
+                new DropInfo(ScrollType.EARTH, 3, 1.0)));
+        DEFAULT_SCROLL_DROPS.put("husk", new MobDrops("husk",
+                new DropInfo(ScrollType.EARTH, 1, 10.0, 2),
+                new DropInfo(ScrollType.EARTH, 2, 7.5, 2),
+                new DropInfo(ScrollType.EARTH, 3, 5)));
 
         //Lightning
-        DEFAULT_SCROLL_DROPS.put("creeper", 1.0);
+        DEFAULT_SCROLL_DROPS.put("creeper", new MobDrops("creeper",
+                new DropInfo(ScrollType.LIGHTNING, 1, 1)));
 
         //Combustion
-        DEFAULT_SCROLL_DROPS.put("creeper", 2.5);
-        DEFAULT_SCROLL_DROPS.put("blaze");
-        DEFAULT_SCROLL_DROPS.put("ghast");
+        DEFAULT_SCROLL_DROPS.get("creeper").addDropInfo(
+                new DropInfo(ScrollType.COMBUSTION, 1, 2.5),
+                new DropInfo(ScrollType.COMBUSTION, 2, 0.5)
+        );
+        DEFAULT_SCROLL_DROPS.get("blaze").addDropInfo(
+                new DropInfo(ScrollType.COMBUSTION, 1, 10, 2),
+                new DropInfo(ScrollType.COMBUSTION, 2, 5),
+                new DropInfo(ScrollType.COMBUSTION, 3, 1)
+        );
+        DEFAULT_SCROLL_DROPS.get("ghast").addDropInfo(
+                new DropInfo(ScrollType.COMBUSTION, 1, 15, 3),
+                new DropInfo(ScrollType.COMBUSTION, 2, 10, 2),
+                new DropInfo(ScrollType.COMBUSTION, 3, 5)
+        );
 
         //Sand
-        DEFAULT_SCROLL_DROPS.put("husk", 10.0);
+        DEFAULT_SCROLL_DROPS.put("husk", new MobDrops("husk",
+                new DropInfo(ScrollType.SAND, 1, 7.5),
+                new DropInfo(ScrollType.SAND, 2, 2.5)
+        ));
         //Ice
 //        DEFAULT_SCROLL_DROPS.put("polarbear", 10.0);
 //        DEFAULT_SCROLL_TYPE.put("polarbear", "ice");
@@ -164,9 +193,27 @@ public class ConfigMobs {
 //        DEFAULT_SCROLL_TYPE.put("stray", "ice");
 
         //All
-        DEFAULT_SCROLL_DROPS.put("witch", 10.0);
-        DEFAULT_SCROLL_DROPS.put("enderman", 12.5);
-        DEFAULT_SCROLL_DROPS.put("creeper", 5.0);
+        DEFAULT_SCROLL_DROPS.put("witch", new MobDrops("witch",
+                new DropInfo(ScrollType.ALL, 1, 10, 2),
+                new DropInfo(ScrollType.ALL, 2, 5, 2),
+                new DropInfo(ScrollType.ALL, 3, 2.5)));
+        DEFAULT_SCROLL_DROPS.put("enderman", new MobDrops("enderman",
+                new DropInfo(ScrollType.ALL, 1, 15, 3),
+                new DropInfo(ScrollType.ALL, 2, 10, 2),
+                new DropInfo(ScrollType.ALL, 3, 5),
+                new DropInfo(ScrollType.ALL, 4, 1)));
+        DEFAULT_SCROLL_DROPS.get("creeper").addDropInfo(
+                new DropInfo(ScrollType.ALL, 1, 7.5),
+                new DropInfo(ScrollType.ALL, 2, 5)
+        );
+        DEFAULT_SCROLL_DROPS.get("zombie").addDropInfo(
+                new DropInfo(ScrollType.ALL, 1, 7.5),
+                new DropInfo(ScrollType.ALL, 2, 2.5)
+        );
+        DEFAULT_SCROLL_DROPS.get("skeleton").addDropInfo(
+                new DropInfo(ScrollType.ALL, 1, 7.5),
+                new DropInfo(ScrollType.ALL, 2, 2.5)
+        );
     }
 
     @Load
@@ -207,6 +254,11 @@ public class ConfigMobs {
     public static void loadPreLists() {
         List<MobDrops> info = new ArrayList<>(DEFAULT_SCROLL_DROPS.values());
 
+        MOBS_CONFIG.scrollTypes = new HashMap<>();
+        MOBS_CONFIG.scrollDropAmounts = new HashMap<>();
+        MOBS_CONFIG.scrollDropTiers = new HashMap<>();
+        MOBS_CONFIG.scrollDropChances = new HashMap<>();
+
         for (MobDrops drop : info) {
             //Scroll Types
             MOBS_CONFIG.scrollTypes.put(drop.getMobName(), drop.getDropTypes());
@@ -234,18 +286,18 @@ public class ConfigMobs {
         }
         //We did it gamers
 
-       /* bisonFoodList = ArrayListMultimap.create();
-        for (Map.Entry<String, Integer> entry : bisonFoods.entries()) {
+        bisonFoodList = new HashMap<>();
+        for (Map.Entry<String, Integer> entry : bisonFoods.entrySet()) {
             String name = entry.getKey();
             Item item = Item.getByNameOrId(name);
             if (item != null) {
                 bisonFoodList.put(item, entry.getValue());
             } else {
-                AvatarLog.warn(WarningType.CONFIGURATION, "Invalid bison food; item " + name + " not found");
+                AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Invalid bison food; item " + name + " not found");
             }
         }
-        tradeItems = ArrayListMultimap.create();
-        for (Map.Entry<String, String> entry : scrollTradeItems.entries()) {
+        tradeItems = new HashMap<>();
+        for (Map.Entry<String, String> entry : scrollTradeItems.entrySet()) {
             String name = entry.getKey();
             String tierS = name.split(" ")[1];
             name = name.split(" ")[0];
@@ -254,26 +306,24 @@ public class ConfigMobs {
                 tier = Integer.parseInt(tierS);
             } catch (NumberFormatException e) {
                 e.printStackTrace();
-                AvatarLog.warn(WarningType.CONFIGURATION, "Please enter a number for the tier next to the item name.");
+                AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Please enter a number for the tier next to the item name.");
             }
             Item item = Item.getByNameOrId(name);
             if (item != null) {
                 tradeItems.put(item, new Pair<>(tier, entry.getValue()));
             } else {
-                AvatarLog.warn(WarningType.CONFIGURATION, "Invalid trade item; item " + name + " not found");
+                AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Invalid trade item; item " + name + " not found");
             }
-        }**/
+        }
     }
 
     public int getDomesticationValue(Item item) {
-        if (bisonFoodList.containsKey(item))
-            return (int) bisonFoodList.get(item).toArray()[0];
-        else return 0;
+        return bisonFoodList.getOrDefault(item, 0);
     }
 
     public List<Item> getTradeItems() {
         List<Item> items = new ArrayList<>();
-        for (Map.Entry<Item, Pair<Integer, String>> entry : tradeItems.entries()) {
+        for (Map.Entry<Item, Pair<Integer, String>> entry : tradeItems.entrySet()) {
             items.add(entry.getKey());
         }
         return items;
@@ -284,19 +334,19 @@ public class ConfigMobs {
     }
 
     public String getTradeItemElement(Item item) {
-        return new ArrayList<>(tradeItems.get(item)).get(0).second();
+        return tradeItems.get(item).second();
     }
 
     public int getTradeItemTier(Item item) {
-        return new ArrayList<>(tradeItems.get(item)).get(0).first();
+        return tradeItems.get(item).first();
     }
 
     public boolean isAirTradeItem(Item item) {
-        return new ArrayList<>(tradeItems.get(item)).get(0).second().equals("air");
+        return tradeItems.get(item).second().equals("air");
     }
 
     public boolean isFireTradeItem(Item item) {
-        return new ArrayList<>(tradeItems.get(item)).get(0).second().equals("fire");
+        return tradeItems.get(item).second().equals("fire");
     }
 
     public boolean isBisonFood(Item item) {
