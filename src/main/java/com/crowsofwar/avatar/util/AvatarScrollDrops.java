@@ -17,6 +17,7 @@
 package com.crowsofwar.avatar.util;
 
 import com.crowsofwar.avatar.AvatarInfo;
+import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.config.DropInfo;
 import com.crowsofwar.avatar.config.MobDrops;
@@ -42,42 +43,41 @@ public class AvatarScrollDrops {
         EntityLivingBase entity = e.getEntityLiving();
 
         if (e.isRecentlyHit()) {
-
             MobDrops mobInfo = MOBS_CONFIG.getMobDropInfo(entity);
-            DropInfo[] dropInfo = mobInfo.getDropInformation().clone();
+            if (mobInfo != null) {
+                DropInfo[] dropInfo = mobInfo.getDropInformation().clone();
 
+                for (DropInfo info : dropInfo) {
+                    int amount = info.getAmount();
+                    int tier = info.getTier();
+                    double chance = info.getDropChance();
+                    ScrollType type = info.getType();
 
-            for (DropInfo info : dropInfo) {
-                int amount = info.getAmount();
-                int tier = info.getTier();
-                double chance = info.getDropChance();
-                ScrollType type = info.getType();
+                    if (MOBS_CONFIG.scrollSettings.chaos || MOBS_CONFIG.scrollSettings.absoluteChaos) {
+                        amount = AvatarUtils.getRandomNumberInRange(1, Ability.MAX_TIER);
+                        tier = AvatarUtils.getRandomNumberInRange(1, Ability.MAX_TIER);
+                    }
 
-                if (MOBS_CONFIG.scrollSettings.chaos || MOBS_CONFIG.scrollSettings.absoluteChaos) {
-                    amount = AvatarUtils.getRandomNumberInRange(1, Ability.MAX_TIER);
-                    tier = AvatarUtils.getRandomNumberInRange(1, Ability.MAX_TIER);
-                }
+                    if (MOBS_CONFIG.scrollSettings.absoluteChaos) {
+                        chance = AvatarUtils.getRandomNumberInRange(1, 100);
+                        type = ScrollType.get(AvatarUtils.getRandomNumberInRange(0, ScrollType.amount()));
+                    }
 
-                if (MOBS_CONFIG.scrollSettings.absoluteChaos) {
-                    chance = AvatarUtils.getRandomNumberInRange(1, 100);
-                    type = ScrollType.get(AvatarUtils.getRandomNumberInRange(0, ScrollType.amount()));
-                }
-
-                for (int i = 0; i < amount; i++) {
-                    if (Math.random() < chance / 100) {
-                        assert type != null;
-                        if (Scrolls.getItemForType(type) != null) {
-                            ItemStack stack = new ItemStack(Objects.requireNonNull(Scrolls.getItemForType(type)),
-                                    1, tier - 1);
-                            EntityItem item = new EntityItem(entity.world, entity.posX, entity.posY,
-                                    entity.posZ, stack);
-                            item.setDefaultPickupDelay();
-                            e.getDrops().add(item);
+                    for (int i = 0; i < amount; i++) {
+                        if (Math.random() <= chance / 100) {
+                            assert type != null;
+                            if (Scrolls.getItemForType(type) != null) {
+                                ItemStack stack = new ItemStack(Objects.requireNonNull(Scrolls.getItemForType(type)),
+                                        1, tier - 1);
+                                EntityItem item = new EntityItem(entity.world, entity.posX, entity.posY,
+                                        entity.posZ, stack);
+                                item.setDefaultPickupDelay();
+                                e.getDrops().add(item);
+                            }
                         }
                     }
                 }
             }
-
         }
 
         // Send analytics for any entities that dropped scrolls

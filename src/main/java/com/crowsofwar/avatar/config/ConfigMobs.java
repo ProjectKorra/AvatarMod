@@ -90,16 +90,16 @@ public class ConfigMobs {
         //Fire
         //Some mob names are weird, don't change them.
         //Also, the classes here are just for example. I set them later.
-        DEFAULT_SCROLL_DROPS.put("pigzombie", new MobDrops("pigzombie",
+        DEFAULT_SCROLL_DROPS.put("zombie_pigman", new MobDrops("zombie_pigman",
                 new DropInfo(ScrollType.FIRE, 1, 20, 2),
                 new DropInfo(ScrollType.FIRE, 2, 10),
                 new DropInfo(ScrollType.FIRE, 3, 5),
                 new DropInfo(ScrollType.FIRE, 4, 2.5)));
-        DEFAULT_SCROLL_DROPS.put("lavaslime", new MobDrops("lavaslime",
+        DEFAULT_SCROLL_DROPS.put("magma_cube", new MobDrops("magma_cube",
                 new DropInfo(ScrollType.FIRE, 1, 25, 3),
                 new DropInfo(ScrollType.FIRE, 2, 15, 2),
                 new DropInfo(ScrollType.FIRE, 3, 2.5)));
-        DEFAULT_SCROLL_DROPS.put("witherskeleton", new MobDrops("witherskeleton",
+        DEFAULT_SCROLL_DROPS.put("wither_skeleton", new MobDrops("wither_skeleton",
                 new DropInfo(ScrollType.FIRE, 1, 30, 3),
                 new DropInfo(ScrollType.FIRE, 2, 15),
                 new DropInfo(ScrollType.FIRE, 3, 10),
@@ -138,7 +138,7 @@ public class ConfigMobs {
         DEFAULT_SCROLL_DROPS.put("mooshroom", new MobDrops("mooshroom",
                 new DropInfo(ScrollType.EARTH, 1, 5.0),
                 new DropInfo(ScrollType.EARTH, 2, 2.5)));
-        DEFAULT_SCROLL_DROPS.put("cavespider", new MobDrops("cavespider",
+        DEFAULT_SCROLL_DROPS.put("cave_spider", new MobDrops("cave_spider",
                 new DropInfo(ScrollType.EARTH, 1, 10, 2),
                 new DropInfo(ScrollType.EARTH, 1, 5.0, 1)));
         DEFAULT_SCROLL_DROPS.put("silverfish", new MobDrops("silverfish",
@@ -214,6 +214,14 @@ public class ConfigMobs {
                 new DropInfo(ScrollType.ALL, 1, 7.5),
                 new DropInfo(ScrollType.ALL, 2, 2.5)
         );
+        DEFAULT_SCROLL_DROPS.put("ender_dragon", new MobDrops("ender_dragon",
+                new DropInfo(ScrollType.ALL, 1, 75, 7),
+                new DropInfo(ScrollType.ALL, 2, 65, 6),
+                new DropInfo(ScrollType.ALL, 3, 55, 5),
+                new DropInfo(ScrollType.ALL, 4, 45, 4),
+                new DropInfo(ScrollType.ALL, 5, 35, 3),
+                new DropInfo(ScrollType.ALL, 6, 25, 2),
+                new DropInfo(ScrollType.ALL, 7, 15, 1)));
     }
 
     @Load
@@ -275,7 +283,7 @@ public class ConfigMobs {
 
     public void loadLists() {
         //Turns information basic into a mob drop map
-        scrollDrops = new HashMap<>();
+        MOBS_CONFIG.scrollDrops = new HashMap<>();
         int i = 0;
         for (String mobName : scrollTypes.keySet()) {
             scrollDrops.put(EntityList.getClassFromName(mobName),
