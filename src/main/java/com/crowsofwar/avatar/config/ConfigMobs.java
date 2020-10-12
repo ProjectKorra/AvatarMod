@@ -176,15 +176,15 @@ public class ConfigMobs {
                 new DropInfo(ScrollType.COMBUSTION, 3, 1)
         );
         DEFAULT_SCROLL_DROPS.get("ghast").addDropInfo(
-                new DropInfo(ScrollType.COMBUSTION, 1, 15, 3),
-                new DropInfo(ScrollType.COMBUSTION, 2, 10, 2),
-                new DropInfo(ScrollType.COMBUSTION, 3, 5)
+                new DropInfo(ScrollType.COMBUSTION, 1, 25.0, 3),
+                new DropInfo(ScrollType.COMBUSTION, 2, 15.0, 2),
+                new DropInfo(ScrollType.COMBUSTION, 3, 5.0)
         );
 
         //Sand
         DEFAULT_SCROLL_DROPS.put("husk", new MobDrops("husk",
-                new DropInfo(ScrollType.SAND, 1, 7.5),
-                new DropInfo(ScrollType.SAND, 2, 2.5)
+                new DropInfo(ScrollType.SAND, 1, 15.0),
+                new DropInfo(ScrollType.SAND, 2, 5.0)
         ));
         //Ice
 //        DEFAULT_SCROLL_DROPS.put("polarbear", 10.0);
@@ -198,21 +198,21 @@ public class ConfigMobs {
                 new DropInfo(ScrollType.ALL, 2, 5, 2),
                 new DropInfo(ScrollType.ALL, 3, 2.5)));
         DEFAULT_SCROLL_DROPS.put("enderman", new MobDrops("enderman",
-                new DropInfo(ScrollType.ALL, 1, 15, 3),
-                new DropInfo(ScrollType.ALL, 2, 10, 2),
-                new DropInfo(ScrollType.ALL, 3, 5),
-                new DropInfo(ScrollType.ALL, 4, 1)));
+                new DropInfo(ScrollType.ALL, 1, 25, 3),
+                new DropInfo(ScrollType.ALL, 2, 15, 2),
+                new DropInfo(ScrollType.ALL, 3, 10),
+                new DropInfo(ScrollType.ALL, 4, 2.5)));
         DEFAULT_SCROLL_DROPS.get("creeper").addDropInfo(
-                new DropInfo(ScrollType.ALL, 1, 7.5),
-                new DropInfo(ScrollType.ALL, 2, 5)
+                new DropInfo(ScrollType.ALL, 1, 15.0),
+                new DropInfo(ScrollType.ALL, 2, 7.5)
         );
         DEFAULT_SCROLL_DROPS.get("zombie").addDropInfo(
-                new DropInfo(ScrollType.ALL, 1, 7.5),
-                new DropInfo(ScrollType.ALL, 2, 2.5)
+                new DropInfo(ScrollType.ALL, 1, 10.0),
+                new DropInfo(ScrollType.ALL, 2, 5.0)
         );
         DEFAULT_SCROLL_DROPS.get("skeleton").addDropInfo(
-                new DropInfo(ScrollType.ALL, 1, 7.5),
-                new DropInfo(ScrollType.ALL, 2, 2.5)
+                new DropInfo(ScrollType.ALL, 1, 10.0),
+                new DropInfo(ScrollType.ALL, 2, 5.0)
         );
         DEFAULT_SCROLL_DROPS.put("ender_dragon", new MobDrops("ender_dragon",
                 new DropInfo(ScrollType.ALL, 1, 75, 7),
