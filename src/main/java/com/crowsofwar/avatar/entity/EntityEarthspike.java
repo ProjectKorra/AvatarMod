@@ -23,6 +23,9 @@ import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.Vec3d;
@@ -34,6 +37,9 @@ import javax.annotation.Nullable;
  * @author CrowsOfWar
  */
 public class EntityEarthspike extends EntityOffensive {
+
+    private static final DataParameter<Boolean> SYNC_ANGLED = EntityDataManager.createKey(EntityEarthspike.class,
+            DataSerializers.BOOLEAN);
 
     int sizeTicks = 0;
 
@@ -177,5 +183,19 @@ public class EntityEarthspike extends EntityOffensive {
     @Override
     public void resetPositionToBB() {
         //Fixes janky positioning
+    }
+
+    @Override
+    protected void entityInit() {
+        super.entityInit();
+        dataManager.register(SYNC_ANGLED, false);
+    }
+
+    public void setAngled(boolean angled) {
+        dataManager.set(SYNC_ANGLED, angled);
+    }
+
+    public boolean isAngled() {
+        return dataManager.get(SYNC_ANGLED);
     }
 }

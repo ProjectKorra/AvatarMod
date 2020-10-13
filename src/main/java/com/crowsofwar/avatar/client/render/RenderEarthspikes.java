@@ -53,17 +53,17 @@ public class RenderEarthspikes extends RenderModel<EntityEarthspike> {
         BlockPos below = entity.getPosition().offset(EnumFacing.DOWN);
         Block belowBlock = entity.world.getBlockState(below).getBlock();
         if (belowBlock == Blocks.GRASS) {
-            TEXTURE = new ResourceLocation("avatarmod", "textures/entity/earthspike" + ".png");
+            TEXTURE = new ResourceLocation("avatarmod", "textures/entity/earthspike/earthspike" + ".png");
         } else if (belowBlock == Blocks.DIRT) {
-            TEXTURE = new ResourceLocation("avatarmod", "textures/entity/earthspike_dirt" + ".png");
+            TEXTURE = new ResourceLocation("avatarmod", "textures/entity/earthspike/earthspike_dirt" + ".png");
         } else if (belowBlock == Blocks.SAND) {
-            TEXTURE = new ResourceLocation("avatarmod", "textures/entity/earthspike_sand" + ".png");
+            TEXTURE = new ResourceLocation("avatarmod", "textures/entity/earthspike/earthspike_sand" + ".png");
         } else if (belowBlock == Blocks.SANDSTONE) {
-            TEXTURE = new ResourceLocation("avatarmod", "textures/entity/earthspike_sandstone" + ".png");
+            TEXTURE = new ResourceLocation("avatarmod", "textures/entity/earthspike/earthspike_sandstone" + ".png");
         } else if (belowBlock == Blocks.STONE) {
-            TEXTURE = new ResourceLocation("avatarmod", "textures/entity/earthspike_stone" + ".png");
+            TEXTURE = new ResourceLocation("avatarmod", "textures/entity/earthspike/earthspike_stone" + ".png");
         } else {
-            TEXTURE = new ResourceLocation("avatarmod", "textures/entity/earthspike_stone" + ".png");
+            TEXTURE = new ResourceLocation("avatarmod", "textures/entity/earthspike/earthspike_stone" + ".png");
         }
 
 
