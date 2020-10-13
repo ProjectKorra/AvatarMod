@@ -231,9 +231,6 @@ public class StatCtrlFlameStrike extends StatusControl {
             if (hand == EnumHand.OFF_HAND)
                 entity.swingArm(hand);
 
-            if (ctx.getData().hasTickHandler(FLAME_STRIKE_HANDLER))
-                ctx.getData().addStatusControl(hand == EnumHand.MAIN_HAND ? FLAME_STRIKE_OFF : FLAME_STRIKE_MAIN);
-
             if (!world.isRemote)
                 setTimesUsed(entity.getPersistentID(), getTimesUsed(entity.getPersistentID()) + 1);
 
@@ -247,6 +244,10 @@ public class StatCtrlFlameStrike extends StatusControl {
                 ctx.getData().removeTickHandler(FLAME_STRIKE_HANDLER, ctx);
                 return true;
             }
+
+
+            if (ctx.getData().hasTickHandler(FLAME_STRIKE_HANDLER))
+                ctx.getData().addStatusControl(hand == EnumHand.MAIN_HAND ? FLAME_STRIKE_OFF : FLAME_STRIKE_MAIN);
         }
         else {
             abilityData.setAbilityCooldown(cooldown);
