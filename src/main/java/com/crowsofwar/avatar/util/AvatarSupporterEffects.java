@@ -58,7 +58,7 @@ public class AvatarSupporterEffects {
                                 int level = Math.min(3, (int) ((float) totalLevel / maxLevel * 4));
 
                                 float mult = 0.5F + (0.5F / 4F * (level + 1F));
-
+/*
                                 ParticleBuilder builder = ParticleBuilder.instance.pos(entity.getPositionVector());
 
                                 switch (style.getName()) {
@@ -93,7 +93,7 @@ public class AvatarSupporterEffects {
                                         break;
 
                                 }
-                                builder.spawn(entity.world);
+                                builder.spawn(entity.world);**/
                             }
                         }
                     }
