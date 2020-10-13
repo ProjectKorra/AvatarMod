@@ -1,9 +1,10 @@
 package com.crowsofwar.avatar.config;
 
-import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.item.scroll.Scrolls;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.registry.EntityEntry;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -22,8 +23,15 @@ public class MobDrops {
 
     public MobDrops(String mobName, DropInfo... info) {
         this.mobName = mobName;
-        this.mob = EntityList.getClassFromName(mobName);
+        this.mob = getClassFromName(mobName);
         this.dropInformation = info;
+    }
+
+
+    //Because EntityList's method is ClientSide. Hax
+    public static Class<? extends Entity> getClassFromName(String name) {
+        EntityEntry entry = net.minecraftforge.fml.common.registry.ForgeRegistries.ENTITIES.getValue(new ResourceLocation(name));
+        return entry == null ? null : entry.getEntityClass();
     }
 
     public static MobDrops fromCollections(Class<? extends Entity> clazz, Collection<String> scrollTypes, Collection<Integer> dropAmounts,

@@ -22,7 +22,6 @@ import com.crowsofwar.avatar.item.scroll.Scrolls.ScrollType;
 import com.crowsofwar.gorecore.config.ConfigLoader;
 import com.crowsofwar.gorecore.config.Load;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
 import net.minecraft.item.Item;
 
 import java.util.*;
@@ -286,7 +285,7 @@ public class ConfigMobs {
         MOBS_CONFIG.scrollDrops = new HashMap<>();
         int i = 0;
         for (String mobName : scrollTypes.keySet()) {
-            scrollDrops.put(EntityList.getClassFromName(mobName),
+            scrollDrops.put(MobDrops.getClassFromName(mobName),
                     MobDrops.fromCollections(mobName, new ArrayList<>(scrollTypes.values()).get(i),
                             new ArrayList<>(scrollDropAmounts.values()).get(i), new ArrayList<>(scrollDropTiers.values()).get(i),
                             new ArrayList<>(scrollDropChances.values()).get(i)));
