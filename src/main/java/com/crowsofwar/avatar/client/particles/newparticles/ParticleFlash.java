@@ -51,9 +51,6 @@ public class ParticleFlash extends ParticleAvatar /*implements IGlowingEntity*/ 
     public void drawParticle(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
 
         float f4;
-        if (!CLIENT_CONFIG.particleSettings.realisticFlashParticles) {
-            GlStateManager.disableTexture2D();
-        }
 
         f4 = particleScale * MathHelper.sin(((float) this.particleAge + partialTicks - 1.0F) / particleMaxAge * (float) Math.PI);
 

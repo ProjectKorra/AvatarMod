@@ -21,6 +21,9 @@ public class RenderLayerFlashParticle extends RenderLayer {
 			GL20.glUseProgram(0);
 		}
 		Minecraft.getMinecraft().renderEngine.bindTexture(PARTICLE_TEXTURES);
+		if (!CLIENT_CONFIG.particleSettings.realisticFlashParticles)
+			GlStateManager.disableTexture2D();
+
 		super.preRenderParticles();
 	}
 	
