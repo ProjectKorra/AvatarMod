@@ -71,7 +71,7 @@ public class AvatarSupporterEffects {
 
                                 float mult = 0.5F + (0.5F / 4F * (level + 1F));
 
-                                if (entity.world.isRemote) {
+                               /* if (entity.world.isRemote) {
                                     ParticleBuilder builder = ParticleBuilder.instance.pos(entity.getPositionVector());
 
                                     switch (style.getName()) {
@@ -107,7 +107,7 @@ public class AvatarSupporterEffects {
 
                                     }
                                     builder.spawn(entity.world);
-                                }
+                                }**/
                             }
                         }
                     }
