@@ -102,9 +102,6 @@ public class FlashParticleBatchRenderer {
                 GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE);
             }
 
-            if (CLIENT_CONFIG.particleSettings.voxelFlashParticles) {
-                GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-            }
 
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             Tessellator tessellator = Tessellator.getInstance();

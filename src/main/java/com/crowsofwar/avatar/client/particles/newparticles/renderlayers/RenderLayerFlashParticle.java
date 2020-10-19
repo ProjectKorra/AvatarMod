@@ -20,9 +20,6 @@ public class RenderLayerFlashParticle extends RenderLayer {
 		if(CLIENT_CONFIG.particleSettings.releaseShaderOnFlashParticleRender && GL11.glGetInteger(GL20.GL_CURRENT_PROGRAM) != 0) {
 			GL20.glUseProgram(0);
 		}
-		if(CLIENT_CONFIG.particleSettings.voxelFlashParticles) {
-			GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-		}
 		Minecraft.getMinecraft().renderEngine.bindTexture(PARTICLE_TEXTURES);
 		super.preRenderParticles();
 	}
@@ -31,6 +28,8 @@ public class RenderLayerFlashParticle extends RenderLayer {
 	public void postRenderParticles() {
 		super.postRenderParticles();
 		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+		//Gives a 2D mc look if the config option is enabled without breaking everything else
+		GlStateManager.enableTexture2D();
 	}
 	
 }

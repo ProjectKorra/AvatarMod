@@ -90,7 +90,6 @@ public class AbilityAirGust extends Ability {
             gust.setOwner(entity);
             gust.setEntitySize(size);
             gust.setDamage(0);
-            gust.setDynamicSpreadingCollision(true);
             gust.setLifeTime(lifetime);
             gust.setPush(push / 1.25F);
             gust.rotationPitch = entity.rotationPitch;
@@ -194,13 +193,15 @@ public class AbilityAirGust extends Ability {
                                 .scale(0.75F * entity.getAvgSize() * (1 / entity.getAvgSize())).element(new Airbending()).collide(true).collideParticles(true).spawn(world);
 
                     }
-                    entity.setVelocity(entity.velocity().times(0.95));
-                    if (entity.velocity().sqrMagnitude() < 0.5 * 0.5)
-                        entity.Dissipate();
 
-                    float expansionRate = 1f / 80;
-                    entity.setEntitySize(entity.getAvgSize() + expansionRate);
                 }
+                entity.motionX *= 0.95;
+                entity.motionY *= 0.95;
+                entity.motionZ *= 0.95;
+                if (entity.velocity().sqrMagnitude() < 0.5 * 0.5)
+                    entity.Dissipate();
+                float expansionRate = 1f / 80;
+                entity.setEntitySize(entity.getAvgSize() + expansionRate);
             }
             return this;
         }

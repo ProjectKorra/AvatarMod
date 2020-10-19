@@ -18,13 +18,13 @@ package com.crowsofwar.avatar.bending.bending.lightning;
 
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingAi;
+import com.crowsofwar.avatar.entity.EntityLightningSpear;
+import com.crowsofwar.avatar.entity.data.LightningSpearBehavior;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
-import com.crowsofwar.avatar.entity.EntityLightningSpear;
-import com.crowsofwar.avatar.entity.data.LightningSpearBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -40,103 +40,115 @@ import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
  */
 public class AbilityLightningSpear extends Ability {
 
-	public AbilityLightningSpear() {
-		super(Lightningbending.ID, "lightning_spear");
-		requireRaytrace(-1, false);
-	}
+    public AbilityLightningSpear() {
+        super(Lightningbending.ID, "lightning_spear");
+        requireRaytrace(-1, false);
+    }
 
-	@Override
-	public void execute(AbilityContext ctx) {
+    @Override
+    public void execute(AbilityContext ctx) {
 
-		EntityLivingBase entity = ctx.getBenderEntity();
-		Bender bender = ctx.getBender();
-		World world = ctx.getWorld();
-		BendingData data = ctx.getData();
-		AbilityData abilityData = ctx.getAbilityData();
+        EntityLivingBase entity = ctx.getBenderEntity();
+        Bender bender = ctx.getBender();
+        World world = ctx.getWorld();
+        BendingData data = ctx.getData();
+        AbilityData abilityData = ctx.getAbilityData();
 
-		if (data.hasStatusControl(THROW_LIGHTNINGSPEAR)) return;
+        if (data.hasStatusControl(THROW_LIGHTNINGSPEAR)) return;
 
-		if (bender.consumeChi(STATS_CONFIG.chiLightningSpear)) {
-
-
-			float size = 1.2F;
-			float damage = 2F;
-			if (abilityData.getLevel() >= 2) {
-				damage = 8;
-			}
-
-			if (ctx.getLevel() == 1) {
-				size = 1.4F;
-				damage = 3;
-			}
-
-			if (ctx.getLevel() == 2) {
-				size = 1.6F;
-				damage = 4;
-			}
-
-			if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
-				size = 1.2F;
-				damage = 6;
-			}
-
-			if (ctx.isMasterLevel(AbilityTreePath.SECOND)) {
-				size = 2.2F;
-				damage = 5;
-			}
-
-			damage *= ctx.getPowerRatingDamageMod();
-
-			EntityLightningSpear spear = new EntityLightningSpear(world);
-			spear.setEntitySize(size);
-
-			Vector target;
-			if (ctx.isLookingAtBlock()) {
-				target = ctx.getLookPos();
-			} else {
-				Vector playerPos = getEyePos(entity);
-				target = playerPos.plus(getLookRectangular(entity).times(spear.getAvgSize()));
-			}
+        if (bender.consumeChi(STATS_CONFIG.chiLightningSpear)) {
 
 
-			assert target != null;
-			spear.setPosition(target);
-			spear.setOwner(entity);
-			spear.setBehavior(new LightningSpearBehavior.PlayerControlled());
-			spear.setDamage(damage);
-			spear.rotationPitch = entity.rotationPitch;
-			spear.rotationYaw = entity.rotationYaw;
-			spear.setPiercing(abilityData.isMasterPath(AbilityTreePath.FIRST));
-			spear.setAbility(this);
-			spear.setDegreesPerSecond(400);
-			spear.setEntitySize(size / 8);
-			spear.setGroupAttack(abilityData.isMasterPath(AbilityTreePath.SECOND));
-			world.spawnEntity(spear);
+            float size = 1.2F;
+            float damage = 2F;
+            if (abilityData.getLevel() >= 2) {
+                damage = 8;
+            }
 
-			data.addStatusControl(THROW_LIGHTNINGSPEAR);
+            if (ctx.getLevel() == 1) {
+                size = 1.4F;
+                damage = 3;
+            }
 
-		}
+            if (ctx.getLevel() == 2) {
+                size = 1.6F;
+                damage = 4;
+            }
 
-	}
+            if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
+                size = 1.2F;
+                damage = 6;
+            }
 
-	@Override
-	public boolean isOffensive() {
-		return true;
-	}
+            if (ctx.isMasterLevel(AbilityTreePath.SECOND)) {
+                size = 2.2F;
+                damage = 5;
+            }
 
-	@Override
-	public boolean isProjectile() {
-		return true;
-	}
+            damage *= ctx.getPowerRatingDamageMod();
 
-	@Override
-	public int getBaseParentTier() {
-		return 3;
-	}
+            EntityLightningSpear spear = new EntityLightningSpear(world);
+            spear.setEntitySize(size);
 
-	@Override
-	public BendingAi getAi(EntityLiving entity, Bender bender) {
-		return new AiLightningSpear(this, entity, bender);
-	}
+            Vector target;
+            if (ctx.isLookingAtBlock()) {
+                target = ctx.getLookPos();
+            } else {
+                Vector playerPos = getEyePos(entity);
+                target = playerPos.plus(getLookRectangular(entity).times(spear.getAvgSize()));
+            }
+
+
+            assert target != null;
+            spear.setPosition(target);
+            spear.setOwner(entity);
+            spear.setBehavior(new LightningSpearBehavior.PlayerControlled());
+            spear.setDamage(damage);
+            spear.rotationPitch = entity.rotationPitch;
+            spear.rotationYaw = entity.rotationYaw;
+            spear.setPiercing(abilityData.isMasterPath(AbilityTreePath.FIRST));
+            spear.setAbility(this);
+            spear.setDegreesPerSecond(400);
+            spear.setEntitySize(size / 8);
+            spear.setGroupAttack(abilityData.isMasterPath(AbilityTreePath.SECOND));
+
+            double speedMult = abilityData.getLevel() >= 1 ? 55 : 45;
+
+            if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+                speedMult = 80;
+            }
+            spear.setBehavior(new LightningSpearBehavior.Thrown());
+            spear.setVelocity(Vector.getLookRectangular(entity).times(speedMult));
+            Vector direction = spear.velocity().toSpherical();
+            spear.rotationYaw = (float) Math.toDegrees(direction.y());
+            spear.rotationPitch = (float) Math.toDegrees(direction.x());
+            if (!world.isRemote)
+                world.spawnEntity(spear);
+
+            data.addStatusControl(THROW_LIGHTNINGSPEAR);
+
+        }
+
+    }
+
+    @Override
+    public boolean isOffensive() {
+        return true;
+    }
+
+    @Override
+    public boolean isProjectile() {
+        return true;
+    }
+
+    @Override
+    public int getBaseParentTier() {
+        return 3;
+    }
+
+    @Override
+    public BendingAi getAi(EntityLiving entity, Bender bender) {
+        return new AiLightningSpear(this, entity, bender);
+    }
 
 }

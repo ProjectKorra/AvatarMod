@@ -473,7 +473,7 @@ public class EntityFloatingBlock extends EntityOffensive {
 
     @Override
     public EntityLivingBase getController() {
-        return getBehavior() instanceof FloatingBlockBehavior.PlayerControlled ? getOwner() : null;
+        return getOwner();
     }
 
 

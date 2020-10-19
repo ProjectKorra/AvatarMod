@@ -358,4 +358,9 @@ public class EntityAirGust extends EntityOffensive {
     public boolean canDamageEntity(Entity entity) {
         return canCollideWith(entity);
     }
+
+    @Override
+    public boolean canBePushed() {
+        return false;
+    }
 }

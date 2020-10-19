@@ -30,219 +30,210 @@ import java.util.Set;
  */
 public class ConfigClient {
 
-	public static ConfigClient CLIENT_CONFIG = new ConfigClient();
+    public static ConfigClient CLIENT_CONFIG = new ConfigClient();
+    @Load
+    public final float bendingCycleAlpha = 0.75f;
+    @Load
+    public final boolean displayGetBendingMessage = true;
+    @Load
+    private final Map<String, Integer> nameKeymappings = new HashMap<>();
+    @Load
+    private final Map<String, Boolean> nameConflicts = new HashMap<>();
+    @Load
+    public float radialMenuAlpha = 0.75f;
+    @Load
+    public float chiBarAlpha = 0.625f;
+    //For some reason if it's not final it won't work
+    //Controls whether or not to show the get bending message
+    //when you press the use bending key
+    @Load
+    public boolean useCustomParticles = true;
+    public Map<Ability, Integer> keymappings = new HashMap<>();
+    public Map<Ability, Boolean> conflicts = new HashMap<>();
+    @Load
+    public ShaderSettings shaderSettings = new ShaderSettings();
+    @Load
+    public ActiveBendingSettings activeBendingSettings = new ActiveBendingSettings();
+    @Load
+    public ChiBarSettings chiBarSettings = new ChiBarSettings();
+    @Load
+    public FireRenderSettings fireRenderSettings = new FireRenderSettings();
+    @Load
+    public AirRenderSettings airRenderSettings = new AirRenderSettings();
+    @Load
+    public ParticleRenderSettings particleSettings = new ParticleRenderSettings();
 
-	@Load
-	public float radialMenuAlpha = 0.75f;
+    public static void load() {
+        ConfigLoader.load(CLIENT_CONFIG, "avatar/cosmetic.yml");
 
-	@Load
-	public float chiBarAlpha = 0.625f;
+        //CLIENT_CONFIG.keymappings.clear();
+        Set<Map.Entry<String, Integer>> entries = CLIENT_CONFIG.nameKeymappings.entrySet();
+        for (Map.Entry<String, Integer> entry : entries) {
+            Ability ability = null;
+            for (Ability a : Abilities.all()) {
+                if (a.getName().equals(entry.getKey())) {
+                    ability = a;
+                    break;
+                }
+            }
+            if (ability != null) {
+                CLIENT_CONFIG.keymappings.put(ability, entry.getValue());
+            }
+        }
+        //CLIENT_CONFIG.conflicts.clear();
+        Set<Map.Entry<String, Boolean>> entries2 = CLIENT_CONFIG.nameConflicts.entrySet();
+        for (Map.Entry<String, Boolean> entry : entries2) {
+            Ability ability = null;
+            for (Ability a : Abilities.all()) {
+                if (a.getName().equals(entry.getKey())) {
+                    ability = a;
+                    break;
+                }
+            }
+            if (ability != null) {
+                CLIENT_CONFIG.conflicts.put(ability, entry.getValue());
+            }
+        }
 
-	@Load
-	public final float bendingCycleAlpha = 0.75f;
+    }
 
-	@Load
-	public final boolean displayGetBendingMessage = true;
-	//For some reason if it's not final it won't work
-	//Controls whether or not to show the get bending message
-	//when you press the use bending key
+    public static void save() {
 
+        //CLIENT_CONFIG.nameKeymappings.clear();
+        Set<Map.Entry<Ability, Integer>> entries = CLIENT_CONFIG.keymappings.entrySet();
+        for (Map.Entry<Ability, Integer> entry : entries) {
+            CLIENT_CONFIG.nameKeymappings.put(entry.getKey().getName(), entry.getValue());
+        }
+        //CLIENT_CONFIG.nameConflicts.clear();
+        Set<Map.Entry<Ability, Boolean>> entries2 = CLIENT_CONFIG.conflicts.entrySet();
+        for (Map.Entry<Ability, Boolean> entry : entries2) {
+            CLIENT_CONFIG.nameConflicts.put(entry.getKey().getName(), entry.getValue());
+        }
 
-	@Load
-	public boolean useCustomParticles = true;
-	public Map<Ability, Integer> keymappings = new HashMap<>();
-	public Map<Ability, Boolean> conflicts = new HashMap<>();
-	@Load
-	private Map<String, Integer> nameKeymappings = new HashMap<>();
-	@Load
-	private Map<String, Boolean> nameConflicts = new HashMap<>();
+        ConfigLoader.save(CLIENT_CONFIG, "avatar/cosmetic.yml");
+    }
 
-	@Load
-	public ShaderSettings shaderSettings = new ShaderSettings();
+    public static class ShaderSettings {
 
-	@Load
-	public ActiveBendingSettings activeBendingSettings = new ActiveBendingSettings();
+        @Load
+        public boolean useSlipstreamShaders = false;
 
-	@Load
-	public ChiBarSettings chiBarSettings = new ChiBarSettings();
+        @Load
+        public boolean useCleanseShaders = false;
 
-	@Load
-	public FireRenderSettings fireRenderSettings = new FireRenderSettings();
+        @Load
+        public boolean useRestoreShaders = false;
 
-	@Load
-	public AirRenderSettings airRenderSettings = new AirRenderSettings();
+        @Load
+        public boolean useImmolateShaders = false;
 
-	@Load
-	public ParticleRenderSettings particleSettings = new ParticleRenderSettings();
+        @Load
+        public boolean bslActive = false;
 
-	public static void load() {
-		ConfigLoader.load(CLIENT_CONFIG, "avatar/cosmetic.yml");
+        @Load
+        public boolean sildursActive = false;
+    }
 
-		//CLIENT_CONFIG.keymappings.clear();
-		Set<Map.Entry<String, Integer>> entries = CLIENT_CONFIG.nameKeymappings.entrySet();
-		for (Map.Entry<String, Integer> entry : entries) {
-			Ability ability = null;
-			for (Ability a : Abilities.all()) {
-				if (a.getName().equals(entry.getKey())) {
-					ability = a;
-					break;
-				}
-			}
-			if (ability != null) {
-				CLIENT_CONFIG.keymappings.put(ability, entry.getValue());
-			}
-		}
-		//CLIENT_CONFIG.conflicts.clear();
-		Set<Map.Entry<String, Boolean>> entries2 = CLIENT_CONFIG.nameConflicts.entrySet();
-		for (Map.Entry<String, Boolean> entry : entries2) {
-			Ability ability = null;
-			for (Ability a : Abilities.all()) {
-				if (a.getName().equals(entry.getKey())) {
-					ability = a;
-					break;
-				}
-			}
-			if (ability != null) {
-				CLIENT_CONFIG.conflicts.put(ability, entry.getValue());
-			}
-		}
+    public static class ActiveBendingSettings {
 
-	}
+        @Load
+        public final boolean shouldBendingMenuRender = true;
+        //For some reason if it's not final it won't work
+        //Determines if element menu should render at all
 
-	public static void save() {
+        @Load
+        public final boolean shouldBendingMenuDisappear = false;
+        //For some reason if it's not final it won't work
+        //Makes the menu disappear after the duration
 
-		//CLIENT_CONFIG.nameKeymappings.clear();
-		Set<Map.Entry<Ability, Integer>> entries = CLIENT_CONFIG.keymappings.entrySet();
-		for (Map.Entry<Ability, Integer> entry : entries) {
-			CLIENT_CONFIG.nameKeymappings.put(entry.getKey().getName(), entry.getValue());
-		}
-		//CLIENT_CONFIG.nameConflicts.clear();
-		Set<Map.Entry<Ability, Boolean>> entries2 = CLIENT_CONFIG.conflicts.entrySet();
-		for (Map.Entry<Ability, Boolean> entry : entries2) {
-			CLIENT_CONFIG.nameConflicts.put(entry.getKey().getName(), entry.getValue());
-		}
+        @Load
+        public final int bendingMenuDuration = 200;
+        //If the menu should disappear, how long it should take before disappearing
 
-		ConfigLoader.save(CLIENT_CONFIG, "avatar/cosmetic.yml");
-	}
+        @Load
+        public final int middleXPosition = 0, rightXPosition = 50, leftXPosition = -35;
+        //The x pos of the middle/active bending, the bending icon on the right, and the bending icon on the left
 
-	public static class ShaderSettings {
+        @Load
+        public final int middleYPosition = -30, rightYPosition = 5, leftYPosition = 5;
+        //The xp pos of the bending icon on the left
 
-		@Load
-		public boolean useSlipstreamShaders = false;
+        @Load
+        public final float middleBendingWidth = 50, leftBendingWidth = 35, rightBendingWidth = 35;
 
-		@Load
-		public boolean useCleanseShaders = false;
+        @Load
+        public final float middleBendingHeight = 50, leftBendingHeight = 35, rightBendingHeight = 35;
 
-		@Load
-		public boolean useRestoreShaders = false;
+    }
 
-		@Load
-		public boolean useImmolateShaders = false;
+    public static class ChiBarSettings {
+        @Load
+        public final boolean shouldChibarRender = true;
 
-		@Load
-		public boolean bslActive = false;
+        @Load
+        public final boolean shouldChiNumbersRender = true;
 
-		@Load
-		public boolean sildursActive = false;
-	}
+        @Load
+        public final boolean shouldChiMenuDisappear = false;
 
-	public static class ActiveBendingSettings {
+        @Load
+        public final int chibarDuration = 200;
 
-		@Load
-		public final boolean shouldBendingMenuRender = true;
-		//For some reason if it's not final it won't work
-		//Determines if element menu should render at all
+        @Load
+        public final double widthScale = 1.1F, heightScale = 1.1F;
 
-		@Load
-		public final boolean shouldBendingMenuDisappear = false;
-		//For some reason if it's not final it won't work
-		//Makes the menu disappear after the duration
+        @Load
+        public final int xPos = 115, yPos = 3;
 
-		@Load
-		public final int bendingMenuDuration = 200;
-		//If the menu should disappear, how long it should take before disappearing
+    }
 
-		@Load
-		public final int middleXPosition = 0, rightXPosition = 50, leftXPosition = -35;
-		//The x pos of the middle/active bending, the bending icon on the right, and the bending icon on the left
+    public static class FireRenderSettings {
 
-		@Load
-		public final int middleYPosition = -30, rightYPosition = 5, leftYPosition = 5;
-		//The xp pos of the bending icon on the left
+        @Load
+        public final boolean flameStrikeSphere = false;
 
-		@Load
-		public final float middleBendingWidth = 50, leftBendingWidth = 35, rightBendingWidth = 35;
+        @Load
+        public final boolean showFlameStrikeOrb = false;
 
-		@Load
-		public final float middleBendingHeight = 50, leftBendingHeight = 35, rightBendingHeight = 35;
+        @Load
+        public final boolean solidFlamethrowerParticles = false;
 
-	}
+        @Load
+        public final boolean solidFlameStrikeParticles = true;
 
-	public static class ChiBarSettings {
-		@Load
-		public final boolean shouldChibarRender = true;
+        //Only used for supporters
+        @Load
+        public final int fireR = 255, fireG = 50, fireB = 10;
 
-		@Load
-		public final boolean shouldChiNumbersRender = true;
-
-		@Load
-		public final boolean shouldChiMenuDisappear = false;
-
-		@Load
-		public final int chibarDuration = 200;
-
-		@Load
-		public final double widthScale = 1.1F, heightScale = 1.1F;
-
-		@Load
-		public final int xPos = 115, yPos = 3;
-
-	}
-
-	public static class FireRenderSettings {
-
-		@Load
-		public final boolean flameStrikeSphere = false;
-
-		@Load
-		public final boolean showFlameStrikeOrb = false;
-
-		@Load
-		public final boolean solidFlamethrowerParticles = false;
-
-		@Load
-		public final boolean solidFlameStrikeParticles = true;
-
-		//Only used for supporters
-		@Load
-		public final int fireR = 255, fireG = 50, fireB = 10;
-
-		//Only used for supporters
-		@Load
-		public final int lightningR = 135, lightningG = 255, lightningB = 252;
+        //Only used for supporters
+        @Load
+        public final int lightningR = 135, lightningG = 255, lightningB = 252;
 
 
-	}
+    }
 
-	public static class AirRenderSettings {
-		@Load
-		public final boolean airBurstSphere = true;
+    public static class AirRenderSettings {
+        @Load
+        public final boolean airBurstSphere = true;
 
-	}
+    }
 
-	public static class ParticleRenderSettings {
-		@Load
-		public final boolean voxelFlashParticles = false;
+    public static class ParticleRenderSettings {
+        @Load
+        public final boolean realisticFlashParticles = true;
 
-		@Load
-		public final boolean collideWithBlocks = true;
+        @Load
+        public final boolean realisticLightningParticles = true;
 
-		@Load
-		public final boolean collideWithParticles = true;
+        @Load
+        public final boolean collideWithBlocks = true;
 
-		@Load
-		public final boolean releaseShaderOnFlashParticleRender = true;
-		
-	}
+        @Load
+        public final boolean collideWithParticles = true;
+
+        @Load
+        public final boolean releaseShaderOnFlashParticleRender = true;
+
+    }
 
 }

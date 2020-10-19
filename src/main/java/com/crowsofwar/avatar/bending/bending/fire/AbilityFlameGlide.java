@@ -10,7 +10,6 @@ import com.crowsofwar.avatar.util.data.StatusControl;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
 
 import static com.crowsofwar.avatar.util.data.StatusControlController.FIRE_JUMP;
 import static com.crowsofwar.avatar.util.data.TickHandlerController.FLAME_GLIDE_HANDLER;
@@ -48,7 +47,6 @@ public class AbilityFlameGlide extends Ability {
 
         BendingData data = ctx.getData();
         Bender bender = ctx.getBender();
-        EntityLivingBase entity = ctx.getBenderEntity();
         AbilityData abilityData = ctx.getAbilityData();
 
         if (!data.hasStatusControl(FIRE_JUMP) && bender.consumeChi(getChiCost(abilityData) / 8)) {

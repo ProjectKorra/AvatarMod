@@ -16,15 +16,21 @@
 */
 package com.crowsofwar.avatar.entity;
 
+import com.crowsofwar.avatar.bending.bending.BendingStyle;
+import com.crowsofwar.avatar.bending.bending.air.Airbending;
+import com.crowsofwar.avatar.bending.bending.lightning.Lightningbending;
 import com.crowsofwar.avatar.client.particle.AvatarParticles;
+import com.crowsofwar.avatar.client.particle.ParticleBuilder;
+import com.crowsofwar.avatar.entity.data.Behavior;
+import com.crowsofwar.avatar.entity.data.LightningFloodFill;
+import com.crowsofwar.avatar.entity.data.LightningSpearBehavior;
+import com.crowsofwar.avatar.util.AvatarEntityUtils;
+import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.util.damageutils.DamageUtils;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.StatusControlController;
-import com.crowsofwar.avatar.entity.data.Behavior;
-import com.crowsofwar.avatar.entity.data.LightningFloodFill;
-import com.crowsofwar.avatar.entity.data.LightningSpearBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 import com.zeitheron.hammercore.api.lighting.ColoredLight;
 import com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity;
@@ -38,6 +44,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
@@ -53,290 +60,337 @@ import static com.crowsofwar.avatar.config.ConfigSkills.SKILLS_CONFIG;
 @Optional.Interface(iface = "com.zeitheron.hammercore.api.lighting.impl.IGlowingEntity", modid = "hammercore")
 public class EntityLightningSpear extends EntityOffensive implements IGlowingEntity {
 
-	//TODO: Clean up this class. Dear lord.
+    //TODO: Clean up this class. Dear lord.
 
-	private static final DataParameter<LightningSpearBehavior> SYNC_BEHAVIOR = EntityDataManager
-			.createKey(EntityLightningSpear.class, LightningSpearBehavior.DATA_SERIALIZER);
+    private static final DataParameter<LightningSpearBehavior> SYNC_BEHAVIOR = EntityDataManager
+            .createKey(EntityLightningSpear.class, LightningSpearBehavior.DATA_SERIALIZER);
 
-	private static final DataParameter<Float> SYNC_DEGREES_PER_SECOND = EntityDataManager.createKey(EntityLightningSpear.class,
-			DataSerializers.FLOAT);
-
-
-	/**
-	 * Whether the lightning spear can continue through multiple enemies, instead of being destroyed
-	 * upon hitting one.
-	 */
-	private boolean piercing;
-
-	/**
-	 * Upon hitting an enemy, whether to damage any additional enemies next to the hit target.
-	 */
-	private boolean groupAttack;
-
-	/**
-	 * Handles electrocution of nearby entities when the lightning spear touches water
-	 */
-	private LightningFloodFill floodFill;
+    private static final DataParameter<Float> SYNC_DEGREES_PER_SECOND = EntityDataManager.createKey(EntityLightningSpear.class,
+            DataSerializers.FLOAT);
 
 
-	/**
-	 * @param world The world it spawns in
-	 */
-	public EntityLightningSpear(World world) {
-		super(world);
-		this.piercing = false;
-	}
+    /**
+     * Whether the lightning spear can continue through multiple enemies, instead of being destroyed
+     * upon hitting one.
+     */
+    private boolean piercing;
 
-	@Override
-	public int getFireTime() {
-		return 0;
-	}
+    /**
+     * Upon hitting an enemy, whether to damage any additional enemies next to the hit target.
+     */
+    private boolean groupAttack;
 
-	@Override
-	public void entityInit() {
-		super.entityInit();
-		dataManager.register(SYNC_BEHAVIOR, new LightningSpearBehavior.Idle());
-		dataManager.register(SYNC_DEGREES_PER_SECOND, 400F);
-	}
-
-	@Override
-	public void onUpdate() {
-		super.onUpdate();
-		setBehavior((LightningSpearBehavior) getBehavior().onUpdate(this));
-
-		LightningSpearBehavior.PlayerControlled controlled = new LightningSpearBehavior.PlayerControlled();
-		if (getOwner() != null) {
-			EntityLightningSpear spear = AvatarEntity.lookupControlledEntity(world, EntityLightningSpear.class, getOwner());
-			BendingData bD = BendingData.get(getOwner());
-			if (spear == null && bD.hasStatusControl(StatusControlController.THROW_LIGHTNINGSPEAR)) {
-				bD.removeStatusControl(StatusControlController.THROW_LIGHTNINGSPEAR);
-			}
-			if (spear != null && spear.getBehavior().equals(controlled) && !(bD.hasStatusControl(StatusControlController.THROW_LIGHTNINGSPEAR))) {
-				bD.addStatusControl(StatusControlController.THROW_LIGHTNINGSPEAR);
-			}
-
-		}
-		// Electrocute enemies in water
-		if (inWater) {
-
-			// When in the water, lightning spear should disappear, but also keep
-			// electrocuting entities. If the lightning spear was simply removed, flood fill
-			// processing (i.e. electrocution) would end, so don't do that. Instead make it
-			// invisible and remove once process is complete.
-			// A hack but it works :\
-			setInvisible(true);
-			setVelocity(Vector.ZERO);
-
-		}
-		if (inWater && !world.isRemote) {
-			if (floodFill == null) {
-				floodFill = new LightningFloodFill(world, getPosition(), 12,
-						this::handleWaterElectrocution);
-			}
-			if (floodFill.tick()) {
-				// Remove lightning spear when it's finished electrocuting
-				setDead();
-			}
-		}
-
-		setEntitySize(getAvgSize());
-
-	}
-
-	@Override
-	public SoundEvent[] getSounds() {
-		SoundEvent[] events = new SoundEvent[2];
-		events[0] = SoundEvents.ENTITY_LIGHTNING_IMPACT;
-		events[1] = SoundEvents.ENTITY_LIGHTNING_THUNDER;
-		return events;
-	}
-
-	@Override
-	public float getAoeDamage() {
-		return getDamage() / 10;
-	}
-
-	@Override
-	public double getExpandedHitboxHeight() {
-		return getAvgSize() / 4;
-	}
-
-	@Override
-	public double getExpandedHitboxWidth() {
-		return getAvgSize() / 4;
-	}
-
-	@Override
-	public DamageSource getDamageSource(Entity target, EntityLivingBase owner) {
-		return AvatarDamageSource.causeLightningSpearDamage(target, owner);
-	}
-
-	/**
-	 * When a lightning spear hits water, electricity spreads through the water and nearby
-	 * entities are electrocuted. This method is called when an entity gets electrocuted.
-	 */
-	private void handleWaterElectrocution(Entity entity) {
-
-		// Uses same DamageSource as lightning arc; this is intentional
-		DamageSource damageSource = AvatarDamageSource.causeLightningDamage(entity, getOwner());
-		DamageUtils.attackEntity(getOwner(), entity, damageSource, getDamage() / 5, getPerformanceAmount(), getAbility(), getXpPerHit());
-
-	}
-
-	public LightningSpearBehavior getBehavior() {
-		return dataManager.get(SYNC_BEHAVIOR);
-	}
-
-	public void setBehavior(LightningSpearBehavior behavior) {
-		dataManager.set(SYNC_BEHAVIOR, behavior);
-	}
-
-	@Override
-	public EntityLivingBase getController() {
-		return getBehavior() instanceof LightningSpearBehavior.PlayerControlled ? getOwner() : null;
-	}
+    /**
+     * Handles electrocution of nearby entities when the lightning spear touches water
+     */
+    private LightningFloodFill floodFill;
 
 
-	@Override
-	public boolean isPiercing() {
-		return piercing;
-	}
+    /**
+     * @param world The world it spawns in
+     */
+    public EntityLightningSpear(World world) {
+        super(world);
+        this.piercing = false;
+    }
 
-	public void setPiercing(boolean piercing) {
-		this.piercing = piercing;
-	}
+    @Override
+    public int getFireTime() {
+        return 0;
+    }
 
-	public boolean isGroupAttack() {
-		return groupAttack;
-	}
+    @Override
+    public void entityInit() {
+        super.entityInit();
+        dataManager.register(SYNC_BEHAVIOR, new LightningSpearBehavior.Idle());
+        dataManager.register(SYNC_DEGREES_PER_SECOND, 400F);
+    }
 
-	public void setGroupAttack(boolean groupAttack) {
-		this.groupAttack = groupAttack;
-	}
+    @Override
+    public void onUpdate() {
+        super.onUpdate();
+        setBehavior((LightningSpearBehavior) getBehavior().onUpdate(this));
 
-	public float getDegreesPerSecond() {
-		return dataManager.get(SYNC_DEGREES_PER_SECOND);
-	}
+        LightningSpearBehavior.PlayerControlled controlled = new LightningSpearBehavior.PlayerControlled();
+        if (getOwner() != null) {
+            EntityLightningSpear spear = AvatarEntity.lookupControlledEntity(world, EntityLightningSpear.class, getOwner());
+            BendingData bD = BendingData.get(getOwner());
+            if (spear == null && bD.hasStatusControl(StatusControlController.THROW_LIGHTNINGSPEAR)) {
+                bD.removeStatusControl(StatusControlController.THROW_LIGHTNINGSPEAR);
+            }
+            if (spear != null && spear.getBehavior().equals(controlled) && !(bD.hasStatusControl(StatusControlController.THROW_LIGHTNINGSPEAR))) {
+                bD.addStatusControl(StatusControlController.THROW_LIGHTNINGSPEAR);
+            }
 
-	public void setDegreesPerSecond(float degrees) {
-		dataManager.set(SYNC_DEGREES_PER_SECOND, degrees);
-	}
+        }
 
-	@Override
-	public boolean onCollideWithSolid() {
-		if (getBehavior() instanceof LightningSpearBehavior.Thrown)
-			return super.onCollideWithSolid();
-		else return false;
-	}
+        //Rendering
+        if (world.isRemote && getOwner() != null) {
+            float mult = 0.5F;
+            if (getBehavior() instanceof LightningSpearBehavior.Thrown)
+                mult = 1;
+            for (int i = 0; i < 4; i++) {
+                Vec3d mid = AvatarEntityUtils.getMiddleOfEntity(this);
+                double spawnX = mid.x + world.rand.nextGaussian() / 20;
+                double spawnY = mid.y + world.rand.nextGaussian() / 20;
+                double spawnZ = mid.z + world.rand.nextGaussian() / 20;
+                ParticleBuilder.create(ParticleBuilder.Type.SPARK).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 25, world.rand.nextGaussian() / 25,
+                        world.rand.nextGaussian() / 25).time(4 + AvatarUtils.getRandomNumberInRange(0, 6)).spawnEntity(this)
+                        .scale(mult * getAvgSize() * (1 / getAvgSize() + 1)).element(getElement()).collide(true).spawn(world);
+                ParticleBuilder.create(ParticleBuilder.Type.SPARK).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 45 + motionX,
+                        world.rand.nextGaussian() / 45 + motionY, world.rand.nextGaussian() / 45 + motionZ)
+                        .time(14 + AvatarUtils.getRandomNumberInRange(0, 10)).spawnEntity(this)
+                        .scale(mult * getAvgSize() * (1 / getAvgSize() + 0.5F)).element(getElement()).collide(true).spawn(world);
+            }
+            for (int i = 0; i < 2; i++) {
+                Vec3d pos = Vector.getOrthogonalVector(getLookVec(), i * 180 + (ticksExisted % 360) * 20 *
+                        (1 / getAvgSize()), getAvgSize() / 1.5F).toMinecraft();
+                Vec3d velocity;
+                Vec3d entityPos = AvatarEntityUtils.getMiddleOfEntity(this);
 
-	@Override
-	public void readEntityFromNBT(NBTTagCompound nbt) {
-		super.readEntityFromNBT(nbt);
-		setBehavior((LightningSpearBehavior) Behavior.lookup(nbt.getInteger("Behavior"), this));
-		setPiercing(nbt.getBoolean("Piercing"));
-	}
+                pos = pos.add(entityPos);
+                velocity = pos.subtract(entityPos).normalize();
+                velocity = velocity.scale(AvatarUtils.getSqrMagnitude(getVelocity()) / 400000);
+                double spawnX = pos.x;
+                double spawnY = pos.y;
+                double spawnZ = pos.z;
+                ParticleBuilder.create(ParticleBuilder.Type.SPARK).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x,
+                        world.rand.nextGaussian() / 80 + velocity.y, world.rand.nextGaussian() / 80 + velocity.z)
+                        .time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).spawnEntity(this)
+                        .scale(mult * getAvgSize() * (1 / getAvgSize())).element(getElement()).collide(true).collideParticles(true).spawn(world);
+                ParticleBuilder.create(ParticleBuilder.Type.SPARK).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x,
+                        world.rand.nextGaussian() / 80 + velocity.y, world.rand.nextGaussian() / 80 + velocity.z)
+                        .time(10 + AvatarUtils.getRandomNumberInRange(0, 6)).spawnEntity(this)
+                        .scale(mult * getAvgSize() * (1 / getAvgSize())).element(getElement()).collide(true).collideParticles(true).spawn(world);
 
-	@Override
-	public void writeEntityToNBT(NBTTagCompound nbt) {
-		super.writeEntityToNBT(nbt);
-		nbt.setInteger("Behavior", getBehavior().getId());
-		nbt.setBoolean("Piercing", piercing);
-	}
+            }
+        }
+        // Electrocute enemies in water
+        if (inWater) {
 
-	@Override
-	public boolean canBePushed() {
-		return piercing;
-	}
+            // When in the water, lightning spear should disappear, but also keep
+            // electrocuting entities. If the lightning spear was simply removed, flood fill
+            // processing (i.e. electrocution) would end, so don't do that. Instead make it
+            // invisible and remove once process is complete.
+            // A hack but it works :\
+            setInvisible(true);
+            setVelocity(Vector.ZERO);
 
-	@Override
-	public void setDead() {
-		super.setDead();
-		if (this.isDead && !world.isRemote)
-			Thread.dumpStack();
-		removeStatCtrl();
-	}
+        }
+        if (inWater && !world.isRemote) {
+            if (floodFill == null) {
+                floodFill = new LightningFloodFill(world, getPosition(), 12,
+                        this::handleWaterElectrocution);
+            }
+            if (floodFill.tick()) {
+                // Remove lightning spear when it's finished electrocuting
+                setDead();
+            }
+        }
+
+        setEntitySize(getAvgSize());
+
+    }
+
+    @Override
+    public BendingStyle getElement() {
+        return new Lightningbending();
+    }
+
+    @Override
+    public SoundEvent[] getSounds() {
+        SoundEvent[] events = new SoundEvent[2];
+        events[0] = SoundEvents.ENTITY_LIGHTNING_IMPACT;
+        events[1] = SoundEvents.ENTITY_LIGHTNING_THUNDER;
+        return events;
+    }
+
+    @Override
+    public float getAoeDamage() {
+        return getDamage() / 10;
+    }
+
+    @Override
+    public double getExpandedHitboxHeight() {
+        return getAvgSize() / 4;
+    }
+
+    @Override
+    public double getExpandedHitboxWidth() {
+        return getAvgSize() / 4;
+    }
+
+    @Override
+    public DamageSource getDamageSource(Entity target, EntityLivingBase owner) {
+        return AvatarDamageSource.causeLightningSpearDamage(target, owner);
+    }
+
+    /**
+     * When a lightning spear hits water, electricity spreads through the water and nearby
+     * entities are electrocuted. This method is called when an entity gets electrocuted.
+     */
+    private void handleWaterElectrocution(Entity entity) {
+
+        // Uses same DamageSource as lightning arc; this is intentional
+        DamageSource damageSource = AvatarDamageSource.causeLightningDamage(entity, getOwner());
+        DamageUtils.attackEntity(getOwner(), entity, damageSource, getDamage() / 5, getPerformanceAmount(), getAbility(), getXpPerHit());
+
+    }
+
+    public LightningSpearBehavior getBehavior() {
+        return dataManager.get(SYNC_BEHAVIOR);
+    }
+
+    public void setBehavior(LightningSpearBehavior behavior) {
+        dataManager.set(SYNC_BEHAVIOR, behavior);
+    }
+
+    @Override
+    public EntityLivingBase getController() {
+        return getBehavior() instanceof LightningSpearBehavior.PlayerControlled ? getOwner() : null;
+    }
 
 
-	@Override
-	public void onCollideWithEntity(Entity entity) {
-		if (getBehavior() instanceof LightningSpearBehavior.Thrown && getBehavior() != null)
-			super.onCollideWithEntity(entity);
-	}
+    @Override
+    public boolean isPiercing() {
+        return piercing;
+    }
 
-	public void removeStatCtrl() {
-		if (getOwner() != null) {
-			BendingData data = Objects.requireNonNull(Bender.get(getOwner())).getData();
-			data.removeStatusControl(StatusControlController.THROW_LIGHTNINGSPEAR);
-		}
-	}
+    public void setPiercing(boolean piercing) {
+        this.piercing = piercing;
+    }
 
-	@SideOnly(Side.CLIENT)
-	@Override
-	public boolean isInRangeToRenderDist(double distance) {
-		return true;
-	}
+    public boolean isGroupAttack() {
+        return groupAttack;
+    }
 
-	@Override
-	public int getBrightnessForRender() {
-		return 15728880;
-	}
+    public void setGroupAttack(boolean groupAttack) {
+        this.groupAttack = groupAttack;
+    }
+
+    public float getDegreesPerSecond() {
+        return dataManager.get(SYNC_DEGREES_PER_SECOND);
+    }
+
+    public void setDegreesPerSecond(float degrees) {
+        dataManager.set(SYNC_DEGREES_PER_SECOND, degrees);
+    }
+
+    @Override
+    public boolean onCollideWithSolid() {
+        if (getBehavior() instanceof LightningSpearBehavior.Thrown)
+            return super.onCollideWithSolid();
+        else return false;
+    }
+
+    @Override
+    public void readEntityFromNBT(NBTTagCompound nbt) {
+        super.readEntityFromNBT(nbt);
+        setBehavior((LightningSpearBehavior) Behavior.lookup(nbt.getInteger("Behavior"), this));
+        setPiercing(nbt.getBoolean("Piercing"));
+    }
+
+    @Override
+    public void writeEntityToNBT(NBTTagCompound nbt) {
+        super.writeEntityToNBT(nbt);
+        nbt.setInteger("Behavior", getBehavior().getId());
+        nbt.setBoolean("Piercing", piercing);
+    }
+
+    @Override
+    public boolean canBePushed() {
+        return piercing;
+    }
+
+    @Override
+    public void setDead() {
+        super.setDead();
+        if (this.isDead && !world.isRemote)
+            Thread.dumpStack();
+        removeStatCtrl();
+    }
 
 
-	@Override
-	public boolean canBeCollidedWith() {
-		return !(getBehavior() instanceof LightningSpearBehavior.PlayerControlled);
-	}
+    @Override
+    public void onCollideWithEntity(Entity entity) {
+        if (getBehavior() instanceof LightningSpearBehavior.Thrown && getBehavior() != null)
+            super.onCollideWithEntity(entity);
+    }
 
-	@Override
-	public boolean canBeAttackedWithItem() {
-		return !(getBehavior() instanceof LightningSpearBehavior.PlayerControlled);
-	}
+    public void removeStatCtrl() {
+        if (getOwner() != null) {
+            BendingData data = Objects.requireNonNull(Bender.get(getOwner())).getData();
+            data.removeStatusControl(StatusControlController.THROW_LIGHTNINGSPEAR);
+        }
+    }
 
-	@Override
-	public void applyElementalContact(AvatarEntity entity) {
-		super.applyElementalContact(entity);
-		entity.onLightningContact();
-	}
+    @SideOnly(Side.CLIENT)
+    @Override
+    public boolean isInRangeToRenderDist(double distance) {
+        return true;
+    }
 
-	@Override
-	public float getXpPerHit() {
-		return SKILLS_CONFIG.lightningspearHit;
-	}
+    @Override
+    public int getBrightnessForRender() {
+        return 15728880;
+    }
 
-	@Override
-	public int getPerformanceAmount() {
-		return 15;
-	}
 
-	@Override
-	public EnumParticleTypes getParticle() {
-		return AvatarParticles.getParticleElectricity();
-	}
+    @Override
+    public boolean canBeCollidedWith() {
+        return !(getBehavior() instanceof LightningSpearBehavior.PlayerControlled);
+    }
 
-	@Override
-	public boolean shouldExplode() {
-		return getBehavior() instanceof LightningSpearBehavior.Thrown;
-	}
+    @Override
+    public boolean canBeAttackedWithItem() {
+        return !(getBehavior() instanceof LightningSpearBehavior.PlayerControlled);
+    }
 
-	@Override
-	public boolean shouldDissipate() {
-		return getBehavior() instanceof LightningSpearBehavior.Thrown;
-	}
+    @Override
+    public void applyElementalContact(AvatarEntity entity) {
+        super.applyElementalContact(entity);
+        entity.onLightningContact();
+    }
 
-	@Override
-	public boolean isProjectile() {
-		return true;
-	}
+    @Override
+    public float getXpPerHit() {
+        return SKILLS_CONFIG.lightningspearHit;
+    }
 
-	@Override
-	public float getVolume() {
-		return super.getVolume() * 6;
-	}
+    @Override
+    public int getPerformanceAmount() {
+        return 15;
+    }
 
-	@Override
-	@Optional.Method(modid = "hammercore")
-	public ColoredLight produceColoredLight(float partialTicks) {
-		return ColoredLight.builder().pos(this).color(87, 161, 235).radius(10f).build();
+    @Override
+    public EnumParticleTypes getParticle() {
+        return null;
+    }
 
-	}
+    @Override
+    public boolean shouldExplode() {
+        return getBehavior() instanceof LightningSpearBehavior.Thrown;
+    }
+
+    @Override
+    public boolean shouldDissipate() {
+        return getBehavior() instanceof LightningSpearBehavior.Thrown;
+    }
+
+    @Override
+    public boolean isProjectile() {
+        return true;
+    }
+
+    @Override
+    public float getVolume() {
+        return super.getVolume() * 6;
+    }
+
+    @Override
+    @Optional.Method(modid = "hammercore")
+    public ColoredLight produceColoredLight(float partialTicks) {
+        return ColoredLight.builder().pos(this).color(87, 161, 235).radius(10f).build();
+
+    }
 }

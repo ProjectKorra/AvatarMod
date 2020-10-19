@@ -71,7 +71,7 @@ public class StatCtrlAirJump extends StatusControl {
         if (jump == null)
             return true;
 
-        boolean allowDoubleJump = abilityData.getJumpNumber() < jump.getProperty(Ability.JUMPS, abilityData).intValue();
+        boolean allowDoubleJump = abilityData.getUseNumber() < jump.getProperty(Ability.JUMPS, abilityData).intValue();
 
         // Figure out whether entity is on ground by finding collisions with
         // ground - if found a collision box, then is not on ground
@@ -160,15 +160,15 @@ public class StatCtrlAirJump extends StatusControl {
 
                 abilityData.addXp(jump.getProperty(Ability.XP_USE, abilityData).floatValue());
 
-                abilityData.setJumpNumber(abilityData.getJumpNumber() + 1);
-                if (abilityData.getJumpNumber() == jump.getProperty(Ability.JUMPS, abilityData).intValue()) {
+                abilityData.setUseNumber(abilityData.getUseNumber() + 1);
+                if (abilityData.getUseNumber() == jump.getProperty(Ability.JUMPS, abilityData).intValue()) {
                     abilityData.addBurnout(burnout);
                     abilityData.setAbilityCooldown(cooldown);
                     if (entity instanceof EntityPlayer)
                         ((EntityPlayer) entity).addExhaustion(exhaustion);
                 }
-                if (abilityData.getJumpNumber() > jump.getProperty(Ability.JUMPS, abilityData).intValue())
-                    abilityData.setJumpNumber(1);
+                if (abilityData.getUseNumber() > jump.getProperty(Ability.JUMPS, abilityData).intValue())
+                    abilityData.setUseNumber(1);
                 abilityData.setRegenBurnout(true);
 
                 int numberOfParticles = (int) (size * 5);

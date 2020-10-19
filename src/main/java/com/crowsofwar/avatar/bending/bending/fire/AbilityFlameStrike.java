@@ -20,7 +20,6 @@ package com.crowsofwar.avatar.bending.bending.fire;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingAi;
-import com.crowsofwar.avatar.bending.bending.fire.statctrls.StatCtrlFlameStrike;
 import com.crowsofwar.avatar.entity.EntityLightOrb;
 import com.crowsofwar.avatar.entity.data.LightOrbBehavior;
 import com.crowsofwar.avatar.entity.mob.EntityBender;
@@ -107,6 +106,7 @@ public class AbilityFlameStrike extends Ability {
             rightSide = rightSide.add(height);
 
             if (AvatarMod.hammerCore) {
+
                 EntityLightOrb orb = new EntityLightOrb(world);
                 orb.setOwner(entity);
                 orb.setAbility(new AbilityFlameStrike());
@@ -127,7 +127,7 @@ public class AbilityFlameStrike extends Ability {
         }
 
         ctx.getAbilityData().setRegenBurnout(false);
-        StatCtrlFlameStrike.setTimesUsed(ctx.getBenderEntity().getPersistentID(), 0);
+        ctx.getAbilityData().setUseNumber(0);
         data.addTickHandler(FLAME_STRIKE_HANDLER, ctx);
         data.addStatusControl(FLAME_STRIKE_MAIN);
         super.execute(ctx);

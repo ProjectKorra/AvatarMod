@@ -55,7 +55,7 @@ public class AbilityData {
     private float exhaustion;
     private boolean shouldRegenBurnout;
     //This is the most small brain solution ever, but we're rewriting later so who really cares
-    private int jumpNumber;
+    private int useNumber;
     private SourceInfo sourceInfo;
     /**
      * Current burnout amount of the ability.
@@ -95,7 +95,7 @@ public class AbilityData {
         this.exhaustion = 0;
         this.powerRating = 0;
         this.shouldRegenBurnout = true;
-        this.jumpNumber = 1;
+        this.useNumber = 1;
         this.sourceInfo = new SourceInfo();
     }
 
@@ -111,7 +111,7 @@ public class AbilityData {
         this.exhaustion = 0;
         this.powerRating = 0;
         this.shouldRegenBurnout = true;
-        this.jumpNumber = 1;
+        this.useNumber = 1;
         this.sourceInfo = new SourceInfo();
     }
 
@@ -138,12 +138,12 @@ public class AbilityData {
         return BendingData.get(world, playerName).getAbilityData(abilityName);
     }
 
-    public int getJumpNumber() {
-        return this.jumpNumber;
+    public int getUseNumber() {
+        return this.useNumber;
     }
 
-    public void setJumpNumber(int number) {
-        this.jumpNumber = number;
+    public void setUseNumber(int number) {
+        this.useNumber = number;
     }
 
     public void setSwitchPath(boolean switchPath) {
@@ -513,7 +513,7 @@ public class AbilityData {
         exhaustion = nbt.getFloat("Exhaustion");
         burnOut = nbt.getFloat("Burnout");
         shouldRegenBurnout = nbt.getBoolean("RegenBurnout");
-        jumpNumber = nbt.getInteger("Jumps");
+        useNumber = nbt.getInteger("Jumps");
         sourceInfo = sourceInfo.readFromNBT(nbt);
     }
 
@@ -527,7 +527,7 @@ public class AbilityData {
         nbt.setFloat("Exhaustion", exhaustion);
         nbt.setFloat("Burnout", burnOut);
         nbt.setBoolean("RegenBurnout", shouldRegenBurnout);
-        nbt.setInteger("Jumps", jumpNumber);
+        nbt.setInteger("Jumps", useNumber);
         sourceInfo.writeToNBT(nbt);
     }
 
@@ -541,7 +541,7 @@ public class AbilityData {
         buf.writeFloat(exhaustion);
         buf.writeFloat(burnOut);
         buf.writeBoolean(shouldRegenBurnout);
-        buf.writeInt(jumpNumber);
+        buf.writeInt(useNumber);
         sourceInfo.writeToBytes(buf);
     }
 
@@ -554,7 +554,7 @@ public class AbilityData {
         exhaustion = buf.readFloat();
         burnOut = buf.readFloat();
         shouldRegenBurnout = buf.readBoolean();
-        jumpNumber = buf.readInt();
+        useNumber = buf.readInt();
         sourceInfo = sourceInfo.readFromBytes(buf);
     }
 

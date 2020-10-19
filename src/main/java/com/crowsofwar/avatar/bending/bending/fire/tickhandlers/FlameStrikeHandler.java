@@ -4,7 +4,6 @@ import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.fire.AbilityFlameStrike;
 import com.crowsofwar.avatar.bending.bending.fire.Firebending;
-import com.crowsofwar.avatar.bending.bending.fire.statctrls.StatCtrlFlameStrike;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.PlayerViewRegistry;
@@ -15,15 +14,12 @@ import com.crowsofwar.avatar.util.data.ctx.BendingContext;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumHandSide;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.bending.bending.Ability.*;
 import static com.crowsofwar.avatar.bending.bending.fire.AbilityFlameStrike.STRIKES;
-import static com.crowsofwar.avatar.bending.bending.fire.statctrls.StatCtrlFlameStrike.setTimesUsed;
 import static com.crowsofwar.avatar.util.data.StatusControlController.FLAME_STRIKE_MAIN;
 import static com.crowsofwar.avatar.util.data.StatusControlController.FLAME_STRIKE_OFF;
 
@@ -133,7 +129,7 @@ public class FlameStrikeHandler extends TickHandler {
                     }
 
             } else return true;
-            if (usage - StatCtrlFlameStrike.getTimesUsed(entity.getPersistentID()) <= 0) {
+            if (usage - abilityData.getUseNumber() <= 0) {
                 data.removeStatusControl(FLAME_STRIKE_MAIN);
                 data.removeStatusControl(FLAME_STRIKE_OFF);
                 return true;
@@ -150,6 +146,6 @@ public class FlameStrikeHandler extends TickHandler {
     @Override
     public void onRemoved(BendingContext ctx) {
         super.onRemoved(ctx);
-        setTimesUsed(ctx.getBenderEntity().getPersistentID(), 0);
+        ctx.getData().getAbilityData("flame_strike").setUseNumber(0);
     }
 }

@@ -27,10 +27,9 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Mod;
 
-import java.util.HashMap;
 import java.util.Random;
-import java.util.UUID;
 
+import static com.crowsofwar.avatar.bending.bending.Ability.SETS_FIRES;
 import static com.crowsofwar.avatar.bending.bending.fire.AbilityFlameStrike.STRIKES;
 import static com.crowsofwar.avatar.client.controls.AvatarControl.CONTROL_LEFT_CLICK;
 import static com.crowsofwar.avatar.client.controls.AvatarControl.CONTROL_RIGHT_CLICK;
@@ -41,34 +40,12 @@ import static com.crowsofwar.avatar.util.data.TickHandlerController.FLAME_STRIKE
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class StatCtrlFlameStrike extends StatusControl {
 
-    private static final HashMap<UUID, Integer> timesUsed = new HashMap<>();
-    private static final HashMap<UUID, Integer> chargeLevel = new HashMap<>();
     EnumHand hand;
 
     public StatCtrlFlameStrike(EnumHand hand) {
         super(18, hand == EnumHand.MAIN_HAND ? CONTROL_LEFT_CLICK : CONTROL_RIGHT_CLICK,
                 hand == EnumHand.MAIN_HAND ? CrosshairPosition.LEFT_OF_CROSSHAIR : CrosshairPosition.RIGHT_OF_CROSSHAIR);
         this.hand = hand;
-    }
-
-    public static int getTimesUsed(UUID id) {
-        return timesUsed.getOrDefault(id, 0);
-    }
-
-    public static void setTimesUsed(UUID id, int times) {
-        if (timesUsed.containsKey(id))
-            timesUsed.replace(id, times);
-        else timesUsed.put(id, times);
-    }
-
-    public static int getChargeLevel(UUID id) {
-        return chargeLevel.getOrDefault(id, 1);
-    }
-
-    public static void setChargeLevel(UUID id, int level) {
-        if (chargeLevel.containsKey(id)) {
-            chargeLevel.replace(id, level);
-        } else chargeLevel.put(id, level);
     }
 
 
@@ -148,8 +125,6 @@ public class StatCtrlFlameStrike extends StatusControl {
             chiCost = burnout = exhaustion = cooldown = 0;
         }
 
-        System.out.println(chiCost);
-
         if (bender.consumeChi(chiCost)) {
             abilityData.addBurnout(abilityData.getBurnOut() + burnout);
             if (entity instanceof EntityPlayer)
@@ -194,36 +169,66 @@ public class StatCtrlFlameStrike extends StatusControl {
                             .scale(size * 0.75F).time(lifeTime + AvatarUtils.getRandomNumberInRange(1, 5))
                             .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(40, 140)).spawn(world);
                 }
-                if (i % 3 == 0) {
-                    EntityFlames flames = new EntityFlames(world);
-                    flames.setOwner(entity);
-                    flames.setDynamicSpreadingCollision(false);
-                    flames.setAbility(strike);
-                    flames.setTier(strike.getCurrentTier(abilityData));
-                    //Will need to be changed later as I go through and add in the new ability config
-                    flames.setXp(xp);
-                    flames.setLifeTime((int) (lifeTime * 0.785) + AvatarUtils.getRandomNumberInRange(0, 4));
-                    //Make a property later
-                    flames.setTrailingFires(strike.getBooleanProperty(Ability.SETS_FIRES, abilityData) && world.rand.nextBoolean());
-                    flames.setFires(strike.getBooleanProperty(Ability.SETS_FIRES, abilityData) && world.rand.nextBoolean());
-                    flames.setDamage(damage);
-                    flames.setSmelts(strike.getBooleanProperty(Ability.SMELTS, abilityData));
-                    flames.setFireTime(fireTime);
-                    flames.setBehaviour(new FlameStrikeBehaviour());
-                    flames.setPerformanceAmount(performance);
-                    flames.setRGB(r, g, b);
-                    flames.setFade(fadeR, fadeG, fadeB);
-                    flames.setElement(new Firebending());
-                    flames.setTier(strike.getCurrentTier(abilityData));
-                    flames.setPosition(x1, y1, z1);
-                    flames.setDamageSource("avatar_Fire_flameStrike");
-                    flames.setChiHit(strike.getProperty(Ability.CHI_HIT, abilityData).floatValue());
-                    flames.setVelocity(new Vec3d(look.x * mult + world.rand.nextGaussian() * accuracyMult + entity.motionX,
-                            look.y * mult + world.rand.nextGaussian() * accuracyMult,
-                            look.z * mult + world.rand.nextGaussian() * accuracyMult + entity.motionZ));
-                    flames.setEntitySize(size / 8);
-                    if (!world.isRemote)
-                        world.spawnEntity(flames);
+
+                //Reduces lag by reducing the amount of entities spawned
+                if (strike.getBooleanProperty(SETS_FIRES, abilityData)) {
+                    if (i % 12 == 0) {
+                        EntityFlames flames = new EntityFlames(world);
+                        flames.setOwner(entity);
+                        flames.setDynamicSpreadingCollision(false);
+                        flames.setAbility(strike);
+                        flames.setTier(strike.getCurrentTier(abilityData));
+                        flames.setXp(xp);
+                        flames.setLifeTime((int) (lifeTime * 0.785) + AvatarUtils.getRandomNumberInRange(0, 4));
+                        flames.setTrailingFires(strike.getBooleanProperty(Ability.SETS_FIRES, abilityData) && world.rand.nextBoolean());
+                        flames.setFires(strike.getBooleanProperty(Ability.SETS_FIRES, abilityData) && world.rand.nextBoolean());
+                        flames.setDamage(damage);
+                        flames.setSmelts(strike.getBooleanProperty(Ability.SMELTS, abilityData));
+                        flames.setFireTime(fireTime);
+                        flames.setBehaviour(new FlameStrikeBehaviour());
+                        flames.setPerformanceAmount(performance);
+                        flames.setRGB(r, g, b);
+                        flames.setFade(fadeR, fadeG, fadeB);
+                        flames.setElement(new Firebending());
+                        flames.setTier(strike.getCurrentTier(abilityData));
+                        flames.setPosition(x1, y1, z1);
+                        flames.setDamageSource("avatar_Fire_flameStrike");
+                        flames.setChiHit(strike.getProperty(Ability.CHI_HIT, abilityData).floatValue());
+                        flames.setVelocity(new Vec3d(look.x * mult + world.rand.nextGaussian() * accuracyMult + entity.motionX,
+                                look.y * mult + world.rand.nextGaussian() * accuracyMult,
+                                look.z * mult + world.rand.nextGaussian() * accuracyMult + entity.motionZ));
+                        flames.setEntitySize(size / 4);
+                        if (!world.isRemote)
+                            world.spawnEntity(flames);
+                    }
+                } else {
+                    if (i % 3 == 0) {
+                        EntityFlames flames = new EntityFlames(world);
+                        flames.setOwner(entity);
+                        flames.setDynamicSpreadingCollision(false);
+                        flames.setAbility(strike);
+                        flames.setTier(strike.getCurrentTier(abilityData));
+                        flames.setXp(xp);
+                        flames.setLifeTime((int) (lifeTime * 0.785) + AvatarUtils.getRandomNumberInRange(0, 4));
+                        flames.setDamage(damage);
+                        flames.setSmelts(strike.getBooleanProperty(Ability.SMELTS, abilityData));
+                        flames.setFireTime(fireTime);
+                        flames.setBehaviour(new FlameStrikeBehaviour());
+                        flames.setPerformanceAmount(performance);
+                        flames.setRGB(r, g, b);
+                        flames.setFade(fadeR, fadeG, fadeB);
+                        flames.setElement(new Firebending());
+                        flames.setTier(strike.getCurrentTier(abilityData));
+                        flames.setPosition(x1, y1, z1);
+                        flames.setDamageSource("avatar_Fire_flameStrike");
+                        flames.setChiHit(strike.getProperty(Ability.CHI_HIT, abilityData).floatValue());
+                        flames.setVelocity(new Vec3d(look.x * mult + world.rand.nextGaussian() * accuracyMult + entity.motionX,
+                                look.y * mult + world.rand.nextGaussian() * accuracyMult,
+                                look.z * mult + world.rand.nextGaussian() * accuracyMult + entity.motionZ));
+                        flames.setEntitySize(size / 8);
+                        if (!world.isRemote)
+                            world.spawnEntity(flames);
+                    }
                 }
             }
 
@@ -231,16 +236,17 @@ public class StatCtrlFlameStrike extends StatusControl {
             if (hand == EnumHand.OFF_HAND)
                 entity.swingArm(hand);
 
-            if (!world.isRemote)
-                setTimesUsed(entity.getPersistentID(), getTimesUsed(entity.getPersistentID()) + 1);
+
+            abilityData.setUseNumber(abilityData.getUseNumber() + 1);
 
 
             world.playSound(entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 1.0F + Math.max(abilityData.getLevel() * 0.5F, 0),
                     1.25F * world.rand.nextFloat(), false);
 
-            if (!world.isRemote && getTimesUsed(entity.getPersistentID()) >= strike.getProperty(STRIKES, abilityData).intValue()) {
+            if (abilityData.getUseNumber() >= strike.getProperty(STRIKES, abilityData).intValue()) {
                 abilityData.setAbilityCooldown(cooldown);
                 abilityData.setRegenBurnout(true);
+                abilityData.setUseNumber(0);
                 ctx.getData().removeTickHandler(FLAME_STRIKE_HANDLER, ctx);
                 return true;
             }
@@ -248,8 +254,7 @@ public class StatCtrlFlameStrike extends StatusControl {
 
             if (ctx.getData().hasTickHandler(FLAME_STRIKE_HANDLER))
                 ctx.getData().addStatusControl(hand == EnumHand.MAIN_HAND ? FLAME_STRIKE_OFF : FLAME_STRIKE_MAIN);
-        }
-        else {
+        } else {
             abilityData.setAbilityCooldown(cooldown);
             abilityData.setRegenBurnout(true);
         }
