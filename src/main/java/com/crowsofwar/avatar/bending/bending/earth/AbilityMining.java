@@ -260,7 +260,7 @@ public class AbilityMining extends Ability {
 
     private boolean isBreakableOre(World world, BlockPos pos) {
         Block block = world.getBlockState(pos).getBlock();
-        return (block instanceof BlockOre || block instanceof BlockRedstoneOre) && Earthbending.isBendable(world.getBlockState(pos));
+        return (block instanceof BlockOre || block instanceof BlockRedstoneOre) && Earthbending.isBendable(world, pos, world.getBlockState(pos), 2);
     }
 
 

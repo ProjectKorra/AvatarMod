@@ -106,7 +106,7 @@ public class AbilityEarthControl extends Ability {
         BendingData data = ctx.getData();
 
         IBlockState ibs = world.getBlockState(pos);
-        if (!ibs.isFullBlock() && !Earthbending.isBendable(ibs))
+        if (!ibs.isFullBlock() && !Earthbending.isBendable(world, pos, ibs, 2))
             ibs = world.getBlockState(pos.down());
 
         Block block = ibs.getBlock();
@@ -126,7 +126,7 @@ public class AbilityEarthControl extends Ability {
                 heldBlocks++;
         }
 
-        boolean bendable = Earthbending.isBendable(ibs);
+        boolean bendable = Earthbending.isBendable(world, pos, ibs, 2);
         bendable |= !bendable && !Earthbending.isBendable(world, pos.down(), world.getBlockState(pos.down()), 2)
                 && !(block instanceof BlockSnow || block instanceof BlockTallGrass) && world.getBlockState(pos).isNormalCube();
 
@@ -141,7 +141,7 @@ public class AbilityEarthControl extends Ability {
         block = ibs.getBlock();
 
         bendable = Earthbending.isBendable(world, pos, ibs, 2);
-        bendable |= !bendable && !Earthbending.isBendable(world, pos.down(), world.getBlockState(pos.down()), 2)
+        bendable |= !bendable && Earthbending.isBendable(world, pos.down(), world.getBlockState(pos.down()), 2)
                 && !(block instanceof BlockSnow || block instanceof BlockTallGrass) && world.getBlockState(pos).isNormalCube();
 
         if (!world.isAirBlock(pos) && bendable && heldBlocks < maxBlocks) {
