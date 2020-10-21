@@ -1,8 +1,10 @@
-package com.crowsofwar.avatar.util.event;
+package com.crowsofwar.avatar.common.event;
 
-import com.crowsofwar.avatar.bending.bending.Ability;
-import com.crowsofwar.avatar.util.data.AbilityData;
+import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.common.triggers.AvatarTriggers;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.eventhandler.Cancelable;
 
 /**
@@ -21,6 +23,8 @@ public class AbilityUseEvent extends BendingEvent {
 		this.ability = ability;
 		this.level = level;
 		this.path = path;
+		if(entity instanceof EntityPlayerMP)
+			AvatarTriggers.ABILITY_USE.trigger((EntityPlayerMP) entity, ability, level);
 	}
 
 	public Ability getAbility() {
