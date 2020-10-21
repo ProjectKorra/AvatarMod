@@ -76,7 +76,6 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 	 * The entity selector passed into the new AI methods.
 	 */
 	protected Predicate<Entity> targetSelector;
-	private boolean hasAttemptedTrade;
 	/**
 	 * The wizard's trades.
 	 */
@@ -96,7 +95,6 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 	//TODO: Chi
 	public EntityHumanBender(World world) {
 		super(world);
-		this.hasAttemptedTrade = false;
 	}
 
 	public int getScrollsLeft() {
