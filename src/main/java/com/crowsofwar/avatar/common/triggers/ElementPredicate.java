@@ -1,7 +1,7 @@
 package com.crowsofwar.avatar.common.triggers;
 
-import com.crowsofwar.avatar.common.bending.BendingStyle;
-import com.crowsofwar.avatar.common.bending.BendingStyles;
+import com.crowsofwar.avatar.bending.bending.BendingStyle;
+import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.google.common.collect.Streams;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -27,11 +27,11 @@ public class ElementPredicate {
         this.elements = elements;
     }
 
-    public boolean test(BendingStyle spell){
+    public boolean test(BendingStyle element){
 
-        if(this.element != null && spell != this.element){
+        if(this.element != null && element != this.element){
             return false;
-        }else if(!Arrays.asList(this.elements).contains(spell)){
+        }else if(!Arrays.asList(this.elements).contains(element)){
             return false;
         }
 

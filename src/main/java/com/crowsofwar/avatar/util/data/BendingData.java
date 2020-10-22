@@ -89,6 +89,14 @@ public class BendingData {
         else return get(entity);
     }
 
+    public int getTotalLevel(BendingStyle style){
+        int totalLevel = 0;
+        List<Ability> abilities = (List<Ability>) Abilities.all().clone();
+        for (Ability ability : abilities)
+            totalLevel += (getAbilityData(ability).getLevel());
+        return totalLevel;
+    }
+
     @Nonnull
     public static BendingData get(@Nonnull EntityLivingBase entity) {
         if (Bender.get(entity) == null || Bender.get(entity).getInfo().getId() == null)

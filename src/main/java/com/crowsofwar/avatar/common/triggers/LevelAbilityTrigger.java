@@ -12,7 +12,7 @@
  */
 package com.crowsofwar.avatar.common.triggers;
 
-import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.bending.bending.Ability;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -54,7 +54,8 @@ public class LevelAbilityTrigger implements ICriterionTrigger<LevelAbilityTrigge
 
     /**
      * Instantiates a new custom trigger.
-     *
+     * We want this to be AbilityLevelTrigger, not LevelAbilityTrigger.
+     * NounVerbType, not VerbNounType
      * @param parRL the par RL
      */
     public LevelAbilityTrigger(ResourceLocation parRL)

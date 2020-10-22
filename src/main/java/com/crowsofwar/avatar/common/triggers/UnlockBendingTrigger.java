@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
-import com.crowsofwar.avatar.common.bending.BendingStyle;
+import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;

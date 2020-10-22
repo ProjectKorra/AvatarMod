@@ -18,17 +18,16 @@
 package com.crowsofwar.avatar.common;
 
 import com.crowsofwar.avatar.AvatarInfo;
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingStyle;
-import com.crowsofwar.avatar.common.bending.BendingStyles;
-import com.crowsofwar.avatar.common.bending.air.Airbending;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.event.AbilityUnlockEvent;
-import com.crowsofwar.avatar.common.event.AbilityUseEvent;
-import com.crowsofwar.avatar.common.event.ElementUnlockEvent;
-import com.crowsofwar.avatar.common.triggers.AvatarTriggers;
-import com.crowsofwar.avatar.common.util.AvatarUtils;
+import com.crowsofwar.avatar.bending.bending.Ability;
+import com.crowsofwar.avatar.bending.bending.BendingStyle;
+import com.crowsofwar.avatar.bending.bending.BendingStyles;
+import com.crowsofwar.avatar.bending.bending.air.Airbending;
+import com.crowsofwar.avatar.util.event.AbilityUnlockEvent;
+import com.crowsofwar.avatar.util.event.AbilityUseEvent;
+import com.crowsofwar.avatar.util.event.ElementUnlockEvent;
+import com.crowsofwar.avatar.util.AvatarUtils;
+import com.crowsofwar.avatar.util.data.Bender;
+import com.crowsofwar.avatar.util.data.BendingData;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
@@ -43,7 +42,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static com.crowsofwar.avatar.common.config.ConfigSkills.SKILLS_CONFIG;
+import static com.crowsofwar.avatar.config.ConfigSkills.SKILLS_CONFIG;
 
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class AvatarPlayerTick {

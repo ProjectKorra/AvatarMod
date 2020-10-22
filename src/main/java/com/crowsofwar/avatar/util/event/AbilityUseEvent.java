@@ -1,8 +1,9 @@
-package com.crowsofwar.avatar.common.event;
+package com.crowsofwar.avatar.util.event;
 
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.data.AbilityData;
+import com.crowsofwar.avatar.bending.bending.Ability;
+import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.common.triggers.AvatarTriggers;
+import com.crowsofwar.avatar.util.event.BendingEvent;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.eventhandler.Cancelable;
