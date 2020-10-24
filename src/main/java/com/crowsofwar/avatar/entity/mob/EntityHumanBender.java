@@ -222,6 +222,7 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 		setHomePosAndDistance(getPosition(), 40);
 		setSkin((int) (rand.nextDouble() * getNumSkins()));
 		setLevel(AvatarUtils.getRandomNumberInRange(1, MOBS_CONFIG.benderSettings.maxLevel));
+		applyAbilityLevels(getLevel());
 		generateRecipes();
 		return livingdata;
 	}
@@ -303,7 +304,6 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 		// Won't trade with a player that has attacked them.
 		if (this.isEntityAlive() && !this.isTrading() && !this.isChild() && !player.isSneaking()
 				&& this.getAttackTarget() != player) {
-			generateRecipes();
 			if (!this.world.isRemote && !trades.isEmpty()) {
 				this.setCustomer(player);
 				player.displayVillagerTradeGui(this);
@@ -411,7 +411,6 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 	// villager, at which point the first is added.
 	@Override
 	public MerchantRecipeList getRecipes(EntityPlayer par1EntityPlayer) {
-		generateRecipes();
 		return trades;
 	}
 
@@ -547,10 +546,13 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 						(int) tierIncreaseChance * AvatarUtils.getRandomNumberInRange(2, 4) + 1, maxTier));
 				itemToSell = this.getRandomItemOfTier(finalTier);
 
+				//Don't know what this is used for tbh
 				if (this.trades != null) {
 					for (Object recipe : this.trades) {
-						if (ItemStack.areItemStacksEqual(((MerchantRecipe) recipe).getItemToSell(), itemToSell))
+						if (ItemStack.areItemStacksEqual(((MerchantRecipe) recipe).getItemToSell(), itemToSell)) {
 							itemAlreadySold = true;
+							return;
+						}
 					}
 				}
 			}
