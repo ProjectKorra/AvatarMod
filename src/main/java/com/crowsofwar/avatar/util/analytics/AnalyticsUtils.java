@@ -12,7 +12,7 @@ import java.nio.charset.StandardCharsets;
  */
 public class AnalyticsUtils {
 
-	public static final String GA_TRACKING_ID = "UA-110529537-1";
+	public static final String GA_TRACKING_ID = "G-HWJB0B4E22";
 
 	/**
 	 * Gets the basic parameters to be sent in any GA API request. Then other parameters can be
