@@ -562,11 +562,11 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 
 			ItemStack firstPrice = this.getRandomPrice(finalTier);
 			ItemStack secondPrice = this.getRandomPrice(finalTier);
-			greaterTier = MOBS_CONFIG.getTradeItemTier(firstPrice.getItem()) > finalTier;
+			greaterTier = MOBS_CONFIG.getTradeItemTier(firstPrice.getItem()) >= finalTier;
 			if (greaterTier)
 				recipeList.add(new MerchantRecipe(firstPrice, itemToSell));
 			else {
-				greaterTier = MOBS_CONFIG.getTradeItemTier(secondPrice.getItem()) > finalTier;
+				greaterTier = MOBS_CONFIG.getTradeItemTier(secondPrice.getItem()) >= finalTier;
 				if (greaterTier)
 					recipeList.add(new MerchantRecipe(secondPrice, itemToSell));
 				else recipeList.add(new MerchantRecipe(firstPrice, secondPrice, itemToSell));
