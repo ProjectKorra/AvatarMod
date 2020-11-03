@@ -17,10 +17,6 @@
 
 package com.crowsofwar.avatar;
 
-import com.crowsofwar.avatar.item.UpgradeItems;
-import com.crowsofwar.avatar.network.AvatarCommonProxy;
-import com.crowsofwar.avatar.util.AvatarPlayerTick;
-import com.crowsofwar.avatar.util.analytics.AvatarAnalytics;
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingStyles;
@@ -32,34 +28,37 @@ import com.crowsofwar.avatar.bending.bending.earth.*;
 import com.crowsofwar.avatar.bending.bending.fire.*;
 import com.crowsofwar.avatar.bending.bending.ice.AbilityIceBurst;
 import com.crowsofwar.avatar.bending.bending.ice.AbilityIcePrison;
-import com.crowsofwar.avatar.bending.bending.ice.Icebending;
 import com.crowsofwar.avatar.bending.bending.lightning.*;
 import com.crowsofwar.avatar.bending.bending.sand.AbilitySandPrison;
 import com.crowsofwar.avatar.bending.bending.sand.AbilitySandstorm;
 import com.crowsofwar.avatar.bending.bending.sand.Sandbending;
 import com.crowsofwar.avatar.bending.bending.water.*;
 import com.crowsofwar.avatar.blocks.AvatarBlocks;
-import com.crowsofwar.avatar.util.command.AvatarCommand;
+import com.crowsofwar.avatar.client.gui.AvatarGuiHandler;
+import com.crowsofwar.avatar.client.particle.AvatarParticles;
 import com.crowsofwar.avatar.config.*;
-import com.crowsofwar.avatar.util.data.AvatarPlayerData;
 import com.crowsofwar.avatar.entity.*;
 import com.crowsofwar.avatar.entity.data.Behavior;
 import com.crowsofwar.avatar.entity.mob.*;
-import com.crowsofwar.avatar.util.event.ServerEventHandler;
-import com.crowsofwar.avatar.client.gui.AvatarGuiHandler;
+import com.crowsofwar.avatar.item.UpgradeItems;
 import com.crowsofwar.avatar.network.AvatarAnnouncements;
-import com.crowsofwar.avatar.registry.AvatarItems;
 import com.crowsofwar.avatar.network.AvatarChatMessages;
+import com.crowsofwar.avatar.network.AvatarCommonProxy;
 import com.crowsofwar.avatar.network.PacketHandlerServer;
 import com.crowsofwar.avatar.network.packets.*;
 import com.crowsofwar.avatar.network.packets.glider.PacketCClientGliding;
 import com.crowsofwar.avatar.network.packets.glider.PacketCSyncGliderDataToClient;
 import com.crowsofwar.avatar.network.packets.glider.PacketCUpdateClientTarget;
 import com.crowsofwar.avatar.network.packets.glider.PacketSServerGliding;
-import com.crowsofwar.avatar.client.particle.AvatarParticles;
+import com.crowsofwar.avatar.registry.AvatarItems;
 import com.crowsofwar.avatar.registry.CapabilityRegistry;
 import com.crowsofwar.avatar.util.AvatarDataSerializers;
+import com.crowsofwar.avatar.util.AvatarPlayerTick;
 import com.crowsofwar.avatar.util.HumanBenderSpawner;
+import com.crowsofwar.avatar.util.analytics.AvatarAnalytics;
+import com.crowsofwar.avatar.util.command.AvatarCommand;
+import com.crowsofwar.avatar.util.data.AvatarPlayerData;
+import com.crowsofwar.avatar.util.event.ServerEventHandler;
 import com.crowsofwar.avatar.util.windhelper.WindHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
@@ -80,16 +79,15 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
+import org.joml.Matrix4f;
+import org.joml.Vector4f;
+
+import java.io.File;
 
 import static com.crowsofwar.avatar.config.ConfigMobs.MOBS_CONFIG;
 import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
 import static net.minecraft.init.Biomes.*;
 import static net.minecraftforge.fml.common.registry.EntityRegistry.registerEgg;
-
-import org.joml.Matrix4f;
-import org.joml.Vector4f;
-
-import java.io.File;
 
 @Mod(modid = AvatarInfo.MOD_ID, name = AvatarInfo.MOD_NAME, version = AvatarInfo.VERSION, dependencies = "required-after:gorecore",  //
         updateJSON = "http://av2.io/updates.json", acceptedMinecraftVersions = "1.12")

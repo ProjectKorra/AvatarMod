@@ -192,10 +192,11 @@ public class AvatarParticleUtils {
 	public static void spawnSpinningDirectionalHelix(World world, Entity entity, Vec3d direction, Vec3d entitySpeed, int maxAngle, double vortexLength, double radius, EnumParticleTypes particle, Vec3d position,
 													 Vec3d particleSpeed, int maxAge, float r, float g, float b) {
 		for (int angle = 0; angle < maxAngle; angle++) {
+			double actAngle = Math.toRadians(angle);
 			double angle2 = world.rand.nextDouble() * Math.PI * 2;
-			double x = radius * cos(angle);
+			double x = radius * cos(actAngle);
 			double y = angle / (maxAngle / vortexLength);
-			double z = radius * sin(angle);
+			double z = radius * sin(actAngle);
 			double speed = world.rand.nextDouble() * 2 + 1;
 			double omega = Math.signum(speed * ((Math.PI * 2) / 20 - speed / (20 * radius)));
 			angle2 += omega;
