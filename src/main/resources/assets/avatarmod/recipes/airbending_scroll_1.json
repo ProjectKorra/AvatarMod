@@ -7,7 +7,7 @@
   ],
   "key": {
     "b": {
-      "item": "minecraft:blaze_rod"
+      "item": "minecraft:feather"
     },
     "p": {
       "item": "minecraft:paper"
@@ -17,7 +17,7 @@
     }
   },
   "result": {
-    "item": "avatarmod:scroll_fire",
+    "item": "avatarmod:scroll_air",
     "data": 0
   }
 }

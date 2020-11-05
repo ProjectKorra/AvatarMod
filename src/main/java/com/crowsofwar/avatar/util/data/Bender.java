@@ -294,7 +294,7 @@ public abstract class Bender {
      */
     public void onUpdate() {
 
-        
+
         BendingData data = getData();
         World world = getWorld();
         EntityLivingBase entity = getEntity();
