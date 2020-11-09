@@ -56,6 +56,7 @@ public class AvatarItems {
 	public static ItemHangGliderPart gliderPart;
 	public static ItemHangGliderBasic gliderBasic;
 	public static ItemHangGliderAdvanced gliderAdv;
+	public static ItemEmptyExpBottle emptyExpBottle;
 
 	private static void PopulateItems() {
 		Scrolls.ALL = ItemScrollAll.getInstance();
@@ -75,6 +76,7 @@ public class AvatarItems {
 		gliderBasic = ItemHangGliderBasic.getInstance();
 		gliderAdv = ItemHangGliderAdvanced.getInstance();
 		gliderPart = ItemHangGliderPart.getInstance();
+		emptyExpBottle = new ItemEmptyExpBottle();
 	}
 
 	//Models

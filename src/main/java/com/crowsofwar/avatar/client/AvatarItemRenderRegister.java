@@ -69,6 +69,7 @@ public class AvatarItemRenderRegister {
 		registerWithMetadata(AvatarItems.gliderBasic, 3);
 		registerWithMetadata(AvatarItems.gliderAdv, 3);
 		registerWithMetadata(AvatarItems.gliderPart, 3);
+
 	}
 
 	private static void forScroll(ItemScroll scroll) {
