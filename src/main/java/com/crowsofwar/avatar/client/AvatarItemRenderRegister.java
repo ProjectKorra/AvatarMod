@@ -59,8 +59,8 @@ public class AvatarItemRenderRegister {
 		//forScroll(Scrolls.ICE);
 
 		register(AvatarItems.itemBisonWhistle);
-
 		register(Item.getItemFromBlock(blockCloud));
+		register(AvatarItems.emptyExpBottle);
 
 		registerWithMetadata(AvatarItems.itemWaterPouch, 6);
 		registerWithMetadata(AvatarItems.itemBisonArmor, 4);

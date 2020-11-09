@@ -1,23 +1,32 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "ebe",
-    "bpb",
-    "ebe"
+    "bwb",
+    "fpe",
+    "bab"
   ],
   "key": {
-    "b": {
+    "f": {
       "item": "minecraft:flint_and_steel"
+    },
+    "w": {
+      "item": "minecraft:water_bucket"
+    },
+    "e": {
+      "item": "minecraft:iron_ingot"
+    },
+    "a": {
+      "item": "minecraft:feather"
     },
     "p": {
       "item": "minecraft:book"
     },
-    "e": {
+    "b": {
       "item": "minecraft:experience_bottle"
     }
   },
   "result": {
-    "item": "avatarmod:scroll_fire",
+    "item": "avatarmod:scroll_all",
     "data": 0
   }
 }

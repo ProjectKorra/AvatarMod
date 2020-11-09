@@ -76,7 +76,7 @@ public class AvatarItems {
 		gliderBasic = ItemHangGliderBasic.getInstance();
 		gliderAdv = ItemHangGliderAdvanced.getInstance();
 		gliderPart = ItemHangGliderPart.getInstance();
-		emptyExpBottle = new ItemEmptyExpBottle();
+		emptyExpBottle = ItemEmptyExpBottle.getInstance();
 	}
 
 	//Models

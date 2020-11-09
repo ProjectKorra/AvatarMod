@@ -40,6 +40,7 @@ import com.crowsofwar.avatar.config.*;
 import com.crowsofwar.avatar.entity.*;
 import com.crowsofwar.avatar.entity.data.Behavior;
 import com.crowsofwar.avatar.entity.mob.*;
+import com.crowsofwar.avatar.item.CustomFurnaceRecipes;
 import com.crowsofwar.avatar.item.UpgradeItems;
 import com.crowsofwar.avatar.network.AvatarAnnouncements;
 import com.crowsofwar.avatar.network.AvatarChatMessages;
@@ -410,6 +411,9 @@ public class AvatarMod {
 
         //glider upgrades
         UpgradeItems.initUpgradesList();
+
+        //Furnace Recipes
+        CustomFurnaceRecipes.initRecipes();
 
         //register server events
         MinecraftForge.EVENT_BUS.register(new ServerEventHandler());
