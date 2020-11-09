@@ -6,11 +6,18 @@
     "ebe"
   ],
   "key": {
-    "b": {
-      "item": "minecraft:iron_ingot"
-    },
+    "b": [
+      {
+        "item": "minecraft:coal",
+        "data": 0
+      },
+      {
+        "item:": "minecraft:coal",
+        "data": 1
+      }
+    ],
     "p": {
-      "item": "minecraft:paper"
+      "item": "minecraft:book"
     },
     "e": {
       "item": "minecraft:experience_bottle"

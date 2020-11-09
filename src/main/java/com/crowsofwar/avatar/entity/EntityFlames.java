@@ -69,7 +69,7 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
         super(worldIn);
         setSize(1.0f, 1.0f);
         this.lightTnt = true;
-        this.setsFires = true;
+        this.setsFires = false;
         this.smelts = false;
     }
 
@@ -78,6 +78,7 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
     }
 
     public void setTrailingFires(boolean fires) {
+        setFires(setsFires);
         dataManager.set(SYNC_TRAILING_FIRES, fires);
     }
 
@@ -112,7 +113,7 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
 
     @Override
     public void onCollideWithEntity(Entity entity) {
-        if (entity instanceof EntityItem && smelts)
+        if (entity instanceof EntityItem && smelts && !world.isRemote && !entity.isDead)
             AvatarEntityUtils.smeltItemEntity((EntityItem) entity, getTier());
         super.onCollideWithEntity(entity);
     }
