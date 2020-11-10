@@ -1,14 +1,28 @@
 {
-  "type": "minecraft:crafting_shapeless",
-  "ingredients": [
-    {
-      "item": "avatarmod:scroll_earth",
-      "data" : 5
-    }, {
-      "item": "avatarmod:scroll_earth",
-      "data" : 5
-    }
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "epe",
+    "sds",
+    "epe"
   ],
+  "key": {
+    "p": {
+      "item": "minecraft:end_bricks",
+      "count": 4
+    },
+    "key": {
+      "item": "minecraft:diamond",
+      "count": 32
+    },
+    "s": {
+      "item": "avatarmod:scroll_earth",
+      "data": 5
+    },
+    "e": {
+      "item": "minecraft:experience_bottle",
+      "count": 4
+    }
+  },
   "result": {
     "item": "avatarmod:scroll_earth",
     "data": 6

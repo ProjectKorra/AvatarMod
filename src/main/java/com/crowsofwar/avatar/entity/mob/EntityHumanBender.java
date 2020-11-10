@@ -513,7 +513,7 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 			boolean itemAlreadySold = true;
 
 			int tier = 1;
-			int maxTier = getLevel();
+			int maxTier = Math.max(getLevel(), tier);
 			int finalTier = tier;
 			double tierInc = (maxTier - tier) / 3F;
 			boolean greaterTier;
@@ -529,7 +529,7 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 				 * 1 46% 25% 20% 9% 2 42% 24% 22% 12% 3 38% 24% 24% 14% 4 34% 22% 26% 17% 5 30% 21% 28% 21% 6 26% 19%
 				 * 30% 24% 7 22% 17% 32% 28% 8 18% 15% 34% 33% */
 
-				double tierIncreaseChance = 0.70 + 0.04 * (Math.max(trades == null ? 0 : this.trades.size() - 4, 0));
+				double tierIncreaseChance = 0.76 + 0.04 * (Math.max(trades == null ? 0 : this.trades.size() - 4, 0));
 
 				if (rand.nextDouble() < tierIncreaseChance) {
 					tier += tierInc;
