@@ -1,7 +1,7 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "avatarmod:items/hang_glider_basic_deployed"
+    "layer0": "avatarmod:items/basic_glider"
   },
   "display": {
     "firstperson_righthand": {

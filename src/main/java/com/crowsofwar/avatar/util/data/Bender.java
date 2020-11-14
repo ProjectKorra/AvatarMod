@@ -375,12 +375,12 @@ public abstract class Bender {
         }
 
         //Config updates
-        if (entity.ticksExisted % 400 == 0) {
-            ConfigClient.load();
-            ConfigStats.load();
-            ConfigSkills.load();
-            ConfigMobs.load();
-        }
+//        if (entity.ticksExisted % 400 == 0) {
+//            ConfigClient.load();
+//            ConfigStats.load();
+//            ConfigSkills.load();
+//            ConfigMobs.load();
+//        }
         // Update bending managers
 
         List<PowerRatingManager> managers = data.getPowerRatingManagers();

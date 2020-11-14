@@ -519,11 +519,12 @@ public class ItemHangGliderBase extends ItemSword implements IGlider, AvatarItem
     public String getModelName(int meta) {
         switch (meta) {
             case 1:
-                return "hang_glider_basic_deployed";
+                return "basic_glider";
             case 3:
+                //TODO: Change
                 return "hang_glider_basic_broken";
             default:
-                return "hang_glider_basic";
+                return "airbender_staff";
         }
     }
 }

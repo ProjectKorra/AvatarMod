@@ -4,6 +4,7 @@ import com.crowsofwar.avatar.util.GliderInfo;
 import com.crowsofwar.avatar.registry.AvatarItem;
 import com.crowsofwar.avatar.registry.AvatarItems;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 
 import static com.crowsofwar.avatar.config.ConfigGlider.GLIDER_CONFIG;
 
@@ -36,11 +37,16 @@ public class ItemHangGliderAdvanced extends ItemHangGliderBase implements Avatar
 	public String getModelName(int meta) {
 		switch (meta) {
             case 1:
-				return "hang_glider_advanced_deployed";
+				return "advanced_glider";
 			case 3:
 				return "hang_glider_advanced_broken";
 			default:
-				return "hang_glider_advanced";
+				return "airbender_staff";
 		}
+	}
+
+	@Override
+	public boolean hasEffect(ItemStack stack) {
+		return true;
 	}
 }

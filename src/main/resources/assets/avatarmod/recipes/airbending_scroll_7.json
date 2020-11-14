@@ -1,14 +1,27 @@
 {
-  "type": "minecraft:crafting_shapeless",
-  "ingredients": [
-    {
-      "item": "avatarmod:scroll_air",
-      "data" : 5
-    }, {
-      "item": "avatarmod:scroll_air",
-      "data" : 5
-    }
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "efe",
+    "sps",
+    "ede"
   ],
+  "key": {
+    "d": {
+      "item": "minecraft:dragon_breath",
+      "count": 4
+    },
+    "f": {
+      "item": "minecraft:elytra"
+    },
+    "s": {
+      "item": "avatarmod:scroll_air",
+      "data": 5
+    },
+    "e": {
+      "item": "minecraft:experience_bottle",
+      "count": 16
+    }
+  },
   "result": {
     "item": "avatarmod:scroll_air",
     "data": 6

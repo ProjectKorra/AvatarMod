@@ -1,6 +1,20 @@
 {
   "parent": "item/handheld",
   "textures": {
-    "layer0": "minecraft:items/stick"
-  }
+    "layer0": "avatarmod:items/airbender_staff"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "status": 1
+      },
+      "model": "avatarmod:item/basic_glider"
+    },
+    {
+      "predicate": {
+        "status": 2
+      },
+      "model": "avatarmod:item/hang_glider_basic_broken"
+    }
+  ]
 }
