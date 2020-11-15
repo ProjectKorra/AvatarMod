@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "avatarmod:items/master_glider_broken"
+    "layer0": "avatarmod:items/basic_glider_broken"
   }
 }

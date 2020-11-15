@@ -36,12 +36,12 @@ public class ItemHangGliderAdvanced extends ItemHangGliderBase implements Avatar
 	@Override
 	public String getModelName(int meta) {
 		switch (meta) {
-            case 1:
-				return "advanced_glider";
-			case 3:
-				return "hang_glider_advanced_broken";
+//            case 1:
+//				return "master_glider";
+//			case 3:
+//				return "master_glider_broken";
 			default:
-				return "airbender_staff";
+				return "master_airbender_staff";
 		}
 	}
 

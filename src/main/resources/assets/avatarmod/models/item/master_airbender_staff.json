@@ -8,13 +8,13 @@
       "predicate": {
         "status": 1
       },
-      "model": "avatarmod:item/basic_glider"
+      "model": "avatarmod:item/master_glider"
     },
     {
       "predicate": {
         "status": 2
       },
-      "model": "avatarmod:item/basic_glider_broken"
+      "model": "avatarmod:item/master_glider_broken"
     }
   ]
 }
