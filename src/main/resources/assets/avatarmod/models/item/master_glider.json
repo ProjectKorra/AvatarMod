@@ -1,7 +1,7 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "avatarmod:items/basic_glider"
+    "layer0": "avatarmod:items/master_glider"
   },
   "display": {
     "firstperson_righthand": {
