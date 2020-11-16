@@ -176,14 +176,7 @@ public class AvatarMod {
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent e) {
-    	//Stupid hack to force java to load Matrix4f on startup instead of when someone uses an ability that relies on it, causing a lag spike.
-    	//Yes, I tried just making new objects or just accessing fields in them, but for some reason that didn't work.
-    	Matrix4f mat = new Matrix4f();
-		mat.translate(0, 0 + .4f, 0);
-		mat.rotate(90, 1, 0, 0);
-		Vector4f v = new Vector4f(2, 1, 1, 1).mul(mat);
-    	
-    	
+
         codeChickenLibCompat = Loader.isModLoaded("codechickenlib");
         //Used for particle and inferno punch shenanigans
         realFirstPersonRender2Compat = Loader.isModLoaded("rfp2");
@@ -426,6 +419,16 @@ public class AvatarMod {
     @EventHandler
     public void postInit(FMLPostInitializationEvent e) {
         AvatarAnalytics.INSTANCE.init();
+        if (e.getSide() == Side.CLIENT) {
+            //Client-side only
+            //Stupid hack to force java to load Matrix4f on startup instead of when someone uses an ability that relies on it, causing a lag spike.
+            //Yes, I tried just making new objects or just accessing fields in them, but for some reason that didn't work.
+            Matrix4f mat = new Matrix4f();
+            mat.translate(0, 0 + .4f, 0);
+            mat.rotate(90, 1, 0, 0);
+            Vector4f v = new Vector4f(2, 1, 1, 1).mul(mat);
+        }
+
     }
 
     @EventHandler
