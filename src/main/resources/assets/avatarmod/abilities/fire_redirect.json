@@ -1,0 +1,81 @@
+{
+  "custom_properties": {
+    "xpOnUse": 4,
+    "level1": {
+      "tier": 3,
+      "chiCost": 2.5,
+      "cooldown": 40,
+      "exhaustion": 2.0,
+      "burnOut": 10.0,
+      "burnOutRecoverTick": 0.5,
+      "redirectTier": 2,
+      "destroyTier": 1,
+      "aimAssist": 0.5,
+      "range": 2,
+      "radius": 0.5,
+      "powerBoost": 0,
+      "powerDuration": 0,
+      "absorbTier": 0,
+      "absorbFires": false
+    },
+    "level2": {
+      "tier": 3,
+      "chiCost": 3.25,
+      "cooldown": 35,
+      "exhaustion": 2.5,
+      "burnOut": 15.0,
+      "burnOutRecoverTick": 0.75,
+      "redirectTier": 2,
+      "destroyTier": 2,
+      "aimAssist": 0.75,
+      "range": 2.5,
+      "radius": 1
+    },
+    "level3": {
+      "tier": 4,
+      "chiCost": 3.5,
+      "cooldown": 30,
+      "exhaustion": 3.0,
+      "burnOut": 20.0,
+      "burnOutRecoverTick": 1.0,
+      "redirectTier": 4,
+      "destroyTier": 3,
+      "aimAssist": 1,
+      "range": 3,
+      "radius": 2
+    },
+    "level4_1": {
+      "tier": 5,
+      "chiCost": 3.75,
+      "cooldown": 20,
+      "exhaustion": 3.5,
+      "burnOut": 25.0,
+      "burnOutRecoverTick": 1.25,
+      "redirectTier": 6,
+      "destroyTier": 4,
+      "aimAssist": 1.5,
+      "range": 4,
+      "radius": 3,
+      "powerBoost": 5,
+      "powerDuration": 200,
+      "absorbTier": 3,
+      "absorbFires": true
+    },
+    "level4_2": {
+      "tier": 5,
+      "chiCost": 4.0,
+      "cooldown": 35,
+      "exhaustion": 4.0,
+      "burnOut": 30.0,
+      "burnOutRecoverTick": 1.5,
+      "redirectTier": 5,
+      "destroyTier": 6,
+      "aimAssist": 0.5,
+      "range": 7,
+      "radius": 1.5,
+      "powerBoost": 0,
+      "powerDuration": 0,
+      "absorbFires": false
+    }
+  }
+}

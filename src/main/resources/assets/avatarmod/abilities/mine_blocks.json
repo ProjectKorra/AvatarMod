@@ -3,43 +3,63 @@
     "xpOnUse": 2,
     "level1": {
       "tier": 1,
-      "chiCost": 3.0,
-      "cooldown": 0,
-      "exhaustion": 2.0,
+      "chiCost": 3.5,
+      "cooldown": 100,
+      "exhaustion": 2.5,
       "burnOut": 10.0,
-      "burnOutRecoverTick": 0.5
+      "burnOutRecoverTick": 0.5,
+      "range": 3,
+      "maxMinedBlocks": 4,
+      "miningDelay": 5,
+      "fortune": 0,
+      "oreVein": false
     },
     "level2": {
       "tier": 1,
-      "chiCost": 3.25,
-      "cooldown": 5,
-      "exhaustion": 2.5,
+      "chiCost": 4.0,
+      "cooldown": 80,
+      "exhaustion": 3.0,
       "burnOut": 15.0,
-      "burnOutRecoverTick": 0.75
+      "burnOutRecoverTick": 0.75,
+      "range": 4,
+      "maxMinedBlocks": 6,
+      "miningDelay": 4
     },
     "level3": {
       "tier": 2,
-      "chiCost": 3.5,
-      "cooldown": 10,
+      "chiCost": 4.5,
+      "cooldown": 70,
       "exhaustion": 3.0,
       "burnOut": 20.0,
-      "burnOutRecoverTick": 1.0
+      "burnOutRecoverTick": 0.85,
+      "range": 5,
+      "maxMinedBlocks": 8,
+      "miningDelay": 2,
+      "fortune": 1
     },
     "level4_1": {
       "tier": 3,
-      "chiCost": 3.75,
-      "cooldown": 15,
-      "exhaustion": 3.5,
+      "chiCost": 5,
+      "cooldown": 75,
+      "exhaustion": 3.25,
       "burnOut": 25.0,
-      "burnOutRecoverTick": 1.25
+      "burnOutRecoverTick": 1.0,
+      "range": 8,
+      "maxMinedBlocks": 12,
+      "miningDelay": 1,
+      "fortune": 1
     },
     "level4_2": {
       "tier": 3,
-      "chiCost": 4.0,
-      "cooldown": 20,
-      "exhaustion": 4.0,
-      "burnOut": 30.0,
-      "burnOutRecoverTick": 1.5
+      "chiCost": 5.5,
+      "cooldown": 85,
+      "exhaustion": 3.5,
+      "burnOut": 25.0,
+      "burnOutRecoverTick": 1.0,
+      "range": 5,
+      "maxMinedBlocks": 16,
+      "miningDelay": 2,
+      "oreVein": true
     }
   }
 }

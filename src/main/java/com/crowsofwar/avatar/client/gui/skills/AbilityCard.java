@@ -18,7 +18,7 @@ package com.crowsofwar.avatar.client.gui.skills;
 
 import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
 import com.crowsofwar.avatar.client.uitools.*;
-import com.crowsofwar.avatar.common.bending.Ability;
+import com.crowsofwar.avatar.bending.bending.Ability;
 import net.minecraft.client.renderer.GlStateManager;
 
 import static com.crowsofwar.avatar.client.gui.AvatarUiTextures.getAbilityTexture;

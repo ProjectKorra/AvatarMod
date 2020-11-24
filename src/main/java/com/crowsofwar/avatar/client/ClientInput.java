@@ -20,20 +20,20 @@ package com.crowsofwar.avatar.client;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.gui.AvatarUiRenderer;
-import com.crowsofwar.avatar.common.bending.Abilities;
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingStyle;
-import com.crowsofwar.avatar.common.controls.AvatarControl;
-import com.crowsofwar.avatar.common.controls.IControlsHandler;
-import com.crowsofwar.avatar.common.data.Bender;
-import com.crowsofwar.avatar.common.data.BendingData;
-import com.crowsofwar.avatar.common.data.StatusControl;
-import com.crowsofwar.avatar.common.data.ctx.BendingContext;
-import com.crowsofwar.avatar.common.event.BendingCycleEvent;
-import com.crowsofwar.avatar.common.event.BendingUseEvent;
-import com.crowsofwar.avatar.common.network.packets.*;
-import com.crowsofwar.avatar.common.util.Raytrace;
-import com.crowsofwar.avatar.common.util.Raytrace.Result;
+import com.crowsofwar.avatar.bending.bending.Abilities;
+import com.crowsofwar.avatar.bending.bending.Ability;
+import com.crowsofwar.avatar.bending.bending.BendingStyle;
+import com.crowsofwar.avatar.client.controls.AvatarControl;
+import com.crowsofwar.avatar.client.controls.IControlsHandler;
+import com.crowsofwar.avatar.util.data.Bender;
+import com.crowsofwar.avatar.util.data.BendingData;
+import com.crowsofwar.avatar.util.data.StatusControl;
+import com.crowsofwar.avatar.util.data.ctx.BendingContext;
+import com.crowsofwar.avatar.util.event.BendingCycleEvent;
+import com.crowsofwar.avatar.util.event.BendingUseEvent;
+import com.crowsofwar.avatar.network.packets.*;
+import com.crowsofwar.avatar.util.Raytrace;
+import com.crowsofwar.avatar.util.Raytrace.Result;
 import com.crowsofwar.gorecore.format.FormattedMessageProcessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
@@ -50,12 +50,13 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import scala.collection.parallel.ParIterableLike;
 
 import java.util.*;
 
-import static com.crowsofwar.avatar.common.AvatarChatMessages.MSG_DONT_HAVE_BENDING;
-import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
-import static com.crowsofwar.avatar.common.controls.AvatarControl.*;
+import static com.crowsofwar.avatar.network.AvatarChatMessages.MSG_DONT_HAVE_BENDING;
+import static com.crowsofwar.avatar.config.ConfigClient.CLIENT_CONFIG;
+import static com.crowsofwar.avatar.client.controls.AvatarControl.*;
 
 /**
  * Large class that manages input on the client-side. After input is received,
@@ -115,7 +116,8 @@ public class ClientInput implements IControlsHandler {
 		if (control == CONTROL_LEFT_CLICK_UP) return !mouseLeft && wasLeft;
 		if (control == CONTROL_RIGHT_CLICK_UP) return !mouseRight && wasRight;
 		if (control == CONTROL_MIDDLE_CLICK_UP) return !mouseMiddle && wasMiddle;
-		if (control == CONTROL_SHIFT) return Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
+		if (control == CONTROL_SHIFT) return Minecraft.getMinecraft().gameSettings.keyBindSneak.isPressed();
+		if (control == CONTROL_JUMP) return Minecraft.getMinecraft().gameSettings.keyBindJump.isPressed();
 		AvatarLog.warn(AvatarLog.WarningType.INVALID_CODE, "ClientInput- Unknown control: " + control);
 		return false;
 
@@ -133,7 +135,8 @@ public class ClientInput implements IControlsHandler {
 		if (control == CONTROL_LEFT_CLICK_UP) return !mouseLeft;
 		if (control == CONTROL_RIGHT_CLICK_UP) return !mouseRight;
 		if (control == CONTROL_MIDDLE_CLICK_UP) return !mouseMiddle;
-		if (control == CONTROL_SHIFT) return Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
+		if (control == CONTROL_SHIFT) return Minecraft.getMinecraft().gameSettings.keyBindSneak.isKeyDown();
+		if (control == CONTROL_JUMP) return Minecraft.getMinecraft().gameSettings.keyBindJump.isKeyDown();
 		AvatarLog.warn(AvatarLog.WarningType.INVALID_CODE, "ClientInput- Unknown control: " + control);
 		return false;
 
@@ -229,9 +232,9 @@ public class ClientInput implements IControlsHandler {
 		wasMiddle = mouseMiddle;
 
 		if (mc.inGameHasFocus) {
-			mouseLeft = Mouse.isButtonDown(0);
-			mouseRight = Mouse.isButtonDown(1);
-			mouseMiddle = Mouse.isButtonDown(2);
+			mouseLeft = Minecraft.getMinecraft().gameSettings.keyBindAttack.isKeyDown();
+			mouseRight = Minecraft.getMinecraft().gameSettings.keyBindUseItem.isKeyDown();
+			mouseMiddle = Minecraft.getMinecraft().gameSettings.keyBindPickBlock.isKeyDown();;
 		} else {
 			mouseLeft = mouseRight = mouseMiddle = false;
 		}
@@ -250,10 +253,13 @@ public class ClientInput implements IControlsHandler {
 						for (StatusControl sc : statusControls) {
 							if (pressed.contains(sc.getSubscribedControl())) {
 								Result raytrace = Raytrace.getTargetBlock(player, sc.getRaytrace());
-								//Call it client-side
-								sc.execute(new BendingContext(data, player, raytrace));
+								//Called client side
+								if (sc.execute(new BendingContext(data, player, raytrace)))
+									data.removeStatusControl(sc);
 								//Then server side
 								AvatarMod.network.sendToServer(new PacketSUseStatusControl(sc, raytrace));
+
+
 							}
 						}
 					}
@@ -273,8 +279,7 @@ public class ClientInput implements IControlsHandler {
 							if (data.hasBendingId(ability.getBendingId()) && player.isCreative() || data.canUse(ability)) {
 								//Client side
 								Bender.get(player).executeAbility(ability, raytrace, isSwitchPathKeyDown);
-								//Server side
-								AvatarMod.network.sendToServer(new PacketSUseAbility(ability, raytrace, isSwitchPathKeyDown));
+								//Automatically done server-side
 							}
 						}
 						wasAbilityDown[i] = down;

@@ -18,7 +18,7 @@ package com.crowsofwar.avatar.client;
 
 import net.minecraft.client.settings.KeyBinding;
 
-import com.crowsofwar.avatar.common.controls.KeybindingWrapper;
+import com.crowsofwar.avatar.client.controls.KeybindingWrapper;
 
 import javax.annotation.Nonnull;
 

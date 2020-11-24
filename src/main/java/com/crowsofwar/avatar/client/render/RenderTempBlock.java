@@ -1,6 +1,6 @@
 package com.crowsofwar.avatar.client.render;
 
-import com.crowsofwar.avatar.common.blocks.tiles.TileBlockTemp;
+import com.crowsofwar.avatar.blocks.tiles.TileBlockTemp;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;

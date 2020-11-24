@@ -16,7 +16,7 @@
 */
 package com.crowsofwar.avatar.client.render;
 
-import com.crowsofwar.avatar.common.entity.EntityAirBubble;
+import com.crowsofwar.avatar.entity.EntityAirBubble;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -31,7 +31,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL11;
 
-import static com.crowsofwar.avatar.common.config.ConfigClient.CLIENT_CONFIG;
+import static com.crowsofwar.avatar.config.ConfigClient.CLIENT_CONFIG;
 import static net.minecraft.client.renderer.GlStateManager.*;
 
 /**
@@ -56,14 +56,24 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
         float y = (float) yy + .8f;
         float z = (float) zz;
 
-        pushMatrix();
+        //  pushMatrix();
         enableBlend();
-        disableDepth();
-        GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
+        enableLighting();
+        disableAlpha();
 
-        if (!CLIENT_CONFIG.shaderSettings.bslActive && !CLIENT_CONFIG.shaderSettings.sildursActive)
-            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
+        //My brain is massive
+       GlStateManager.depthMask(false);
 
+        int i = 15728880;
+        int j = i % 65536;
+        int k = i / 65536;
+
+
+        if (!CLIENT_CONFIG.shaderSettings.bslActive)
+            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j, k);
+
+
+         GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE);
 
         float ticks = entity.ticksExisted + partialTicks;
         float sizeMult = 1, alpha = 1;
@@ -80,32 +90,32 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
             alpha = ticks / 10f;
         }
         sizeMult *= entity.getSize() / 2.5f;
+        
+        alpha *=2;
+
+        alpha *= 1.5F;
 
         if (CLIENT_CONFIG.shaderSettings.bslActive || CLIENT_CONFIG.shaderSettings.sildursActive)
-            GlStateManager.color(0.35F, 0.35F, 0.35F, 0.15f * alpha);
-        else GlStateManager.color(0.5F, 0.5F, 0.5F, 0.15f * alpha);
+            GlStateManager.color(0.35F, 0.35F, 0.35F, 0.10f * alpha);
+        else GlStateManager.color(0.5F, 0.5F, 0.5F, 0.10f * alpha);
         {
             float rotY = ticks / 7f;
             float rotX = MathHelper.cos(ticks / 4f) * .3f;
-            enableLighting();
             renderCube(x, y, z, 0, 1, 0, 1, 2.25f * sizeMult, rotX, rotY, 0);
         }
 
         if (CLIENT_CONFIG.shaderSettings.bslActive || CLIENT_CONFIG.shaderSettings.sildursActive)
-            GlStateManager.color(0.875F, 0.875F, 0.875F, 0.25f * alpha);
-        else GlStateManager.color(1F, 1F, 1F, 0.25f * alpha);
+            GlStateManager.color(0.85F, 0.85F, 0.85F, 0.20f * alpha);
+        else GlStateManager.color(0.95F, 0.95F, 0.95F, 0.20f * alpha);
         {
             float rotY = ticks / 25f;
             float rotZ = MathHelper.cos(ticks / 10f + 1.3f) * .3f;
-            enableLighting();
             renderCube(x, y, z, 0, 1, 0, 1, 3f * sizeMult, 0, rotY, rotZ);
         }
-        //GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
-
 
         disableBlend();
-        enableDepth();
-        popMatrix();
+        disableLighting();
+        enableAlpha();
     }
 
     private void renderCube(float x, float y, float z, double u1, double u2, double v1, double v2, float size,

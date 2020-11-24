@@ -23,3 +23,15 @@ eclipse
 run
 ignore*
 secrets.properties
+
+# run
+saves
+logs
+config
+crash-reports
+asm
+mods
+resourcepacks
+options.txt
+usercache.json
+usernamecache.json

@@ -1,23 +1,17 @@
 package com.crowsofwar.avatar.client.model;
 
-import com.crowsofwar.avatar.common.helper.GliderPlayerHelper;
+import com.crowsofwar.avatar.util.helper.GliderPlayerHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.ResourceLocation;
-
-import static com.crowsofwar.avatar.AvatarInfo.MOD_ID;
 
 /**
  * ModelGlider - DavieDoo
  * Created using Tabula 7.0.1
  */
 public class ModelGlider extends ModelBase {
-
-    public static final ResourceLocation MODEL_GLIDER_BASIC_TEXTURE_RL = new ResourceLocation(MOD_ID, "textures/models/orangestaff.png");
-    public static final ResourceLocation MODEL_GLIDER_ADVANCED_TEXTURE_RL = new ResourceLocation(MOD_ID, "textures/models/blackstaff.png");
 
     public ModelRenderer staffMain;
     public ModelRenderer gliderPivotTop;

@@ -1,0 +1,238 @@
+/* 
+  This file is part of AvatarMod.
+    
+  AvatarMod is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+  
+  AvatarMod is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+  
+  You should have received a copy of the GNU General Public License
+  along with AvatarMod. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+package com.crowsofwar.avatar.bending.bending.earth;
+
+import com.crowsofwar.avatar.AvatarLog;
+import com.crowsofwar.avatar.bending.bending.Ability;
+import com.crowsofwar.avatar.bending.bending.BendingStyle;
+import com.crowsofwar.avatar.client.gui.BendingMenuInfo;
+import com.crowsofwar.avatar.client.gui.MenuTheme;
+import com.crowsofwar.avatar.client.gui.MenuTheme.ThemeColor;
+import com.crowsofwar.avatar.util.Raytrace;
+import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
+import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockLiquid;
+import net.minecraft.block.BlockOre;
+import net.minecraft.block.BlockRedstoneOre;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.World;
+import net.minecraftforge.oredict.OreDictionary;
+
+import java.awt.*;
+import java.util.UUID;
+import java.util.function.BiPredicate;
+
+import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
+import static java.lang.Math.toRadians;
+
+public class Earthbending extends BendingStyle {
+
+    public static final UUID ID = UUID.fromString("82ad13b5-4bbe-4eaf-8aa0-00b36b33aed0");
+
+    private final BendingMenuInfo menu;
+
+    public Earthbending() {
+        registerAbilities();
+        Color light = new Color(225, 225, 225);
+        Color brown = new Color(79, 57, 45);
+        Color gray = new Color(90, 90, 90);
+        Color lightBrown = new Color(255, 235, 224);
+        ThemeColor background = new ThemeColor(lightBrown, brown);
+        ThemeColor edge = new ThemeColor(brown, brown);
+        ThemeColor icon = new ThemeColor(gray, light);
+        menu = new BendingMenuInfo(new MenuTheme(background, edge, icon, 0xB09B7F), this);
+
+    }
+
+    public static boolean isBendable(IBlockState state) {
+        Block block = state.getBlock();
+        if (STATS_CONFIG.bendableBlocks.contains(block))
+            return true;
+        else
+            return STATS_CONFIG.enableAutoModCompat && block.getRegistryName() != null && !block.getRegistryName().getNamespace().equals("minecraft") &&
+                    (OreDictionary.doesOreNameExist(block.getTranslationKey()) || block instanceof BlockOre || block instanceof BlockRedstoneOre ||
+                            OreDictionary.doesOreNameExist(block.getLocalizedName())) && !(block instanceof BlockLiquid);
+    }
+
+    public static Vector getClosestEarthbendableBlock(EntityLivingBase entity, AbilityContext ctx, Ability ability) {
+        World world = entity.world;
+        Vector eye = Vector.getEyePos(entity);
+
+        float range = ability.getProperty(Ability.RADIUS, ctx).floatValue();
+        range *= ctx.getAbilityData().getDamageMult() * ctx.getAbilityData().getXpModifier();
+
+        float dist = range;
+        Vector closestPos = null;
+
+        int angle = 12;
+        for (int i = 0; i < angle; i++) {
+            for (int j = 0; j < angle; j++) {
+
+                double yaw = entity.rotationYaw + i * 360.0 / angle;
+                double pitch = entity.rotationPitch + j * 360.0 / angle;
+
+                BiPredicate<BlockPos, IBlockState> isWater = (pos, state) -> isBendable(state)
+                        && state.getBlock() != Blocks.AIR;
+
+                Vector angleVec = Vector.toRectangular(toRadians(yaw), toRadians(pitch));
+                Raytrace.Result result = Raytrace.predicateRaytrace(world, eye, angleVec, range, isWater);
+                if (result.hitSomething() && result.getPosPrecise() != null) {
+                    eye = eye.plus(Vector.getLookRectangular(entity));
+                    if (result.getPosPrecise().dist(eye.withY(entity.getEntityBoundingBox().minY - 1)) < dist) {
+                        dist = (float) result.getPosPrecise().dist(eye.withY(entity.getEntityBoundingBox().minY));
+                        closestPos = result.getPosPrecise();
+                    }
+                }
+
+            }
+
+        }
+
+        if (closestPos == null)
+            ctx.getBender().sendMessage("avatar.earthSourceFail");
+        return closestPos;
+
+    }
+
+    public static boolean isBendable(World world, BlockPos pos, IBlockState state, int maxHardness) {
+        Block block = state.getBlock();
+        if (STATS_CONFIG.bendableBlocks.contains(block))
+            return true;
+        else
+            return STATS_CONFIG.enableAutoModCompat && state.getBlockHardness(world, pos) <= maxHardness && block.getRegistryName() != null && !block.getRegistryName().getNamespace().equals("minecraft") &&
+                    (OreDictionary.doesOreNameExist(block.getTranslationKey()) || block instanceof BlockOre || block instanceof BlockRedstoneOre ||
+                            OreDictionary.doesOreNameExist(block.getLocalizedName())) && !(block instanceof BlockLiquid);
+    }
+
+    public static Vector getClosestEarthbendableBlock(EntityLivingBase entity, AbilityContext ctx, Ability ability, int maxHardness) {
+        World world = entity.world;
+        Vector eye = Vector.getEyePos(entity);
+
+        float range = ability.getProperty(Ability.RADIUS, ctx).floatValue();
+        range *= ctx.getAbilityData().getDamageMult() * ctx.getAbilityData().getXpModifier();
+
+        float dist = range;
+        Vector closestPos = null;
+
+        int angle = 12;
+        for (int i = 0; i < angle; i++) {
+            for (int j = 0; j < angle; j++) {
+
+                double yaw = entity.rotationYaw + i * 360.0 / angle;
+                double pitch = entity.rotationPitch + j * 360.0 / angle;
+
+                BiPredicate<BlockPos, IBlockState> isWater = (pos, state) -> isBendable(world, pos, state, maxHardness)
+                        && state.getBlock() != Blocks.AIR;
+
+                Vector angleVec = Vector.toRectangular(toRadians(yaw), toRadians(pitch));
+                Raytrace.Result result = Raytrace.predicateRaytrace(world, eye, angleVec, range, isWater);
+                if (result.hitSomething() && result.getPosPrecise() != null) {
+                    eye = eye.plus(Vector.getLookRectangular(entity));
+                    if (result.getPosPrecise().dist(eye.withY(entity.getEntityBoundingBox().minY - 1)) < dist) {
+                        dist = (float) result.getPosPrecise().dist(eye.withY(entity.getEntityBoundingBox().minY));
+                        closestPos = result.getPosPrecise();
+                    }
+                }
+
+            }
+
+        }
+
+        if (closestPos == null)
+            ctx.getBender().sendMessage("avatar.earthSourceFail");
+        return closestPos;
+
+    }
+
+    public static Vector getClosestEarthbendableBlock(EntityLivingBase entity, AbilityContext ctx, String property, Ability ability, int maxHardness) {
+        World world = entity.world;
+        Vector eye = Vector.getEyePos(entity);
+
+        float range = ability.getProperty(property, ctx).floatValue();
+        range *= ctx.getAbilityData().getDamageMult() * ctx.getAbilityData().getXpModifier();
+
+        float dist = range;
+        Vector closestPos = null;
+
+        int angle = 12;
+        for (int i = 0; i < angle; i++) {
+            for (int j = 0; j < angle; j++) {
+
+                double yaw = entity.rotationYaw + i * 360.0 / angle;
+                double pitch = entity.rotationPitch + j * 360.0 / angle;
+
+                BiPredicate<BlockPos, IBlockState> isWater = (pos, state) -> isBendable(world, pos, state, maxHardness)
+                        && state.getBlock() != Blocks.AIR;
+
+                Vector angleVec = Vector.toRectangular(toRadians(yaw), toRadians(pitch));
+                Raytrace.Result result = Raytrace.predicateRaytrace(world, eye, angleVec, range, isWater);
+                if (result.hitSomething() && result.getPosPrecise() != null) {
+                    eye = eye.plus(Vector.getLookRectangular(entity));
+                    if (result.getPosPrecise().dist(eye.withY(entity.getEntityBoundingBox().minY - 1)) < dist) {
+                        dist = (float) result.getPosPrecise().dist(eye.withY(entity.getEntityBoundingBox().minY));
+                        closestPos = result.getPosPrecise();
+                    }
+                }
+
+            }
+
+        }
+
+        if (closestPos == null)
+            ctx.getBender().sendMessage("avatar.earthSourceFail");
+        return closestPos;
+
+    }
+
+    @Override
+    public int getTextColour() {
+        return 0x663300;
+    }
+
+    @Override
+    public BendingMenuInfo getRadialMenu() {
+        return menu;
+    }
+
+    @Override
+    public String getName() {
+        return "earthbending";
+    }
+
+    @Override
+    public UUID getId() {
+        return ID;
+    }
+
+    @Override
+    public TextFormatting getTextFormattingColour() {
+        return TextFormatting.DARK_GREEN;
+    }
+
+    @Override
+    public SoundEvent getRadialMenuSound() {
+        return SoundEvents.BLOCK_GRASS_BREAK;
+    }
+}

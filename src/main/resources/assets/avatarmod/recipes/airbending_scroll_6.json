@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "avatarmod:scroll_air",
+      "data" : 4
+    }, {
+      "item": "avatarmod:scroll_air",
+      "data" : 4
+    }
+  ],
+  "result": {
+    "item": "avatarmod:scroll_air",
+    "data": 5
+  }
+}

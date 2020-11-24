@@ -17,49 +17,50 @@
 
 package com.crowsofwar.avatar;
 
-import com.crowsofwar.avatar.api.upgrade.UpgradeItems;
-import com.crowsofwar.avatar.common.*;
-import com.crowsofwar.avatar.common.analytics.AvatarAnalytics;
-import com.crowsofwar.avatar.common.bending.Abilities;
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingStyles;
-import com.crowsofwar.avatar.common.bending.air.*;
-import com.crowsofwar.avatar.common.bending.combustion.AbilityExplosion;
-import com.crowsofwar.avatar.common.bending.combustion.AbilityExplosivePillar;
-import com.crowsofwar.avatar.common.bending.combustion.Combustionbending;
-import com.crowsofwar.avatar.common.bending.earth.*;
-import com.crowsofwar.avatar.common.bending.fire.*;
-import com.crowsofwar.avatar.common.bending.ice.AbilityIceBurst;
-import com.crowsofwar.avatar.common.bending.ice.AbilityIcePrison;
-import com.crowsofwar.avatar.common.bending.ice.Icebending;
-import com.crowsofwar.avatar.common.bending.lightning.*;
-import com.crowsofwar.avatar.common.bending.sand.AbilitySandPrison;
-import com.crowsofwar.avatar.common.bending.sand.AbilitySandstorm;
-import com.crowsofwar.avatar.common.bending.sand.Sandbending;
-import com.crowsofwar.avatar.common.bending.water.*;
-import com.crowsofwar.avatar.common.blocks.AvatarBlocks;
-import com.crowsofwar.avatar.common.command.AvatarCommand;
-import com.crowsofwar.avatar.common.config.*;
-import com.crowsofwar.avatar.common.controls.AvatarControl;
-import com.crowsofwar.avatar.common.data.AvatarPlayerData;
-import com.crowsofwar.avatar.common.entity.*;
-import com.crowsofwar.avatar.common.entity.data.Behavior;
-import com.crowsofwar.avatar.common.entity.mob.*;
-import com.crowsofwar.avatar.common.event.ServerEventHandler;
-import com.crowsofwar.avatar.common.gui.AvatarGuiHandler;
-import com.crowsofwar.avatar.common.item.AvatarItems;
-import com.crowsofwar.avatar.common.network.PacketHandlerServer;
-import com.crowsofwar.avatar.common.network.packets.*;
-import com.crowsofwar.avatar.common.network.packets.glider.PacketCClientGliding;
-import com.crowsofwar.avatar.common.network.packets.glider.PacketCSyncGliderDataToClient;
-import com.crowsofwar.avatar.common.network.packets.glider.PacketCUpdateClientTarget;
-import com.crowsofwar.avatar.common.network.packets.glider.PacketSServerGliding;
-import com.crowsofwar.avatar.common.registry.CapabilityRegistry;
-import com.crowsofwar.avatar.common.util.AvatarDataSerializers;
-import com.crowsofwar.avatar.common.wind.WindHelper;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
+import com.crowsofwar.avatar.bending.bending.Abilities;
+import com.crowsofwar.avatar.bending.bending.Ability;
+import com.crowsofwar.avatar.bending.bending.BendingStyles;
+import com.crowsofwar.avatar.bending.bending.air.*;
+import com.crowsofwar.avatar.bending.bending.combustion.AbilityExplosion;
+import com.crowsofwar.avatar.bending.bending.combustion.AbilityExplosivePillar;
+import com.crowsofwar.avatar.bending.bending.combustion.Combustionbending;
+import com.crowsofwar.avatar.bending.bending.earth.*;
+import com.crowsofwar.avatar.bending.bending.fire.*;
+import com.crowsofwar.avatar.bending.bending.ice.AbilityIceBurst;
+import com.crowsofwar.avatar.bending.bending.ice.AbilityIcePrison;
+import com.crowsofwar.avatar.bending.bending.lightning.*;
+import com.crowsofwar.avatar.bending.bending.sand.AbilitySandPrison;
+import com.crowsofwar.avatar.bending.bending.sand.AbilitySandstorm;
+import com.crowsofwar.avatar.bending.bending.sand.Sandbending;
+import com.crowsofwar.avatar.bending.bending.water.*;
+import com.crowsofwar.avatar.blocks.AvatarBlocks;
+import com.crowsofwar.avatar.client.gui.AvatarGuiHandler;
+import com.crowsofwar.avatar.client.particle.AvatarParticles;
+import com.crowsofwar.avatar.config.*;
+import com.crowsofwar.avatar.entity.*;
+import com.crowsofwar.avatar.entity.data.Behavior;
+import com.crowsofwar.avatar.entity.mob.*;
+import com.crowsofwar.avatar.item.CustomFurnaceRecipes;
+import com.crowsofwar.avatar.item.UpgradeItems;
+import com.crowsofwar.avatar.network.AvatarAnnouncements;
+import com.crowsofwar.avatar.network.AvatarChatMessages;
+import com.crowsofwar.avatar.network.AvatarCommonProxy;
+import com.crowsofwar.avatar.network.PacketHandlerServer;
+import com.crowsofwar.avatar.network.packets.*;
+import com.crowsofwar.avatar.network.packets.glider.PacketCClientGliding;
+import com.crowsofwar.avatar.network.packets.glider.PacketCSyncGliderDataToClient;
+import com.crowsofwar.avatar.network.packets.glider.PacketCUpdateClientTarget;
+import com.crowsofwar.avatar.network.packets.glider.PacketSServerGliding;
+import com.crowsofwar.avatar.registry.AvatarItems;
+import com.crowsofwar.avatar.registry.CapabilityRegistry;
+import com.crowsofwar.avatar.util.AvatarDataSerializers;
+import com.crowsofwar.avatar.util.AvatarPlayerTick;
+import com.crowsofwar.avatar.util.HumanBenderSpawner;
+import com.crowsofwar.avatar.util.analytics.AvatarAnalytics;
+import com.crowsofwar.avatar.util.command.AvatarCommand;
+import com.crowsofwar.avatar.util.data.AvatarPlayerData;
+import com.crowsofwar.avatar.util.event.ServerEventHandler;
+import com.crowsofwar.avatar.util.windhelper.WindHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.util.ResourceLocation;
@@ -79,13 +80,13 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
+import org.joml.Matrix4f;
+import org.joml.Vector4f;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 
-import static com.crowsofwar.avatar.common.config.ConfigMobs.MOBS_CONFIG;
-import static com.crowsofwar.avatar.common.config.ConfigStats.STATS_CONFIG;
+import static com.crowsofwar.avatar.config.ConfigMobs.MOBS_CONFIG;
+import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
 import static net.minecraft.init.Biomes.*;
 import static net.minecraftforge.fml.common.registry.EntityRegistry.registerEgg;
 
@@ -94,7 +95,7 @@ import static net.minecraftforge.fml.common.registry.EntityRegistry.registerEgg;
 
 public class AvatarMod {
 
-    @SidedProxy(serverSide = "com.crowsofwar.avatar.server.AvatarServerProxy", clientSide = "com.crowsofwar.avatar.client.AvatarClientProxy")
+    @SidedProxy(serverSide = "com.crowsofwar.avatar.network.AvatarServerProxy", clientSide = "com.crowsofwar.avatar.network.AvatarClientProxy")
     public static AvatarCommonProxy proxy;
 
     @Instance(value = AvatarInfo.MOD_ID)
@@ -102,10 +103,13 @@ public class AvatarMod {
 
     public static SimpleNetworkWrapper network;
 
-    public static boolean codeChickenLibCompat, realFirstPersonRender2Compat, cubicChunks;
+    public static boolean codeChickenLibCompat, realFirstPersonRender2Compat, cubicChunks, hammerCore;
+
+    public static File configDirectory;
 
     private int nextMessageID = 1;
     private int nextEntityID = 1;
+
 
     private static void registerAbilities() {
         /*    			Air		  			*/
@@ -121,7 +125,8 @@ public class AvatarMod {
         Abilities.register(new AbilityFlameStrike());
         Abilities.register(new AbilityFlamethrower());
         Abilities.register(new AbilityFireball());
-        Abilities.register(new AbilityFireJump());
+        Abilities.register(new AbilityFireRedirect());
+        Abilities.register(new AbilityFlameGlide());
         Abilities.register(new AbilityImmolate());
         /*    			Water	  			*/
         Abilities.register(new AbilityWaterArc());
@@ -135,6 +140,7 @@ public class AvatarMod {
         Abilities.register(new AbilityMining());
         Abilities.register(new AbilityRavine());
         Abilities.register(new AbilityWall());
+        Abilities.register(new AbilityEarthRedirect());
         Abilities.register(new AbilityEarthspikes());
         Abilities.register(new AbilityRestore());
         /*    			Ice		  			*/
@@ -156,13 +162,15 @@ public class AvatarMod {
     }
 
     private static void registerBendingStyles() {
-        BendingStyles.register(new Earthbending());
-        BendingStyles.register(new Firebending());
-        BendingStyles.register(new Waterbending());
+        //Same order as abilities or ability properties won't work!
         BendingStyles.register(new Airbending());
-        BendingStyles.register(new Icebending());
-        BendingStyles.register(new Lightningbending());
+        BendingStyles.register(new Firebending());
+        //No waterbending for you! (Blame drillgon for why it's not done, btw)
+        //BendingStyles.register(new Waterbending());
+        BendingStyles.register(new Earthbending());
+        //BendingStyles.register(new Icebending());
         BendingStyles.register(new Sandbending());
+        BendingStyles.register(new Lightningbending());
         BendingStyles.register(new Combustionbending());
     }
 
@@ -174,6 +182,10 @@ public class AvatarMod {
         realFirstPersonRender2Compat = Loader.isModLoaded("rfp2");
         //Prevents sky bison crashing
         cubicChunks = Loader.isModLoaded("cubicchunkscore");
+        //Light orbs
+        hammerCore = Loader.isModLoaded("hammercore");
+
+        configDirectory = new File(e.getModConfigurationDirectory(), "avatar");
 
         AvatarLog.log = e.getModLog();
 
@@ -191,9 +203,11 @@ public class AvatarMod {
         //register capabilities
         CapabilityRegistry.registerAllCapabilities();
 
-        AvatarControl.initControls();
         registerAbilities();
+        Abilities.all().forEach(Ability::init);
+        AbilityProperties.init();
         registerBendingStyles();
+
         AvatarItems.init();
         AvatarBlocks.init();
         AvatarParticles.register();
@@ -248,7 +262,7 @@ public class AvatarMod {
         AvatarAnnouncements.fetchAnnouncements();
 
         //File Generation
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+       /* Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
         for (Ability ability : Abilities.all()) {
             try {
@@ -299,6 +313,7 @@ public class AvatarMod {
                     level.addProperty("exhaustion", 2.0 + i / 2F);
                     level.addProperty("burnOut", 10.0F + i * 5);
                     level.addProperty("burnOutRecoverTick", 0.5F + i * 0.25);
+                    level.addProperty("performanceAmount", 20 + i * 5);
 
                     if (ability.getElement() instanceof Firebending && !ability.isBuff())
                         level.addProperty("fireTime", 20 + i * 5);
@@ -328,7 +343,7 @@ public class AvatarMod {
             } catch (IOException exception) {
                 exception.printStackTrace();
             }
-        }
+        }**/
 
 
     }
@@ -349,7 +364,7 @@ public class AvatarMod {
         registerEntity(EntityWallSegment.class, "WallSegment", 128, 3, true);
         registerEntity(EntityFireball.class, "Fireball", 128, 1000, true);
         registerEntity(EntityAirblade.class, "Airblade", 128, 1000, true);
-        registerEntity(EntityAirBubble.class, "AirBubble", 128, 1000, false);
+        registerEntity(EntityAirBubble.class, "AirBubble", 256, 1000, false);
         registerEntity(EntityFirebender.class, "Firebender", 0xB0171F, 0xFFFF00);
         registerEntity(EntityAirbender.class, "Airbender", 0xffffff, 0xDDA0DD);
         registerEntity(EntitySkyBison.class, "SkyBison", 0xffffff, 0x8B5A00);
@@ -372,7 +387,6 @@ public class AvatarMod {
         registerEntity(EntityShockwave.class, "Shockwave", 128, 1000, false);
         registerEntity(EntityLightOrb.class, "LightOrb", 128, 1000, true);
         registerEntity(EntityLightCylinder.class, "LightCylinder", 128, 1000, true);
-        registerEntity(EntityFlameArc.class, "Flamethrower", 128, 1000, true);
 
         EntityRegistry.addSpawn(EntitySkyBison.class, 5, 1, 3, EnumCreatureType.CREATURE, //
                 SAVANNA_PLATEAU, EXTREME_HILLS, BIRCH_FOREST_HILLS, TAIGA_HILLS, ICE_MOUNTAINS, REDWOOD_TAIGA_HILLS, MUTATED_EXTREME_HILLS,
@@ -391,6 +405,9 @@ public class AvatarMod {
         //glider upgrades
         UpgradeItems.initUpgradesList();
 
+        //Furnace Recipes
+        CustomFurnaceRecipes.initRecipes();
+
         //register server events
         MinecraftForge.EVENT_BUS.register(new ServerEventHandler());
 
@@ -402,6 +419,16 @@ public class AvatarMod {
     @EventHandler
     public void postInit(FMLPostInitializationEvent e) {
         AvatarAnalytics.INSTANCE.init();
+        if (e.getSide() == Side.CLIENT) {
+            //Client-side only
+            //Stupid hack to force java to load Matrix4f on startup instead of when someone uses an ability that relies on it, causing a lag spike.
+            //Yes, I tried just making new objects or just accessing fields in them, but for some reason that didn't work.
+            Matrix4f mat = new Matrix4f();
+            mat.translate(0, 0 + .4f, 0);
+            mat.rotate(90, 1, 0, 0);
+            Vector4f v = new Vector4f(2, 1, 1, 1).mul(mat);
+        }
+
     }
 
     @EventHandler

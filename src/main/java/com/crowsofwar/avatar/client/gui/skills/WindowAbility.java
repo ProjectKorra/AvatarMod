@@ -19,10 +19,10 @@ package com.crowsofwar.avatar.client.gui.skills;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.gui.AvatarUiTextures;
 import com.crowsofwar.avatar.client.uitools.*;
-import com.crowsofwar.avatar.common.bending.Ability;
-import com.crowsofwar.avatar.common.bending.BendingStyles;
-import com.crowsofwar.avatar.common.data.AbilityData;
-import com.crowsofwar.avatar.common.network.packets.PacketSUseScroll;
+import com.crowsofwar.avatar.bending.bending.Ability;
+import com.crowsofwar.avatar.bending.bending.BendingStyles;
+import com.crowsofwar.avatar.util.data.AbilityData;
+import com.crowsofwar.avatar.network.packets.PacketSUseScroll;
 import com.crowsofwar.gorecore.format.FormattedMessage;
 import com.crowsofwar.gorecore.format.FormattedMessageProcessor;
 import net.minecraft.client.Minecraft;
@@ -112,7 +112,7 @@ public class WindowAbility {
         //Turns the tier into a roman numeral.
         String tierName;
         String parentTierName = "";
-        switch (ability.getCurrentTier(AbilityData.get(player, ability.getName()).getLevel())) {
+        switch (ability.getCurrentTier(AbilityData.get(player, ability.getName()))) {
             default:
                 tierName = "I";
                 break;
@@ -136,7 +136,7 @@ public class WindowAbility {
                 break;
         }
         if (ability.getBaseParentTier() > 0) {
-            switch (ability.getCurrentParentTier(AbilityData.get(player, ability.getName()).getLevel())) {
+            switch (ability.getCurrentParentTier(AbilityData.get(player, ability.getName()))) {
                 default:
                     parentTierName = "I";
                     break;

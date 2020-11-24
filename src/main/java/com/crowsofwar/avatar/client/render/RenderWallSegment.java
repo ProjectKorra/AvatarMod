@@ -17,7 +17,7 @@
 
 package com.crowsofwar.avatar.client.render;
 
-import com.crowsofwar.avatar.common.entity.EntityWallSegment;
+import com.crowsofwar.avatar.entity.EntityWallSegment;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
@@ -53,7 +53,7 @@ public class RenderWallSegment extends Render<EntityWallSegment> {
 	public void doRender(EntityWallSegment entity, double x, double y, double z, float entityYaw,
 						 float partialTicks) {
 
-		for (int i = 0; i < EntityWallSegment.SEGMENT_HEIGHT; i++) {
+		for (int i = 0; i < entity.getSegmentHeight(); i++) {
 			IBlockState block = entity.getBlock(i);
 			GlStateManager.translate(0, entity.getBlocksOffset(), 0);
 			if (block != null) renderBlock(block, entity, x, y + i, z, new BlockPos(entity).up(i));

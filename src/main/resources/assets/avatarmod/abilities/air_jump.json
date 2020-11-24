@@ -1,45 +1,91 @@
 {
   "custom_properties": {
     "xpOnUse": 2,
+    "xpOnHit": 2,
     "level1": {
       "tier": 1,
       "chiCost": 3.0,
-      "cooldown": 0,
+      "cooldown": 40,
       "exhaustion": 2.0,
       "burnOut": 10.0,
-      "burnOutRecoverTick": 0.5
+      "burnOutRecoverTick": 0.18,
+      "performanceAmount": 10,
+      "effectRadius": 0.5,
+      "knockback": 0.75,
+      "jumpHeight": 3.5,
+      "numberOfJumps": 1,
+      "fallAbsorption": 5,
+      "powerrating": 5,
+      "duration": 10,
+      "chiOnHit": 0.5,
+      "groundPound": false
     },
     "level2": {
       "tier": 1,
       "chiCost": 3.25,
-      "cooldown": 5,
+      "cooldown": 50,
       "exhaustion": 2.5,
       "burnOut": 15.0,
-      "burnOutRecoverTick": 0.75
+      "burnOutRecoverTick": 0.22,
+      "performanceAmount": 15,
+      "effectRadius": 0.75,
+      "jumpHeight": 4.5,
+      "knockback": 1.0,
+      "powerrating": 10,
+      "duration": 15,
+      "fallAbsorption": 9,
+      "chiOnHit": 0.75
     },
     "level3": {
       "tier": 2,
       "chiCost": 3.5,
-      "cooldown": 10,
+      "cooldown": 60,
       "exhaustion": 3.0,
       "burnOut": 20.0,
-      "burnOutRecoverTick": 1.0
+      "burnOutRecoverTick": 0.25,
+      "performanceAmount": 20,
+      "effectRadius": 1.0,
+      "jumpHeight": 6,
+      "knockback": 1.5,
+      "powerrating": 20,
+      "duration": 30,
+      "fallAbsorption": 15,
+      "chiOnHit": 1
     },
     "level4_1": {
       "tier": 3,
-      "chiCost": 3.75,
-      "cooldown": 15,
+      "chiCost": 3.0,
+      "cooldown": 50,
       "exhaustion": 3.5,
-      "burnOut": 25.0,
-      "burnOutRecoverTick": 1.25
+      "burnOut": 27.0,
+      "burnOutRecoverTick": 0.4,
+      "performanceAmount": 25,
+      "effectRadius": 1.25,
+      "jumpHeight": 5.5,
+      "numberOfJumps": 3,
+      "powerrating": 25,
+      "duration": 30,
+      "knockback": 2,
+      "fallAbsorption": 13,
+      "chiOnHit": 1.25
     },
     "level4_2": {
       "tier": 3,
-      "chiCost": 4.0,
-      "cooldown": 20,
+      "chiCost": 6.0,
+      "cooldown": 45,
       "exhaustion": 4.0,
       "burnOut": 30.0,
-      "burnOutRecoverTick": 1.5
+      "burnOutRecoverTick": 0.4,
+      "performanceAmount": 27,
+      "effectRadius": 1.5,
+      "jumpHeight": 8,
+      "numberOfJumps": 1,
+      "knockback": 3,
+      "fallAbsorption": 19,
+      "powerrating": 40,
+      "duration": 40,
+      "chiOnHit": 2,
+      "groundPound": true
     }
   }
 }

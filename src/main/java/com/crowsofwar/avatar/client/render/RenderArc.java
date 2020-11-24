@@ -17,8 +17,8 @@
 
 package com.crowsofwar.avatar.client.render;
 
-import com.crowsofwar.avatar.common.entity.ControlPoint;
-import com.crowsofwar.avatar.common.entity.EntityArc;
+import com.crowsofwar.avatar.entity.ControlPoint;
+import com.crowsofwar.avatar.entity.EntityArc;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;

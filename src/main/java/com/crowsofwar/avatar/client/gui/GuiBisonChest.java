@@ -17,9 +17,7 @@
 
 package com.crowsofwar.avatar.client.gui;
 
-import com.crowsofwar.avatar.common.entity.mob.EntitySkyBison;
-import com.crowsofwar.avatar.common.gui.AvatarGui;
-import com.crowsofwar.avatar.common.gui.ContainerBisonChest;
+import com.crowsofwar.avatar.entity.mob.EntitySkyBison;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;

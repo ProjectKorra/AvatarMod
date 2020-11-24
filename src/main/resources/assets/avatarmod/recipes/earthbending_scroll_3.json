@@ -1,14 +1,23 @@
 {
-  "type": "minecraft:crafting_shapeless",
-  "ingredients": [
-    {
-      "item": "avatarmod:scroll_earth",
-      "data" : 1
-    }, {
-      "item": "avatarmod:scroll_earth",
-      "data" : 1
-    }
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "epe",
+    "sps",
+    "epe"
   ],
+  "key": {
+    "p": {
+      "item": "minecraft:gold"
+    },
+    "s": {
+      "item": "avatarmod:scroll_earth",
+      "data": 1
+    },
+    "e": {
+      "item": "minecraft:experience_bottle",
+      "count": 4
+    }
+  },
   "result": {
     "item": "avatarmod:scroll_earth",
     "data": 2

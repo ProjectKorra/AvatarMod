@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ebe",
+    "sps",
+    "ebe"
+  ],
+  "key": {
+    "b": {
+      "item": "minecraft:diamond",
+      "count": 3
+    },
+    "s": {
+      "item": "avatarmod:scroll_air",
+      "data": 1
+    },
+    "e": {
+      "item": "minecraft:experience_bottle",
+      "count": 4
+    }
+  },
+  "result": {
+    "item": "avatarmod:scroll_air",
+    "data": 2
+  }
+}

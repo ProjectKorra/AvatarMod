@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "l",
+    "b"
+  ],
+  "key": {
+    "l": {
+      "item": "minecraft:dye",
+      "data": 4
+    },
+    "b": {
+      "item": "minecraft:glass_bottle"
+    }
+  },
+  "result": {
+    "item": "avatarmod:empty_experience_bottle"
+  }
+}
+

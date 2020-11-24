@@ -1,20 +1,14 @@
 package com.crowsofwar.avatar.client.render;
 
-import com.crowsofwar.avatar.common.entity.ControlPoint;
-import com.crowsofwar.avatar.common.entity.EntityArc;
-import com.crowsofwar.avatar.common.entity.EntityWaterCannon;
-import com.crowsofwar.avatar.common.util.AvatarEntityUtils;
-import com.crowsofwar.avatar.common.util.AvatarUtils;
+import com.crowsofwar.avatar.entity.ControlPoint;
+import com.crowsofwar.avatar.entity.EntityArc;
+import com.crowsofwar.avatar.entity.EntityWaterCannon;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-
-import static com.crowsofwar.gorecore.util.Vector.getEyePos;
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
 
 public class RenderWaterCannon extends RenderArc {
 	private static final ResourceLocation TEXTURE = new ResourceLocation("minecraft",

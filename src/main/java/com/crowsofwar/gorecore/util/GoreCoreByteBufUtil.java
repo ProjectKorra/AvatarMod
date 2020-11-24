@@ -17,41 +17,52 @@
 
 package com.crowsofwar.gorecore.util;
 
-import java.util.UUID;
-
 import io.netty.buffer.ByteBuf;
+import net.minecraft.util.math.BlockPos;
+
+import java.util.UUID;
 
 /**
  * Contains utility methods for reading and writing to ByteBufs.
- * 
+ *
  * @author CrowsOfWar
  */
 public final class GoreCoreByteBufUtil {
-	
-	public static String readString(ByteBuf buf) {
-		String res = "";
-		int length = buf.readInt();
-		for (int i = 0; i < length; i++) {
-			res += buf.readChar();
-		}
-		return res;
-	}
-	
-	public static void writeString(ByteBuf buf, String str) {
-		char[] chs = str.toCharArray();
-		buf.writeInt(chs.length);
-		for (int i = 0; i < chs.length; i++) {
-			buf.writeChar(chs[i]);
-		}
-	}
-	
-	public static UUID readUUID(ByteBuf buf) {
-		return new UUID(buf.readLong(), buf.readLong());
-	}
-	
-	public static void writeUUID(ByteBuf buf, UUID uuid) {
-		buf.writeLong(uuid.getMostSignificantBits());
-		buf.writeLong(uuid.getLeastSignificantBits());
-	}
-	
+
+    public static String readString(ByteBuf buf) {
+        String res = "";
+        int length = buf.readInt();
+        for (int i = 0; i < length; i++) {
+            res += buf.readChar();
+        }
+        return res;
+    }
+
+    public static void writeString(ByteBuf buf, String str) {
+        char[] chs = str.toCharArray();
+        buf.writeInt(chs.length);
+        for (int i = 0; i < chs.length; i++) {
+            buf.writeChar(chs[i]);
+        }
+    }
+
+    public static UUID readUUID(ByteBuf buf) {
+        return new UUID(buf.readLong(), buf.readLong());
+    }
+
+    public static void writeUUID(ByteBuf buf, UUID uuid) {
+        buf.writeLong(uuid.getMostSignificantBits());
+        buf.writeLong(uuid.getLeastSignificantBits());
+    }
+
+    public static void writeBlockPos(ByteBuf buf, BlockPos pos) {
+        if (pos != null)
+            buf.writeLong(pos.toLong());
+    }
+
+    public static BlockPos readBlockPos(ByteBuf buf) {
+        if (buf != null)
+            return BlockPos.fromLong(buf.readLong());
+        return new BlockPos(0, 0, 0);
+    }
 }
