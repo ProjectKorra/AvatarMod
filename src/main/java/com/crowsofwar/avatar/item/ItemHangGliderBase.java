@@ -18,6 +18,7 @@ import com.crowsofwar.avatar.util.GliderHelper;
 import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -50,8 +51,9 @@ import static com.crowsofwar.avatar.util.data.TickHandlerController.STAFF_GUST_H
 
 public class ItemHangGliderBase extends ItemSword implements IGlider, AvatarItem {
 
-    public static final ResourceLocation MODEL_GLIDER_BASIC_TEXTURE_RL = new ResourceLocation(MOD_ID, "textures/models/orangestaff.png");
-    public static final ResourceLocation MODEL_GLIDER_ADVANCED_TEXTURE_RL = new ResourceLocation(MOD_ID, "textures/models/blackstaff.png");
+    public static final ResourceLocation MODEL_GLIDER_BASIC_TEXTURE_RL = new ResourceLocation(MOD_ID, "textures/models/glider.png");
+    public static final ResourceLocation MODEL_GLIDER_ADVANCED_TEXTURE_RL = new ResourceLocation(MOD_ID, "textures/models/glider.png");
+    public static final ResourceLocation MODEL_GLIDER_RL = new ResourceLocation(MOD_ID, "models/glider/Glider.obj");
 
     //ToDo: NBT saving tags of upgrade (need IRecipe for them)
 

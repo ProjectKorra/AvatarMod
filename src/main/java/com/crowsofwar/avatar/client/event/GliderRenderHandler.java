@@ -2,10 +2,12 @@ package com.crowsofwar.avatar.client.event;
 
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.bending.bending.BendingStyles;
+import com.crowsofwar.avatar.client.model_loaders.obj.ObjLoader;
+import com.crowsofwar.avatar.client.model_loaders.obj.ObjModel;
+import com.crowsofwar.avatar.item.ItemHangGliderBase;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.helper.GliderHelper;
 import com.crowsofwar.avatar.item.IGlider;
-import com.crowsofwar.avatar.client.model.ModelGlider;
 import com.crowsofwar.avatar.util.helper.GliderPlayerHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiInventory;
@@ -44,7 +46,7 @@ public class GliderRenderHandler {
                 if (Minecraft.getMinecraft().currentScreen instanceof GuiInventory) return; //don't rotate if the player rendered is in an inventory
                 setRotationThirdPersonPerspective(event.getEntityPlayer(), event.getPartialRenderTick());
                 //AvatarUtils.setRotationFromPosition(event.getEntityPlayer(), new Vec3d(event.getX(), event.getY(), event.getZ()));//rotate player to flying position
-                this.needToPop = true; //mark the matrix to pop
+//                this.needToPop = true; //mark the matrix to pop
             }
         }
     }
@@ -75,7 +77,7 @@ public class GliderRenderHandler {
     }
 
     //The model to display
-    private final ModelGlider modelGlider = new ModelGlider();
+    private final ObjModel modelGlider = ObjLoader.load(ItemHangGliderBase.MODEL_GLIDER_RL);
 
     /**
      * Renders the gliderBasic above the player
@@ -91,18 +93,13 @@ public class GliderRenderHandler {
         Minecraft.getMinecraft().getTextureManager().bindTexture(resourceLocation); //bind texture
 
         //push matrix
-        GlStateManager.pushMatrix();
         //set the rotation correctly for fpp
         setRotationFirstPersonPerspective(entityPlayer, event.getPartialTicks());
         //set the correct lighting
         setLightingBeforeRendering(entityPlayer, event.getPartialTicks());
         //render the gliderBasic
-        modelGlider.render(entityPlayer, entityPlayer.limbSwing, entityPlayer.limbSwingAmount, entityPlayer.ticksExisted, entityPlayer.rotationYawHead, entityPlayer.rotationPitch, 1);
+        modelGlider.renderAll();
         //render the bars
-//        Minecraft.getMinecraft().getTextureManager().bindTexture(ModelBars.MODEL_GLIDER_BARS_RL); //bind texture
-//        modelBars.render(entityPlayer, entityPlayer.limbSwing, entityPlayer.limbSwingAmount, entityPlayer.getAge(), entityPlayer.rotationYawHead, entityPlayer.rotationPitch, 1);
-        //pop matrix
-        GlStateManager.popMatrix();
 
     }
 
@@ -148,8 +145,8 @@ public class GliderRenderHandler {
 
     private void setRotationThirdPersonPerspective(EntityPlayer player, float partialTicks) {
         player.limbSwingAmount = 0;
-        GlStateManager.rotate(-player.rotationYawHead, 0, 1, 0);
         GlStateManager.pushMatrix();
+        GlStateManager.rotate(-player.rotationYawHead, 0, 1, 0);
         float interpolatedPitch = (player.prevRotationPitch + (player.rotationPitch - player.prevRotationPitch) * partialTicks) + 90;
         Vec3d lookVec = player.getLookVec();
         GlStateManager.rotate(interpolatedPitch, 1, 0, 0);

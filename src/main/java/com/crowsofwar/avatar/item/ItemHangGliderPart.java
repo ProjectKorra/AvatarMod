@@ -3,7 +3,6 @@ package com.crowsofwar.avatar.item;
 import com.crowsofwar.avatar.util.GliderInfo;
 import com.crowsofwar.avatar.registry.AvatarItem;
 import com.crowsofwar.avatar.registry.AvatarItems;
-import com.crowsofwar.avatar.common.item.scroll.ItemScroll;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

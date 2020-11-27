@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.opengl.GL11;
 
 import com.crowsofwar.avatar.AvatarLog;
@@ -14,6 +15,12 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
+
+import static org.lwjgl.opengl.GL11.GL_VERTEX_ARRAY;
+import static org.lwjgl.opengl.GL11.glDisableClientState;
+import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL15.glBindBuffer;
+
 
 public class ObjLoader {
 
@@ -44,6 +51,7 @@ public class ObjLoader {
 		int currentList = 0;
 		boolean isDrawing = false;
 		ObjModel model = new ObjModel();
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		while((currentLine = read.readLine()) != null){
 			lineNumber++;
 			currentLine = currentLine.trim();
