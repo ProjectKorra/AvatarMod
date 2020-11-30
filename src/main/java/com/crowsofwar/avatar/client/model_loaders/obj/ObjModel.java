@@ -12,5 +12,5 @@ public class ObjModel {
 	public void renderAll(){
 		nameToCallList.values().forEach(list -> GL11.glCallList(list));
 	}
-	
+
 }

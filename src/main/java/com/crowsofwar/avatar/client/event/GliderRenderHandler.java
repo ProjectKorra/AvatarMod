@@ -46,7 +46,7 @@ public class GliderRenderHandler {
                 if (Minecraft.getMinecraft().currentScreen instanceof GuiInventory) return; //don't rotate if the player rendered is in an inventory
                 setRotationThirdPersonPerspective(event.getEntityPlayer(), event.getPartialRenderTick());
                 //AvatarUtils.setRotationFromPosition(event.getEntityPlayer(), new Vec3d(event.getX(), event.getY(), event.getZ()));//rotate player to flying position
-//                this.needToPop = true; //mark the matrix to pop
+                this.needToPop = true; //mark the matrix to pop
             }
         }
     }
@@ -89,18 +89,17 @@ public class GliderRenderHandler {
         EntityPlayer entityPlayer = Minecraft.getMinecraft().player;
         ItemStack gliderStack = GliderHelper.getGlider(Minecraft.getMinecraft().player);
         if (gliderStack == null || gliderStack.isEmpty()) return; //just in case the other null check don't work somehow, return
+        GlStateManager.enableTexture2D();
         ResourceLocation resourceLocation = ((IGlider)gliderStack.getItem()).getModelTexture(gliderStack);
         Minecraft.getMinecraft().getTextureManager().bindTexture(resourceLocation); //bind texture
-
         //push matrix
         //set the rotation correctly for fpp
         setRotationFirstPersonPerspective(entityPlayer, event.getPartialTicks());
         //set the correct lighting
         setLightingBeforeRendering(entityPlayer, event.getPartialTicks());
-        //render the gliderBasic
-        modelGlider.renderAll();
-        //render the bars
+        //render the glider model
 
+        modelGlider.renderAll();
     }
 
     private void setLightingBeforeRendering(EntityPlayer player, float partialTicks) {
