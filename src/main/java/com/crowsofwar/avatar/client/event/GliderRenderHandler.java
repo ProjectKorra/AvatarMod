@@ -10,9 +10,13 @@ import com.crowsofwar.avatar.util.helper.GliderHelper;
 import com.crowsofwar.avatar.item.IGlider;
 import com.crowsofwar.avatar.util.helper.GliderPlayerHelper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.entity.RenderLivingBase;
+import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
@@ -22,6 +26,7 @@ import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.event.RenderSpecificHandEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -45,6 +50,8 @@ public class GliderRenderHandler {
                 if (!GliderPlayerHelper.shouldBeGliding(playerEntity)) return; //don't continue if player is not flying
                 if (Minecraft.getMinecraft().currentScreen instanceof GuiInventory) return; //don't rotate if the player rendered is in an inventory
                 setRotationThirdPersonPerspective(event.getEntityPlayer(), event.getPartialRenderTick());
+              if (modelGlider != null)
+                    modelGlider.renderAll();
                 //AvatarUtils.setRotationFromPosition(event.getEntityPlayer(), new Vec3d(event.getX(), event.getY(), event.getZ()));//rotate player to flying position
                 this.needToPop = true; //mark the matrix to pop
             }
@@ -170,7 +177,7 @@ public class GliderRenderHandler {
             if (GliderHelper.getIsGliderDeployed(player)) { //if gliderBasic deployed
                 if (GLIDER_CONFIG.disableHandleBarRenderingWhenGliding) event.setCanceled(true);
                 else if (GLIDER_CONFIG.disableOffhandRenderingWhenGliding) {
-                    if (player.getHeldItemMainhand() != null && !player.getHeldItemMainhand().isEmpty() && player.getHeldItemMainhand().getItem() instanceof IGlider && !((IGlider) player.getHeldItemMainhand().getItem()).isBroken(player.getHeldItemMainhand())) { //if holding a deployed hang gliderBasic
+                    if (!player.getHeldItemMainhand().isEmpty() && player.getHeldItemMainhand().getItem() instanceof IGlider && !((IGlider) player.getHeldItemMainhand().getItem()).isBroken(player.getHeldItemMainhand())) { //if holding a deployed hang gliderBasic
                         if (event.getHand() == EnumHand.OFF_HAND) { //offhand rendering
                             event.setCanceled(true);
                         }

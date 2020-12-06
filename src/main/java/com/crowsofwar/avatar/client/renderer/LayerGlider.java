@@ -35,6 +35,7 @@ public class LayerGlider implements LayerRenderer<AbstractClientPlayer> {
         gliderModel = ObjLoader.load(ItemHangGliderBase.MODEL_GLIDER_RL);
     }
 
+    @Override
     public void doRenderLayer(@Nonnull AbstractClientPlayer entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         //Handles glider render layers scale rotation and translation for third person perspective
         if (!entitylivingbaseIn.isInvisible() && GLIDER_CONFIG.enableRendering3PP) { //if not invisible and should render
