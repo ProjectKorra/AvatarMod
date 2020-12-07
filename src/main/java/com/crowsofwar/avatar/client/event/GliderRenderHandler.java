@@ -13,6 +13,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
@@ -89,15 +91,14 @@ public class GliderRenderHandler {
         EntityPlayer entityPlayer = Minecraft.getMinecraft().player;
         ItemStack gliderStack = GliderHelper.getGlider(Minecraft.getMinecraft().player);
         if (gliderStack == null || gliderStack.isEmpty()) return; //just in case the other null check don't work somehow, return
-        GlStateManager.enableTexture2D();
         ResourceLocation resourceLocation = ((IGlider)gliderStack.getItem()).getModelTexture(gliderStack);
-        Minecraft.getMinecraft().getTextureManager().bindTexture(resourceLocation); //bind texture
-        //push matrix
         //set the rotation correctly for fpp
         setRotationFirstPersonPerspective(entityPlayer, event.getPartialTicks());
         //set the correct lighting
         setLightingBeforeRendering(entityPlayer, event.getPartialTicks());
         //render the glider model
+        GlStateManager.enableTexture2D();
+        Minecraft.getMinecraft().getTextureManager().bindTexture(resourceLocation); //bind texture
 
         modelGlider.renderAll();
     }

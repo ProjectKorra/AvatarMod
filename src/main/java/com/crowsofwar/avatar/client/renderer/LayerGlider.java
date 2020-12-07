@@ -16,7 +16,9 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;
 
@@ -43,11 +45,16 @@ public class LayerGlider implements LayerRenderer<AbstractClientPlayer> {
             if (gliding) { //if there is one
                 //bind texture of the current glider
                 ItemStack gliderStack = GliderHelper.getGlider(entitylivingbaseIn);
-                GlStateManager.popMatrix();
-                this.playerRenderer.bindTexture(((IGlider)gliderStack.getItem())
-                        .getModelTexture(gliderStack));
+                ResourceLocation resourceLocation = ((IGlider)gliderStack.getItem())
+                        .getModelTexture(gliderStack);
+                //binds the texture
+//                GlStateManager.enableTexture2D();
+
+                Minecraft.getMinecraft().getTextureManager().bindTexture(resourceLocation);
+
+                AvatarLog.debug("RENDER GLIDER MODEL FROM LAYER");
                 gliderModel.renderAll();
-                GlStateManager.pushMatrix();
+                AvatarLog.debug("RENDERED GLIDER MODEL FROM LAYER");
             }
         }
     }

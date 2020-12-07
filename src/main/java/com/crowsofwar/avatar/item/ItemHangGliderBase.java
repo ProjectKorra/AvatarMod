@@ -53,7 +53,7 @@ public class ItemHangGliderBase extends ItemSword implements IGlider, AvatarItem
 
     public static final ResourceLocation MODEL_GLIDER_BASIC_TEXTURE_RL = new ResourceLocation(MOD_ID, "textures/models/glider.png");
     public static final ResourceLocation MODEL_GLIDER_ADVANCED_TEXTURE_RL = new ResourceLocation(MOD_ID, "textures/models/glider.png");
-    public static final ResourceLocation MODEL_GLIDER_RL = new ResourceLocation(MOD_ID, "models/glider/Glider.obj");
+    public static final ResourceLocation MODEL_GLIDER_RL = new ResourceLocation(MOD_ID, "models/glider/glider.obj");
 
     //ToDo: NBT saving tags of upgrade (need IRecipe for them)
 
