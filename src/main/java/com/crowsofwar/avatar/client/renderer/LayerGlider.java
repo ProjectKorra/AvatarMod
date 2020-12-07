@@ -16,8 +16,11 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;
@@ -37,6 +40,8 @@ public class LayerGlider implements LayerRenderer<AbstractClientPlayer> {
         gliderModel = ObjLoader.load(ItemHangGliderBase.MODEL_GLIDER_RL);
     }
 
+    @Override
+    @SubscribeEvent
     public void doRenderLayer(@Nonnull AbstractClientPlayer entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         //Handles glider render layers scale rotation and translation for third person perspective
         if (!entitylivingbaseIn.isInvisible() && GLIDER_CONFIG.enableRendering3PP) { //if not invisible and should render
@@ -52,9 +57,14 @@ public class LayerGlider implements LayerRenderer<AbstractClientPlayer> {
 
                 Minecraft.getMinecraft().getTextureManager().bindTexture(resourceLocation);
 
-                AvatarLog.debug("RENDER GLIDER MODEL FROM LAYER");
+                AvatarLog.error("RENDER GLIDER MODEL FROM LAYER");
+                GlStateManager.pushMatrix();
+                GlStateManager.rotate(180f, 1, 0, 0);
+                GlStateManager.scale(1.3, 1.3, 1.3);
+                GlStateManager.translate(0, 0, -0.2);
                 gliderModel.renderAll();
-                AvatarLog.debug("RENDERED GLIDER MODEL FROM LAYER");
+                AvatarLog.error("RENDERED GLIDER MODEL FROM LAYER");
+                GlStateManager.popMatrix();
             }
         }
     }
