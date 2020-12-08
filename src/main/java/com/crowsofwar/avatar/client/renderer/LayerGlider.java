@@ -57,13 +57,11 @@ public class LayerGlider implements LayerRenderer<AbstractClientPlayer> {
 
                 Minecraft.getMinecraft().getTextureManager().bindTexture(resourceLocation);
 
-                AvatarLog.error("RENDER GLIDER MODEL FROM LAYER");
                 GlStateManager.pushMatrix();
                 GlStateManager.rotate(180f, 1, 0, 0);
                 GlStateManager.scale(1.3, 1.3, 1.3);
                 GlStateManager.translate(0, 0, -0.2);
                 gliderModel.renderAll();
-                AvatarLog.error("RENDERED GLIDER MODEL FROM LAYER");
                 GlStateManager.popMatrix();
             }
         }
