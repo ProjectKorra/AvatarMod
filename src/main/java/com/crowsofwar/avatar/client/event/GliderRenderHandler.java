@@ -12,6 +12,7 @@ import com.crowsofwar.avatar.util.helper.GliderPlayerHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.inventory.GuiInventory;
+import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
@@ -59,6 +60,9 @@ public class GliderRenderHandler {
 
     @SubscribeEvent(priority = EventPriority.LOWEST, receiveCanceled = true)
     public void onRender(RenderPlayerEvent.Post event) {
+        ModelPlayer playerModel = event.getRenderer().getMainModel();
+        playerModel.bipedLeftArm.rotateAngleX = 180f;
+        playerModel.bipedRightArm.rotateAngleX = 180f;
         if (this.needToPop) {
             this.needToPop = false;
             GlStateManager.popMatrix();
@@ -104,9 +108,11 @@ public class GliderRenderHandler {
 //        GlStateManager.enableTexture2D();
         Minecraft.getMinecraft().getTextureManager().bindTexture(resourceLocation); //bind texture
         GlStateManager.pushMatrix();
-        GlStateManager.translate(0,0, 1);
+        GlStateManager.rotate(180f, 1,0, 0);
+        GlStateManager.translate(0,1.5, 0);
+        GlStateManager.translate(0,0, 1.35f);
         modelGlider.renderAll();
-        GlStateManager.pushMatrix();
+        GlStateManager.popMatrix();
     }
 
     private void setLightingBeforeRendering(EntityPlayer player, float partialTicks) {
@@ -136,17 +142,11 @@ public class GliderRenderHandler {
         GlStateManager.rotate(90F, 1, 0, 0);
         //move up to correct position (above player's head)
         GlStateManager.translate(0, GLIDER_CONFIG.gliderVisibilityFPPShiftAmount, 0);
-        GlStateManager.translate(0, 0, -3f);
+        GlStateManager.translate(0, 0, -0.5f);
 
         //move away if sneaking
         if (player.isSneaking())
             GlStateManager.translate(0, 0, -1 * GLIDER_CONFIG.shiftSpeedVisualShift); //subtle speed effect (makes gliderBasic smaller looking)
-
-        boolean isAirbender = BendingData.get(player).getAllBending().contains(BendingStyles.get("airbending"));
-        if(Minecraft.getMinecraft().gameSettings.keyBindJump.isKeyDown() && isAirbender)
-        {
-            GlStateManager.translate(0, 1 * GLIDER_CONFIG.airbenderHeightGain, 0); //subtle speed effect (makes gliderBasic smaller looking)
-        }
     }
 
     private void setRotationThirdPersonPerspective(EntityPlayer player, float partialTicks) {
