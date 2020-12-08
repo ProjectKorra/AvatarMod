@@ -401,6 +401,9 @@ public class ConfigMobs {
 
         @Load
         public float bisonBreedMinMinutes = 60, bisonBreedMaxMinutes = 120;
+
+        @Load
+        public boolean airBisonCanBeSterile = false, airBisonSpawnNaturally = true;
     }
 
 }
