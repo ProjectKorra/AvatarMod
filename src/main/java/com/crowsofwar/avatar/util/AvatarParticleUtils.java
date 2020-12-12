@@ -143,7 +143,7 @@ public class AvatarParticleUtils {
 	 * @param vortexHeight  How tall the vortex is.
 	 * @param radiusScale   The maximum radius and how much the radius increases by. Always use your value for the maxAngle here-
 	 *                      otherwise you can get some funky effects. Ex: maxAngle/1.5 would give you a max radius of 1.5 blocks.
-	 *                      Note: It might only be a diamater of 1.5 blocks- if so, uhhh... My bad.
+	 *                      Note: It might only be a diameter of 1.5 blocks- if so, uhhh... My bad.
 	 * @param particle      The wizardry particle type. I had to create two methods- for for normal particles, one for wizardry ones.
 	 * @param position      The starting/reference position of the vortex. Used along with the direction position to determine the actual starting position.
 	 * @param particleSpeed How fast the particles are spinning. You don't need to include complex maths here- that's all handled by this method.
