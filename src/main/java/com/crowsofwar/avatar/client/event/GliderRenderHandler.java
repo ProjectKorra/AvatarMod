@@ -12,6 +12,7 @@ import com.crowsofwar.avatar.util.helper.GliderPlayerHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.model.ModelPlayer;
+import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.entity.player.EntityPlayer;
@@ -53,8 +54,9 @@ public class GliderRenderHandler {
     @SubscribeEvent(priority = EventPriority.LOWEST, receiveCanceled = true)
     public void onRender(RenderPlayerEvent.Post event) {
         ModelPlayer playerModel = event.getRenderer().getMainModel();
-        playerModel.bipedLeftArm.rotateAngleX = 180f;
-        playerModel.bipedRightArm.rotateAngleX = 180f;
+        playerModel.bipedLeftArm.rotateAngleX = 125f;
+//        playerModel.bipedLeftArm.render(0);
+        playerModel.bipedRightArm.rotateAngleY = 125f;
         if (this.needToPop) {
             this.needToPop = false;
             GlStateManager.popMatrix();
