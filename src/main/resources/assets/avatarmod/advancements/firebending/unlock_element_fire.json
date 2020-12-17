@@ -1,0 +1,29 @@
+{
+  "display": {
+    "title": "Bending Arts",
+    "description": "Unlocked the element of power, Fire!",
+    "icon": {
+      "item": "avatarmod:scroll_fire",
+      "data": 0
+    },
+    "background": "avatarmod:textures/advancements/background/air.png",
+    "frame": "goal"
+  },
+  "parent": "avatarmod:firebending/fire_scroll",
+  "rewards": {
+    "experience": 50,
+    "recipes": [
+      "avatarmod:firebending_scroll_2"
+    ]
+  },
+  "criteria": {
+    "unlock_an_element": {
+      "trigger": "unlock_bending",
+      "conditions": {
+        "element": {
+          "element": "firebending"
+        }
+      }
+    }
+  }
+}

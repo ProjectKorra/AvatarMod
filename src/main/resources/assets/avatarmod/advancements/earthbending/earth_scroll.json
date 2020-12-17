@@ -1,0 +1,30 @@
+{
+  "display": {
+    "title": "Path of Substance",
+    "description": "Gain an earthbending scroll!",
+    "icon": {
+      "item": "avatarmod:scroll_earth",
+      "data": 0
+    },
+    "background": "avatarmod:textures/advancements/background/air.png",
+    "frame": "goal"
+  },
+  "rewards": {
+    "experience": 50,
+    "recipes": [
+      "avatarmod:earthbending_scroll_1"
+    ]
+  },
+  "criteria": {
+    "gained_air_scroll": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "avatarmod:scroll_earth"
+          }
+        ]
+      }
+    }
+  }
+}

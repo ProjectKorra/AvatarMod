@@ -1,0 +1,29 @@
+{
+  "display": {
+    "title": "Bending Arts",
+    "description": "Unlocked the element of freedom, Air!",
+    "icon": {
+      "item": "avatarmod:scroll_air",
+      "data": 1
+    },
+    "background": "avatarmod:textures/advancements/background/air.png",
+    "frame": "goal"
+  },
+  "parent": "avatarmod:airbending/air_scroll",
+  "rewards": {
+    "experience": 50,
+    "recipes": [
+      "avatarmod:airbender_staff"
+    ]
+  },
+  "criteria": {
+    "unlock_an_element": {
+      "trigger": "unlock_bending",
+      "conditions": {
+        "element": {
+          "element": "airbending"
+        }
+      }
+    }
+  }
+}
