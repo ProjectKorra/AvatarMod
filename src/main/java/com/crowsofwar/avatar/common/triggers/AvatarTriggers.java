@@ -1,10 +1,6 @@
 package com.crowsofwar.avatar.common.triggers;
 
 import com.crowsofwar.avatar.AvatarInfo;
-import com.crowsofwar.avatar.bending.bending.Ability;
-import com.crowsofwar.avatar.bending.bending.BendingStyles;
-import com.crowsofwar.avatar.client.gui.AvatarUiRenderer;
-import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.event.AbilityLevelEvent;
 import com.crowsofwar.avatar.util.event.AbilityUnlockEvent;
 import com.crowsofwar.avatar.util.event.ElementUnlockEvent;
@@ -15,8 +11,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import com.crowsofwar.avatar.util.event.AbilityUseEvent;
 
-import java.util.List;
-
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class AvatarTriggers {
     /*
@@ -25,7 +19,7 @@ public class AvatarTriggers {
     public static final UnlockBendingTrigger UNLOCK_ELEMENT = new UnlockBendingTrigger("unlock_bending");
     public static final LevelAbilityTrigger ABILITY_LEVEL = new LevelAbilityTrigger("level_ability");
     public static final UseAbilityTrigger ABILITY_USE = new UseAbilityTrigger("use_ability");
-    public static final ElementRankTrigger ELEMENT_RANK = new ElementRankTrigger("rank_element");
+    public static final ElementRankupTrigger ELEMENT_RANK = new ElementRankupTrigger("rank_element");
     public static final AbilityUnlockTrigger UNLOCK_ABILITY = new AbilityUnlockTrigger("ability_unlock");
     //TODO: [AD] Discuss how this one should be done, is there a total levels per element we can hook into?
     public static final ICriterionTrigger ELEMENT_RANKUP = new UnlockBendingTrigger("");
