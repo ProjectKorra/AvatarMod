@@ -1,15 +1,3 @@
-/**
- Copyright (C) 2017 by jabelar
- This file is part of jabelar's Minecraft Forge modding examples; as such,
- you can redistribute it and/or modify it under the terms of the GNU
- General Public License as published by the Free Software Foundation,
- either version 3 of the License, or (at your option) any later version.
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- GNU General Public License for more details.
- For a copy of the GNU General Public License see <http://www.gnu.org/licenses/>.
- */
 package com.crowsofwar.avatar.common.triggers;
 
 import com.crowsofwar.avatar.bending.bending.Ability;
@@ -29,14 +17,6 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
-// TODO: Auto-generated Javadoc
-
-/**
- * This class is part of my simple custom advancement triggering tutorial.
- * See: http://jabelarminecraft.blogspot.com/p/minecraft-modding-custom-triggers-aka.html
- *
- * @author jabelar
- */
 public class AbilityUnlockTrigger implements ICriterionTrigger<AbilityUnlockTrigger.Instance>
 {
     private final ResourceLocation RL;

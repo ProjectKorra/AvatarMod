@@ -1,4 +1,7 @@
 package com.crowsofwar.avatar.common.triggers;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Set;
 
 import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import com.google.common.collect.Lists;
@@ -6,27 +9,27 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
+
 import net.minecraft.advancements.ICriterionTrigger;
 import net.minecraft.advancements.PlayerAdvancements;
 import net.minecraft.advancements.critereon.AbstractCriterionInstance;
+import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import scala.xml.Elem;
 
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Set;
-
-public class ElementRankTrigger implements ICriterionTrigger<ElementRankTrigger.Instance>
+public class UnlockBendingTrigger implements ICriterionTrigger<UnlockBendingTrigger.Instance>
 {
     private final ResourceLocation RL;
-    private final Map<PlayerAdvancements, ElementRankTrigger.Listeners> listeners = Maps.newHashMap();
+    private final Map<PlayerAdvancements, UnlockBendingTrigger.Listeners> listeners = Maps.newHashMap();
 
     /**
      * Instantiates a new custom trigger.
      *
      * @param parString the par string
      */
-    public ElementRankTrigger(String parString)
+    public UnlockBendingTrigger(String parString)
     {
         super();
         RL = new ResourceLocation(parString);
@@ -37,7 +40,7 @@ public class ElementRankTrigger implements ICriterionTrigger<ElementRankTrigger.
      *
      * @param parRL the par RL
      */
-    public ElementRankTrigger(ResourceLocation parRL)
+    public UnlockBendingTrigger(ResourceLocation parRL)
     {
         super();
         RL = parRL;
@@ -56,13 +59,13 @@ public class ElementRankTrigger implements ICriterionTrigger<ElementRankTrigger.
      * @see net.minecraft.advancements.ICriterionTrigger#addListener(net.minecraft.advancements.PlayerAdvancements, net.minecraft.advancements.ICriterionTrigger.Listener)
      */
     @Override
-    public void addListener(PlayerAdvancements playerAdvancementsIn, Listener<ElementRankTrigger.Instance> listener)
+    public void addListener(PlayerAdvancements playerAdvancementsIn, ICriterionTrigger.Listener<UnlockBendingTrigger.Instance> listener)
     {
-        ElementRankTrigger.Listeners myCustomTrigger$listeners = listeners.get(playerAdvancementsIn);
+        UnlockBendingTrigger.Listeners myCustomTrigger$listeners = listeners.get(playerAdvancementsIn);
 
         if (myCustomTrigger$listeners == null)
         {
-            myCustomTrigger$listeners = new ElementRankTrigger.Listeners(playerAdvancementsIn);
+            myCustomTrigger$listeners = new UnlockBendingTrigger.Listeners(playerAdvancementsIn);
             listeners.put(playerAdvancementsIn, myCustomTrigger$listeners);
         }
 
@@ -73,9 +76,9 @@ public class ElementRankTrigger implements ICriterionTrigger<ElementRankTrigger.
      * @see net.minecraft.advancements.ICriterionTrigger#removeListener(net.minecraft.advancements.PlayerAdvancements, net.minecraft.advancements.ICriterionTrigger.Listener)
      */
     @Override
-    public void removeListener(PlayerAdvancements playerAdvancementsIn, Listener<ElementRankTrigger.Instance> listener)
+    public void removeListener(PlayerAdvancements playerAdvancementsIn, ICriterionTrigger.Listener<UnlockBendingTrigger.Instance> listener)
     {
-        ElementRankTrigger.Listeners tameanimaltrigger$listeners = listeners.get(playerAdvancementsIn);
+        UnlockBendingTrigger.Listeners tameanimaltrigger$listeners = listeners.get(playerAdvancementsIn);
 
         if (tameanimaltrigger$listeners != null)
         {
@@ -105,9 +108,9 @@ public class ElementRankTrigger implements ICriterionTrigger<ElementRankTrigger.
      * @return the tame bird trigger. instance
      */
     @Override
-    public ElementRankTrigger.Instance deserializeInstance(JsonObject json, JsonDeserializationContext context)
+    public UnlockBendingTrigger.Instance deserializeInstance(JsonObject json, JsonDeserializationContext context)
     {
-        return new ElementRankTrigger.Instance(getId(),
+        return new UnlockBendingTrigger.Instance(getId(),
                 ElementPredicate.deserialize(json.get("element")));
     }
 
@@ -115,32 +118,28 @@ public class ElementRankTrigger implements ICriterionTrigger<ElementRankTrigger.
      * Trigger.
      *
      * @param parPlayer the player
-     * @param oldRank
-     * @param newRank
      */
-    public void trigger(EntityPlayerMP parPlayer, BendingStyle bendingStyle, int oldRank, int newRank)
+    public void trigger(EntityPlayerMP parPlayer, BendingStyle bendingStyle)
     {
-        ElementRankTrigger.Listeners tameanimaltrigger$listeners = listeners.get(parPlayer.getAdvancements());
+        UnlockBendingTrigger.Listeners tameanimaltrigger$listeners = listeners.get(parPlayer.getAdvancements());
 
         if (tameanimaltrigger$listeners != null)
         {
-            tameanimaltrigger$listeners.trigger(bendingStyle, oldRank, newRank);
+            tameanimaltrigger$listeners.trigger(bendingStyle);
         }
     }
 
     public static class Instance extends AbstractCriterionInstance
     {
-
         private final ElementPredicate element;
         /**
          * Instantiates a new instance.
          *
-         * @param parRL the par RL
-         * @param element
+         * @param criterion the criterion RL
          */
-        public Instance(ResourceLocation parRL, ElementPredicate element)
+        public Instance(ResourceLocation criterion, ElementPredicate element)
         {
-            super(parRL);
+            super(criterion);
             this.element = element;
         }
 
@@ -148,20 +147,17 @@ public class ElementRankTrigger implements ICriterionTrigger<ElementRankTrigger.
          * Test.
          *
          * @return true, if successful
-         * @param bendingStyle
-         * @param oldRank
-         * @param newRank
          */
-        public boolean test(BendingStyle bendingStyle, int oldRank, int newRank)
+        public boolean test(BendingStyle element)
         {
-            return this.element.test(bendingStyle) && newRank > oldRank;
+            return this.element.test(element);
         }
     }
 
     static class Listeners
     {
         private final PlayerAdvancements playerAdvancements;
-        private final Set<Listener<ElementRankTrigger.Instance>> listeners = Sets.newHashSet();
+        private final Set<ICriterionTrigger.Listener<UnlockBendingTrigger.Instance>> listeners = Sets.newHashSet();
 
         /**
          * Instantiates a new listeners.
@@ -188,7 +184,7 @@ public class ElementRankTrigger implements ICriterionTrigger<ElementRankTrigger.
          *
          * @param listener the listener
          */
-        public void add(Listener<ElementRankTrigger.Instance> listener)
+        public void add(ICriterionTrigger.Listener<UnlockBendingTrigger.Instance> listener)
         {
             listeners.add(listener);
         }
@@ -198,7 +194,7 @@ public class ElementRankTrigger implements ICriterionTrigger<ElementRankTrigger.
          *
          * @param listener the listener
          */
-        public void remove(Listener<ElementRankTrigger.Instance> listener)
+        public void remove(ICriterionTrigger.Listener<UnlockBendingTrigger.Instance> listener)
         {
             listeners.remove(listener);
         }
@@ -207,16 +203,14 @@ public class ElementRankTrigger implements ICriterionTrigger<ElementRankTrigger.
          * Trigger.
          *
          * @param bendingStyle
-         * @param oldRank
-         * @param newRank
          */
-        public void trigger(BendingStyle bendingStyle, int oldRank, int newRank)
+        public void trigger(BendingStyle bendingStyle)
         {
-            ArrayList<Listener<ElementRankTrigger.Instance>> list = null;
+            ArrayList<ICriterionTrigger.Listener<UnlockBendingTrigger.Instance>> list = null;
 
-            for (Listener<ElementRankTrigger.Instance> listener : listeners)
+            for (ICriterionTrigger.Listener<UnlockBendingTrigger.Instance> listener : listeners)
             {
-                if (listener.getCriterionInstance().test(bendingStyle, oldRank, newRank))
+                if (listener.getCriterionInstance().test(bendingStyle))
                 {
                     if (list == null)
                     {
@@ -229,7 +223,7 @@ public class ElementRankTrigger implements ICriterionTrigger<ElementRankTrigger.
 
             if (list != null)
             {
-                for (Listener<ElementRankTrigger.Instance> listener1 : list)
+                for (ICriterionTrigger.Listener<UnlockBendingTrigger.Instance> listener1 : list)
                 {
                     listener1.grantCriterion(playerAdvancements);
                 }

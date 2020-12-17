@@ -1,5 +1,6 @@
 package com.crowsofwar.avatar.common.triggers;
 
+import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -16,17 +17,17 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
-public class ElementRankTrigger implements ICriterionTrigger<ElementRankTrigger.Instance>
+public class UseAbilityTrigger implements ICriterionTrigger<UseAbilityTrigger.Instance>
 {
     private final ResourceLocation RL;
-    private final Map<PlayerAdvancements, ElementRankTrigger.Listeners> listeners = Maps.newHashMap();
+    private final Map<PlayerAdvancements, UseAbilityTrigger.Listeners> listeners = Maps.newHashMap();
 
     /**
      * Instantiates a new custom trigger.
      *
      * @param parString the par string
      */
-    public ElementRankTrigger(String parString)
+    public UseAbilityTrigger(String parString)
     {
         super();
         RL = new ResourceLocation(parString);
@@ -37,7 +38,7 @@ public class ElementRankTrigger implements ICriterionTrigger<ElementRankTrigger.
      *
      * @param parRL the par RL
      */
-    public ElementRankTrigger(ResourceLocation parRL)
+    public UseAbilityTrigger(ResourceLocation parRL)
     {
         super();
         RL = parRL;
@@ -56,13 +57,13 @@ public class ElementRankTrigger implements ICriterionTrigger<ElementRankTrigger.
      * @see net.minecraft.advancements.ICriterionTrigger#addListener(net.minecraft.advancements.PlayerAdvancements, net.minecraft.advancements.ICriterionTrigger.Listener)
      */
     @Override
-    public void addListener(PlayerAdvancements playerAdvancementsIn, Listener<ElementRankTrigger.Instance> listener)
+    public void addListener(PlayerAdvancements playerAdvancementsIn, Listener<UseAbilityTrigger.Instance> listener)
     {
-        ElementRankTrigger.Listeners myCustomTrigger$listeners = listeners.get(playerAdvancementsIn);
+        UseAbilityTrigger.Listeners myCustomTrigger$listeners = listeners.get(playerAdvancementsIn);
 
         if (myCustomTrigger$listeners == null)
         {
-            myCustomTrigger$listeners = new ElementRankTrigger.Listeners(playerAdvancementsIn);
+            myCustomTrigger$listeners = new UseAbilityTrigger.Listeners(playerAdvancementsIn);
             listeners.put(playerAdvancementsIn, myCustomTrigger$listeners);
         }
 
@@ -73,9 +74,9 @@ public class ElementRankTrigger implements ICriterionTrigger<ElementRankTrigger.
      * @see net.minecraft.advancements.ICriterionTrigger#removeListener(net.minecraft.advancements.PlayerAdvancements, net.minecraft.advancements.ICriterionTrigger.Listener)
      */
     @Override
-    public void removeListener(PlayerAdvancements playerAdvancementsIn, Listener<ElementRankTrigger.Instance> listener)
+    public void removeListener(PlayerAdvancements playerAdvancementsIn, Listener<UseAbilityTrigger.Instance> listener)
     {
-        ElementRankTrigger.Listeners tameanimaltrigger$listeners = listeners.get(playerAdvancementsIn);
+        UseAbilityTrigger.Listeners tameanimaltrigger$listeners = listeners.get(playerAdvancementsIn);
 
         if (tameanimaltrigger$listeners != null)
         {
@@ -105,63 +106,56 @@ public class ElementRankTrigger implements ICriterionTrigger<ElementRankTrigger.
      * @return the tame bird trigger. instance
      */
     @Override
-    public ElementRankTrigger.Instance deserializeInstance(JsonObject json, JsonDeserializationContext context)
+    public UseAbilityTrigger.Instance deserializeInstance(JsonObject json, JsonDeserializationContext context)
     {
-        return new ElementRankTrigger.Instance(getId(),
-                ElementPredicate.deserialize(json.get("element")));
+        return new UseAbilityTrigger.Instance(getId(),
+                AbilityPredicate.deserialize(json.get("ability")));
     }
 
     /**
      * Trigger.
      *
      * @param parPlayer the player
-     * @param oldRank
-     * @param newRank
      */
-    public void trigger(EntityPlayerMP parPlayer, BendingStyle bendingStyle, int oldRank, int newRank)
+    public void trigger(EntityPlayerMP parPlayer, Ability ability, int level)
     {
-        ElementRankTrigger.Listeners tameanimaltrigger$listeners = listeners.get(parPlayer.getAdvancements());
+        UseAbilityTrigger.Listeners tameanimaltrigger$listeners = listeners.get(parPlayer.getAdvancements());
 
         if (tameanimaltrigger$listeners != null)
         {
-            tameanimaltrigger$listeners.trigger(bendingStyle, oldRank, newRank);
+            tameanimaltrigger$listeners.trigger(ability, level);
         }
     }
 
     public static class Instance extends AbstractCriterionInstance
     {
-
-        private final ElementPredicate element;
+        private final AbilityPredicate ability;
         /**
          * Instantiates a new instance.
          *
-         * @param parRL the par RL
-         * @param element
+         * @param criterion the criterion RL
          */
-        public Instance(ResourceLocation parRL, ElementPredicate element)
+        public Instance(ResourceLocation criterion, AbilityPredicate ability)
         {
-            super(parRL);
-            this.element = element;
+            super(criterion);
+            this.ability = ability;
         }
 
         /**
          * Test.
          *
          * @return true, if successful
-         * @param bendingStyle
-         * @param oldRank
-         * @param newRank
          */
-        public boolean test(BendingStyle bendingStyle, int oldRank, int newRank)
+        public boolean test(Ability ability, int level)
         {
-            return this.element.test(bendingStyle) && newRank > oldRank;
+            return this.ability.test(ability, level);
         }
     }
 
     static class Listeners
     {
         private final PlayerAdvancements playerAdvancements;
-        private final Set<Listener<ElementRankTrigger.Instance>> listeners = Sets.newHashSet();
+        private final Set<Listener<UseAbilityTrigger.Instance>> listeners = Sets.newHashSet();
 
         /**
          * Instantiates a new listeners.
@@ -188,7 +182,7 @@ public class ElementRankTrigger implements ICriterionTrigger<ElementRankTrigger.
          *
          * @param listener the listener
          */
-        public void add(Listener<ElementRankTrigger.Instance> listener)
+        public void add(Listener<UseAbilityTrigger.Instance> listener)
         {
             listeners.add(listener);
         }
@@ -198,7 +192,7 @@ public class ElementRankTrigger implements ICriterionTrigger<ElementRankTrigger.
          *
          * @param listener the listener
          */
-        public void remove(Listener<ElementRankTrigger.Instance> listener)
+        public void remove(Listener<UseAbilityTrigger.Instance> listener)
         {
             listeners.remove(listener);
         }
@@ -206,17 +200,15 @@ public class ElementRankTrigger implements ICriterionTrigger<ElementRankTrigger.
         /**
          * Trigger.
          *
-         * @param bendingStyle
-         * @param oldRank
-         * @param newRank
+         * @param ability
          */
-        public void trigger(BendingStyle bendingStyle, int oldRank, int newRank)
+        public void trigger(Ability ability, int level)
         {
-            ArrayList<Listener<ElementRankTrigger.Instance>> list = null;
+            ArrayList<Listener<UseAbilityTrigger.Instance>> list = null;
 
-            for (Listener<ElementRankTrigger.Instance> listener : listeners)
+            for (Listener<UseAbilityTrigger.Instance> listener : listeners)
             {
-                if (listener.getCriterionInstance().test(bendingStyle, oldRank, newRank))
+                if (listener.getCriterionInstance().test(ability, level))
                 {
                     if (list == null)
                     {
@@ -229,7 +221,7 @@ public class ElementRankTrigger implements ICriterionTrigger<ElementRankTrigger.
 
             if (list != null)
             {
-                for (Listener<ElementRankTrigger.Instance> listener1 : list)
+                for (Listener<UseAbilityTrigger.Instance> listener1 : list)
                 {
                     listener1.grantCriterion(playerAdvancements);
                 }
