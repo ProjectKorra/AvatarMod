@@ -1,14 +1,32 @@
 {
-  "type": "minecraft:crafting_shapeless",
-  "ingredients": [
-    {
-      "item": "avatarmod:scroll_fire",
-      "data" : 5
-    }, {
-      "item": "avatarmod:scroll_fire",
-      "data" : 5
-    }
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "eqe",
+    "fsf",
+    "ege"
   ],
+  "key": {
+    "s": {
+      "item": "minecraft:nether_star"
+    },
+    "g": {
+      "item": "minecraft:ghast_tear",
+      "count": 16
+    },
+    "q": {
+      "item": "minecraft:quartz_block",
+      "data": 1,
+      "count": 8
+    },
+    "f": {
+      "item": "avatarmod:scroll_fire",
+      "data": 5
+    },
+    "e": {
+      "item": "minecraft:experience_bottle",
+      "count": 16
+    }
+  },
   "result": {
     "item": "avatarmod:scroll_fire",
     "data": 6

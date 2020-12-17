@@ -76,7 +76,6 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 	 * The entity selector passed into the new AI methods.
 	 */
 	protected Predicate<Entity> targetSelector;
-	private boolean hasAttemptedTrade;
 	/**
 	 * The wizard's trades.
 	 */
@@ -96,7 +95,6 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 	//TODO: Chi
 	public EntityHumanBender(World world) {
 		super(world);
-		this.hasAttemptedTrade = false;
 	}
 
 	public int getScrollsLeft() {
@@ -224,6 +222,7 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 		setHomePosAndDistance(getPosition(), 40);
 		setSkin((int) (rand.nextDouble() * getNumSkins()));
 		setLevel(AvatarUtils.getRandomNumberInRange(1, MOBS_CONFIG.benderSettings.maxLevel));
+		applyAbilityLevels(getLevel());
 		generateRecipes();
 		return livingdata;
 	}
@@ -305,7 +304,6 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 		// Won't trade with a player that has attacked them.
 		if (this.isEntityAlive() && !this.isTrading() && !this.isChild() && !player.isSneaking()
 				&& this.getAttackTarget() != player) {
-			generateRecipes();
 			if (!this.world.isRemote && !trades.isEmpty()) {
 				this.setCustomer(player);
 				player.displayVillagerTradeGui(this);
@@ -413,7 +411,6 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 	// villager, at which point the first is added.
 	@Override
 	public MerchantRecipeList getRecipes(EntityPlayer par1EntityPlayer) {
-		generateRecipes();
 		return trades;
 	}
 
@@ -516,7 +513,7 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 			boolean itemAlreadySold = true;
 
 			int tier = 1;
-			int maxTier = getLevel();
+			int maxTier = Math.max(getLevel(), tier);
 			int finalTier = tier;
 			double tierInc = (maxTier - tier) / 3F;
 			boolean greaterTier;
@@ -532,7 +529,7 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 				 * 1 46% 25% 20% 9% 2 42% 24% 22% 12% 3 38% 24% 24% 14% 4 34% 22% 26% 17% 5 30% 21% 28% 21% 6 26% 19%
 				 * 30% 24% 7 22% 17% 32% 28% 8 18% 15% 34% 33% */
 
-				double tierIncreaseChance = 0.70 + 0.04 * (Math.max(trades == null ? 0 : this.trades.size() - 4, 0));
+				double tierIncreaseChance = 0.76 + 0.04 * (Math.max(trades == null ? 0 : this.trades.size() - 4, 0));
 
 				if (rand.nextDouble() < tierIncreaseChance) {
 					tier += tierInc;
@@ -549,10 +546,13 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 						(int) tierIncreaseChance * AvatarUtils.getRandomNumberInRange(2, 4) + 1, maxTier));
 				itemToSell = this.getRandomItemOfTier(finalTier);
 
+				//Don't know what this is used for tbh
 				if (this.trades != null) {
 					for (Object recipe : this.trades) {
-						if (ItemStack.areItemStacksEqual(((MerchantRecipe) recipe).getItemToSell(), itemToSell))
+						if (ItemStack.areItemStacksEqual(((MerchantRecipe) recipe).getItemToSell(), itemToSell)) {
 							itemAlreadySold = true;
+							return;
+						}
 					}
 				}
 			}
@@ -562,11 +562,11 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 
 			ItemStack firstPrice = this.getRandomPrice(finalTier);
 			ItemStack secondPrice = this.getRandomPrice(finalTier);
-			greaterTier = MOBS_CONFIG.getTradeItemTier(firstPrice.getItem()) > finalTier;
+			greaterTier = MOBS_CONFIG.getTradeItemTier(firstPrice.getItem()) >= finalTier;
 			if (greaterTier)
 				recipeList.add(new MerchantRecipe(firstPrice, itemToSell));
 			else {
-				greaterTier = MOBS_CONFIG.getTradeItemTier(secondPrice.getItem()) > finalTier;
+				greaterTier = MOBS_CONFIG.getTradeItemTier(secondPrice.getItem()) >= finalTier;
 				if (greaterTier)
 					recipeList.add(new MerchantRecipe(secondPrice, itemToSell));
 				else recipeList.add(new MerchantRecipe(firstPrice, secondPrice, itemToSell));

@@ -1,9 +1,7 @@
 package com.crowsofwar.avatar.util.event;
 
 import com.crowsofwar.avatar.bending.bending.Ability;
-import com.crowsofwar.avatar.common.triggers.AvatarTriggers;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayerMP;
 
 public class AbilityLevelEvent extends BendingEvent {
 	private Ability ability;
@@ -17,8 +15,6 @@ public class AbilityLevelEvent extends BendingEvent {
 		this.ability = ability;
 		this.oldLevel = oldLevel;
 		this.newLevel = newLevel;
-		if(entity instanceof EntityPlayerMP)
-			AvatarTriggers.ABILITY_LEVEL.trigger((EntityPlayerMP) entity, ability, oldLevel, newLevel);
 	}
 
 	public Ability getAbility() {

@@ -12,7 +12,7 @@ public class ItemHangGliderPart extends Item implements AvatarItem {
 
     private static ItemHangGliderPart instance = null;
 
-    public static String[] names = {"wing_left", "wing_right", "scaffolding"};
+    public static String[] names = {"basic_wing_left", "basic_wing_right", "scaffolding"};
 
     public ItemHangGliderPart() {
         super();

@@ -23,6 +23,9 @@ import com.crowsofwar.avatar.config.DropInfo;
 import com.crowsofwar.avatar.config.MobDrops;
 import com.crowsofwar.avatar.item.scroll.Scrolls;
 import com.crowsofwar.avatar.item.scroll.Scrolls.ScrollType;
+import com.crowsofwar.avatar.util.analytics.AnalyticEvents;
+import com.crowsofwar.avatar.util.analytics.AvatarAnalytics;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
@@ -73,6 +76,9 @@ public class AvatarScrollDrops {
                                         entity.posZ, stack);
                                 item.setDefaultPickupDelay();
                                 e.getDrops().add(item);
+                                String entityName = EntityList.getEntityString(entity);
+                                AvatarAnalytics.INSTANCE.pushEvent(AnalyticEvents.onMobScrollDrop(entityName,
+                                        type.name().toLowerCase()));
                             }
                         }
                     }

@@ -73,7 +73,6 @@ public abstract class EntityBender extends EntityCreature implements IEntityAddi
 		// initEntityAI - Constructor is called AFTER initEntityAI
 		bender = initBender();
 		dataManager.register(SYNC_LEVEL, 1);
-		applyAbilityLevels(getLevel());
 		getData().addBending(getElement());
 	}
 

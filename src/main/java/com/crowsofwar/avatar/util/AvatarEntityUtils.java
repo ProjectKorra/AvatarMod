@@ -47,7 +47,7 @@ public class AvatarEntityUtils {
     }
 
 
-    //Smelts any item, really unabalanced
+    //Smelts any item, really unbalanced
     public static void smeltItemEntity(EntityItem entity) {
         ItemStack stack = entity.getItem();
         ItemStack smelted = FurnaceRecipes.instance().getSmeltingResult(stack);
@@ -87,11 +87,11 @@ public class AvatarEntityUtils {
 
             if (rarity) {
                 EntityItem item = new EntityItem(entity.world, entity.posX, entity.posY + 0.75, entity.posZ, smelted);
-                item.setDefaultPickupDelay();
-                item.setEntityInvulnerable(true);
-                item.setNoDespawn();
                 //This makes sure the stack count is reset between smelts
                 item.getItem().setCount(stack.getCount());
+                item.setDefaultPickupDelay();
+                item.setEntityInvulnerable(true);
+
                 if (!entity.world.isRemote)
                     entity.world.spawnEntity(item);
                 entity.setDead();

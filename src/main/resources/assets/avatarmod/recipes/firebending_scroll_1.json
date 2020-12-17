@@ -7,10 +7,10 @@
   ],
   "key": {
     "b": {
-      "item": "minecraft:blaze_rod"
+      "item": "minecraft:flint_and_steel"
     },
     "p": {
-      "item": "minecraft:paper"
+      "item": "minecraft:book"
     },
     "e": {
       "item": "minecraft:experience_bottle"

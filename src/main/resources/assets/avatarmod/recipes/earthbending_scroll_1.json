@@ -7,10 +7,10 @@
   ],
   "key": {
     "b": {
-      "item": "minecraft:emerald"
+      "item": "minecraft:iron_ingot"
     },
     "p": {
-      "item": "minecraft:paper"
+      "item": "minecraft:book"
     },
     "e": {
       "item": "minecraft:experience_bottle"

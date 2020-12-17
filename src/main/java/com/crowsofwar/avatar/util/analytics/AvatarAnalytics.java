@@ -6,6 +6,7 @@ import com.crowsofwar.avatar.network.AvatarServerProxy;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
 
+import java.util.Arrays;
 import java.util.Deque;
 import java.util.LinkedList;
 
@@ -84,9 +85,7 @@ public class AvatarAnalytics {
 	 */
 	public void pushEvents(AnalyticEvent... events) {
 		synchronized (queuedEvents) {
-			for (AnalyticEvent event : events) {
-				queuedEvents.add(event);
-			}
+			queuedEvents.addAll(Arrays.asList(events));
 		}
 	}
 

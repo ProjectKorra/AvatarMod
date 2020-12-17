@@ -122,8 +122,9 @@ public interface IOffensiveEntity {
                         if (setVelocity())
                             AvatarUtils.setVelocity(hit, vel);
                         else hit.addVelocity(vel.x, vel.y, vel.z);
-                        //   if (multiHit() && hit instanceof EntityLivingBase)
-                        //       ((EntityLivingBase) hit).hurtResistantTime = 10;
+                        //TODO: If they're invulnerable, make them collide
+//                           if (multiHit() && hit instanceof EntityLivingBase)
+//                               hit.hurtResistantTime = 10;
                         AvatarUtils.afterVelocityAdded(hit);
                         if (attacker.getOwner() != null) {
                             BendingData bendingData = BendingData.getFromEntity(attacker.getOwner());
@@ -135,12 +136,14 @@ public interface IOffensiveEntity {
                         }
                     }
                 }
-            } else if (attacker.canCollideWith(hit)) {
+            } if (data != null && !attacker.canDamageEntity(hit) && attacker.canCollideWith(hit)
+                    || attacker instanceof IOffensiveEntity && ((IOffensiveEntity) attacker).multiHit()) {
                 if (hit instanceof EntityItem)
                     vel = vel.scale(0.05);
                 if (!(hit instanceof AvatarEntity))
                     BattlePerformanceScore.addScore(attacker.getOwner(), getPerformanceAmount());
-                data.addXp(getXpPerHit());
+                if (!(attacker instanceof IOffensiveEntity && ((IOffensiveEntity) attacker).multiHit()))
+                    data.addXp(getXpPerHit());
                 hit.setFire(getFireTime());
                 if (hit instanceof EntityOffensive)
                     ((EntityOffensive) hit).applyElementalContact(attacker);

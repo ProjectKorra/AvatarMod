@@ -194,7 +194,7 @@ public class EntitySandstorm extends AvatarEntity {
 		// Finally, finds a velocity which will move towards that point
 
 		double currentAngle = Vector.getRotationTo(position(), Vector.getEntityPos(entity)).y();
-		double nextAngle = currentAngle + Math.toRadians(360 / 20);
+		double nextAngle = currentAngle + Math.toRadians(360 / 20F);
 
 		double currentDistance = entity.getDistance(this.posX, this.posY + floatingDistance, this
 				.posZ);

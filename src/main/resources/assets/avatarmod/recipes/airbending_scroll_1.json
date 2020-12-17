@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ebe",
+    "bpb",
+    "ebe"
+  ],
+  "key": {
+    "b": {
+      "item": "minecraft:feather"
+    },
+    "p": {
+      "item": "minecraft:book"
+    },
+    "e": {
+      "item": "minecraft:experience_bottle"
+    }
+  },
+  "result": {
+    "item": "avatarmod:scroll_air",
+    "data": 0
+  }
+}

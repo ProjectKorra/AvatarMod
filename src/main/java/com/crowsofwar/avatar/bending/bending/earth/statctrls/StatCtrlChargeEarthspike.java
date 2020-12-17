@@ -12,7 +12,7 @@ public class StatCtrlChargeEarthspike extends StatusControl {
     private final boolean setting;
 
     public StatCtrlChargeEarthspike(boolean setting) {
-        super(setting ? 21 : 100, setting ? AvatarControl.CONTROL_RIGHT_CLICK_DOWN : AvatarControl.CONTROL_RIGHT_CLICK_UP,
+        super(setting ? 30 : 31, setting ? AvatarControl.CONTROL_RIGHT_CLICK_DOWN : AvatarControl.CONTROL_RIGHT_CLICK_UP,
                 CrosshairPosition.RIGHT_OF_CROSSHAIR);
         this.setting = setting;
     }

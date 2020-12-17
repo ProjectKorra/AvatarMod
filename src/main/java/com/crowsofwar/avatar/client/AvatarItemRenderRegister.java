@@ -59,8 +59,8 @@ public class AvatarItemRenderRegister {
 		//forScroll(Scrolls.ICE);
 
 		register(AvatarItems.itemBisonWhistle);
-
 		register(Item.getItemFromBlock(blockCloud));
+		register(AvatarItems.emptyExpBottle);
 
 		registerWithMetadata(AvatarItems.itemWaterPouch, 6);
 		registerWithMetadata(AvatarItems.itemBisonArmor, 4);
@@ -69,6 +69,7 @@ public class AvatarItemRenderRegister {
 		registerWithMetadata(AvatarItems.gliderBasic, 3);
 		registerWithMetadata(AvatarItems.gliderAdv, 3);
 		registerWithMetadata(AvatarItems.gliderPart, 3);
+
 	}
 
 	private static void forScroll(ItemScroll scroll) {

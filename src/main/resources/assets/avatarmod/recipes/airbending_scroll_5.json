@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "e e",
+    "sps",
+    "ede"
+  ],
+  "key": {
+    "d": {
+      "item": "minecraft:dragon_breath"
+    },
+    "s": {
+      "item": "avatarmod:scroll_air",
+      "data": 3
+    },
+    "e": {
+      "item": "minecraft:experience_bottle",
+      "count": 8
+    }
+  },
+  "result": {
+    "item": "avatarmod:scroll_air",
+    "data": 4
+  }
+}

@@ -78,12 +78,6 @@ public class AnalyticEvents {
 		return new AnalyticEvent("Scrolls", "NPC trade");
 	}
 
-	/**
-	 * Event to be used when a player exhausts an NPC's trading supply of scrolls
-	 */
-	public static AnalyticEvent onNpcNoScrolls() {
-		return new AnalyticEvent("Misc", "NPC supply exhausted");
-	}
 
 	/**
 	 * Event to be used when a mob drops a scroll

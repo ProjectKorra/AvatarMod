@@ -37,7 +37,7 @@ public class StatCtrlPlaceWall extends StatusControl {
         // Wall has no owner so we go for segments
         EntityWallSegment wallSegment = AvatarEntity.lookupOwnedEntity(world, EntityWallSegment.class, entity);
 
-        if (wallSegment.getBehavior().getClass() == WallBehavior.Waiting.class &&
+        if (wallSegment != null && wallSegment.getBehavior() != null && wallSegment.getBehavior() instanceof WallBehavior.Waiting &&
                 abilityData.getAbilityCooldown(entity) <= 0) {
 
             List<EntityWallSegment> segments = world.getEntities(EntityWallSegment.class,

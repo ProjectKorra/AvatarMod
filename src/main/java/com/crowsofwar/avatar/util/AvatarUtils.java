@@ -751,6 +751,8 @@ public class AvatarUtils {
 
     public static int getRandomNumberInRange(int min, int max) {
         Random r = new Random();
+        if (max < 0 || min < 0)
+            return 0;
         return r.nextInt((max - min) + 1) + min;
     }
 

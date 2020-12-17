@@ -23,10 +23,7 @@ import com.crowsofwar.avatar.bending.bending.air.Airbending;
 import com.crowsofwar.avatar.bending.bending.earth.Earthbending;
 import com.crowsofwar.avatar.bending.bending.water.Waterbending;
 import com.crowsofwar.avatar.bending.bendingmultipliers.PrModifierHandler;
-import com.crowsofwar.avatar.config.ConfigClient;
-import com.crowsofwar.avatar.config.ConfigMobs;
-import com.crowsofwar.avatar.config.ConfigSkills;
-import com.crowsofwar.avatar.config.ConfigStats;
+import com.crowsofwar.avatar.config.*;
 import com.crowsofwar.avatar.entity.EntityLightningArc;
 import com.crowsofwar.avatar.entity.mob.EntityBender;
 import com.crowsofwar.avatar.network.AvatarChatMessages;
@@ -222,6 +219,11 @@ public abstract class Bender {
                     entity, powerRating, switchPath);
             aD.setSwitchPath(switchPath);
 
+
+            //Tries to make sure they're loaded
+            if (entity instanceof EntityPlayer && ability.properties == null)
+                Ability.syncProperties((EntityPlayer) entity);
+
             if (ability.properties != null) {
                 if (canUseAbility(ability) && !MinecraftForge.EVENT_BUS.post(new AbilityUseEvent(entity, ability, level + 1, path))) {
                     if (data.getMiscData().getCanUseAbilities()) {
@@ -293,6 +295,7 @@ public abstract class Bender {
      * Called every tick; updates things like chi.
      */
     public void onUpdate() {
+
 
         BendingData data = getData();
         World world = getWorld();
@@ -374,12 +377,12 @@ public abstract class Bender {
         }
 
         //Config updates
-        if (entity.ticksExisted % 400 == 0) {
-            ConfigClient.load();
-            ConfigStats.load();
-            ConfigSkills.load();
-            ConfigMobs.load();
-        }
+//        if (entity.ticksExisted % 400 == 0) {
+//            ConfigClient.load();
+//            ConfigStats.load();
+//            ConfigSkills.load();
+//            ConfigMobs.load();
+//        }
         // Update bending managers
 
         List<PowerRatingManager> managers = data.getPowerRatingManagers();

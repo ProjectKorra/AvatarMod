@@ -52,6 +52,7 @@ public class RenderEarthspikes extends RenderModel<EntityEarthspike> {
 
         BlockPos below = entity.getPosition().offset(EnumFacing.DOWN);
         Block belowBlock = entity.world.getBlockState(below).getBlock();
+
         if (belowBlock == Blocks.GRASS) {
             TEXTURE = new ResourceLocation("avatarmod", "textures/entity/earthspike/earthspike" + ".png");
         } else if (belowBlock == Blocks.DIRT) {
