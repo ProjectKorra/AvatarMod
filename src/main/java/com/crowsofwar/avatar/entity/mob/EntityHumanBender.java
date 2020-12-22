@@ -304,7 +304,7 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 		// Won't trade with a player that has attacked them.
 		if (this.isEntityAlive() && !this.isTrading() && !this.isChild() && !player.isSneaking()
 				&& this.getAttackTarget() != player) {
-			if (!this.world.isRemote && !trades.isEmpty()) {
+			if (!this.world.isRemote && trades != null && !trades.isEmpty()) {
 				this.setCustomer(player);
 				player.displayVillagerTradeGui(this);
 				// player.displayGUIMerchant(this, this.getElement().getWizardName());
