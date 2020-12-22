@@ -2,20 +2,23 @@ package com.crowsofwar.avatar.client.event;
 
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.bending.bending.BendingStyles;
+import com.crowsofwar.avatar.client.model_loaders.obj.ObjLoader;
+import com.crowsofwar.avatar.client.model_loaders.obj.ObjModel;
+import com.crowsofwar.avatar.item.ItemHangGliderBase;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.helper.GliderHelper;
 import com.crowsofwar.avatar.item.IGlider;
-import com.crowsofwar.avatar.client.model.ModelGlider;
 import com.crowsofwar.avatar.util.helper.GliderPlayerHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiInventory;
+import net.minecraft.client.model.ModelPlayer;
+import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.event.RenderSpecificHandEvent;
@@ -44,13 +47,16 @@ public class GliderRenderHandler {
                 if (Minecraft.getMinecraft().currentScreen instanceof GuiInventory) return; //don't rotate if the player rendered is in an inventory
                 setRotationThirdPersonPerspective(event.getEntityPlayer(), event.getPartialRenderTick());
                 //AvatarUtils.setRotationFromPosition(event.getEntityPlayer(), new Vec3d(event.getX(), event.getY(), event.getZ()));//rotate player to flying position
-                this.needToPop = true; //mark the matrix to pop
             }
         }
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST, receiveCanceled = true)
     public void onRender(RenderPlayerEvent.Post event) {
+        ModelPlayer playerModel = event.getRenderer().getMainModel();
+        playerModel.bipedLeftArm.rotateAngleX = 125f;
+//        playerModel.bipedLeftArm.render(0);
+        playerModel.bipedRightArm.rotateAngleY = 125f;
         if (this.needToPop) {
             this.needToPop = false;
             GlStateManager.popMatrix();
@@ -75,7 +81,7 @@ public class GliderRenderHandler {
     }
 
     //The model to display
-    private final ModelGlider modelGlider = new ModelGlider();
+    private final ObjModel modelGlider = ObjLoader.load(ItemHangGliderBase.MODEL_GLIDER_RL);
 
     /**
      * Renders the gliderBasic above the player
@@ -88,22 +94,18 @@ public class GliderRenderHandler {
         ItemStack gliderStack = GliderHelper.getGlider(Minecraft.getMinecraft().player);
         if (gliderStack == null || gliderStack.isEmpty()) return; //just in case the other null check don't work somehow, return
         ResourceLocation resourceLocation = ((IGlider)gliderStack.getItem()).getModelTexture(gliderStack);
-        Minecraft.getMinecraft().getTextureManager().bindTexture(resourceLocation); //bind texture
-
-        //push matrix
-        GlStateManager.pushMatrix();
         //set the rotation correctly for fpp
         setRotationFirstPersonPerspective(entityPlayer, event.getPartialTicks());
         //set the correct lighting
         setLightingBeforeRendering(entityPlayer, event.getPartialTicks());
-        //render the gliderBasic
-        modelGlider.render(entityPlayer, entityPlayer.limbSwing, entityPlayer.limbSwingAmount, entityPlayer.ticksExisted, entityPlayer.rotationYawHead, entityPlayer.rotationPitch, 1);
-        //render the bars
-//        Minecraft.getMinecraft().getTextureManager().bindTexture(ModelBars.MODEL_GLIDER_BARS_RL); //bind texture
-//        modelBars.render(entityPlayer, entityPlayer.limbSwing, entityPlayer.limbSwingAmount, entityPlayer.getAge(), entityPlayer.rotationYawHead, entityPlayer.rotationPitch, 1);
-        //pop matrix
+        //render the glider model
+        Minecraft.getMinecraft().getTextureManager().bindTexture(resourceLocation); //bind texture
+        GlStateManager.pushMatrix();
+        GlStateManager.rotate(180f, 1,0, 0);
+        GlStateManager.translate(0,1.5, 0);
+        GlStateManager.translate(0,0, 1.35f);
+        modelGlider.renderAll();
         GlStateManager.popMatrix();
-
     }
 
     private void setLightingBeforeRendering(EntityPlayer player, float partialTicks) {
@@ -133,29 +135,23 @@ public class GliderRenderHandler {
         GlStateManager.rotate(90F, 1, 0, 0);
         //move up to correct position (above player's head)
         GlStateManager.translate(0, GLIDER_CONFIG.gliderVisibilityFPPShiftAmount, 0);
-        GlStateManager.translate(0, 0, -3f);
+        GlStateManager.translate(0, 0, -0.5f);
 
         //move away if sneaking
         if (player.isSneaking())
             GlStateManager.translate(0, 0, -1 * GLIDER_CONFIG.shiftSpeedVisualShift); //subtle speed effect (makes gliderBasic smaller looking)
-
-        boolean isAirbender = BendingData.get(player).getAllBending().contains(BendingStyles.get("airbending"));
-        if(Minecraft.getMinecraft().gameSettings.keyBindJump.isKeyDown() && isAirbender)
-        {
-            GlStateManager.translate(0, 1 * GLIDER_CONFIG.airbenderHeightGain, 0); //subtle speed effect (makes gliderBasic smaller looking)
-        }
     }
 
     private void setRotationThirdPersonPerspective(EntityPlayer player, float partialTicks) {
         player.limbSwingAmount = 0;
-        GlStateManager.rotate(-player.rotationYawHead, 0, 1, 0);
         GlStateManager.pushMatrix();
+        GlStateManager.rotate(-player.rotationYawHead, 0, 1, 0);
         float interpolatedPitch = (player.prevRotationPitch + (player.rotationPitch - player.prevRotationPitch) * partialTicks) + 90;
-        Vec3d lookVec = player.getLookVec();
         GlStateManager.rotate(interpolatedPitch, 1, 0, 0);
         float interpolatedYaw = (player.prevRotationYaw + (player.rotationYaw - player.prevRotationYaw) - partialTicks);
         GlStateManager.rotate(interpolatedYaw, 0, 1, 0);
 
+        this.needToPop = true; //mark the matrix to pop
     }
 
 
@@ -174,7 +170,7 @@ public class GliderRenderHandler {
             if (GliderHelper.getIsGliderDeployed(player)) { //if gliderBasic deployed
                 if (GLIDER_CONFIG.disableHandleBarRenderingWhenGliding) event.setCanceled(true);
                 else if (GLIDER_CONFIG.disableOffhandRenderingWhenGliding) {
-                    if (player.getHeldItemMainhand() != null && !player.getHeldItemMainhand().isEmpty() && player.getHeldItemMainhand().getItem() instanceof IGlider && !((IGlider) player.getHeldItemMainhand().getItem()).isBroken(player.getHeldItemMainhand())) { //if holding a deployed hang gliderBasic
+                    if (!player.getHeldItemMainhand().isEmpty() && player.getHeldItemMainhand().getItem() instanceof IGlider && !((IGlider) player.getHeldItemMainhand().getItem()).isBroken(player.getHeldItemMainhand())) { //if holding a deployed hang gliderBasic
                         if (event.getHand() == EnumHand.OFF_HAND) { //offhand rendering
                             event.setCanceled(true);
                         }

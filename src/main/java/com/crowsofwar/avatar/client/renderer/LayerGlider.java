@@ -1,17 +1,27 @@
 package com.crowsofwar.avatar.client.renderer;
 
 import com.crowsofwar.avatar.AvatarLog;
+import com.crowsofwar.avatar.client.model_loaders.obj.ObjLoader;
+import com.crowsofwar.avatar.client.model_loaders.obj.ObjModel;
+import com.crowsofwar.avatar.item.ItemHangGliderBase;
 import com.crowsofwar.avatar.util.helper.GliderHelper;
 import com.crowsofwar.avatar.item.IGlider;
-import com.crowsofwar.avatar.client.model.ModelGlider;
+import com.zeitheron.hammercore.client.model.mc.ModelRendererWavefront;
+import com.zeitheron.hammercore.client.utils.rendering.WavefrontLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;
 
@@ -22,14 +32,17 @@ public class LayerGlider implements LayerRenderer<AbstractClientPlayer> {
     /** Instance of the player renderer. */
     private final RenderPlayer playerRenderer;
     /** The model used by the gliderBasic. */
-    private final ModelGlider modelGlider = new ModelGlider();
+    private final ObjModel gliderModel;
+
 
     public LayerGlider(RenderPlayer playerRendererIn) {
         this.playerRenderer = playerRendererIn;
+        gliderModel = ObjLoader.load(ItemHangGliderBase.MODEL_GLIDER_RL);
     }
 
+    @Override
+    @SubscribeEvent
     public void doRenderLayer(@Nonnull AbstractClientPlayer entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-
         //Handles glider render layers scale rotation and translation for third person perspective
         if (!entitylivingbaseIn.isInvisible() && GLIDER_CONFIG.enableRendering3PP) { //if not invisible and should render
 
@@ -37,18 +50,18 @@ public class LayerGlider implements LayerRenderer<AbstractClientPlayer> {
             if (gliding) { //if there is one
                 //bind texture of the current glider
                 ItemStack gliderStack = GliderHelper.getGlider(entitylivingbaseIn);
-                this.playerRenderer.bindTexture(((IGlider)gliderStack.getItem()).getModelTexture(gliderStack));
+                ResourceLocation resourceLocation = ((IGlider)gliderStack.getItem())
+                        .getModelTexture(gliderStack);
+                //binds the texture
+//                GlStateManager.enableTexture2D();
 
-                //push matrix
+                Minecraft.getMinecraft().getTextureManager().bindTexture(resourceLocation);
+
                 GlStateManager.pushMatrix();
-                GlStateManager.rotate(270.0F, 1.0F, 0.0F, 0.0F);
-                GlStateManager.translate(0, -.5f, 0);
-                //set rotation angles of the glider and render it
-                this.modelGlider.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, entitylivingbaseIn);
-
-                this.modelGlider.render(entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
-
-                //pop matrix
+                GlStateManager.rotate(180f, 1, 0, 0);
+                GlStateManager.scale(1.3, 1.3, 1.3);
+                GlStateManager.translate(0, 0, -0.2);
+                gliderModel.renderAll();
                 GlStateManager.popMatrix();
             }
         }
