@@ -37,13 +37,6 @@ public class GliderPlayerHelper {
                     applyHeatUplift(player, iGlider);
                     WindHelper.applyWind(player, glider);
                     if(isAirbender) {
-//                            Vec3d vec3d = player.getLookVec();
-//                            double d0 = 0.5D;
-//                            double d1 = 0.1D;
-//                            player.motionX += vec3d.x * d1 + (vec3d.x * d0 - player.motionX) * 0.5D;
-//                            player.motionY += vec3d.y * d1 + (vec3d.y * d0 - player.motionY) * 0.5D;
-//                            player.motionZ += vec3d.z * d1 + (vec3d.z * d0 - player.motionZ) * 0.5D;
-//                            player.velocityChanged = true;
                         final float speed = (float) MathHelper.clampedLerp(iGlider.getMinSpeed(), iGlider.getMaxSpeed(), -player.moveForward);
                         final float elevationBoost = transform(
                                 Math.abs(player.rotationPitch),

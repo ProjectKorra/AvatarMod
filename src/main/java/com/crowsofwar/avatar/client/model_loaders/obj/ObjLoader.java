@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+import net.minecraft.client.renderer.GlStateManager;
+import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
 
 import com.crowsofwar.avatar.AvatarLog;
@@ -15,13 +17,18 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 
+import static org.lwjgl.opengl.ARBVertexArrayObject.glBindVertexArray;
+import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL15.glBindBuffer;
+
+
 public class ObjLoader {
 
 	private static ArrayList<Vec3d> vertices = new ArrayList<>();
 	private static ArrayList<Vec2f> texCoords = new ArrayList<>();
 	private static ArrayList<Vec3d> normals = new ArrayList<>();
 	private static String currentName = "";
-	
+
 	public static ObjModel load(ResourceLocation model){
 		try {
 			BufferedReader read = new BufferedReader(new InputStreamReader(Minecraft.getMinecraft().getResourceManager().getResource(model).getInputStream()));
@@ -32,12 +39,12 @@ public class ObjLoader {
 		}
 		return null;
 	}
-	
+
 	private static ObjModel parseObj(BufferedReader read) throws Exception {
 		vertices.clear();
 		texCoords.clear();
 		normals.clear();
-		
+
 		String currentLine = null;
 		String name = "";
 		int lineNumber = 0;
@@ -51,19 +58,16 @@ public class ObjLoader {
 				continue;
 			} else if(currentLine.startsWith("o") || currentLine.startsWith("g")){
 				name = currentLine.split(" ")[1].trim();
-				if(model.nameToCallList.containsKey(name)){
-					GL11.glDeleteLists(model.nameToCallList.get(name), 1);
-				}
 				if(isDrawing){
 					Tessellator.getInstance().draw();
 					GL11.glEndList();
 				}
-				
+
 				isDrawing = true;
 				Tessellator.getInstance().getBuffer().begin(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION_TEX_NORMAL);
 				currentList = GL11.glGenLists(1);
 				GL11.glNewList(currentList, GL11.GL_COMPILE);
-				model.nameToCallList.put(name, currentList);
+				model.nameToCallList.add(Pair.of(name, currentList));
 			} else if(currentLine.startsWith("v ")){
 				String[] values = currentLine.split(" ");
 				if(values.length == 4){
@@ -107,7 +111,7 @@ public class ObjLoader {
 					throw new Exception("Model " + currentName + " has bad face format on line " + lineNumber);
 				}
 			}
-			
+
 		}
 		if(isDrawing){
 			Tessellator.getInstance().draw();
@@ -115,7 +119,7 @@ public class ObjLoader {
 		}
 		return model;
 	}
-	
+
 	private static void addVertex(String part, int lineNumber) throws Exception {
 		try {
 			String[] indices = part.split("/");

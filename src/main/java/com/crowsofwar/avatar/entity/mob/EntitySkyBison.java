@@ -250,9 +250,8 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 											@Nullable IEntityLivingData livingData) {
 		getData().addBendingId(Airbending.ID);
 
-
 		boolean sterile = false;
-		if (livingData instanceof BisonSpawnData) {
+		if (MOBS_CONFIG.bisonSettings.airBisonCanBeSterile && livingData instanceof BisonSpawnData) {
 			sterile = ((BisonSpawnData) livingData).isSterile();
 		}
 		condition.setSterile(sterile);
