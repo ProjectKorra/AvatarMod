@@ -4,21 +4,20 @@ import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.bending.bending.air.AbilityAirGust;
 import com.crowsofwar.avatar.bending.bending.air.AbilityAirblade;
 import com.crowsofwar.avatar.bending.bending.air.Airbending;
+import com.crowsofwar.avatar.entity.EntityAirGust;
+import com.crowsofwar.avatar.entity.EntityAirblade;
+import com.crowsofwar.avatar.network.packets.glider.PacketCUpdateClientTarget;
+import com.crowsofwar.avatar.registry.AvatarItem;
+import com.crowsofwar.avatar.util.GliderHelper;
 import com.crowsofwar.avatar.util.Raytrace;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.Chi;
-import com.crowsofwar.avatar.entity.EntityAirGust;
-import com.crowsofwar.avatar.entity.EntityAirblade;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
 import com.crowsofwar.avatar.util.event.StaffUseEvent;
 import com.crowsofwar.avatar.util.helper.GliderPlayerHelper;
-import com.crowsofwar.avatar.registry.AvatarItem;
-import com.crowsofwar.avatar.network.packets.glider.PacketCUpdateClientTarget;
-import com.crowsofwar.avatar.util.GliderHelper;
 import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -30,7 +29,10 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.*;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -44,10 +46,10 @@ import java.util.List;
 import java.util.Random;
 
 import static com.crowsofwar.avatar.AvatarInfo.MOD_ID;
-import static com.crowsofwar.avatar.util.helper.GliderHelper.getIsGliderDeployed;
-import static com.crowsofwar.avatar.util.helper.GliderHelper.setIsGliderDeployed;
 import static com.crowsofwar.avatar.network.AvatarChatMessages.MSG_AIR_STAFF_COOLDOWN;
 import static com.crowsofwar.avatar.util.data.TickHandlerController.STAFF_GUST_HANDLER;
+import static com.crowsofwar.avatar.util.helper.GliderHelper.getIsGliderDeployed;
+import static com.crowsofwar.avatar.util.helper.GliderHelper.setIsGliderDeployed;
 
 public class ItemHangGliderBase extends ItemSword implements IGlider, AvatarItem {
 
@@ -139,7 +141,7 @@ public class ItemHangGliderBase extends ItemSword implements IGlider, AvatarItem
         boolean isCreative = entityLiving instanceof EntityPlayer && ((EntityPlayer) entityLiving)
                 .isCreative();
         BendingData data = BendingData.get(entityLiving);
-        if(entityLiving.isSneaking()) {
+        if (entityLiving.isSneaking()) {
             if (entityLiving.getHeldItemOffhand() == stack) {
                 if (!data.hasTickHandler(STAFF_GUST_HANDLER) && !entityLiving.world.isRemote) {
                     if (!MinecraftForge.EVENT_BUS.post(new StaffUseEvent(entityLiving, spawnGust))) {
@@ -241,11 +243,7 @@ public class ItemHangGliderBase extends ItemSword implements IGlider, AvatarItem
         if (isSelected && entityIn instanceof EntityLivingBase) {
             spawnGust = !entityIn.isSneaking();
             if (!worldIn.isRemote && worldIn instanceof WorldServer) {
-                WorldServer world = (WorldServer) worldIn;
                 if (entityIn.ticksExisted % 40 == 0) {
-                    world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, entityIn.posX,
-                            entityIn.posY + entityIn.getEyeHeight(),
-                            entityIn.posZ, 1, 0, 0, 0, 0.04);
                     ((EntityLivingBase) entityIn)
                             .addPotionEffect(new PotionEffect(MobEffects.SPEED, 40, 0, false, false));
                     ((EntityLivingBase) entityIn)
@@ -256,11 +254,7 @@ public class ItemHangGliderBase extends ItemSword implements IGlider, AvatarItem
         if (entityIn instanceof EntityLivingBase) {
             if (((EntityLivingBase) entityIn).getHeldItemOffhand().getItem() == this) {
                 if (!worldIn.isRemote && worldIn instanceof WorldServer) {
-                    WorldServer world = (WorldServer) worldIn;
                     if (entityIn.ticksExisted % 40 == 0) {
-                        world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, entityIn.posX,
-                                entityIn.posY + entityIn.getEyeHeight(),
-                                entityIn.posZ, 1, 0, 0, 0, 0.04);
                         ((EntityLivingBase) entityIn)
                                 .addPotionEffect(new PotionEffect(MobEffects.SPEED, 40, 0, false, false));
                         ((EntityLivingBase) entityIn).addPotionEffect(

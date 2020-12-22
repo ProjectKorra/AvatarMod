@@ -36,18 +36,18 @@ public class ConfigClient {
     @Load
     public final boolean displayGetBendingMessage = true;
     @Load
-    private final Map<String, Integer> nameKeymappings = new HashMap<>();
+    public final float radialMenuAlpha = 0.75f;
     @Load
-    private final Map<String, Boolean> nameConflicts = new HashMap<>();
-    @Load
-    public float radialMenuAlpha = 0.75f;
-    @Load
-    public float chiBarAlpha = 0.625f;
+    public final float chiBarAlpha = 0.625f;
     //For some reason if it's not final it won't work
     //Controls whether or not to show the get bending message
     //when you press the use bending key
     @Load
-    public boolean useCustomParticles = true;
+    public final boolean useCustomParticles = true;
+    @Load
+    private final Map<String, Integer> nameKeymappings = new HashMap<>();
+    @Load
+    private final Map<String, Boolean> nameConflicts = new HashMap<>();
     public Map<Ability, Integer> keymappings = new HashMap<>();
     public Map<Ability, Boolean> conflicts = new HashMap<>();
     @Load
@@ -113,28 +113,28 @@ public class ConfigClient {
         ConfigLoader.save(CLIENT_CONFIG, "avatar/cosmetic.yml");
     }
 
-    public static class ShaderSettings {
+    public static final class ShaderSettings {
 
         @Load
-        public boolean useSlipstreamShaders = false;
+        public final boolean useSlipstreamShaders = false;
 
         @Load
-        public boolean useCleanseShaders = false;
+        public final boolean useCleanseShaders = false;
 
         @Load
-        public boolean useRestoreShaders = false;
+        public final boolean useRestoreShaders = false;
 
         @Load
-        public boolean useImmolateShaders = false;
+        public final boolean useImmolateShaders = false;
 
         @Load
-        public boolean bslActive = false;
+        public final boolean bslActive = false;
 
         @Load
-        public boolean sildursActive = false;
+        public final boolean sildursActive = false;
     }
 
-    public static class ActiveBendingSettings {
+    public static final class ActiveBendingSettings {
 
         @Load
         public final boolean shouldBendingMenuRender = true;
@@ -166,7 +166,7 @@ public class ConfigClient {
 
     }
 
-    public static class ChiBarSettings {
+    public static final class ChiBarSettings {
         @Load
         public final boolean shouldChibarRender = true;
 
@@ -187,7 +187,7 @@ public class ConfigClient {
 
     }
 
-    public static class FireRenderSettings {
+    public static final class FireRenderSettings {
 
         @Load
         public final boolean flameStrikeSphere = false;
@@ -212,13 +212,13 @@ public class ConfigClient {
 
     }
 
-    public static class AirRenderSettings {
+    public static final class AirRenderSettings {
         @Load
         public final boolean airBurstSphere = true;
 
     }
 
-    public static class ParticleRenderSettings {
+    public static final class ParticleRenderSettings {
         @Load
         public final boolean realisticFlashParticles = true;
 
