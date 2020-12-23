@@ -2,10 +2,10 @@ package com.crowsofwar.avatar.bending.bending.sand;
 
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.config.ConfigStats;
+import com.crowsofwar.avatar.entity.EntitySandstorm;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
-import com.crowsofwar.avatar.entity.EntitySandstorm;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
@@ -14,8 +14,19 @@ import static com.crowsofwar.avatar.util.data.StatusControlController.SANDSTORM_
 
 public class AbilitySandstorm extends Ability {
 
+    public static final String
+            CONTACT_DAMAGE = "contact_damage",
+            FLUNG_DAMAGE = "flung_damage",
+            VULNERABLE = "vulnerable_airbending";
+
     public AbilitySandstorm() {
         super(Sandbending.ID, "sandstorm");
+    }
+
+    @Override
+    public void init() {
+        super.init();
+        addBooleanProperties(CONTACT_DAMAGE, VULNERABLE, FLUNG_DAMAGE);
     }
 
     @Override
@@ -30,33 +41,26 @@ public class AbilitySandstorm extends Ability {
             // Determine stats based on experience
 
             AbilityData abilityData = ctx.getAbilityData();
-            float speedMult = abilityData.getLevel() >= 1 ? 1 : 0.8f;
-            boolean damageFlung = abilityData.getLevel() >= 2;
-            boolean damageContacting = false;
-            boolean vulnerableToAirbending = true;
-            if (ctx.isMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-                speedMult = 1.4f;
-                vulnerableToAirbending = false;
-            }
-            if (ctx.isMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
-                damageContacting = true;
-            }
+            float speed = powerModify(getProperty(SPEED, ctx).floatValue(), abilityData) / 5F;
+            float size = powerModify(getProperty(SIZE, ctx).floatValue(), abilityData);
+
 
             // Spawn the sandstorm
 
-            Vector velocity = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0).times(8).times(speedMult);
+            Vector velocity = Vector.toRectangular(Math.toRadians(entity.rotationYaw), 0).times(8).times(speed);
 
             EntitySandstorm sandstorm = new EntitySandstorm(world);
             sandstorm.setPosition(Vector.getEntityPos(entity));
             sandstorm.setOwner(entity);
             sandstorm.setVelocity(velocity);
             sandstorm.setAbility(this);
-
-            sandstorm.setVelocityMultiplier(speedMult);
-            sandstorm.setDamageFlungTargets(damageFlung);
-            sandstorm.setDamageContactingTargets(damageContacting);
-            sandstorm.setVulnerableToAirbending(vulnerableToAirbending);
-            sandstorm.setEntitySize(5.5F, 2.5F);
+            sandstorm.setVelocityMultiplier(speed);
+            sandstorm.setDamageFlungTargets(getBooleanProperty(FLUNG_DAMAGE, ctx));
+            sandstorm.setDamageContactingTargets(getBooleanProperty(CONTACT_DAMAGE, ctx));
+            sandstorm.setVulnerableToAirbending(getBooleanProperty(VULNERABLE, ctx));
+            sandstorm.setEntitySize(size * 2.2F, size);
+            sandstorm.setTier(getBaseTier());
+            sandstorm.setElement(new Sandbending());
 
             if (!world.isRemote)
                 world.spawnEntity(sandstorm);

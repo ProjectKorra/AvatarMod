@@ -452,12 +452,12 @@ avatar.ability.sand_prison.lvl4_1=§6§lCoarse §6§lgrains ;; The prisoner take
 avatar.ability.sand_prison.lvl4_2=§6§lSolid §6§lsands ;; The sand can't be blown away by airbending
 
 avatar.ability.sandstorm=§6§lSandstorm
-avatar.ability.sandstorm.desc=Create a whirling dust devil that picks up enemies and carries them away
-avatar.ability.sandstorm.lvl1=Pick up entities and throw them off, vulnerable to airbending moves
-avatar.ability.sandstorm.lvl2=Moves slightly faster and travels slightly farther
-avatar.ability.sandstorm.lvl3=Intense whiplash deals damage to targets when they are flung away
-avatar.ability.sandstorm.lvl4_1=§6§lStrong §6§lgusts ;; Sandstorm moves much faster and isn't disrupted by airbending
-avatar.ability.sandstorm.lvl4_2=§6§lHarsh §6§lgrains ;; Whirling sand grains cause continuous minor damage to targets
+avatar.ability.sandstorm.desc=Create a whirling dust devil that picks up enemies and carries them away!
+avatar.ability.sandstorm.lvl1=Pick up entities and throw them off; vulnerable to airbending moves.
+avatar.ability.sandstorm.lvl2=Moves slightly faster and travels slightly farther.
+avatar.ability.sandstorm.lvl3=Intense whiplash deals damage to targets when they are flung away!
+avatar.ability.sandstorm.lvl4_1=§6§lSand Cyclone ;; Sandstorm moves much faster and isn't disrupted by airbending.
+avatar.ability.sandstorm.lvl4_2=§6§lWhirling Pain ;; Whirling sand grains cause continuous minor damage to targets.
 
 
 avatar.ability.explosion=§8§lExplosion
