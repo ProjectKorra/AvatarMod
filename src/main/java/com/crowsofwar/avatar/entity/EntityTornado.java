@@ -1,6 +1,8 @@
 package com.crowsofwar.avatar.entity;
 
+import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
+import com.crowsofwar.avatar.util.AvatarUtils;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -67,15 +69,23 @@ public class EntityTornado extends EntityOffensive {
                 tornadoPoints.add(new Vec3d(x + centre.x, y + centre.y, z + centre.z));
             }
             //Draws the bezier curve
-            for (int i = 0; i < tornadoPoints.size(); i++) {
+            for (int i = 0; i < tornadoPoints.size() - 1; i++) {
                 Vec3d pos = tornadoPoints.get(i);
-                Vec3d velPos = tornadoPoints.get(i + 1);
+                Vec3d pos2 = tornadoPoints.get(i + 1);
+                Vec3d pos3 = null;
+                if (i < tornadoPoints.size() - 2)
+                    pos3 = tornadoPoints.get(i + 2);
+                Vec3d[] points = new Vec3d[3];
+                points[0] = pos;
+                points[1] = pos2;
+                points[2] = pos3;
 
                 //Iterate for the amount of particles in between each line.
                 for (int h = 0; h < 360; h += (360 / 120)) {
+                    pos = AvatarUtils.bezierCurve(h / 360F, points);
+                    ParticleBuilder.create(ParticleBuilder.Type.FLASH);
                 }
                 //Only curves through 3 points to optimise the shape of the curve.
-
 
             }
 

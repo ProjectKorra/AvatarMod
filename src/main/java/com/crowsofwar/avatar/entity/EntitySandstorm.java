@@ -1,7 +1,9 @@
 package com.crowsofwar.avatar.entity;
 
 import com.crowsofwar.avatar.bending.bending.BattlePerformanceScore;
+import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.config.ConfigSkills;
+import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.BendingData;
@@ -21,15 +23,20 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 
-import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
+import java.util.ArrayList;
 
-public class EntitySandstorm extends AvatarEntity {
+import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+
+public class EntitySandstorm extends EntityOffensive {
 
 	private static final DataParameter<Float> SYNC_VELOCITY_MULT = EntityDataManager.createKey(EntitySandstorm.class, DataSerializers.FLOAT);
 	private static final DataParameter<Float> SYNC_STRENGTH = EntityDataManager.createKey(EntitySandstorm.class, DataSerializers.FLOAT);
@@ -76,6 +83,11 @@ public class EntitySandstorm extends AvatarEntity {
 	}
 
 	@Override
+	public double getExpandedHitboxHeight() {
+		return super.getExpandedHitboxHeight();
+	}
+
+	@Override
 	public void onUpdate() {
 
 		// For "onGround = true":
@@ -112,6 +124,56 @@ public class EntitySandstorm extends AvatarEntity {
 
 			if (getStrength() == 0) {
 				setDead();
+			}
+
+		}
+
+		//Render code
+		//ArrayLists cause I'm lazy
+		ArrayList<Vec3d> tornadoPoints = new ArrayList<>();
+		//While the previous list stores points to use to render, this list contains the velocities.
+		//We then bezier curve through the velocities as well. Is it calculus? Yes. But shhh
+		ArrayList<Vec3d> tornadoVelocity = new ArrayList<>();
+		if (world.isRemote) {
+			//Essentially, creates a rough outline of a vortex, which is then bezier-curved.
+			//It optimises everything and looks cooler. I think.
+
+			//Creates the points to put into the bezier curve.
+			for (int angle = 0; angle < 120; angle++) {
+				double radAngle = Math.toRadians(angle);
+				double angle2 = world.rand.nextDouble() * Math.PI * 2;
+				double radius = 0.01 + (angle / (120 / (getWidth() + getExpandedHitboxWidth())));
+				double x = radius * cos(radAngle);
+				double y = angle / (120 / (getExpandedHitboxHeight() + getHeight()));
+				double z = radius * sin(radAngle);
+				double speed = world.rand.nextDouble() * 2 + 1;
+				double omega = Math.signum(speed * ((Math.PI * 2) / 20 - speed / (20 * radius)));
+				angle2 += omega;
+				Vec3d centre = AvatarEntityUtils.getBottomMiddleOfEntity(this);
+				tornadoPoints.add(new Vec3d(x + centre.x, y + centre.y, z + centre.z));
+			}
+			//Draws the bezier curve
+			for (int i = 0; i < tornadoPoints.size() - 1; i++) {
+				Vec3d pos = tornadoPoints.get(i);
+				Vec3d pos2 = tornadoPoints.get(i + 1);
+				Vec3d pos3 = null;
+				if (i < tornadoPoints.size() - 2)
+					pos3 = tornadoPoints.get(i + 2);
+				Vec3d[] points = new Vec3d[pos3 == null ? 2 : 3];
+				points[0] = pos;
+				points[1] = pos2;
+				if (pos3 != null)
+					points[2] = pos3;
+
+				//Iterate for the amount of particles in between each line.
+				for (int h = 0; h < 360; h += (360 / 60)) {
+					pos = pos.add(AvatarUtils.bezierCurve(h / 360F, points));
+					ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(pos.x, pos.y, pos.z).clr(220, 180, 130, 180)
+					.vel(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20)
+					.scale(0.45F).spawnEntity(getOwner()).time(20).spawn(world);
+				}
+				//Only curves through 3 points to optimise the shape of the curve.
+
 			}
 
 		}
@@ -330,6 +392,36 @@ public class EntitySandstorm extends AvatarEntity {
 
 	public void setStrength(float strength) {
 		dataManager.set(SYNC_STRENGTH, MathHelper.clamp(strength, 0, 1));
+	}
+
+	@Override
+	public boolean shouldDissipate() {
+		return false;
+	}
+
+	@Override
+	public boolean shouldExplode() {
+		return false;
+	}
+
+	@Override
+	public boolean isPiercing() {
+		return true;
+	}
+
+	@Override
+	public void spawnExplosionParticles(World world, Vec3d pos) {
+
+	}
+
+	@Override
+	public void spawnDissipateParticles(World world, Vec3d pos) {
+
+	}
+
+	@Override
+	public void spawnPiercingParticles(World world, Vec3d pos) {
+
 	}
 
 	@SideOnly(Side.CLIENT)

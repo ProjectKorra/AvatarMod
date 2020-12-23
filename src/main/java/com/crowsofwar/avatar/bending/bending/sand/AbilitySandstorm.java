@@ -56,6 +56,7 @@ public class AbilitySandstorm extends Ability {
             sandstorm.setDamageFlungTargets(damageFlung);
             sandstorm.setDamageContactingTargets(damageContacting);
             sandstorm.setVulnerableToAirbending(vulnerableToAirbending);
+            sandstorm.setEntitySize(5.5F, 2.5F);
 
             if (!world.isRemote)
                 world.spawnEntity(sandstorm);
