@@ -81,7 +81,7 @@
       "performanceAmount": 40,
       "lifeTime": 40,
       "size": 3.0,
-      "speed": 8,
+      "speed": 5,
       "knockback": 6,
       "chiOnHit": 2.0,
       "damage": 5,

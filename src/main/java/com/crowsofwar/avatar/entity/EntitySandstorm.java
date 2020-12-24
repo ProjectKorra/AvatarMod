@@ -32,6 +32,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
+import static com.crowsofwar.avatar.config.ConfigClient.CLIENT_CONFIG;
 import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
@@ -73,8 +74,6 @@ public class EntitySandstorm extends EntityOffensive {
     public void setDead() {
         super.setDead();
         removeStatCtrl();
-        if (this.isDead && !world.isRemote)
-            Thread.dumpStack();
     }
 
     @Override
@@ -178,7 +177,8 @@ public class EntitySandstorm extends EntityOffensive {
                             .vel(vel.x + world.rand.nextGaussian() / 60 + motionX, vel.y + motionY, vel.z + world.rand.nextGaussian() / 60 +
                                     motionZ).element(new Sandbending()).spin(Math.abs(radius) / 2,
                             world.rand.nextGaussian() * 0.125F).spawnEntity(getOwner())
-                            .time(8 + AvatarUtils.getRandomNumberInRange(0, 4)).scale(0.25F * getWidth()).spawn(world);
+                            .time(10 + AvatarUtils.getRandomNumberInRange(0, 4)).scale(CLIENT_CONFIG.particleSettings.realisticFlashParticles
+                ? 0.25F * getWidth() * 2 : 0.125F * getWidth()).spawn(world);
                 }
                 //Only curves through 3 points to optimise the shape of the curve.
 
@@ -255,9 +255,9 @@ public class EntitySandstorm extends EntityOffensive {
     public void onCollideWithEntity(Entity entity) {
 
         // Number of blocks that the target "floats" above the ground
-        final double floatingDistance = 2;
+        final double floatingDistance = getWidth() + getExpandedHitboxHeight();
         // The maximum distance between a sandstorm and an orbiting mob before the mob is thrown
-        final double maxPickupRange = 1.3;
+        final double maxPickupRange = velocity().magnitude() * 0.75 + getWidth() / 2;
 
         if (entity == getOwner()) {
             return;
@@ -276,34 +276,36 @@ public class EntitySandstorm extends EntityOffensive {
         double nextDistance = currentDistance + 0.01;
 
         // Prevent entities from orbiting too closely
-        if (nextDistance < 0.8) {
-            nextDistance = 0.8;
+        if (nextDistance < velocity().magnitude() / 3) {
+            nextDistance = velocity().magnitude() / 3;
         }
 
         // Below conditions handle cases when entity was just picked up or needs to be flung off
 
-        if (nextDistance > 2) {
+        if (nextDistance > velocity().magnitude() * 0.85) {
             // Entities recently picked up typically have very large distances, over maxPickupRange
             // Bring them close to the center
-            nextDistance = 0.8;
+            nextDistance = velocity().magnitude() / 3;
             onPickupEntity();
-        } else if (nextDistance > maxPickupRange) {
+        }
+        //Basically a 5% chance to fling an entity every tick
+        else if (nextDistance > maxPickupRange || AvatarUtils.getRandomNumberInRange(1, 100) < 6) {
             // If the distance is large, but not very large(>2), it has probably just been here
             // for a while
-            // Fling entity to be far away quickly
-            nextDistance = 3;
+            // Fling entity to be far away quickly, but not too quickly.
+            nextDistance = velocity().magnitude() / 10;
             // Fling in the current direction
             nextAngle = Vector.getRotationTo(Vector.ZERO, velocity()).y();
             onFlingEntity(entity);
         }
 
-        Vector nextPos = position().plus(Vector.toRectangular(nextAngle, 0).times(nextDistance))
+        Vector nextPos = position().plus(Vector.toRectangular(nextAngle, 0).times(nextDistance / 2))
                 .plusY(floatingDistance);
         Vector delta = nextPos.minus(Vector.getEntityPos(entity));
 
-        Vector nextVelocity = velocity().plus(delta.times(20));
+        Vector nextVelocity = velocity().plus(delta.times(getPush()));
         entity.motionX = nextVelocity.x() / 20;
-        entity.motionY = nextVelocity.y() / 20;
+        entity.motionY = nextVelocity.y() / 20 + 0.05;
         entity.motionZ = nextVelocity.z() / 20;
 
         AvatarUtils.afterVelocityAdded(entity);
@@ -332,7 +334,7 @@ public class EntitySandstorm extends EntityOffensive {
     private void onFlingEntity(Entity entity) {
         if (!world.isRemote && damageFlungTargets && canDamageEntity(entity)) {
             DamageSource ds = AvatarDamageSource.causeSandstormDamage(entity, getOwner());
-            entity.attackEntityFrom(ds, 5);
+            entity.attackEntityFrom(ds, getDamage());
         }
     }
 
@@ -342,7 +344,7 @@ public class EntitySandstorm extends EntityOffensive {
     private void onContact(Entity entity) {
         if (!world.isRemote && damageContactingTargets) {
             DamageSource ds = AvatarDamageSource.causeSandstormDamage(entity, getOwner());
-            entity.attackEntityFrom(ds, 1);
+            entity.attackEntityFrom(ds, getDamage() / 5F);
         }
     }
 

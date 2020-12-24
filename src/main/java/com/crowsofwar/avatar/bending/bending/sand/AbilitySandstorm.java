@@ -8,6 +8,7 @@ import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.util.data.StatusControlController.SANDSTORM_REDIRECT;
@@ -43,6 +44,8 @@ public class AbilitySandstorm extends Ability {
             AbilityData abilityData = ctx.getAbilityData();
             float speed = powerModify(getProperty(SPEED, ctx).floatValue(), abilityData) / 10F;
             float size = powerModify(getProperty(SIZE, ctx).floatValue(), abilityData);
+            float push = powerModify(getProperty(KNOCKBACK, ctx).floatValue(), abilityData) * 6F;
+            float damage = powerModify(getProperty(DAMAGE, ctx).floatValue(), abilityData);
 
 
             // Spawn the sandstorm
@@ -60,7 +63,9 @@ public class AbilitySandstorm extends Ability {
             sandstorm.setVulnerableToAirbending(getBooleanProperty(VULNERABLE, ctx));
             sandstorm.setEntitySize(size * 2, size);
             sandstorm.setTier(getBaseTier());
+            sandstorm.setPush(push);
             sandstorm.setElement(new Sandbending());
+            sandstorm.setDamage(damage);
 
             if (!world.isRemote)
                 world.spawnEntity(sandstorm);
