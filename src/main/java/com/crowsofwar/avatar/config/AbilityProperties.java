@@ -5,6 +5,8 @@ import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
+import com.crowsofwar.avatar.bending.bending.air.AbilitySlipstream;
+import com.crowsofwar.avatar.bending.bending.sand.AbilitySandstorm;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
@@ -150,10 +152,11 @@ public class AbilityProperties {
             if (baseBooleanNames.size() > 0) {
                 for (String baseBooleanName : baseBooleanNames) {
                     try {
+                        System.out.println(baseValueObject);
                         baseBooleans.put(baseBooleanName, JsonUtils.getBoolean(baseValueObject, baseBooleanName));
                     } catch (JsonSyntaxException e) {
                         if (!baseBooleans.containsKey(baseBooleanName))
-                            AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Either someone's been lazy and left out a value, or your properties file is screwed.");
+                            AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Either someone's been lazy and left out " + baseBooleanName + ", or your properties file is screwed.");
                         else {
                             List<Boolean> vals = new ArrayList<>(baseBooleans.get(baseBooleanName));
                             baseBooleans.put(baseBooleanName, vals.get(vals.size() - 1));

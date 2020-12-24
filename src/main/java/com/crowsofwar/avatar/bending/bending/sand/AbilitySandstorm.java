@@ -15,9 +15,9 @@ import static com.crowsofwar.avatar.util.data.StatusControlController.SANDSTORM_
 public class AbilitySandstorm extends Ability {
 
     public static final String
-            CONTACT_DAMAGE = "contact_damage",
-            FLUNG_DAMAGE = "flung_damage",
-            VULNERABLE = "vulnerable_airbending";
+            CONTACT_DAMAGE = "contactDamage",
+            FLUNG_DAMAGE = "flungDamage",
+            VULNERABLE = "vulnerableAirbending";
 
     public AbilitySandstorm() {
         super(Sandbending.ID, "sandstorm");
@@ -26,7 +26,7 @@ public class AbilitySandstorm extends Ability {
     @Override
     public void init() {
         super.init();
-        addBooleanProperties(CONTACT_DAMAGE, VULNERABLE, FLUNG_DAMAGE);
+        addBooleanProperties(FLUNG_DAMAGE, CONTACT_DAMAGE, VULNERABLE);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class AbilitySandstorm extends Ability {
         EntityLivingBase entity = ctx.getBenderEntity();
         Bender bender = ctx.getBender();
 
-        if (bender.consumeChi(ConfigStats.STATS_CONFIG.chiSandstorm)) {
+        if (bender.consumeChi(getChiCost(ctx))) {
 
             // Determine stats based on experience
 

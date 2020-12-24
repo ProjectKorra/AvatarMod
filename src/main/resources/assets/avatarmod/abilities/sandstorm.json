@@ -2,7 +2,7 @@
   "custom_properties": {
     "xpOnHit": 2,
     "level1": {
-      "tier": 2,
+       "tier": 2,
       "parentTier": 4,
       "chiCost": 3.0,
       "cooldown": 35,
@@ -16,9 +16,9 @@
       "knockback": 2,
       "chiOnHit": 1.5,
       "damage": 0,
-      "contact_damage": false,
-      "vulnerable_airbending": true,
-      "flung_damage": false
+      "flungDamage": false,
+      "contactDamage": false,
+      "vulnerableAirbending": true
     },
     "level2": {
       "tier": 2,
@@ -51,7 +51,7 @@
       "knockback": 4,
       "chiOnHit": 1.75,
       "damage": 3,
-      "flung_damage": true
+      "flungDamage": true
     },
     "level4_1": {
       "tier": 4,
@@ -68,7 +68,7 @@
       "knockback": 5,
       "chiOnHit": 1.875,
       "damage": 3.5,
-      "vulnerable_airbending": false
+      "vulnerableAirbending": false
     },
     "level4_2": {
       "tier": 4,
@@ -85,7 +85,8 @@
       "knockback": 6,
       "chiOnHit": 2.0,
       "damage": 5,
-      "contact_damage": true
+      "vulnerableAirbending": true,
+      "contactDamage": true
     }
   }
 }
