@@ -41,7 +41,7 @@ public class AbilitySandstorm extends Ability {
             // Determine stats based on experience
 
             AbilityData abilityData = ctx.getAbilityData();
-            float speed = powerModify(getProperty(SPEED, ctx).floatValue(), abilityData) / 5F;
+            float speed = powerModify(getProperty(SPEED, ctx).floatValue(), abilityData) / 10F;
             float size = powerModify(getProperty(SIZE, ctx).floatValue(), abilityData);
 
 
@@ -58,7 +58,7 @@ public class AbilitySandstorm extends Ability {
             sandstorm.setDamageFlungTargets(getBooleanProperty(FLUNG_DAMAGE, ctx));
             sandstorm.setDamageContactingTargets(getBooleanProperty(CONTACT_DAMAGE, ctx));
             sandstorm.setVulnerableToAirbending(getBooleanProperty(VULNERABLE, ctx));
-            sandstorm.setEntitySize(size * 2.2F, size);
+            sandstorm.setEntitySize(size * 2, size);
             sandstorm.setTier(getBaseTier());
             sandstorm.setElement(new Sandbending());
 

@@ -140,17 +140,18 @@ public class EntitySandstorm extends EntityOffensive {
             //Creates the points to put into the bezier curve.
             //High angle ensures it actually rotates around and looks cool
             //Creates a vortex to the right and to the left
-            for (int angle = 0; angle < 1440; angle += 30) {
+            int maxAngle = 360 * Math.max((int) getHeight(), 1);
+            for (int angle = 0; angle < maxAngle; angle += 6 * Math.max((int) getHeight(), 1)) {
                 double radAngle = Math.toRadians(angle);
-                double radius = 0.01 + (angle / (1440 / (getWidth() / 2)));
+                double radius = 0.01 + (angle / (maxAngle / (getWidth())));
                 double x = radius * cos(radAngle);
-                double y = angle / (1440 / (getExpandedHitboxHeight() + getHeight()));
+                double y = angle / (maxAngle / (getExpandedHitboxHeight() + getHeight()));
                 double z = radius * sin(radAngle);
                 double speed = world.rand.nextDouble() * 2 + 1;
                 double omega = Math.signum(speed * ((Math.PI * 2) / 20 - speed / (20 * radius)));
                 Vec3d centre = AvatarEntityUtils.getBottomMiddleOfEntity(this);
                 tornadoPoints.add(new Vec3d(x + centre.x + world.rand.nextGaussian() / 5, y + centre.y, z + centre.z + world.rand.nextGaussian() / 5));
-                tornadoVelocity.add(new Vec3d(x * omega * 0.05, ((1440 / (getExpandedHitboxHeight() + getHeight())) - y) / 2500F, z * omega * 0.05F));
+                tornadoVelocity.add(new Vec3d(x * omega * 0.05, ((maxAngle / (getExpandedHitboxHeight() + getHeight())) - y) / 1250F, z * omega * 0.05F));
             }
             //Draws the bezier curve
             for (int i = 0; i < tornadoPoints.size() - 1; i++) {
@@ -177,7 +178,7 @@ public class EntitySandstorm extends EntityOffensive {
                             .vel(vel.x + world.rand.nextGaussian() / 60 + motionX, vel.y + motionY, vel.z + world.rand.nextGaussian() / 60 +
                                     motionZ).element(new Sandbending()).spin(Math.abs(radius) / 2,
                             world.rand.nextGaussian() * 0.125F).spawnEntity(getOwner())
-                            .time(8 + AvatarUtils.getRandomNumberInRange(0, 4)).scale(0.5F).spawn(world);
+                            .time(8 + AvatarUtils.getRandomNumberInRange(0, 4)).scale(0.25F * getWidth()).spawn(world);
                 }
                 //Only curves through 3 points to optimise the shape of the curve.
 

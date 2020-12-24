@@ -28,6 +28,7 @@ import org.apache.commons.io.IOUtils;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -253,6 +254,7 @@ public class AbilityProperties {
                         if (!abilities.remove(ability)) AvatarLog.error("What's going on?!");
 
                         try {
+                            //TODO: Overwrite files if they're outdated
                             File abilityFile = new File(targetDirectory.getPath(), ability.getName() + ".json");
                             if (!abilityFile.exists())
                                 Files.copy(file, abilityFile.toPath());
