@@ -138,7 +138,7 @@ public class EntitySandstorm extends EntityOffensive {
             //High angle ensures it actually rotates around and looks cool
             //Creates a vortex to the right and to the left
             int maxAngle = 360 * Math.max((int) getHeight(), 1);
-            for (int angle = 0; angle < maxAngle; angle += 6 * Math.max((int) getHeight(), 1)) {
+            for (int angle = 0; angle < maxAngle; angle += 10 * Math.max((int) getHeight(), 1)) {
                 double radAngle = Math.toRadians(angle);
                 double radius = 0.01 + (angle / (maxAngle / (getWidth())));
                 double x = radius * cos(radAngle);
