@@ -66,6 +66,10 @@ public class AbilitySandstorm extends Ability {
             sandstorm.setPush(push);
             sandstorm.setElement(new Sandbending());
             sandstorm.setDamage(damage);
+            sandstorm.setChiHit(powerModify(getProperty(CHI_HIT, ctx).floatValue(), abilityData));
+            sandstorm.setPerformanceAmount(getProperty(PERFORMANCE, ctx).intValue());
+            sandstorm.setLifeTime((int) powerModify(getProperty(LIFETIME, ctx).intValue(), abilityData));
+            sandstorm.setDamageSource("avatar_Sand_sandstorm");
 
             if (!world.isRemote)
                 world.spawnEntity(sandstorm);
