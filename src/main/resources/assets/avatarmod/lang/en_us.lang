@@ -392,6 +392,7 @@ avatar.ability.slipstream.lvl4_1=§f§l§oDivine §f§l§oBreeze ;; Become stron
 avatar.ability.slipstream.lvl4_2=§f§l§oRun §f§l§olike §f§l§othe §f§l§owind ;; You can now run on air! Potion effects are stronger, you're more frequently invisible.
 
 
+
 avatar.ability.lightning_redirect=§b§lLightning §b§lRedirection
 avatar.ability.lightning_redirect.desc=Represents your ability to redirect lightning, doesn't appear in the radial menu
 avatar.ability.lightning_redirect.lvl1=60% chance to redirect lightning, be careful!
