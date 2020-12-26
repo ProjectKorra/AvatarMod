@@ -211,7 +211,7 @@ avatar.ability.restore.lvl1=Gain Resistance, but at the cost of your speed. The 
 avatar.ability.restore.lvl2=You can draw energy from the surrounding area to slowly heal yourself.
 avatar.ability.restore.lvl3=The amount of speed you lose is decreased, and your regeneration speed is increased. You also receive strength.
 avatar.ability.restore.lvl4_1=§2§l§oGuardian §2§l§oof §2§l§oLife ;; Your strength and resistance are increased. Huge chi increase.
-avatar.ability.restore.lvl4_2=§2§l§oSustenance §2§l§oof §2§l§oLife ;; You effectively instant chi regen, hunger is no moer.
+avatar.ability.restore.lvl4_2=§2§l§oSustenance §2§l§oof §2§l§oLife ;; You effectively instant chi regen, hunger is no more.
 
 avatar.ability.fire_shot=§c§lFire Shot
 avatar.ability.fire_shot.desc=A small utility and offensive ability to light fires and keep mobs at bay. Smelts basic items!
@@ -390,8 +390,6 @@ avatar.ability.slipstream.lvl2=Increase your jumping height
 avatar.ability.slipstream.lvl3=Intermittently become invisible and increase the power of the buffs.
 avatar.ability.slipstream.lvl4_1=§f§l§oDivine §f§l§oBreeze ;; Become stronger in melee and airbending combat
 avatar.ability.slipstream.lvl4_2=§f§l§oRun §f§l§olike §f§l§othe §f§l§owind ;; You can now run on air! Potion effects are stronger, you're more frequently invisible.
-
-
 
 avatar.ability.lightning_redirect=§b§lLightning §b§lRedirection
 avatar.ability.lightning_redirect.desc=Represents your ability to redirect lightning, doesn't appear in the radial menu

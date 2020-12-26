@@ -5,8 +5,6 @@ import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
-import com.crowsofwar.avatar.bending.bending.air.AbilitySlipstream;
-import com.crowsofwar.avatar.bending.bending.sand.AbilitySandstorm;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
@@ -28,12 +26,13 @@ import org.apache.commons.io.IOUtils;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import static com.crowsofwar.avatar.config.ConfigSkills.SKILLS_CONFIG;
 
 public class AbilityProperties {
 
@@ -256,10 +255,11 @@ public class AbilityProperties {
                         try {
                             //TODO: Overwrite files if they're outdated
                             File abilityFile = new File(targetDirectory.getPath(), ability.getName() + ".json");
-                            if (!abilityFile.exists())
+                            if (!abilityFile.exists() && SKILLS_CONFIG.abilitySettings.generateAbilities ||
+                                    SKILLS_CONFIG.abilitySettings.overrideAbilities)
                                 Files.copy(file, abilityFile.toPath());
 
-                        }  catch (IOException ioexception) {
+                        } catch (IOException ioexception) {
                             ioexception.printStackTrace();
                             return false;
                         }

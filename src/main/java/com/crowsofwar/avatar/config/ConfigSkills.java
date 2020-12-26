@@ -32,7 +32,7 @@ public class ConfigSkills {
 	public boolean startWithRandomBending = true;
 
 	@Load
-	public boolean MultipleElements = true;
+	public boolean multipleElements = true;
 
 	@Load
 	public boolean setKeepInventory = true;
@@ -72,6 +72,27 @@ public class ConfigSkills {
 			icePrisoned = 10,
 			sandstormPickedUp = 5,
 			fireJump = 5;
+
+	@Load
+	public AbilitySettings abilitySettings = new AbilitySettings();
+
+
+
+	public static class AbilitySettings {
+
+		@Load
+		public boolean overrideAbilities = true;
+
+		@Load
+		public boolean generateAbilities = true;
+
+		//Don't disable both of these unless you don't want to play the game lol
+		@Load
+		public boolean useRadialMouse = true;
+
+		@Load
+		public boolean useRadialNumbers = true;
+	}
 
 	private ConfigSkills() {
 	}

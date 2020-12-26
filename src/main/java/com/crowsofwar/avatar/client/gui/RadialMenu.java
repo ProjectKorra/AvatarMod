@@ -33,12 +33,14 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.text.TextFormatting;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.UUID;
 
 import static com.crowsofwar.avatar.config.ConfigClient.CLIENT_CONFIG;
+import static com.crowsofwar.avatar.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.gorecore.format.FormattedMessage.newChatMessage;
 
 public class RadialMenu extends Gui {
@@ -222,22 +224,46 @@ public class RadialMenu extends Gui {
 
 		}
 
+
 		if (closeGui) {
+			//For using the mouse
+			if (SKILLS_CONFIG.abilitySettings.useRadialMouse) {
+				for (int i = 0; i < segments.length; i++) {
+					if (controls[i] == null) continue;
+					if (segments[i].isMouseHover(mouseX, mouseY, resolution)) {
+						boolean isSwitchPathKeyDown = AvatarControl.KEY_SWITCH.isDown();
 
-			for (int i = 0; i < segments.length; i++) {
-				if (controls[i] == null) continue;
-				if (segments[i].isMouseHover(mouseX, mouseY, resolution)) {
-					boolean isSwitchPathKeyDown = AvatarControl.KEY_SWITCH.isDown();
+						bender.executeAbility(controls[i], isSwitchPathKeyDown);
+						AvatarUiRenderer.fade(segments[i]);
+						playClickSound(0.8f);
+						break;
 
-					bender.executeAbility(controls[i], isSwitchPathKeyDown);
-					AvatarUiRenderer.fade(segments[i]);
-					playClickSound(0.8f);
-					break;
-
+					}
 				}
 			}
 
 		}
+
+		//For using numbers. We put it after the mouse code to prevent abilities executing twice.
+		if (SKILLS_CONFIG.abilitySettings.useRadialNumbers) {
+			 for (int i = 0; i < 8; i++) {
+			 	KeyBinding binding = Minecraft.getMinecraft().gameSettings.keyBindsHotbar[i];
+			 	if (binding.isKeyDown()) {
+			 		//Checks to make sure a corresponding ability is on the radial menu
+			 		if (controls[i] != null) {
+						boolean isSwitchPathKeyDown = AvatarControl.KEY_SWITCH.isDown();
+
+						bender.executeAbility(controls[i], isSwitchPathKeyDown);
+						AvatarUiRenderer.fade(segments[i]);
+						playClickSound(0.8f);
+						//Breaks the loop
+						closeGui = true;
+						break;
+					}
+				}
+			 }
+		}
+
 		// Right-clicking on segment opens bending menu
 		if (mc.gameSettings.keyBindUseItem.isKeyDown() && currentMouseover != null) {
 			UUID activeBendingId = BendingData.get(mc.player).getActiveBendingId();
