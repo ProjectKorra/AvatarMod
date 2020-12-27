@@ -324,7 +324,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
 
         KeyBinding kb = allKeybindings.get(keybindName);
         //Why not just return the new keybinding?
-        return /*kb == null ? new KeybindingWrapper() : **/new ClientKeybindWrapper(kb);
+        return kb == null ? new KeybindingWrapper() : new ClientKeybindWrapper(kb);
 
     }
 

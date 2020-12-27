@@ -184,6 +184,10 @@ public abstract class Ability {
     private AbilityProperties globalProperties;
     private Raytrace.Info raytrace;
 
+    /**
+     * Used for modifying ability properties
+     */
+    private AbilityModifier modifier;
 
     /**
      * NOTE: DO NOT CREATE A NEW INSTANCE OF AN ABILITY FOR GETTING PROPERTIES, IT'LL JUST RETURN NULL.
@@ -193,6 +197,7 @@ public abstract class Ability {
         this.type = bendingType;
         this.name = name;
         this.raytrace = new Raytrace.Info();
+        this.modifier = new AbilityModifier();
     }
 
     /**
@@ -295,31 +300,31 @@ public abstract class Ability {
     public final Number getProperty(String identifier, int abilityLevel) {
         if (properties == null)
             AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Properties file for " + getName() + " wasn't successfully loaded, things will start breaking!");
-        return properties == null ? 1 : properties.getBaseValue(identifier, abilityLevel, AbilityData.AbilityTreePath.MAIN);
+        return properties == null ? 1 : modify(identifier, properties.getBaseValue(identifier, abilityLevel, AbilityData.AbilityTreePath.MAIN));
     }
 
     public final Number getProperty(String identifier, int abilityLevel, AbilityData.AbilityTreePath path) {
         if (properties == null)
             AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Properties file for " + getName() + " wasn't successfully loaded, things will start breaking!");
-        return properties == null ? 1 : properties.getBaseValue(identifier, abilityLevel, path);
+        return properties == null ? 1 : modify(identifier, properties.getBaseValue(identifier, abilityLevel, path));
     }
 
     public final Number getProperty(String identifier) {
         if (properties == null)
             AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Properties file for " + getName() + " wasn't successfully loaded, things will start breaking!");
-        return properties == null ? 1 : properties.getBaseValue(identifier, 0, AbilityData.AbilityTreePath.MAIN);
+        return properties == null ? 1 : modify(identifier, properties.getBaseValue(identifier, 0, AbilityData.AbilityTreePath.MAIN));
     }
 
     public final Number getProperty(String identifier, AbilityContext ctx) {
         if (properties == null)
             AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Properties file for " + getName() + " wasn't successfully loaded, things will start breaking!");
-        return properties == null ? 1 : properties.getBaseValue(identifier, ctx.getLevel(), ctx.getDynamicPath());
+        return properties == null ? 1 : modify(identifier, properties.getBaseValue(identifier, ctx.getLevel(), ctx.getDynamicPath()));
     }
 
     public final Number getProperty(String identifier, AbilityData data) {
         if (properties == null)
             AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Properties file for " + getName() + " wasn't successfully loaded, things will start breaking!");
-        return properties == null ? 1 : properties.getBaseValue(identifier, data.getLevel(), data.getDynamicPath());
+        return properties == null ? 1 : modify(identifier, properties.getBaseValue(identifier, data.getLevel(), data.getDynamicPath()));
     }
 
     /**
@@ -709,4 +714,22 @@ public abstract class Ability {
         val *= abilityData.getDamageMult() * abilityData.getXpModifier();
         return val;
     }
+
+    public Number modify(String property, Number val) {
+        //Returns the property's base value/1 by default
+        return getModifier().getProperty(property).floatValue() * val.floatValue();
+    }
+
+    public void setModifier(AbilityModifier modifier) {
+        this.modifier = modifier;
+    }
+
+    public AbilityModifier getModifier() {
+        return this.modifier;
+    }
+
+    public void clearModifier() {
+        this.modifier = new AbilityModifier();
+    }
+
 }

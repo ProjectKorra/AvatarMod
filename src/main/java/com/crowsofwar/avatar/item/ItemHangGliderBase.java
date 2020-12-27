@@ -1,19 +1,14 @@
 package com.crowsofwar.avatar.item;
 
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.bending.bending.air.AbilityAirGust;
-import com.crowsofwar.avatar.bending.bending.air.AbilityAirblade;
 import com.crowsofwar.avatar.bending.bending.air.Airbending;
-import com.crowsofwar.avatar.entity.EntityAirGust;
-import com.crowsofwar.avatar.entity.EntityAirblade;
 import com.crowsofwar.avatar.network.packets.glider.PacketCUpdateClientTarget;
 import com.crowsofwar.avatar.registry.AvatarItem;
+import com.crowsofwar.avatar.registry.AvatarItems;
 import com.crowsofwar.avatar.util.GliderHelper;
-import com.crowsofwar.avatar.util.Raytrace;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.Chi;
-import com.crowsofwar.avatar.util.data.ctx.BendingContext;
-import com.crowsofwar.avatar.util.event.StaffUseEvent;
+import com.crowsofwar.avatar.util.event.AbilityUseEvent;
 import com.crowsofwar.avatar.util.helper.GliderPlayerHelper;
 import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.collect.HashMultimap;
@@ -36,7 +31,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -44,18 +40,19 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 import static com.crowsofwar.avatar.AvatarInfo.MOD_ID;
-import static com.crowsofwar.avatar.network.AvatarChatMessages.MSG_AIR_STAFF_COOLDOWN;
-import static com.crowsofwar.avatar.util.data.TickHandlerController.STAFF_GUST_HANDLER;
 import static com.crowsofwar.avatar.util.helper.GliderHelper.getIsGliderDeployed;
 import static com.crowsofwar.avatar.util.helper.GliderHelper.setIsGliderDeployed;
 
+@Mod.EventBusSubscriber(modid = MOD_ID)
 public class ItemHangGliderBase extends ItemSword implements IGlider, AvatarItem {
 
     public static final ResourceLocation MODEL_GLIDER_BASIC_TEXTURE_RL = new ResourceLocation(MOD_ID, "textures/models/glider_basic.png");
     public static final ResourceLocation MODEL_GLIDER_ADVANCED_TEXTURE_RL = new ResourceLocation(MOD_ID, "textures/models/glider_advanced.png");
     public static final ResourceLocation MODEL_GLIDER_RL = new ResourceLocation(MOD_ID, "models/glider/glider.obj");
+    public static final UUID STAFF_MODIFIER = UUID.fromString("f80d4e3d-79e6-4590-b099-5938f0b35cac");
 
     //ToDo: NBT saving tags of upgrade (need IRecipe for them)
 
@@ -101,6 +98,21 @@ public class ItemHangGliderBase extends ItemSword implements IGlider, AvatarItem
 
     }
 
+    //Clears the ability modifier when not using the staff.
+    @SubscribeEvent
+    public static void onAbilityUse(AbilityUseEvent event) {
+        EntityLivingBase entity = event.getEntityLiving();
+        if (entity != null) {
+            if (entity.getHeldItemMainhand().getItem() != AvatarItems.gliderBasic
+                    && entity.getHeldItemMainhand().getItem() != AvatarItems.gliderAdv &&
+                    entity.getHeldItemOffhand().getItem() != AvatarItems.gliderBasic &&
+                    entity.getHeldItemOffhand().getItem() != AvatarItems.gliderAdv) {
+                if (event.getAbility().getModifier().getID().equals(STAFF_MODIFIER))
+                    event.getAbility().clearModifier();
+            }
+        }
+    }
+
     @Override
     public float getAttackDamage() {
         return 1F;
@@ -110,7 +122,6 @@ public class ItemHangGliderBase extends ItemSword implements IGlider, AvatarItem
     public boolean hasEffect(ItemStack stack) {
         return false;
     }
-
 
     @Override
     public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker) {
@@ -127,113 +138,9 @@ public class ItemHangGliderBase extends ItemSword implements IGlider, AvatarItem
 
     }
 
-
     @Override
     public EnumRarity getRarity(ItemStack stack) {
         return EnumRarity.RARE;
-    }
-
-
-    //God this is cancer
-    //TODO: Actually fix this
-    @Override
-    public boolean onEntitySwing(EntityLivingBase entityLiving, ItemStack stack) {
-        boolean isCreative = entityLiving instanceof EntityPlayer && ((EntityPlayer) entityLiving)
-                .isCreative();
-        BendingData data = BendingData.get(entityLiving);
-        if (entityLiving.isSneaking()) {
-            if (entityLiving.getHeldItemOffhand() == stack) {
-                if (!data.hasTickHandler(STAFF_GUST_HANDLER) && !entityLiving.world.isRemote) {
-                    if (!MinecraftForge.EVENT_BUS.post(new StaffUseEvent(entityLiving, spawnGust))) {
-                        if (spawnGust) {
-                            EntityAirGust gust = new EntityAirGust(entityLiving.world);
-                            gust.setPosition(Vector.getLookRectangular(entityLiving)
-                                    .plus(Vector.getEntityPos(entityLiving))
-                                    .withY(entityLiving.getEyeHeight() +
-                                            entityLiving.getEntityBoundingBox().minY));
-                            gust.setAbility(new AbilityAirGust());
-                            gust.setOwner(entityLiving);
-                            gust.setVelocity(Vector.getLookRectangular(entityLiving).times(30));
-                            entityLiving.world.spawnEntity(gust);
-                            if (!isCreative) {
-                                data.addTickHandler(STAFF_GUST_HANDLER, new BendingContext(data, entityLiving, new Raytrace.Result()));
-                                stack.damageItem(2, entityLiving);
-                            }
-                            return true;
-                        } else {
-                            EntityAirblade blade = new EntityAirblade(entityLiving.world);
-                            blade.setPosition(Vector.getLookRectangular(entityLiving)
-                                    .plus(Vector.getEntityPos(entityLiving))
-                                    .withY(entityLiving.getEyeHeight() + entityLiving
-                                            .getEntityBoundingBox().minY));
-                            blade.setAbility(new AbilityAirblade());
-                            blade.rotationYaw = entityLiving.rotationYaw;
-                            blade.rotationPitch = entityLiving.rotationPitch;
-                            blade.setOwner(entityLiving);
-                            blade.setVelocity(Vector.getLookRectangular(entityLiving).times(30));
-                            blade.setDamage(2);
-                            entityLiving.world.spawnEntity(blade);
-                            if (!isCreative) {
-                                data.addTickHandler(STAFF_GUST_HANDLER, new BendingContext(data, entityLiving, new Raytrace.Result()));
-                                stack.damageItem(2, entityLiving);
-                            }
-                            return true;
-                        }
-                    }
-                }
-                if (data.hasTickHandler(STAFF_GUST_HANDLER) && !entityLiving.world.isRemote) {
-                    MSG_AIR_STAFF_COOLDOWN.send(entityLiving);
-                }
-                return true;
-            }
-            return false;
-        } else {
-            if (!data.hasTickHandler(STAFF_GUST_HANDLER) && !entityLiving.world.isRemote) {
-                if (!MinecraftForge.EVENT_BUS.post(new StaffUseEvent(entityLiving, spawnGust))) {
-                    if (spawnGust) {
-                        EntityAirGust gust = new EntityAirGust(entityLiving.world);
-                        gust.setPosition(Vector.getLookRectangular(entityLiving)
-                                .plus(Vector.getEntityPos(entityLiving))
-                                .withY(entityLiving.getEyeHeight() + entityLiving
-                                        .getEntityBoundingBox().minY));
-                        gust.setAbility(new AbilityAirGust());
-                        gust.setOwner(entityLiving);
-                        gust.setVelocity(Vector.getLookRectangular(entityLiving).times(30));
-                        entityLiving.world.spawnEntity(gust);
-                        if (!isCreative) {
-                            data.addTickHandler(STAFF_GUST_HANDLER, new BendingContext(data, entityLiving, new Raytrace.Result()));
-                            stack.damageItem(2, entityLiving);
-                        }
-                        return true;
-                    } else {
-                        EntityAirblade blade = new EntityAirblade(entityLiving.world);
-                        blade.setPosition(Vector.getLookRectangular(entityLiving)
-                                .plus(Vector.getEntityPos(entityLiving))
-                                .withY(entityLiving.getEyeHeight() + entityLiving
-                                        .getEntityBoundingBox().minY));
-                        blade.setAbility(new AbilityAirblade());
-                        blade.setOwner(entityLiving);
-                        blade.rotationYaw = entityLiving.rotationYaw;
-                        blade.rotationPitch = entityLiving.rotationPitch;
-                        blade.setVelocity(Vector.getLookRectangular(entityLiving).times(30));
-                        blade.setDamage(2);
-                        entityLiving.world.spawnEntity(blade);
-                        if (!isCreative) {
-                            data.addTickHandler(STAFF_GUST_HANDLER, new BendingContext(data, entityLiving, new Raytrace.Result()));
-                            stack.damageItem(2, entityLiving);
-                        }
-                        return true;
-                    }
-
-                }
-            }
-            if (data.hasTickHandler(STAFF_GUST_HANDLER) && entityLiving instanceof EntityPlayer
-                    && !entityLiving.world.isRemote) {
-                MSG_AIR_STAFF_COOLDOWN.send(entityLiving);
-            }
-            return false;
-        }
-
     }
 
     @Override
@@ -282,7 +189,6 @@ public class ItemHangGliderBase extends ItemSword implements IGlider, AvatarItem
             }
         }
     }
-
 
     @Override
     public Multimap<String, AttributeModifier> getItemAttributeModifiers(
@@ -361,6 +267,9 @@ public class ItemHangGliderBase extends ItemSword implements IGlider, AvatarItem
         }
     }
 
+
+    //==============================================IGlider========================================
+
     /**
      * Return whether this item is repairable in an anvil. Uses leather.
      */
@@ -374,9 +283,6 @@ public class ItemHangGliderBase extends ItemSword implements IGlider, AvatarItem
         return false;
 
     }
-
-
-    //==============================================IGlider========================================
 
     @Override
     public float getMaxSpeed() {
@@ -494,7 +400,6 @@ public class ItemHangGliderBase extends ItemSword implements IGlider, AvatarItem
     public void setModelTexture(ResourceLocation resourceLocation) {
         modelRL = resourceLocation;
     }
-
 
     @Override
     public NBTTagCompound serializeNBT() {
