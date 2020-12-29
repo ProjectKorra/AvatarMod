@@ -189,8 +189,6 @@ public class SkillsGui extends GuiContainer implements AvatarGui {
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
 
-		BendingData data = BendingData.get(mc.player);
-
 		// Update background to have the correct scaling based on screen dimensions
 		float imageWidth = AvatarUiTextures.getBendingBackgroundWidth(bendingId);
 		float imageHeight = AvatarUiTextures.getBendingBackgroundHeight(bendingId);

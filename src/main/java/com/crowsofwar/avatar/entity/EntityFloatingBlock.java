@@ -50,7 +50,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
-import java.util.List;
 
 import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.util.data.StatusControlController.PLACE_BLOCK;
@@ -332,7 +331,7 @@ public class EntityFloatingBlock extends EntityOffensive {
     @Nullable
     @Override
     public SoundEvent[] getSounds() {
-        return new SoundEvent[] {
+        return new SoundEvent[]{
                 world.getBlockState(getPosition().down()).getBlock().getSoundType().getBreakSound()
         };
     }
@@ -518,8 +517,9 @@ public class EntityFloatingBlock extends EntityOffensive {
 
     private void removeStatCtrl() {
         if (getOwner() != null) {
-            BendingData bD = BendingData.get(getOwner());
-            bD.removeStatusControls(THROW_BLOCK, PLACE_BLOCK);
+            BendingData bD = BendingData.getFromEntity(getOwner());
+            if (bD != null)
+                bD.removeStatusControls(THROW_BLOCK, PLACE_BLOCK);
         }
 
     }

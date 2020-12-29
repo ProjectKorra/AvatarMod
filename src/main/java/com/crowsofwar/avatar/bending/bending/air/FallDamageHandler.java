@@ -23,8 +23,8 @@ public class FallDamageHandler {
 		if (entity instanceof EntityBender || entity instanceof EntityPlayer) {
 			Bender bender = Bender.get(entity);
 			if (bender != null) {
-				BendingData ctx = BendingData.get(entity);
-				if (ctx.hasBendingId(Airbending.ID)) {
+				BendingData ctx = BendingData.getFromEntity(entity);
+				if (ctx != null && ctx.hasBendingId(Airbending.ID)) {
 					if (STATS_CONFIG.passiveSettings.noFallDamageAir) {
 						if (event.getSource() == DamageSource.FALL) {
 							event.setAmount(0);

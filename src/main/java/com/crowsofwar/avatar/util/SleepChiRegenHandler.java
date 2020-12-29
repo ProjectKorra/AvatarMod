@@ -36,14 +36,16 @@ public class SleepChiRegenHandler {
 	@SubscribeEvent
 	public static void onSlept(PlayerWakeUpEvent e) {
 		EntityPlayer player = e.getEntityPlayer();
-		BendingData data = BendingData.get(player);
-		Chi chi = data.chi();
-		World world = player.world;
+		BendingData data = BendingData.getFromEntity(player);
+		if (data != null) {
+			Chi chi = data.chi();
+			World world = player.world;
 
-		if (world.getWorldTime() % 24000 <= 2) {
-			chi.setAvailableChi(CHI_CONFIG.maxAvailableChi);
-			chi.changeTotalChi(STATS_CONFIG.sleepChiRegen);
-			AvatarAnalytics.INSTANCE.pushEvent(AnalyticEvents.onSleepRestoration());
+			if (world.getWorldTime() % 24000 <= 2) {
+				chi.setAvailableChi(CHI_CONFIG.maxAvailableChi);
+				chi.changeTotalChi(STATS_CONFIG.sleepChiRegen);
+				AvatarAnalytics.INSTANCE.pushEvent(AnalyticEvents.onSleepRestoration());
+			}
 		}
 
 	}

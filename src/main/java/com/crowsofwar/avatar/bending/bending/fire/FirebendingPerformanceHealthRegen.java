@@ -21,9 +21,9 @@ public class FirebendingPerformanceHealthRegen {
 
 			EntityPlayer player = e.player;
 			World world = player.world;
-			BendingData data = BendingData.get(player);
+			BendingData data = BendingData.getFromEntity(player);
 
-			if (!world.isRemote && data.hasBendingId(Firebending.ID)) {
+			if (!world.isRemote && data != null && data.hasBendingId(Firebending.ID)) {
 
 				BattlePerformanceScore performance = data.getPerformance();
 				double score = performance.getScore();

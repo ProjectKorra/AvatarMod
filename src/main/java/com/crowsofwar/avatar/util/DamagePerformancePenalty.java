@@ -17,20 +17,21 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class DamagePerformancePenalty {
 
-	@SubscribeEvent
-	public static void onTakenDamage(LivingHurtEvent e) {
+    @SubscribeEvent
+    public static void onTakenDamage(LivingHurtEvent e) {
 
-		EntityLivingBase entity = e.getEntityLiving();
+        EntityLivingBase entity = e.getEntityLiving();
 
-		if (entity instanceof EntityPlayer && !entity.world.isRemote) {
+        if (entity instanceof EntityPlayer && !entity.world.isRemote) {
 
-			float penalty = e.getAmount() * -5;
+            float penalty = e.getAmount() * -5;
 
-			BendingData data = BendingData.get(entity);
-			data.getPerformance().modifyScore(penalty);
+            BendingData data = BendingData.getFromEntity(entity);
+            if (data != null)
+                data.getPerformance().modifyScore(penalty);
 
-		}
+        }
 
-	}
+    }
 
 }

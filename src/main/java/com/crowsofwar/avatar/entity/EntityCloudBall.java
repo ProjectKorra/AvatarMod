@@ -265,8 +265,8 @@ public class EntityCloudBall extends EntityOffensive {
             if (getBehavior() instanceof CloudburstBehavior.Thrown) {
                 if (chismash) {
                     if (entity instanceof EntityLivingBase) {
-                        if (Bender.isBenderSupported((EntityLivingBase) entity)) {
-                            BendingData data = BendingData.get((EntityLivingBase) entity);
+                        BendingData data = BendingData.getFromEntity((EntityLivingBase) entity);
+                        if (data != null) {
                             for (UUID uuid : data.getAllBendingIds()) {
                                 CloudburstPowerModifier cloudModifier = new CloudburstPowerModifier();
                                 cloudModifier.setTicks(100);

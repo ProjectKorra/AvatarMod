@@ -28,7 +28,10 @@ public class GliderPlayerHelper {
      * @param player - the player gliding
      */
     public static void updatePosition(EntityPlayer player){
-        boolean isAirbender = BendingData.get(player).getActiveBending() instanceof Airbending;
+        BendingData data = BendingData.getFromEntity(player);
+        boolean isAirbender = false;
+        if (data != null)
+            isAirbender = data.getActiveBending() instanceof Airbending;
         ItemStack glider = GliderHelper.getGlider(player);
         if(isValidGlider(glider)) {
             IGlider iGlider = (IGlider) glider.getItem();

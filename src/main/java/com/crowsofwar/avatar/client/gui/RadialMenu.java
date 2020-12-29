@@ -21,11 +21,11 @@ import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import com.crowsofwar.avatar.client.controls.AvatarControl;
+import com.crowsofwar.avatar.network.packets.PacketSSkillsMenu;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
-import com.crowsofwar.avatar.network.packets.PacketSSkillsMenu;
 import com.crowsofwar.gorecore.format.FormattedMessage;
 import com.crowsofwar.gorecore.format.FormattedMessageProcessor;
 import net.minecraft.client.Minecraft;
@@ -45,233 +45,236 @@ import static com.crowsofwar.gorecore.format.FormattedMessage.newChatMessage;
 
 public class RadialMenu extends Gui {
 
-	/**
-	 * Center of rotation X position for radial_segment.png
-	 */
-	public static final int segmentX = 207;
-	/**
-	 * Center of rotation Y position for radial_segment.png
-	 */
-	public static final int segmentY = 296;
-	/**
-	 * Scaling factor for the radial menu
-	 */
-	public static final float menuScale = 0.36f;
-	private static final FormattedMessage MSG_RADIAL_XP = newChatMessage("avatar.radial.xp", "level", "xp");
-	private final BendingStyle controller;
-	private final Minecraft mc = Minecraft.getMinecraft();
-	private final Bender bender;
-	private RadialSegment[] segments;
-	private Ability[] controls;
-	private MenuTheme theme;
-	/**
-	 * Current radial segment that the mouse is over, null for none.
-	 */
-	private RadialSegment prevMouseover;
-	private int ticksExisted;
+    /**
+     * Center of rotation X position for radial_segment.png
+     */
+    public static final int segmentX = 207;
+    /**
+     * Center of rotation Y position for radial_segment.png
+     */
+    public static final int segmentY = 296;
+    /**
+     * Scaling factor for the radial menu
+     */
+    public static final float menuScale = 0.36f;
+    private static final FormattedMessage MSG_RADIAL_XP = newChatMessage("avatar.radial.xp", "level", "xp");
+    private final BendingStyle controller;
+    private final Minecraft mc = Minecraft.getMinecraft();
+    private final Bender bender;
+    private final RadialSegment[] segments;
+    private final Ability[] controls;
+    private final MenuTheme theme;
+    /**
+     * Current radial segment that the mouse is over, null for none.
+     */
+    private RadialSegment prevMouseover;
+    private int ticksExisted;
 
-	/**
-	 * Create a new radial menu with the given controls.
-	 *
-	 * @param controls A 8-element array of controls. If the arguments passed are
-	 *                 less than 8, then the array is filled with null. The arguments
-	 *                 can only be a maximum of 8.
-	 */
-	public RadialMenu(BendingStyle controller, MenuTheme theme, Ability... controls) {
-		this.controller = controller;
-		this.theme = theme;
-		this.segments = new RadialSegment[8];
-		this.ticksExisted = 0;
+    /**
+     * Create a new radial menu with the given controls.
+     *
+     * @param controls A 8-element array of controls. If the arguments passed are
+     *                 less than 8, then the array is filled with null. The arguments
+     *                 can only be a maximum of 8.
+     */
+    public RadialMenu(BendingStyle controller, MenuTheme theme, Ability... controls) {
+        this.controller = controller;
+        this.theme = theme;
+        this.segments = new RadialSegment[8];
+        this.ticksExisted = 0;
 
-		if (controls == null) {
-			throw new IllegalArgumentException("Controls is null");
-		}
-		if (controls.length > 8) {
-			throw new IllegalArgumentException("The length of controls can't be more than 8");
-		}
+        if (controls == null) {
+            throw new IllegalArgumentException("Controls is null");
+        }
+        if (controls.length > 8) {
+            throw new IllegalArgumentException("The length of controls can't be more than 8");
+        }
 
-		Ability[] ctrl = new Ability[8];
-		for (int i = 0; i < ctrl.length; i++) {
-			ctrl[i] = i < controls.length ? controls[i] : null;
-		}
-		this.controls = ctrl;
+        Ability[] ctrl = new Ability[8];
+        for (int i = 0; i < ctrl.length; i++) {
+            ctrl[i] = i < controls.length ? controls[i] : null;
+        }
+        this.controls = ctrl;
 
-		for (int i = 0; i < segments.length; i++) {
-			segments[i] = new RadialSegment(this, theme, i, controls[i], controller);
-		}
+        for (int i = 0; i < segments.length; i++) {
+            segments[i] = new RadialSegment(this, theme, i, controls[i], controller);
+        }
 
-		this.bender = Bender.get(mc.player);
+        this.bender = Bender.get(mc.player);
 
-	}
+    }
 
-	public void drawScreen(int mouseX, int mouseY, ScaledResolution resolution) {
+    public void drawScreen(int mouseX, int mouseY, ScaledResolution resolution) {
 
-		float scale = ticksExisted <= 10 ? 0.5f + (float) Math.sqrt(ticksExisted / 40f) : 1;
+        float scale = ticksExisted <= 10 ? 0.5f + (float) Math.sqrt(ticksExisted / 40f) : 1;
 
-		for (int i = 0; i < segments.length; i++) {
-			if (segments[i] == null) continue;
-			boolean hover = segments[i].isMouseHover(mouseX, mouseY, resolution);
-			segments[i].draw(hover, resolution, scale * CLIENT_CONFIG.radialMenuAlpha, scale * 0.9F);
+        for (int i = 0; i < segments.length; i++) {
+            if (segments[i] == null) continue;
+            boolean hover = segments[i].isMouseHover(mouseX, mouseY, resolution);
+            segments[i].draw(hover, resolution, scale * CLIENT_CONFIG.radialMenuAlpha, scale * 0.9F);
 
-			if (hover) {
-				displaySegmentDetails(controls[i], resolution);
-			}
-		}
+            if (hover) {
+                displaySegmentDetails(controls[i], resolution);
+            }
+        }
 
-	}
+    }
 
-	private void displaySegmentDetails(Ability ability, ScaledResolution resolution) {
+    private void displaySegmentDetails(Ability ability, ScaledResolution resolution) {
 
-		String nameKey = ability == null ? "avatar.ability.undefined" : "avatar.ability." + ability.getName();
-		int x = resolution.getScaledWidth() / 2;
-		int y = (int) (resolution.getScaledHeight() / 2 - mc.fontRenderer.FONT_HEIGHT * 1.5);
+        String nameKey = ability == null ? "avatar.ability.undefined" : "avatar.ability." + ability.getName();
+        int x = resolution.getScaledWidth() / 2;
+        int y = (int) (resolution.getScaledHeight() / 2 - mc.fontRenderer.FONT_HEIGHT * 1.5);
 
-		BendingData data = BendingData.getFromEntity(mc.player);
-		if (data != null) {
+        BendingData data = BendingData.getFromEntity(mc.player);
+        if (data != null) {
 
-			int level = 0;
+            int level = 0;
 
-			String secondKey = "avatar.radial.undefined";
-			String[] secondArgs = {"", ""};
-			if (ability != null) {
-				AbilityData abilityData = data.getAbilityData(ability);
-				level = abilityData.getLevel();
+            String secondKey = "avatar.radial.undefined";
+            String[] secondArgs = {"", ""};
+            if (ability != null) {
+                AbilityData abilityData = data.getAbilityData(ability);
+                level = abilityData.getLevel();
 
-				secondKey = "avatar.radial.xp";
-				secondArgs[0] = abilityData.getLevel() + "";
-				secondArgs[1] = (int) (abilityData.getXp()) + "";
+                secondKey = "avatar.radial.xp";
+                secondArgs[0] = abilityData.getLevel() + "";
+                secondArgs[1] = (int) (abilityData.getXp()) + "";
 
-				if (abilityData.getLevel() == 3) {
-					String path = abilityData.getPath() == AbilityTreePath.FIRST ? "1" : "2";
-					secondKey = nameKey + ".lvl4_" + path;
-				}
-				boolean creative = mc.player.capabilities.isCreativeMode;
-				if (abilityData.isLocked() && !creative) {
-					secondKey = "avatar.radial.locked2";
-					secondArgs[0] = AvatarMod.proxy.getKeyHandler().getDisplayName(AvatarControl.KEY_SKILLS)
-							+ "";
-					nameKey = "avatar.radial.locked1";
-				}
-				if (abilityData.isLocked() && creative) {
-					secondKey = "avatar.radial.lockedCreative2";
-				}
+                if (abilityData.getLevel() == 3) {
+                    String path = abilityData.getPath() == AbilityTreePath.FIRST ? "1" : "2";
+                    secondKey = nameKey + ".lvl4_" + path;
+                }
+                boolean creative = mc.player.capabilities.isCreativeMode;
+                if (abilityData.isLocked() && !creative) {
+                    secondKey = "avatar.radial.locked2";
+                    secondArgs[0] = AvatarMod.proxy.getKeyHandler().getDisplayName(AvatarControl.KEY_SKILLS)
+                            + "";
+                    nameKey = "avatar.radial.locked1";
+                }
+                if (abilityData.isLocked() && creative) {
+                    secondKey = "avatar.radial.lockedCreative2";
+                }
 
-			}
-			String second = I18n.format(secondKey);
+            }
+            String second = I18n.format(secondKey);
 
-			// in the case of level 4 upgrades, the upgrade name is displayed
-			// cut out the second line
-			if (second.contains(" ;; ")) {
-				second = second.substring(0, second.indexOf(" ;; "));
-			}
+            // in the case of level 4 upgrades, the upgrade name is displayed
+            // cut out the second line
+            if (second.contains(" ;; ")) {
+                second = second.substring(0, second.indexOf(" ;; "));
+            }
 
-			//Ignore if your IDE says that the cast is redundant, it'll then complain that the object specified is too ambiguous.
+            //Ignore if your IDE says that the cast is redundant, it'll then complain that the object specified is too ambiguous.
 
-			//Ignore the redundant casting, it stops Intellij from throwing a fit
-			second = FormattedMessageProcessor.formatText(MSG_RADIAL_XP, second,
-					(Object[]) ArrayUtils.addAll(secondArgs, level + ""));
+            //Ignore the redundant casting, it stops Intellij from throwing a fit
+            second = FormattedMessageProcessor.formatText(MSG_RADIAL_XP, second,
+                    (Object[]) ArrayUtils.addAll(secondArgs, level + ""));
 
-			drawCenteredString(mc.fontRenderer, second, x,
-					(int) (resolution.getScaledHeight() / 2 + mc.fontRenderer.FONT_HEIGHT * 0.5),
-					0xffffff);
+            drawCenteredString(mc.fontRenderer, second, x,
+                    (int) (resolution.getScaledHeight() / 2 + mc.fontRenderer.FONT_HEIGHT * 0.5),
+                    0xffffff);
 
-		}
+        }
 
-		drawCenteredString(mc.fontRenderer, I18n.format(nameKey), x, y, 0xffffff);
+        drawCenteredString(mc.fontRenderer, I18n.format(nameKey), x, y, 0xffffff);
 
-	}
+    }
 
-	private void playClickSound(float pitch) {
-		mc.getSoundHandler()
-				.playSound(PositionedSoundRecord.getMasterRecord(controller.getRadialMenuSound(), pitch));
-	}
+    private void playClickSound(float pitch) {
+        mc.getSoundHandler()
+                .playSound(PositionedSoundRecord.getMasterRecord(controller.getRadialMenuSound(), pitch));
+    }
 
-	/**
-	 * Handle key release. Triggers new abilities if possible.
-	 *
-	 * @param mouseX Mouse x-pos
-	 * @param mouseY Mouse y-pos
-	 * @return Whether to close the screen
-	 */
-	public boolean updateScreen(int mouseX, int mouseY, ScaledResolution resolution) {
+    /**
+     * Handle key release. Triggers new abilities if possible.
+     *
+     * @param mouseX Mouse x-pos
+     * @param mouseY Mouse y-pos
+     * @return Whether to close the screen
+     */
+    public boolean updateScreen(int mouseX, int mouseY, ScaledResolution resolution) {
 
-		ticksExisted++;
+        ticksExisted++;
 
-		boolean closeGui = !AvatarControl.KEY_USE_BENDING.isDown()
-				|| mc.gameSettings.keyBindAttack.isKeyDown();
+        boolean closeGui = !AvatarControl.KEY_USE_BENDING.isDown()
+                || mc.gameSettings.keyBindAttack.isKeyDown();
+        BendingData data = BendingData.getFromEntity(mc.player);
+        if (data != null) {
 
-		// Find current mouse over
-		RadialSegment currentMouseover = null;
-		for (RadialSegment segment : segments) {
-			if (segment.isMouseHover(mouseX, mouseY, resolution)) {
-				currentMouseover = segment;
-				break;
-			}
-		}
+            // Find current mouse over
+            RadialSegment currentMouseover = null;
+            for (RadialSegment segment : segments) {
+                if (segment.isMouseHover(mouseX, mouseY, resolution)) {
+                    currentMouseover = segment;
+                    break;
+                }
+            }
 
-		if (currentMouseover != null && currentMouseover != prevMouseover) {
-			playClickSound(1.3f);
-		}
-		prevMouseover = currentMouseover;
-		if (currentMouseover == null) {
+            if (currentMouseover != null && currentMouseover != prevMouseover) {
+                playClickSound(1.3f);
+            }
+            prevMouseover = currentMouseover;
+            if (currentMouseover == null) {
 
-			int centerX = resolution.getScaledWidth() / 2, centerY = resolution.getScaledHeight() / 2;
-			MenuTheme theme = controller.getRadialMenu().getTheme();
+                int centerX = resolution.getScaledWidth() / 2, centerY = resolution.getScaledHeight() / 2;
+                MenuTheme theme = controller.getRadialMenu().getTheme();
 
-			drawCenteredString(mc.fontRenderer,
-					"" + TextFormatting.BOLD + I18n.format("avatar." + controller.getName()),
-					centerX, centerY - mc.fontRenderer.FONT_HEIGHT, theme.getText());
+                drawCenteredString(mc.fontRenderer,
+                        "" + TextFormatting.BOLD + I18n.format("avatar." + controller.getName()),
+                        centerX, centerY - mc.fontRenderer.FONT_HEIGHT, theme.getText());
 
-		}
+            }
 
 
-		if (closeGui) {
-			//For using the mouse
-			if (SKILLS_CONFIG.abilitySettings.useRadialMouse) {
-				for (int i = 0; i < segments.length; i++) {
-					if (controls[i] == null) continue;
-					if (segments[i].isMouseHover(mouseX, mouseY, resolution)) {
-						boolean isSwitchPathKeyDown = AvatarControl.KEY_SWITCH.isDown();
+            if (closeGui) {
+                //For using the mouse
+                if (SKILLS_CONFIG.abilitySettings.useRadialMouse) {
+                    for (int i = 0; i < segments.length; i++) {
+                        if (controls[i] == null) continue;
+                        if (segments[i].isMouseHover(mouseX, mouseY, resolution)) {
+                            boolean isSwitchPathKeyDown = AvatarControl.KEY_SWITCH.isDown();
 
-						bender.executeAbility(controls[i], isSwitchPathKeyDown);
-						AvatarUiRenderer.fade(segments[i]);
-						playClickSound(0.8f);
-						break;
+                            bender.executeAbility(controls[i], isSwitchPathKeyDown);
+                            AvatarUiRenderer.fade(segments[i]);
+                            playClickSound(0.8f);
+                            break;
 
-					}
-				}
-			}
+                        }
+                    }
+                }
 
-		}
+            }
 
-		//For using numbers. We put it after the mouse code to prevent abilities executing twice.
-		if (SKILLS_CONFIG.abilitySettings.useRadialNumbers) {
-			 for (int i = 0; i < 8; i++) {
-			 	KeyBinding binding = Minecraft.getMinecraft().gameSettings.keyBindsHotbar[i];
-			 	if (binding.isKeyDown()) {
-			 		//Checks to make sure a corresponding ability is on the radial menu
-			 		if (controls[i] != null) {
-						boolean isSwitchPathKeyDown = AvatarControl.KEY_SWITCH.isDown();
+            //For using numbers. We put it after the mouse code to prevent abilities executing twice.
+            if (SKILLS_CONFIG.abilitySettings.useRadialNumbers) {
+                for (int i = 0; i < 8; i++) {
+                    KeyBinding binding = Minecraft.getMinecraft().gameSettings.keyBindsHotbar[i];
+                    if (binding.isKeyDown()) {
+                        //Checks to make sure a corresponding ability is on the radial menu
+                        if (controls[i] != null) {
+                            boolean isSwitchPathKeyDown = AvatarControl.KEY_SWITCH.isDown();
 
-						bender.executeAbility(controls[i], isSwitchPathKeyDown);
-						AvatarUiRenderer.fade(segments[i]);
-						playClickSound(0.8f);
-						//Breaks the loop
-						closeGui = true;
-						break;
-					}
-				}
-			 }
-		}
+                            bender.executeAbility(controls[i], isSwitchPathKeyDown);
+                            AvatarUiRenderer.fade(segments[i]);
+                            playClickSound(0.8f);
+                            //Breaks the loop
+                            closeGui = true;
+                            break;
+                        }
+                    }
+                }
+            }
 
-		// Right-clicking on segment opens bending menu
-		if (mc.gameSettings.keyBindUseItem.isKeyDown() && currentMouseover != null) {
-			UUID activeBendingId = BendingData.get(mc.player).getActiveBendingId();
-			AvatarMod.network.sendToServer(new PacketSSkillsMenu(activeBendingId, currentMouseover.getAbility()));
-			closeGui = true;
-		}
+            // Right-clicking on segment opens bending menu
+            if (mc.gameSettings.keyBindUseItem.isKeyDown() && currentMouseover != null) {
+                UUID activeBendingId = data.getActiveBendingId();
+                AvatarMod.network.sendToServer(new PacketSSkillsMenu(activeBendingId, currentMouseover.getAbility()));
+                closeGui = true;
+            }
 
-		return closeGui;
-	}
+        } else closeGui = true;
+        return closeGui;
+    }
 
 }

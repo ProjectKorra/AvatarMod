@@ -200,9 +200,11 @@ public class EntityWall extends AvatarEntity {
 			}
 		}
 		if (getOwner() != null) {
-			BendingData bD = BendingData.get(getOwner());
-			bD.removeStatusControl(StatusControlController.PLACE_WALL);
-			bD.removeStatusControl(StatusControlController.DROP_WALL);
+			BendingData bD = BendingData.getFromEntity(getOwner());
+			if (bD != null) {
+				bD.removeStatusControl(StatusControlController.PLACE_WALL);
+				bD.removeStatusControl(StatusControlController.DROP_WALL);
+			}
 		}
 		super.setDead();
 	}

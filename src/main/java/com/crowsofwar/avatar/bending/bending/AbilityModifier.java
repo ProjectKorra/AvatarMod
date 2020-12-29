@@ -1,5 +1,7 @@
 package com.crowsofwar.avatar.bending.bending;
 
+import jdk.nashorn.internal.objects.NativeUint8Array;
+
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -17,6 +19,7 @@ public class AbilityModifier {
     private UUID id = UUID.fromString("55c88686-6fc1-4cf5-8a31-887702fb2d5e");
 
     public AbilityModifier() {
+        properties = new HashMap<>();
     }
 
     public AbilityModifier(HashMap<String, Number> properties) {

@@ -1,9 +1,9 @@
 package com.crowsofwar.avatar.bending.bending.water;
 
 import com.crowsofwar.avatar.AvatarInfo;
+import com.crowsofwar.avatar.entity.mob.EntityBender;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
-import com.crowsofwar.avatar.entity.mob.EntityBender;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
@@ -25,21 +25,22 @@ public class WaterPassives {
 			Bender bender = Bender.get(entity);
 			if (bender != null) {
 				if (bender.getData() != null) {
-					BendingData ctx = BendingData.get(entity);
-					if (ctx.hasBendingId(Waterbending.ID)) {
-						if (entity.isInWater()) {
-							if (STATS_CONFIG.passiveSettings.waterBreathing) {
-								entity.addPotionEffect(new PotionEffect(MobEffects.WATER_BREATHING, 10, 0, false, false));
+					BendingData ctx = BendingData.getFromEntity(entity);
+					if (ctx != null) {
+						if (ctx.hasBendingId(Waterbending.ID)) {
+							if (entity.isInWater()) {
+								if (STATS_CONFIG.passiveSettings.waterBreathing) {
+									entity.addPotionEffect(new PotionEffect(MobEffects.WATER_BREATHING, 10, 0, false, false));
+								}
+								if (STATS_CONFIG.passiveSettings.hasteInWater) {
+									entity.addPotionEffect(new PotionEffect(MobEffects.HASTE, 10, 0, false, false));
+								}
+								//entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 10, 0));
+								//OP right now; will be implemented later with the skill tree
 							}
-							if (STATS_CONFIG.passiveSettings.hasteInWater) {
-								entity.addPotionEffect(new PotionEffect(MobEffects.HASTE, 10, 0, false, false));
-							}
-							//entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 10, 0));
-							//OP right now; will be implemented later with the skill tree
 						}
 					}
 				}
-
 			}
 		}
 	}

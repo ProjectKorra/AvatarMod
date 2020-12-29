@@ -185,12 +185,12 @@ public class EntityAirBubble extends EntityShield {
         }
         if (getOwner() != null) {
             EntityAirBubble bubble = AvatarEntity.lookupControlledEntity(world, EntityAirBubble.class, getOwner());
-            BendingData bD = BendingData.get(getOwner());
-            if (bubble == null && (bD.hasStatusControl(StatusControlController.BUBBLE_CONTRACT) || bD.hasStatusControl(StatusControlController.BUBBLE_EXPAND))) {
+            BendingData bD = BendingData.getFromEntity(getOwner());
+            if (bubble == null && bD != null && (bD.hasStatusControl(StatusControlController.BUBBLE_CONTRACT) || bD.hasStatusControl(StatusControlController.BUBBLE_EXPAND))) {
                 bD.removeStatusControl(StatusControlController.BUBBLE_CONTRACT);
                 bD.removeStatusControl(StatusControlController.BUBBLE_EXPAND);
             }
-            if (bubble != null && !(bD.hasStatusControl(StatusControlController.BUBBLE_CONTRACT) || bD.hasStatusControl(StatusControlController.BUBBLE_EXPAND))) {
+            if (bubble != null && bD != null && !(bD.hasStatusControl(StatusControlController.BUBBLE_CONTRACT) || bD.hasStatusControl(StatusControlController.BUBBLE_EXPAND))) {
                 bD.addStatusControl(StatusControlController.BUBBLE_CONTRACT);
                 bD.addStatusControl(StatusControlController.BUBBLE_EXPAND);
             }

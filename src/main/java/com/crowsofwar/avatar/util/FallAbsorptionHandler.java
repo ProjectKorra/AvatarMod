@@ -29,19 +29,21 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class FallAbsorptionHandler {
 
-	@SubscribeEvent
-	public static void onFall(LivingFallEvent e) {
-		Entity entity = e.getEntity();
-		if (entity instanceof EntityPlayer && !entity.world.isRemote && !(entity instanceof FakePlayer)) {
-			EntityPlayer player = (EntityPlayer) entity;
-			BendingData data = BendingData.get(player);
-			MiscData miscData = data.getMiscData();
-			if (miscData.getFallAbsorption() != 0) {
-				e.setDistance(e.getDistance() - miscData.getFallAbsorption());
-				if (e.getDistance() < 0) e.setDistance(0);
-				miscData.setFallAbsorption(0);
-			}
-		}
-	}
+    @SubscribeEvent
+    public static void onFall(LivingFallEvent e) {
+        Entity entity = e.getEntity();
+        if (entity instanceof EntityPlayer && !entity.world.isRemote && !(entity instanceof FakePlayer)) {
+            EntityPlayer player = (EntityPlayer) entity;
+            BendingData data = BendingData.getFromEntity(player);
+            if (data != null) {
+                MiscData miscData = data.getMiscData();
+                if (miscData.getFallAbsorption() != 0) {
+                    e.setDistance(e.getDistance() - miscData.getFallAbsorption());
+                    if (e.getDistance() < 0) e.setDistance(0);
+                    miscData.setFallAbsorption(0);
+                }
+            }
+        }
+    }
 
 }
