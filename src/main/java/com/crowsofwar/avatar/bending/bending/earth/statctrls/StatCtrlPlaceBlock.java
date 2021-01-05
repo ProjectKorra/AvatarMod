@@ -113,7 +113,7 @@ public class StatCtrlPlaceBlock extends StatusControl {
                         Vector force = new Vector(pos).minus(floating.velocity()).normalize();
 
                         if (bender.consumeChi(chiCost)) {
-                            abilityData.addXp(control.getProperty(Ability.XP_USE).floatValue());
+                            abilityData.addXp(control.getProperty(Ability.XP_USE, abilityData).floatValue());
                             abilityData.addBurnout(burnout);
                             abilityData.setAbilityCooldown(cooldown);
                             if (entity instanceof EntityPlayer)

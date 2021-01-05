@@ -125,7 +125,7 @@ public class AbilityWall extends Ability {
             }
 
             if (wallCreated) {
-                abilityData.addXp(getProperty(XP_USE).floatValue());
+                abilityData.addXp(getProperty(XP_USE, ctx).floatValue());
                 ctx.getData().addStatusControl(DROP_WALL);
                 ctx.getData().addStatusControl(PLACE_WALL);
                 if (getBooleanProperty(SHOOT_BLOCKS, ctx)) {

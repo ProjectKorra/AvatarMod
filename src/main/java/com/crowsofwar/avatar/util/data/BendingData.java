@@ -49,11 +49,11 @@ public class BendingData {
     private final Map<String, AbilityData> abilityData;
     private final Set<TickHandler> tickHandlers;
     private final Map<TickHandler, Integer> tickHandlerDuration;
+    private final Map<UUID, PowerRatingManager> powerRatingManagers;
     private BattlePerformanceScore performance;
     private UUID activeBending;
     private Chi chi;
     private MiscData miscData;
-    private final Map<UUID, PowerRatingManager> powerRatingManagers;
     private Vision vision;
 
     /**
@@ -184,6 +184,27 @@ public class BendingData {
         }
     }
 
+    public void applyModifiersToAll(AbilityModifier... modifiers) {
+        for (Ability ability : Abilities.all())
+            getAbilityData(ability).addModiifers(modifiers);
+    }
+
+    public void applyModifiersToAbilities(List<Ability> abilities, AbilityModifier... modifiers) {
+        for (Ability ability : abilities)
+            getAbilityData(ability).addModiifers(modifiers);
+    }
+
+    public void removeModifiersFromAll(AbilityModifier... modifiers) {
+        for (Ability ability : Abilities.all())
+            getAbilityData(ability).removeModifiers(modifiers);
+    }
+
+    public void removeModifiersFromAbilities(List<Ability> abilities, AbilityModifier... modifiers) {
+        for (Ability ability : abilities)
+            getAbilityData(ability).removeModifiers(modifiers);
+    }
+
+
     /**
      * @see #removeBendingId(UUID)
      */
@@ -284,6 +305,7 @@ public class BendingData {
             if (statusControls.remove(sc))
                 save(DataCategory.STATUS_CONTROLS);
     }
+
     public List<StatusControl> getAllStatusControls() {
         return new ArrayList<>(statusControls);
     }

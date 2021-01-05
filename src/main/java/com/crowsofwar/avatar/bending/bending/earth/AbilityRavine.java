@@ -102,7 +102,7 @@ public class AbilityRavine extends Ability {
                     ravine.setLifeTime(lifetime);
                     ravine.setEntitySize(size);
                     ravine.setBehaviour(new RavineBehaviour());
-                    ravine.setXp(getProperty(XP_HIT).floatValue());
+                    ravine.setXp(getProperty(XP_HIT, ctx).floatValue());
                     ravine.setDistance(speed);
                     ravine.setBreakBlocks(getBooleanProperty(DESTRUCTION, ctx));
                     ravine.setDropEquipment(getBooleanProperty(DROP_EQUIPMENT, ctx));

@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.util.data;
 
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
+import com.crowsofwar.avatar.bending.bending.AbilityModifier;
 import com.crowsofwar.avatar.bending.bending.SourceInfo;
 import com.crowsofwar.gorecore.util.GoreCoreByteBufUtil;
 import io.netty.buffer.ByteBuf;
@@ -31,6 +32,9 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -57,6 +61,7 @@ public class AbilityData {
     //This is the most small brain solution ever, but we're rewriting later so who really cares
     private int useNumber;
     private SourceInfo sourceInfo;
+    private List<AbilityModifier> modifiers;
     /**
      * Current burnout amount of the ability.
      * <p>
@@ -97,6 +102,7 @@ public class AbilityData {
         this.shouldRegenBurnout = true;
         this.useNumber = 1;
         this.sourceInfo = new SourceInfo();
+        this.modifiers = new ArrayList<>();
     }
 
     public AbilityData(BendingData data, String abilityName, boolean switchPath) {
@@ -113,6 +119,7 @@ public class AbilityData {
         this.shouldRegenBurnout = true;
         this.useNumber = 1;
         this.sourceInfo = new SourceInfo();
+        this.modifiers = new ArrayList<>();
     }
 
     /**
@@ -188,6 +195,35 @@ public class AbilityData {
     public int getAbilityCooldown(EntityLivingBase entity) {
         if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) return 0;
         return getAbilityCooldown();
+    }
+
+    public Number modify(String property, Number val) {
+        //Returns the property's base value/1 by default
+        float baseVal = val.floatValue();
+        for (AbilityModifier modifier : getModifiers())
+            baseVal *= modifier.getProperty(property).floatValue();
+        return baseVal;
+    }
+
+    public void setModifier(List<AbilityModifier> modifiers) {
+        this.modifiers = modifiers;
+    }
+
+    public List<AbilityModifier> getModifiers() {
+        return this.modifiers;
+    }
+
+    public void addModiifers(AbilityModifier... modifiers) {
+        this.modifiers.addAll(Arrays.asList(modifiers));
+    }
+
+    public void removeModifiers(AbilityModifier... modifiers) {
+        //mutable ugh
+        this.modifiers.removeAll(Arrays.asList(modifiers.clone()));
+    }
+
+    public void clearModifier() {
+        this.modifiers = new ArrayList<>();
     }
 
     public void decrementCooldown() {
@@ -515,6 +551,9 @@ public class AbilityData {
         shouldRegenBurnout = nbt.getBoolean("RegenBurnout");
         useNumber = nbt.getInteger("Jumps");
         sourceInfo = sourceInfo.readFromNBT(nbt);
+        nbt.setInteger("Modifier Size", modifiers.size());
+        for (AbilityModifier modifier : modifiers)
+            modifier.toNBT(nbt);
     }
 
     public void writeToNbt(NBTTagCompound nbt) {
@@ -529,6 +568,12 @@ public class AbilityData {
         nbt.setBoolean("RegenBurnout", shouldRegenBurnout);
         nbt.setInteger("Jumps", useNumber);
         sourceInfo.writeToNBT(nbt);
+
+        int size = nbt.getInteger("Modifier Size");
+        modifiers.clear();
+        for (int i = 0; i < size; i++) {
+            modifiers.add(i, AbilityModifier.staticFromNBT(nbt));
+        }
     }
 
     public void toBytes(ByteBuf buf) {
@@ -543,6 +588,7 @@ public class AbilityData {
         buf.writeBoolean(shouldRegenBurnout);
         buf.writeInt(useNumber);
         sourceInfo.writeToBytes(buf);
+        buf.writeInt(modifiers.size());
     }
 
     private void fromBytes(ByteBuf buf) {
@@ -556,6 +602,11 @@ public class AbilityData {
         shouldRegenBurnout = buf.readBoolean();
         useNumber = buf.readInt();
         sourceInfo = sourceInfo.readFromBytes(buf);
+        int size = buf.readInt();
+        modifiers.clear();
+        for (int i = 0; i < size; i++) {
+            modifiers.add(i, AbilityModifier.staticFromBytes(buf));
+        }
     }
 
     /**

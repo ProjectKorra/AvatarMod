@@ -53,7 +53,7 @@ public class SlipstreamPowerModifier extends BuffPowerModifier {
         if (slipstream != null && data != null) {
 
             if (entity.ticksExisted % 15 == 0) {
-                if (Math.random() < slipstream.getProperty(INVIS_CHANCE).doubleValue()) {
+                if (Math.random() < slipstream.getProperty(INVIS_CHANCE, data).doubleValue()) {
                     PotionEffect effect = new PotionEffect(MobEffects.INVISIBILITY, 20, 0, false, false);
                     entity.addPotionEffect(effect);
                 }

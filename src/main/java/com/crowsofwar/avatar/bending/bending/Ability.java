@@ -179,15 +179,11 @@ public abstract class Ability {
      */
     public AbilityProperties properties;
     /**
-     * A reference to the global spell properties for this ability, so they are only loaded once.
+     * A reference to the global properties for this ability, so they are only loaded once.
      */
     private AbilityProperties globalProperties;
     private Raytrace.Info raytrace;
 
-    /**
-     * Used for modifying ability properties
-     */
-    private AbilityModifier modifier;
 
     /**
      * NOTE: DO NOT CREATE A NEW INSTANCE OF AN ABILITY FOR GETTING PROPERTIES, IT'LL JUST RETURN NULL.
@@ -197,7 +193,6 @@ public abstract class Ability {
         this.type = bendingType;
         this.name = name;
         this.raytrace = new Raytrace.Info();
-        this.modifier = new AbilityModifier();
     }
 
     /**
@@ -297,34 +292,36 @@ public abstract class Ability {
      * values! The JSON parser cannot guarantee that the property file has an integer value.</i>
      * @throws IllegalArgumentException if no property was defined with the given identifier.
      */
+    //NOTE: These first three methods *ARE NOT* affected by ability modifiers. Use the other two methods if you wish for something
+    //to be affected. I.e, all the time.
     public final Number getProperty(String identifier, int abilityLevel) {
         if (properties == null)
             AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Properties file for " + getName() + " wasn't successfully loaded, things will start breaking!");
-        return properties == null ? 1 : modify(identifier, properties.getBaseValue(identifier, abilityLevel, AbilityData.AbilityTreePath.MAIN));
+        return properties == null ? 1 : properties.getBaseValue(identifier, abilityLevel, AbilityData.AbilityTreePath.MAIN);
     }
 
     public final Number getProperty(String identifier, int abilityLevel, AbilityData.AbilityTreePath path) {
         if (properties == null)
             AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Properties file for " + getName() + " wasn't successfully loaded, things will start breaking!");
-        return properties == null ? 1 : modify(identifier, properties.getBaseValue(identifier, abilityLevel, path));
+        return properties == null ? 1 : properties.getBaseValue(identifier, abilityLevel, path);
     }
 
     public final Number getProperty(String identifier) {
         if (properties == null)
             AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Properties file for " + getName() + " wasn't successfully loaded, things will start breaking!");
-        return properties == null ? 1 : modify(identifier, properties.getBaseValue(identifier, 0, AbilityData.AbilityTreePath.MAIN));
+        return properties == null ? 1 : properties.getBaseValue(identifier, 0, AbilityData.AbilityTreePath.MAIN);
     }
 
     public final Number getProperty(String identifier, AbilityContext ctx) {
         if (properties == null)
             AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Properties file for " + getName() + " wasn't successfully loaded, things will start breaking!");
-        return properties == null ? 1 : modify(identifier, properties.getBaseValue(identifier, ctx.getLevel(), ctx.getDynamicPath()));
+        return properties == null ? 1 : ctx.getAbilityData().modify(identifier, properties.getBaseValue(identifier, ctx.getLevel(), ctx.getDynamicPath()));
     }
 
     public final Number getProperty(String identifier, AbilityData data) {
         if (properties == null)
             AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Properties file for " + getName() + " wasn't successfully loaded, things will start breaking!");
-        return properties == null ? 1 : modify(identifier, properties.getBaseValue(identifier, data.getLevel(), data.getDynamicPath()));
+        return properties == null ? 1 : data.modify(identifier, properties.getBaseValue(identifier, data.getLevel(), data.getDynamicPath()));
     }
 
     /**
@@ -399,7 +396,7 @@ public abstract class Ability {
     public int getCooldown(AbilityContext ctx) {
         if (ctx.getBenderEntity() instanceof EntityPlayer && ((EntityPlayer) ctx.getBenderEntity()).isCreative())
             return 0;
-        int coolDown = getProperty(COOLDOWN, ctx.getLevel(), ctx.getDynamicPath()).intValue();
+        int coolDown = getProperty(COOLDOWN, ctx).intValue();
         coolDown *= (2 - ctx.getAbilityData().getDamageMult()) * (1 / ctx.getAbilityData().getXpModifier());
         //Cooldown has a 1.5x multiplier with max burnout
         return (int) (coolDown * (1 + ctx.getAbilityData().getBurnOut() / 200));
@@ -408,7 +405,7 @@ public abstract class Ability {
     public float getBurnOut(AbilityContext ctx) {
         if (ctx.getBenderEntity() instanceof EntityPlayer && ((EntityPlayer) ctx.getBenderEntity()).isCreative())
             return 0;
-        float burnout = getProperty(BURNOUT, ctx.getLevel(), ctx.getDynamicPath()).floatValue();
+        float burnout = getProperty(BURNOUT, ctx).floatValue();
         burnout *= (2 - ctx.getAbilityData().getDamageMult()) * (1 / ctx.getAbilityData().getXpModifier());
         return burnout;
     }
@@ -416,7 +413,7 @@ public abstract class Ability {
     public float getExhaustion(AbilityContext ctx) {
         if (ctx.getBenderEntity() instanceof EntityPlayer && ((EntityPlayer) ctx.getBenderEntity()).isCreative())
             return 0;
-        float exhaustion = getProperty(EXHAUSTION, ctx.getLevel(), ctx.getDynamicPath()).floatValue();
+        float exhaustion = getProperty(EXHAUSTION, ctx).floatValue();
         exhaustion *= (2 - ctx.getAbilityData().getDamageMult()) * (1 / ctx.getAbilityData().getXpModifier());
         //Burnout has a 2x multiplier on exhaustion
         return exhaustion * (1 + ctx.getAbilityData().getBurnOut() / 100F);
@@ -430,7 +427,7 @@ public abstract class Ability {
     public float getChiCost(AbilityContext ctx) {
         if (ctx.getBenderEntity() instanceof EntityPlayer && ((EntityPlayer) ctx.getBenderEntity()).isCreative() || ctx.getBenderEntity() instanceof EntityHumanBender)
             return 0;
-        float chi = getProperty(CHI_COST, ctx.getLevel(), ctx.getDynamicPath()).floatValue();
+        float chi = getProperty(CHI_COST, ctx).floatValue();
         chi *= (2 - ctx.getAbilityData().getDamageMult()) * (1 / ctx.getAbilityData().getXpModifier());
         //Burnout has a 1.5x multipler on chi cost
         return chi * (1 + ctx.getAbilityData().getBurnOut() / 200);
@@ -446,20 +443,20 @@ public abstract class Ability {
     //NOTE: These aren't called by Bender.execute, so no need to override these! Just override the AbilityContext ones,
     //and call these when you need to apply them.
     public int getCooldown(AbilityData data) {
-        int coolDown = getProperty(COOLDOWN, data.getLevel(), data.getDynamicPath()).intValue();
+        int coolDown = getProperty(COOLDOWN, data).intValue();
         coolDown *= (2 - data.getDamageMult()) * (1 / data.getXpModifier());
         //Cooldown has a 1.5x multiplier with max burnout
         return (int) (coolDown * (1 + data.getBurnOut() / 200));
     }
 
     public float getBurnOut(AbilityData data) {
-        float burnout = getProperty(BURNOUT, data.getLevel(), data.getDynamicPath()).floatValue();
+        float burnout = getProperty(BURNOUT, data).floatValue();
         burnout *= (2 - data.getDamageMult()) * (1 / data.getXpModifier());
         return burnout;
     }
 
     public float getExhaustion(AbilityData data) {
-        float exhaustion = getProperty(EXHAUSTION, data.getLevel(), data.getDynamicPath()).floatValue();
+        float exhaustion = getProperty(EXHAUSTION, data).floatValue();
         exhaustion *= (2 - data.getDamageMult()) * (1 / data.getXpModifier());
         //Burnout has a 2x multiplier on exhaustion
         return exhaustion * (1 + data.getBurnOut() / 100F);
@@ -471,7 +468,7 @@ public abstract class Ability {
      * Can be overriden if the chi cost shouldn't be applied immediately.
      */
     public float getChiCost(AbilityData data) {
-        float chi = getProperty(CHI_COST, data.getLevel(), data.getDynamicPath()).floatValue();
+        float chi = getProperty(CHI_COST, data).floatValue();
         chi *= (2 - data.getDamageMult()) * (1 / data.getXpModifier());
         //Burnout has a 1.5x multipler on chi cost
         return chi * (1 + data.getBurnOut() / 200);
@@ -555,21 +552,21 @@ public abstract class Ability {
     }
 
     public int getCurrentTier(AbilityContext ctx) {
-        return getProperty(TIER, ctx.getLevel(), ctx.getDynamicPath()).intValue();
+        return getProperty(TIER, ctx).intValue();
     }
 
     //Only for abilities in sub-elements.
     public int getCurrentParentTier(AbilityContext ctx) {
-        return getProperty(PARENT_TIER, ctx.getLevel(), ctx.getDynamicPath()).intValue();
+        return getProperty(PARENT_TIER, ctx).intValue();
     }
 
     public int getCurrentTier(AbilityData data) {
-        return getProperty(TIER, data.getLevel(), data.getDynamicPath()).intValue();
+        return getProperty(TIER, data).intValue();
     }
 
     //Only for abilities in sub-elements.
     public int getCurrentParentTier(AbilityData data) {
-        return getProperty(PARENT_TIER, data.getLevel(), data.getDynamicPath()).intValue();
+        return getProperty(PARENT_TIER, data).intValue();
     }
 
 
@@ -715,21 +712,10 @@ public abstract class Ability {
         return val;
     }
 
-    public Number modify(String property, Number val) {
-        //Returns the property's base value/1 by default
-        return getModifier().getProperty(property).floatValue() * val.floatValue();
-    }
-
-    public void setModifier(AbilityModifier modifier) {
-        this.modifier = modifier;
-    }
-
-    public AbilityModifier getModifier() {
-        return this.modifier;
-    }
-
-    public void clearModifier() {
-        this.modifier = new AbilityModifier();
+    public static boolean propertyEqualsInhibitor(String property) {
+        return property.equals(CHI_COST) || property.equals(EXHAUSTION) || property.equals(COOLDOWN)
+                || property.equals(BURNOUT) || property.equals(BURNOUT_HIT) || property.equals(CHI_PER_SECOND)
+                || property.equals(CHI_PERCENT) || property.equals(EXHAUSTION_HIT);
     }
 
 }

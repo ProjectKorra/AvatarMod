@@ -22,7 +22,6 @@ import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.air.Airbending;
-import com.crowsofwar.avatar.config.AbilityProperties;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.event.AbilityUnlockEvent;
@@ -71,6 +70,7 @@ public class AvatarPlayerTick {
             }
         }
     }
+
 
     @SubscribeEvent
     public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {

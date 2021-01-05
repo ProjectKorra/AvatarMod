@@ -1,14 +1,16 @@
 package com.crowsofwar.avatar.item;
 
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.bending.bending.Abilities;
+import com.crowsofwar.avatar.bending.bending.Ability;
+import com.crowsofwar.avatar.bending.bending.AbilityModifier;
+import com.crowsofwar.avatar.bending.bending.AbilityModifiers;
 import com.crowsofwar.avatar.bending.bending.air.Airbending;
 import com.crowsofwar.avatar.network.packets.glider.PacketCUpdateClientTarget;
 import com.crowsofwar.avatar.registry.AvatarItem;
-import com.crowsofwar.avatar.registry.AvatarItems;
 import com.crowsofwar.avatar.util.GliderHelper;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.Chi;
-import com.crowsofwar.avatar.util.event.AbilityUseEvent;
 import com.crowsofwar.avatar.util.helper.GliderPlayerHelper;
 import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.collect.HashMultimap;
@@ -32,7 +34,6 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -40,7 +41,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static com.crowsofwar.avatar.AvatarInfo.MOD_ID;
 import static com.crowsofwar.avatar.util.helper.GliderHelper.getIsGliderDeployed;
@@ -52,7 +53,6 @@ public class ItemHangGliderBase extends ItemSword implements IGlider, AvatarItem
     public static final ResourceLocation MODEL_GLIDER_BASIC_TEXTURE_RL = new ResourceLocation(MOD_ID, "textures/models/glider_basic.png");
     public static final ResourceLocation MODEL_GLIDER_ADVANCED_TEXTURE_RL = new ResourceLocation(MOD_ID, "textures/models/glider_advanced.png");
     public static final ResourceLocation MODEL_GLIDER_RL = new ResourceLocation(MOD_ID, "models/glider/glider.obj");
-    public static final UUID STAFF_MODIFIER = UUID.fromString("f80d4e3d-79e6-4590-b099-5938f0b35cac");
 
     //ToDo: NBT saving tags of upgrade (need IRecipe for them)
 
@@ -98,20 +98,6 @@ public class ItemHangGliderBase extends ItemSword implements IGlider, AvatarItem
 
     }
 
-    //Clears the ability modifier when not using the staff.
-    @SubscribeEvent
-    public static void onAbilityUse(AbilityUseEvent event) {
-        EntityLivingBase entity = event.getEntityLiving();
-        if (entity != null) {
-            if (entity.getHeldItemMainhand().getItem() != AvatarItems.gliderBasic
-                    && entity.getHeldItemMainhand().getItem() != AvatarItems.gliderAdv &&
-                    entity.getHeldItemOffhand().getItem() != AvatarItems.gliderBasic &&
-                    entity.getHeldItemOffhand().getItem() != AvatarItems.gliderAdv) {
-                if (event.getAbility().getModifier().getID().equals(STAFF_MODIFIER))
-                    event.getAbility().clearModifier();
-            }
-        }
-    }
 
     @Override
     public float getAttackDamage() {
@@ -157,6 +143,20 @@ public class ItemHangGliderBase extends ItemSword implements IGlider, AvatarItem
                             .addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 40, 0, false, false));
                 }
             }
+
+            BendingData data = BendingData.getFromEntity((EntityLivingBase) entityIn);
+            if (data != null) {
+                //Only affects airbending
+                List<Ability> airAbilities = Abilities.all().stream().filter(ability -> ability.getBendingId() == Airbending.ID)
+                        .collect(Collectors.toList());
+                data.applyModifiersToAbilities(airAbilities, getAbilityModifier());
+            }
+        } else {
+            if (entityIn instanceof EntityLivingBase) {
+                BendingData data = BendingData.getFromEntity((EntityLivingBase) entityIn);
+                if (data != null)
+                    data.removeModifiersFromAll(getAbilityModifier());
+            }
         }
         if (entityIn instanceof EntityLivingBase) {
             if (((EntityLivingBase) entityIn).getHeldItemOffhand().getItem() == this) {
@@ -172,18 +172,20 @@ public class ItemHangGliderBase extends ItemSword implements IGlider, AvatarItem
         }
         if (entityIn instanceof EntityLivingBase) {
             //Heals the item's durability if you have airbending
-            BendingData data = BendingData.get((EntityLivingBase) entityIn);
-            Chi chi = data.chi();
-            if (entityIn.ticksExisted % 80 == 0 && chi != null && data.hasBendingId(Airbending.ID)
-                    && ((new Random().nextInt(2) + 1) >= 2)) {
-                if (stack.isItemDamaged()) {
-                    float availableChi = chi.getAvailableChi();
-                    if (availableChi > 1) {
-                        if (!(entityIn instanceof EntityPlayer && (((EntityPlayer) entityIn)
-                                .isCreative()))) {
-                            chi.setTotalChi(chi.getTotalChi() - 2);
+            BendingData data = BendingData.getFromEntity((EntityLivingBase) entityIn);
+            if (data != null) {
+                Chi chi = data.chi();
+                if (entityIn.ticksExisted % 80 == 0 && chi != null && data.hasBendingId(Airbending.ID)
+                        && ((new Random().nextInt(2) + 1) >= 2)) {
+                    if (stack.isItemDamaged()) {
+                        float availableChi = chi.getAvailableChi();
+                        if (availableChi > 1) {
+                            if (!(entityIn instanceof EntityPlayer && (((EntityPlayer) entityIn)
+                                    .isCreative()))) {
+                                chi.setTotalChi(chi.getTotalChi() - 2);
+                            }
+                            stack.damageItem(-1, (EntityLivingBase) entityIn);
                         }
-                        stack.damageItem(-1, (EntityLivingBase) entityIn);
                     }
                 }
             }
@@ -427,5 +429,10 @@ public class ItemHangGliderBase extends ItemSword implements IGlider, AvatarItem
             default:
                 return "airbender_staff";
         }
+    }
+
+    public AbilityModifier getAbilityModifier() {
+        return AbilityModifiers.STAFF_BASE_MODIFIER;
+
     }
 }

@@ -44,7 +44,7 @@ public class AbilityRestore extends Ability {
 
         if (bender.consumeChi(getChiCost(ctx)) && Earthbending.getClosestEarthbendableBlock(entity, ctx, this, 2) != null) {
 
-            abilityData.addXp(getProperty(XP_USE).floatValue());
+            abilityData.addXp(getProperty(XP_USE, ctx).floatValue());
 
             // 3s + 1.5s per level
             int duration = getProperty(DURATION, ctx).intValue();

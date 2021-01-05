@@ -121,7 +121,7 @@ public class StatCtrlShootWall extends StatusControl {
                 floating.setChiHit(ability.getChiCost(abilityData) / 2);
                 floating.setTier(ability.getCurrentTier(abilityData));
                 floating.setDamage((float) (Objects.requireNonNull(Abilities.get("earth_control")).
-                        getProperty(DAMAGE, 1).floatValue() * abilityData.getXpModifier() * abilityData.getDamageMult()));
+                        getProperty(DAMAGE, abilityData).floatValue() * abilityData.getXpModifier() * abilityData.getDamageMult()));
                 floating.setOwner(entity);
                 floating.setEntityInvulnerable(true);
                 floating.setPosition(segment.getPositionVector().add(0, -usedNum, 0).add(entity.getLookVec()));

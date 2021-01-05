@@ -1,25 +1,18 @@
 package com.crowsofwar.avatar.item;
 
-import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.AbilityModifier;
-import com.crowsofwar.avatar.bending.bending.air.AbilityAirGust;
-import com.crowsofwar.avatar.bending.bending.air.AbilityAirblade;
 import com.crowsofwar.avatar.registry.AvatarItem;
 import com.crowsofwar.avatar.registry.AvatarItems;
 import com.crowsofwar.avatar.util.GliderInfo;
-import com.crowsofwar.avatar.util.event.AbilityUseEvent;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.HashMap;
 
 import static com.crowsofwar.avatar.config.ConfigGlider.GLIDER_CONFIG;
 
-@Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class ItemHangGliderAdvanced extends ItemHangGliderBase implements AvatarItem {
 
     private static ItemHangGliderAdvanced instance = null;
@@ -40,32 +33,6 @@ public class ItemHangGliderAdvanced extends ItemHangGliderBase implements Avatar
         return instance;
     }
 
-    @SubscribeEvent
-    public static void onAirUse(AbilityUseEvent event) {
-        Ability ability = event.getAbility();
-        HashMap<String, Number> properties = new HashMap<>();
-
-        if (ability instanceof AbilityAirblade || ability instanceof AbilityAirGust) {
-            //Just edits the cooldown, chi cost, exhaustion, and burnout by a bit for the basic staff.
-            properties.put(Ability.COOLDOWN, 0.75);
-            properties.put(Ability.EXHAUSTION, 0.75);
-            properties.put(Ability.BURNOUT, 0.75);
-            properties.put(Ability.CHI_COST, 0.75);
-
-            //Increases the damage and the knockback
-            if (ability instanceof AbilityAirblade)
-                properties.put(Ability.DAMAGE, 1.125F);
-            properties.put(Ability.KNOCKBACK, 1.125F);
-            properties.put(Ability.SPEED, 1.125F);
-
-            if (ability.getModifier() != null) {
-                ability.getModifier().setID(STAFF_MODIFIER);
-                ability.getModifier().addProperties(properties);
-            } else {
-                ability.setModifier(new AbilityModifier(properties, STAFF_MODIFIER));
-            }
-        }
-    }
 
     @Override
     public Item item() {
@@ -92,5 +59,21 @@ public class ItemHangGliderAdvanced extends ItemHangGliderBase implements Avatar
     @Override
     public boolean hasEffect(ItemStack stack) {
         return true;
+    }
+
+    @Override
+    public AbilityModifier getAbilityModifier() {
+        AbilityModifier modifier = super.getAbilityModifier();
+        HashMap<String, Number> properties = new HashMap<>();
+        properties.put(Ability.COOLDOWN, 0.75);
+        properties.put(Ability.EXHAUSTION, 0.75);
+        properties.put(Ability.BURNOUT, 0.75);
+        properties.put(Ability.CHI_COST, 0.75);
+        properties.put(Ability.DAMAGE, 1.125F);
+        properties.put(Ability.KNOCKBACK, 1.125F);
+        properties.put(Ability.SPEED, 1.125F);
+
+        modifier.addProperties(properties);
+        return modifier;
     }
 }

@@ -92,6 +92,10 @@ public class ConfigSkills {
 
 		@Load
 		public boolean useRadialNumbers = true;
+
+		//Adds a power level config option. Divides inhibitors by and multiplies effects by this value.
+		@Load
+		public float powerLevel = 1;
 	}
 
 	private ConfigSkills() {

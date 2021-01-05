@@ -65,7 +65,7 @@ public class AbilityAirJump extends Ability {
 		World world = ctx.getWorld();
 		AbilityData abilityData = ctx.getAbilityData();
 
-		boolean allowDoubleJump = abilityData.getUseNumber() < getProperty(JUMPS).intValue();
+		boolean allowDoubleJump = abilityData.getUseNumber() < getProperty(JUMPS, ctx).intValue();
 		List<AxisAlignedBB> collideWithGround = world.getCollisionBoxes(entity, entity.getEntityBoundingBox().grow(0.2, 0.5, 0.2));
 		boolean onGround = !collideWithGround.isEmpty() || entity.collidedVertically || world.getBlockState(entity.getPosition()).getBlock() == Blocks.WEB;
 

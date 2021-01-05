@@ -28,7 +28,8 @@ import net.minecraft.entity.EntityLiving;
 import static com.crowsofwar.avatar.util.data.StatusControlController.START_FLAMETHROW;
 
 /**
- * @author CrowsOfWar
+ * @author CrowsOfWar, FavouriteDragon
+ * TODO: Optimise particles
  */
 public class AbilityFlamethrower extends Ability {
 

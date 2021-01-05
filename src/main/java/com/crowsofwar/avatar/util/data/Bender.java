@@ -19,6 +19,8 @@ package com.crowsofwar.avatar.util.data;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
+import com.crowsofwar.avatar.bending.bending.AbilityModifier;
+import com.crowsofwar.avatar.bending.bending.AbilityModifiers;
 import com.crowsofwar.avatar.bending.bending.air.Airbending;
 import com.crowsofwar.avatar.bending.bending.earth.Earthbending;
 import com.crowsofwar.avatar.bending.bending.water.Waterbending;
@@ -47,6 +49,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.crowsofwar.avatar.config.ConfigChi.CHI_CONFIG;
+import static com.crowsofwar.avatar.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
 
 /**
@@ -292,6 +295,24 @@ public abstract class Bender {
     }
 
 
+    //Config modifier for power levles
+    public static AbilityModifier adjustConfigModifier() {
+        AbilityModifier modifier = AbilityModifiers.CONFIG_MODIFIER;
+        HashMap<String, Number> properties = new HashMap<>();
+        for (Ability ability : Abilities.all()) {
+            int size = ability.properties.getValues().size();
+            for (int i = 0; i < size; i++) {
+                String propertyName = ability.properties.getValues().get(i);
+                if (Ability.propertyEqualsInhibitor(propertyName))
+                    properties.put(propertyName, 1 / SKILLS_CONFIG.abilitySettings.powerLevel);
+                else properties.put(propertyName, SKILLS_CONFIG.abilitySettings.powerLevel);
+            }
+        }
+        modifier.addProperties(properties);
+        return modifier;
+    }
+
+
     /**
      * Called every tick; updates things like chi.
      */
@@ -301,6 +322,10 @@ public abstract class Bender {
         BendingData data = getData();
         World world = getWorld();
         EntityLivingBase entity = getEntity();
+
+        //Applies modifiers first
+        data.removeModifiersFromAll(adjustConfigModifier());
+        data.applyModifiersToAll(adjustConfigModifier());
 
         List<Ability> abilities = Abilities.all().stream().filter(ability -> AbilityData.get(entity, ability.getName()).getAbilityCooldown() > 0).collect(Collectors.toList());
         for (Ability ability : abilities) {
@@ -315,6 +340,8 @@ public abstract class Bender {
             }
             data.save(DataCategory.ABILITY_DATA);
         }
+
+
 
         BendingContext ctx = new BendingContext(data, entity, this, new Raytrace.Result());
 

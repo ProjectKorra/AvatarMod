@@ -20,6 +20,9 @@
     "e": {
       "item": "minecraft:experience_bottle",
       "count": 16
+    },
+    "p": {
+      "item": "minecraft:book"
     }
   },
   "result": {

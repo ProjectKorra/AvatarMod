@@ -152,7 +152,6 @@ public class AbilityProperties {
             if (baseBooleanNames.size() > 0) {
                 for (String baseBooleanName : baseBooleanNames) {
                     try {
-                        System.out.println(baseValueObject);
                         baseBooleans.put(baseBooleanName, JsonUtils.getBoolean(baseValueObject, baseBooleanName));
                     } catch (JsonSyntaxException e) {
                         if (!baseBooleans.containsKey(baseBooleanName))
@@ -255,9 +254,12 @@ public class AbilityProperties {
                         try {
                             //TODO: Overwrite files if they're outdated
                             File abilityFile = new File(targetDirectory.getPath(), ability.getName() + ".json");
-                            if (!abilityFile.exists() && SKILLS_CONFIG.abilitySettings.generateAbilities ||
-                                    SKILLS_CONFIG.abilitySettings.overrideAbilities)
+                            if (!abilityFile.exists() && SKILLS_CONFIG.abilitySettings.generateAbilities)
                                 Files.copy(file, abilityFile.toPath());
+                            else if (SKILLS_CONFIG.abilitySettings.overrideAbilities) {
+                                Files.delete(abilityFile.toPath());
+                                Files.copy(file, abilityFile.toPath());
+                            }
 
                         } catch (IOException ioexception) {
                             ioexception.printStackTrace();
@@ -291,7 +293,7 @@ public class AbilityProperties {
 
         File abilityJsonDir = new File(AvatarMod.configDirectory, "abilities");
 
-        if (!abilityJsonDir.exists()) {
+        if (!abilityJsonDir.exists() && SKILLS_CONFIG.abilitySettings.generateAbilities || SKILLS_CONFIG.abilitySettings.overrideAbilities) {
             AvatarLog.info("No override config found, default values will be used unless there's world-specific properties.");
             addPropertiesToConfig(abilityJsonDir);
             return true; // If there's no global spell properties folder, do nothing
@@ -493,6 +495,12 @@ public class AbilityProperties {
         ArrayList<Boolean> list = new ArrayList<>(baseBooleans.get(identifier));
         return list.get(Math.min(list.size() - 1, Math.max(path == AbilityData.AbilityTreePath.SECOND ? abilityLevel + 1 : abilityLevel, 0)));
     }
+
+    //Gets how many different properties the ability has
+    public List<String> getValues() {
+        return new ArrayList<>(baseValues.keySet());
+    }
+
 
 }
 

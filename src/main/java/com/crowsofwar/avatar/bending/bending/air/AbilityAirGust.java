@@ -71,9 +71,9 @@ public class AbilityAirGust extends Ability {
                 Math.toRadians(entity.rotationPitch));
         Vector pos = Vector.getEyePos(entity);
 
-        float speed = getProperty(SPEED, ctx.getLevel(), ctx.getDynamicPath()).floatValue();
-        float size = getProperty(SIZE, ctx.getLevel(), ctx.getDynamicPath()).floatValue();
-        int lifetime = getProperty(LIFETIME, ctx.getLevel(), ctx.getDynamicPath()).intValue();
+        float speed = getProperty(SPEED, ctx).floatValue();
+        float size = getProperty(SIZE, ctx).floatValue();
+        int lifetime = getProperty(LIFETIME, ctx).intValue();
         int performance = getProperty(PERFORMANCE, ctx).intValue();
         float push = getProperty(KNOCKBACK, ctx).floatValue() / 2;
 
@@ -105,7 +105,7 @@ public class AbilityAirGust extends Ability {
             gust.setAbility(this);
             gust.setTier(getCurrentTier(ctx));
             gust.setChiHit(getProperty(CHI_HIT, ctx).floatValue());
-            gust.setXp(getProperty(XP_HIT).floatValue());
+            gust.setXp(getProperty(XP_HIT, ctx).floatValue());
             gust.setBehaviour(new AirGustBehaviour());
             gust.setDamageSource("avatar_Air");
             if (!world.isRemote)

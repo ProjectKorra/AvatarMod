@@ -86,7 +86,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
             return false;
 
         //No dividing by 0 here
-        int flamesPerSecond = Math.max(flamethrower.getProperty(FLAMES_PER_SECOND).intValue(), 1);
+        int flamesPerSecond = Math.max(flamethrower.getProperty(FLAMES_PER_SECOND, abilityData).intValue(), 1);
 
         float requiredChi = flamethrower.getProperty(CHI_COST, abilityData).floatValue() / 20F;
         double powerFactor = 2 - abilityData.getDamageMult();

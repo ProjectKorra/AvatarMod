@@ -75,7 +75,7 @@ public class StatCtrlFireRedirect extends StatusControl {
                         if (bender.consumeChi(chiCost)) {
                             e.setOwner(entity);
                             if (redirect.getBooleanProperty(ABSORB_FIRE) &&
-                                    e.getTier() <= redirect.getProperty(ABSORB_TIER).intValue()) {
+                                    e.getTier() <= redirect.getProperty(ABSORB_TIER, abilityData).intValue()) {
                                 e.setBehaviour(new AbsorbBehaviour());
                             } else e.setBehaviour(new OffensiveBehaviour.Redirect());
                             abilityData.addXp(xp);
