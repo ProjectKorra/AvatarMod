@@ -300,12 +300,14 @@ public abstract class Bender {
         AbilityModifier modifier = AbilityModifiers.CONFIG_MODIFIER;
         HashMap<String, Number> properties = new HashMap<>();
         for (Ability ability : Abilities.all()) {
-            int size = ability.properties.getValues().size();
-            for (int i = 0; i < size; i++) {
-                String propertyName = ability.properties.getValues().get(i);
-                if (Ability.propertyEqualsInhibitor(propertyName))
-                    properties.put(propertyName, 1 / SKILLS_CONFIG.abilitySettings.powerLevel);
-                else properties.put(propertyName, SKILLS_CONFIG.abilitySettings.powerLevel);
+            if (ability.properties != null) {
+                int size = ability.properties.getValues().size();
+                for (int i = 0; i < size; i++) {
+                    String propertyName = ability.properties.getValues().get(i);
+                    if (Ability.propertyEqualsInhibitor(propertyName))
+                        properties.put(propertyName, 1 / SKILLS_CONFIG.abilitySettings.powerLevel);
+                    else properties.put(propertyName, SKILLS_CONFIG.abilitySettings.powerLevel);
+                }
             }
         }
         modifier.addProperties(properties);

@@ -1,7 +1,5 @@
 package com.crowsofwar.avatar.bending.bending;
 
-import javax.print.attribute.standard.NumberUp;
-import java.util.HashMap;
 import java.util.UUID;
 
 //Class that contains independent static modifiers and modifier ids
@@ -24,6 +22,9 @@ public class AbilityModifiers {
             FIREBENDER_MODIFIER = new AbilityModifier(FIREBENDER_ID),
             CONFIG_MODIFIER = new AbilityModifier(CONFIG_ID);
 
+    //Just reference the class to set stuf fup
+    public static void init() {
+    }
 
 
 }

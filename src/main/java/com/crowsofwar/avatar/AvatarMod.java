@@ -19,6 +19,7 @@ package com.crowsofwar.avatar;
 
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
+import com.crowsofwar.avatar.bending.bending.AbilityModifiers;
 import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.air.*;
 import com.crowsofwar.avatar.bending.bending.combustion.AbilityExplosion;
@@ -207,6 +208,7 @@ public class AvatarMod {
         Abilities.all().forEach(Ability::init);
         AbilityProperties.init();
         registerBendingStyles();
+        AbilityModifiers.init();
 
         AvatarItems.init();
         AvatarBlocks.init();
