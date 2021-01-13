@@ -11,6 +11,7 @@ import com.crowsofwar.avatar.registry.AvatarItem;
 import com.crowsofwar.avatar.util.GliderHelper;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.Chi;
+import com.crowsofwar.avatar.util.event.AbilityUseEvent;
 import com.crowsofwar.avatar.util.helper.GliderPlayerHelper;
 import com.crowsofwar.gorecore.util.Vector;
 import com.google.common.collect.HashMultimap;
@@ -19,6 +20,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
@@ -34,6 +36,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -65,7 +68,6 @@ public class ItemHangGliderBase extends ItemSword implements IGlider, AvatarItem
     private double airResistance;
     private int totalDurability;
     private ResourceLocation modelRL;
-    private boolean spawnGust;
 
     public ItemHangGliderBase(float minSpeed, float maxSpeed, float pitchOffset, float yBoost, float fallReduction, double windMultiplier, double airResistance, int totalDurability, ResourceLocation modelRL) {
         super(Item.ToolMaterial.WOOD);
@@ -134,7 +136,6 @@ public class ItemHangGliderBase extends ItemSword implements IGlider, AvatarItem
                          boolean isSelected) {
 
         if (isSelected && entityIn instanceof EntityLivingBase) {
-            spawnGust = !entityIn.isSneaking();
             if (!worldIn.isRemote && worldIn instanceof WorldServer) {
                 if (entityIn.ticksExisted % 40 == 0) {
                     ((EntityLivingBase) entityIn)
@@ -144,21 +145,15 @@ public class ItemHangGliderBase extends ItemSword implements IGlider, AvatarItem
                 }
             }
 
-            BendingData data = BendingData.getFromEntity((EntityLivingBase) entityIn);
-            if (data != null) {
-                //Only affects airbending
-                List<Ability> airAbilities = Abilities.all().stream().filter(ability -> ability.getBendingId() == Airbending.ID)
-                        .collect(Collectors.toList());
-                data.applyModifiersToAbilities(airAbilities, getAbilityModifier());
-            }
-        } else {
-            if (entityIn instanceof EntityLivingBase) {
-                List<Ability> airAbilities = Abilities.all().stream().filter(ability -> ability.getBendingId() == Airbending.ID)
-                        .collect(Collectors.toList());
-                BendingData data = BendingData.getFromEntity((EntityLivingBase) entityIn);
-                if (data != null)
-                    data.removeModifiersFromAbilities(airAbilities, getAbilityModifier());
-            }
+        }
+        else {
+            if (entityIn.ticksExisted % 100 == 0)
+                if (entityIn instanceof EntityLivingBase) {
+                    BendingData data = BendingData.getFromEntity((EntityLivingBase) entityIn);
+                    if (data != null)
+                        data.removeModifiersFromAbilities(Abilities.all().stream().filter(ability ->
+                                ability.getBendingId().equals(Airbending.ID)).collect(Collectors.toList()), getAbilityModifier());
+                }
         }
         if (entityIn instanceof EntityLivingBase) {
             if (((EntityLivingBase) entityIn).getHeldItemOffhand().getItem() == this) {
@@ -200,7 +195,6 @@ public class ItemHangGliderBase extends ItemSword implements IGlider, AvatarItem
         Multimap<String, AttributeModifier> multimap = HashMultimap.create();
 
         if (equipmentSlot == EntityEquipmentSlot.MAINHAND) {
-            spawnGust = new Random().nextBoolean();
             multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(),
                     new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier",
                             getAttackDamage(), 0));
@@ -209,6 +203,29 @@ public class ItemHangGliderBase extends ItemSword implements IGlider, AvatarItem
         }
 
         return multimap;
+    }
+
+    @SubscribeEvent
+    public static void onAbilityEvent(AbilityUseEvent event) {
+        EntityLivingBase entity = event.getEntityLiving();
+        BendingData data = BendingData.getFromEntity(entity);
+        if (data != null) {
+            ItemHangGliderBase base;
+            if (entity.getHeldItemMainhand().getItem() instanceof ItemHangGliderBase) {
+                base = (ItemHangGliderBase) entity.getHeldItemMainhand().getItem();
+                List<Ability> abilities = Abilities.all().stream().filter(ability -> ability.getBendingId().equals(Airbending.ID))
+                        .collect(Collectors.toList());
+                if (abilities.contains(event.getAbility()))
+                    data.applyModifiersToAbilities(abilities, base.getAbilityModifier());
+            }
+            else if (entity.getHeldItemOffhand().getItem() instanceof ItemHangGliderBase) {
+                base = (ItemHangGliderBase) entity.getHeldItemOffhand().getItem();
+                List<Ability> abilities = Abilities.all().stream().filter(ability -> ability.getBendingId().equals(Airbending.ID))
+                        .collect(Collectors.toList());
+                if (abilities.contains(event.getAbility()))
+                    data.applyModifiersToAbilities(abilities, base.getAbilityModifier());
+            }
+        }
     }
 
     /**
@@ -422,15 +439,7 @@ public class ItemHangGliderBase extends ItemSword implements IGlider, AvatarItem
 
     @Override
     public String getModelName(int meta) {
-        switch (meta) {
-//            case 1:
-//                return "basic_glider";
-//            case 3:
-//                //TODO: Change
-//                return "basic_glider_broken";
-            default:
-                return "airbender_staff";
-        }
+        return "airbender_staff";
     }
 
     public AbilityModifier getAbilityModifier() {

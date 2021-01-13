@@ -17,7 +17,6 @@
 
 package com.crowsofwar.avatar.util.data;
 
-import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.AbilityModifier;
@@ -215,12 +214,14 @@ public class AbilityData {
     }
 
     public void addModifiers(AbilityModifier... modifiers) {
-        this.modifiers.addAll(Arrays.asList(modifiers));
+        if (!this.modifiers.contains(modifiers))
+            this.modifiers.addAll(Arrays.asList(modifiers.clone()));
     }
 
     public void removeModifiers(AbilityModifier... modifiers) {
         //mutable ugh
-        this.modifiers.removeAll(Arrays.asList(modifiers.clone()));
+        if (this.modifiers.contains(modifiers))
+            this.modifiers.removeAll(Arrays.asList(modifiers.clone()));
     }
 
     public void clearModifier() {

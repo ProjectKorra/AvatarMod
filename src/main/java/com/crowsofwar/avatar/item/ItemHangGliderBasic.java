@@ -36,11 +36,6 @@ public class ItemHangGliderBasic extends ItemHangGliderBase {
     }
 
     @Override
-    public String getModelName(int meta) {
-        return super.getModelName(meta);
-    }
-
-    @Override
     public AbilityModifier getAbilityModifier() {
         AbilityModifier mods = super.getAbilityModifier();
         HashMap<String, Number> properties = new HashMap<>();

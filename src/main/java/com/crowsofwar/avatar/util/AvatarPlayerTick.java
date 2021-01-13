@@ -94,7 +94,7 @@ public class AvatarPlayerTick {
             //Syncs the frickin properties if they're not loaded
             List<Ability> initialisedAbilities = Abilities.all().stream().filter(ability -> !ability.arePropertiesInitialised())
                     .collect(Collectors.toList());
-            if (initialisedAbilities.size() < Abilities.all().size())
+            if (!initialisedAbilities.isEmpty())
                 Ability.syncEntityProperties();
 
             if (event.getEntity() instanceof EntityPlayer)

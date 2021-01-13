@@ -16,7 +16,7 @@ import static com.crowsofwar.gorecore.util.GoreCoreByteBufUtil.writeString;
 /**
  * Serves as a wrapper class for modifying abilities. Allows you to alter the cooldown,
  * burnout, exhaustion, e.t.c of an ability through its use event. Also useful for
- * mobs.
+ * mobs. DO NOT ADD THIS ON UPDATE. IT WILL LAG OUT YOUR GAME.
  */
 public class AbilityModifier {
 

@@ -213,7 +213,6 @@ public abstract class Ability {
             AvatarMod.network.sendToAll(new PacketCSyncAbilityProperties(abilities.stream().map(a -> a.properties).toArray(AbilityProperties[]::new)));
 
         }
-        Thread.dumpStack();
     }
 
     public static void syncEntityProperties() {
@@ -226,7 +225,6 @@ public abstract class Ability {
         AvatarMod.network.sendToAll(new PacketCSyncAbilityProperties(abilities.stream().map(a -> a.properties).toArray(AbilityProperties[]::new)));
 
         //Prevents NPCS from yeeting
-        Thread.dumpStack();
     }
 
     private static void clearProperties() {
