@@ -18,6 +18,7 @@
 package com.crowsofwar.avatar.util;
 
 import com.crowsofwar.avatar.AvatarInfo;
+import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import com.crowsofwar.avatar.bending.bending.BendingStyles;
@@ -86,15 +87,25 @@ public class AvatarPlayerTick {
         }
     }
 
+
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void worldJoinEvent(EntityJoinWorldEvent event) {
         if (event.getEntity() instanceof EntityLivingBase && Bender.isBenderSupported((EntityLivingBase) event.getEntity())) {
+            //Syncs the frickin properties if they're not loaded
+            List<Ability> initialisedAbilities = Abilities.all().stream().filter(ability -> !ability.arePropertiesInitialised())
+                    .collect(Collectors.toList());
+            if (initialisedAbilities.size() < Abilities.all().size())
+                Ability.syncEntityProperties();
+
             if (event.getEntity() instanceof EntityPlayer)
                 Ability.syncProperties((EntityPlayer) event.getEntity());
+
             if (SKILLS_CONFIG.startWithRandomBending && !event.getWorld().isRemote) {
                 EntityLivingBase bender = (EntityLivingBase) event.getEntity();
                 if (Bender.isBenderSupported(bender)) {
                     BendingData data = BendingData.getFromEntity(bender);
+                    //Applies a config modifier
+                    Bender.adjustConfigModifier(bender);
                     if (data != null && !data.hasElements()) {
                         List<BendingStyle> elements = BendingStyles.all().stream()
                                 .filter(bendingStyle -> bendingStyle.isParentBending() && bendingStyle.canEntityUse())

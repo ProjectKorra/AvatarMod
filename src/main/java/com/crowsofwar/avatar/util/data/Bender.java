@@ -25,7 +25,6 @@ import com.crowsofwar.avatar.bending.bending.air.Airbending;
 import com.crowsofwar.avatar.bending.bending.earth.Earthbending;
 import com.crowsofwar.avatar.bending.bending.water.Waterbending;
 import com.crowsofwar.avatar.bending.bendingmultipliers.PrModifierHandler;
-import com.crowsofwar.avatar.config.*;
 import com.crowsofwar.avatar.entity.EntityLightningArc;
 import com.crowsofwar.avatar.entity.mob.EntityBender;
 import com.crowsofwar.avatar.network.AvatarChatMessages;
@@ -81,6 +80,32 @@ public abstract class Bender {
     public static boolean isBenderSupported(EntityLivingBase entity) {
         return (entity == null || (entity instanceof EntityPlayer && !(entity instanceof FakePlayer)) || entity instanceof EntityBender)
                 && (Bender.get(entity) != null && Bender.get(entity).getInfo().getId() != null);
+    }
+
+    //Config modifier for power levles
+    public static void adjustConfigModifier(EntityLivingBase bender) {
+
+        for (Ability ability : Abilities.all()) {
+            if (ability.properties != null) {
+                AbilityModifier modifier = AbilityModifiers.CONFIG_MODIFIER;
+                HashMap<String, Number> properties = new HashMap<>();
+                int size = ability.properties.getValues().size();
+                for (int i = 0; i < size; i++) {
+                    String propertyName = ability.properties.getValues().get(i);
+                    if (Ability.propertyEqualsInhibitor(propertyName))
+                        properties.put(propertyName, 1 / SKILLS_CONFIG.abilitySettings.powerLevel);
+                    else properties.put(propertyName, SKILLS_CONFIG.abilitySettings.powerLevel);
+                }
+                modifier.addProperties(properties);
+                BendingData data = BendingData.getFromEntity(bender);
+                if (data != null) {
+                    //Clear modifiers
+                    data.getAbilityData(ability).clearModifier();
+                    //Add modifiers
+                    data.getAbilityData(ability).addModifiers(modifier);
+                }
+            }
+        }
     }
 
     /**
@@ -294,27 +319,6 @@ public abstract class Bender {
         return false;
     }
 
-
-    //Config modifier for power levles
-    public static AbilityModifier adjustConfigModifier() {
-        AbilityModifier modifier = AbilityModifiers.CONFIG_MODIFIER;
-        HashMap<String, Number> properties = new HashMap<>();
-        for (Ability ability : Abilities.all()) {
-            if (ability.properties != null) {
-                int size = ability.properties.getValues().size();
-                for (int i = 0; i < size; i++) {
-                    String propertyName = ability.properties.getValues().get(i);
-                    if (Ability.propertyEqualsInhibitor(propertyName))
-                        properties.put(propertyName, 1 / SKILLS_CONFIG.abilitySettings.powerLevel);
-                    else properties.put(propertyName, SKILLS_CONFIG.abilitySettings.powerLevel);
-                }
-            }
-        }
-        modifier.addProperties(properties);
-        return modifier;
-    }
-
-
     /**
      * Called every tick; updates things like chi.
      */
@@ -324,10 +328,6 @@ public abstract class Bender {
         BendingData data = getData();
         World world = getWorld();
         EntityLivingBase entity = getEntity();
-
-        //Applies modifiers first
-        data.removeModifiersFromAll(adjustConfigModifier());
-        data.applyModifiersToAll(adjustConfigModifier());
 
         List<Ability> abilities = Abilities.all().stream().filter(ability -> AbilityData.get(entity, ability.getName()).getAbilityCooldown() > 0).collect(Collectors.toList());
         for (Ability ability : abilities) {
@@ -342,7 +342,6 @@ public abstract class Bender {
             }
             data.save(DataCategory.ABILITY_DATA);
         }
-
 
 
         BendingContext ctx = new BendingContext(data, entity, this, new Raytrace.Result());

@@ -17,6 +17,7 @@
 
 package com.crowsofwar.avatar.util.data;
 
+import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.AbilityModifier;
@@ -213,7 +214,7 @@ public class AbilityData {
         return this.modifiers;
     }
 
-    public void addModiifers(AbilityModifier... modifiers) {
+    public void addModifiers(AbilityModifier... modifiers) {
         this.modifiers.addAll(Arrays.asList(modifiers));
     }
 
@@ -589,6 +590,10 @@ public class AbilityData {
         buf.writeInt(useNumber);
         sourceInfo.writeToBytes(buf);
         buf.writeInt(modifiers.size());
+        if (!modifiers.isEmpty()) {
+            for (AbilityModifier modifier : modifiers)
+                modifier.toBytes(buf);
+        }
     }
 
     private void fromBytes(ByteBuf buf) {
@@ -603,9 +608,11 @@ public class AbilityData {
         useNumber = buf.readInt();
         sourceInfo = sourceInfo.readFromBytes(buf);
         int size = buf.readInt();
-        modifiers.clear();
-        for (int i = 0; i < size; i++) {
-            modifiers.add(i, AbilityModifier.staticFromBytes(buf));
+        if (size > 0) {
+            modifiers.clear();
+            for (int i = 0; i < size; i++) {
+                modifiers.add(i, new AbilityModifier().fromBytes(buf));
+            }
         }
     }
 

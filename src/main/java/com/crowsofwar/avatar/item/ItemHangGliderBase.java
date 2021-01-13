@@ -153,9 +153,11 @@ public class ItemHangGliderBase extends ItemSword implements IGlider, AvatarItem
             }
         } else {
             if (entityIn instanceof EntityLivingBase) {
+                List<Ability> airAbilities = Abilities.all().stream().filter(ability -> ability.getBendingId() == Airbending.ID)
+                        .collect(Collectors.toList());
                 BendingData data = BendingData.getFromEntity((EntityLivingBase) entityIn);
                 if (data != null)
-                    data.removeModifiersFromAll(getAbilityModifier());
+                    data.removeModifiersFromAbilities(airAbilities, getAbilityModifier());
             }
         }
         if (entityIn instanceof EntityLivingBase) {

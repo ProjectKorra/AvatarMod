@@ -21,8 +21,10 @@ import com.crowsofwar.avatar.entity.mob.EntityAirbender;
 import com.crowsofwar.avatar.entity.mob.EntityFirebender;
 import com.crowsofwar.avatar.entity.mob.EntityHumanBender;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.MapGenVillage;
@@ -111,6 +113,7 @@ public class HumanBenderSpawner {
 							bender.copyLocationAndAnglesFrom(e);
 							bender.setLevel(AvatarUtils.getRandomNumberInRange(1, MOBS_CONFIG.benderSettings.maxLevel));
 							bender.setHomePosAndDistance(e.getPosition(), 20);
+							bender.onInitialSpawn(worldIn.getDifficultyForLocation(new BlockPos(bender)), (IEntityLivingData)null);
 							if (!worldIn.isRemote)
 								worldIn.spawnEntity(bender);
 
@@ -118,7 +121,7 @@ public class HumanBenderSpawner {
 					}
 				}
 			}
-			return false;
+			return true;
 		}
 	}
 }

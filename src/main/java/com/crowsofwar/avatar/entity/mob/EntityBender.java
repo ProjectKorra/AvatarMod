@@ -105,6 +105,8 @@ public abstract class EntityBender extends EntityCreature implements IEntityAddi
 
 	public abstract void applyAbilityLevels(int level);
 
+	public abstract void applyModifiers(int level);
+
 	public Bender getBender() {
 		return bender;
 	}

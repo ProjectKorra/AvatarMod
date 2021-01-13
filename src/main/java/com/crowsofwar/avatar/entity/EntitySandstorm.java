@@ -320,10 +320,10 @@ public class EntitySandstorm extends EntityOffensive {
      * Called when an entity is picked up by the sandstorm
      */
     private void onPickupEntity() {
-        if (getOwner() != null) {
-            AbilityData.get(getOwner(), "sandstorm").addXp(ConfigSkills.SKILLS_CONFIG.sandstormPickedUp);
-            BattlePerformanceScore.addMediumScore(getOwner());
-        }
+//        if (getOwner() != null) {
+//            AbilityData.get(getOwner(), "sandstorm").addXp(ConfigSkills.SKILLS_CONFIG.sandstormPickedUp);
+//            BattlePerformanceScore.addMediumScore(getOwner());
+//        }
     }
 
     @Override

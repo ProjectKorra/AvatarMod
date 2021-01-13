@@ -17,12 +17,15 @@
 package com.crowsofwar.avatar.entity.mob;
 
 import com.crowsofwar.avatar.AvatarLog;
+import com.crowsofwar.avatar.bending.bending.AbilityModifier;
 import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import com.crowsofwar.avatar.bending.bending.air.Airbending;
 import com.crowsofwar.avatar.registry.AvatarItems;
 import com.crowsofwar.avatar.item.scroll.Scrolls;
 import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.WildCardTradeList;
+import com.crowsofwar.avatar.util.data.AbilityData;
+import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.gorecore.format.FormattedMessage;
 import com.crowsofwar.gorecore.util.GoreCoreNBTUtil;
 import com.google.common.base.Predicate;
@@ -104,13 +107,7 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 	public void setScrollsLeft(int scrolls) {
 		dataManager.set(SYNC_SCROLLS_LEFT, scrolls);
 	}
-
-	@Override
-	public boolean getAlwaysRenderNameTagForRender() {
-		return true;
-	}
-
-
+	
 	@Override
 	protected void entityInit() {
 		super.entityInit();
@@ -223,6 +220,7 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 		setSkin((int) (rand.nextDouble() * getNumSkins()));
 		setLevel(AvatarUtils.getRandomNumberInRange(1, MOBS_CONFIG.benderSettings.maxLevel));
 		applyAbilityLevels(getLevel());
+		applyModifiers(getLevel());
 		generateRecipes();
 		return livingdata;
 	}
@@ -237,6 +235,11 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 	public void readSpawnData(ByteBuf additionalData) {
 		super.readSpawnData(additionalData);
 		setSkin(additionalData.readInt());
+	}
+
+	@Override
+	public void applyModifiers(int level) {
+		//BendingData.getFromEntity(this).applyModifiersToAll(new AbilityModifier());
 	}
 
 	@Override

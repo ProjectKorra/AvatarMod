@@ -30,21 +30,34 @@ import java.util.UUID;
 public final class GoreCoreByteBufUtil {
 
     public static String readString(ByteBuf buf) {
-        String res = "";
+        StringBuilder res = new StringBuilder();
         int length = buf.readInt();
+        //For some reason I was getting out of bounds exceptions???
         for (int i = 0; i < length; i++) {
-            res += buf.readChar();
+            res.append(buf.readChar());
         }
-        return res;
+
+        return res.toString();
     }
 
     public static void writeString(ByteBuf buf, String str) {
         char[] chs = str.toCharArray();
         buf.writeInt(chs.length);
-        for (int i = 0; i < chs.length; i++) {
-            buf.writeChar(chs[i]);
+        for (char ch : chs) {
+            buf.writeChar(ch);
         }
     }
+
+  /*  public static void writeString(ByteBuf buf, String string) {
+        PacketBuffer buffer = new PacketBuffer(buf);
+        buffer.writeString(string);
+    }
+
+    public static String readString(ByteBuf buf) {
+        PacketBuffer buffer = new PacketBuffer(buf);
+        return buffer.readString(128);
+    }**/
+
 
     public static UUID readUUID(ByteBuf buf) {
         return new UUID(buf.readLong(), buf.readLong());

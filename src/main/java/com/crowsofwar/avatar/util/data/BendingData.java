@@ -186,12 +186,12 @@ public class BendingData {
 
     public void applyModifiersToAll(AbilityModifier... modifiers) {
         for (Ability ability : Abilities.all())
-            getAbilityData(ability).addModiifers(modifiers);
+            getAbilityData(ability).addModifiers(modifiers);
     }
 
     public void applyModifiersToAbilities(List<Ability> abilities, AbilityModifier... modifiers) {
         for (Ability ability : abilities)
-            getAbilityData(ability).addModiifers(modifiers);
+            getAbilityData(ability).addModifiers(modifiers);
     }
 
     public void removeModifiersFromAll(AbilityModifier... modifiers) {

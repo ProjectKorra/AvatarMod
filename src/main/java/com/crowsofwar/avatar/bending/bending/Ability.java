@@ -199,7 +199,11 @@ public abstract class Ability {
      * Called from the event handler when a player logs in.
      */
     public static void syncProperties(EntityPlayer player) {
-        if (player instanceof EntityPlayerMP) {
+        if (!(player instanceof EntityPlayerMP)) {
+            // On the client side, wipe the ability properties so the new ones can be set
+            // TESTME: Can we guarantee this happens before the packet arrives?
+            clearProperties();
+        } else {
             AbilityProperties.loadWorldSpecificAbilityProperties(player.world);
             for (Ability ability : Abilities.all()) {
                 if (!ability.arePropertiesInitialised()) ability.setProperties(ability.globalProperties);
@@ -208,11 +212,21 @@ public abstract class Ability {
             List<Ability> abilities = Abilities.all();
             AvatarMod.network.sendToAll(new PacketCSyncAbilityProperties(abilities.stream().map(a -> a.properties).toArray(AbilityProperties[]::new)));
 
-        } else {
-            // On the client side, wipe the spell properties so the new ones can be set
-            // TESTME: Can we guarantee this happens before the packet arrives?
-            clearProperties();
         }
+        Thread.dumpStack();
+    }
+
+    public static void syncEntityProperties() {
+        //Syncs properties for everything upon initial world generation
+        for (Ability ability : Abilities.all()) {
+            if (!ability.arePropertiesInitialised()) ability.setProperties(ability.globalProperties);
+        }
+        // On the server side, send a packet to the player to synchronise their spell properties
+        List<Ability> abilities = Abilities.all();
+        AvatarMod.network.sendToAll(new PacketCSyncAbilityProperties(abilities.stream().map(a -> a.properties).toArray(AbilityProperties[]::new)));
+
+        //Prevents NPCS from yeeting
+        Thread.dumpStack();
     }
 
     private static void clearProperties() {
@@ -704,6 +718,7 @@ public abstract class Ability {
                 this.globalProperties = properties;
         } else {
             AvatarLog.info("A mod attempted to set an ability's properties, but they were already initialised.");
+         //   Thread.dumpStack();
         }
     }
 

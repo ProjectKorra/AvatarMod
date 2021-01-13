@@ -23,6 +23,7 @@ import com.crowsofwar.avatar.bending.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.util.data.StatusControl;
 import com.crowsofwar.avatar.util.data.*;
 import io.netty.buffer.ByteBuf;
+import io.netty.handler.codec.ByteToMessageDecoder;
 
 import java.util.*;
 
@@ -75,6 +76,8 @@ public class DataTransmitters {
 				@Override
 				public Map<String, AbilityData> read(ByteBuf buf, BendingData data) {
 					Map<String, AbilityData> out = new HashMap<>();
+					//Frickin AbilityModifiers not wanting to be read
+				//	buf.capacity(buf.capacity() * 2);
 					int size = buf.readInt();
 					for (int i = 0; i < size; i++) {
 						AbilityData abilityData = AbilityData.createFromBytes(buf, data);

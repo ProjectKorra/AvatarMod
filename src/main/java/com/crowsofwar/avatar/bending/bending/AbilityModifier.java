@@ -1,6 +1,5 @@
 package com.crowsofwar.avatar.bending.bending;
 
-import com.crowsofwar.gorecore.util.GoreCoreByteBufUtil;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
@@ -9,6 +8,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
+import static com.crowsofwar.gorecore.util.GoreCoreByteBufUtil.readString;
+import static com.crowsofwar.gorecore.util.GoreCoreByteBufUtil.writeString;
 
 /**
  * Serves as a wrapper class for modifying abilities. Allows you to alter the cooldown,
@@ -19,9 +22,9 @@ public class AbilityModifier {
 
     //I should probably support modifying booleans in the future
 
-    private HashMap<String, Number> properties;
     private final List<String> propertyNames;
     private final List<Number> propertyValues;
+    private HashMap<String, Number> properties;
     //UUID's to distinguish modifies; e.g the staff modifier
     private UUID id = UUID.fromString("55c88686-6fc1-4cf5-8a31-887702fb2d5e");
 
@@ -59,6 +62,46 @@ public class AbilityModifier {
         this.propertyValues.addAll(properties.values());
     }
 
+    public static AbilityModifier staticFromBytes(ByteBuf buf) {
+        PacketBuffer buffer = new PacketBuffer(buf);
+        //Names
+        int size = buffer.readVarInt();
+        List<String> propertyNames = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            propertyNames.add(i, readString(buffer));
+        }
+        //Numbers
+        size = buffer.readVarInt();
+        List<Number> propertyValues = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            propertyValues.add(i, buffer.readFloat());
+        }
+        //Properties
+        HashMap<String, Number> properties = new HashMap<>();
+        for (int i = 0; i < propertyNames.size(); i++)
+            properties.put(propertyNames.get(i), propertyValues.get(i));
+        return new AbilityModifier(properties, buffer.readUniqueId());
+    }
+
+    public static AbilityModifier staticFromNBT(NBTTagCompound nbt) {
+        //Names
+        int size = nbt.getInteger("Property Name Size");
+        List<String> propertyNames = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            propertyNames.add(i, nbt.getString("Property Name " + (i + 1)));
+        }
+        //Values
+        size = nbt.getInteger("Property Value Size");
+        List<Number> propertyValues = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            propertyValues.add(i, nbt.getFloat("Property Value " + (i + 1)));
+        }
+        HashMap<String, Number> map = new HashMap<>();
+        for (int i = 0; i < size; i++) {
+            map.put(propertyNames.get(i), propertyValues.get(i));
+        }
+        return new AbilityModifier(map, nbt.getUniqueId("ID"));
+    }
 
     public void addProperties(HashMap<String, Number> properties) {
         this.properties.putAll(properties);
@@ -71,6 +114,22 @@ public class AbilityModifier {
         this.properties.remove(property);
         this.propertyNames.remove(property);
         this.propertyValues.remove(num);
+    }
+
+    public void addProperty(String propertyName, Number propertyValue) {
+        this.properties.put(propertyName, propertyValue);
+        this.propertyNames.add(propertyName);
+        this.propertyValues.add(propertyValue);
+    }
+
+    public void clearPropertyList() {
+        this.properties.clear();
+    }
+
+    public void clearProperties() {
+        this.properties.clear();
+        this.propertyNames.clear();
+        this.propertyValues.clear();
     }
 
     public boolean hasProperty(String property) {
@@ -89,64 +148,56 @@ public class AbilityModifier {
         this.id = id;
     }
 
-
     //Read and write methods for bytes and nbt
     public void toBytes(ByteBuf buf) {
         PacketBuffer buffer = new PacketBuffer(buf);
         //Writes the names
-        buffer.writeInt(propertyNames.size());
-        for (String string : propertyNames)
-            GoreCoreByteBufUtil.writeString(buf, string);
+        buffer.writeVarInt(propertyNames.size());
+        //Copies it, prevents exceptions
+        List<String> propertyNames = new ArrayList<>(this.propertyNames);
+        if (!propertyNames.isEmpty()) {
+            for (String string : propertyNames)
+                writeString(buf, string);
+        }
         //Writes the numbers
-        buffer.writeInt(propertyValues.size());
-        for (Number number : propertyValues)
-            buf.writeFloat(number.floatValue());
-
+        buffer.writeVarInt(propertyValues.size());
+        //Copies it, prevents exceptions
+        List<Number> propertyValues = new ArrayList<>(this.propertyValues);
+        if (!propertyValues.isEmpty()) {
+            for (Number number : propertyValues)
+                buffer.writeFloat(number.floatValue());
+        }
         buffer.writeUniqueId(getID());
     }
 
     public AbilityModifier fromBytes(ByteBuf buf) {
         PacketBuffer buffer = new PacketBuffer(buf);
+
+        //Clear properties
+        clearProperties();
         //Names
-        int size = buffer.readInt();
-        propertyNames.clear();
-        for (int i = 0; i < size; i++) {
-            propertyNames.add(i, GoreCoreByteBufUtil.readString(buf));
+        int size = buffer.readVarInt();
+        List<String> propertyNames = new ArrayList<>();
+        if (size > 0) {
+            for (int i = 0; i < size; i++) {
+                propertyNames.add(i, readString(buf));
+            }
         }
         //Numbers
-        size = buffer.readInt();
-        propertyValues.clear();
-        for (int i = 0; i < size; i++) {
-            propertyValues.add(i, buf.readFloat());
+        size = buffer.readVarInt();
+        List<Number> propertyValues = new ArrayList<>();
+        if (size > 0) {
+            for (int i = 0; i < size; i++) {
+                propertyValues.add(i, buffer.readFloat());
+            }
         }
         //Properties
-        this.properties = new HashMap<>();
-        for (int i = 0; i < propertyNames.size(); i++)
-            properties.put(propertyNames.get(i), propertyValues.get(i));
+        if (!propertyNames.isEmpty() && !propertyValues.isEmpty())
+            for (int i = 0; i < propertyNames.size(); i++)
+                addProperty(propertyNames.get(i), propertyValues.get(i));
         //ID
         setID(buffer.readUniqueId());
         return this;
-    }
-
-    public static AbilityModifier staticFromBytes(ByteBuf buf) {
-        PacketBuffer buffer = new PacketBuffer(buf);
-        //Names
-        int size = buffer.readInt();
-        List<String> propertyNames = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
-            propertyNames.add(i, GoreCoreByteBufUtil.readString(buf));
-        }
-        //Numbers
-        size = buffer.readInt();
-        List<Number> propertyValues = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
-            propertyValues.add(i, buf.readFloat());
-        }
-        //Properties
-        HashMap<String, Number> properties = new HashMap<>();
-        for (int i = 0; i < propertyNames.size(); i++)
-            properties.put(propertyNames.get(i), propertyValues.get(i));
-        return new AbilityModifier(properties, buffer.readUniqueId());
     }
 
     public void toNBT(NBTTagCompound nbt) {
@@ -177,26 +228,6 @@ public class AbilityModifier {
         }
         setID(nbt.getUniqueId("ID"));
         return this;
-    }
-
-    public static AbilityModifier staticFromNBT(NBTTagCompound nbt) {
-        //Names
-        int size = nbt.getInteger("Property Name Size");
-        List<String> propertyNames = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
-            propertyNames.add(i, nbt.getString("Property Name " + (i + 1)));
-        }
-        //Values
-        size = nbt.getInteger("Property Value Size");
-        List<Number> propertyValues = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
-            propertyValues.add(i, nbt.getFloat("Property Value " + (i + 1)));
-        }
-        HashMap<String, Number> map = new HashMap<>();
-        for (int i = 0; i < size; i++) {
-            map.put(propertyNames.get(i), propertyValues.get(i));
-        }
-        return new AbilityModifier(map, nbt.getUniqueId("ID"));
     }
 
 }
