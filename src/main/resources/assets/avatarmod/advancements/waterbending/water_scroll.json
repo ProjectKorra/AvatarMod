@@ -1,0 +1,31 @@
+{
+  "display": {
+    "title": "Path of change",
+    "description": "Gain a waterbending scroll!",
+    "icon": {
+      "item": "avatarmod:scroll_water",
+      "data": 0
+    },
+    "background": "avatarmod:textures/advancements/background/water.png",
+    "frame": "goal"
+  },
+  "rewards": {
+    "experience": 250,
+    "recipes": [
+      "avatarmod:water_pouch",
+      "avatarmod:waterbending_scroll_1"
+    ]
+  },
+  "criteria": {
+    "gained_water_scroll": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "avatarmod:scroll_water"
+          }
+        ]
+      }
+    }
+  }
+}

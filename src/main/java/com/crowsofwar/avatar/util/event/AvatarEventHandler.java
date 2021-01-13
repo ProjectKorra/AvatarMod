@@ -1,8 +1,8 @@
 package com.crowsofwar.avatar.util.event;
 
 import com.crowsofwar.avatar.AvatarInfo;
-import com.crowsofwar.avatar.util.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.entity.AvatarEntity;
+import com.crowsofwar.avatar.util.damageutils.AvatarDamageSource;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.Mod;

@@ -1,0 +1,29 @@
+{
+  "display": {
+    "title": "Bending Arts",
+    "description": "Unlocked the element of change, Water!",
+    "icon": {
+      "item": "avatarmod:scroll_water",
+      "data": 1
+    },
+    "background": "avatarmod:textures/advancements/background/air.png",
+    "frame": "goal"
+  },
+  "rewards": {
+    "experience": 50,
+    "recipes": [
+      "avatarmod:airbender_staff"
+    ]
+  },
+  "parent": "avatarmod:waterbending/water_scroll",
+  "criteria": {
+    "unlock_an_element": {
+      "trigger": "unlock_bending",
+      "conditions": {
+        "element": {
+          "element": "waterbending"
+        }
+      }
+    }
+  }
+}

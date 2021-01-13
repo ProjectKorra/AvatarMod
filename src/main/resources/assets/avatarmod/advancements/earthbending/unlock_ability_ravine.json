@@ -1,0 +1,26 @@
+{
+  "display": {
+    "title": "Acolyte Moves: Ravine",
+    "description": "Unlocked the Ravine ability!",
+    "icon": {
+      "item": "avatarmod:scroll_earth",
+      "data": 2
+    },
+    "background": "avatarmod:textures/advancements/background/air.png",
+    "frame": "goal"
+  },
+  "parent": "avatarmod:earthbending/unlock_element_earth",
+  "rewards": {
+    "experience": 50
+  },
+  "criteria": {
+    "unlock_an_element": {
+      "trigger": "unlock_ability",
+      "conditions": {
+        "ability": {
+          "ability": "ravine"
+        }
+      }
+    }
+  }
+}

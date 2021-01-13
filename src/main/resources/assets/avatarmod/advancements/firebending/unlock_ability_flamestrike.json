@@ -1,0 +1,26 @@
+{
+  "display": {
+    "title": "Acolyte Moves: Flame Strike",
+    "description": "Unlocked the Flame Strike ability!",
+    "icon": {
+      "item": "avatarmod:scroll_fire",
+      "data": 2
+    },
+    "background": "avatarmod:textures/advancements/background/air.png",
+    "frame": "goal"
+  },
+  "parent": "avatarmod:firebending/unlock_element_fire",
+  "rewards": {
+    "experience": 50
+  },
+  "criteria": {
+    "unlock_an_element": {
+      "trigger": "unlock_ability",
+      "conditions": {
+        "ability": {
+          "ability": "flame_strike"
+        }
+      }
+    }
+  }
+}
