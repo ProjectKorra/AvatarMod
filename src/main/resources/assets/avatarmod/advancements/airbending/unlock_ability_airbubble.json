@@ -15,7 +15,7 @@
   },
   "criteria": {
     "unlock_an_element": {
-      "trigger": "unlock_ability",
+      "trigger": "avatarmod:unlock_ability",
       "conditions": {
         "ability": {
           "ability": "air_bubble"

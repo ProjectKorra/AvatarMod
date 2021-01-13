@@ -13,7 +13,10 @@
   "rewards": {
     "experience": 50,
     "recipes": [
-      "avatarmod:airbender_staff"
+      "avatarmod:airbender_staff",
+      "avatarmod:glider_scaffolding",
+      "avatarmod:glider_wing_left",
+      "avatarmod:glider_wing_right"
     ]
   },
   "criteria": {

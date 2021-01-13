@@ -37,6 +37,7 @@ import com.crowsofwar.avatar.bending.bending.water.*;
 import com.crowsofwar.avatar.blocks.AvatarBlocks;
 import com.crowsofwar.avatar.client.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.client.particle.AvatarParticles;
+import com.crowsofwar.avatar.common.triggers.AvatarTriggers;
 import com.crowsofwar.avatar.config.*;
 import com.crowsofwar.avatar.entity.*;
 import com.crowsofwar.avatar.entity.data.Behavior;
@@ -419,6 +420,7 @@ public class AvatarMod {
 
         proxy.init();
         proxy.registerParticles();
+        AvatarTriggers.init();
 
     }
 

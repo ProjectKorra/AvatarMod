@@ -89,14 +89,6 @@ public class BendingData {
         else return get(entity);
     }
 
-    public int getTotalLevel(BendingStyle style){
-        int totalLevel = 0;
-        List<Ability> abilities = (List<Ability>) Abilities.all().clone();
-        for (Ability ability : abilities)
-            totalLevel += (getAbilityData(ability).getLevel());
-        return totalLevel;
-    }
-
     @Nonnull
     public static BendingData get(@Nonnull EntityLivingBase entity) {
         if (Bender.get(entity) == null || Bender.get(entity).getInfo().getId() == null)
@@ -130,6 +122,14 @@ public class BendingData {
                 return null;
             }
         }
+    }
+
+    public int getTotalLevel(BendingStyle style) {
+        int totalLevel = 0;
+        List<Ability> abilities = (List<Ability>) Abilities.all().clone();
+        for (Ability ability : abilities)
+            totalLevel += (getAbilityData(ability).getLevel());
+        return totalLevel;
     }
 
     // ================================================================================
@@ -212,6 +212,30 @@ public class BendingData {
             getAbilityData(ability).removeModifiers(modifiers);
     }
 
+    public Rank getRank(BendingStyle style, int newLevels) {
+        List<Ability> abilities = Abilities.all().stream().filter(ability -> ability.getElement().equals(style)).collect(Collectors.toList());
+        int maxLevel = abilities.size() * 4;
+        int realLevel = newLevels;
+        int level;
+        if (!abilities.isEmpty()) {
+            for (Ability ability : abilities) {
+                realLevel += (getAbilityData(ability).getLevel() + 1);
+            }
+        }
+        level = realLevel / maxLevel * 4;
+        switch (level) {
+            case 1:
+                return Rank.ACOLYTE;
+            case 2:
+                return Rank.ADEPT;
+            case 3:
+                return Rank.MASTER;
+            case 4:
+                return Rank.GRANDMASTER;
+            default:
+                return Rank.NOVICE;
+        }
+    }
 
     /**
      * @see #removeBendingId(UUID)
@@ -243,10 +267,6 @@ public class BendingData {
         bendings.clear();
     }
 
-    // ================================================================================
-    // ACTIVE BENDING
-    // ================================================================================
-
     @Nullable
     public UUID getActiveBendingId() {
         if (!bendings.isEmpty() && activeBending == null) {
@@ -260,6 +280,10 @@ public class BendingData {
         }
         return activeBending;
     }
+
+    // ================================================================================
+    // ACTIVE BENDING
+    // ================================================================================
 
     public void setActiveBendingId(UUID id) {
         if (bendings.contains(id)) {
@@ -277,6 +301,10 @@ public class BendingData {
         setActiveBendingId(bending.getId());
     }
 
+    public boolean hasStatusControl(StatusControl control) {
+        return statusControls.contains(control);
+    }
+
     // ================================================================================
     // MISCELLANEOUS
     // ================================================================================
@@ -285,10 +313,6 @@ public class BendingData {
     // ================================================================================
     // STATUS CONTROLS
     // ================================================================================
-
-    public boolean hasStatusControl(StatusControl control) {
-        return statusControls.contains(control);
-    }
 
     public void addStatusControl(StatusControl control) {
         if (statusControls.add(control)) {
@@ -327,18 +351,17 @@ public class BendingData {
         statusControls.clear();
     }
 
-    // ================================================================================
-    // ABILITY DATA
-    // ================================================================================
-
     public boolean hasAbilityData(String abilityName) {
         return abilityData.get(abilityName) != null;
     }
 
+    // ================================================================================
+    // ABILITY DATA
+    // ================================================================================
+
     public boolean hasAbilityData(Ability ability) {
         return hasAbilityData(ability.getName());
     }
-
 
     /**
      * Retrieves data about the given ability. Will get data if necessary.
@@ -392,10 +415,6 @@ public class BendingData {
         abilityData.clear();
     }
 
-    // ================================================================================
-    // CHI
-    // ================================================================================
-
     /**
      * Gets the chi information about the bender
      */
@@ -403,6 +422,10 @@ public class BendingData {
     public Chi chi() {
         return chi;
     }
+
+    // ================================================================================
+    // CHI
+    // ================================================================================
 
     public void setChi(Chi chi) {
         this.chi = chi;
@@ -434,13 +457,13 @@ public class BendingData {
         }
     }
 
-    // ================================================================================
-    // TICK HANDLERS
-    // ================================================================================
-
     public boolean hasTickHandler(TickHandler handler) {
         return tickHandlers.contains(handler);
     }
+
+    // ================================================================================
+    // TICK HANDLERS
+    // ================================================================================
 
     /**
      * Returns how many ticks the given TH has been executing for. Is reset on the world reload
@@ -496,10 +519,6 @@ public class BendingData {
         tickHandlerDuration.clear();
     }
 
-    // ================================================================================
-    // POWER RATING
-    // ================================================================================
-
     /**
      * Gets the power rating manager for the given bending style. Returns null if the bender
      * doesn't have that bending style.
@@ -513,6 +532,10 @@ public class BendingData {
             return null;
         }
     }
+
+    // ================================================================================
+    // POWER RATING
+    // ================================================================================
 
     /**
      * @see #getPowerRatingManager(UUID)
@@ -541,14 +564,14 @@ public class BendingData {
         return new ArrayList<>(powerRatingManagers.values());
     }
 
-    // ================================================================================
-    // VISION
-    // ================================================================================
-
     @Nullable
     public Vision getVision() {
         return vision;
     }
+
+    // ================================================================================
+    // VISION
+    // ================================================================================
 
     public void setVision(@Nullable Vision vision) {
         if (this.vision != vision) {
@@ -557,25 +580,25 @@ public class BendingData {
         }
     }
 
-    // ================================================================================
-    // BATTLE PERFORMANCE
-    // ================================================================================
-
     public BattlePerformanceScore getPerformance() {
         return performance;
     }
+
+    // ================================================================================
+    // BATTLE PERFORMANCE
+    // ================================================================================
 
     public void setPerformance(BattlePerformanceScore performance) {
         this.performance = performance;
     }
 
-// ================================================================================
-    // MISC
-    // ================================================================================
-
     public MiscData getMiscData() {
         return miscData;
     }
+
+// ================================================================================
+    // MISC
+    // ================================================================================
 
     public void setMiscData(MiscData md) {
         miscData = md;
@@ -701,6 +724,14 @@ public class BendingData {
 
     public void saveAll() {
         saveAll.run();
+    }
+
+    public enum Rank {
+        NOVICE,
+        ACOLYTE,
+        ADEPT,
+        MASTER,
+        GRANDMASTER
     }
 
 }
