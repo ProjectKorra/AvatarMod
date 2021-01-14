@@ -270,7 +270,7 @@ public class AvatarMod {
         AvatarAnnouncements.fetchAnnouncements();
 
         //File Generation
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+      /*  Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
         for (Ability ability : Abilities.all()) {
             try {
@@ -350,7 +350,7 @@ public class AvatarMod {
             } catch (IOException exception) {
                 exception.printStackTrace();
             }
-        }
+        }**/
 
 
     }
