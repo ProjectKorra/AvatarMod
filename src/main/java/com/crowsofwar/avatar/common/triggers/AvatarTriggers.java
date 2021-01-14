@@ -17,9 +17,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class AvatarTriggers {
-    /*
-    UnlockBendingTrigger is working, LevelAbilityTrigger is working.
-     */
+    //TODO: Write autogeneration for all of the advancements for levelling up.
+    // Pain.
     public static final UnlockBendingTrigger UNLOCK_ELEMENT = new UnlockBendingTrigger("unlock_bending");
     public static final LevelAbilityTrigger ABILITY_LEVEL = new LevelAbilityTrigger("level_ability");
     public static final UseAbilityTrigger ABILITY_USE = new UseAbilityTrigger("use_ability");
@@ -59,7 +58,7 @@ public class AvatarTriggers {
     @SubscribeEvent
     public static void useAbility(AbilityUseEvent event) {
         if (event.getEntity() instanceof EntityPlayerMP)
-            AvatarTriggers.ABILITY_USE.trigger((EntityPlayerMP) event.getEntity(), event.getAbility(), event.getLevel());
+            AvatarTriggers.ABILITY_USE.trigger((EntityPlayerMP) event.getEntity(), event.getAbility(), event.getLevel() - 1);
     }
 
     @SubscribeEvent

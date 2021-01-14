@@ -1,7 +1,6 @@
 package com.crowsofwar.avatar.common.triggers;
 
 import com.crowsofwar.avatar.bending.bending.Ability;
-import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -17,8 +16,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
-public class UseAbilityTrigger implements ICriterionTrigger<UseAbilityTrigger.Instance>
-{
+public class UseAbilityTrigger implements ICriterionTrigger<UseAbilityTrigger.Instance> {
     private final ResourceLocation RL;
     private final Map<PlayerAdvancements, UseAbilityTrigger.Listeners> listeners = Maps.newHashMap();
 
@@ -27,8 +25,7 @@ public class UseAbilityTrigger implements ICriterionTrigger<UseAbilityTrigger.In
      *
      * @param parString the par string
      */
-    public UseAbilityTrigger(String parString)
-    {
+    public UseAbilityTrigger(String parString) {
         super();
         RL = new ResourceLocation(parString);
     }
@@ -38,8 +35,7 @@ public class UseAbilityTrigger implements ICriterionTrigger<UseAbilityTrigger.In
      *
      * @param parRL the par RL
      */
-    public UseAbilityTrigger(ResourceLocation parRL)
-    {
+    public UseAbilityTrigger(ResourceLocation parRL) {
         super();
         RL = parRL;
     }
@@ -48,8 +44,7 @@ public class UseAbilityTrigger implements ICriterionTrigger<UseAbilityTrigger.In
      * @see net.minecraft.advancements.ICriterionTrigger#getId()
      */
     @Override
-    public ResourceLocation getId()
-    {
+    public ResourceLocation getId() {
         return RL;
     }
 
@@ -57,12 +52,10 @@ public class UseAbilityTrigger implements ICriterionTrigger<UseAbilityTrigger.In
      * @see net.minecraft.advancements.ICriterionTrigger#addListener(net.minecraft.advancements.PlayerAdvancements, net.minecraft.advancements.ICriterionTrigger.Listener)
      */
     @Override
-    public void addListener(PlayerAdvancements playerAdvancementsIn, Listener<UseAbilityTrigger.Instance> listener)
-    {
+    public void addListener(PlayerAdvancements playerAdvancementsIn, Listener<UseAbilityTrigger.Instance> listener) {
         UseAbilityTrigger.Listeners myCustomTrigger$listeners = listeners.get(playerAdvancementsIn);
 
-        if (myCustomTrigger$listeners == null)
-        {
+        if (myCustomTrigger$listeners == null) {
             myCustomTrigger$listeners = new UseAbilityTrigger.Listeners(playerAdvancementsIn);
             listeners.put(playerAdvancementsIn, myCustomTrigger$listeners);
         }
@@ -74,16 +67,13 @@ public class UseAbilityTrigger implements ICriterionTrigger<UseAbilityTrigger.In
      * @see net.minecraft.advancements.ICriterionTrigger#removeListener(net.minecraft.advancements.PlayerAdvancements, net.minecraft.advancements.ICriterionTrigger.Listener)
      */
     @Override
-    public void removeListener(PlayerAdvancements playerAdvancementsIn, Listener<UseAbilityTrigger.Instance> listener)
-    {
+    public void removeListener(PlayerAdvancements playerAdvancementsIn, Listener<UseAbilityTrigger.Instance> listener) {
         UseAbilityTrigger.Listeners tameanimaltrigger$listeners = listeners.get(playerAdvancementsIn);
 
-        if (tameanimaltrigger$listeners != null)
-        {
+        if (tameanimaltrigger$listeners != null) {
             tameanimaltrigger$listeners.remove(listener);
 
-            if (tameanimaltrigger$listeners.isEmpty())
-            {
+            if (tameanimaltrigger$listeners.isEmpty()) {
                 listeners.remove(playerAdvancementsIn);
             }
         }
@@ -93,21 +83,19 @@ public class UseAbilityTrigger implements ICriterionTrigger<UseAbilityTrigger.In
      * @see net.minecraft.advancements.ICriterionTrigger#removeAllListeners(net.minecraft.advancements.PlayerAdvancements)
      */
     @Override
-    public void removeAllListeners(PlayerAdvancements playerAdvancementsIn)
-    {
+    public void removeAllListeners(PlayerAdvancements playerAdvancementsIn) {
         listeners.remove(playerAdvancementsIn);
     }
 
     /**
      * Deserialize a ICriterionInstance of this trigger from the data in the JSON.
      *
-     * @param json the json
+     * @param json    the json
      * @param context the context
      * @return the tame bird trigger. instance
      */
     @Override
-    public UseAbilityTrigger.Instance deserializeInstance(JsonObject json, JsonDeserializationContext context)
-    {
+    public UseAbilityTrigger.Instance deserializeInstance(JsonObject json, JsonDeserializationContext context) {
         return new UseAbilityTrigger.Instance(getId(),
                 AbilityPredicate.deserialize(json.get("ability")));
     }
@@ -117,26 +105,23 @@ public class UseAbilityTrigger implements ICriterionTrigger<UseAbilityTrigger.In
      *
      * @param parPlayer the player
      */
-    public void trigger(EntityPlayerMP parPlayer, Ability ability, int level)
-    {
-        UseAbilityTrigger.Listeners tameanimaltrigger$listeners = listeners.get(parPlayer.getAdvancements());
+    public void trigger(EntityPlayerMP parPlayer, Ability ability, int level) {
+        UseAbilityTrigger.Listeners useAbilityTrigger$listeners = listeners.get(parPlayer.getAdvancements());
 
-        if (tameanimaltrigger$listeners != null)
-        {
-            tameanimaltrigger$listeners.trigger(ability, level);
+        if (useAbilityTrigger$listeners != null) {
+            useAbilityTrigger$listeners.trigger(ability, level);
         }
     }
 
-    public static class Instance extends AbstractCriterionInstance
-    {
+    public static class Instance extends AbstractCriterionInstance {
         private final AbilityPredicate ability;
+
         /**
          * Instantiates a new instance.
          *
          * @param criterion the criterion RL
          */
-        public Instance(ResourceLocation criterion, AbilityPredicate ability)
-        {
+        public Instance(ResourceLocation criterion, AbilityPredicate ability) {
             super(criterion);
             this.ability = ability;
         }
@@ -146,14 +131,12 @@ public class UseAbilityTrigger implements ICriterionTrigger<UseAbilityTrigger.In
          *
          * @return true, if successful
          */
-        public boolean test(Ability ability, int level)
-        {
+        public boolean test(Ability ability, int level) {
             return this.ability.test(ability, level);
         }
     }
 
-    static class Listeners
-    {
+    static class Listeners {
         private final PlayerAdvancements playerAdvancements;
         private final Set<Listener<UseAbilityTrigger.Instance>> listeners = Sets.newHashSet();
 
@@ -162,8 +145,7 @@ public class UseAbilityTrigger implements ICriterionTrigger<UseAbilityTrigger.In
          *
          * @param playerAdvancementsIn the player advancements in
          */
-        public Listeners(PlayerAdvancements playerAdvancementsIn)
-        {
+        public Listeners(PlayerAdvancements playerAdvancementsIn) {
             playerAdvancements = playerAdvancementsIn;
         }
 
@@ -172,8 +154,7 @@ public class UseAbilityTrigger implements ICriterionTrigger<UseAbilityTrigger.In
          *
          * @return true, if is empty
          */
-        public boolean isEmpty()
-        {
+        public boolean isEmpty() {
             return listeners.isEmpty();
         }
 
@@ -182,8 +163,7 @@ public class UseAbilityTrigger implements ICriterionTrigger<UseAbilityTrigger.In
          *
          * @param listener the listener
          */
-        public void add(Listener<UseAbilityTrigger.Instance> listener)
-        {
+        public void add(Listener<UseAbilityTrigger.Instance> listener) {
             listeners.add(listener);
         }
 
@@ -192,8 +172,7 @@ public class UseAbilityTrigger implements ICriterionTrigger<UseAbilityTrigger.In
          *
          * @param listener the listener
          */
-        public void remove(Listener<UseAbilityTrigger.Instance> listener)
-        {
+        public void remove(Listener<UseAbilityTrigger.Instance> listener) {
             listeners.remove(listener);
         }
 
@@ -202,16 +181,12 @@ public class UseAbilityTrigger implements ICriterionTrigger<UseAbilityTrigger.In
          *
          * @param ability
          */
-        public void trigger(Ability ability, int level)
-        {
+        public void trigger(Ability ability, int level) {
             ArrayList<Listener<UseAbilityTrigger.Instance>> list = null;
 
-            for (Listener<UseAbilityTrigger.Instance> listener : listeners)
-            {
-                if (listener.getCriterionInstance().test(ability, level))
-                {
-                    if (list == null)
-                    {
+            for (Listener<UseAbilityTrigger.Instance> listener : listeners) {
+                if (listener.getCriterionInstance().test(ability, level)) {
+                    if (list == null) {
                         list = Lists.newArrayList();
                     }
 
@@ -219,10 +194,8 @@ public class UseAbilityTrigger implements ICriterionTrigger<UseAbilityTrigger.In
                 }
             }
 
-            if (list != null)
-            {
-                for (Listener<UseAbilityTrigger.Instance> listener1 : list)
-                {
+            if (list != null) {
+                for (Listener<UseAbilityTrigger.Instance> listener1 : list) {
                     listener1.grantCriterion(playerAdvancements);
                 }
             }

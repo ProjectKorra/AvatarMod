@@ -146,9 +146,9 @@ public class AbilityUnlockTrigger implements ICriterionTrigger<AbilityUnlockTrig
          *
          * @return true, if successful
          */
-        public boolean test(Ability ability, int level)
+        public boolean test(Ability ability)
         {
-            return this.ability.test(ability, level);
+            return this.ability.test(ability, -1);
         }
     }
 
@@ -208,7 +208,7 @@ public class AbilityUnlockTrigger implements ICriterionTrigger<AbilityUnlockTrig
 
             for (Listener<AbilityUnlockTrigger.Instance> listener : listeners)
             {
-                if (listener.getCriterionInstance().test(ability, 0))
+                if (listener.getCriterionInstance().test(ability))
                 {
                     if (list == null)
                     {
