@@ -1,6 +1,6 @@
 package com.crowsofwar.avatar.bending.bendingmultipliers;
 
-import com.crowsofwar.avatar.item.ItemHangGliderBase;
+import com.crowsofwar.avatar.item.ItemGliderBase;
 import com.crowsofwar.avatar.bending.bending.air.Airbending;
 import com.crowsofwar.avatar.bending.bending.air.powermods.StaffPowerModifier;
 import com.crowsofwar.avatar.bending.bending.earth.Earthbending;
@@ -54,13 +54,13 @@ public class PrModifierHandler {
 			if (bendingId.equals(Airbending.ID)) {
 				if (bender.getEntity().getHeldItemMainhand() != ItemStack.EMPTY) {
 					Item item = bender.getEntity().getHeldItemMainhand().getItem();
-					if (item instanceof ItemHangGliderBase) {
+					if (item instanceof ItemGliderBase) {
 						manager.addModifier(new StaffPowerModifier(), ctx);
 					}
 				}
 				if (bender.getEntity().getHeldItemOffhand() != ItemStack.EMPTY) {
 					Item item = bender.getEntity().getHeldItemOffhand().getItem();
-					if (item instanceof ItemHangGliderBase) {
+					if (item instanceof ItemGliderBase) {
 						manager.addModifier(new StaffPowerModifier(), ctx);
 					}
 				}

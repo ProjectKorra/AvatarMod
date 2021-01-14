@@ -1,13 +1,10 @@
 {
-  "result": {
-    "item": "avatarmod:airbender_staff"
-  },
+  "type": "minecraft:crafting_shaped",
   "pattern": [
     "   ",
     "lsr",
     "   "
   ],
-  "type": "forge:ore_shaped",
   "key": {
     "l": {
       "item": "avatarmod:basic_wing_left"
@@ -19,5 +16,8 @@
       "item": "avatarmod:basic_wing_right"
     }
   },
-  "mirrored": false
+
+  "result": {
+    "item": "avatarmod:airbender_staff"
+  }
 }

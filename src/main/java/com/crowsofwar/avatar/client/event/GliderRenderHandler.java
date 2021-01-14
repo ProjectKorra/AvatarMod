@@ -1,18 +1,15 @@
 package com.crowsofwar.avatar.client.event;
 
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.client.model_loaders.obj.ObjLoader;
 import com.crowsofwar.avatar.client.model_loaders.obj.ObjModel;
-import com.crowsofwar.avatar.item.ItemHangGliderBase;
-import com.crowsofwar.avatar.util.data.BendingData;
+import com.crowsofwar.avatar.item.ItemGliderBase;
 import com.crowsofwar.avatar.util.helper.GliderHelper;
 import com.crowsofwar.avatar.item.IGlider;
 import com.crowsofwar.avatar.util.helper.GliderPlayerHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.model.ModelPlayer;
-import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.entity.player.EntityPlayer;
@@ -81,7 +78,7 @@ public class GliderRenderHandler {
     }
 
     //The model to display
-    private final ObjModel modelGlider = ObjLoader.load(ItemHangGliderBase.MODEL_GLIDER_RL);
+    private final ObjModel modelGlider = ObjLoader.load(ItemGliderBase.MODEL_GLIDER_RL);
 
     /**
      * Renders the gliderBasic above the player

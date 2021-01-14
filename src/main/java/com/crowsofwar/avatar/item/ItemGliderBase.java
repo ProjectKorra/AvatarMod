@@ -20,7 +20,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
@@ -51,7 +50,7 @@ import static com.crowsofwar.avatar.util.helper.GliderHelper.getIsGliderDeployed
 import static com.crowsofwar.avatar.util.helper.GliderHelper.setIsGliderDeployed;
 
 @Mod.EventBusSubscriber(modid = MOD_ID)
-public class ItemHangGliderBase extends ItemSword implements IGlider, AvatarItem {
+public class ItemGliderBase extends ItemSword implements IGlider, AvatarItem {
 
     public static final ResourceLocation MODEL_GLIDER_BASIC_TEXTURE_RL = new ResourceLocation(MOD_ID, "textures/models/glider_basic.png");
     public static final ResourceLocation MODEL_GLIDER_ADVANCED_TEXTURE_RL = new ResourceLocation(MOD_ID, "textures/models/glider_advanced.png");
@@ -69,7 +68,7 @@ public class ItemHangGliderBase extends ItemSword implements IGlider, AvatarItem
     private int totalDurability;
     private ResourceLocation modelRL;
 
-    public ItemHangGliderBase(float minSpeed, float maxSpeed, float pitchOffset, float yBoost, float fallReduction, double windMultiplier, double airResistance, int totalDurability, ResourceLocation modelRL) {
+    public ItemGliderBase(float minSpeed, float maxSpeed, float pitchOffset, float yBoost, float fallReduction, double windMultiplier, double airResistance, int totalDurability, ResourceLocation modelRL) {
         super(Item.ToolMaterial.WOOD);
         this.windMultiplier = windMultiplier;
         this.airResistance = airResistance;
@@ -210,16 +209,16 @@ public class ItemHangGliderBase extends ItemSword implements IGlider, AvatarItem
         EntityLivingBase entity = event.getEntityLiving();
         BendingData data = BendingData.getFromEntity(entity);
         if (data != null) {
-            ItemHangGliderBase base;
-            if (entity.getHeldItemMainhand().getItem() instanceof ItemHangGliderBase) {
-                base = (ItemHangGliderBase) entity.getHeldItemMainhand().getItem();
+            ItemGliderBase base;
+            if (entity.getHeldItemMainhand().getItem() instanceof ItemGliderBase) {
+                base = (ItemGliderBase) entity.getHeldItemMainhand().getItem();
                 List<Ability> abilities = Abilities.all().stream().filter(ability -> ability.getBendingId().equals(Airbending.ID))
                         .collect(Collectors.toList());
                 if (abilities.contains(event.getAbility()))
                     data.applyModifiersToAbilities(abilities, base.getAbilityModifier());
             }
-            else if (entity.getHeldItemOffhand().getItem() instanceof ItemHangGliderBase) {
-                base = (ItemHangGliderBase) entity.getHeldItemOffhand().getItem();
+            else if (entity.getHeldItemOffhand().getItem() instanceof ItemGliderBase) {
+                base = (ItemGliderBase) entity.getHeldItemOffhand().getItem();
                 List<Ability> abilities = Abilities.all().stream().filter(ability -> ability.getBendingId().equals(Airbending.ID))
                         .collect(Collectors.toList());
                 if (abilities.contains(event.getAbility()))

@@ -1,14 +1,13 @@
 {
   "result": {
-    "item": "avatarmod:hang_glider_part",
-    "data": 1
+    "item": "avatarmod:basic_wing_right"
   },
   "pattern": [
     "ls ",
     "lls",
     "lll"
   ],
-  "type": "avatarmod:ore_shaped",
+  "type": "forge:ore_shaped",
   "key": {
     "s": {
       "type": "forge:ore_dict",

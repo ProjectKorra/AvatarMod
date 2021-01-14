@@ -10,20 +10,20 @@ import java.util.HashMap;
 
 import static com.crowsofwar.avatar.config.ConfigGlider.GLIDER_CONFIG;
 
-public class ItemHangGliderBasic extends ItemHangGliderBase {
+public class ItemGliderBasic extends ItemGliderBase {
 
-    private static ItemHangGliderBasic instance = null;
+    private static ItemGliderBasic instance = null;
 
-    public ItemHangGliderBasic() {
+    public ItemGliderBasic() {
         super(GLIDER_CONFIG.basicGliderMinSpeed, GLIDER_CONFIG.basicGliderMaxSpeed, GLIDER_CONFIG.basicGliderPitchOffset, GLIDER_CONFIG.basicGliderYBoost, GLIDER_CONFIG.basicGliderFallReduction, GLIDER_CONFIG.basicGliderWindModifier,
-                GLIDER_CONFIG.basicGliderAirResistance, GLIDER_CONFIG.basicGliderTotalDurability, ItemHangGliderBase.MODEL_GLIDER_BASIC_TEXTURE_RL);
+                GLIDER_CONFIG.basicGliderAirResistance, GLIDER_CONFIG.basicGliderTotalDurability, ItemGliderBase.MODEL_GLIDER_BASIC_TEXTURE_RL);
         setCreativeTab(AvatarItems.tabItems);
         setTranslationKey(GliderInfo.itemGliderBasicName);
     }
 
-    public static ItemHangGliderBasic getInstance() {
+    public static ItemGliderBasic getInstance() {
         if (instance == null) {
-            instance = new ItemHangGliderBasic();
+            instance = new ItemGliderBasic();
             AvatarItems.addItem(instance);
         }
 

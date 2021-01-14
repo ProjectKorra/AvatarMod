@@ -3,25 +3,19 @@ package com.crowsofwar.avatar.client.renderer;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.client.model_loaders.obj.ObjLoader;
 import com.crowsofwar.avatar.client.model_loaders.obj.ObjModel;
-import com.crowsofwar.avatar.item.ItemHangGliderBase;
+import com.crowsofwar.avatar.item.ItemGliderBase;
 import com.crowsofwar.avatar.util.helper.GliderHelper;
 import com.crowsofwar.avatar.item.IGlider;
-import com.zeitheron.hammercore.client.model.mc.ModelRendererWavefront;
-import com.zeitheron.hammercore.client.utils.rendering.WavefrontLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
-import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;
 
@@ -37,7 +31,7 @@ public class LayerGlider implements LayerRenderer<AbstractClientPlayer> {
 
     public LayerGlider(RenderPlayer playerRendererIn) {
         this.playerRenderer = playerRendererIn;
-        gliderModel = ObjLoader.load(ItemHangGliderBase.MODEL_GLIDER_RL);
+        gliderModel = ObjLoader.load(ItemGliderBase.MODEL_GLIDER_RL);
     }
 
     @Override

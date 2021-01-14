@@ -54,8 +54,8 @@ public class AvatarItems {
 	public static ItemOstrichEquipment itemOstrichEquipment;
 	public static ItemStack stackScroll;
 	public static ItemHangGliderPart gliderPart;
-	public static ItemHangGliderBasic gliderBasic;
-	public static ItemHangGliderAdvanced gliderAdv;
+	public static ItemGliderBasic gliderBasic;
+	public static ItemGliderMaster gliderAdv;
 	public static ItemEmptyExpBottle emptyExpBottle;
 
 	private static void PopulateItems() {
@@ -73,8 +73,8 @@ public class AvatarItems {
 		itemBisonArmor = ItemBisonArmor.getInstance();
 		itemBisonSaddle = ItemBisonSaddle.getInstance();
 		itemOstrichEquipment = ItemOstrichEquipment.getInstance();
-		gliderBasic = ItemHangGliderBasic.getInstance();
-		gliderAdv = ItemHangGliderAdvanced.getInstance();
+		gliderBasic = ItemGliderBasic.getInstance();
+		gliderAdv = ItemGliderMaster.getInstance();
 		gliderPart = ItemHangGliderPart.getInstance();
 		emptyExpBottle = ItemEmptyExpBottle.getInstance();
 	}

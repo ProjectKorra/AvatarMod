@@ -1,28 +1,22 @@
 {
-  "result": {
-    "item": "avatarmod:master_airbender_staff"
-  },
+  "type": "minecraft:crafting_shaped",
   "pattern": [
     " e ",
-    "lsr",
-    " e "
+    "lel"
   ],
-  "type": "forge:ore_shaped",
   "key": {
     "l": {
-      "item": "avatarmod:hang_glider_part",
-      "data": 0
+      "item": "avatarmod:scroll_air",
+      "data": 3
     },
     "s": {
-      "item": "avatarmod:hang_glider_basic"
-    },
-    "r": {
-      "item": "avatarmod:hang_glider_part",
-      "data": 1
+      "item": "avatarmod:airbender_staff"
     },
     "e": {
       "item": "minecraft:elytra"
     }
   },
-  "mirrored": false
+  "result": {
+    "item": "avatarmod:master_airbender_staff"
+  }
 }
