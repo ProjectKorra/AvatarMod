@@ -9,7 +9,7 @@
     "background": "avatarmod:textures/advancements/background/air.png",
     "frame": "goal"
   },
-  "parent": "avatarmod:airbending/level_air_gust_2",
+  "parent": "avatarmod:airbending/abilities/air_gust/level_air_gust_2",
   "rewards": {
     "experience": 50
   },
