@@ -11,7 +11,7 @@
   },
   "parent": "avatarmod:airbending/abilities/air_gust/level_air_gust_2",
   "rewards": {
-    "experience": 50
+    "experience": 45
   },
   "criteria": {
     "level_an_ability": {

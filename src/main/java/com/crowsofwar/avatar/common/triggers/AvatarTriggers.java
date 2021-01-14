@@ -42,7 +42,7 @@ public class AvatarTriggers {
     @SubscribeEvent
     public static void levelAbility(AbilityLevelEvent event) {
         if (event.getEntity() instanceof EntityPlayerMP) {
-            AvatarTriggers.ABILITY_LEVEL.trigger((EntityPlayerMP) event.getEntity(), event.getAbility(), event.getOldLevel(), event.getNewLevel());
+            AvatarTriggers.ABILITY_LEVEL.trigger((EntityPlayerMP) event.getEntity(), event.getAbility(), event.getOldLevel() - 1, event.getNewLevel() - 1);
             //Time to calculate the player's rank ugh
             BendingData data = BendingData.getFromEntity(event.getEntityLiving());
             if (data != null) {
