@@ -31,11 +31,11 @@ avatar.icebending.demonym=§3§lIcebender
 avatar.sandbending=§6§lSandbending
 avatar.sandbending.demonym=§6§lSandbender
 
-item.avatarmod:hang_glider_basic.name=§f§lAcolyte Glider
-item.avatarmod:hang_glider_advanced.name=§7§l§nMaster Glider
-item.avatarmod:hang_glider_part.wing_left.name=Glider Wing (Left)
-item.avatarmod:hang_glider_part.wing_right.name=Glider Wing (Right)
-item.avatarmod:hang_glider_part.scaffolding.name=Scaffolding
+item.avatarmod:basic_glider.name=§lAcolyte Glider
+item.avatarmod:master_glider.name=§l§nMaster Glider
+item.avatarmod:glider_part.wing_left.name=Glider Wing (Left)
+item.avatarmod:glider_part.wing_right.name=Glider Wing (Right)
+item.avatarmod:glider_part.scaffolding.name=Scaffolding
 
 # Creative tab Localization
 itemGroup.avatarmod=Glider
