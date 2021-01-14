@@ -1,15 +1,15 @@
 {
   "display": {
-    "title": "Monk Moves: Air Gust",
-    "description": "Level up the Air Gust ability to Level IV!",
+    "title": "Nomad Moves: Air Gust",
+    "description": "Level up the Air Gust ability to Level III!",
     "icon": {
       "item": "avatarmod:scroll_air",
-      "data": 3
+      "data": 2
     },
     "background": "avatarmod:textures/advancements/background/air.png",
-    "frame": "challenge"
+    "frame": "goal"
   },
-  "parent": "avatarmod:airbending/unlock_element_air",
+  "parent": "avatarmod:airbending/level_air_gust_2",
   "rewards": {
     "experience": 50
   },

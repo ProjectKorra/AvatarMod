@@ -10,13 +10,13 @@
       "data": 3
     },
     "s": {
-      "item": "avatarmod:glider_basic"
+      "item": "avatarmod:basic_glider"
     },
     "e": {
       "item": "minecraft:elytra"
     }
   },
   "result": {
-    "item": "avatarmod:glider_master"
+    "item": "avatarmod:master_glider"
   }
 }
