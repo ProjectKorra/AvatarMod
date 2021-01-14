@@ -84,7 +84,7 @@ public class NodeXpSet extends NodeFunctional {
 			}
 
 		}
-		if (level < 0 && !MinecraftForge.EVENT_BUS.post(new AbilityUnlockEvent(player, ability)) ||
+		if (level == 0 && abilityData.getLevel() < 0 && !MinecraftForge.EVENT_BUS.post(new AbilityUnlockEvent(player, ability)) ||
 				!MinecraftForge.EVENT_BUS.post(new AbilityLevelEvent(player, ability, abilityData.getLevel() + 1, level + 1))) {
 
 			abilityData.setLevel(level);

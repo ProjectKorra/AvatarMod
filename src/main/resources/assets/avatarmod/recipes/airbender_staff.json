@@ -10,16 +10,13 @@
   "type": "forge:ore_shaped",
   "key": {
     "l": {
-      "item": "avatarmod:hang_glider_part",
-      "data": 0
+      "item": "avatarmod:basic_wing_left"
     },
     "s": {
-      "item": "avatarmod:hang_glider_part",
-      "data": 2
+      "item": "avatarmod:scaffolding"
     },
     "r": {
-      "item": "avatarmod:hang_glider_part",
-      "data": 1
+      "item": "avatarmod:basic_wing_right"
     }
   },
   "mirrored": false

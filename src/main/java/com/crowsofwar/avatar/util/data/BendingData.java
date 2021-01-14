@@ -213,7 +213,7 @@ public class BendingData {
     }
 
     public Rank getRank(BendingStyle style, int newLevels) {
-        List<Ability> abilities = Abilities.all().stream().filter(ability -> ability.getElement().equals(style)).collect(Collectors.toList());
+        List<Ability> abilities = Abilities.all().stream().filter(ability -> ability.getElement() == style).collect(Collectors.toList());
         int maxLevel = abilities.size() * 4;
         int realLevel = newLevels;
         int level;
@@ -371,6 +371,7 @@ public class BendingData {
         AbilityData data = abilityData.get(abilityName);
         if (data == null) {
             data = new AbilityData(this, Abilities.get(abilityName));
+            AvatarLog.info("Hm: " + Abilities.get(abilityName));
             abilityData.put(abilityName, data);
             save(DataCategory.ABILITY_DATA);
         }

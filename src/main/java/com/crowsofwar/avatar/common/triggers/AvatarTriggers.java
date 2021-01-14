@@ -11,9 +11,6 @@ import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
-
-import java.lang.reflect.Method;
 
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class AvatarTriggers {
@@ -35,31 +32,36 @@ public class AvatarTriggers {
     }
 
     @SubscribeEvent
-    public void unlockBending(ElementUnlockEvent event) {
-        AvatarTriggers.UNLOCK_ELEMENT.trigger((EntityPlayerMP) event.getEntity(), event.getElement());
+    public static void unlockBending(ElementUnlockEvent event) {
+        if (event.getEntity() instanceof EntityPlayerMP)
+            AvatarTriggers.UNLOCK_ELEMENT.trigger((EntityPlayerMP) event.getEntity(), event.getElement());
     }
 
     @SubscribeEvent
-    public void levelAbility(AbilityLevelEvent event) {
-        AvatarTriggers.ABILITY_LEVEL.trigger((EntityPlayerMP) event.getEntity(), event.getAbility(), event.getOldLevel(), event.getNewLevel());
-        //Time to calculate the player's rank ugh
-        BendingData data = BendingData.getFromEntity(event.getEntityLiving());
-        if (data != null) {
-            Ability ability = event.getAbility();
+    public static void levelAbility(AbilityLevelEvent event) {
+        if (event.getEntity() instanceof EntityPlayerMP) {
+            AvatarTriggers.ABILITY_LEVEL.trigger((EntityPlayerMP) event.getEntity(), event.getAbility(), event.getOldLevel(), event.getNewLevel());
+            //Time to calculate the player's rank ugh
+            BendingData data = BendingData.getFromEntity(event.getEntityLiving());
+            if (data != null) {
+                Ability ability = event.getAbility();
 
-            BendingData.Rank rank = data.getRank(ability.getElement(), 0);
-            BendingData.Rank newRank = data.getRank(ability.getElement(), 1);
-            AvatarTriggers.ELEMENT_RANK.trigger((EntityPlayerMP) event.getEntity(), event.getAbility().getElement(), rank.ordinal(), newRank.ordinal());
+                BendingData.Rank rank = data.getRank(ability.getElement(), 0);
+                BendingData.Rank newRank = data.getRank(ability.getElement(), 1);
+                AvatarTriggers.ELEMENT_RANK.trigger((EntityPlayerMP) event.getEntity(), event.getAbility().getElement(), rank.ordinal(), newRank.ordinal());
+            }
         }
     }
 
     @SubscribeEvent
-    public void useAbility(AbilityUseEvent event) {
-        AvatarTriggers.ABILITY_USE.trigger((EntityPlayerMP) event.getEntity(), event.getAbility(), event.getLevel());
+    public static void useAbility(AbilityUseEvent event) {
+        if (event.getEntity() instanceof EntityPlayerMP)
+            AvatarTriggers.ABILITY_USE.trigger((EntityPlayerMP) event.getEntity(), event.getAbility(), event.getLevel());
     }
 
     @SubscribeEvent
-    public void unlockAbility(AbilityUnlockEvent event) {
-        AvatarTriggers.UNLOCK_ABILITY.trigger((EntityPlayerMP) event.getEntity(), event.getAbility());
+    public static void unlockAbility(AbilityUnlockEvent event) {
+        if (event.getEntity() instanceof EntityPlayerMP)
+            AvatarTriggers.UNLOCK_ABILITY.trigger((EntityPlayerMP) event.getEntity(), event.getAbility());
     }
 }
