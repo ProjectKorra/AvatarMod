@@ -1,7 +1,7 @@
 {
   "display": {
-    "title": "Acolyte Moves: Air Bubble",
-    "description": "Unlock the Air Bubble ability!",
+    "title": "Novice Moves: Air Blade",
+    "description": "Unlock the Air Blade ability!",
     "icon": {
       "item": "avatarmod:scroll_air",
       "data": 2
@@ -14,11 +14,11 @@
     "experience": 50
   },
   "criteria": {
-    "unlock_an_element": {
+    "unlock_an_ability": {
       "trigger": "unlock_ability",
       "conditions": {
         "ability": {
-          "ability": "air_bubble"
+          "ability": "airblade"
         }
       }
     }

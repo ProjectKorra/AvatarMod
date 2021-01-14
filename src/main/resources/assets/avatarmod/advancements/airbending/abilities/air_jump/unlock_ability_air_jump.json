@@ -1,0 +1,26 @@
+{
+  "display": {
+    "title": "Novice Moves: Air Jump",
+    "description": "Unlock the Air Jump ability!",
+    "icon": {
+      "item": "avatarmod:scroll_air",
+      "data": 2
+    },
+    "background": "avatarmod:textures/advancements/background/air.png",
+    "frame": "goal"
+  },
+  "parent": "avatarmod:airbending/unlock_element_air",
+  "rewards": {
+    "experience": 35
+  },
+  "criteria": {
+    "unlock_an_ability": {
+      "trigger": "unlock_ability",
+      "conditions": {
+        "ability": {
+          "ability": "air_jump"
+        }
+      }
+    }
+  }
+}

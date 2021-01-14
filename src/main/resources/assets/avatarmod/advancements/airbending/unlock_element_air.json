@@ -4,7 +4,7 @@
     "description": "Unlocked the element of freedom, Air!",
     "icon": {
       "item": "avatarmod:scroll_air",
-      "data": 1
+      "data": 0
     },
     "background": "avatarmod:textures/advancements/background/air.png",
     "frame": "goal"

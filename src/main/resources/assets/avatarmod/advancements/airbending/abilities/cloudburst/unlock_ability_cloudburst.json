@@ -1,7 +1,7 @@
 {
   "display": {
-    "title": "Acolyte Moves: Air Blade",
-    "description": "Unlock the Air Blade ability!",
+    "title": "Nomad Moves: Cloud Burst",
+    "description": "Unlock the Cloud Burst ability!",
     "icon": {
       "item": "avatarmod:scroll_air",
       "data": 2
@@ -11,14 +11,14 @@
   },
   "parent": "avatarmod:airbending/unlock_element_air",
   "rewards": {
-    "experience": 50
+    "experience": 100
   },
   "criteria": {
-    "unlock_an_element": {
+    "unlock_an_ability": {
       "trigger": "unlock_ability",
       "conditions": {
         "ability": {
-          "ability": "airblade"
+          "ability": "cloudburst"
         }
       }
     }

@@ -63,6 +63,9 @@ import com.crowsofwar.avatar.util.command.AvatarCommand;
 import com.crowsofwar.avatar.util.data.AvatarPlayerData;
 import com.crowsofwar.avatar.util.event.ServerEventHandler;
 import com.crowsofwar.avatar.util.windhelper.WindHelper;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.util.ResourceLocation;
@@ -86,6 +89,8 @@ import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import static com.crowsofwar.avatar.config.ConfigMobs.MOBS_CONFIG;
 import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
@@ -265,13 +270,12 @@ public class AvatarMod {
         AvatarAnnouncements.fetchAnnouncements();
 
         //File Generation
-       /* Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
         for (Ability ability : Abilities.all()) {
             try {
 
-
-                File file = new File("generated\\" + ability.getName() + ".json");
+                File file = new File("generated\\" + "level_ability" + ability.getName() + ".json");
                 file.createNewFile();
                 FileWriter writer = new FileWriter(file);
 
@@ -346,7 +350,7 @@ public class AvatarMod {
             } catch (IOException exception) {
                 exception.printStackTrace();
             }
-        }**/
+        }
 
 
     }

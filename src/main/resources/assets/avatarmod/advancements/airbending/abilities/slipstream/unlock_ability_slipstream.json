@@ -1,7 +1,7 @@
 {
   "display": {
-    "title": "Acolyte Moves: Slip Stream",
-    "description": "Unlocked the Slip Stream ability!",
+    "title": "Master Moves: Slip Stream",
+    "description": "Unlock the Slip Stream ability!",
     "icon": {
       "item": "avatarmod:scroll_air",
       "data": 2
@@ -11,10 +11,10 @@
   },
   "parent": "avatarmod:airbending/unlock_element_air",
   "rewards": {
-    "experience": 50
+    "experience": 200
   },
   "criteria": {
-    "unlock_an_element": {
+    "unlock_an_ability": {
       "trigger": "unlock_ability",
       "conditions": {
         "ability": {
