@@ -1,6 +1,7 @@
 {
   "result": {
-    "item": "avatarmod:scaffolding"
+    "item": "avatarmod:glider_part",
+    "data": 2
   },
   "pattern": [
     " i ",

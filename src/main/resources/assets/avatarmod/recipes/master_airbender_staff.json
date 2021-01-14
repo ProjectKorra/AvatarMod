@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "pattern": [
     " e ",
-    "lel"
+    "lsl"
   ],
   "key": {
     "l": {
@@ -10,13 +10,13 @@
       "data": 3
     },
     "s": {
-      "item": "avatarmod:airbender_staff"
+      "item": "avatarmod:glider_basic"
     },
     "e": {
       "item": "minecraft:elytra"
     }
   },
   "result": {
-    "item": "avatarmod:master_airbender_staff"
+    "item": "avatarmod:glider_master"
   }
 }

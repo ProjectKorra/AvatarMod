@@ -8,22 +8,22 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 
-public class ItemHangGliderPart extends Item implements AvatarItem {
+public class ItemGliderPart extends Item implements AvatarItem {
 
-    private static ItemHangGliderPart instance = null;
+    private static ItemGliderPart instance = null;
 
-    public static String[] names = {"basic_wing_left", "basic_wing_right", "scaffolding"};
+    public static String[] names = {"wing_left", "wing_right", "scaffolding"};
 
-    public ItemHangGliderPart() {
+    public ItemGliderPart() {
         super();
         setCreativeTab(AvatarItems.tabItems);
         setHasSubtypes(true);
-        setTranslationKey(GliderInfo.itemGliderPartName + ".");
+        setTranslationKey(GliderInfo.itemGliderPartName);
     }
 
-    public static ItemHangGliderPart getInstance() {
+    public static ItemGliderPart getInstance() {
         if(instance == null) {
-            instance = new ItemHangGliderPart();
+            instance = new ItemGliderPart();
             AvatarItems.addItem(instance);
         }
         return instance;
@@ -39,7 +39,7 @@ public class ItemHangGliderPart extends Item implements AvatarItem {
 
     @Override
     public String getTranslationKey(ItemStack stack) {
-        return super.getTranslationKey(stack) + names[stack.getMetadata()];
+        return super.getTranslationKey(stack) +  "." + names[stack.getMetadata()];
     }
 
     @Override

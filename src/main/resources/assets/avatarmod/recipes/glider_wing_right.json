@@ -1,6 +1,7 @@
 {
   "result": {
-    "item": "avatarmod:basic_wing_right"
+    "item": "avatarmod:glider_part",
+    "data": 1
   },
   "pattern": [
     "ls ",
