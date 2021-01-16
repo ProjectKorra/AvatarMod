@@ -222,7 +222,7 @@ public class BendingData {
                 realLevel += (getAbilityData(ability).getLevel() + 1);
             }
         }
-        level = realLevel / maxLevel * 4;
+        level = (int) ((float) realLevel / maxLevel * 4F);
         switch (level) {
             case 1:
                 return Rank.ACOLYTE;

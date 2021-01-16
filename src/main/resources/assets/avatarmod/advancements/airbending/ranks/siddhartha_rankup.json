@@ -9,11 +9,11 @@
     "background": "avatarmod:textures/advancements/background/air.png",
     "frame": "challenge"
   },
-  "parent": "avatarmod:airbending/unlock_element_air",
+  "parent": "avatarmod:airbending/ranks/gyatso_rankup",
   "rewards": {
     "experience": 500,
     "recipes": [
-      "airbending_scroll_7"
+      "avatarmod:airbending_scroll_7"
     ]
   },
   "criteria": {

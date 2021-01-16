@@ -52,7 +52,8 @@ public class AvatarTriggers {
                 Ability ability = event.getAbility();
 
                 BendingData.Rank rank = data.getRank(ability.getElement(), 0);
-                BendingData.Rank newRank = data.getRank(ability.getElement(), 1);
+                //Level hasn't been increased yet, have to simulate itl
+                BendingData.Rank newRank = data.getRank(ability.getElement(), event.getNewLevel() - event.getOldLevel());
                 System.out.println("Old Rank: " + rank.ordinal() + ", New Rank: " + newRank.ordinal());
                 AvatarTriggers.ELEMENT_RANK.trigger((EntityPlayerMP) event.getEntity(), event.getAbility().getElement(), rank.ordinal(), newRank.ordinal());
             }

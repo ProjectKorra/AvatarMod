@@ -1,0 +1,61 @@
+{
+  "display": {
+    "title": "Gyatso Moves: Air Burst",
+    "description": "Master the Air Burst ability!",
+    "icon": {
+      "item": "avatarmod:scroll_air",
+      "data": 5
+    },
+    "background": "avatarmod:textures/advancements/background/air.png",
+    "frame": "challenge"
+  },
+  "parent": "avatarmod:airbending/abilities/air_burst/unlock_air_burst",
+  "rewards": {
+    "experience": 100
+  },
+  "criteria": {
+    "level_max": {
+      "trigger": "level_ability",
+      "conditions": {
+        "ability": {
+          "ability": "air_burst",
+          "fromLevel": 3,
+          "toLevel": 4
+        }
+      }
+    },
+    "level_from_2": {
+      "trigger": "level_ability",
+      "conditions": {
+        "ability": {
+          "ability": "air_burst",
+          "fromLevel": 2,
+          "toLevel": 4
+        }
+      }
+    },
+    "level_from_1": {
+      "trigger": "level_ability",
+      "conditions": {
+        "ability": {
+          "ability": "air_burst",
+          "fromLevel": 1,
+          "toLevel": 4
+        }
+      }
+    },
+    "level_from_locked": {
+      "trigger": "level_ability",
+      "conditions": {
+        "ability": {
+          "ability": "air_burst",
+          "fromLevel": 0,
+          "toLevel": 4
+        }
+      }
+    }
+  },
+  "requirements": [
+    ["level_max", "level_from_2", "level_from_1", "level_from_locked"]
+  ]
+}

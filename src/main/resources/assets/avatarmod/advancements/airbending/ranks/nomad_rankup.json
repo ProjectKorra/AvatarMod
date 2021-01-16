@@ -9,7 +9,7 @@
     "background": "avatarmod:textures/advancements/background/air.png",
     "frame": "goal"
   },
-  "parent": "avatarmod:airbending/unlock_element_air",
+  "parent": "avatarmod:airbending/ranks/novice_rankup",
   "rewards": {
     "experience": 50,
     "recipes": [
@@ -21,7 +21,7 @@
     ]
   },
   "criteria": {
-    "unlock_an_ability": {
+    "rankup_novice": {
       "trigger": "rankup_bending",
       "conditions": {
         "element": {
@@ -30,6 +30,49 @@
           "newRank": 1
         }
       }
+    },
+    "rankup_nothing": {
+      "trigger": "rankup_bending",
+      "conditions": {
+        "element": {
+          "element": "airbending",
+          "oldRank": -1,
+          "newRank": 1
+        }
+      }
+    },
+    "rankdown_monk": {
+      "trigger": "rankup_bending",
+      "conditions": {
+        "element": {
+          "element": "airbending",
+          "oldRank": 2,
+          "newRank": 1
+        }
+      }
+    },
+    "rankdown_gyatso": {
+      "trigger": "rankup_bending",
+      "conditions": {
+        "element": {
+          "element": "airbending",
+          "oldRank": 4,
+          "newRank": 1
+        }
+      }
+    },
+    "rankdown_siddhartha": {
+      "trigger": "rankup_bending",
+      "conditions": {
+        "element": {
+          "element": "airbending",
+          "oldRank": 4,
+          "newRank": 1
+        }
+      }
     }
-  }
+  },
+  "requirements": [
+    ["rankup_novice", "rankup_nothing", "rankdown_monk", "rankdown_gyatso", "rankdown_siddhartha"]
+  ]
 }
