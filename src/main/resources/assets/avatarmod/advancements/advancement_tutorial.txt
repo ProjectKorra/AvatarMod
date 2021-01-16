@@ -28,3 +28,6 @@ Conventions for this mod???
 Examples?
     Checkout airbending! It should give you a good idea of what to expect. Don't worry if recipes don't work, I'll handle those.
     Just report them to me.
+
+Anything else?
+    Be sure to include appropriate xp amounts!
