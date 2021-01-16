@@ -4,12 +4,12 @@
     "description": "Unlock the Fire Shot ability!",
     "icon": {
       "item": "avatarmod:scroll_fire",
-      "data": 1
+      "data": 0
     },
     "background": "avatarmod:textures/advancements/background/air.png",
     "frame": "goal"
   },
-  "parent": "avatarmod:airbending/ranks/novice_rankup",
+  "parent": "avatarmod:firebending/ranks/novice_rankup",
   "rewards": {
     "experience": 20
   },
