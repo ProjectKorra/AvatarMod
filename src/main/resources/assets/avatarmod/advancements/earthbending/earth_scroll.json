@@ -11,8 +11,8 @@
   },
   "rewards": {
     "experience": 50,
-    "recipes": [
-      "avatarmod:earthbending_scroll_1"
+    "recipes":  [
+      "avatarmod:empty_experience_bottle"
     ]
   },
   "criteria": {

@@ -10,7 +10,10 @@
     "frame": "task"
   },
   "rewards": {
-    "experience": 50
+    "experience": 50,
+    "recipes":  [
+      "avatarmod:empty_experience_bottle"
+    ]
   },
   "criteria": {
     "gained_air_scroll": {

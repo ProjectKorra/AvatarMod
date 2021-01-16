@@ -1,0 +1,61 @@
+{
+  "display": {
+    "title": "Nomad Moves: Air Gust",
+    "description": "Master the Air Gust ability!",
+    "icon": {
+      "item": "avatarmod:scroll_air",
+      "data": 2
+    },
+    "background": "avatarmod:textures/advancements/background/air.png",
+    "frame": "challenge"
+  },
+  "parent": "avatarmod:airbending/abilities/air_gust/unlock_air_gust",
+  "rewards": {
+    "experience": 50
+  },
+  "criteria": {
+    "level_max": {
+      "trigger": "level_ability",
+      "conditions": {
+        "ability": {
+          "ability": "air_gust",
+          "fromLevel": 3,
+          "toLevel": 4
+        }
+      }
+    },
+    "level_from_2": {
+      "trigger": "level_ability",
+      "conditions": {
+        "ability": {
+          "ability": "air_gust",
+          "fromLevel": 2,
+          "toLevel": 4
+        }
+      }
+    },
+    "level_from_1": {
+      "trigger": "level_ability",
+      "conditions": {
+        "ability": {
+          "ability": "air_gust",
+          "fromLevel": 1,
+          "toLevel": 4
+        }
+      }
+    },
+    "level_from_locked": {
+      "trigger": "level_ability",
+      "conditions": {
+        "ability": {
+          "ability": "air_gust",
+          "fromLevel": 0,
+          "toLevel": 4
+        }
+      }
+    }
+  },
+  "requirements": [
+    ["level_max", "level_from_2", "level_from_1", "level_from_locked"]
+  ]
+}
