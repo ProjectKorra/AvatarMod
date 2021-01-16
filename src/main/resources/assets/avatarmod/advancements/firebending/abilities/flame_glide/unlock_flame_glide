@@ -1,1 +1,26 @@
-
+{
+  "display": {
+    "title": "Novice Moves: Flame Glide",
+    "description": "Unlock the Flame Glide ability!",
+    "icon": {
+      "item": "avatarmod:scroll_fire",
+      "data": 1
+    },
+    "background": "avatarmod:textures/advancements/background/air.png",
+    "frame": "goal"
+  },
+  "parent": "avatarmod:firebending/ranks/novice_rankup",
+  "rewards": {
+    "experience": 20
+  },
+  "criteria": {
+    "unlock_an_ability": {
+      "trigger": "unlock_ability",
+      "conditions": {
+        "ability": {
+          "ability": "flame_glide"
+        }
+      }
+    }
+  }
+}
