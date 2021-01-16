@@ -24,3 +24,7 @@ Conventions for this mod???
         Tier 7.
     Additionally, relevant elemental items should be given. E.g., water pouch recipes should be given after obtaining a water scroll.
     The basic glider should be given at Nomad rank, while the advanced should be given at Gyatso.
+
+Examples?
+    Checkout airbending! It should give you a good idea of what to expect. Don't worry if recipes don't work, I'll handle those.
+    Just report them to me.
