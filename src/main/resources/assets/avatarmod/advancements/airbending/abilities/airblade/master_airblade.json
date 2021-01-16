@@ -1,26 +1,66 @@
 {
   "display": {
-    "title": "Novice Moves: Air Blade",
-    "description": "Unlock the Air Blade ability!",
+    "title": "Monk Moves: Air Blade",
+    "description": "Master the Air Blade ability!",
     "icon": {
       "item": "avatarmod:scroll_air",
-      "data": 2
+      "data": 3
     },
     "background": "avatarmod:textures/advancements/background/air.png",
-    "frame": "goal"
+    "frame": "challenge"
   },
-  "parent": "avatarmod:airbending/ranks/nomad_rankup",
+  "parent": "avatarmod:airbending/abilities/airblade/unlock_airblade",
   "rewards": {
-    "experience": 50
+    "experience": 40
   },
   "criteria": {
-    "unlock_an_ability": {
-      "trigger": "unlock_ability",
+    "level_max": {
+      "trigger": "level_ability",
       "conditions": {
         "ability": {
-          "ability": "airblade"
+          "ability": "airblade",
+          "fromLevel": 3,
+          "toLevel": 4
+        }
+      }
+    },
+    "level_from_2": {
+      "trigger": "level_ability",
+      "conditions": {
+        "ability": {
+          "ability": "airblade",
+          "fromLevel": 2,
+          "toLevel": 4
+        }
+      }
+    },
+    "level_from_1": {
+      "trigger": "level_ability",
+      "conditions": {
+        "ability": {
+          "ability": "airblade",
+          "fromLevel": 1,
+          "toLevel": 4
+        }
+      }
+    },
+    "level_from_locked": {
+      "trigger": "level_ability",
+      "conditions": {
+        "ability": {
+          "ability": "airblade",
+          "fromLevel": 0,
+          "toLevel": 4
         }
       }
     }
-  }
+  },
+  "requirements": [
+    [
+      "level_max",
+      "level_from_2",
+      "level_from_1",
+      "level_from_locked"
+    ]
+  ]
 }

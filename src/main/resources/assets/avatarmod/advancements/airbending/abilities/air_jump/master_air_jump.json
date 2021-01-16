@@ -1,26 +1,66 @@
 {
   "display": {
-    "title": "Novice Moves: Air Jump",
-    "description": "Unlock the Air Jump ability!",
+    "title": "Nomad Moves: Air Jump",
+    "description": "Master the Air Jump ability!",
     "icon": {
       "item": "avatarmod:scroll_air",
       "data": 2
     },
     "background": "avatarmod:textures/advancements/background/air.png",
-    "frame": "goal"
+    "frame": "challenge"
   },
-  "parent": "avatarmod:airbending/ranks/novice_rankup",
+  "parent": "avatarmod:airbending/abilities/air_jump/unlock_air_jump",
   "rewards": {
-    "experience": 35
+    "experience": 30
   },
   "criteria": {
-    "unlock_an_ability": {
-      "trigger": "unlock_ability",
+    "level_max": {
+      "trigger": "level_ability",
       "conditions": {
         "ability": {
-          "ability": "air_jump"
+          "ability": "air_jump",
+          "fromLevel": 3,
+          "toLevel": 4
+        }
+      }
+    },
+    "level_from_2": {
+      "trigger": "level_ability",
+      "conditions": {
+        "ability": {
+          "ability": "air_jump",
+          "fromLevel": 2,
+          "toLevel": 4
+        }
+      }
+    },
+    "level_from_1": {
+      "trigger": "level_ability",
+      "conditions": {
+        "ability": {
+          "ability": "air_jump",
+          "fromLevel": 1,
+          "toLevel": 4
+        }
+      }
+    },
+    "level_from_locked": {
+      "trigger": "level_ability",
+      "conditions": {
+        "ability": {
+          "ability": "air_jump",
+          "fromLevel": 0,
+          "toLevel": 4
         }
       }
     }
-  }
+  },
+  "requirements": [
+    [
+      "level_max",
+      "level_from_2",
+      "level_from_1",
+      "level_from_locked"
+    ]
+  ]
 }

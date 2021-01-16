@@ -11,7 +11,7 @@
   },
   "parent": "avatarmod:airbending/ranks/novice_rankup",
   "rewards": {
-    "experience": 25
+    "experience": 10
   },
   "criteria": {
     "unlock_an_ability": {

@@ -11,7 +11,7 @@
   },
   "parent": "avatarmod:airbending/ranks/nomad_rankup",
   "rewards": {
-    "experience": 75
+    "experience": 35
   },
   "criteria": {
     "unlock_an_ability": {

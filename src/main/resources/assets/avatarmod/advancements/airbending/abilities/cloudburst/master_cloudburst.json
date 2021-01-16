@@ -1,24 +1,24 @@
 {
   "display": {
-    "title": "Monk Moves: Air Blade",
-    "description": "Master the Air Blade ability!",
+    "title": "Gyatso Moves: Cloudburst",
+    "description": "Master the Cloudburst ability!",
     "icon": {
       "item": "avatarmod:scroll_air",
-      "data": 3
+      "data": 4
     },
     "background": "avatarmod:textures/advancements/background/air.png",
     "frame": "challenge"
   },
-  "parent": "avatarmod:airbending/ranks/nomad_rankup",
+  "parent": "avatarmod:airbending/abilities/cloudburst/unlock_ability_cloudburst",
   "rewards": {
-    "experience": 40
+    "experience": 60
   },
   "criteria": {
     "level_max": {
       "trigger": "level_ability",
       "conditions": {
         "ability": {
-          "ability": "airblade",
+          "ability": "cloudburst",
           "fromLevel": 3,
           "toLevel": 4
         }
@@ -28,7 +28,7 @@
       "trigger": "level_ability",
       "conditions": {
         "ability": {
-          "ability": "airblade",
+          "ability": "cloudburst",
           "fromLevel": 2,
           "toLevel": 4
         }
@@ -38,7 +38,7 @@
       "trigger": "level_ability",
       "conditions": {
         "ability": {
-          "ability": "airblade",
+          "ability": "cloudburst",
           "fromLevel": 1,
           "toLevel": 4
         }
@@ -48,7 +48,7 @@
       "trigger": "level_ability",
       "conditions": {
         "ability": {
-          "ability": "airblade",
+          "ability": "cloudburst",
           "fromLevel": 0,
           "toLevel": 4
         }

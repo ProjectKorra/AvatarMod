@@ -1,24 +1,24 @@
 {
   "display": {
-    "title": "Gyatso Moves: Air Bubble",
-    "description": "Master the Air Bubble ability!",
+    "title": "Siddhartha Moves: Slipstream",
+    "description": "Master the Slipstream ability!",
     "icon": {
       "item": "avatarmod:scroll_air",
-      "data": 4
+      "data": 6
     },
     "background": "avatarmod:textures/advancements/background/air.png",
     "frame": "challenge"
   },
-  "parent": "avatarmod:airbending/abilities/air_bubble/unlock_air_bubble",
+  "parent": "avatarmod:airbending/abilities/slipstream/unlock_slipstream",
   "rewards": {
-    "experience": 70
+    "experience": 120
   },
   "criteria": {
     "level_max": {
       "trigger": "level_ability",
       "conditions": {
         "ability": {
-          "ability": "air_bubble",
+          "ability": "slipstream",
           "fromLevel": 3,
           "toLevel": 4
         }
@@ -28,7 +28,7 @@
       "trigger": "level_ability",
       "conditions": {
         "ability": {
-          "ability": "air_bubble",
+          "ability": "slipstream",
           "fromLevel": 2,
           "toLevel": 4
         }
@@ -38,7 +38,7 @@
       "trigger": "level_ability",
       "conditions": {
         "ability": {
-          "ability": "air_bubble",
+          "ability": "slipstream",
           "fromLevel": 1,
           "toLevel": 4
         }
@@ -48,7 +48,7 @@
       "trigger": "level_ability",
       "conditions": {
         "ability": {
-          "ability": "air_bubble",
+          "ability": "slipstream",
           "fromLevel": 0,
           "toLevel": 4
         }

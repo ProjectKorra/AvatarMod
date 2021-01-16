@@ -4,14 +4,14 @@
     "description": "Unlock the Air Jump ability!",
     "icon": {
       "item": "avatarmod:scroll_air",
-      "data": 2
+      "data": 0
     },
     "background": "avatarmod:textures/advancements/background/air.png",
     "frame": "goal"
   },
   "parent": "avatarmod:airbending/ranks/novice_rankup",
   "rewards": {
-    "experience": 35
+    "experience": 15
   },
   "criteria": {
     "unlock_an_ability": {

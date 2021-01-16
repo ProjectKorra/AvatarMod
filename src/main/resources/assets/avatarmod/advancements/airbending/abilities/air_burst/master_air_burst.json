@@ -11,7 +11,7 @@
   },
   "parent": "avatarmod:airbending/abilities/air_burst/unlock_air_burst",
   "rewards": {
-    "experience": 100
+    "experience": 80
   },
   "criteria": {
     "level_max": {
@@ -56,6 +56,11 @@
     }
   },
   "requirements": [
-    ["level_max", "level_from_2", "level_from_1", "level_from_locked"]
+    [
+      "level_max",
+      "level_from_2",
+      "level_from_1",
+      "level_from_locked"
+    ]
   ]
 }

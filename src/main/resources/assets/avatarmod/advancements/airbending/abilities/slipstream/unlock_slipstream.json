@@ -4,14 +4,14 @@
     "description": "Unlock the Slip Stream ability!",
     "icon": {
       "item": "avatarmod:scroll_air",
-      "data": 2
+      "data": 4
     },
     "background": "avatarmod:textures/advancements/background/air.png",
     "frame": "goal"
   },
   "parent": "avatarmod:airbending/ranks/gyatso_rankup",
   "rewards": {
-    "experience": 200
+    "experience": 60
   },
   "criteria": {
     "unlock_an_ability": {

@@ -4,14 +4,14 @@
     "description": "Unlock the Air Blade ability!",
     "icon": {
       "item": "avatarmod:scroll_air",
-      "data": 2
+      "data": 1
     },
     "background": "avatarmod:textures/advancements/background/air.png",
     "frame": "goal"
   },
   "parent": "avatarmod:airbending/ranks/nomad_rankup",
   "rewards": {
-    "experience": 50
+    "experience": 20
   },
   "criteria": {
     "unlock_an_ability": {
