@@ -19,8 +19,8 @@
       "conditions": {
         "ability": {
           "ability": "air_gust",
-          "oldLevel": 1,
-          "newLevel": 2
+          "fromLevel": 1,
+          "toLevel": 2
         }
       }
     }

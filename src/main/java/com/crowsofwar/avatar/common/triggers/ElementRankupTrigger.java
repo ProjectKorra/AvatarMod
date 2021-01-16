@@ -154,7 +154,7 @@ public class ElementRankupTrigger implements ICriterionTrigger<ElementRankupTrig
          */
         public boolean test(BendingStyle bendingStyle, int oldRank, int newRank)
         {
-            return this.element.test(bendingStyle) && newRank > oldRank;
+            return this.element.test(bendingStyle, oldRank, newRank) && newRank > oldRank;
         }
     }
 

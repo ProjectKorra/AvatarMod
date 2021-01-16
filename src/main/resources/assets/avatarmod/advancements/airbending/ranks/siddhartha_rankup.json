@@ -1,17 +1,17 @@
 {
   "display": {
-    "title": "Monk",
-    "description": "Monks are formidable warriors, able to attack, defend, and evade with ease. They can learn advanced airbending techniques.",
+    "title": "Siddhartha",
+    "description": "One who was achieved enlightenment. They have reached the peak of airbending.",
     "icon": {
       "item": "avatarmod:scroll_air",
-      "data": 3
+      "data": 6
     },
     "background": "avatarmod:textures/advancements/background/air.png",
-    "frame": "goal"
+    "frame": "challenge"
   },
   "parent": "avatarmod:airbending/unlock_element_air",
   "rewards": {
-    "experience": 150
+    "experience": 500
   },
   "criteria": {
     "unlock_an_ability": {
@@ -19,8 +19,8 @@
       "conditions": {
         "element": {
           "element": "airbending",
-          "oldRank": 1,
-          "newRank": 2
+          "oldRank": 3,
+          "newRank": 4
         }
       }
     }

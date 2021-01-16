@@ -9,7 +9,7 @@
     "background": "avatarmod:textures/advancements/background/air.png",
     "frame": "goal"
   },
-  "parent": "avatarmod:airbending/unlock_element_air",
+  "parent": "avatarmod:airbending/ranks/novice_rankup",
   "rewards": {
     "experience": 25
   },

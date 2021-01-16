@@ -1,1 +1,28 @@
-{}
+{
+  "display": {
+    "title": "Nomad",
+    "description": "Nomads have learned the basics of airbending, and are able to handle themselves in a fight.",
+    "icon": {
+      "item": "avatarmod:scroll_air",
+      "data": 2
+    },
+    "background": "avatarmod:textures/advancements/background/air.png",
+    "frame": "goal"
+  },
+  "parent": "avatarmod:airbending/unlock_element_air",
+  "rewards": {
+    "experience": 50
+  },
+  "criteria": {
+    "unlock_an_ability": {
+      "trigger": "rankup_bending",
+      "conditions": {
+        "element": {
+          "element": "airbending",
+          "oldRank": 0,
+          "newRank": 1
+        }
+      }
+    }
+  }
+}

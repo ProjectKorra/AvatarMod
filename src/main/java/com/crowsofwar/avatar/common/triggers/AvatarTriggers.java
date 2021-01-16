@@ -22,7 +22,7 @@ public class AvatarTriggers {
     public static final UnlockBendingTrigger UNLOCK_ELEMENT = new UnlockBendingTrigger("unlock_bending");
     public static final LevelAbilityTrigger ABILITY_LEVEL = new LevelAbilityTrigger("level_ability");
     public static final UseAbilityTrigger ABILITY_USE = new UseAbilityTrigger("use_ability");
-    public static final ElementRankupTrigger ELEMENT_RANK = new ElementRankupTrigger("rank_element");
+    public static final ElementRankupTrigger ELEMENT_RANK = new ElementRankupTrigger("rankup_bending");
     public static final AbilityUnlockTrigger UNLOCK_ABILITY = new AbilityUnlockTrigger("unlock_ability");
 
     public static void init() {
@@ -35,14 +35,17 @@ public class AvatarTriggers {
 
     @SubscribeEvent
     public static void unlockBending(ElementUnlockEvent event) {
-        if (event.getEntity() instanceof EntityPlayerMP)
+        if (event.getEntity() instanceof EntityPlayerMP) {
             AvatarTriggers.UNLOCK_ELEMENT.trigger((EntityPlayerMP) event.getEntity(), event.getElement());
+            //Otherwise this isn't activated
+            AvatarTriggers.ELEMENT_RANK.trigger((EntityPlayerMP) event.getEntity(), event.getElement(), -1, 0);
+        }
     }
 
     @SubscribeEvent
     public static void levelAbility(AbilityLevelEvent event) {
         if (event.getEntity() instanceof EntityPlayerMP) {
-            AvatarTriggers.ABILITY_LEVEL.trigger((EntityPlayerMP) event.getEntity(), event.getAbility(), event.getOldLevel() - 1, event.getNewLevel() - 1);
+            AvatarTriggers.ABILITY_LEVEL.trigger((EntityPlayerMP) event.getEntity(), event.getAbility(), event.getOldLevel(), event.getNewLevel());
             //Time to calculate the player's rank ugh
             BendingData data = BendingData.getFromEntity(event.getEntityLiving());
             if (data != null) {
@@ -50,6 +53,7 @@ public class AvatarTriggers {
 
                 BendingData.Rank rank = data.getRank(ability.getElement(), 0);
                 BendingData.Rank newRank = data.getRank(ability.getElement(), 1);
+                System.out.println("Old Rank: " + rank.ordinal() + ", New Rank: " + newRank.ordinal());
                 AvatarTriggers.ELEMENT_RANK.trigger((EntityPlayerMP) event.getEntity(), event.getAbility().getElement(), rank.ordinal(), newRank.ordinal());
             }
         }

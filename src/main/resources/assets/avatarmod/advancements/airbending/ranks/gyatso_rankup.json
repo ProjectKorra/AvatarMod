@@ -1,17 +1,17 @@
 {
   "display": {
-    "title": "Monk",
-    "description": "Monks are formidable warriors, able to attack, defend, and evade with ease. They can learn advanced airbending techniques.",
+    "title": "Gyatso",
+    "description": "Gyatsos are incredibly powerful, having mastered the majority of airbending techniques, and access to more powerful ones. Defeating one is an arduous task.",
     "icon": {
       "item": "avatarmod:scroll_air",
-      "data": 3
+      "data": 4
     },
     "background": "avatarmod:textures/advancements/background/air.png",
-    "frame": "goal"
+    "frame": "challenge"
   },
   "parent": "avatarmod:airbending/unlock_element_air",
   "rewards": {
-    "experience": 150
+    "experience": 250
   },
   "criteria": {
     "unlock_an_ability": {
@@ -19,8 +19,8 @@
       "conditions": {
         "element": {
           "element": "airbending",
-          "oldRank": 1,
-          "newRank": 2
+          "oldRank": 2,
+          "newRank": 3
         }
       }
     }
