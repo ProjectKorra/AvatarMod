@@ -21,22 +21,22 @@
     ]
   },
   "criteria": {
-    "rankup_novice": {
-      "trigger": "rankup_bending",
-      "conditions": {
-        "element": {
-          "element": "airbending",
-          "oldRank": 0,
-          "newRank": 1
-        }
-      }
-    },
     "rankup_nothing": {
       "trigger": "rankup_bending",
       "conditions": {
         "element": {
           "element": "airbending",
           "oldRank": -1,
+          "newRank": 1
+        }
+      }
+    },
+    "rankup_novice": {
+      "trigger": "rankup_bending",
+      "conditions": {
+        "element": {
+          "element": "airbending",
+          "oldRank": 0,
           "newRank": 1
         }
       }
@@ -56,7 +56,7 @@
       "conditions": {
         "element": {
           "element": "airbending",
-          "oldRank": 4,
+          "oldRank": 3,
           "newRank": 1
         }
       }
@@ -73,6 +73,12 @@
     }
   },
   "requirements": [
-    ["rankup_novice", "rankup_nothing", "rankdown_monk", "rankdown_gyatso", "rankdown_siddhartha"]
+    [
+      "rankup_nothing",
+      "rankup_novice",
+      "rankdown_monk",
+      "rankdown_gyatso",
+      "rankdown_siddhartha"
+    ]
   ]
 }

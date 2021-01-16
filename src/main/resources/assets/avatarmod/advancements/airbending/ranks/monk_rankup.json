@@ -17,7 +17,27 @@
     ]
   },
   "criteria": {
-    "unlock_an_ability": {
+    "rankup_nothing": {
+      "trigger": "rankup_bending",
+      "conditions": {
+        "element": {
+          "element": "airbending",
+          "oldRank": -1,
+          "newRank": 2
+        }
+      }
+    },
+    "rankup_novice": {
+      "trigger": "rankup_bending",
+      "conditions": {
+        "element": {
+          "element": "airbending",
+          "oldRank": 0,
+          "newRank": 2
+        }
+      }
+    },
+    "rankup_nomad": {
       "trigger": "rankup_bending",
       "conditions": {
         "element": {
@@ -26,6 +46,35 @@
           "newRank": 2
         }
       }
+    },
+    "rankdown_gyatso": {
+      "trigger": "rankup_bending",
+      "conditions": {
+        "element": {
+          "element": "airbending",
+          "oldRank": 3,
+          "newRank": 2
+        }
+      }
+    },
+    "rankdown_siddhartha": {
+      "trigger": "rankup_bending",
+      "conditions": {
+        "element": {
+          "element": "airbending",
+          "oldRank": 4,
+          "newRank": 2
+        }
+      }
     }
-  }
+  },
+  "requirements": [
+    [
+      "rankup_nothing",
+      "rankup_novice",
+      "rankup_nomad",
+      "rankdown_gyatso",
+      "rankdown_siddhartha"
+    ]
+  ]
 }
