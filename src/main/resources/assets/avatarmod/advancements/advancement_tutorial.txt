@@ -1,0 +1,26 @@
+Welcome to the advancement tutorial!
+
+Please follow the conventions here! Please. I only have so much sanity.
+
+So!
+Advancement trees for elements are defined as such:
+Scroll Find > Element Unlock > Ranks > Abilities.
+    Abilities have 2 advancements: unlocking, and maxing. Maxing should be a 'challenge', basic abilities should be a
+    'task', and everything else is a goal.
+    If you're confused about how advancements work, check out this tutorial here: https://www.minecraftforum.net/forums/minecraft-java-edition/redstone-discussion-and/commands-command-blocks-and/2809368-1-12-custom-advancements-aka-achievements#Requirements
+
+Conventions for this mod???
+    Each ability maxing advancement should have 4 triggers, and they'll only require 1. This accounts for levels 3>4,
+    2>4, 1>4, and 0>4. Each bending rank should give access to its appropriate tiers scrolls. For example:
+    Novice:
+        Tiers 1-2.
+    Nomad:
+        Tier 3
+    Monk:
+        Tier 4
+    Gyatso:
+        Tiers 5-6
+    Siddhartha:
+        Tier 7.
+    Additionally, relevant elemental items should be given. E.g., water pouch recipes should be given after obtaining a water scroll.
+    The basic glider should be given at Nomad rank, while the advanced should be given at Gyatso.
