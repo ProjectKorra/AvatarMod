@@ -54,7 +54,6 @@ public class AvatarTriggers {
                 BendingData.Rank rank = data.getRank(ability.getElement(), 0);
                 //Level hasn't been increased yet, have to simulate itl
                 BendingData.Rank newRank = data.getRank(ability.getElement(), event.getNewLevel() - event.getOldLevel());
-                System.out.println("Old Rank: " + rank.ordinal() + ", New Rank: " + newRank.ordinal());
                 AvatarTriggers.ELEMENT_RANK.trigger((EntityPlayerMP) event.getEntity(), event.getAbility().getElement(), rank.ordinal(), newRank.ordinal());
             }
         }
@@ -68,7 +67,20 @@ public class AvatarTriggers {
 
     @SubscribeEvent
     public static void unlockAbility(AbilityUnlockEvent event) {
-        if (event.getEntity() instanceof EntityPlayerMP)
+        if (event.getEntity() instanceof EntityPlayerMP) {
             AvatarTriggers.UNLOCK_ABILITY.trigger((EntityPlayerMP) event.getEntity(), event.getAbility());
+
+            //This event isn't fired with the level event, so we want to be sure to catch all use cases
+            BendingData data = BendingData.getFromEntity(event.getEntityLiving());
+            if (data != null) {
+                Ability ability = event.getAbility();
+
+                BendingData.Rank rank = data.getRank(ability.getElement(), 0);
+                //Level hasn't been increased yet, have to simulate itl
+                BendingData.Rank newRank = data.getRank(ability.getElement(), 1);
+                AvatarTriggers.ELEMENT_RANK.trigger((EntityPlayerMP) event.getEntity(), event.getAbility().getElement(), rank.ordinal(), newRank.ordinal());
+
+            }
+        }
     }
 }

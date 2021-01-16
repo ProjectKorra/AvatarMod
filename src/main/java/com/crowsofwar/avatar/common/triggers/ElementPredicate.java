@@ -118,9 +118,6 @@ public class ElementPredicate {
         if (this.element != null && element != this.element) {
             return false;
         }
-        else if (newRank <= oldRank) {
-            return false;
-        }
         else if (this.newRank != newRank || this.oldRank != oldRank) {
             return false;
         }
