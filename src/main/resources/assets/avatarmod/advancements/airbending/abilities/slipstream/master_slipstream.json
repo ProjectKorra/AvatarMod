@@ -1,0 +1,66 @@
+{
+  "display": {
+    "title": "Gyatso Moves: Air Bubble",
+    "description": "Master the Air Bubble ability!",
+    "icon": {
+      "item": "avatarmod:scroll_air",
+      "data": 4
+    },
+    "background": "avatarmod:textures/advancements/background/air.png",
+    "frame": "challenge"
+  },
+  "parent": "avatarmod:airbending/abilities/air_bubble/unlock_air_bubble",
+  "rewards": {
+    "experience": 70
+  },
+  "criteria": {
+    "level_max": {
+      "trigger": "level_ability",
+      "conditions": {
+        "ability": {
+          "ability": "air_bubble",
+          "fromLevel": 3,
+          "toLevel": 4
+        }
+      }
+    },
+    "level_from_2": {
+      "trigger": "level_ability",
+      "conditions": {
+        "ability": {
+          "ability": "air_bubble",
+          "fromLevel": 2,
+          "toLevel": 4
+        }
+      }
+    },
+    "level_from_1": {
+      "trigger": "level_ability",
+      "conditions": {
+        "ability": {
+          "ability": "air_bubble",
+          "fromLevel": 1,
+          "toLevel": 4
+        }
+      }
+    },
+    "level_from_locked": {
+      "trigger": "level_ability",
+      "conditions": {
+        "ability": {
+          "ability": "air_bubble",
+          "fromLevel": 0,
+          "toLevel": 4
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "level_max",
+      "level_from_2",
+      "level_from_1",
+      "level_from_locked"
+    ]
+  ]
+}
