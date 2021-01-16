@@ -11,7 +11,11 @@
   },
   "parent": "avatarmod:airbending/unlock_element_air",
   "rewards": {
-    "experience": 0
+    "experience": 0,
+    "recipes": [
+      "avatarmod:airbending_scroll_1",
+      "avatarmod:airbending_scroll_2",
+    ]
   },
   "criteria": {
     "unlock_an_ability": {

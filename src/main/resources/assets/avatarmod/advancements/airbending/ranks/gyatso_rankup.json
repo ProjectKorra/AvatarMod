@@ -11,7 +11,12 @@
   },
   "parent": "avatarmod:airbending/unlock_element_air",
   "rewards": {
-    "experience": 250
+    "experience": 250,
+    "recipes": [
+      "airbending_scroll_5",
+      "airbending_scroll_6",
+      "master_airbender_staff"
+    ]
   },
   "criteria": {
     "unlock_an_ability": {

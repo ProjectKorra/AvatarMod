@@ -11,7 +11,14 @@
   },
   "parent": "avatarmod:airbending/unlock_element_air",
   "rewards": {
-    "experience": 50
+    "experience": 50,
+    "recipes": [
+      "avatarmod:airbending_scroll_3",
+      "avatarmod:airbender_staff",
+      "avatarmod:glider_scaffolding",
+      "avatarmod:glider_wing_left",
+      "avatarmod:glider_wing_right"
+    ]
   },
   "criteria": {
     "unlock_an_ability": {
