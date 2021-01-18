@@ -1,1 +1,81 @@
-
+{
+  "display": {
+    "title": "Fire Lord",
+    "description": "Fire Lords are incredibly powerful, having unlocked the majority of firebending techniques, and access to yet more powerful ones. Defeating one is no easy feat.",
+    "icon": {
+      "item": "avatarmod:scroll_fire",
+      "data": 4
+    },
+    "background": "avatarmod:textures/advancements/background/fire.png",
+    "frame": "challenge"
+  },
+  "parent": "avatarmod:airbending/ranks/flame_general_rankup",
+  "rewards": {
+    "experience": 250,
+    "recipes": [
+      "avatarmod:firebending_scroll_5",
+      "avatarmod:firebending_scroll_6",
+    ]
+  },
+  "criteria": {
+    "rankup_nothing": {
+      "trigger": "rankup_bending",
+      "conditions": {
+        "element": {
+          "element": "firebending",
+          "oldRank": -1,
+          "newRank": 3
+        }
+      }
+    },
+    "rankup_novice": {
+      "trigger": "rankup_bending",
+      "conditions": {
+        "element": {
+          "element": "firebending",
+          "oldRank": 0,
+          "newRank": 3
+        }
+      }
+    },
+    "rankup_cinder_soldier": {
+      "trigger": "rankup_bending",
+      "conditions": {
+        "element": {
+          "element": "firebending",
+          "oldRank": 1,
+          "newRank": 3
+        }
+      }
+    },
+    "rankup_flmae_general": {
+      "trigger": "rankup_bending",
+      "conditions": {
+        "element": {
+          "element": "firebending",
+          "oldRank": 2,
+          "newRank": 3
+        }
+      }
+    },
+    "rankdown_infernal_dragon": {
+      "trigger": "rankup_bending",
+      "conditions": {
+        "element": {
+          "element": "firebending",
+          "oldRank": 4,
+          "newRank": 3
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "rankup_nothing",
+      "rankup_novice",
+      "rankup_cinder_soldier",
+      "rankup_flame_general",
+      "rankdown_infernal_dragon"
+    ]
+  ]
+}
