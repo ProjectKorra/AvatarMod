@@ -6,15 +6,12 @@
       "item": "avatarmod:scroll_fire",
       "data": 0
     },
-    "background": "avatarmod:textures/advancements/background/air.png",
+    "background": "avatarmod:textures/advancements/background/fire.png",
     "frame": "goal"
   },
   "parent": "avatarmod:firebending/fire_scroll",
   "rewards": {
-    "experience": 50,
-    "recipes": [
-      "avatarmod:firebending_scroll_2"
-    ]
+    "experience": 50
   },
   "criteria": {
     "unlock_an_element": {
