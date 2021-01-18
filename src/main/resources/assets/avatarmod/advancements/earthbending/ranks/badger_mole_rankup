@@ -1,0 +1,80 @@
+{
+  "display": {
+    "title": "Badger Mole",
+    "description": "One who has reached the apex of earthbending. Their power allows them to reshape the Earth itself with ease.",
+    "icon": {
+      "item": "avatarmod:scroll_earth,
+      "data": 6
+    },
+    "background": "avatarmod:textures/advancements/background/earth.png",
+    "frame": "challenge"
+  },
+  "parent": "avatarmod:earthbending/ranks/mountain_king_rankup",
+  "rewards": {
+    "experience": 500,
+    "recipes": [
+      "avatarmod:earthbending_scroll_7"
+    ]
+  },
+  "criteria": {
+    "rankup_nothing": {
+      "trigger": "rankup_bending",
+      "conditions": {
+        "element": {
+          "element": "earthbending",
+          "oldRank": -1,
+          "newRank": 4
+        }
+      }
+    },
+    "rankup_novice": {
+      "trigger": "rankup_bending",
+      "conditions": {
+        "element": {
+          "element": "earthbending",
+          "oldRank": 0,
+          "newRank": 4
+        }
+      }
+    },
+    "rankup_stone_brawler": {
+      "trigger": "rankup_bending",
+      "conditions": {
+        "element": {
+          "element": "earthbending",
+          "oldRank": 1,
+          "newRank": 4
+        }
+      }
+    },
+    "rankup_boulder_champion": {
+      "trigger": "rankup_bending",
+      "conditions": {
+        "element": {
+          "element": "earthbending",
+          "oldRank": 2,
+          "newRank": 4
+        }
+      }
+    },
+    "rankup_mountain_king": {
+      "trigger": "rankup_bending",
+      "conditions": {
+        "element": {
+          "element": "earthbending",
+          "oldRank": 3,
+          "newRank": 4
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "rankup_nothing",
+      "rankup_novice",
+      "rankup_stone_brawler",
+      "rankup_boulder_champion",
+      "rankup_mountain_king"
+    ]
+  ]
+}
