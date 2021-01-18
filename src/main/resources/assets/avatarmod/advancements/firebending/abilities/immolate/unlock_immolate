@@ -6,7 +6,7 @@
       "item": "avatarmod:scroll_fire",
       "data": 4
     },
-    "background": "avatarmod:textures/advancements/background/air.png",
+    "background": "avatarmod:textures/advancements/background/fire.png",
     "frame": "goal"
   },
   "parent": "avatarmod:firebending/ranks/novice_rankup",
