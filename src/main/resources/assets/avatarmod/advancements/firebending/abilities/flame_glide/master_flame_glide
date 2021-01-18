@@ -6,7 +6,7 @@
       "item": "avatarmod:scroll_fire",
       "data": 3
     },
-    "background": "avatarmod:textures/advancements/background/air.png",
+    "background": "avatarmod:textures/advancements/background/fire.png",
     "frame": "challenge"
   },
   "parent": "avatarmod:firebending/abilities/flame_glide/unlock_flame_glide",
