@@ -9,7 +9,7 @@
     "background": "avatarmod:textures/advancements/background/air.png",
     "frame": "challenge"
   },
-  "parent": "avatarmod:airbending/abilities/fire_shot/unlock_fire_shot",
+  "parent": "avatarmod:firebending/abilities/fire_shot/unlock_fire_shot",
   "rewards": {
     "experience": 25
   },
