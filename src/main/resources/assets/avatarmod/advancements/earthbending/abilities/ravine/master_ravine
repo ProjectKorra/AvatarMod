@@ -1,1 +1,66 @@
-
+{
+  "display": {
+    "title": "Boulder Champion Moves: Ravine",
+    "description": "Master the Ravine ability!",
+    "icon": {
+      "item": "avatarmod:scroll_earth",
+      "data": 3
+    },
+    "background": "avatarmod:textures/advancements/background/earth.png",
+    "frame": "challenge"
+  },
+  "parent": "avatarmod:earthbending/abilities/ravine/unlock_ravine",
+  "rewards": {
+    "experience": 25
+  },
+  "criteria": {
+    "level_max": {
+      "trigger": "level_ability",
+      "conditions": {
+        "ability": {
+          "ability": "ravine",
+          "fromLevel": 3,
+          "toLevel": 4
+        }
+      }
+    },
+    "level_from_2": {
+      "trigger": "level_ability",
+      "conditions": {
+        "ability": {
+          "ability": "ravine",
+          "fromLevel": 2,
+          "toLevel": 4
+        }
+      }
+    },
+    "level_from_1": {
+      "trigger": "level_ability",
+      "conditions": {
+        "ability": {
+          "ability": "ravine",
+          "fromLevel": 1,
+          "toLevel": 4
+        }
+      }
+    },
+    "level_from_locked": {
+      "trigger": "level_ability",
+      "conditions": {
+        "ability": {
+          "ability": "ravine",
+          "fromLevel": 0,
+          "toLevel": 4
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "level_max",
+      "level_from_2",
+      "level_from_1",
+      "level_from_locked"
+    ]
+  ]
+}
