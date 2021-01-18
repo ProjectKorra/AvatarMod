@@ -9,7 +9,7 @@
     "background": "avatarmod:textures/advancements/background/air.png",
     "frame": "challenge"
   },
-  "parent": "avatarmod:airbending/abilities/flame_strike/unlock_flame_strike",
+  "parent": "avatarmod:firebending/abilities/flame_strike/unlock_flame_strike",
   "rewards": {
     "experience": 25
   },
