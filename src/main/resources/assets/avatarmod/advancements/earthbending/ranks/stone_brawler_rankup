@@ -1,0 +1,80 @@
+ {
+    "display": {
+      "title": "Stone Brawler",
+      "description": "Stone Brawlers have learned the basics of earthbending, and are able to handle themselves in a rumble.",
+      "icon": {
+        "item": "avatarmod:scroll_earth",
+        "data": 2
+      },
+      "background": "avatarmod:textures/advancements/background/earth.png",
+      "frame": "goal"
+    },
+    "parent": "avatarmod:earthbending/ranks/novice_rankup",
+    "rewards": {
+      "experience": 50,
+      "recipes": [
+        "avatarmod:earthbending_scroll_4",
+      ]
+    },
+    "criteria": {
+      "rankup_nothing": {
+        "trigger": "rankup_bending",
+        "conditions": {
+          "element": {
+            "element": "earthbending",
+            "oldRank": -1,
+            "newRank": 1
+          }
+        }
+      },
+      "rankup_novice": {
+        "trigger": "rankup_bending",
+        "conditions": {
+          "element": {
+            "element": "earthbending",
+            "oldRank": 0,
+            "newRank": 1
+          }
+        }
+      },
+      "rankdown_boulder_champion": {
+        "trigger": "rankup_bending",
+        "conditions": {
+          "element": {
+            "element": "earthbending",
+            "oldRank": 2,
+            "newRank": 1
+          }
+        }
+      },
+      "rankdown_mountain_king": {
+        "trigger": "rankup_bending",
+        "conditions": {
+          "element": {
+            "element": "earthbending",
+            "oldRank": 3,
+            "newRank": 1
+          }
+        }
+      },
+      "rankdown_badger_mole": {
+        "trigger": "rankup_bending",
+        "conditions": {
+          "element": {
+            "element": "earthbending",
+            "oldRank": 4,
+            "newRank": 1
+          }
+        }
+      }
+    },
+    "requirements": [
+      [
+        "rankup_nothing",
+        "rankup_novice",
+        "rankdown_boulder_champion",
+        "rankdown_mountain_king",
+        "rankdown_badger_mole"
+      ]
+    ]
+  }
