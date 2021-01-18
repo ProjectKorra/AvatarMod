@@ -1,24 +1,24 @@
 {
   "display": {
-    "title": "Novice Moves: Swirling Inferno",
-    "description": "Unlocked the Swirling Inferno ability!",
+    "title": "Novice Moves: Flame Glide",
+    "description": "Unlock the Flame Glide ability!",
     "icon": {
       "item": "avatarmod:scroll_fire",
-      "data": 2
+      "data": 1
     },
     "background": "avatarmod:textures/advancements/background/air.png",
     "frame": "goal"
   },
-  "parent": "avatarmod:firebending/unlock_element_fire",
+  "parent": "avatarmod:firebending/ranks/novice_rankup",
   "rewards": {
-    "experience": 50
+    "experience": 20
   },
   "criteria": {
-    "unlock_an_element": {
+    "unlock_an_ability": {
       "trigger": "unlock_ability",
       "conditions": {
         "ability": {
-          "ability": "swirling_inferno"
+          "ability": "flame_glide"
         }
       }
     }

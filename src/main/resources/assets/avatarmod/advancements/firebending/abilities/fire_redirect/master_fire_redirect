@@ -1,0 +1,66 @@
+{
+  "display": {
+    "title": "Fire Lord Moves: Fire Redirect",
+    "description": "Master the Fire Redirect ability!",
+    "icon": {
+      "item": "avatarmod:scroll_fire",
+      "data": 4
+    },
+    "background": "avatarmod:textures/advancements/background/air.png",
+    "frame": "challenge"
+  },
+  "parent": "avatarmod:firebending/abilities/fire_redirect/unlock_fire_redirect",
+  "rewards": {
+    "experience": 25
+  },
+  "criteria": {
+    "level_max": {
+      "trigger": "level_ability",
+      "conditions": {
+        "ability": {
+          "ability": "fire_redirect",
+          "fromLevel": 3,
+          "toLevel": 4
+        }
+      }
+    },
+    "level_from_2": {
+      "trigger": "level_ability",
+      "conditions": {
+        "ability": {
+          "ability": "fire_redirect",
+          "fromLevel": 2,
+          "toLevel": 4
+        }
+      }
+    },
+    "level_from_1": {
+      "trigger": "level_ability",
+      "conditions": {
+        "ability": {
+          "ability": "fire_redirect",
+          "fromLevel": 1,
+          "toLevel": 4
+        }
+      }
+    },
+    "level_from_locked": {
+      "trigger": "level_ability",
+      "conditions": {
+        "ability": {
+          "ability": "fire_redirect",
+          "fromLevel": 0,
+          "toLevel": 4
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "level_max",
+      "level_from_2",
+      "level_from_1",
+      "level_from_locked"
+    ]
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "display": {
+    "title": "Novice Moves: Flamethrower",
+    "description": "Unlock the Flamethrower ability!",
+    "icon": {
+      "item": "avatarmod:scroll_fire",
+      "data": 2
+    },
+    "background": "avatarmod:textures/advancements/background/air.png",
+    "frame": "goal"
+  },
+  "parent": "avatarmod:firebending/ranks/novice_rankup",
+  "rewards": {
+    "experience": 20
+  },
+  "criteria": {
+    "unlock_an_ability": {
+      "trigger": "unlock_ability",
+      "conditions": {
+        "ability": {
+          "ability": "flamethrower"
+        }
+      }
+    }
+  }
+}
