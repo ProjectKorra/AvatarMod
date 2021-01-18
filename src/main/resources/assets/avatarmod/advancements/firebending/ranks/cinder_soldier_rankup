@@ -1,1 +1,80 @@
-
+  {
+    "display": {
+      "title": "Cinder Soldier",
+      "description": "Cinder Soldiers have learned the basics of firebending, and are able to handle themselves in a fight.",
+      "icon": {
+        "item": "avatarmod:scroll_fire",
+        "data": 2
+      },
+      "background": "avatarmod:textures/advancements/background/fire.png",
+      "frame": "goal"
+    },
+    "parent": "avatarmod:firebending/ranks/novice_rankup",
+    "rewards": {
+      "experience": 50,
+      "recipes": [
+        "avatarmod:firebending_scroll_4",
+      ]
+    },
+    "criteria": {
+      "rankup_nothing": {
+        "trigger": "rankup_bending",
+        "conditions": {
+          "element": {
+            "element": "firebending",
+            "oldRank": -1,
+            "newRank": 1
+          }
+        }
+      },
+      "rankup_novice": {
+        "trigger": "rankup_bending",
+        "conditions": {
+          "element": {
+            "element": "firebending",
+            "oldRank": 0,
+            "newRank": 1
+          }
+        }
+      },
+      "rankdown_flame_general": {
+        "trigger": "rankup_bending",
+        "conditions": {
+          "element": {
+            "element": "firebending",
+            "oldRank": 2,
+            "newRank": 1
+          }
+        }
+      },
+      "rankdown_fire_lord": {
+        "trigger": "rankup_bending",
+        "conditions": {
+          "element": {
+            "element": "firebending",
+            "oldRank": 3,
+            "newRank": 1
+          }
+        }
+      },
+      "rankdown_infernal_dragon": {
+        "trigger": "rankup_bending",
+        "conditions": {
+          "element": {
+            "element": "firebending",
+            "oldRank": 4,
+            "newRank": 1
+          }
+        }
+      }
+    },
+    "requirements": [
+      [
+        "rankup_nothing",
+        "rankup_novice",
+        "rankdown_flame_general",
+        "rankdown_fire_lord",
+        "rankdown_infernal_dragon"
+      ]
+    ]
+  }
