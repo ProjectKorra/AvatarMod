@@ -9,7 +9,7 @@
     "background": "avatarmod:textures/advancements/background/fire.png",
     "frame": "task"
   },
-  "parent": "avatarmod:airbending/unlock_element_fire",
+  "parent": "avatarmod:firebending/unlock_element_fire",
   "rewards": {
     "experience": 0,
     "recipes": [
