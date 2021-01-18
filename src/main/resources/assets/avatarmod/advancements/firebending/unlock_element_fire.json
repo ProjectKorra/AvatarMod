@@ -11,10 +11,7 @@
   },
   "parent": "avatarmod:firebending/fire_scroll",
   "rewards": {
-    "experience": 50,
-    "recipes": [
-      "avatarmod:firebending_scroll_2"
-    ]
+    "experience": 50
   },
   "criteria": {
     "unlock_an_element": {
