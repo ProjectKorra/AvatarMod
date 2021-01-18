@@ -1,1 +1,80 @@
-
+{
+  "display": {
+    "title": "Infernal Dragon",
+    "description": "One who has reached the pinnacle of firebending. Their power rivals that of dragons.",
+    "icon": {
+      "item": "avatarmod:scroll_fire",
+      "data": 6
+    },
+    "background": "avatarmod:textures/advancements/background/fire.png",
+    "frame": "challenge"
+  },
+  "parent": "avatarmod:airbending/ranks/fire_lord_rankup",
+  "rewards": {
+    "experience": 500,
+    "recipes": [
+      "avatarmod:firebending_scroll_7"
+    ]
+  },
+  "criteria": {
+    "rankup_nothing": {
+      "trigger": "rankup_bending",
+      "conditions": {
+        "element": {
+          "element": "firebending",
+          "oldRank": -1,
+          "newRank": 4
+        }
+      }
+    },
+    "rankup_novice": {
+      "trigger": "rankup_bending",
+      "conditions": {
+        "element": {
+          "element": "firebending",
+          "oldRank": 0,
+          "newRank": 4
+        }
+      }
+    },
+    "rankup_cinder_soldier": {
+      "trigger": "rankup_bending",
+      "conditions": {
+        "element": {
+          "element": "firebending",
+          "oldRank": 1,
+          "newRank": 4
+        }
+      }
+    },
+    "rankup_flame_general": {
+      "trigger": "rankup_bending",
+      "conditions": {
+        "element": {
+          "element": "firebending",
+          "oldRank": 2,
+          "newRank": 4
+        }
+      }
+    },
+    "rankup_fire_lord": {
+      "trigger": "rankup_bending",
+      "conditions": {
+        "element": {
+          "element": "firebending",
+          "oldRank": 3,
+          "newRank": 4
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "rankup_nothing",
+      "rankup_novice",
+      "rankup_cinder_soldier",
+      "rankup_flame_general",
+      "rankup_fire_lord"
+    ]
+  ]
+}
