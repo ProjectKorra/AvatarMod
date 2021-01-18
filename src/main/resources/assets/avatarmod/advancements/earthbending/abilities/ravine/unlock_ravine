@@ -1,1 +1,26 @@
-
+{
+  "display": {
+    "title": "Novice Moves: Ravine",
+    "description": "Unlock the Ravine ability!",
+    "icon": {
+      "item": "avatarmod:scroll_earth",
+      "data": 2
+    },
+    "background": "avatarmod:textures/advancements/background/earth.png",
+    "frame": "goal"
+  },
+  "parent": "avatarmod:earthbending/ranks/novice_rankup",
+  "rewards": {
+    "experience": 20
+  },
+  "criteria": {
+    "unlock_an_ability": {
+      "trigger": "unlock_ability",
+      "conditions": {
+        "ability": {
+          "ability": "ravine"
+        }
+      }
+    }
+  }
+}
