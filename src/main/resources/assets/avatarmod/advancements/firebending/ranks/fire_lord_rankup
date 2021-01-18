@@ -48,7 +48,7 @@
         }
       }
     },
-    "rankup_flmae_general": {
+    "rankup_flame_general": {
       "trigger": "rankup_bending",
       "conditions": {
         "element": {
