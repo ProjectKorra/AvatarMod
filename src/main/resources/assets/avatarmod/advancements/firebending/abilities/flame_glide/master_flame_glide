@@ -9,7 +9,7 @@
     "background": "avatarmod:textures/advancements/background/air.png",
     "frame": "challenge"
   },
-  "parent": "avatarmod:airbending/abilities/flame_glide/unlock_flame_glide",
+  "parent": "avatarmod:firebending/abilities/flame_glide/unlock_flame_glide",
   "rewards": {
     "experience": 25
   },
