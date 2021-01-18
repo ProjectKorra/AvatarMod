@@ -9,7 +9,7 @@
     "background": "avatarmod:textures/advancements/background/air.png",
     "frame": "challenge"
   },
-  "parent": "avatarmod:airbending/abilities/flamethrower/unlock_flamethrower",
+  "parent": "avatarmod:firebending/abilities/flamethrower/unlock_flamethrower",
   "rewards": {
     "experience": 25
   },
