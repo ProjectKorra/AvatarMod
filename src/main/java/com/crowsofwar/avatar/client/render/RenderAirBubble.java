@@ -62,7 +62,7 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
         disableAlpha();
 
         //My brain is massive
-       GlStateManager.depthMask(false);
+        GlStateManager.depthMask(false);
 
         int i = 15728880;
         int j = i % 65536;
@@ -73,7 +73,7 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
             OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j, k);
 
 
-         GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE);
+        GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE);
 
         float ticks = entity.ticksExisted + partialTicks;
         float sizeMult = 1, alpha = 1;
@@ -90,14 +90,10 @@ public class RenderAirBubble extends Render<EntityAirBubble> {
             alpha = ticks / 10f;
         }
         sizeMult *= entity.getSize() / 2.5f;
-        
-        alpha *=2;
-
-        alpha *= 1.5F;
 
         if (CLIENT_CONFIG.shaderSettings.bslActive || CLIENT_CONFIG.shaderSettings.sildursActive)
-            GlStateManager.color(0.35F, 0.35F, 0.35F, 0.10f * alpha);
-        else GlStateManager.color(0.5F, 0.5F, 0.5F, 0.10f * alpha);
+            GlStateManager.color(0.35F, 0.35F, 0.35F, 0.15f * alpha);
+        else GlStateManager.color(0.5F, 0.5F, 0.5F, 0.15f * alpha);
         {
             float rotY = ticks / 7f;
             float rotX = MathHelper.cos(ticks / 4f) * .3f;

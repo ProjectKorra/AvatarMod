@@ -371,7 +371,6 @@ public class BendingData {
         AbilityData data = abilityData.get(abilityName);
         if (data == null) {
             data = new AbilityData(this, Abilities.get(abilityName));
-            AvatarLog.info("Hm: " + Abilities.get(abilityName));
             abilityData.put(abilityName, data);
             save(DataCategory.ABILITY_DATA);
         }
