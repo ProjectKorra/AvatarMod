@@ -1,15 +1,15 @@
 {
   "display": {
-    "title": "Flame General Moves: Flame Glide",
-    "description": "Master the Flame Glide ability!",
+    "title": "Badger Mole Moves: Restore",
+    "description": "Master the Restore ability!",
     "icon": {
-      "item": "avatarmod:scroll_fire",
-      "data": 3
+      "item": "avatarmod:scroll_earth",
+      "data": 5
     },
-    "background": "avatarmod:textures/advancements/background/fire.png",
+    "background": "avatarmod:textures/advancements/background/earth.png",
     "frame": "challenge"
   },
-  "parent": "avatarmod:firebending/abilities/flame_glide/unlock_flame_glide",
+  "parent": "avatarmod:earthbending/abilities/restore/unlock_restore",
   "rewards": {
     "experience": 25
   },
@@ -18,7 +18,7 @@
       "trigger": "level_ability",
       "conditions": {
         "ability": {
-          "ability": "flame_glide",
+          "ability": "restore",
           "fromLevel": 3,
           "toLevel": 4
         }
@@ -28,7 +28,7 @@
       "trigger": "level_ability",
       "conditions": {
         "ability": {
-          "ability": "flame_glide",
+          "ability": "restore",
           "fromLevel": 2,
           "toLevel": 4
         }
@@ -38,7 +38,7 @@
       "trigger": "level_ability",
       "conditions": {
         "ability": {
-          "ability": "flame_glide",
+          "ability": "restore",
           "fromLevel": 1,
           "toLevel": 4
         }
@@ -48,7 +48,7 @@
       "trigger": "level_ability",
       "conditions": {
         "ability": {
-          "ability": "flame_glide",
+          "ability": "restore",
           "fromLevel": 0,
           "toLevel": 4
         }

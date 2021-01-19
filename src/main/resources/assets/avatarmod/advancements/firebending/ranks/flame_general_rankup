@@ -1,0 +1,80 @@
+{
+  "display": {
+    "title": "Flame General",
+    "description": "Flame Generals are formidable fighters, able to utilize powerful firebending attacks with ease. They can learn advanced firebending techniques.",
+    "icon": {
+      "item": "avatarmod:scroll_fire",
+      "data": 3
+    },
+    "background": "avatarmod:textures/advancements/background/fire.png",
+    "frame": "goal"
+  },
+  "parent": "avatarmod:firebending/ranks/cinder_soldier_rankup",
+  "rewards": {
+    "experience": 150,
+    "recipes": [
+      "avatarmod:firebending_scroll_5"
+    ]
+  },
+  "criteria": {
+    "rankup_nothing": {
+      "trigger": "rankup_bending",
+      "conditions": {
+        "element": {
+          "element": "firebending",
+          "oldRank": -1,
+          "newRank": 2
+        }
+      }
+    },
+    "rankup_novice": {
+      "trigger": "rankup_bending",
+      "conditions": {
+        "element": {
+          "element": "firebending",
+          "oldRank": 0,
+          "newRank": 2
+        }
+      }
+    },
+    "rankup_cinder_soldier": {
+      "trigger": "rankup_bending",
+      "conditions": {
+        "element": {
+          "element": "firebending",
+          "oldRank": 1,
+          "newRank": 2
+        }
+      }
+    },
+    "rankdown_fire_lord": {
+      "trigger": "rankup_bending",
+      "conditions": {
+        "element": {
+          "element": "firebending",
+          "oldRank": 3,
+          "newRank": 2
+        }
+      }
+    },
+    "rankdown_infernal_dragon": {
+      "trigger": "rankup_bending",
+      "conditions": {
+        "element": {
+          "element": "firebending",
+          "oldRank": 4,
+          "newRank": 2
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "rankup_nothing",
+      "rankup_novice",
+      "rankup_cinder_soldier",
+      "rankdown_fire_lord",
+      "rankdown_infernal_dragon"
+    ]
+  ]
+}

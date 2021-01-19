@@ -1,20 +1,20 @@
 {
   "display": {
-    "title": "Novice Moves: Earth Redirect",
-    "description": "Unlocked the Earth Redirect ability!",
+    "title": "Stone Brawler Moves: Earth Redirect",
+    "description": "Unlock the Earth Redirect ability!",
     "icon": {
       "item": "avatarmod:scroll_earth",
       "data": 2
     },
-    "background": "avatarmod:textures/advancements/background/air.png",
+    "background": "avatarmod:textures/advancements/background/earth.png",
     "frame": "goal"
   },
-  "parent": "avatarmod:earthbending/unlock_element_earth",
+  "parent": "avatarmod:earthbending/ranks/novice_rankup",
   "rewards": {
-    "experience": 50
+    "experience": 20
   },
   "criteria": {
-    "unlock_an_element": {
+    "unlock_an_ability": {
       "trigger": "unlock_ability",
       "conditions": {
         "ability": {

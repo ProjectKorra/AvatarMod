@@ -1,0 +1,80 @@
+{
+  "display": {
+    "title": "Boudler Champion",
+    "description": "Boulder Champions are rocklike soldiers, able to utilize powerful earthbending attacks with ease. They can learn advanced earthbending techniques.",
+    "icon": {
+      "item": "avatarmod:scroll_earth",
+      "data": 3
+    },
+    "background": "avatarmod:textures/advancements/background/earth.png",
+    "frame": "goal"
+  },
+  "parent": "avatarmod:firebending/ranks/stone_brawler_rankup",
+  "rewards": {
+    "experience": 150,
+    "recipes": [
+      "avatarmod:earthbending_scroll_5"
+    ]
+  },
+  "criteria": {
+    "rankup_nothing": {
+      "trigger": "rankup_bending",
+      "conditions": {
+        "element": {
+          "element": "earthbending",
+          "oldRank": -1,
+          "newRank": 2
+        }
+      }
+    },
+    "rankup_novice": {
+      "trigger": "rankup_bending",
+      "conditions": {
+        "element": {
+          "element": "earthbending",
+          "oldRank": 0,
+          "newRank": 2
+        }
+      }
+    },
+    "rankup_stone_brawler": {
+      "trigger": "rankup_bending",
+      "conditions": {
+        "element": {
+          "element": "earthbending",
+          "oldRank": 1,
+          "newRank": 2
+        }
+      }
+    },
+    "rankdown_mountain_king": {
+      "trigger": "rankup_bending",
+      "conditions": {
+        "element": {
+          "element": "earthbending",
+          "oldRank": 3,
+          "newRank": 2
+        }
+      }
+    },
+    "rankdown_badger_mole": {
+      "trigger": "rankup_bending",
+      "conditions": {
+        "element": {
+          "element": "earthbending",
+          "oldRank": 4,
+          "newRank": 2
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "rankup_nothing",
+      "rankup_novice",
+      "rankup_stone_brawler",
+      "rankdown_mountain_king",
+      "rankdown_badger_mole"
+    ]
+  ]
+}

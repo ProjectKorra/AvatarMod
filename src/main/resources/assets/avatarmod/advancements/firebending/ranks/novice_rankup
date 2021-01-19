@@ -1,0 +1,81 @@
+{
+  "display": {
+    "title": "Novice: Firebending",
+    "description": "Become a Firebender!",
+    "icon": {
+      "item": "avatarmod:scroll_fire",
+      "data": 0
+    },
+    "background": "avatarmod:textures/advancements/background/fire.png",
+    "frame": "task"
+  },
+  "parent": "avatarmod:firebending/unlock_element_fire",
+  "rewards": {
+    "experience": 0,
+    "recipes": [
+      "avatarmod:firebending_scroll_1",
+      "avatarmod:firebending_scroll_2"
+    ]
+  },
+  "criteria": {
+    "rankup_nothing": {
+      "trigger": "rankup_bending",
+      "conditions": {
+        "element": {
+          "element": "firebending",
+          "oldRank": -1,
+          "newRank": 0
+        }
+      }
+    },
+    "rankdown_cinder_soldier": {
+      "trigger": "rankup_bending",
+      "conditions": {
+        "element": {
+          "element": "firebending",
+          "oldRank": 1,
+          "newRank": 0
+        }
+      }
+    },
+    "rankdown_flame_general": {
+      "trigger": "rankup_bending",
+      "conditions": {
+        "element": {
+          "element": "firebending",
+          "oldRank": 2,
+          "newRank": 0
+        }
+      }
+    },
+    "rankdown_fire_lord": {
+      "trigger": "rankup_bending",
+      "conditions": {
+        "element": {
+          "element": "firebending",
+          "oldRank": 3,
+          "newRank": 0
+        }
+      }
+    },
+    "rankdown_infernal_dragon": {
+      "trigger": "rankup_bending",
+      "conditions": {
+        "element": {
+          "element": "firebending",
+          "oldRank": 4,
+          "newRank": 0
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "rankup_nothing",
+      "rankdown_cinder_soldier",
+      "rankdown_flame_general",
+      "rankdown_fire_lord",
+      "rankdown_infernal_dragon"
+    ]
+  ]
+}

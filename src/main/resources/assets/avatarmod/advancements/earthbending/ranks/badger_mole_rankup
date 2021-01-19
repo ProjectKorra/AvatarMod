@@ -1,19 +1,19 @@
 {
   "display": {
-    "title": "Siddhartha",
-    "description": "One who has achieved enlightenment. They have reached the peak of airbending.",
+    "title": "Badger Mole",
+    "description": "One who has reached the apex of earthbending. Their power allows them to reshape the Earth itself with ease.",
     "icon": {
-      "item": "avatarmod:scroll_air",
+      "item": "avatarmod:scroll_earth,
       "data": 6
     },
-    "background": "avatarmod:textures/advancements/background/air.png",
+    "background": "avatarmod:textures/advancements/background/earth.png",
     "frame": "challenge"
   },
-  "parent": "avatarmod:airbending/ranks/gyatso_rankup",
+  "parent": "avatarmod:earthbending/ranks/mountain_king_rankup",
   "rewards": {
     "experience": 500,
     "recipes": [
-      "avatarmod:airbending_scroll_7"
+      "avatarmod:earthbending_scroll_7"
     ]
   },
   "criteria": {
@@ -21,7 +21,7 @@
       "trigger": "rankup_bending",
       "conditions": {
         "element": {
-          "element": "airbending",
+          "element": "earthbending",
           "oldRank": -1,
           "newRank": 4
         }
@@ -31,37 +31,37 @@
       "trigger": "rankup_bending",
       "conditions": {
         "element": {
-          "element": "airbending",
+          "element": "earthbending",
           "oldRank": 0,
           "newRank": 4
         }
       }
     },
-    "rankup_nomad": {
+    "rankup_stone_brawler": {
       "trigger": "rankup_bending",
       "conditions": {
         "element": {
-          "element": "airbending",
+          "element": "earthbending",
           "oldRank": 1,
           "newRank": 4
         }
       }
     },
-    "rankup_monk": {
+    "rankup_boulder_champion": {
       "trigger": "rankup_bending",
       "conditions": {
         "element": {
-          "element": "airbending",
+          "element": "earthbending",
           "oldRank": 2,
           "newRank": 4
         }
       }
     },
-    "rankup_gyatso": {
+    "rankup_mountain_king": {
       "trigger": "rankup_bending",
       "conditions": {
         "element": {
-          "element": "airbending",
+          "element": "earthbending",
           "oldRank": 3,
           "newRank": 4
         }
@@ -72,9 +72,9 @@
     [
       "rankup_nothing",
       "rankup_novice",
-      "rankup_nomad",
-      "rankup_monk",
-      "rankup_gyatso"
+      "rankup_stone_brawler",
+      "rankup_boulder_champion",
+      "rankup_mountain_king"
     ]
   ]
 }

@@ -1,0 +1,26 @@
+{
+  "display": {
+    "title": "Novice Moves: Mine Blocks",
+    "description": "Unlock the Mine Blocks ability!",
+    "icon": {
+      "item": "avatarmod:scroll_earth",
+      "data": 1
+    },
+    "background": "avatarmod:textures/advancements/background/earth.png",
+    "frame": "goal"
+  },
+  "parent": "avatarmod:earthbending/ranks/novice_rankup",
+  "rewards": {
+    "experience": 20
+  },
+  "criteria": {
+    "unlock_an_ability": {
+      "trigger": "unlock_ability",
+      "conditions": {
+        "ability": {
+          "ability": "earth_control"
+        }
+      }
+    }
+  }
+}

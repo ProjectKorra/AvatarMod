@@ -1,20 +1,20 @@
 {
   "display": {
-    "title": "Acolyte Moves: Ravine",
-    "description": "Unlocked the Ravine ability!",
+    "title": "Novice Moves: Ravine",
+    "description": "Unlock the Ravine ability!",
     "icon": {
       "item": "avatarmod:scroll_earth",
       "data": 2
     },
-    "background": "avatarmod:textures/advancements/background/air.png",
+    "background": "avatarmod:textures/advancements/background/earth.png",
     "frame": "goal"
   },
-  "parent": "avatarmod:earthbending/unlock_element_earth",
+  "parent": "avatarmod:earthbending/ranks/novice_rankup",
   "rewards": {
-    "experience": 50
+    "experience": 20
   },
   "criteria": {
-    "unlock_an_element": {
+    "unlock_an_ability": {
       "trigger": "unlock_ability",
       "conditions": {
         "ability": {

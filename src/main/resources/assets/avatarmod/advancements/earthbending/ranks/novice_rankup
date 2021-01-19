@@ -1,0 +1,81 @@
+{
+  "display": {
+    "title": "Novice: Earthbending",
+    "description": "Become an Earthbender!",
+    "icon": {
+      "item": "avatarmod:scroll_earth",
+      "data": 0
+    },
+    "background": "avatarmod:textures/advancements/background/earth.png",
+    "frame": "task"
+  },
+  "parent": "avatarmod:earthbending/unlock_element_fire",
+  "rewards": {
+    "experience": 0,
+    "recipes": [
+      "avatarmod:earthbending_scroll_1",
+      "avatarmod:earthbending_scroll_2"
+    ]
+  },
+  "criteria": {
+    "rankup_nothing": {
+      "trigger": "rankup_bending",
+      "conditions": {
+        "element": {
+          "element": "earthbending",
+          "oldRank": -1,
+          "newRank": 0
+        }
+      }
+    },
+    "rankdown_stone_brawler": {
+      "trigger": "rankup_bending",
+      "conditions": {
+        "element": {
+          "element": "earthbending",
+          "oldRank": 1,
+          "newRank": 0
+        }
+      }
+    },
+    "rankdown_boulder_champion": {
+      "trigger": "rankup_bending",
+      "conditions": {
+        "element": {
+          "element": "earthbending",
+          "oldRank": 2,
+          "newRank": 0
+        }
+      }
+    },
+    "rankdown_mountain_king": {
+      "trigger": "rankup_bending",
+      "conditions": {
+        "element": {
+          "element": "earthbending",
+          "oldRank": 3,
+          "newRank": 0
+        }
+      }
+    },
+    "rankdown_badger_mole": {
+      "trigger": "rankup_bending",
+      "conditions": {
+        "element": {
+          "element": "earthbending",
+          "oldRank": 4,
+          "newRank": 0
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "rankup_nothing",
+      "rankdown_stone_brawler",
+      "rankdown_boulder_champion",
+      "rankdown_mountain_king",
+      "rankdown_badger_mole"
+    ]
+  ]
+}

@@ -1,15 +1,15 @@
 {
   "display": {
-    "title": "Flame General Moves: Flame Glide",
-    "description": "Master the Flame Glide ability!",
+    "title": "Boulder Champion Moves: Mine Blocks",
+    "description": "Master the Mine Blocks ability!",
     "icon": {
-      "item": "avatarmod:scroll_fire",
+      "item": "avatarmod:scroll_earth",
       "data": 3
     },
-    "background": "avatarmod:textures/advancements/background/fire.png",
+    "background": "avatarmod:textures/advancements/background/earth.png",
     "frame": "challenge"
   },
-  "parent": "avatarmod:firebending/abilities/flame_glide/unlock_flame_glide",
+  "parent": "avatarmod:earthbending/abilities/mine_blocks/unlock_mine_blocks",
   "rewards": {
     "experience": 25
   },
@@ -18,7 +18,7 @@
       "trigger": "level_ability",
       "conditions": {
         "ability": {
-          "ability": "flame_glide",
+          "ability": "mine_blocks",
           "fromLevel": 3,
           "toLevel": 4
         }
@@ -28,7 +28,7 @@
       "trigger": "level_ability",
       "conditions": {
         "ability": {
-          "ability": "flame_glide",
+          "ability": "mine_blocks",
           "fromLevel": 2,
           "toLevel": 4
         }
@@ -38,7 +38,7 @@
       "trigger": "level_ability",
       "conditions": {
         "ability": {
-          "ability": "flame_glide",
+          "ability": "mine_blocks",
           "fromLevel": 1,
           "toLevel": 4
         }
@@ -48,7 +48,7 @@
       "trigger": "level_ability",
       "conditions": {
         "ability": {
-          "ability": "flame_glide",
+          "ability": "mine_blocks",
           "fromLevel": 0,
           "toLevel": 4
         }

@@ -1,0 +1,81 @@
+{
+  "display": {
+    "title": "Mountain King",
+    "description": "Mountain Kings are incredibly powerful earthbenders, having unlocked the majority of earthbending techniques and access to yet more powerful ones. Defeating one is not an easy endeavor.",
+    "icon": {
+      "item": "avatarmod:scroll_earth",
+      "data": 4
+    },
+    "background": "avatarmod:textures/advancements/background/fire.png",
+    "frame": "challenge"
+  },
+  "parent": "avatarmod:airbending/ranks/boulder_champion_rankup",
+  "rewards": {
+    "experience": 250,
+    "recipes": [
+      "avatarmod:earthbending_scroll_5",
+      "avatarmod:earthbending_scroll_6",
+    ]
+  },
+  "criteria": {
+    "rankup_nothing": {
+      "trigger": "rankup_bending",
+      "conditions": {
+        "element": {
+          "element": "earthbending",
+          "oldRank": -1,
+          "newRank": 3
+        }
+      }
+    },
+    "rankup_novice": {
+      "trigger": "rankup_bending",
+      "conditions": {
+        "element": {
+          "element": "earthbending",
+          "oldRank": 0,
+          "newRank": 3
+        }
+      }
+    },
+    "rankup_stone_brawler": {
+      "trigger": "rankup_bending",
+      "conditions": {
+        "element": {
+          "element": "earthbending",
+          "oldRank": 1,
+          "newRank": 3
+        }
+      }
+    },
+    "rankup_boulder_champion": {
+      "trigger": "rankup_bending",
+      "conditions": {
+        "element": {
+          "element": "earthbending",
+          "oldRank": 2,
+          "newRank": 3
+        }
+      }
+    },
+    "rankdown_badger_mole": {
+      "trigger": "rankup_bending",
+      "conditions": {
+        "element": {
+          "element": "earthbending",
+          "oldRank": 4,
+          "newRank": 3
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "rankup_nothing",
+      "rankup_novice",
+      "rankup_stone_brawler",
+      "rankup_boulder_champion",
+      "rankdown_badger_mole"
+    ]
+  ]
+}
