@@ -39,6 +39,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
+import org.apache.logging.log4j.core.net.Priority;
 
 import java.util.List;
 import java.util.Objects;
@@ -73,7 +74,7 @@ public class AvatarPlayerTick {
     }
 
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGH)
     public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
         if (Bender.isBenderSupported(event.player)) {
             Ability.syncProperties(event.player);

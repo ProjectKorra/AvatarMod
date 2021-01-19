@@ -261,6 +261,18 @@ public abstract class Ability {
         }
     }
 
+    public static boolean propertyEqualsInhibitor(String property) {
+        return property.equals(CHI_COST) || property.equals(EXHAUSTION) || property.equals(COOLDOWN)
+                || property.equals(BURNOUT) || property.equals(BURNOUT_HIT) || property.equals(CHI_PER_SECOND)
+                || property.equals(CHI_PERCENT) || property.equals(EXHAUSTION_HIT);
+    }
+
+    /**
+     * All configurable stats. Should be implemented here so that
+     * it automagically gets the correct stats from the json files based on the ability name
+     * with 0 need for an override (except in the case of status control abilities).
+     */
+
     public void init() {
         //Base properties belonging to all abilities
         addProperties(TIER, CHI_COST, BURNOUT, BURNOUT_REGEN, COOLDOWN, EXHAUSTION);
@@ -288,12 +300,6 @@ public abstract class Ability {
     }
 
     /**
-     * All configurable stats. Should be implemented here so that
-     * it automagically gets the correct stats from the json files based on the ability name
-     * with 0 need for an override (except in the case of status control abilities).
-     */
-
-    /**
      * Returns the base value specified in JSON for the given identifier. This may be used from within the spell
      * class, or from elsewhere (entities, items, etc.) via the spell's instance.
      *
@@ -308,31 +314,31 @@ public abstract class Ability {
     //to be affected. I.e, all the time.
     public final Number getProperty(String identifier, int abilityLevel) {
         if (properties == null)
-            AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Properties file for " + getName() + " wasn't successfully loaded, things will start breaking!");
+            syncEntityProperties();
         return properties == null ? 1 : properties.getBaseValue(identifier, abilityLevel, AbilityData.AbilityTreePath.MAIN);
     }
 
     public final Number getProperty(String identifier, int abilityLevel, AbilityData.AbilityTreePath path) {
         if (properties == null)
-            AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Properties file for " + getName() + " wasn't successfully loaded, things will start breaking!");
+            syncEntityProperties();
         return properties == null ? 1 : properties.getBaseValue(identifier, abilityLevel, path);
     }
 
     public final Number getProperty(String identifier) {
         if (properties == null)
-            AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Properties file for " + getName() + " wasn't successfully loaded, things will start breaking!");
+            syncEntityProperties();
         return properties == null ? 1 : properties.getBaseValue(identifier, 0, AbilityData.AbilityTreePath.MAIN);
     }
 
     public final Number getProperty(String identifier, AbilityContext ctx) {
         if (properties == null)
-            AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Properties file for " + getName() + " wasn't successfully loaded, things will start breaking!");
+            syncEntityProperties();
         return properties == null ? 1 : ctx.getAbilityData().modify(identifier, properties.getBaseValue(identifier, ctx.getLevel(), ctx.getDynamicPath()));
     }
 
     public final Number getProperty(String identifier, AbilityData data) {
         if (properties == null)
-            AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Properties file for " + getName() + " wasn't successfully loaded, things will start breaking!");
+            syncEntityProperties();
         return properties == null ? 1 : data.modify(identifier, properties.getBaseValue(identifier, data.getLevel(), data.getDynamicPath()));
     }
 
@@ -349,31 +355,31 @@ public abstract class Ability {
      */
     public final boolean getBooleanProperty(String identifier, int abilityLevel) {
         if (properties == null)
-            AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Properties file for " + getName() + " wasn't successfully loaded, things will start breaking!");
+            syncEntityProperties();
         return properties != null && properties.getBaseBooleanValue(identifier, abilityLevel, AbilityData.AbilityTreePath.MAIN);
     }
 
     public final boolean getBooleanProperty(String identifier, int abilityLevel, AbilityData.AbilityTreePath path) {
         if (properties == null)
-            AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Properties file for " + getName() + " wasn't successfully loaded, things will start breaking!");
+            syncEntityProperties();
         return properties != null && properties.getBaseBooleanValue(identifier, abilityLevel, path);
     }
 
     public final boolean getBooleanProperty(String identifier) {
         if (properties == null)
-            AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Properties file for " + getName() + " wasn't successfully loaded, things will start breaking!");
+            syncEntityProperties();
         return properties != null && properties.getBaseBooleanValue(identifier, 0, AbilityData.AbilityTreePath.MAIN);
     }
 
     public final boolean getBooleanProperty(String identifier, AbilityContext ctx) {
         if (properties == null)
-            AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Properties file for " + getName() + " wasn't successfully loaded, things will start breaking!");
+            syncEntityProperties();
         return properties != null && properties.getBaseBooleanValue(identifier, ctx.getLevel(), ctx.getDynamicPath());
     }
 
     public final boolean getBooleanProperty(String identifier, AbilityData data) {
         if (properties == null)
-            AvatarLog.warn(AvatarLog.WarningType.CONFIGURATION, "Properties file for " + getName() + " wasn't successfully loaded, things will start breaking!");
+            syncEntityProperties();
         return properties != null && properties.getBaseBooleanValue(identifier, data
                 .getLevel(), data.getDynamicPath());
     }
@@ -431,6 +437,8 @@ public abstract class Ability {
         return exhaustion * (1 + ctx.getAbilityData().getBurnOut() / 100F);
     }
 
+    //Same stuff but with AbilityData
+
     /**
      * We now handle chi costs here and in {@code Bender.execute()}
      * rather than manually getting our value value for each ability. Pretty snazzy.
@@ -444,8 +452,6 @@ public abstract class Ability {
         //Burnout has a 1.5x multipler on chi cost
         return chi * (1 + ctx.getAbilityData().getBurnOut() / 200);
     }
-
-    //Same stuff but with AbilityData
 
     /**
      * Gets cooldown to be added after the ability is activated.
@@ -485,7 +491,6 @@ public abstract class Ability {
         //Burnout has a 1.5x multipler on chi cost
         return chi * (1 + data.getBurnOut() / 200);
     }
-
 
     /*
      * Generally used for abilities that grant you stat boosts.
@@ -580,7 +585,6 @@ public abstract class Ability {
     public int getCurrentParentTier(AbilityData data) {
         return getProperty(PARENT_TIER, data).intValue();
     }
-
 
     public BendingStyle getElement() {
         return BendingStyles.get(getBendingId());
@@ -688,7 +692,6 @@ public abstract class Ability {
         return propertyKeys.toArray(new String[0]);
     }
 
-
     /**
      * Internal, do not use.
      */
@@ -716,19 +719,13 @@ public abstract class Ability {
                 this.globalProperties = properties;
         } else {
             AvatarLog.info("A mod attempted to set an ability's properties, but they were already initialised.");
-         //   Thread.dumpStack();
+            //   Thread.dumpStack();
         }
     }
 
     public float powerModify(float val, AbilityData abilityData) {
         val *= abilityData.getDamageMult() * abilityData.getXpModifier();
         return val;
-    }
-
-    public static boolean propertyEqualsInhibitor(String property) {
-        return property.equals(CHI_COST) || property.equals(EXHAUSTION) || property.equals(COOLDOWN)
-                || property.equals(BURNOUT) || property.equals(BURNOUT_HIT) || property.equals(CHI_PER_SECOND)
-                || property.equals(CHI_PERCENT) || property.equals(EXHAUSTION_HIT);
     }
 
 }
