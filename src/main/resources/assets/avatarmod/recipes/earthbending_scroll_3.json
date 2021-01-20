@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "forge:ore_shaped",
   "pattern": [
     "epe",
     "sps",
@@ -7,7 +7,8 @@
   ],
   "key": {
     "p": {
-      "item": "minecraft:gold"
+      "type": "forge:ore_dict",
+      "ore": "ingotGold"
     },
     "s": {
       "item": "avatarmod:scroll_earth",
@@ -18,6 +19,7 @@
       "count": 4
     }
   },
+  "mirrored": false,
   "result": {
     "item": "avatarmod:scroll_earth",
     "data": 2

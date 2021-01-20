@@ -9,7 +9,7 @@
     "background": "avatarmod:textures/advancements/background/fire.png",
     "frame": "goal"
   },
-  "parent": "avatarmod:firebending/ranks/novice_rankup",
+  "parent": "avatarmod:firebending/ranks/fire_lord_rankup",
   "rewards": {
     "experience": 20
   },

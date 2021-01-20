@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "forge:ore_shaped",
   "pattern": [
     "epe",
     "sps",
@@ -7,7 +7,8 @@
   ],
   "key": {
     "p": {
-      "item": "minecraft:emerald",
+      "type": "forge:ore_dict",
+      "ore": "gemEmerald",
       "count": 8
     },
     "s": {
@@ -19,6 +20,7 @@
       "count": 8
     }
   },
+  "mirrored": false,
   "result": {
     "item": "avatarmod:scroll_earth",
     "data": 4

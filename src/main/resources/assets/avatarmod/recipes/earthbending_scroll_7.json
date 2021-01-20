@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "forge:ore_shaped",
   "pattern": [
     "epe",
     "sds",
@@ -10,8 +10,9 @@
       "item": "minecraft:end_bricks",
       "count": 4
     },
-    "key": {
-      "item": "minecraft:diamond",
+    "d": {
+      "type": "forge:ore_dict",
+      "ore": "gemDiamond",
       "count": 32
     },
     "s": {
@@ -23,6 +24,7 @@
       "count": 4
     }
   },
+  "mirrored": false,
   "result": {
     "item": "avatarmod:scroll_earth",
     "data": 6

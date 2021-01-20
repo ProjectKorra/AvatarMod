@@ -1,14 +1,10 @@
 {
-  "result": {
-    "item": "avatarmod:glider_part",
-    "data": 0
-  },
+  "type": "forge:ore_shaped",
   "pattern": [
     " sl",
     "sll",
     "lll"
   ],
-  "type": "forge:ore_shaped",
   "key": {
     "s": {
       "type": "forge:ore_dict",
@@ -19,5 +15,9 @@
       "ore": "leather"
     }
   },
-  "mirrored": false
+  "mirrored": false,
+  "result": {
+    "item": "avatarmod:glider_part",
+    "data": 0
+  }
 }
