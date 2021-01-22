@@ -6,7 +6,7 @@
       "item": "avatarmod:scroll_fire",
       "data": 0
     },
-    "background": "avatarmod:textures/advancements/background/fire.png",
+    "background": "minecraft:textures/gui/advancements/backgrounds/nether.png",
     "frame": "goal"
   },
   "rewards": {

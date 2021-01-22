@@ -3,7 +3,7 @@
     "title": "Badger Mole",
     "description": "One who has reached the apex of earthbending. Their power allows them to reshape the Earth itself with ease.",
     "icon": {
-      "item": "avatarmod:scroll_earth,
+      "item": "avatarmod:scroll_earth",
       "data": 6
     },
     "background": "avatarmod:textures/advancements/background/earth.png",

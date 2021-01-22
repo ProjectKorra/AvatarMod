@@ -6,7 +6,7 @@
       "item": "avatarmod:scroll_earth",
       "data": 0
     },
-    "background": "avatarmod:textures/advancements/background/air.png",
+    "background": "minecraft:textures/gui/advancements/backgrounds/stone.png",
     "frame": "goal"
   },
   "rewards": {

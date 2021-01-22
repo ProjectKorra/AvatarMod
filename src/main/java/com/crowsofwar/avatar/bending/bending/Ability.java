@@ -718,7 +718,7 @@ public abstract class Ability {
             if (this.globalProperties == null)
                 this.globalProperties = properties;
         } else {
-            AvatarLog.info("A mod attempted to set an ability's properties, but they were already initialised.");
+         //   AvatarLog.info("A mod attempted to set an ability's properties, but they were already initialised.");
             //   Thread.dumpStack();
         }
     }
