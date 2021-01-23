@@ -92,7 +92,7 @@ public class AvatarPlayerTick {
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void worldJoinEvent(EntityJoinWorldEvent event) {
         if (event.getEntity() instanceof EntityLivingBase && Bender.isBenderSupported((EntityLivingBase) event.getEntity())) {
-            //Syncs the frickin properties if they're not loaded
+            //Syncs the properties if they're not loaded
             List<Ability> initialisedAbilities = Abilities.all().stream().filter(ability -> !ability.arePropertiesInitialised())
                     .collect(Collectors.toList());
             if (!initialisedAbilities.isEmpty())

@@ -139,7 +139,8 @@ public class EntityRavine extends EntityOffensive {
         if (!world.isRemote) {
             BlockPos pos = new BlockPos(prevPosX, prevPosY, prevPosZ);
 
-            if (world.getBlockState(pos.down()).getBlockHardness(world, pos.down()) != -1 && !world.isAirBlock(pos.down()) && world.isBlockNormalCube(pos.down(), false)
+            if (world.getBlockState(pos.down()).getBlockHardness(world, pos.down()) != -1 && !world.isAirBlock(pos.down())
+                    && world.isBlockNormalCube(pos.down(), false)
                     // Checks that the block above is not solid, since this causes the falling sand to vanish.
                     && !world.isBlockNormalCube(pos, false)) {
 

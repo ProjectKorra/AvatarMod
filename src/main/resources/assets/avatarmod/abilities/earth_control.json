@@ -89,7 +89,7 @@
       "lifeTime": 40,
       "size": 1.0,
       "speed": 10,
-      "knockback": 6,
+      "knockback": 10,
       "chiOnHit": 2.0,
       "damage": 4,
       "blockHits": 1,
