@@ -22,57 +22,60 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.File;
 
 public class GoreCoreClientProxy extends GoreCoreCommonProxy {
 
-	@Override
-	protected File createUUIDCacheFile() {
-		return new File(Minecraft.getMinecraft().gameDir, "GoreCore_ClientUUIDCache.txt");
-	}
+    @Override
+    protected File createUUIDCacheFile() {
+        return new File(Minecraft.getMinecraft().gameDir, "GoreCore_ClientUUIDCache.txt");
+    }
 
-	@Override
-	protected File createMinecraftDir() {
-		return new File(Minecraft.getMinecraft().gameDir, ".");
-	}
+    @Override
+    protected File createMinecraftDir() {
+        return new File(Minecraft.getMinecraft().gameDir, ".");
+    }
 
-	@Override
-	public boolean isPlayerWalking(EntityPlayer player) {
-		if (player == Minecraft.getMinecraft().player) {
-			GameSettings gs = Minecraft.getMinecraft().gameSettings;
-			return gs.keyBindForward.isKeyDown() || gs.keyBindBack.isKeyDown() || gs.keyBindLeft
-							.isKeyDown()
-			       || gs.keyBindRight.isKeyDown();
-		}
+    @Override
+    public boolean isPlayerWalking(EntityPlayer player) {
+        if (player == Minecraft.getMinecraft().player) {
+            GameSettings gs = Minecraft.getMinecraft().gameSettings;
+            return gs.keyBindForward.isKeyDown() || gs.keyBindBack.isKeyDown() || gs.keyBindLeft
+                    .isKeyDown()
+                    || gs.keyBindRight.isKeyDown();
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	@Override
-	public void sideSpecifics() {}
+    @Override
+    public void sideSpecifics() {
+    }
 
-	@Override
-	public String translate(String key, Object... args) {
-		return I18n.format(key, args);
-	}
+    @Override
+    public String translate(String key, Object... args) {
+        return I18n.format(key, args);
+    }
 
-	@Override
-	public EntityPlayer getClientSidePlayer() {
-		return Minecraft.getMinecraft().player;
-	}
+    @Override
+    public EntityPlayer getClientSidePlayer() {
+        return Minecraft.getMinecraft().player;
+    }
 
-	@Override
-	public String getKeybindingDisplayName(String name) {
+    @Override
+    public String getKeybindingDisplayName(String name) {
 
-		KeyBinding[] allKeybindings = Minecraft.getMinecraft().gameSettings.keyBindings;
-		for (KeyBinding kb : allKeybindings) {
-			if (kb.getKeyDescription().equals(name)) {
-				return kb.getDisplayName();
-			}
-		}
+        KeyBinding[] allKeybindings = Minecraft.getMinecraft().gameSettings.keyBindings;
+        for (KeyBinding kb : allKeybindings) {
+            if (kb.getKeyDescription().equals(name)) {
+                return kb.getDisplayName();
+            }
+        }
 
-		return null;
-	}
+        return null;
+    }
 
 }

@@ -62,11 +62,12 @@ public class GoreCore {
 		config = new GoreCoreModConfig(event);
 		ConverterRegistry.addDefaultConverters();
 
-		File oldFile = GoreCore.proxy.getUUIDCacheFile();
-		if (oldFile.exists()) {
-			// We don't need a cache anymore
-			oldFile.delete();
-		}
+		//Why is this here
+//		File oldFile = GoreCore.proxy.getUUIDCacheFile();
+//		if (oldFile.exists()) {
+//			// We don't need a cache anymore
+//			oldFile.delete();
+//		}
 		GoreCoreChatMessages.register();
 
 		proxy.sideSpecifics();

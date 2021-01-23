@@ -22,14 +22,15 @@ import net.minecraft.util.text.translation.I18n;
 
 import java.io.File;
 
+//This class is literally useless
 public class GoreCoreCommonProxy {
 	
 	private File uuidCacheFile;
 	private File minecraftDirectory;
 	
 	public GoreCoreCommonProxy() {
-		uuidCacheFile = createUUIDCacheFile();
-		minecraftDirectory = createMinecraftDir();
+//		uuidCacheFile = createUUIDCacheFile();
+//		minecraftDirectory = createMinecraftDir();
 	}
 	
 	public final File getUUIDCacheFile() {
