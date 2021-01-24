@@ -39,30 +39,29 @@ public class SourceInfo {
         return this.state;
     }
 
-    public void setWorld(World world) {
-        this.world = world;
-    }
-
     public World getWorld() {
         return this.world;
     }
 
-    public void setTime(int time) {
-        this.time = time;
+    public void setWorld(World world) {
+        this.world = world;
     }
 
     public int getTime() {
         return this.time;
     }
 
-    public void setBlockPos(BlockPos pos) {
-        this.pos = pos;
+    public void setTime(int time) {
+        this.time = time;
     }
 
     public BlockPos getBlockPos() {
         return this.pos;
     }
 
+    public void setBlockPos(BlockPos pos) {
+        this.pos = pos;
+    }
 
     public void writeToBytes(ByteBuf buf) {
         buf.writeInt(getTime());
@@ -94,7 +93,9 @@ public class SourceInfo {
         this.setState(Block.getStateById(nbt.getInteger("Block State")));
 
         int[] blockPos = nbt.getIntArray("Block Pos");
-        this.setBlockPos(new BlockPos(blockPos[0], blockPos[1], blockPos[2]));
+        if (blockPos.length > 2)
+            this.setBlockPos(new BlockPos(blockPos[0], blockPos[1], blockPos[2]));
+        else this.setBlockPos(new BlockPos(0, 0, 0));
 
         return this;
     }

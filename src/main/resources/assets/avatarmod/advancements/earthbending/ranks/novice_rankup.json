@@ -9,7 +9,7 @@
     "background": "avatarmod:textures/advancements/background/earth.png",
     "frame": "task"
   },
-  "parent": "avatarmod:earthbending/unlock_element_fire",
+  "parent": "avatarmod:earthbending/unlock_element_earth",
   "rewards": {
     "experience": 0,
     "recipes": [

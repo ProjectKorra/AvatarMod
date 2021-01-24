@@ -9,7 +9,7 @@
     "background": "avatarmod:textures/advancements/background/fire.png",
     "frame": "challenge"
   },
-  "parent": "avatarmod:airbending/ranks/boulder_champion_rankup",
+  "parent": "avatarmod:earthbending/ranks/boulder_champion_rankup",
   "rewards": {
     "experience": 250,
     "recipes": [

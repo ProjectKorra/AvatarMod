@@ -9,7 +9,7 @@
     "background": "avatarmod:textures/advancements/background/earth.png",
     "frame": "goal"
   },
-  "parent": "avatarmod:firebending/ranks/stone_brawler_rankup",
+  "parent": "avatarmod:earthbending/ranks/stone_brawler_rankup",
   "rewards": {
     "experience": 150,
     "recipes": [

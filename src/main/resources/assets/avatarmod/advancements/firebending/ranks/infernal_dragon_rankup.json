@@ -9,7 +9,7 @@
     "background": "avatarmod:textures/advancements/background/fire.png",
     "frame": "challenge"
   },
-  "parent": "avatarmod:airbending/ranks/fire_lord_rankup",
+  "parent": "avatarmod:firebending/ranks/fire_lord_rankup",
   "rewards": {
     "experience": 500,
     "recipes": [

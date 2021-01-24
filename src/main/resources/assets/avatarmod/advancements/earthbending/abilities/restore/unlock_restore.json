@@ -9,7 +9,7 @@
     "background": "avatarmod:textures/advancements/background/earth.png",
     "frame": "goal"
   },
-  "parent": "avatarmod:earthbending/ranks/novice_rankup",
+  "parent": "avatarmod:earthbending/ranks/mountain_king_rankup",
   "rewards": {
     "experience": 20
   },
@@ -23,4 +23,4 @@
       }
     }
   }
-}M
+}
