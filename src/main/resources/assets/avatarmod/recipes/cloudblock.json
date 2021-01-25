@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "avatarmod:cloudblock",
+  "pattern": [
+    " # ",
+    " X ",
+    " W "
+  ],
+  "key": {
+    "#": {
+      "item": "avatarmod:scroll_air"
+    },
+    "X": {
+      "item": "minecraft:glass"
+    },
+    "W": {
+      "item": "minecraft:wool"
+    }
+  },
+  "result": {
+    "item": "avatarmod:cloudblock",
+    "data": 0
+  }
+}

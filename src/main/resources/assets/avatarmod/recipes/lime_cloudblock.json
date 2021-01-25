@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "avatarmod:cloudblock",
+  "pattern": [
+    "###",
+    "#X#",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "avatarmod:cloudblock"
+    },
+    "X": {
+      "item": "minecraft:dye",
+      "data": 10
+    }
+  },
+  "result": {
+    "item": "avatarmod:cloudblock",
+    "data": 5,
+    "count": 8
+  }
+}

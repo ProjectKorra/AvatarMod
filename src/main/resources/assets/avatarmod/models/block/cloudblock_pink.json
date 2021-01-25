@@ -1,6 +1,6 @@
 {
   "parent": "block/cube_all",
   "textures": {
-    "all": "avatarmod:blocks/cloudblock"
+    "all": "blocks/cloudblock_pink"
   }
 }

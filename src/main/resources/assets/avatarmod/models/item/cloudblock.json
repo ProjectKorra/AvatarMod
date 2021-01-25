@@ -1,6 +1,3 @@
 {
-  "parent": "block/cube_all",
-  "textures": {
-    "all": "avatarmod:blocks/cloudblock"
-  }
+  "parent": "block/cloudblock"
 }

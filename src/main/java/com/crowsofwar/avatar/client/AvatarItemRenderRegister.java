@@ -59,7 +59,7 @@ public class AvatarItemRenderRegister {
 		//forScroll(Scrolls.ICE);
 
 		register(AvatarItems.itemBisonWhistle);
-		register(Item.getItemFromBlock(blockCloud));
+		registerWithMetadata(Item.getItemFromBlock(blockCloud), 16);
 		register(AvatarItems.emptyExpBottle);
 
 		registerWithMetadata(AvatarItems.itemWaterPouch, 6);
