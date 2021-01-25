@@ -33,14 +33,10 @@ public class CloudBlock extends BlockBreakable {
     public static final PropertyEnum<EnumDyeColor> COLOR = PropertyEnum.create("color", EnumDyeColor.class);
 
     public CloudBlock() {
-        super(Material.CLOTH, false);
+        super(Material.GLASS, false);
         this.setCreativeTab(AvatarItems.tabItems);
         //Placeholder
         this.setTranslationKey("avatarmod:cloudblock");
-        this.setHardness(1f);
-        this.setLightOpacity(0);
-        this.setLightLevel(15F);
-        this.setResistance(10F);
         this.setSoundType(SoundType.CLOTH);
         this.setDefaultState(this.blockState.getBaseState().withProperty(COLOR, EnumDyeColor.WHITE));
     }
@@ -78,7 +74,7 @@ public class CloudBlock extends BlockBreakable {
             name = "Light Blue Cloud Block";
         }
         else {
-            StringBuilder dyeName = new StringBuilder(dyeColor.getDyeColorName());
+            StringBuilder dyeName = new StringBuilder(dyeColor.getTranslationKey());
             char letter = dyeName.charAt(0);
             String firstLetter = String.valueOf(letter).toUpperCase();
             dyeName.deleteCharAt(0);
