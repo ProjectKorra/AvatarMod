@@ -46,8 +46,6 @@ public class AvatarBlocks {
 	public static void init() {
 		allBlocks = new ArrayList<>();
 		addBlock(blockCloud = new CloudBlock());
-		ModelLoader.setCustomStateMapper(blockCloud, (new StateMap.Builder()).withName(BlockColored.COLOR).withSuffix("_cloudblock").build());
-
 	}
 
 	private static void addBlock(Block block) {
