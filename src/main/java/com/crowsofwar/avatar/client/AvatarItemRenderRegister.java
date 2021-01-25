@@ -16,19 +16,30 @@
 */
 package com.crowsofwar.avatar.client;
 
+import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.item.scroll.*;
 import com.crowsofwar.avatar.registry.AvatarItem;
 import com.crowsofwar.avatar.registry.AvatarItems;
 import com.crowsofwar.avatar.item.scroll.Scrolls.ScrollType;
+import net.minecraft.block.BlockColored;
+import net.minecraft.client.renderer.BlockModelRenderer;
+import net.minecraft.client.renderer.BlockModelShapes;
+import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.block.model.ModelBakery;
+import net.minecraft.client.renderer.block.model.ModelManager;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.statemap.StateMap;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import static com.crowsofwar.avatar.blocks.AvatarBlocks.blockCloud;
+import static net.minecraft.client.renderer.block.model.ModelBakery.registerItemVariants;
 import static net.minecraftforge.client.model.ModelLoader.setCustomModelResourceLocation;
 
 /**
@@ -36,91 +47,103 @@ import static net.minecraftforge.client.model.ModelLoader.setCustomModelResource
  */
 public class AvatarItemRenderRegister {
 
-	private static ModelResourceLocation[] locationsRegular, locationsGlow;
+    private static ModelResourceLocation[] locationsRegular, locationsGlow;
 
-	public static void register() {
+    public static void register() {
 
-		MinecraftForge.EVENT_BUS.register(new AvatarItemRenderRegister());
+        MinecraftForge.EVENT_BUS.register(new AvatarItemRenderRegister());
 
-		// Setup scrolls
-		//This stuff is broken rn
-		locationsRegular = new ModelResourceLocation[7];
-		locationsGlow = new ModelResourceLocation[7];
+        // Setup scrolls
+        //This stuff is broken rn
+        locationsRegular = new ModelResourceLocation[7];
+        locationsGlow = new ModelResourceLocation[7];
 
-		forScroll(Scrolls.ALL);
-		forScroll(Scrolls.AIR);
-		//No water for you!
-		//forScroll(Scrolls.WATER);
-		forScroll(Scrolls.FIRE);
-		forScroll(Scrolls.EARTH);
-		forScroll(Scrolls.LIGHTNING);
-		forScroll(Scrolls.COMBUSTION);
-		forScroll(Scrolls.SAND);
-		//forScroll(Scrolls.ICE);
+        forScroll(Scrolls.ALL);
+        forScroll(Scrolls.AIR);
+        //No water for you!
+        //forScroll(Scrolls.WATER);
+        forScroll(Scrolls.FIRE);
+        forScroll(Scrolls.EARTH);
+        forScroll(Scrolls.LIGHTNING);
+        forScroll(Scrolls.COMBUSTION);
+        forScroll(Scrolls.SAND);
+        //forScroll(Scrolls.ICE);
 
-		register(AvatarItems.itemBisonWhistle);
-		registerWithMetadata(Item.getItemFromBlock(blockCloud), 16);
-		register(AvatarItems.emptyExpBottle);
+        ModelLoader.setCustomStateMapper(blockCloud, (new StateMap.Builder()).withName(BlockColored.COLOR).withSuffix("_cloudblock").build());
+        register(AvatarItems.itemBisonWhistle);
+        forCloudBlock(Item.getItemFromBlock(blockCloud));
+        register(AvatarItems.emptyExpBottle);
 
-		registerWithMetadata(AvatarItems.itemWaterPouch, 6);
-		registerWithMetadata(AvatarItems.itemBisonArmor, 4);
-		registerWithMetadata(AvatarItems.itemBisonSaddle, 4);
-		registerWithMetadata(AvatarItems.itemOstrichEquipment, 4);
-		registerWithMetadata(AvatarItems.gliderBasic, 3);
-		registerWithMetadata(AvatarItems.gliderAdv, 3);
-		registerWithMetadata(AvatarItems.gliderPart, 3);
+        registerWithMetadata(AvatarItems.itemWaterPouch, 6);
+        registerWithMetadata(AvatarItems.itemBisonArmor, 4);
+        registerWithMetadata(AvatarItems.itemBisonSaddle, 4);
+        registerWithMetadata(AvatarItems.itemOstrichEquipment, 4);
+        registerWithMetadata(AvatarItems.gliderBasic, 3);
+        registerWithMetadata(AvatarItems.gliderAdv, 3);
+        registerWithMetadata(AvatarItems.gliderPart, 3);
 
-	}
+    }
 
-	private static void forScroll(ItemScroll scroll) {
-		for (int i = 0; i < 7; i++) {
-			ScrollType type = scroll.getScrollType();
-			locationsRegular[i] = new ModelResourceLocation("avatarmod:scroll_" + type.displayName(),
-					"inventory");
-			locationsGlow[i] = new ModelResourceLocation("avatarmod:scroll_" + type.displayName() + "_glow" + "_" + (i + 1),
-					"inventory");
-			setCustomModelResourceLocation(scroll.item(), i, locationsGlow[i]);
+    private static void forScroll(ItemScroll scroll) {
+        for (int i = 0; i < 7; i++) {
+            ScrollType type = scroll.getScrollType();
+            locationsRegular[i] = new ModelResourceLocation("avatarmod:scroll_" + type.displayName(),
+                    "inventory");
+            locationsGlow[i] = new ModelResourceLocation("avatarmod:scroll_" + type.displayName() + "_glow" + "_" + (i + 1),
+                    "inventory");
+            setCustomModelResourceLocation(scroll.item(), i, locationsGlow[i]);
 //			if (!(scroll instanceof ItemScrollAir || (scroll instanceof ItemScrollWater || scroll instanceof ItemScrollCombustion ||
 //					scroll instanceof ItemScrollEarth) && i == 6))
-				//setCustomModelResourceLocation(scroll.item(), i, locationsRegular[i]);
-		}
-	}
+            //setCustomModelResourceLocation(scroll.item(), i, locationsRegular[i]);
+        }
+    }
 
-	private static void registerWithMetadata(Item item, int subitemCount) {
-		for (int i = 0; i < subitemCount; i++) {
-			register(item, i);
-		}
-	}
+    private static void registerWithMetadata(Item item, int subitemCount) {
+        for (int i = 0; i < subitemCount; i++) {
+            register(item, i);
+        }
+    }
 
-	/**
-	 * Registers the specified item with the given metadata(s). Maps it to
-	 * {unlocalizedName}.json. Note that if no metadata is specified, the item
-	 * will not be registered.
-	 */
-	private static void register(Item item, int... metadata) {
+    //Assume the right item is passed
+    private static void forCloudBlock(Item block) {
+        for (int i = 0; i < 16; i++) {
+            String dyeName = EnumDyeColor.byMetadata(i).getDyeColorName();
+            registerItemVariants(block, new ModelResourceLocation("avatarmod:" + dyeName + "_cloudblock", "inventory"));
+            setCustomModelResourceLocation(block, i, new ModelResourceLocation("avatarmod:" + dyeName + "_cloudblock", "inventory"));
+        }
+    }
 
-		if (metadata.length == 0) {
-			metadata = new int[1];
-		}
+    /**
+     * Registers the specified item with the given metadata(s). Maps it to
+     * {unlocalizedName}.json. Note that if no metadata is specified, the item
+     * will not be registered.
+     */
+    private static void register(Item item, int... metadata) {
 
-		if (item instanceof AvatarItem) {
-			for (int meta : metadata) {
-				ModelResourceLocation mrl = new ModelResourceLocation("avatarmod:" + ((AvatarItem) item).getModelName(meta),
-						"inventory");
+        if (metadata.length == 0) {
+            metadata = new int[1];
+        }
 
-				setCustomModelResourceLocation(((AvatarItem) item).item(), meta, mrl);
-			}
-		} else {
+        if (item instanceof AvatarItem) {
+            for (int meta : metadata) {
+                ModelResourceLocation mrl = new ModelResourceLocation("avatarmod:" + ((AvatarItem) item).getModelName(meta),
+                        "inventory");
 
-			ModelBakery.registerItemVariants(item, new ModelResourceLocation(item.getRegistryName(), "inventory"));
-			// Assigns the model for all metadata values
-			ModelLoader.setCustomMeshDefinition(item, s -> new ModelResourceLocation(item.getRegistryName(), "inventory"));
-		}
+                setCustomModelResourceLocation(((AvatarItem) item).item(), meta, mrl);
+            }
+        } else {
 
-	}
+            AvatarLog.info("Name: " + item.getRegistryName());
+            ModelBakery.registerItemVariants(item, new ModelResourceLocation(item.getRegistryName(), "inventory"));
+            // Assigns the model for all metadata values
+            ModelLoader.setCustomMeshDefinition(item, s -> new ModelResourceLocation(item.getRegistryName(), "inventory"));
 
-	@SubscribeEvent
-	public void modelBake(ModelBakeEvent e) {
+        }
+
+    }
+
+    @SubscribeEvent
+    public void modelBake(ModelBakeEvent e) {
 
 	/*	for (int i = 0; i < 7; i++) {
 			for (int j = 0; j < ScrollType.values().length; j++) {
@@ -136,6 +159,6 @@ public class AvatarItemRenderRegister {
 			}
 		}**/
 
-	}
+    }
 
 }
