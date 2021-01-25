@@ -96,7 +96,7 @@ public class StatCtrlPlaceBlock extends StatusControl {
                     Vec3d start = entity.getPositionEyes(1.0F);
                     Vec3d end = start.add(entity.getLookVec().scale(5));
 
-                    RayTraceResult result = entity.rayTrace(5, 1.0F);
+                    RayTraceResult result = Raytrace.rayTrace(entity,5, 1.0F);
                     if (result != null) {
                         BlockPos pos = result.getBlockPos();
                         IBlockState state = world.getBlockState(pos);
