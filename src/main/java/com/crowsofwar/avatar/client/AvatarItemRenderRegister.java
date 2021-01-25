@@ -108,7 +108,7 @@ public class AvatarItemRenderRegister {
     private static void forCloudBlock(Item block) {
         for (int i = 0; i < 16; i++) {
             String dyeName = EnumDyeColor.byMetadata(i).getDyeColorName();
-            registerItemVariants(block, new ModelResourceLocation("avatarmod:" + dyeName + "_cloudblock", "inventory"));
+            //  registerItemVariants(block, new ModelResourceLocation("avatarmod:" + dyeName + "_cloudblock", "inventory"));
             setCustomModelResourceLocation(block, i, new ModelResourceLocation("avatarmod:" + dyeName + "_cloudblock", "inventory"));
         }
     }

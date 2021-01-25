@@ -19,7 +19,10 @@ package com.crowsofwar.avatar.blocks;
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.blocks.tiles.TileBlockTemp;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockColored;
+import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -43,6 +46,8 @@ public class AvatarBlocks {
 	public static void init() {
 		allBlocks = new ArrayList<>();
 		addBlock(blockCloud = new CloudBlock());
+		ModelLoader.setCustomStateMapper(blockCloud, (new StateMap.Builder()).withName(BlockColored.COLOR).withSuffix("_cloudblock").build());
+
 	}
 
 	private static void addBlock(Block block) {
