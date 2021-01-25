@@ -35,6 +35,7 @@ public class CloudBlock extends BlockBreakable {
     public CloudBlock() {
         super(Material.CLOTH, false);
         this.setCreativeTab(AvatarItems.tabItems);
+        //Placeholder
         this.setTranslationKey("avatarmod:cloudblock");
         this.setHardness(1f);
         this.setLightOpacity(0);
@@ -67,8 +68,24 @@ public class CloudBlock extends BlockBreakable {
      */
     public void getSubBlocks(CreativeTabs itemIn, NonNullList<ItemStack> items) {
         for (EnumDyeColor enumdyecolor : EnumDyeColor.values()) {
-            items.add(new ItemStack(this, 1, enumdyecolor.getMetadata()));
+            items.add(new ItemStack(this, 1, enumdyecolor.getMetadata()).setStackDisplayName(getNameFromDye(enumdyecolor)));
         }
+    }
+
+    public String getNameFromDye(EnumDyeColor dyeColor) {
+        String name;
+        if (dyeColor == EnumDyeColor.LIGHT_BLUE) {
+            name = "Light Blue Cloud Block";
+        }
+        else {
+            StringBuilder dyeName = new StringBuilder(dyeColor.getDyeColorName());
+            char letter = dyeName.charAt(0);
+            String firstLetter = String.valueOf(letter).toUpperCase();
+            dyeName.deleteCharAt(0);
+            dyeName.replace(0, 0, firstLetter);
+            name = dyeName.toString() + " Cloud Block";
+        }
+        return name;
     }
 
     /**
