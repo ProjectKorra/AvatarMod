@@ -31,138 +31,153 @@ import java.util.*;
 
 public class AvatarPlayerData extends PlayerData {
 
-	private static PlayerDataFetcher<AvatarPlayerData> fetcher;
+    private static PlayerDataFetcher<AvatarPlayerData> fetcher;
 
-	private final BendingData bendingData;
+    private final BendingData bendingData;
 
-	/**
-	 * Changed DataCategories since last sent a packet
-	 */
-	private SortedSet<DataCategory> changed;
+    /**
+     * Changed DataCategories since last sent a packet
+     */
+    private final SortedSet<DataCategory> changed;
 
-	/**
-	 * For use by server thread only. This represents the ticksExisted value (Entity#ticksExisted)
-	 * when the last information packet <strong>only about chi</strong> to client was sent.
-	 * <p>
-	 * Used to limit the amount of only-chi-related packets that are sent, since that is most
-	 * of the packets that try to be sent
-	 */
-	private int lastChiPacketTime;
+    /**
+     * For use by server thread only. This represents the ticksExisted value (Entity#ticksExisted)
+     * when the last information packet <strong>only about chi</strong> to client was sent.
+     * <p>
+     * Used to limit the amount of only-chi-related packets that are sent, since that is most
+     * of the packets that try to be sent
+     */
+    private int lastChiPacketTime;
 
-	public AvatarPlayerData(DataSaver dataSaver, UUID playerID, EntityPlayer player) {
-		super(dataSaver, playerID, player);
-		lastChiPacketTime = -1;
+    public AvatarPlayerData(DataSaver dataSaver, UUID playerID, EntityPlayer player) {
+        super(dataSaver, playerID, player);
+        lastChiPacketTime = -1;
 
-		boolean isClient = !(player instanceof EntityPlayerMP);
+        boolean isClient = !(player instanceof EntityPlayerMP);
 
-		bendingData = new BendingData(this::save, this::saveAll);
+        bendingData = new BendingData(this::save, this::saveAll);
 
-		changed = new TreeSet<>();
+        changed = new TreeSet<>();
 
-	}
+    }
 
-	public static void initFetcher(PlayerDataFetcher<AvatarPlayerData> clientFetcher) {
-		fetcher = new PlayerDataFetcherSided<>(clientFetcher,
-				new PlayerDataFetcherServer<>(AvatarWorldData::getDataFromWorld));
-	}
+    public static void initFetcher(PlayerDataFetcher<AvatarPlayerData> clientFetcher) {
+        fetcher = new PlayerDataFetcherSided<>(clientFetcher,
+                new PlayerDataFetcherServer<>(AvatarWorldData::getDataFromWorld));
+    }
 
-	public static PlayerDataFetcher<AvatarPlayerData> fetcher() {
-		return fetcher;
-	}
+    public static PlayerDataFetcher<AvatarPlayerData> fetcher() {
+        return fetcher;
+    }
 
-	@Override
-	protected void readPlayerDataFromNBT(NBTTagCompound nbt) {
-		bendingData.readFromNbt(nbt);
-	}
+    @Override
+    protected void readPlayerDataFromNBT(NBTTagCompound nbt) {
+        bendingData.readFromNbt(nbt);
+    }
 
-	@Override
-	protected void writePlayerDataToNBT(NBTTagCompound nbt) {
-		bendingData.writeToNbt(nbt);
-	}
+    @Override
+    protected void writePlayerDataToNBT(NBTTagCompound nbt) {
+        bendingData.writeToNbt(nbt);
+    }
 
-	public void save(DataCategory category) {
-		changed.add(category);
-		sendPacket();
-		saveChanges();
-	}
+    public void save(DataCategory category) {
+        changed.add(category);
+        sendPacket();
+        saveChanges();
+    }
 
-	public void saveAll() {
-		changed.addAll(Arrays.asList(DataCategory.values()));
-		sendPacket();
-		saveChanges();
-	}
+    public void saveAll() {
+        changed.addAll(Arrays.asList(DataCategory.values()));
+        sendPacket();
+        saveChanges();
+    }
 
-	private void sendPacket() {
+    private void sendPacket() {
 
-		PacketCPlayerData packet = new PacketCPlayerData(bendingData, playerID, changed);
-		EntityPlayer player = this.getPlayerEntity();
-		if (player != null && !player.world.isRemote) {
+        PacketCPlayerData packet = new PacketCPlayerData(bendingData, playerID, changed);
+        EntityPlayer player = this.getPlayerEntity();
+        if (player != null && !player.world.isRemote) {
 
-			// Enforce limits for chi-only packets
-			if (!doesChiLimitPass(player)) {
-				return;
-			}
+            // Enforce limits for chi-only packets
+            if (!doesChiLimitPass(player)) {
+                return;
+            }
 
-			// Look at who is tracking this player, to avoid unnecessarily
-			// sending packets to extra players
-			EntityTracker tracker = ((WorldServer) player.world).getEntityTracker();
+            // Look at who is tracking this player, to avoid unnecessarily
+            // sending packets to extra players
+            EntityTracker tracker = ((WorldServer) player.world).getEntityTracker();
 
-			List<EntityPlayer> nearbyPlayers = new ArrayList<>();
-			nearbyPlayers.add(player);
-			nearbyPlayers.addAll(tracker.getTrackingPlayers(player));
+            List<EntityPlayer> nearbyPlayers = new ArrayList<>();
+            nearbyPlayers.add(player);
+            nearbyPlayers.addAll(tracker.getTrackingPlayers(player));
 
-			// Find the correct range to send the packet to
-			double rangeSq = 0;
-			for (EntityPlayer p : nearbyPlayers) {
-				if (p.getDistanceSq(player) > rangeSq) {
-					rangeSq = p.getDistanceSq(player);
-				}
-			}
-			double range = Math.sqrt(rangeSq) + 0.01;// +0.01 "just in case"
+            // Find the correct range to send the packet to
+            double rangeSq = 0;
+            for (EntityPlayer p : nearbyPlayers) {
+                if (p.getDistanceSq(player) > rangeSq) {
+                    rangeSq = p.getDistanceSq(player);
+                }
+            }
+            double range = Math.sqrt(rangeSq) + 0.01;// +0.01 "just in case"
 
-			//Drillgon200: Why not just use sendToAllTracking? Might be a reason, so I won't mess with it.
-			TargetPoint targetPoint = new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, range);
-			//FMLLog.info("Target Point: " + targetPoint);
-			AvatarMod.network.sendToAllAround(packet, targetPoint);
+            //Drillgon200: Why not just use sendToAllTracking? Might be a reason, so I won't mess with it.
+            //FD: sendToAllTracking breaks bending.
+            TargetPoint targetPoint = new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, range);
 
-			changed.clear();
+            //FMLLog.info("Target Point: " + targetPoint);
+            //WE HAVE ALL THE CATCHES! NO PACKET ERRORS TODAY!
+            //Ignore the redundancy warning, it's occasionally null on servers
+            if (targetPoint != null)
+                AvatarMod.network.sendToAllAround(packet, targetPoint);
+            else {
+                if (player instanceof EntityPlayerMP && player != null) {
+                    AvatarMod.network.sendTo(packet, (EntityPlayerMP) player);
+                    AvatarMod.network.sendToAllTracking(packet, player);
+                }
+                //Last resort
+                else {
+                    AvatarMod.network.sendToAll(packet);
+                }
+            }
 
-		}
+            changed.clear();
 
-	}
+        }
 
-	public BendingData getData() {
-		return bendingData;
-	}
+    }
 
-	/**
-	 * To be called when sending an update packet. Performs rate limiting for chi only packets
-	 * (i.e., where the only value sent is the chi). They aren't as important as other data and
-	 * clog up the network.
-	 *
-	 * @return Whether the rate limit has approved the chi packet, or the packet wasn't about chi
-	 * anyways
-	 */
-	private boolean doesChiLimitPass(EntityPlayer player) {
+    public BendingData getData() {
+        return bendingData;
+    }
 
-		if (changed.size() == 1 && changed.first() == DataCategory.CHI) {
+    /**
+     * To be called when sending an update packet. Performs rate limiting for chi only packets
+     * (i.e., where the only value sent is the chi). They aren't as important as other data and
+     * clog up the network.
+     *
+     * @return Whether the rate limit has approved the chi packet, or the packet wasn't about chi
+     * anyways
+     */
+    private boolean doesChiLimitPass(EntityPlayer player) {
 
-			// Don't send chi-only packets more than once a second
-			if (player.ticksExisted - lastChiPacketTime < 20 && lastChiPacketTime != -1) {
-				return false;
-			}
-			lastChiPacketTime = player.ticksExisted;
+        if (changed.size() == 1 && changed.first() == DataCategory.CHI) {
 
-		}
+            // Don't send chi-only packets more than once a second
+            if (player.ticksExisted - lastChiPacketTime < 20 && lastChiPacketTime != -1) {
+                return false;
+            }
+            lastChiPacketTime = player.ticksExisted;
 
-		return true;
+        }
 
-	}
+        return true;
 
-	@Override
-	protected void saveChanges() {
-		super.saveChanges();
-		bendingData.updateMaxChi();
-	}
+    }
+
+    @Override
+    protected void saveChanges() {
+        super.saveChanges();
+        bendingData.updateMaxChi();
+    }
 
 }
