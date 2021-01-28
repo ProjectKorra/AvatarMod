@@ -29,6 +29,7 @@ import com.crowsofwar.avatar.entity.EntityLightningArc;
 import com.crowsofwar.avatar.entity.mob.EntityBender;
 import com.crowsofwar.avatar.network.AvatarChatMessages;
 import com.crowsofwar.avatar.network.packets.PacketCPowerRating;
+import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.Raytrace;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
@@ -330,17 +331,24 @@ public abstract class Bender {
         EntityLivingBase entity = getEntity();
 
         List<Ability> abilities = Abilities.all().stream().filter(ability -> AbilityData.get(entity, ability.getName()).getAbilityCooldown() > 0).collect(Collectors.toList());
+        //Optimisation
+        boolean updateAbilities = false;
         for (Ability ability : abilities) {
             AbilityData aD = AbilityData.get(entity, ability.getName());
             if (aD != null) {
                 if (aD.shouldRegenBurnout()) {
                     if (aD.getBurnOut() > 0) {
                         aD.setBurnOut(aD.getBurnOut() - ability.getProperty(Ability.BURNOUT_REGEN, aD).floatValue());
+                        updateAbilities = true;
                     }
                 }
-                aD.decrementCooldown();
+                if (aD.getAbilityCooldown() > 0) {
+                    updateAbilities = true;
+                    aD.decrementCooldown();
+                }
             }
-            data.save(DataCategory.ABILITY_DATA);
+            if (updateAbilities)
+                data.save(DataCategory.ABILITY_DATA);
         }
 
 
@@ -382,12 +390,11 @@ public abstract class Bender {
                 if (STATS_CONFIG.bendableBlocks.contains(world.getBlockState(entity.getPosition()).getBlock()))
                     chi.changeTotalChi(CHI_CONFIG.regenOnEarth / 20F);
             }
-
+            data.save(DataCategory.CHI);
 
         }
 
         // Tick the TickHandlers
-
         List<TickHandler> tickHandlers = data.getAllTickHandlers();
         if (tickHandlers != null) {
             for (TickHandler handler : tickHandlers) {
@@ -432,7 +439,9 @@ public abstract class Bender {
             syncPowerRating();
         }
 
-        data.saveAll();
+        //Updates every 30 ish seconds
+        if (entity.ticksExisted % (400 + AvatarUtils.getRandomNumberInRange(0, 200)) == 0)
+            data.saveAll();
 
     }
 
@@ -451,6 +460,7 @@ public abstract class Bender {
         Chi chi = data.chi();
         chi.setTotalChi(chi.getMaxChi());
         chi.setAvailableChi(CHI_CONFIG.maxAvailableChi);
+        data.saveAll();
 
     }
 
