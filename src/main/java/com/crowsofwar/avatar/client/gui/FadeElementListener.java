@@ -16,38 +16,37 @@ import static com.crowsofwar.avatar.util.data.TickHandlerController.RENDER_ELEME
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class FadeElementListener {
 
-	@SubscribeEvent
-	public static void onBendingCycleEvent(BendingCycleEvent event) {
-		if (event.getEntityLiving() != null) {
-			EntityLivingBase entity = event.getEntityLiving();
-			BendingData data = BendingData.getFromEntity(entity);
-			if (data != null) {
-				BendingContext ctx = new BendingContext(data, entity, new Raytrace.Result());
-				if (CLIENT_CONFIG.activeBendingSettings.shouldBendingMenuDisappear) {
-					if (data.hasTickHandler(RENDER_ELEMENT_HANDLER)) {
-						data.removeTickHandler(RENDER_ELEMENT_HANDLER, ctx);
-					}
-					data.addTickHandler(RENDER_ELEMENT_HANDLER, ctx);
-				}
-			}
-		}
-	}
+    @SubscribeEvent
+    public static void onBendingCycleEvent(BendingCycleEvent event) {
+        if (event.getEntityLiving() != null) {
+            EntityLivingBase entity = event.getEntityLiving();
+            BendingData data = BendingData.getFromEntity(entity);
+            if (data != null) {
+                BendingContext ctx = new BendingContext(data, entity, new Raytrace.Result());
+                if (CLIENT_CONFIG.activeBendingSettings.shouldBendingMenuDisappear) {
+                    if (data.hasTickHandler(RENDER_ELEMENT_HANDLER)) {
+                        data.removeTickHandler(RENDER_ELEMENT_HANDLER, ctx);
+                    }
+                    data.addTickHandler(RENDER_ELEMENT_HANDLER, ctx);
+                }
+            }
+        }
+    }
 
-	@SubscribeEvent
-	public static void onBendingOpenEvent(BendingUseEvent event) {
-		if (event.getEntityLiving() != null) {
-			EntityLivingBase entity = event.getEntityLiving();
-			BendingData data = BendingData.getFromEntity(entity);
-			if (data != null) {
-				BendingContext ctx = new BendingContext(data, entity, new Raytrace.Result());
-
-				if (CLIENT_CONFIG.activeBendingSettings.shouldBendingMenuDisappear) {
-					if (data.hasTickHandler(RENDER_ELEMENT_HANDLER)) {
-						data.removeTickHandler(RENDER_ELEMENT_HANDLER, ctx);
-					}
-					data.addTickHandler(RENDER_ELEMENT_HANDLER, ctx);
-				}
-			}
-		}
-	}
+    @SubscribeEvent
+    public static void onBendingOpenEvent(BendingUseEvent event) {
+        if (event.getEntityLiving() != null) {
+            EntityLivingBase entity = event.getEntityLiving();
+            BendingData data = BendingData.getFromEntity(entity);
+            if (data != null) {
+                BendingContext ctx = new BendingContext(data, entity, new Raytrace.Result());
+                if (CLIENT_CONFIG.activeBendingSettings.shouldBendingMenuDisappear) {
+                    if (data.hasTickHandler(RENDER_ELEMENT_HANDLER)) {
+                        data.removeTickHandler(RENDER_ELEMENT_HANDLER, ctx);
+                    }
+                    data.addTickHandler(RENDER_ELEMENT_HANDLER, ctx);
+                }
+            }
+        }
+    }
 }

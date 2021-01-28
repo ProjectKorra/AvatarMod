@@ -347,7 +347,8 @@ public abstract class Bender {
                     aD.decrementCooldown();
                 }
             }
-            if (updateAbilities)
+            //Save it occasionally
+            if (updateAbilities && entity.ticksExisted % 10000 == 0)
                 data.save(DataCategory.ABILITY_DATA);
         }
 
@@ -390,7 +391,6 @@ public abstract class Bender {
                 if (STATS_CONFIG.bendableBlocks.contains(world.getBlockState(entity.getPosition()).getBlock()))
                     chi.changeTotalChi(CHI_CONFIG.regenOnEarth / 20F);
             }
-            data.save(DataCategory.CHI);
 
         }
 
@@ -409,7 +409,6 @@ public abstract class Bender {
                     }
                 }
             }
-            data.save(DataCategory.TICK_HANDLERS);
         }
 
         //Config updates
@@ -438,10 +437,6 @@ public abstract class Bender {
         if (entity instanceof EntityPlayer && !world.isRemote && entity.ticksExisted % 10 == 0) {
             syncPowerRating();
         }
-
-        //Updates every 30 ish seconds
-        if (entity.ticksExisted % (400 + AvatarUtils.getRandomNumberInRange(0, 200)) == 0)
-            data.saveAll();
 
     }
 

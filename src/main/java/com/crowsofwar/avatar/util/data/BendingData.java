@@ -505,6 +505,7 @@ public class BendingData {
     }
 
     public void setAllTickHandlers(List<TickHandler> handlers) {
+        //For some reason the handlers
         tickHandlers.clear();
         tickHandlers.addAll(handlers);
 
