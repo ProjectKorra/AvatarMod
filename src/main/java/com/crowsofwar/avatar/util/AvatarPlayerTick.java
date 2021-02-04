@@ -39,7 +39,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
-import org.apache.logging.log4j.core.net.Priority;
 
 import java.util.List;
 import java.util.Objects;
@@ -61,7 +60,7 @@ public class AvatarPlayerTick {
 
                 //Why's this here? (why is it server side)
                 //Note: originally every 50 seconds
-                if (player.ticksExisted % 20 == 0) {
+                if (player.ticksExisted % 10000 == 0) {
                     data.saveAll();
                 }
 

@@ -119,8 +119,6 @@ public class EntityFirebender extends EntityHumanBender {
 				getData().getAbilityData("flame_glide").setLevel(0);
                 break;
         }
-        getData().saveAll();
-
     }
 
     @Override
