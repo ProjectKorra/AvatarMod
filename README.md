@@ -1,3 +1,5 @@
+![Build](https://github.com/ProjectKorra/AvatarMod/workflows/Build/badge.svg)
+
 Avatar Mod 2
 ============
 
