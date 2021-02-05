@@ -1,3 +1,5 @@
+![Build](https://github.com/ProjectKorra/AvatarMod/workflows/Build/badge.svg)
+
 Avatar Mod 2
 ============
 This repository hosts the source code for the [Avatar Mod 2 project](http://avatar.amuzil.com), currently
