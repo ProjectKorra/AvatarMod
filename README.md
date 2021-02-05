@@ -1,4 +1,4 @@
-![Build](https://github.com/ProjectKorra/AvatarMod/workflows/Build/badge.svg)
+![Build](https://github.com/ProjectKorra/AvatarMod/workflows/Build/badge.svg?branch=master)
 
 Avatar Mod 2
 ============
