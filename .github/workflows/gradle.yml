@@ -23,5 +23,7 @@ jobs:
     - name: Archive code coverage results
       uses: actions/upload-artifact@v2
       with:
-        name: artifacts
-        path: build/libs
+        name: artifact
+        path: |
+          build/libs
+          !build/libs/*-sources.jar
