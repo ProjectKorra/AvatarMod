@@ -142,7 +142,7 @@ public class ConfigClient {
         //Determines if element menu should render at all
 
         @Load
-        public boolean shouldBendingMenuDisappear = false;
+        public boolean shouldBendingMenuDisappear = true;
         //For some reason if it's not final it won't work
         //Makes the menu disappear after the duration
 

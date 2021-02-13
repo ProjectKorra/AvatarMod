@@ -330,7 +330,6 @@ public class AvatarUiRenderer extends Gui {
                                 (((float) CLIENT_CONFIG.activeBendingSettings.bendingMenuDuration - data.getTickHandlerDuration(RENDER_ELEMENT_HANDLER))
                                         / CLIENT_CONFIG.activeBendingSettings.bendingMenuDuration) * CLIENT_CONFIG.bendingCycleAlpha : CLIENT_CONFIG.bendingCycleAlpha;
                         GlStateManager.color(1, 1, 1, alpha);
-                      //  System.out.println(alpha);
                         drawBendingIcon(CLIENT_CONFIG.activeBendingSettings.middleXPosition,
                                 CLIENT_CONFIG.activeBendingSettings.middleYPosition, data.getActiveBending(),
                                 CLIENT_CONFIG.activeBendingSettings.middleBendingWidth, CLIENT_CONFIG.activeBendingSettings.middleBendingHeight);

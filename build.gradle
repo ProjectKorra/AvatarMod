@@ -269,6 +269,7 @@ task cleanBuild(dependsOn: ["buildInformation", "startBuild", "clean", "build", 
     tasks.finishBuild.mustRunAfter tasks.build
 }
 
+
 publishing {
     publications {
         shadowPublication(MavenPublication) {

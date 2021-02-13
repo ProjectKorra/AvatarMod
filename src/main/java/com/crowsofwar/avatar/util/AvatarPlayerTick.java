@@ -123,6 +123,7 @@ public class AvatarPlayerTick {
                             if (!MinecraftForge.EVENT_BUS.post(new AbilityUnlockEvent(bender, ability)))
                                 data.getAbilityData(ability).unlockAbility();
 
+                            data.saveAll();
                         }
                     }
                 }
