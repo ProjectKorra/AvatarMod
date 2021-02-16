@@ -1,14 +1,12 @@
 package com.crowsofwar.avatar.bending.bending.sand;
 
 import com.crowsofwar.avatar.bending.bending.Ability;
-import com.crowsofwar.avatar.config.ConfigStats;
 import com.crowsofwar.avatar.entity.EntitySandstorm;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.util.data.StatusControlController.SANDSTORM_REDIRECT;
@@ -62,13 +60,14 @@ public class AbilitySandstorm extends Ability {
             sandstorm.setDamageContactingTargets(getBooleanProperty(CONTACT_DAMAGE, ctx));
             sandstorm.setVulnerableToAirbending(getBooleanProperty(VULNERABLE, ctx));
             sandstorm.setEntitySize(size * 2, size);
+         //   sandstorm.setEntitySize(4F, 0.5F);
             sandstorm.setTier(getBaseTier());
             sandstorm.setPush(push);
             sandstorm.setElement(new Sandbending());
             sandstorm.setDamage(damage);
             sandstorm.setChiHit(powerModify(getProperty(CHI_HIT, ctx).floatValue(), abilityData));
             sandstorm.setPerformanceAmount(getProperty(PERFORMANCE, ctx).intValue());
-            sandstorm.setLifeTime((int) powerModify(getProperty(LIFETIME, ctx).intValue(), abilityData));
+            sandstorm.setLifeTime(/*140);**/(int) powerModify(getProperty(LIFETIME, ctx).intValue(), abilityData));
             sandstorm.setDamageSource("avatar_Sand_sandstorm");
 
             if (!world.isRemote)

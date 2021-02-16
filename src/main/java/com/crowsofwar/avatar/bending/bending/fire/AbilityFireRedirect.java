@@ -9,6 +9,7 @@ import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
 import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 
@@ -56,6 +57,10 @@ public class AbilityFireRedirect extends Ability {
     }
 
     public static class AbsorbBehaviour extends OffensiveBehaviour {
+
+        //TODO: Affect DragonBreath: AreaEffectCloud
+        //TODO: Affect DragonFireball
+        //TODO: Affect Fireball
 
         @Override
         public OffensiveBehaviour onUpdate(EntityOffensive entity) {

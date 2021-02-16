@@ -1,12 +1,9 @@
 package com.crowsofwar.avatar.entity;
 
-import com.crowsofwar.avatar.bending.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.bending.bending.sand.Sandbending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
-import com.crowsofwar.avatar.config.ConfigSkills;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
-import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.SandstormMovementHandler;
 import com.crowsofwar.avatar.util.data.StatusControlController;
@@ -111,11 +108,11 @@ public class EntitySandstorm extends EntityOffensive {
             Block groundBlock = groundBlockState == null ? null : groundBlockState.getBlock();
 
             if (STATS_CONFIG.sandBlocks.contains(groundBlock)) {
-                setStrength(getStrength() - 0.005f);
-                setVelocityMultiplier(getVelocityMultiplier() - 0.0025f);
+//                setStrength(getStrength() - 0.005f);
+//                setVelocityMultiplier(getVelocityMultiplier() - 0.0025f);
             } else {
-                setStrength(getStrength() - 0.025f);
-                setVelocityMultiplier(getVelocityMultiplier() - 0.025f);
+//                setStrength(getStrength() - 0.025f);
+//                setVelocityMultiplier(getVelocityMultiplier() - 0.025f);
             }
 
             if (getStrength() == 0) {
@@ -166,14 +163,14 @@ public class EntitySandstorm extends EntityOffensive {
                     points[2] = pos3;
 
                 //Iterate for the amount of particles in between each line.
-                for (int h = 0; h < 360; h += (360 / 4)) {
+                for (int h = 0; h < 360; h += (360 / 3)) {
                     Vec3d middle = AvatarEntityUtils.getBottomMiddleOfEntity(this);
                     pos = pos.add(AvatarUtils.bezierCurve(h / 360F, points));
 
                     double radius = pos.x - middle.x;
                     ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(pos.x, pos.y, pos.z).clr(220, 180, 130, 25)
                             .vel(vel.x + world.rand.nextGaussian() / 60 + motionX, vel.y + motionY, vel.z + world.rand.nextGaussian() / 60 +
-                                    motionZ).element(new Sandbending()).spin(Math.abs(radius) / 2, world.rand.nextGaussian() * 0.125F)
+                                   motionZ).element(new Sandbending()).spin(Math.abs(radius) / 2, world.rand.nextGaussian() * 0.125F)
                             .spawnEntity(getOwner())
                             .time(10 + AvatarUtils.getRandomNumberInRange(0, 4)).scale(CLIENT_CONFIG.particleSettings.realisticFlashParticles
                             ? 0.25F * getWidth() * 2 : 0.125F * getWidth()).spawn(world);
@@ -253,7 +250,8 @@ public class EntitySandstorm extends EntityOffensive {
     public void onCollideWithEntity(Entity entity) {
 
         // Number of blocks that the target "floats" above the ground
-        final double floatingDistance = getWidth() + getExpandedHitboxHeight();
+      //  final double floatingDistance = getHeight() / 2;
+         final double floatingDistance = getWidth() + getExpandedHitboxHeight();
         // The maximum distance between a sandstorm and an orbiting mob before the mob is thrown
         final double maxPickupRange = velocity().magnitude() * 0.75 + getWidth() / 2;
 
@@ -302,6 +300,8 @@ public class EntitySandstorm extends EntityOffensive {
         Vector delta = nextPos.minus(Vector.getEntityPos(entity));
 
         Vector nextVelocity = velocity().plus(delta.times(getPush()));
+//        if (!world.isRemote)
+//            System.out.println(nextVelocity.dividedBy(20).magnitude());
         entity.motionX = nextVelocity.x() / 20;
         entity.motionY = Math.min(nextVelocity.y() / 20, floatingDistance / 20);
         entity.motionZ = nextVelocity.z() / 20;
