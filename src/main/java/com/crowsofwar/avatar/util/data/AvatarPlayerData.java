@@ -118,26 +118,18 @@ public class AvatarPlayerData extends PlayerData {
                     rangeSq = p.getDistanceSq(player);
                 }
             }
+            //For target point; leaving in in-case something breaks
             double range = Math.sqrt(rangeSq) + 0.01;// +0.01 "just in case"
 
-            //Drillgon200: Why not just use sendToAllTracking? Might be a reason, so I won't mess with it.
-            //FD: sendToAllTracking breaks bending.
-            TargetPoint targetPoint = new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, range);
-
-            //FMLLog.info("Target Point: " + targetPoint);
-            //WE HAVE ALL THE CATCHES! NO PACKET ERRORS TODAY!
-            //Ignore the redundancy warning, it's occasionally null on servers
-            if (targetPoint != null)
-                AvatarMod.network.sendToAllAround(packet, targetPoint);
+            //Target points are dumb
+            //Player may be null, ignore warning
+            if (player instanceof EntityPlayerMP && player != null) {
+                AvatarMod.network.sendTo(packet, (EntityPlayerMP) player);
+                AvatarMod.network.sendToAllTracking(packet, player);
+            }
+            //Last resort
             else {
-                if (player instanceof EntityPlayerMP && player != null) {
-                    AvatarMod.network.sendTo(packet, (EntityPlayerMP) player);
-                    AvatarMod.network.sendToAllTracking(packet, player);
-                }
-                //Last resort
-                else {
-                    AvatarMod.network.sendToAll(packet);
-                }
+                AvatarMod.network.sendToAll(packet);
             }
 
             changed.clear();
