@@ -214,9 +214,6 @@ public abstract class Ability {
             AvatarMod.network.sendToAll(new PacketCSyncAbilityProperties(abilities.stream().map(a -> a.properties).toArray(AbilityProperties[]::new)));
 
         }
-        BendingData data = BendingData.getFromEntity(player);
-        if (data != null)
-            data.saveAll();
     }
 
     public static void syncEntityProperties() {

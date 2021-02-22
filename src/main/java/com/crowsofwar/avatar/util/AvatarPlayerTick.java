@@ -60,7 +60,7 @@ public class AvatarPlayerTick {
 
                 //Why's this here? (why is it server side)
                 //Note: originally every 50 seconds
-                if (player.ticksExisted % 10000 == 0) {
+                if (!player.world.isRemote && player.ticksExisted == 2) {
                     data.saveAll();
                 }
 
@@ -122,8 +122,6 @@ public class AvatarPlayerTick {
                             Ability ability = Objects.requireNonNull(style.getAllAbilities().get(0));
                             if (!MinecraftForge.EVENT_BUS.post(new AbilityUnlockEvent(bender, ability)))
                                 data.getAbilityData(ability).unlockAbility();
-
-                            data.saveAll();
                         }
                     }
                 }
