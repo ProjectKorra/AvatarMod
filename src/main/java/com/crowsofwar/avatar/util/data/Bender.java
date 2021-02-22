@@ -454,7 +454,7 @@ public abstract class Bender {
         Chi chi = data.chi();
         chi.setTotalChi(chi.getMaxChi());
         chi.setAvailableChi(CHI_CONFIG.maxAvailableChi);
-        data.saveAll();
+        data.save(DataCategory.CHI);
 
     }
 
