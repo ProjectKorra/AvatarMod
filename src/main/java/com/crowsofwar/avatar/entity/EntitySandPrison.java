@@ -287,8 +287,11 @@ public class EntitySandPrison extends AvatarEntity {
 
         imprisonedSeconds += powerRating / 50;
 
-        setImprisonedTime((int) (imprisonedSeconds * 20));
-        setMaxImprisonedTime((int) (imprisonedSeconds * 20));
+        //I believe in the power of having to do a physics IA
+        setImprisonedTime(20000);
+        setMaxImprisonedTime(20000);
+//        setImprisonedTime((int) (imprisonedSeconds * 20));
+//        setMaxImprisonedTime((int) (imprisonedSeconds * 20));
 
     }
 

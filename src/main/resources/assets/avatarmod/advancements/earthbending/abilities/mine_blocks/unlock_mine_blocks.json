@@ -18,7 +18,7 @@
       "trigger": "unlock_ability",
       "conditions": {
         "ability": {
-          "ability": "earth_control"
+          "ability": "mine_blocks"
         }
       }
     }

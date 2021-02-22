@@ -59,15 +59,15 @@ public class AbilitySandstorm extends Ability {
             sandstorm.setDamageFlungTargets(getBooleanProperty(FLUNG_DAMAGE, ctx));
             sandstorm.setDamageContactingTargets(getBooleanProperty(CONTACT_DAMAGE, ctx));
             sandstorm.setVulnerableToAirbending(getBooleanProperty(VULNERABLE, ctx));
-            sandstorm.setEntitySize(size * 2, size);
-         //   sandstorm.setEntitySize(4F, 0.5F);
+         //   sandstorm.setEntitySize(size * 2, size);
+            sandstorm.setEntitySize(4F, 0.5F);
             sandstorm.setTier(getBaseTier());
             sandstorm.setPush(push);
             sandstorm.setElement(new Sandbending());
             sandstorm.setDamage(damage);
             sandstorm.setChiHit(powerModify(getProperty(CHI_HIT, ctx).floatValue(), abilityData));
             sandstorm.setPerformanceAmount(getProperty(PERFORMANCE, ctx).intValue());
-            sandstorm.setLifeTime(/*140);**/(int) powerModify(getProperty(LIFETIME, ctx).intValue(), abilityData));
+            sandstorm.setLifeTime(60);//(int) powerModify(getProperty(LIFETIME, ctx).intValue(), abilityData));
             sandstorm.setDamageSource("avatar_Sand_sandstorm");
 
             if (!world.isRemote)

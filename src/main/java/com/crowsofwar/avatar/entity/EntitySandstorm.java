@@ -249,9 +249,10 @@ public class EntitySandstorm extends EntityOffensive {
     @Override
     public void onCollideWithEntity(Entity entity) {
 
+
         // Number of blocks that the target "floats" above the ground
-      //  final double floatingDistance = getHeight() / 2;
-         final double floatingDistance = getWidth() + getExpandedHitboxHeight();
+        final double floatingDistance = getHeight() / 2;
+      //   final double floatingDistance = getWidth() + getExpandedHitboxHeight();
         // The maximum distance between a sandstorm and an orbiting mob before the mob is thrown
         final double maxPickupRange = velocity().magnitude() * 0.75 + getWidth() / 2;
 
@@ -264,8 +265,33 @@ public class EntitySandstorm extends EntityOffensive {
         // Then, calculates position with that next angle
         // Finally, finds a velocity which will move towards that point
 
-        double currentAngle = Vector.getRotationTo(position(), Vector.getEntityPos(entity)).y();
-        double nextAngle = currentAngle + Math.toRadians(360 / 20F);
+        //Physics
+        //Calculates the corresponding radius with the height given
+        int maxAngle = 360 * Math.max((int) getHeight(), 1);
+        Vector floatPos = new Vector(posX, posY + floatingDistance, posZ);
+        //The vector ensures it's in the right direction
+        Vector dir = Vector.getEntityPos(entity).minus(floatPos);
+        dir = dir.normalize();
+        dir = dir.times(getWidth());
+        double radiusToUse = getWidth();
+        for (int angle = 0; angle < maxAngle; angle += 5 * Math.max((int) getHeight(), 1)) {
+            double radius = 0.01 + (angle / (maxAngle / (getWidth())));
+            double y = angle / (maxAngle / (getExpandedHitboxHeight() + getHeight()));
+            //Assigns the correct radius value to the corresponding given height
+            if (y == floatingDistance) {
+                dir = dir.normalize();
+                dir = dir.times(radius);
+                radiusToUse = radius;
+            }
+        }
+        //floatPos = floatPos.plus(dir.x(), 0, dir.z());
+
+        double currentAngle = Vector.getRotationTo(floatPos/*position()**/,
+                Vector.getEntityPos(entity).plusY(entity.height / 2)).y();
+        //20 ticks a second, 1 rotation per second, assuming radius of 1. Actually implements
+        //angular momentum.
+        //Therefore, we need some way to conserve the angular momentum.
+        double nextAngle = currentAngle + Math.toRadians(360 / 20F) / radiusToUse;
 
         double currentDistance = entity.getDistance(this.posX, this.posY + floatingDistance, this
                 .posZ);
@@ -295,13 +321,24 @@ public class EntitySandstorm extends EntityOffensive {
             onFlingEntity(entity);
         }
 
-        Vector nextPos = position().plus(Vector.toRectangular(nextAngle, 0).times(nextDistance / 4))
+        Vector nextPos = position().plus(Vector.toRectangular(nextAngle, 0).times(radiusToUse + 0.1))
                 .plusY(floatingDistance);
         Vector delta = nextPos.minus(Vector.getEntityPos(entity));
 
-        Vector nextVelocity = velocity().plus(delta.times(getPush()));
-//        if (!world.isRemote)
-//            System.out.println(nextVelocity.dividedBy(20).magnitude());
+
+        Vector nextVelocity = delta.times(getPush());
+        if (!world.isRemote) {
+            //Due to 20 ticks a second, 360 / 20
+            //This is essentially pi / 10 * radius.
+            //Centripetal force!
+            //  Vector testVel = Vector.toRectangular(nextAngle, 0).times(radiusToUse);
+            //Ok! Maths time. Angular Momentum = Mass * Velocity * Radius. Momentum is conserved,
+            //so once I calculate it, I need to show how the velocity changes as the radius increases.
+            Vector testVel = velocity();
+  //My maths sucks
+            System.out.println("Actual Angular Momentum: " + testVel.magnitude() * 20 * radiusToUse);
+         //   System.out.println("Target Velocity/Applied Force: " + (2 * Math.PI * radiusToUse * 20));
+        }
         entity.motionX = nextVelocity.x() / 20;
         entity.motionY = Math.min(nextVelocity.y() / 20, floatingDistance / 20);
         entity.motionZ = nextVelocity.z() / 20;

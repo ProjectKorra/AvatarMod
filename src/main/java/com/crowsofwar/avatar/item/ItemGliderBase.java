@@ -214,6 +214,8 @@ public class ItemGliderBase extends ItemSword implements IGlider, AvatarItem {
                 base = (ItemGliderBase) entity.getHeldItemMainhand().getItem();
                 List<Ability> abilities = Abilities.all().stream().filter(ability -> ability.getBendingId().equals(Airbending.ID))
                         .collect(Collectors.toList());
+               //TODO: Optimise this system
+                // data.removeModifiersFromAbilities(abilities, base.getAbilityModifier());
                 if (abilities.contains(event.getAbility()))
                     data.applyModifiersToAbilities(abilities, base.getAbilityModifier());
             }
