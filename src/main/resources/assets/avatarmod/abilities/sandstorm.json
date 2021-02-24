@@ -2,7 +2,7 @@
   "custom_properties": {
     "xpOnHit": 2,
     "level1": {
-       "tier": 2,
+      "tier": 2,
       "parentTier": 4,
       "chiCost": 3.0,
       "cooldown": 35,

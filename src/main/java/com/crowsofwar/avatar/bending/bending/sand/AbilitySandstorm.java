@@ -60,7 +60,7 @@ public class AbilitySandstorm extends Ability {
             sandstorm.setDamageContactingTargets(getBooleanProperty(CONTACT_DAMAGE, ctx));
             sandstorm.setVulnerableToAirbending(getBooleanProperty(VULNERABLE, ctx));
          //   sandstorm.setEntitySize(size * 2, size);
-            sandstorm.setEntitySize(4F, 0.5F);
+            sandstorm.setEntitySize(4F, 3.5F);
             sandstorm.setTier(getBaseTier());
            // sandstorm.setPush(push);
             sandstorm.setPush(10);

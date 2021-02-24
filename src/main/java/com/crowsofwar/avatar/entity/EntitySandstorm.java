@@ -72,6 +72,11 @@ public class EntitySandstorm extends EntityOffensive {
     }
 
     @Override
+    public boolean onCollideWithSolid() {
+        return false;
+    }
+
+    @Override
     protected void entityInit() {
         super.entityInit();
         dataManager.register(SYNC_VELOCITY_MULT, 1f);
@@ -251,7 +256,7 @@ public class EntitySandstorm extends EntityOffensive {
 
 
         // Number of blocks that the target "floats" above the ground
-        final double floatingDistance = getHeight() / 2;
+        final double floatingDistance = getHeight();
         //   final double floatingDistance = getWidth() + getExpandedHitboxHeight();
         // The maximum distance between a sandstorm and an orbiting mob before the mob is thrown
         final double maxPickupRange = velocity().magnitude() * 0.75 + getWidth() / 2;
@@ -275,7 +280,8 @@ public class EntitySandstorm extends EntityOffensive {
             double radius = 0.01 + (angle / (maxAngle / (getWidth())));
             double y = angle / (maxAngle / (getExpandedHitboxHeight() + getHeight()));
             //Assigns the correct radius value to the corresponding given height
-            if (y == floatingDistance) {
+            //Allows for approximate values
+            if (y >= floatingDistance - 0.05 && y <= floatingDistance + 0.05) {
                 radiusToUse = radius;
             }
         }
@@ -288,7 +294,7 @@ public class EntitySandstorm extends EntityOffensive {
         //Therefore, we need some way to conserve the angular momentum.
         //Gonna reassign them later
 
-        double spinSpeed = Math.toRadians(360 / 20F) * getPush() * 10;
+        double spinSpeed = Math.toRadians(360 / 20F);
         //Mass is 1; L = mwr^2
         double dif = (getWidth() * getWidth()) / (radiusToUse * radiusToUse);
         spinSpeed *= dif;
@@ -334,11 +340,11 @@ public class EntitySandstorm extends EntityOffensive {
             //This is essentially pi / 10 * radius.
             //Ok! Maths time. Angular Momentum = Mass * Velocity * Radius. Momentum is conserved,
             //so once I calculate it, I need to show how the velocity changes as the radius increases.
-            Vector testVel = Vector.toRectangular(spinSpeed, 0);
+            Vector testVel = Vector.toRectangular(nextAngle, 0).times(spinSpeed);
             //5 times difference ;-;
             //My maths sucks
-            System.out.println("Actual: " + (nextPos.minus(position()).minusY(floatingDistance)).magnitude());
-            System.out.println("Theoretical Angular Momentum: " + getWidth() * getWidth() * Math.toRadians(360F / 20F) * 20);
+            System.out.println("Actual: " + testVel.magnitude());
+            System.out.println("Theoretical Angular Velocity: " + spinSpeed);
       //      System.out.println((getWidth() * getWidth() * Math.toRadians(360F / 20F) * 20) / (nextPos.minus(position()).minusY(floatingDistance)).magnitude() );
             //   System.out.println("Target Velocity/Applied Force: " + (2 * Math.PI * radiusToUse * 20));
         }
