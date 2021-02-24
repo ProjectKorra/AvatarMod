@@ -20,6 +20,7 @@ package com.crowsofwar.avatar.util.data;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.network.packets.PacketCPlayerData;
 import com.crowsofwar.gorecore.data.*;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -123,9 +124,9 @@ public class AvatarPlayerData extends PlayerData {
 
             //Target points are dumb
             //Player may be null, ignore warning
-            if (player instanceof EntityPlayerMP && player != null) {
+            //Pls I got crashes because it wasn't an entity, how is that even possible
+            if (player instanceof Entity && player instanceof EntityPlayerMP && player != null) {
                 AvatarMod.network.sendTo(packet, (EntityPlayerMP) player);
-                AvatarMod.network.sendToAllTracking(packet, player);
             }
             //Last resort
             else {

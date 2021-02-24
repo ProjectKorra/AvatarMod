@@ -62,7 +62,8 @@ public class AbilitySandstorm extends Ability {
          //   sandstorm.setEntitySize(size * 2, size);
             sandstorm.setEntitySize(4F, 0.5F);
             sandstorm.setTier(getBaseTier());
-            sandstorm.setPush(push);
+           // sandstorm.setPush(push);
+            sandstorm.setPush(10);
             sandstorm.setElement(new Sandbending());
             sandstorm.setDamage(damage);
             sandstorm.setChiHit(powerModify(getProperty(CHI_HIT, ctx).floatValue(), abilityData));

@@ -170,7 +170,7 @@ public class EntitySandstorm extends EntityOffensive {
                     double radius = pos.x - middle.x;
                     ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(pos.x, pos.y, pos.z).clr(220, 180, 130, 25)
                             .vel(vel.x + world.rand.nextGaussian() / 60 + motionX, vel.y + motionY, vel.z + world.rand.nextGaussian() / 60 +
-                                   motionZ).element(new Sandbending()).spin(Math.abs(radius) / 2, world.rand.nextGaussian() * 0.125F)
+                                    motionZ).element(new Sandbending()).spin(Math.abs(radius) / 2, world.rand.nextGaussian() * 0.125F)
                             .spawnEntity(getOwner())
                             .time(10 + AvatarUtils.getRandomNumberInRange(0, 4)).scale(CLIENT_CONFIG.particleSettings.realisticFlashParticles
                             ? 0.25F * getWidth() * 2 : 0.125F * getWidth()).spawn(world);
@@ -252,7 +252,7 @@ public class EntitySandstorm extends EntityOffensive {
 
         // Number of blocks that the target "floats" above the ground
         final double floatingDistance = getHeight() / 2;
-      //   final double floatingDistance = getWidth() + getExpandedHitboxHeight();
+        //   final double floatingDistance = getWidth() + getExpandedHitboxHeight();
         // The maximum distance between a sandstorm and an orbiting mob before the mob is thrown
         final double maxPickupRange = velocity().magnitude() * 0.75 + getWidth() / 2;
 
@@ -269,18 +269,13 @@ public class EntitySandstorm extends EntityOffensive {
         //Calculates the corresponding radius with the height given
         int maxAngle = 360 * Math.max((int) getHeight(), 1);
         Vector floatPos = new Vector(posX, posY + floatingDistance, posZ);
-        //The vector ensures it's in the right direction
-        Vector dir = Vector.getEntityPos(entity).minus(floatPos);
-        dir = dir.normalize();
-        dir = dir.times(getWidth());
+
         double radiusToUse = getWidth();
         for (int angle = 0; angle < maxAngle; angle += 5 * Math.max((int) getHeight(), 1)) {
             double radius = 0.01 + (angle / (maxAngle / (getWidth())));
             double y = angle / (maxAngle / (getExpandedHitboxHeight() + getHeight()));
             //Assigns the correct radius value to the corresponding given height
             if (y == floatingDistance) {
-                dir = dir.normalize();
-                dir = dir.times(radius);
                 radiusToUse = radius;
             }
         }
@@ -291,7 +286,13 @@ public class EntitySandstorm extends EntityOffensive {
         //20 ticks a second, 1 rotation per second, assuming radius of 1. Actually implements
         //angular momentum.
         //Therefore, we need some way to conserve the angular momentum.
-        double nextAngle = currentAngle + Math.toRadians(360 / 20F) / radiusToUse;
+        //Gonna reassign them later
+
+        double spinSpeed = Math.toRadians(360 / 20F) * getPush() * 10;
+        //Mass is 1; L = mwr^2
+        double dif = (getWidth() * getWidth()) / (radiusToUse * radiusToUse);
+        spinSpeed *= dif;
+        double nextAngle = currentAngle + spinSpeed;
 
         double currentDistance = entity.getDistance(this.posX, this.posY + floatingDistance, this
                 .posZ);
@@ -321,8 +322,9 @@ public class EntitySandstorm extends EntityOffensive {
             onFlingEntity(entity);
         }
 
-        Vector nextPos = position().plus(Vector.toRectangular(nextAngle, 0).times(radiusToUse + 0.1))
-                .plusY(floatingDistance);
+        //Add a 0.1 if it's weird
+        Vector nextPos = position().plus(Vector.toRectangular(nextAngle, 0).times(radiusToUse * radiusToUse + 0.1)
+                .plusY(floatingDistance));
         Vector delta = nextPos.minus(Vector.getEntityPos(entity));
 
 
@@ -330,14 +332,15 @@ public class EntitySandstorm extends EntityOffensive {
         if (!world.isRemote) {
             //Due to 20 ticks a second, 360 / 20
             //This is essentially pi / 10 * radius.
-            //Centripetal force!
-            //  Vector testVel = Vector.toRectangular(nextAngle, 0).times(radiusToUse);
             //Ok! Maths time. Angular Momentum = Mass * Velocity * Radius. Momentum is conserved,
             //so once I calculate it, I need to show how the velocity changes as the radius increases.
-            Vector testVel = velocity();
-  //My maths sucks
-            System.out.println("Actual Angular Momentum: " + testVel.magnitude() * 20 * radiusToUse);
-         //   System.out.println("Target Velocity/Applied Force: " + (2 * Math.PI * radiusToUse * 20));
+            Vector testVel = Vector.toRectangular(spinSpeed, 0);
+            //5 times difference ;-;
+            //My maths sucks
+            System.out.println("Actual: " + (nextPos.minus(position()).minusY(floatingDistance)).magnitude());
+            System.out.println("Theoretical Angular Momentum: " + getWidth() * getWidth() * Math.toRadians(360F / 20F) * 20);
+      //      System.out.println((getWidth() * getWidth() * Math.toRadians(360F / 20F) * 20) / (nextPos.minus(position()).minusY(floatingDistance)).magnitude() );
+            //   System.out.println("Target Velocity/Applied Force: " + (2 * Math.PI * radiusToUse * 20));
         }
         entity.motionX = nextVelocity.x() / 20;
         entity.motionY = Math.min(nextVelocity.y() / 20, floatingDistance / 20);
