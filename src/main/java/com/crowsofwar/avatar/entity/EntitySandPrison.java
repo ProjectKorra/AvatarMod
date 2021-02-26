@@ -19,10 +19,10 @@ package com.crowsofwar.avatar.entity;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BattlePerformanceScore;
 import com.crowsofwar.avatar.bending.bending.sand.Sandbending;
+import com.crowsofwar.avatar.entity.data.SyncedEntity;
 import com.crowsofwar.avatar.util.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
-import com.crowsofwar.avatar.entity.data.SyncedEntity;
 import com.google.common.base.Optional;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -55,10 +55,8 @@ public class EntitySandPrison extends AvatarEntity {
 
     public static final DataParameter<Integer> SYNC_MAX_IMPRISONED_TIME = EntityDataManager
             .createKey(EntitySandPrison.class, DataSerializers.VARINT);
-
-    private double normalBaseValue;
     private final SyncedEntity<EntityLivingBase> imprisonedAttr;
-
+    private double normalBaseValue;
     private boolean damageEntity;
     private boolean applySlowness;
     private boolean vulnerableToAirbending;
@@ -287,11 +285,8 @@ public class EntitySandPrison extends AvatarEntity {
 
         imprisonedSeconds += powerRating / 50;
 
-        //I believe in the power of having to do a physics IA
-        setImprisonedTime(20000);
-        setMaxImprisonedTime(20000);
-//        setImprisonedTime((int) (imprisonedSeconds * 20));
-//        setMaxImprisonedTime((int) (imprisonedSeconds * 20));
+        setImprisonedTime((int) (imprisonedSeconds * 20));
+        setMaxImprisonedTime((int) (imprisonedSeconds * 20));
 
     }
 

@@ -129,9 +129,8 @@ public class AvatarPlayerData extends PlayerData {
                 AvatarMod.network.sendTo(packet, (EntityPlayerMP) player);
             }
             //Last resort
-            else {
-                AvatarMod.network.sendToAll(packet);
-            }
+            //This might lag servers. Woops.
+            AvatarMod.network.sendToAll(packet);
 
             changed.clear();
 
