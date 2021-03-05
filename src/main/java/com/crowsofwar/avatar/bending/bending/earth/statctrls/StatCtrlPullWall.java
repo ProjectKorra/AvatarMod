@@ -28,7 +28,8 @@ public class StatCtrlPullWall extends StatusControl {
         AbilityData abilityData = ctx.getData().getAbilityData("wall");
         EntityWallSegment wallSegment = AvatarEntity.lookupOwnedEntity(world, EntityWallSegment.class, entity);
 
-        if (wallSegment.getBehavior().getClass() == WallBehavior.Waiting.class
+        if (wallSegment != null && wallSegment.getBehavior() != null &&
+                wallSegment.getBehavior().getClass() == WallBehavior.Waiting.class
                 && abilityData.getAbilityCooldown(entity) <= 0) {
 
             List<EntityWallSegment> segments = world.getEntities(EntityWallSegment.class,

@@ -257,7 +257,7 @@ public class EntitySandstorm extends EntityOffensive {
 
         // Number of blocks that the target "floats" above the ground
         /*final**/
-        final double floatingDistance = getHeight() / 2;
+        final double floatingDistance = getHeight() / 10;
         //   final double floatingDistance = getWidth() + getExpandedHitboxHeight();
         // The maximum distance between a sandstorm and an orbiting mob before the mob is thrown
         final double maxPickupRange = velocity().magnitude() * 0.75 + getWidth() / 2;
@@ -302,6 +302,8 @@ public class EntitySandstorm extends EntityOffensive {
 //            }
             //System.out.println(y);
         }
+        //test
+        radiusToUse = (floatingDistance / getHeight()) * getWidth();
         //floatPos = floatPos.plus(dir.x(), 0, dir.z());
 
         double currentAngle = Vector.getRotationTo(floatPos/*position()**/,
@@ -360,10 +362,10 @@ public class EntitySandstorm extends EntityOffensive {
             Vector testVel = Vector.toRectangular(nextAngle, 0).times(spinSpeed);
             //5 times difference ;-;
             //My maths sucks
-//            System.out.println("Actual: " + testVel.magnitude());
-//            System.out.println("Theoretical Angular Velocity: " + spinSpeed);
+            System.out.println("Actual: " + testVel.magnitude());
+            System.out.println("Theoretical Angular Velocity: " + spinSpeed);
             //      System.out.println((getWidth() * getWidth() * Math.toRadians(360F / 20F) * 20) / (nextPos.minus(position()).minusY(floatingDistance)).magnitude() );
-            //   System.out.println("Target Velocity/Applied Force: " + (2 * Math.PI * radiusToUse * 20));
+               System.out.println("Target Velocity/Applied Force: " + (radiusToUse * radiusToUse * spinSpeed * 20));
         }
         entity.motionX = nextVelocity.x() / 20;
         entity.motionY = Math.min(nextVelocity.y() / 20, floatingDistance / 20);
