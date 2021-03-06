@@ -363,7 +363,7 @@ public class EntitySandstorm extends EntityOffensive {
             //5 times difference ;-;
             //My maths sucks
             System.out.println("Actual Radius: " + radiusToUse);
-            System.out.println("Actual: " + testVel.magnitude());
+            System.out.println("Actual Angular Velocity: " + testVel.magnitude());
             System.out.println("Theoretical Angular Velocity: " + spinSpeed);
             //      System.out.println((getWidth() * getWidth() * Math.toRadians(360F / 20F) * 20) / (nextPos.minus(position()).minusY(floatingDistance)).magnitude() );
                System.out.println("Target Total Momentum: " + (radiusToUse * radiusToUse * spinSpeed * 20));
