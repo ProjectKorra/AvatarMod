@@ -59,11 +59,9 @@ public class AbilitySandstorm extends Ability {
             sandstorm.setDamageFlungTargets(getBooleanProperty(FLUNG_DAMAGE, ctx));
             sandstorm.setDamageContactingTargets(getBooleanProperty(CONTACT_DAMAGE, ctx));
             sandstorm.setVulnerableToAirbending(getBooleanProperty(VULNERABLE, ctx));
-         //   sandstorm.setEntitySize(size * 2, size);
-            sandstorm.setEntitySize(4F, 1.000F);
+            sandstorm.setEntitySize(size * 2, size);
             sandstorm.setTier(getBaseTier());
-           // sandstorm.setPush(push);
-            sandstorm.setPush(10);
+            sandstorm.setPush(push);
             sandstorm.setElement(new Sandbending());
             sandstorm.setDamage(damage);
             sandstorm.setChiHit(powerModify(getProperty(CHI_HIT, ctx).floatValue(), abilityData));
