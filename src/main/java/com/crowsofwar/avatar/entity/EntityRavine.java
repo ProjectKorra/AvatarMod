@@ -19,11 +19,8 @@ package com.crowsofwar.avatar.entity;
 
 import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import com.crowsofwar.avatar.bending.bending.earth.Earthbending;
-import com.crowsofwar.avatar.util.damageutils.AvatarDamageSource;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockAir;
-import net.minecraft.block.BlockLiquid;
+import net.minecraft.block.*;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -35,13 +32,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
 
 import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
 
@@ -146,9 +145,11 @@ public class EntityRavine extends EntityOffensive {
                     && !world.isBlockNormalCube(pos, false)) {
 
                 // Falling blocks do the setting block to air themselves.
-                EntityFallingBlock fallingblock = new EntityFallingBlock(world, posX, posY - 1, posZ,
-                        world.getBlockState(new BlockPos(posX, posY - 1, posZ)));
-                fallingblock.motionY = 0.2 + getAvgSize() / 10;
+                //Fixed issues with floating blocks not appearing??? Now time to fix going up areas with
+                //non-solid blocks.
+                EntityFallingBlock fallingblock = new EntityFallingBlock(world, posX, (int) (posY - 0.5) + 0.5,
+                        posZ, world.getBlockState(new BlockPos(posX, posY - 1, posZ)));
+                fallingblock.motionY = 0.15 + getAvgSize() / 10;
                 world.spawnEntity(fallingblock);
             }
         }
@@ -193,9 +194,9 @@ public class EntityRavine extends EntityOffensive {
         }
 
 
-        if (Earthbending.isBendable(world, getPosition(), world.getBlockState(getPosition()), 2) && !shouldBreakBlocks())
+        boolean bendable = Earthbending.isBendable(world, getPosition(), world.getBlockState(getPosition()), 2);
+        if (bendable && !shouldBreakBlocks())
             setPosition(position().plusY(1));
-
 
         if (world.isRemote)
             if (!(world.getBlockState(getPosition().down()).getBlock() instanceof BlockAir))
@@ -207,16 +208,20 @@ public class EntityRavine extends EntityOffensive {
 
         // Destroy non-solid blocks in the ravine
         IBlockState inBlock = world.getBlockState(getPosition());
-        if (inBlock.getBlock() != Blocks.AIR && !inBlock.isFullBlock()) {
-            if (inBlock.getBlockHardness(world, getPosition()) == 0) {
-                if (inBlock.getBlock() instanceof BlockLiquid)
-                    Dissipate();
-                breakBlock(getPosition());
-            } else {
-                if (!shouldBreakBlocks())
-                    Dissipate();
-            }
+        if (isDefaultBreakableBlock(world, getPosition())) {
+            if (inBlock.getBlock() instanceof BlockLiquid)
+                Dissipate();
+            breakBlock(getPosition());
+        } else {
+            if (!shouldBreakBlocks())
+                Dissipate();
         }
+    }
+
+    @Nullable
+    @Override
+    public SoundEvent[] getSounds() {
+        return new SoundEvent[0];
     }
 
     @Override
@@ -293,8 +298,9 @@ public class EntityRavine extends EntityOffensive {
         IBlockState inBlock = world.getBlockState(getPosition());
         if (inBlock.isFullBlock() && Earthbending.isBendable(world, getPosition(), inBlock, 2)) {
             inBlock = world.getBlockState(getPosition().up());
-            if ((inBlock.getBlock() == Blocks.AIR || !inBlock.isNormalCube() && inBlock.getBlockHardness(world, getPosition().up()) == 0) &&
-                    Earthbending.isBendable(world, getPosition(), world.getBlockState(getPosition()), 2)) {
+            if ((inBlock.getBlock() == Blocks.AIR || isDefaultBreakableBlock(world, getPosition().up()) &&
+                    Earthbending.isBendable(world, getPosition(), world.getBlockState(getPosition()),
+                            2))) {
                 setPosition(position().plusY(1));
                 return false;
             } else return !shouldBreakBlocks();
@@ -306,5 +312,11 @@ public class EntityRavine extends EntityOffensive {
     @Override
     public BendingStyle getElement() {
         return new Earthbending();
+    }
+
+    public boolean isDefaultBreakableBlock(World world, BlockPos pos) {
+        IBlockState state = world.getBlockState(pos);
+        return (state.getBlock() instanceof BlockSnow || state.getBlock()
+                instanceof BlockBush) || state.getBlockHardness(world, pos) == 0 && !state.isFullBlock();
     }
 }

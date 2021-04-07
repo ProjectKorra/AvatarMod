@@ -103,6 +103,7 @@ public class EntityFloatingBlock extends EntityOffensive {
 
     private float damageMult;
     private int ticksGround;
+    private int ticksPlaced;
 
     public EntityFloatingBlock(World world) {
         super(world);
@@ -117,6 +118,7 @@ public class EntityFloatingBlock extends EntityOffensive {
         this.width = size;
         this.height = size;
         this.ignoreFrustumCheck = true;
+        this.ticksPlaced = 0;
     }
 
     public EntityFloatingBlock(World world, IBlockState blockState) {
@@ -279,13 +281,15 @@ public class EntityFloatingBlock extends EntityOffensive {
                 Block.getStateId(getBlockState()));
     }
 
-    public void placeBlock() {
-        if (!world.isRemote && !STATS_CONFIG.preventEarthGriefing) {
-            Vec3d middle = AvatarEntityUtils.getMiddleOfEntity(this);
+    public boolean placeBlock() {
+        if (!STATS_CONFIG.preventEarthGriefing) {
+            Vec3d middle = AvatarEntityUtils.getBottomMiddleOfEntity(this);
             BlockPos pos = new BlockPos(middle.x, middle.y, middle.z);
+            BlockPos pos2 = new BlockPos(middle.x, middle.y, middle.z).down();
             //Using getPosition sometimes results in weird stuff
-            world.setBlockState(pos, getBlockState());
+            return world.setBlockState(pos, getBlockState()) || world.setBlockState(pos2, getBlockState());
         }
+        return true;
     }
 
     @Override
@@ -307,6 +311,14 @@ public class EntityFloatingBlock extends EntityOffensive {
             placeBlock();
             world.scheduleBlockUpdate(getPosition(), getBlock(), 0, 1);
         }
+
+        if (getBehavior() instanceof FloatingBlockBehavior.Place) {
+            ticksPlaced++;
+        }
+
+        if (ticksPlaced > 60)
+            if (!placeBlock())
+                Dissipate();
 
         if (ticksGround > 17 && velocity().magnitude() < 0.5)
             Dissipate();
@@ -465,7 +477,7 @@ public class EntityFloatingBlock extends EntityOffensive {
     }
 
     public void setBehavior(FloatingBlockBehavior behavior) {
-        // FIXME research: why doesn't sync_Behavior cause an update to client?
+        // FIXME research: why doesn't syncBehavior cause an update to client?
         if (behavior == null) throw new IllegalArgumentException("Cannot have null behavior");
         dataManager.set(SYNC_BEHAVIOR, behavior);
     }
@@ -506,8 +518,6 @@ public class EntityFloatingBlock extends EntityOffensive {
     public void setDead() {
         super.setDead();
         removeStatCtrl();
-//        if (!world.isRemote && isDead)
-//            Thread.dumpStack();
     }
 
     @Override

@@ -23,7 +23,6 @@ import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.StatusControlController;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -33,7 +32,6 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
 
 import java.util.List;
 
@@ -97,26 +95,26 @@ public abstract class FloatingBlockBehavior extends OffensiveBehaviour {
 
             if (entity instanceof EntityFloatingBlock) {
                 entity.noClip = true;
-                World world = entity.world;
 
 
                 Vector placeAtVec = new Vector(placeAt.getX() + 0.5, placeAt.getY(), placeAt.getZ() + 0.5);
                 Vector thisPos = new Vector(entity);
                 Vector force = placeAtVec.minus(thisPos);
-                force = force.normalize().times(3);
+                force = force.normalize().times(4);
                 entity.setVelocity(force);
 
 
-                if (placeAtVec.sqrDist(thisPos) < 0.005) {
-                    ((EntityFloatingBlock) entity).placeBlock();
-                    entity.Dissipate();
-                    SoundType sound = ((EntityFloatingBlock) entity).getBlock().getSoundType();
-                    if (sound != null) {
-                        entity.world.playSound(null, entity.getPosition(), sound.getPlaceSound(),
-                                SoundCategory.PLAYERS, sound.getVolume(), sound.getPitch());
+                if (entity.getDistance(placeAtVec.x(), placeAtVec.y(), placeAtVec.z()) < 0.5 && entity.collided
+                        || entity.getDistance(placeAtVec.x(), placeAtVec.y(), placeAtVec.z()) < 0.15) {
+                    entity.setPosition(placeAtVec);
+                    if (((EntityFloatingBlock) entity).placeBlock()) {
+                        entity.Dissipate();
+                        SoundType sound = ((EntityFloatingBlock) entity).getBlock().getSoundType();
+                        if (sound != null) {
+                            entity.world.playSound(null, entity.getPosition(), sound.getPlaceSound(),
+                                    SoundCategory.PLAYERS, sound.getVolume(), sound.getPitch());
+                        }
                     }
-
-
                 }
             }
             return this;

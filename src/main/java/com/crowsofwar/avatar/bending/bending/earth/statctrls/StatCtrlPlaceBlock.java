@@ -38,6 +38,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -78,7 +79,7 @@ public class StatCtrlPlaceBlock extends StatusControl {
 
         if (abilityData != null && control != null) {
             if (abilityData.getAbilityCooldown(entity) <= 0) {
-				
+
                 float chiCost = control.getChiCost(abilityData);
                 float exhaustion = control.getExhaustion(abilityData);
                 float burnout = control.getBurnOut(abilityData);
@@ -93,12 +94,15 @@ public class StatCtrlPlaceBlock extends StatusControl {
                     chiCost = exhaustion = burnout = cooldown = 0;
 
                 if (floating != null && !world.isRemote) {
-                    Vec3d start = entity.getPositionEyes(1.0F);
-                    Vec3d end = start.add(entity.getLookVec().scale(5));
 
                     RayTraceResult result = Raytrace.rayTrace(entity,5, 1.0F);
                     if (result != null) {
-                        BlockPos pos = result.getBlockPos();
+                        //AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
+                        Vec3i facing = result.sideHit.getDirectionVec();
+                        Vec3d resPos = result.hitVec;//.add(facing.getX(), facing.getY(), facing.getZ());
+                        BlockPos pos = new BlockPos(resPos);
+                        if (world.getBlockState(pos).isFullCube())
+                            pos = new BlockPos(resPos.add(facing.getX(), facing.getY(), facing.getZ()));
                         IBlockState state = world.getBlockState(pos);
                         IBlockState upState = world.getBlockState(pos.up());
                         Block block = state.getBlock();
@@ -107,7 +111,7 @@ public class StatCtrlPlaceBlock extends StatusControl {
                         if (!(upBlock instanceof BlockBush || upBlock instanceof BlockSnow || block instanceof BlockAir))
                             pos = pos.up();
 
-                        if (block instanceof BlockSnow || block instanceof BlockBush)
+                       if (block instanceof BlockSnow || block instanceof BlockBush)
                             pos = pos.down();
 
                         Vector force = new Vector(pos).minus(floating.velocity()).normalize();
