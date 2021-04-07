@@ -67,7 +67,8 @@ public class AbilityMining extends Ability {
 
         Bender bender = ctx.getBender();
 
-        if (bender.consumeChi(getChiCost(ctx)) && !ctx.getWorld().isRemote) {
+        if (bender.consumeChi(getChiCost(ctx)) && !ctx.getWorld().isRemote && (ctx.getAbilityData().getAbilityCooldown() == 0
+                || getCooldown(ctx) == 0)) {
 
             EntityLivingBase entity = ctx.getBenderEntity();
             World world = ctx.getWorld();
@@ -104,7 +105,7 @@ public class AbilityMining extends Ability {
                     // Mark any ores that were found; doesn't actually mine them yet
                     if (isBreakableOre(world, pos)) {
                         oresToBeMined.add(pos);
-                        //alreadyMinedOres.add(pos);
+                        alreadyMinedOres.add(pos);
                     }
 
                     // Actually break the block here

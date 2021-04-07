@@ -88,12 +88,16 @@ public class AbilityEarthControl extends Ability {
         EntityLivingBase entity = ctx.getBenderEntity();
         int range = getProperty(RANGE, ctx).intValue();
 
-        if (targetPos != null && targetPos.dist(entityPos) <= range) {
-            pickupBlock(ctx, targetPos.toBlockPos());
-        } else {
-            pos = Earthbending.getClosestEarthbendableBlock(entity, ctx, this, 2);
-            if (pos != null) {
-                pickupBlock(ctx, pos.toBlockPos());
+        //Ik I overrode the methods but the default ability activation code should have a simple
+        //check to ensure integrity
+        if (ctx.getAbilityData().getAbilityCooldown() == 0 || getCooldown(ctx) <= 0) {
+            if (targetPos != null && targetPos.dist(entityPos) <= range) {
+                pickupBlock(ctx, targetPos.toBlockPos());
+            } else {
+                pos = Earthbending.getClosestEarthbendableBlock(entity, ctx, this, 2);
+                if (pos != null) {
+                    pickupBlock(ctx, pos.toBlockPos());
+                }
             }
         }
     }

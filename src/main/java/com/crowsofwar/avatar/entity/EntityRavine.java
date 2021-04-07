@@ -137,16 +137,17 @@ public class EntityRavine extends EntityOffensive {
 
     public void spawnEntity() {
         if (!world.isRemote) {
-            BlockPos pos = new BlockPos(prevPosX, prevPosY, prevPosZ);
+            BlockPos pos = new BlockPos(posX, posY, posZ);
 
+            //TODO: BUG - Spawns weirdly/not at all with snow layers and such. Fix.
             if (world.getBlockState(pos.down()).getBlockHardness(world, pos.down()) != -1 && !world.isAirBlock(pos.down())
                     && world.isBlockNormalCube(pos.down(), false)
-                    // Checks that the block above is not solid, since this causes the falling sand to vanish.
+                    // Checks that the block above is not solid, since this causes the falling blocks to vanish.
                     && !world.isBlockNormalCube(pos, false)) {
 
                 // Falling blocks do the setting block to air themselves.
-                EntityFallingBlock fallingblock = new EntityFallingBlock(world, prevPosX, prevPosY - 1, prevPosZ,
-                        world.getBlockState(new BlockPos(prevPosX, prevPosY - 1, prevPosZ)));
+                EntityFallingBlock fallingblock = new EntityFallingBlock(world, posX, posY - 1, posZ,
+                        world.getBlockState(new BlockPos(posX, posY - 1, posZ)));
                 fallingblock.motionY = 0.2 + getAvgSize() / 10;
                 world.spawnEntity(fallingblock);
             }

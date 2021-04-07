@@ -63,10 +63,10 @@ public class AvatarItems {
 		Scrolls.AIR = ItemScrollAir.getInstance();
 		Scrolls.EARTH = ItemScrollEarth.getInstance();
 		Scrolls.FIRE = ItemScrollFire.getInstance();
-		//Scrolls.WATER = ItemScrollWater.getInstance();
+		Scrolls.WATER = ItemScrollWater.getInstance();
 		Scrolls.COMBUSTION = ItemScrollCombustion.getInstance();
 		Scrolls.SAND = ItemScrollSand.getInstance();
-		//Scrolls.ICE = ItemScrollIce.getInstance();
+		Scrolls.ICE = ItemScrollIce.getInstance();
 		Scrolls.LIGHTNING = ItemScrollLightning.getInstance();
 		itemWaterPouch = ItemWaterPouch.getInstance();
 		itemBisonWhistle = ItemBisonWhistle.getInstance();

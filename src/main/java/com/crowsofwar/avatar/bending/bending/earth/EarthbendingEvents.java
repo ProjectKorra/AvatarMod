@@ -16,10 +16,10 @@
 */
 package com.crowsofwar.avatar.bending.bending.earth;
 
+import com.crowsofwar.avatar.entity.mob.EntityBender;
 import com.crowsofwar.avatar.util.data.AvatarWorldData;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.ScheduledDestroyBlock;
-import com.crowsofwar.avatar.entity.mob.EntityBender;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -43,84 +43,88 @@ import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
  */
 public class EarthbendingEvents {
 
-	private EarthbendingEvents() {
-	}
+    private EarthbendingEvents() {
+    }
 
-	public static void register() {
-		MinecraftForge.EVENT_BUS.register(new EarthbendingEvents());
-	}
+    public static void register() {
+        MinecraftForge.EVENT_BUS.register(new EarthbendingEvents());
+    }
 
-	@SubscribeEvent
-	public void digSpeed(PlayerEvent.BreakSpeed e) {
-		EntityPlayer player = e.getEntityPlayer();
-		World world = player.world;
+    @SubscribeEvent
+    public void digSpeed(PlayerEvent.BreakSpeed e) {
+        EntityPlayer player = e.getEntityPlayer();
+        World world = player.world;
 
-		IBlockState state = e.getState();
-		if (STATS_CONFIG.bendableBlocks.contains(state.getBlock())) {
-			e.setNewSpeed(e.getOriginalSpeed() * 2);
-		}
+        IBlockState state = e.getState();
+        if (STATS_CONFIG.bendableBlocks.contains(state.getBlock())) {
+            e.setNewSpeed(e.getOriginalSpeed() * 2);
+        }
 
-	}
+    }
 
-	@SubscribeEvent
-	public void worldUpdate(WorldTickEvent e) {
-		World world = e.world;
-		if (!world.isRemote && e.phase == TickEvent.Phase.START) {
+    @SubscribeEvent
+    public void worldUpdate(WorldTickEvent e) {
+        World world = e.world;
+        if (!world.isRemote && e.phase == TickEvent.Phase.START) {
 
-			AvatarWorldData wd = AvatarWorldData.getDataFromWorld(world);
-			Iterator<ScheduledDestroyBlock> iterator = wd.getScheduledDestroyBlocks().iterator();
-			while (iterator.hasNext()) {
+            AvatarWorldData wd = AvatarWorldData.getDataFromWorld(world);
+            Iterator<ScheduledDestroyBlock> iterator = wd.getScheduledDestroyBlocks().iterator();
+            while (iterator.hasNext()) {
 
-				ScheduledDestroyBlock sdb = iterator.next();
-				sdb.decrementTicks();
-				if (sdb.getTicks() <= 0) {
+                ScheduledDestroyBlock sdb = iterator.next();
+                sdb.decrementTicks();
+                if (sdb.getTicks() <= 0) {
 
-					BlockPos pos = sdb.getPos();
-					IBlockState blockState = world.getBlockState(pos);
-					Block block = blockState.getBlock();
-					destroyBlock(world, pos, sdb.isDrop(), sdb.getFortune());
+                    BlockPos pos = sdb.getPos();
+                    IBlockState blockState = world.getBlockState(pos);
+                    Block block = blockState.getBlock();
+                    destroyBlock(world, pos, sdb.isDrop(), sdb.getFortune());
 
-					iterator.remove();
+                    iterator.remove();
 
-				}
+                }
 
-			}
+            }
 
-		}
-	}
+        }
+    }
 
-	@SubscribeEvent
-	public void knockbackEvent(LivingKnockBackEvent event) {
-		if (event.getEntityLiving() instanceof EntityPlayer || event.getEntityLiving() instanceof EntityBender) {
-			if (!(event.getEntityLiving() instanceof FakePlayer)) {
-				Bender b = Bender.get(event.getEntityLiving());
-				if (b != null) {
-					if (b.getData() != null && b.getData().hasBendingId(Earthbending.ID)) {
-						float powerrating = (float) b.calcPowerRating(Earthbending.ID) / 100;
-						if (STATS_CONFIG.passiveSettings.knockbackResistanceEarth) {
-							event.setStrength(event.getStrength() * (0.8F - powerrating));
-						}
-					}
-				}
-			}
-		}
-	}
+    @SubscribeEvent
+    public void knockbackEvent(LivingKnockBackEvent event) {
+        if (event.getEntityLiving() instanceof EntityPlayer || event.getEntityLiving() instanceof EntityBender) {
+            if (!(event.getEntityLiving() instanceof FakePlayer)) {
+                Bender b = Bender.get(event.getEntityLiving());
+                if (b != null) {
+                    if (b.getData() != null && b.getData().hasBendingId(Earthbending.ID)) {
+                        float powerrating = (float) b.calcPowerRating(Earthbending.ID) / 100;
+                        if (STATS_CONFIG.passiveSettings.knockbackResistanceEarth) {
+                            event.setStrength(event.getStrength() * (0.8F - powerrating));
+                        }
+                    }
+                }
+            }
+        }
+    }
 
-	private void destroyBlock(World world, BlockPos pos, boolean dropBlock, int fortune) {
+    //Can't use the world's default method due to fortune; so, copy + paste
+    //and use fortune
+    private boolean destroyBlock(World world, BlockPos pos, boolean dropBlock, int fortune) {
 
-		IBlockState iblockstate = world.getBlockState(pos);
-		Block block = iblockstate.getBlock();
+        IBlockState iblockstate = world.getBlockState(pos);
+        Block block = iblockstate.getBlock();
 
-		if (!block.isAir(iblockstate, world, pos)) {
-			world.playEvent(2001, pos, Block.getStateId(iblockstate));
+        if (block.isAir(iblockstate, world, pos)) {
+            return false;
+        } else {
+            world.playEvent(2001, pos, Block.getStateId(iblockstate));
 
-			if (dropBlock) {
-				block.dropBlockAsItem(world, pos, iblockstate, fortune);
-			}
+            if (dropBlock) {
+                block.dropBlockAsItem(world, pos, iblockstate, fortune);
+            }
 
-			world.setBlockState(pos, Blocks.AIR.getDefaultState(), 2);
-		}
+            return world.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
+        }
 
-	}
+    }
 
 }

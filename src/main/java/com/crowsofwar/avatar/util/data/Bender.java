@@ -256,6 +256,7 @@ public abstract class Bender {
             if (ability.properties != null) {
                 if (canUseAbility(ability) && !MinecraftForge.EVENT_BUS.post(new AbilityUseEvent(entity, ability, level + 1, path))) {
                     if (data.getMiscData().getCanUseAbilities()) {
+                      //TODO: Fix client-server cooldown desync
                         if (getData().chi().getAvailableChi() >= ability.getChiCost(abilityCtx) && aD.getAbilityCooldown() == 0 || entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
                             aD.setPowerRating(calcPowerRating(ability.getBendingId()));
                             //This lets the ability disable burnout regeneration
@@ -347,7 +348,7 @@ public abstract class Bender {
                 }
             }
             //Save it occasionally
-            if (updateAbilities && entity.ticksExisted % 10000 == 0)
+            if (updateAbilities || entity.ticksExisted % 10000 == 0)
                 data.save(DataCategory.ABILITY_DATA);
         }
 

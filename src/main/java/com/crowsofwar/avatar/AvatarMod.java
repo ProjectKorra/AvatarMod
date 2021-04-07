@@ -29,6 +29,7 @@ import com.crowsofwar.avatar.bending.bending.earth.*;
 import com.crowsofwar.avatar.bending.bending.fire.*;
 import com.crowsofwar.avatar.bending.bending.ice.AbilityIceBurst;
 import com.crowsofwar.avatar.bending.bending.ice.AbilityIcePrison;
+import com.crowsofwar.avatar.bending.bending.ice.Icebending;
 import com.crowsofwar.avatar.bending.bending.lightning.*;
 import com.crowsofwar.avatar.bending.bending.sand.AbilitySandPrison;
 import com.crowsofwar.avatar.bending.bending.sand.AbilitySandstorm;
@@ -63,9 +64,6 @@ import com.crowsofwar.avatar.util.command.AvatarCommand;
 import com.crowsofwar.avatar.util.data.AvatarPlayerData;
 import com.crowsofwar.avatar.util.event.ServerEventHandler;
 import com.crowsofwar.avatar.util.windhelper.WindHelper;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.util.ResourceLocation;
@@ -89,8 +87,6 @@ import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 
 import static com.crowsofwar.avatar.config.ConfigMobs.MOBS_CONFIG;
 import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
@@ -173,9 +169,9 @@ public class AvatarMod {
         BendingStyles.register(new Airbending());
         BendingStyles.register(new Firebending());
         //No waterbending for you! (Blame drillgon for why it's not done, btw)
-        //BendingStyles.register(new Waterbending());
+        BendingStyles.register(new Waterbending());
         BendingStyles.register(new Earthbending());
-        //BendingStyles.register(new Icebending());
+        BendingStyles.register(new Icebending());
         BendingStyles.register(new Sandbending());
         BendingStyles.register(new Lightningbending());
         BendingStyles.register(new Combustionbending());

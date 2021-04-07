@@ -125,7 +125,7 @@ public class AvatarPlayerData extends PlayerData {
             //Target points are dumb
             //Player may be null, ignore warning
             //Pls I got crashes because it wasn't an entity, how is that even possible
-            if (player instanceof Entity && player instanceof EntityPlayerMP && player != null) {
+            if (player instanceof EntityPlayerMP) {
                 AvatarMod.network.sendTo(packet, (EntityPlayerMP) player);
             }
             //Last resort

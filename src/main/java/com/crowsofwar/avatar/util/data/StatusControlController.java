@@ -7,6 +7,7 @@ import com.crowsofwar.avatar.bending.bending.ice.StatCtrlShieldShatter;
 import com.crowsofwar.avatar.bending.bending.lightning.StatCtrlThrowLightningSpear;
 import com.crowsofwar.avatar.bending.bending.sand.StatCtrlSandstormRedirect;
 import com.crowsofwar.avatar.bending.bending.water.statctrls.*;
+import com.crowsofwar.avatar.bending.bending.water.statctrls.waterarc.StatCtrlThrowWater;
 import net.minecraft.util.EnumHand;
 
 import java.util.List;

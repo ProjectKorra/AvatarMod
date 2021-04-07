@@ -15,7 +15,7 @@
   along with AvatarMod. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.crowsofwar.avatar.bending.bending.water.statctrls;
+package com.crowsofwar.avatar.bending.bending.water.statctrls.waterarc;
 
 import com.crowsofwar.avatar.client.controls.AvatarControl;
 import com.crowsofwar.avatar.util.data.AbilityData;
@@ -30,7 +30,8 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
 /**
- * @author CrowsOfWar
+ * @author CrowsOfWar, FavouriteDragon
+ * Two options: Simple throw, or projectile blast. Blast when fully charged.
  */
 public class StatCtrlThrowWater extends StatusControl {
 
