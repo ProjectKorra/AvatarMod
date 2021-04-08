@@ -61,13 +61,13 @@ public class AvatarItemRenderRegister {
         forScroll(Scrolls.ALL);
         forScroll(Scrolls.AIR);
         //No water for you!
-        //forScroll(Scrolls.WATER);
+        forScroll(Scrolls.WATER);
         forScroll(Scrolls.FIRE);
         forScroll(Scrolls.EARTH);
         forScroll(Scrolls.LIGHTNING);
         forScroll(Scrolls.COMBUSTION);
         forScroll(Scrolls.SAND);
-        //forScroll(Scrolls.ICE);
+        forScroll(Scrolls.ICE);
 
         ModelLoader.setCustomStateMapper(blockCloud, (new StateMap.Builder()).withName(BlockColored.COLOR).withSuffix("_cloudblock").build());
         register(AvatarItems.itemBisonWhistle);

@@ -1,14 +1,5 @@
 package com.crowsofwar.avatar.client.particles.newparticles;
 
-import static net.minecraft.util.math.MathHelper.cos;
-import static net.minecraft.util.math.MathHelper.sin;
-
-import javax.annotation.Nonnull;
-
-import org.joml.Matrix4f;
-import org.joml.Vector4f;
-import org.lwjgl.opengl.GL11;
-
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import com.crowsofwar.avatar.bending.bending.air.Airbending;
@@ -18,7 +9,6 @@ import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.client.particles.newparticles.behaviour.ParticleAvatarBehaviour;
 import com.crowsofwar.avatar.client.particles.newparticles.renderlayers.RenderLayer;
 import com.crowsofwar.avatar.client.particles.newparticles.renderlayers.RenderLayerWaterCube;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -32,6 +22,14 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.joml.Matrix4f;
+import org.joml.Vector4f;
+import org.lwjgl.opengl.GL11;
+
+import javax.annotation.Nonnull;
+
+import static net.minecraft.util.math.MathHelper.cos;
+import static net.minecraft.util.math.MathHelper.sin;
 
 //@Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class ParticleCube extends ParticleAvatar {
@@ -104,8 +102,8 @@ public class ParticleCube extends ParticleAvatar {
     @Override
     public void renderParticle(BufferBuilder buffer, Entity viewer, float partialTicks, float lookZ, float lookY, float lookX, float lookXY, float lookYZ) {
 
-    	updateEntityLinking(partialTicks);
-        
+        updateEntityLinking(partialTicks);
+
         Tessellator tes = Tessellator.getInstance();
         buffer = tes.getBuffer();
 
@@ -141,15 +139,13 @@ public class ParticleCube extends ParticleAvatar {
         //GlStateManager.scale(scale, scale, scale);
 
         Matrix4f mat = new Matrix4f();
-        
+
         mat = mat.translate(x, y + 0.4F, z);
-        
+
         //4 = degrees per second
         mat = mat.rotate(ticks / 20 * 0.2F * 40, 1, 0, 0);
         mat = mat.rotate(ticks / 20 * 40, 0, 1, 0);
         mat = mat.rotate(ticks / 20 * -0.4F * 40, 0, 0, 1);
-        
-        
 
 
         // @formatter:off
@@ -169,7 +165,11 @@ public class ParticleCube extends ParticleAvatar {
 
             float t1 = ticks * (float) Math.PI / 10f;
             float t2 = t1 + (float) Math.PI / 2f;
-            float amt = 0.05f*scale;
+            float amt = 0.05f * scale;
+
+            //Somehow smooth min with other cubes? legit don't know how
+            //Please, god of programming, I beseech you to hear my prayer
+            //How dost one make water go sploosh?
 
             lbf.add(cos(t1) * amt, sin(t2) * amt, cos(t2) * amt, 0);
             rbf.add(sin(t1) * amt, cos(t2) * amt, sin(t2) * amt, 0);
@@ -191,7 +191,7 @@ public class ParticleCube extends ParticleAvatar {
             //if (element instanceof Waterbending)
             //   setRBGColorF(particleRed * 0.75F, particleGreen * 0.75F, particleBlue * 1.25F);
         }
-        
+
         drawQuad(2, ltb, lbb, lbf, ltf, 0, v1, 1, v2,
                 particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.5F, element); // -x
         drawQuad(2, rtb, rbb, rbf, rtf, 0, v1, 1, v2,
@@ -204,16 +204,16 @@ public class ParticleCube extends ParticleAvatar {
                 particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.5F, element); // -z
         drawQuad(2, rtb, rbb, lbb, ltb, 0, v1, 1, v2,
                 particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.5F, element); // +z
-        
-       // GlStateManager.color(1F, 1F, 1F, 1F);
-       // GlStateManager.disableBlend();
-       // GlStateManager.popMatrix();
+
+        // GlStateManager.color(1F, 1F, 1F, 1F);
+        // GlStateManager.disableBlend();
+        // GlStateManager.popMatrix();
 
     }
 
     @Override
     public RenderLayer getCustomRenderLayer() {
-    	return element instanceof Waterbending ? RenderLayerWaterCube.INSTANCE : null;
+        return element instanceof Waterbending ? RenderLayerWaterCube.INSTANCE : null;
     }
 
     @Override
