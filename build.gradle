@@ -73,7 +73,8 @@ repositories {
     }
     maven {
         name = "forge"
-        url = "https://files.minecraftforge.net/maven" }
+        url = "https://files.minecraftforge.net/maven"
+    }
     /*   maven {
            name = "amuzil"
            url = "http://repo.amuzil.com/repository/public/"
@@ -97,6 +98,10 @@ repositories {
     maven {
         name = "DragonForge"
         url = "https://raw.github.com/dragon-forge/maven/master"
+    }
+    //Patchouli guidebook
+    maven {
+        url = 'https://maven.blamejared.com'
     }
 }
 
@@ -124,6 +129,8 @@ dependencies {
     deobfProvided "mezz.jei:jei_1.12.2:4.15.0.293:api"
     // at runtime, use the full JEI jar
     runtime "mezz.jei:jei_1.12.2:4.15.0.293"
+    // patchouli
+    compile "vazkii.patchouli:Patchouli:1.0-20"
     // Forge Mods
     if (dependenciesConfig.obfuscated) {
     } else {
