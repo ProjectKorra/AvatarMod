@@ -34,6 +34,24 @@ import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
 
+/**
+ * Are you proud of me, dad? I'm outlining how this should work in the documentation.
+ * I'm actually following conventions. Praise be!
+ *
+ * Wave -- Waterbending
+ * This ability is designed for mobility and offense. It's a staple of waterbenders, and allows them
+ * to dominate in water, snow, or rain. Charge up to create a bigger wave! As with most waterbending abilities,
+ * it can be frozen and electrocuted.
+ * Rideable.
+ *
+ * Level 1 - Simple Wave.
+ * Level 2 - Faster, Stronger, Bigger, Cooler. Ya know.
+ * Level 3 - It's now rideable! Woo!
+ * Level 4 Path 1 : Sundering Tsunami - Waves are now closer to geysers of water in a line. Think ravine but water and stronger.
+ * Level 4 Path 2: Voluminous Falls - Waves are now thicker, and can be controlled into shapes!
+ *
+ * @author CrowsofWar, FavouriteDragon (mainly me)
+ */
 public class AbilityCreateWave extends Ability {
 
 	public AbilityCreateWave() {

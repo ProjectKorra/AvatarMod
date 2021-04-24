@@ -1,10 +1,12 @@
 package com.crowsofwar.avatar.bending.bending.earth.statctrls;
 
+import com.crowsofwar.avatar.bending.bending.earth.Earthbending;
 import com.crowsofwar.avatar.client.controls.AvatarControl;
 import com.crowsofwar.avatar.entity.AvatarEntity;
 import com.crowsofwar.avatar.entity.EntityWallSegment;
 import com.crowsofwar.avatar.entity.data.WallBehavior;
 import com.crowsofwar.avatar.util.data.AbilityData;
+import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.StatusControl;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
 import net.minecraft.entity.EntityLivingBase;
@@ -27,8 +29,12 @@ public class StatCtrlPushWall extends StatusControl {
     public boolean execute(BendingContext ctx) {
         World world = ctx.getWorld();
         EntityLivingBase entity = ctx.getBenderEntity();
+        BendingData data = ctx.getData();
         AbilityData abilityData = ctx.getData().getAbilityData("wall");
         EntityWallSegment wallSegment = AvatarEntity.lookupOwnedEntity(world, EntityWallSegment.class, entity);
+
+        if (!data.hasBendingId(Earthbending.ID))
+            return true;
 
         if (wallSegment != null && wallSegment.getOwner() != null &&
                 wallSegment.getBehavior().getClass() == WallBehavior.Waiting.class && abilityData.getAbilityCooldown(entity) <= 0) {

@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.bending.bending.earth.statctrls;
 import akka.japi.Pair;
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.earth.AbilityWall;
+import com.crowsofwar.avatar.bending.bending.earth.Earthbending;
 import com.crowsofwar.avatar.client.controls.AvatarControl;
 import com.crowsofwar.avatar.entity.AvatarEntity;
 import com.crowsofwar.avatar.entity.EntityFloatingBlock;
@@ -13,6 +14,7 @@ import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.Raytrace;
 import com.crowsofwar.avatar.util.Raytrace.Result;
 import com.crowsofwar.avatar.util.data.AbilityData;
+import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.StatusControl;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
 import com.crowsofwar.gorecore.util.Vector;
@@ -43,11 +45,15 @@ public class StatCtrlShootWall extends StatusControl {
     public boolean execute(BendingContext ctx) {
         World world = ctx.getWorld();
         EntityLivingBase entity = ctx.getBenderEntity();
+        BendingData data = ctx.getData();
 
         Vector start = new Vector(entity.getPositionVector());
         Vector direction = new Vector(entity.getLookVec());
         AbilityWall ability = (AbilityWall) Abilities.get("wall");
         AbilityData abilityData = AbilityData.get(entity, "wall");
+
+        if (!data.hasBendingId(Earthbending.ID))
+            return true;
 
         if (ability != null && abilityData != null) {
             if (abilityData.getAbilityCooldown(entity) <= 0) {

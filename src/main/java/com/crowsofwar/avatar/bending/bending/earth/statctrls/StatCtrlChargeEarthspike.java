@@ -1,5 +1,6 @@
 package com.crowsofwar.avatar.bending.bending.earth.statctrls;
 
+import com.crowsofwar.avatar.bending.bending.earth.Earthbending;
 import com.crowsofwar.avatar.client.controls.AvatarControl;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.StatusControl;
@@ -20,6 +21,9 @@ public class StatCtrlChargeEarthspike extends StatusControl {
     @Override
     public boolean execute(BendingContext ctx) {
         BendingData data = ctx.getData();
+
+        if (!data.hasBendingId(Earthbending.ID))
+            return true;
 
         if (setting && !data.hasTickHandler(TickHandlerController.RELEASE_EARTHSPIKE)) {
             data.addTickHandler(TickHandlerController.RELEASE_EARTHSPIKE, ctx);

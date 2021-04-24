@@ -1,10 +1,12 @@
 package com.crowsofwar.avatar.bending.bending.earth.statctrls;
 
+import com.crowsofwar.avatar.bending.bending.earth.Earthbending;
 import com.crowsofwar.avatar.client.controls.AvatarControl;
 import com.crowsofwar.avatar.entity.AvatarEntity;
 import com.crowsofwar.avatar.entity.EntityWallSegment;
 import com.crowsofwar.avatar.entity.data.WallBehavior;
 import com.crowsofwar.avatar.util.data.AbilityData;
+import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.StatusControl;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
 import net.minecraft.entity.EntityLivingBase;
@@ -30,11 +32,15 @@ public class StatCtrlPlaceWall extends StatusControl {
         World world = ctx.getWorld();
         EntityLivingBase entity = ctx.getBenderEntity();
         AbilityData abilityData = ctx.getData().getAbilityData("wall");
-
+        BendingData data = ctx.getData();
         // TODO: When upgrade to a5.0 , call setOwner on the wall itself , then lookup
         // based on wall
+        //FD: I'm sorry wot crows???
 
         // Wall has no owner so we go for segments
+        if (!data.hasBendingId(Earthbending.ID))
+            return true;
+
         EntityWallSegment wallSegment = AvatarEntity.lookupOwnedEntity(world, EntityWallSegment.class, entity);
 
         if (wallSegment != null && wallSegment.getBehavior() != null && wallSegment.getBehavior() instanceof WallBehavior.Waiting &&

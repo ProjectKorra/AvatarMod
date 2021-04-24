@@ -121,8 +121,8 @@ public class ParticleCube extends ParticleAvatar {
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
 
         if (element instanceof Waterbending) {
-            //GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-            //mc.renderEngine.bindTexture(WATER);
+            GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+            mc.renderEngine.bindTexture(WATER);
         }
 
         if (element instanceof Firebending)
@@ -192,16 +192,23 @@ public class ParticleCube extends ParticleAvatar {
             //   setRBGColorF(particleRed * 0.75F, particleGreen * 0.75F, particleBlue * 1.25F);
         }
 
+        //If facing the cube:
+        //Left side
         drawQuad(2, ltb, lbb, lbf, ltf, 0, v1, 1, v2,
                 particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.5F, element); // -x
+        //Right Side
         drawQuad(2, rtb, rbb, rbf, rtf, 0, v1, 1, v2,
                 particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.5F, element); // +x
+        //Bottom Side
         drawQuad(2, rbb, rbf, lbf, lbb, 0, v1, 1, v2,
                 particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.5F, element); // -y
+        //Top Side
         drawQuad(2, rtb, rtf, ltf, ltb, 0, v1, 1, v2,
                 particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.5F, element); // +y
+        //Front Side
         drawQuad(2, rtf, rbf, lbf, ltf, 0, v1, 1, v2,
                 particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.5F, element); // -z
+        //Back Side
         drawQuad(2, rtb, rbb, lbb, ltb, 0, v1, 1, v2,
                 particleRed * colorEnhancement, particleGreen * colorEnhancement, particleBlue * colorEnhancement, particleAlpha * 0.5F, element); // +z
 

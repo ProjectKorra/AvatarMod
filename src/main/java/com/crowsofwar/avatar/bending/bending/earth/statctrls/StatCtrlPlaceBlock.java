@@ -20,6 +20,7 @@ package com.crowsofwar.avatar.bending.bending.earth.statctrls;
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.earth.AbilityEarthControl;
+import com.crowsofwar.avatar.bending.bending.earth.Earthbending;
 import com.crowsofwar.avatar.entity.AvatarEntity;
 import com.crowsofwar.avatar.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.entity.data.FloatingBlockBehavior;
@@ -69,6 +70,9 @@ public class StatCtrlPlaceBlock extends StatusControl {
         Bender bender = ctx.getBender();
         AbilityData abilityData = AbilityData.get(entity, "earth_control");
         AbilityEarthControl control = (AbilityEarthControl) Abilities.get("earth_control");
+
+        if (!data.hasBendingId(Earthbending.ID))
+            return true;
 
         EntityFloatingBlock floating = AvatarEntity.lookupEntity(ctx.getWorld(), EntityFloatingBlock.class,
                 fb -> fb.getBehavior() instanceof FloatingBlockBehavior.PlayerControlled
