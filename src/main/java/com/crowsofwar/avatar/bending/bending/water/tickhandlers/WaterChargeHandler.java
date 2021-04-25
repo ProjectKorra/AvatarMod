@@ -2,10 +2,7 @@ package com.crowsofwar.avatar.bending.bending.water.tickhandlers;
 
 import com.crowsofwar.avatar.bending.bending.water.AbilityWaterBlast;
 import com.crowsofwar.avatar.bending.bending.water.Waterbending;
-import com.crowsofwar.avatar.util.data.AbilityData;
-import com.crowsofwar.avatar.util.data.Bender;
-import com.crowsofwar.avatar.util.data.BendingData;
-import com.crowsofwar.avatar.util.data.TickHandler;
+import com.crowsofwar.avatar.util.data.*;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
 import com.crowsofwar.avatar.entity.AvatarEntity;
 import com.crowsofwar.avatar.entity.EntityLightCylinder;
@@ -32,7 +29,7 @@ import static com.crowsofwar.avatar.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
 
 public class WaterChargeHandler extends TickHandler {
-	public static final UUID MOVEMENT_MODIFIER_ID = UUID.fromString("87a0458a-38ea-4d7a-be3b-0fee10217aa6");
+	public static final UUID WATER_CHARGE_MOVEMENT_ID = UUID.fromString("87a0458a-38ea-4d7a-be3b-0fee10217aa6");
 
 	public WaterChargeHandler(int id) {
 		super(id);
@@ -47,6 +44,7 @@ public class WaterChargeHandler extends TickHandler {
 		BendingData data = ctx.getData();
 		Bender bender = ctx.getBender();
 
+		//TODO: Adjust this for new property system
 		double powerRating = ctx.getBender().calcPowerRating(Waterbending.ID);
 		int duration = data.getTickHandlerDuration(this);
 		double speed = abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND) ? 40 : 0;
@@ -66,7 +64,7 @@ public class WaterChargeHandler extends TickHandler {
 
 		applyMovementModifier(entity, MathHelper.clamp(movementMultiplier, 0.1f, 1));
 
-		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND) && !data.hasStatusControl(StatusControlController.RELEASE_WATER)) {
 
 			size = 0.1F;
 			ticks = 50;
@@ -79,13 +77,13 @@ public class WaterChargeHandler extends TickHandler {
 
 				fireCannon(world, entity, damage, speed, size, ticks, maxRange, knockback);
 				world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.BLOCK_WATER_AMBIENT, SoundCategory.PLAYERS, 1, 2);
-				entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(MOVEMENT_MODIFIER_ID);
+				entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(WATER_CHARGE_MOVEMENT_ID);
 
 				return duration >= 100;
 
 			}
 
-		} else if (duration >= durationToFire) {
+		} else if (!data.hasStatusControl(StatusControlController.RELEASE_WATER)) {
 
 			speed = abilityData.getLevel() >= 1 ? 20 : 30;
 			speed += powerRating / 15;
@@ -112,7 +110,7 @@ public class WaterChargeHandler extends TickHandler {
 			knockback.scale(damage);
 			fireCannon(world, entity, damage, speed, size, ticks, maxRange, knockback);
 			world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GENERIC_SPLASH, SoundCategory.PLAYERS, 1, 2);
-			entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(MOVEMENT_MODIFIER_ID);
+			entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(WATER_CHARGE_MOVEMENT_ID);
 
 
 			return true;
@@ -170,9 +168,9 @@ public class WaterChargeHandler extends TickHandler {
 
 		IAttributeInstance moveSpeed = entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
 
-		moveSpeed.removeModifier(MOVEMENT_MODIFIER_ID);
+		moveSpeed.removeModifier(WATER_CHARGE_MOVEMENT_ID);
 
-		moveSpeed.applyModifier(new AttributeModifier(MOVEMENT_MODIFIER_ID, "Water charge modifier", multiplier - 1, 1));
+		moveSpeed.applyModifier(new AttributeModifier(WATER_CHARGE_MOVEMENT_ID, "Water charge modifier", multiplier - 1, 1));
 
 	}
 

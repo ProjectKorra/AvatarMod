@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.entity;
 import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import com.crowsofwar.avatar.bending.bending.water.Waterbending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
+import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
@@ -190,6 +191,21 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
         }
         setEntitySize(getAvgSize());
 
+        if (world.isRemote && getOwner() != null){
+            for (int i = 0; i < 2 * (width); i++) {
+                Vec3d mid = AvatarEntityUtils.getMiddleOfEntity(this);
+                double spawnX = mid.x + world.rand.nextGaussian() / 20;
+                double spawnY = mid.y + world.rand.nextGaussian() / 20;
+                double spawnZ = mid.z + world.rand.nextGaussian() / 20;
+                ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 25, world.rand.nextGaussian() / 25,
+                        world.rand.nextGaussian() / 25).time(4 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(0, 102, 255, 145).spawnEntity(this)
+                        .scale(getAvgSize() * (1 / getAvgSize() + 1)).element(getElement()).collide(true).spawn(world);
+                ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 45 + motionX,
+                        world.rand.nextGaussian() / 45 + motionY, world.rand.nextGaussian() / 45 + motionZ)
+                        .time(14 + AvatarUtils.getRandomNumberInRange(0, 10)).clr(0, 102, 255, 145).spawnEntity(getOwner())
+                        .scale(getAvgSize() * (1 / getAvgSize() + 0.5F)).element(getElement()).collide(true).spawn(world);
+            }
+        }
         if (world.isRemote && getOwner() != null && ticksExisted % 2 == 0) {
             Vec3d[] points = new Vec3d[getAmountOfControlPoints()];
             for (int i = 0; i < points.length; i++)
@@ -204,14 +220,14 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
                     Vec3d pos = getControlPoint(points.length - i - 1).position().toMinecraft();
                     Vec3d pos2 = i < points.length - 1 ? getControlPoint(Math.max(points.length - i - 2, 0)).position().toMinecraft() : Vec3d.ZERO;
 
-                    for (int h = 0; h < 5; h++) {
+                    for (int h = 0; h < 4; h++) {
                         pos = pos.add(AvatarUtils.bezierCurve(((points.length - i - 1D / (h + 1)) / points.length), points));
 
                         //Flow animation
                         pos2 = pos2.add(AvatarUtils.bezierCurve(Math.min((((i + 1) / (h + 1D)) / points.length), 1), points));
-                        Vec3d circlePos = Vector.getOrthogonalVector(getLookVec(), (ticksExisted % 360) * 20 + h * 72, getAvgSize() / 2F).toMinecraft().add(pos);
+                        Vec3d circlePos = Vector.getOrthogonalVector(getLookVec(), (ticksExisted % 360) * 20 + h * 90, getAvgSize() / 2F).toMinecraft().add(pos);
                         Vec3d targetPos = i < points.length - 1 ? Vector.getOrthogonalVector(getLookVec(),
-                                (ticksExisted % 360) * 20 + h * 72 + 20, getAvgSize() / 2F).toMinecraft().add(pos2)
+                                (ticksExisted % 360) * 20 + h * 90 + 20, getAvgSize() / 2F).toMinecraft().add(pos2)
                                 : Vec3d.ZERO;
                         Vec3d vel = new Vec3d(world.rand.nextGaussian() / 240, world.rand.nextGaussian() / 240, world.rand.nextGaussian() / 240);
 
@@ -223,7 +239,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
                     }
 
                     //Particles along the line
-                    for (int h = 0; h < 6; h++) {
+                    for (int h = 0; h < 4; h++) {
                         pos = pos.add(AvatarUtils.bezierCurve(((points.length - i - 1D / (h + 1)) / points.length), points));
                         ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(pos).spawnEntity(this).vel(world.rand.nextGaussian() / 40 * getAvgSize(),
                                 world.rand.nextGaussian() / 40 * getAvgSize(), world.rand.nextGaussian() / 40 * getAvgSize()).scale(getAvgSize()).clr(0, 102, 255, 185)

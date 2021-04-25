@@ -8,6 +8,7 @@ import com.crowsofwar.avatar.bending.bending.lightning.StatCtrlThrowLightningSpe
 import com.crowsofwar.avatar.bending.bending.sand.StatCtrlSandstormRedirect;
 import com.crowsofwar.avatar.bending.bending.water.statctrls.*;
 import com.crowsofwar.avatar.bending.bending.water.statctrls.waterarc.StatCtrlThrowWater;
+import com.crowsofwar.avatar.bending.bending.water.statctrls.waterblast.StatCtrlChargeWaterBlast;
 import com.crowsofwar.avatar.bending.bending.water.statctrls.waterbubble.StatCtrlLobBubble;
 import com.crowsofwar.avatar.bending.bending.water.statctrls.waterskate.StatCtrlSkateJump;
 import com.crowsofwar.avatar.bending.bending.water.statctrls.waterskate.StatCtrlSkateStart;
