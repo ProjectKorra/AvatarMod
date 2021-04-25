@@ -14,7 +14,14 @@
       "speed": 5,
       "knockback": 2,
       "chiOnHit": 1.5,
-      "damage": 4
+      "damage": 4,
+      "health": 0,
+      "sourceRange": 4,
+      "waterLevel": 1,
+      "rideable": false,
+      "geyser": false,
+      "walls": false,
+      "land": false
     },
     "level2": {
       "tier": 2,
@@ -44,7 +51,9 @@
       "speed": 9,
       "knockback": 4,
       "chiOnHit": 1.75,
-      "damage": 6
+      "damage": 6,
+      "rideable": true,
+      "land": true
     },
     "level4_1": {
       "tier": 4,
