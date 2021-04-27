@@ -168,6 +168,7 @@ public class BendingContext {
 	 * requireRaytrace, because otherwise no raytrace will be performed, and then this won't be able
 	 * to detect if the player is looking at water.
 	 */
+	//TODO: Update for property files
 	public boolean consumeWater(int amount) {
 
 		World world = bender.getWorld();

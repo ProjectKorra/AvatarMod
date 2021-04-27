@@ -68,7 +68,8 @@
       "speed": 11,
       "knockback": 5,
       "chiOnHit": 1.875,
-      "damage": 7
+      "damage": 7,
+      "geyser": true
     },
     "level4_2": {
       "tier": 4,
@@ -83,7 +84,9 @@
       "speed": 13,
       "knockback": 6,
       "chiOnHit": 2.0,
-      "damage": 8
+      "damage": 8,
+      "geyser": false,
+      "walls": true
     }
   }
 }

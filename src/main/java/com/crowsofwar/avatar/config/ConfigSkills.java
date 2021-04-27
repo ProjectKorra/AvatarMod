@@ -93,9 +93,39 @@ public class ConfigSkills {
 		@Load
 		public boolean useRadialNumbers = true;
 
+		@Load
+		public boolean infiniteScaling = false;
+
+		@Load
+		public float maxScaleLevel = 1F;
+
 		//Adds a power level config option. Divides inhibitors by and multiplies effects by this value.
 		@Load
 		public float powerLevel = 1;
+
+		@Load
+		public float damageMult = 1;
+
+		@Load
+		public float speedMult  = 1;
+
+		@Load
+		public float chiMult = 1;
+
+		@Load
+		public float chiHitMult = 1;
+
+		@Load
+		public float cooldownMult = 1;
+
+		@Load
+		public float exhaustionMult = 1;
+
+		@Load
+		public float burnoutMult = 1;
+
+		@Load
+		public float burnoutRecoverMult = 1;
 	}
 
 	private ConfigSkills() {

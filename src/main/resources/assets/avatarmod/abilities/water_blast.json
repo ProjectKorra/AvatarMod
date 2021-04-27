@@ -15,7 +15,11 @@
       "knockback": 2,
       "chiOnHit": 1.5,
       "damage": 4,
-      "chargeTime": 40
+      "chargeTime": 40,
+      "shield": false,
+      "burst": false,
+      "aoe": false,
+      "pull": false
     },
     "level2": {
       "tier": 3,
@@ -47,7 +51,9 @@
       "knockback": 4,
       "chiOnHit": 1.75,
       "damage": 6,
-      "chargeTime": 30
+      "chargeTime": 30,
+      "shield": true,
+      "burst": true
     },
     "level4_1": {
       "tier": 5,
@@ -63,7 +69,9 @@
       "knockback": 5,
       "chiOnHit": 1.875,
       "damage": 7,
-      "chargeTime": 25
+      "chargeTime": 25,
+      "aoe": false,
+      "pull": false
     },
     "level4_2": {
       "tier": 5,

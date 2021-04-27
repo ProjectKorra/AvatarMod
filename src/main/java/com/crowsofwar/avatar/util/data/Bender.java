@@ -82,7 +82,8 @@ public abstract class Bender {
                 && (Bender.get(entity) != null && Bender.get(entity).getInfo().getId() != null);
     }
 
-    //Config modifier for power levles
+    //Config modifier for power levels
+    //TODO: Infinite scaling????
     public static void adjustConfigModifier(EntityLivingBase bender) {
 
         for (Ability ability : Abilities.all()) {
@@ -95,6 +96,25 @@ public abstract class Bender {
                     if (Ability.propertyEqualsInhibitor(propertyName))
                         properties.put(propertyName, 1 / SKILLS_CONFIG.abilitySettings.powerLevel);
                     else properties.put(propertyName, SKILLS_CONFIG.abilitySettings.powerLevel);
+                    //Now for other config values. They stack. Be warned.
+                    /* Inhibitors */
+                    if (propertyName.equals(Ability.CHI_COST))
+                        properties.put(propertyName, SKILLS_CONFIG.abilitySettings.chiMult);
+                    if (propertyName.equals(Ability.COOLDOWN))
+                        properties.put(propertyName, SKILLS_CONFIG.abilitySettings.cooldownMult);
+                    if (propertyName.equals(Ability.EXHAUSTION))
+                        properties.put(propertyName, SKILLS_CONFIG.abilitySettings.exhaustionMult);
+                    if (propertyName.equals(Ability.BURNOUT))
+                        properties.put(propertyName, SKILLS_CONFIG.abilitySettings.burnoutMult);
+                    /* Helpers */
+                    if (propertyName.equals(Ability.BURNOUT_REGEN))
+                        properties.put(propertyName, SKILLS_CONFIG.abilitySettings.burnoutRecoverMult);
+                    if (propertyName.equals(Ability.CHI_HIT))
+                        properties.put(propertyName, SKILLS_CONFIG.abilitySettings.chiHitMult);
+                    if (propertyName.equals(Ability.DAMAGE))
+                        properties.put(propertyName, SKILLS_CONFIG.abilitySettings.damageMult);
+                    if (propertyName.equals(Ability.SPEED))
+                        properties.put(propertyName, SKILLS_CONFIG.abilitySettings.speedMult);
                 }
                 modifier.addProperties(properties);
                 BendingData data = BendingData.getFromEntity(bender);

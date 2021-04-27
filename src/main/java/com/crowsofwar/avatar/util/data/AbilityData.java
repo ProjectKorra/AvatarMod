@@ -37,6 +37,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import static com.crowsofwar.avatar.config.ConfigSkills.SKILLS_CONFIG;
+
 /**
  * Represents saveable data about an ability. These are not singletons; there is
  * as many instances as required for each player data.
@@ -45,12 +47,15 @@ import java.util.UUID;
  */
 public class AbilityData {
 
+    //TODO: Infinite scaling??
     public static final int MAX_LEVEL = 3;
 
     private final BendingData data;
     private final String abilityName;
     private float lastXp;
     private float xp;
+    //Infinite scaling bois
+    private float abilityPowerLevel;
     //Whether to switch the path of the ability
     private boolean switchPath;
     private int abilityCooldown;
@@ -103,6 +108,7 @@ public class AbilityData {
         this.useNumber = 1;
         this.sourceInfo = new SourceInfo();
         this.modifiers = new ArrayList<>();
+        this.abilityPowerLevel = 1;
     }
 
     public AbilityData(BendingData data, String abilityName, boolean switchPath) {
@@ -120,6 +126,7 @@ public class AbilityData {
         this.useNumber = 1;
         this.sourceInfo = new SourceInfo();
         this.modifiers = new ArrayList<>();
+        this.abilityPowerLevel = 1;
     }
 
     /**
@@ -463,8 +470,12 @@ public class AbilityData {
     public void addXp(float xp) {
 
         xp *= getXpMultiplier();
-        if (xp == 0) return;
-
+        if (xp == 0) {
+            if (SKILLS_CONFIG.abilitySettings.infiniteScaling ||
+                    getAbilityPower() < SKILLS_CONFIG.abilitySettings.maxScaleLevel)
+                addAbilityPower(xp);
+            return;
+        }
         setXp(this.xp + xp);
 
     }
@@ -505,6 +516,25 @@ public class AbilityData {
             return .6f - .1f * (x - 2) * (x - 2);
         }
         return 0;
+    }
+
+    /**
+     *
+     * @return The current power level of the ability. Independent from the configurable power level,
+     * this infinitely increases if enabled in the config.
+     */
+    public float getAbilityPower() {
+        return this.abilityPowerLevel;
+    }
+
+    /**
+     * @param xp The xp used to increase the power level; called independently by the ability elsewhere.
+     *           Abilities will keep gaining in power after you hit the level limit,
+     *           if enabled in the config.
+     */
+    public void addAbilityPower(float xp) {
+        float x = xp / 100;
+        this.abilityPowerLevel += 0.07f - .01f * (x - 3) * (x - 3);
     }
 
     /**
@@ -553,9 +583,12 @@ public class AbilityData {
         shouldRegenBurnout = nbt.getBoolean("RegenBurnout");
         useNumber = nbt.getInteger("Jumps");
         sourceInfo = sourceInfo.readFromNBT(nbt);
+
         nbt.setInteger("Modifier Size", modifiers.size());
         for (AbilityModifier modifier : modifiers)
             modifier.toNBT(nbt);
+
+        abilityPowerLevel = nbt.getFloat("AbilityPowerLevel");
     }
 
     public void writeToNbt(NBTTagCompound nbt) {
@@ -576,6 +609,8 @@ public class AbilityData {
         for (int i = 0; i < size; i++) {
             modifiers.add(i, AbilityModifier.staticFromNBT(nbt));
         }
+
+        nbt.setFloat("AbilityPowerLevel", abilityPowerLevel);
     }
 
     public void toBytes(ByteBuf buf) {
@@ -595,6 +630,7 @@ public class AbilityData {
             for (AbilityModifier modifier : modifiers)
                 modifier.toBytes(buf);
         }
+        buf.writeFloat(abilityPowerLevel);
     }
 
     private void fromBytes(ByteBuf buf) {
@@ -615,6 +651,7 @@ public class AbilityData {
                 modifiers.add(i, new AbilityModifier().fromBytes(buf));
             }
         }
+        abilityPowerLevel = buf.readFloat();
     }
 
     /**

@@ -168,7 +168,6 @@ public class AvatarMod {
         //Same order as abilities or ability properties won't work!
         BendingStyles.register(new Airbending());
         BendingStyles.register(new Firebending());
-        //No waterbending for you! (Blame drillgon for why it's not done, btw)
         BendingStyles.register(new Waterbending());
         BendingStyles.register(new Earthbending());
         BendingStyles.register(new Icebending());
@@ -437,6 +436,9 @@ public class AvatarMod {
             mat.rotate(90, 1, 0, 0);
             Vector4f v = new Vector4f(2, 1, 1, 1).mul(mat);
         }
+
+        //Allows for BendingContext shenanigans
+        Abilities.all().forEach(Ability::postInit);
 
     }
 

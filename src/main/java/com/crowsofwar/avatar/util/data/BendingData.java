@@ -41,6 +41,8 @@ import static com.crowsofwar.gorecore.util.GoreCoreNBTUtil.nestedCompound;
  */
 public class BendingData {
 
+    //TODO: Infinite scaling????
+
     private static final int CURRENT_SAVE_VERSION = 1;
     private final Consumer<DataCategory> saveCategory;
     private final Runnable saveAll;
@@ -55,6 +57,8 @@ public class BendingData {
     private Chi chi;
     private MiscData miscData;
     private Vision vision;
+    //Abilities have power levels, and now elements do too!
+    private float powerLevel;
 
     /**
      * Create a new BendingData

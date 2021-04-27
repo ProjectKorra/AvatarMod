@@ -1,30 +1,49 @@
 package com.crowsofwar.avatar.bending.bending.water;
 
+import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
-import com.crowsofwar.avatar.util.Raytrace;
+import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.StatusControlController;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import java.util.function.BiPredicate;
+import java.util.Objects;
 
-import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.avatar.util.data.TickHandlerController.WATER_CHARGE;
-import static com.crowsofwar.avatar.util.data.TickHandlerController.WATER_PARTICLE_SPAWNER;
-import static java.lang.Math.toRadians;
-
+/**
+ * Are you proud of me, dad? I'm outlining how this should work in the documentation.
+ * I'm actually following conventions. Praise be!
+ * <p>
+ * Water Blast -- Waterbending
+ * This ability is designed for offense. It allows for some defensive manoeuvres and complete annihilation.
+ * Charge up to create a bigger blast! As with most waterbending abilities,
+ * it can be frozen and electrocuted.
+ * <p>
+ * Level 1 - Simple Water Blast.
+ * Level 2 - Faster, Stronger, Bigger, Cooler. Ya know.
+ * Level 3 - Charging now creates a shield, and you can left click to burst!
+ * Level 4 Path 1: Crushing Cyclone - When charging, your shield has an AOE slow and damaging effect. Additionally, your burst pulls nearby enemies in
+ * before annihilating them.
+ * Level 4 Path 2: Piercing Maelstrom - Your blasts are significantly empowered, creating massive explosions upon hitting a surface.
+ * They carry hit objects to where they explode.
+ *
+ * @author FavouriteDragon
+ */
 public class AbilityWaterBlast extends Ability {
+
     public AbilityWaterBlast() {
         super(Waterbending.ID, "water_blast");
         requireRaytrace(-1, false);
+    }
+
+    @Override
+    public void init() {
+        super.init();
+        addProperties(WATER_LEVEL, SOURCE_ANGLES, SOURCE_RANGE);
     }
 
     @Override
@@ -34,106 +53,30 @@ public class AbilityWaterBlast extends Ability {
         EntityLivingBase entity = ctx.getBenderEntity();
         BendingData data = ctx.getData();
         World world = ctx.getWorld();
+        AbilityData abilityData = ctx.getAbilityData();
 
-        Vector targetPos = getClosestWaterbendableBlock(entity, ctx.getLevel() * 2);
-        boolean hasWaterCharge = data.hasTickHandler(WATER_CHARGE);
-        int waterAmount = 2;
-
-        if (ctx.getLevel() >= 2) {
-            waterAmount = 3;
-        }
+        Vector targetPos = Waterbending.getClosestWaterbendableBlock(entity,
+                Objects.requireNonNull(Abilities.get("water_blast")), ctx);
+        boolean hasWaterCharge = data.hasStatusControl(StatusControlController.CHARGE_WATER) ||
+                data.hasStatusControl(StatusControlController.RELEASE_WATER);
+        int waterAmount = getProperty(WATER_AMOUNT).intValue();
+        waterAmount = (int) powerModify(waterAmount, abilityData);
 
         if (ctx.getAbilityData().getAbilityCooldown(entity) == 0 || getCooldown(ctx) == 0) {
-            if (ctx.consumeWater(waterAmount)) {
-                if (bender.consumeChi(getChiCost(ctx)) && !hasWaterCharge) {
+            if (bender.consumeChi(getChiCost(ctx)) && !hasWaterCharge) {
+                if (ctx.consumeWater(waterAmount)) {
                     data.addStatusControl(StatusControlController.CHARGE_WATER);
-                }
-            } else if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
-                if (!hasWaterCharge) {
+                } else if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
                     data.addStatusControl(StatusControlController.CHARGE_WATER);
-                }
-            } else if (targetPos != null && ctx.getLevel() >= 2) {
-                if (bender.consumeChi(getChiCost(ctx)) && !hasWaterCharge) {
+                } else if (targetPos != null) {
                     world.setBlockToAir(targetPos.toBlockPos());
                     data.addStatusControl(StatusControlController.CHARGE_WATER);
+                } else {
+                    bender.sendMessage("avatar.waterSourceFail");
                 }
-            } else {
-                bender.sendMessage("avatar.waterSourceFail");
             }
         }
     }
-
-    //Is broken; will investigate later.
-    //TODO: Investigate if still broken. I don't think it is, I think I forgot to delete my comment
-    private Vector getClosestWaterbendableBlock(EntityLivingBase entity, int level) {
-        World world = entity.world;
-
-        Vector eye = Vector.getEyePos(entity);
-
-        double rangeMult = 0.6;
-        if (level >= 1) {
-            rangeMult = 1;
-        }
-
-        double range = STATS_CONFIG.waterCannonSettings.waterCannonSearchRadius * rangeMult;
-        for (int i = 0; i < STATS_CONFIG.waterCannonSettings.waterCannonAngles; i++) {
-            for (int j = 0; j < STATS_CONFIG.waterCannonSettings.waterCannonAngles; j++) {
-
-                double yaw = entity.rotationYaw + i * 360.0 / STATS_CONFIG.waterCannonSettings.waterCannonAngles;
-                double pitch = entity.rotationPitch + j * 360.0 / STATS_CONFIG.waterCannonSettings.waterCannonAngles;
-
-                BiPredicate<BlockPos, IBlockState> isWater = (pos, state) ->
-                        (STATS_CONFIG.waterBendableBlocks.contains(state.getBlock()) || STATS_CONFIG.plantBendableBlocks
-                                .contains(state.getBlock())) && state.getBlock() != Blocks.AIR;
-
-                Vector angle = Vector.toRectangular(toRadians(yaw), toRadians(pitch));
-                Raytrace.Result result = Raytrace.predicateRaytrace(world, eye, angle, range, isWater);
-                if (result.hitSomething()) {
-                    return result.getPosPrecise();
-                }
-
-            }
-
-        }
-
-        return null;
-
-    }
-
-	/*private Vector getClosestWaterBlock(EntityLivingBase entity, int level) {
-		World world = entity.world;
-
-		Vector eye = Vector.getEyePos(entity);
-
-		double rangeMult = 0.6;
-		if (level >= 1) {
-			rangeMult = 1;
-		}
-
-		double range = STATS_CONFIG.waterCannonSettings.waterCannonSearchRadius * rangeMult;
-		for (int i = 0; i < STATS_CONFIG.waterCannonSettings.waterCannonAngles; i++) {
-			for (int j = 0; j < STATS_CONFIG.waterCannonSettings.waterCannonAngles; j++) {
-
-				double yaw = entity.rotationYaw + i * 360.0 / STATS_CONFIG.waterCannonSettings.waterCannonAngles;
-				double pitch = entity.rotationPitch + j * 360.0 / STATS_CONFIG.waterCannonSettings.waterCannonAngles;
-
-				BiPredicate<BlockPos, IBlockState> isWater = (pos, state) -> state.getBlock() == Blocks.WATER
-						|| state.getBlock() == Blocks.FLOWING_WATER || state.getBlock() == Blocks.ICE || state.getBlock() == Blocks.SNOW_LAYER
-						|| state.getBlock() == Blocks.SNOW;
-
-				Vector angle = Vector.toRectangular(toRadians(yaw), toRadians(pitch));
-				Raytrace.Result result = Raytrace.predicateRaytrace(world, eye, angle, range, isWater);
-				if (result.hitSomething()) {
-					return result.getPosPrecise();
-				}
-
-			}
-
-		}
-
-		return null;
-
-	}**/
 
     @Override
     public int getBaseTier() {

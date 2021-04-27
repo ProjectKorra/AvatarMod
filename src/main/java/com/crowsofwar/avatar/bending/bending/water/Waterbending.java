@@ -17,17 +17,31 @@
 
 package com.crowsofwar.avatar.bending.bending.water;
 
+import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import com.crowsofwar.avatar.client.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.client.gui.MenuTheme;
 import com.crowsofwar.avatar.client.gui.MenuTheme.ThemeColor;
+import com.crowsofwar.avatar.util.Raytrace;
+import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
+import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.World;
 
 import java.awt.*;
 import java.util.UUID;
+import java.util.function.BiPredicate;
+
+import static com.crowsofwar.avatar.bending.bending.Ability.*;
+import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
+import static java.lang.Math.toRadians;
 
 public class Waterbending extends BendingStyle {
 
@@ -83,5 +97,38 @@ public class Waterbending extends BendingStyle {
 	@Override
 	public TextFormatting getTextFormattingColour() {
 		return TextFormatting.BLUE;
+	}
+
+	public static Vector getClosestWaterbendableBlock(EntityLivingBase entity, Ability ability, AbilityContext ctx) {
+		World world = entity.world;
+
+		Vector eye = Vector.getEyePos(entity);
+
+		double range = ability.getProperty(SOURCE_RANGE, ctx).doubleValue();
+		int angles = ability.getProperty(SOURCE_ANGLES, ctx).intValue();
+		boolean plantbend = ability.getBooleanProperty(PLANT_BEND, ctx);
+
+		range = ability.powerModify((float) range, ctx.getAbilityData());
+
+		for (int i = 0; i < angles; i++) {
+			for (int j = 0; j < angles; j++) {
+
+				double yaw = entity.rotationYaw + i * 360.0 / angles;
+				double pitch = entity.rotationPitch + j * 360.0 / angles;
+
+				BiPredicate<BlockPos, IBlockState> isWater = (pos, state) ->
+						(STATS_CONFIG.waterBendableBlocks.contains(state.getBlock()) || STATS_CONFIG.plantBendableBlocks
+								.contains(state.getBlock()) && plantbend) && state.getBlock() != Blocks.AIR;
+
+				Vector angle = Vector.toRectangular(toRadians(yaw), toRadians(pitch));
+				Raytrace.Result result = Raytrace.predicateRaytrace(world, eye, angle, range, isWater);
+				if (result.hitSomething()) {
+					return result.getPosPrecise();
+				}
+
+			}
+
+		}
+		return null;
 	}
 }

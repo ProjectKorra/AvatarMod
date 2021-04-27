@@ -103,6 +103,15 @@ public abstract class Ability {
             FADE_B = "fadeB",
             SMELTS = "smelts",
             SETS_FIRES = "setsFires";
+    //Waterbending stuff
+    public static final String
+            //Amount is the amount consumed
+            WATER_AMOUNT = "waterAmount",
+            //Level is the HP of it (applies to source abilities such as water bubble)
+            WATER_LEVEL = "waterLevel",
+            SOURCE_RANGE = "sourceRange",
+            SOURCE_ANGLES = "sourceAngles",
+            PLANT_BEND = "plantbend";
     //Buff abilities
     public static final String
             POWERRATING = "powerrating",
@@ -298,6 +307,14 @@ public abstract class Ability {
                 getBendingId() == Sandbending.ID || getBendingId() == Combustionbending.ID
                 || getBendingId() == Icebending.ID)
             addProperties(PARENT_TIER);
+    }
+
+    /**
+     * Used for adjusting requireRaytrace so that consuming water levels works properly.
+     * Also affects other aspects of BendingContext and AbilityContext if one so wishes.
+     * You can use your AbilityProperties here!
+     */
+    public void postInit() {
     }
 
     /**
@@ -725,7 +742,7 @@ public abstract class Ability {
     }
 
     public float powerModify(float val, AbilityData abilityData) {
-        val *= abilityData.getDamageMult() * abilityData.getXpModifier();
+        val *= abilityData.getDamageMult() * abilityData.getXpModifier() * abilityData.getAbilityPower();
         return val;
     }
 
