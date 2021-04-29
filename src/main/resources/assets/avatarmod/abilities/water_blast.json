@@ -16,6 +16,10 @@
       "chiOnHit": 1.5,
       "damage": 4,
       "chargeTime": 40,
+      "sourceRange": 1,
+      "sourceAngles": 45,
+      "waterAmount": 1,
+      "plantbend": false,
       "shield": false,
       "burst": false,
       "aoe": false,
@@ -35,7 +39,10 @@
       "knockback": 3,
       "chiOnHit": 1.625,
       "damage": 5,
-      "chargeTime": 35
+      "chargeTime": 35,
+      "sourceRange": 2,
+      "sourceAngles": 45,
+      "waterAmount": 2
     },
     "level3": {
       "tier": 4,
@@ -52,6 +59,10 @@
       "chiOnHit": 1.75,
       "damage": 6,
       "chargeTime": 30,
+      "sourceRange": 5,
+      "sourceAngles": 45,
+      "waterAmount": 3,
+      "plantbend": true,
       "shield": true,
       "burst": true
     },

@@ -23,9 +23,10 @@ import java.util.Objects;
  * Charge up to create a bigger blast! As with most waterbending abilities,
  * it can be frozen and electrocuted.
  * <p>
- * Level 1 - Simple Water Blast.
- * Level 2 - Faster, Stronger, Bigger, Cooler. Ya know.
- * Level 3 - Charging now creates a shield, and you can left click to burst!
+ * Level 1 - Simple Water Blast. Animated swirl charging.
+ * Level 2 - Faster, Stronger, Bigger, Cooler. Ya know. Pierces.
+ * Level 3 - Charging now creates a shield, and you can left click to burst! 3D Animated Swirl. Draw from plants!
+ *           Big source radius.
  * Level 4 Path 1: Crushing Cyclone - When charging, your shield has an AOE slow and damaging effect. Additionally, your burst pulls nearby enemies in
  * before annihilating them.
  * Level 4 Path 2: Piercing Maelstrom - Your blasts are significantly empowered, creating massive explosions upon hitting a surface.
@@ -43,7 +44,8 @@ public class AbilityWaterBlast extends Ability {
     @Override
     public void init() {
         super.init();
-        addProperties(WATER_LEVEL, SOURCE_ANGLES, SOURCE_RANGE);
+        addProperties(WATER_AMOUNT, SOURCE_ANGLES, SOURCE_RANGE);
+        addBooleanProperties(PLANT_BEND);
     }
 
     @Override
@@ -60,7 +62,6 @@ public class AbilityWaterBlast extends Ability {
         boolean hasWaterCharge = data.hasStatusControl(StatusControlController.CHARGE_WATER) ||
                 data.hasStatusControl(StatusControlController.RELEASE_WATER);
         int waterAmount = getProperty(WATER_AMOUNT).intValue();
-        waterAmount = (int) powerModify(waterAmount, abilityData);
 
         if (ctx.getAbilityData().getAbilityCooldown(entity) == 0 || getCooldown(ctx) == 0) {
             if (bender.consumeChi(getChiCost(ctx)) && !hasWaterCharge) {

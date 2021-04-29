@@ -80,6 +80,7 @@ public class BendingData {
         miscData = new MiscData(() -> save(DataCategory.MISC_DATA));
         powerRatingManagers = new HashMap<>();
         performance = new BattlePerformanceScore(this);
+        powerLevel = 0;
     }
 
     // static methods
@@ -127,6 +128,19 @@ public class BendingData {
             }
         }
     }
+
+    public void setBendingPower(float power) {
+
+    }
+
+    public void addBendingPower(float power) {
+
+    }
+
+    public float getBendingPower() {
+        return this.powerLevel;
+    }
+
 
     public int getTotalLevel(BendingStyle style) {
         int totalLevel = 0;

@@ -45,8 +45,8 @@ import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
  * Rideable.
  *
  * Level 1 - Simple Wave.
- * Level 2 - Faster, Stronger, Bigger, Cooler. Ya know.
- * Level 3 - It's now rideable! Woo!
+ * Level 2 - Faster, Stronger, Bigger, Cooler. Ya know. Pierces. Works on land (with applicable water source nearby).
+ * Level 3 - It's now rideable! Woo! Bigger source radius! Drawn from plants!
  * Level 4 Path 1 : Sundering Tsunami - Waves are now closer to geysers of water in a line. Think ravine but water and stronger.
  * Level 4 Path 2: Voluminous Falls - Waves are now thicker, and can be controlled into shapes (walls)!
  *

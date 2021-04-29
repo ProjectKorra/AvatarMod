@@ -54,6 +54,7 @@ import java.util.*;
  *
  * @author CrowsOfWar
  */
+//TODO: Add elemental abstraction layers for different abilities (esp cause they share properties)
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public abstract class Ability {
 
