@@ -217,7 +217,7 @@ public class AbilityProperties {
 
             ModContainer mod = Loader.instance().getModList().stream().filter(modContainer -> modContainer.getModId().equals(AvatarInfo.MOD_ID)).findFirst()
                     .orElse(null);
-            // Spells will be removed from this list as their properties are set
+            // Abilities will be removed from this list as their properties are set
             // If everything works properly, it should be empty by the end
             List<Ability> abilities = new ArrayList<>(Abilities.all());
 

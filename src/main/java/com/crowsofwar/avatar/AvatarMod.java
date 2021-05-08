@@ -265,6 +265,7 @@ public class AvatarMod {
 
         AvatarAnnouncements.fetchAnnouncements();
 
+        //TODO: rebalance stuff for lower cooldown, chi cost, e.t.c
         //File Generation
       /*  Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
