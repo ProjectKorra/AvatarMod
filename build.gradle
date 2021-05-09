@@ -131,11 +131,11 @@ dependencies {
     
     //provided "elucent.albedo:albedo:1.1.0-3"
     provided "codechicken:CodeChickenLib:1.12.2-3.2.2.353:universal"
-    deobfCompile "tk.zeitheron:hammerlib-1.12.2:2.0.6.26:deobf"
-    deobfCompile "tk.zeitheron:coloredlux-1.12.2:12.4.20:deobf"
+    compile "tk.zeitheron:hammerlib-1.12.2:2.0.6.26:deobf"
+    compile "tk.zeitheron:coloredlux-1.12.2:12.4.20:deobf"
     
     // compile against the JEI API but do not include it at runtime
-    deobfProvided "mezz:jei-1.12.2:4.16.1.302:api"
+    provided "mezz:jei-1.12.2:4.16.1.302:api"
     // at runtime, use the full JEI jar
     runtime "mezz:jei-1.12.2:4.16.1.302"
     
