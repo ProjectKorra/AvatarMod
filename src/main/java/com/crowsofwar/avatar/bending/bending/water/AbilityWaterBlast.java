@@ -36,6 +36,11 @@ import java.util.Objects;
  */
 public class AbilityWaterBlast extends Ability {
 
+    public static String
+            SHIELD = "shield",
+            BURST = "burst",
+            PULL = "pull";
+
     public AbilityWaterBlast() {
         super(Waterbending.ID, "water_blast");
         requireRaytrace(-1, false);
@@ -45,12 +50,13 @@ public class AbilityWaterBlast extends Ability {
     public void init() {
         super.init();
         addProperties(WATER_AMOUNT, SOURCE_ANGLES, SOURCE_RANGE);
-        addBooleanProperties(PLANT_BEND);
+        addBooleanProperties(PLANT_BEND, SHIELD, BURST, PULL);
     }
 
     @Override
     public void execute(AbilityContext ctx) {
 
+        //TODO: Swirl!
         Bender bender = ctx.getBender();
         EntityLivingBase entity = ctx.getBenderEntity();
         BendingData data = ctx.getData();

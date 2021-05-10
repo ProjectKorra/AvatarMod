@@ -1,5 +1,6 @@
 package com.crowsofwar.avatar.util;
 
+import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumParticleTypes;
@@ -35,7 +36,6 @@ public class AvatarParticleUtils {
 ​
 		return rotateAroundAxis(axis, angle);
 	}**/
-
 
 	public static Vec3d rotateAroundAxisX(Vec3d v, double angle) {
 		angle = Math.toRadians(angle);
@@ -92,6 +92,25 @@ public class AvatarParticleUtils {
 		}
 	}
 
+	/**
+	 *
+	 * @param rings How many rings to have when swirling.
+	 * @param particles
+	 * @param radius
+	 * @param particleSize
+	 * @param entity
+	 * @param builder ParticleBuilder to pass. Be sure to handle type, element, spawnentity, whether to collide, e.t.c
+	 *                beforehand.
+	 */
+	public static void swirl(int rings, int particles, float radius, float particleSize, EntityLivingBase entity,
+							 ParticleBuilder builder, SwirlMotionType type) {
+
+	}
+
+	public enum SwirlMotionType {
+		OUT,
+		IN;
+	}
 
 	/**
 	 * Spawns a directional vortex that has rotating particles.
