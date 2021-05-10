@@ -14,10 +14,10 @@ buildscript {
             name = "sonatype"
             url = "https://oss.sonatype.org/content/repositories/snapshots/"
         }
-        /*  maven {
+        maven {
               name = "amuzil"
-              url = "http://repo.amuzil.com/repository/public/"
-          }**/
+              url = "https://repo.amuzil.com/artifactory/release/"
+        }
 
     }
     dependencies {
@@ -71,34 +71,39 @@ repositories {
     maven {
         url = "https://plugins.gradle.org/m2/"
     }
+    
     maven {
         name = "forge"
         url = "https://files.minecraftforge.net/maven"
     }
-    /*   maven {
-           name = "amuzil"
-           url = "http://repo.amuzil.com/repository/public/"
-       }**/
+    
+    maven {
+        name = "amuzil"
+        url = "https://repo.amuzil.com/artifactory/release/"
+    }
 
     maven {
         name = "codechickenlib"
         url = "http://chickenbones.net/maven/"
     }
-
+    
     maven {
         // location of the maven that hosts JEI files
         name = "Progwml6 maven"
         url = "https://dvs1.progwml6.com/files/maven/"
     }
+    
     maven {
         // location of a maven mirror for JEI files, as a fallback
         name = "ModMaven"
         url = "https://modmaven.k-4u.nl"
     }
+    
     maven {
         name = "DragonForge"
         url = "https://raw.github.com/dragon-forge/maven/master"
     }
+    
     //Patchouli guidebook
     maven {
         url = 'https://maven.blamejared.com'
@@ -121,21 +126,23 @@ tasks.runServer.dependsOn tasks.useDeobfDependencies
 
 dependencies {
     provided fileTree(dir: dependenciesConfig.libraries + (dependenciesConfig.obfuscated ? "" : "Deobf"), include: ["*.jar"])
+    
+    // Forge Mods
+    
     //provided "elucent.albedo:albedo:1.1.0-3"
     provided "codechicken:CodeChickenLib:1.12.2-3.2.2.353:universal"
-    deobfCompile "tk.zeitheron.HammerLib:HammerLib-1.12.2:2.0.6.13:deobf"
-    deobfCompile "tk.zeitheron.ColoredLux:ColoredLux-1.12.2:12r:deobf"
+    compile "tk.zeitheron:hammerlib-1.12.2:2.0.6.26:deobf"
+    compile "tk.zeitheron:coloredlux-1.12.2:12.4.20:deobf"
+    
     // compile against the JEI API but do not include it at runtime
-    deobfProvided "mezz.jei:jei_1.12.2:4.15.0.293:api"
+    provided "mezz:jei-1.12.2:4.16.1.302:api"
     // at runtime, use the full JEI jar
-    runtime "mezz.jei:jei_1.12.2:4.15.0.293"
-    // patchouli
+    runtime "mezz:jei-1.12.2:4.16.1.302"
+    
     compile "vazkii.patchouli:Patchouli:1.0-19.98"
-    // Forge Mods
-    if (dependenciesConfig.obfuscated) {
-    } else {
-    }
-    //jei_1.12.2-4.15.0.293.jar
+    
+    if (dependenciesConfig.obfuscated) { } else { }
+    
     // Other Stuff
     shadow "org.yaml:snakeyaml:1.23"
     shadow "org.joml:joml:1.9.25"
