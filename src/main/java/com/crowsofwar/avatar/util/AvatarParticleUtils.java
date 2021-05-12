@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.util;
 
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
+import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumParticleTypes;
@@ -14,7 +15,7 @@ import static java.lang.Math.sin;
 public class AvatarParticleUtils {
 
 
-	//Always points to the right
+    //Always points to the right
 	/*public static Vec3d orthogonal(Vec3d axis, double length, double angle, float rotationYaw, float rotationPitch) throws IllegalArgumentException {
 		Validate.isTrue(!axis.equals(Vec3d.ZERO), "Axis vector cannot be zero!");
 ​
@@ -37,238 +38,277 @@ public class AvatarParticleUtils {
 		return rotateAroundAxis(axis, angle);
 	}**/
 
-	public static Vec3d rotateAroundAxisX(Vec3d v, double angle) {
-		angle = Math.toRadians(angle);
-		double y, z, cos, sin;
-		cos = cos(angle);
-		sin = sin(angle);
-		y = v.y * cos - v.z * sin;
-		z = v.y * sin + v.z * cos;
-		return new Vec3d(v.x, y, z);
-	}
+    public static Vec3d rotateAroundAxisX(Vec3d v, double angle) {
+        angle = Math.toRadians(angle);
+        double y, z, cos, sin;
+        cos = cos(angle);
+        sin = sin(angle);
+        y = v.y * cos - v.z * sin;
+        z = v.y * sin + v.z * cos;
+        return new Vec3d(v.x, y, z);
+    }
 
-	public static Vec3d rotateAroundAxisY(Vec3d v, double angle) {
-		angle = -angle;
-		angle = Math.toRadians(angle);
-		double x, z, cos, sin;
-		cos = cos(angle);
-		sin = sin(angle);
-		x = v.x * cos + v.z * sin;
-		z = v.x * -sin + v.z * cos;
-		return new Vec3d(x, v.y, z);
-	}
+    public static Vec3d rotateAroundAxisY(Vec3d v, double angle) {
+        angle = -angle;
+        angle = Math.toRadians(angle);
+        double x, z, cos, sin;
+        cos = cos(angle);
+        sin = sin(angle);
+        x = v.x * cos + v.z * sin;
+        z = v.x * -sin + v.z * cos;
+        return new Vec3d(x, v.y, z);
+    }
 
-	public static Vec3d rotateAroundAxisZ(Vec3d v, double angle) {
-		angle = Math.toRadians(angle);
-		double x, y, cos, sin;
-		cos = cos(angle);
-		sin = sin(angle);
-		x = v.x * cos - v.y * sin;
-		y = v.x * sin + v.y * cos;
-		return new Vec3d(x, y, v.z);
-	}
-
-
-	//NOTE: ONLY USE ENUMPARTICLETYPE SPAWN METHODS IN RENDERING FILES. DUE TO VANILLA'S WEIRD PARTICLE SPAWNING SYSTEM,
-	//YOU CANNOT SPAWN PARTICLES IN ENTITY CLASSES AND SUCH RELIABLY. CUSTOM PARTICLES IN THIS CASE ARE FINE, THOUGH.
-	public static void spawnDirectionalVortex(World world, EntityLivingBase entity, Vec3d direction, int particleAmount, double vortexLength, double minRadius, double radiusScale, EnumParticleTypes particle, double posX, double posY, double posZ,
-											  double velX, double velY, double velZ) {
-		for (int angle = 0; angle < particleAmount; angle++) {
-			double radius = minRadius + (angle / radiusScale);
-			//Why isn't this in radians
-			double x = radius * cos(angle);
-			double y = angle / (particleAmount / vortexLength);
-			double z = radius * sin(angle);
-			Vec3d pos = new Vec3d(x, y, z);
-			if (entity != null && direction != null) {
-				pos = rotateAroundAxisX(pos, entity.rotationPitch + 90);
-				pos = rotateAroundAxisY(pos, entity.rotationYaw);
-				world.spawnParticle(particle, true, pos.x + posX + direction.x, pos.y + posY + direction.y,
-						pos.z + posZ + direction.z, velX, velY, velZ);
-			} else {
-				world.spawnParticle(particle, false, x + posX, y + posY,
-						z + posZ, velX, velY, velZ);
-			}
-		}
-	}
-
-	/**
-	 *
-	 * @param rings How many rings to have when swirling.
-	 * @param particles
-	 * @param radius
-	 * @param particleSize
-	 * @param entity
-	 * @param builder ParticleBuilder to pass. Be sure to handle type, element, spawnentity, whether to collide, e.t.c
-	 *                beforehand.
-	 */
-	public static void swirl(int rings, int particles, float radius, float particleSize, EntityLivingBase entity,
-							 ParticleBuilder builder, SwirlMotionType type) {
-
-	}
-
-	public enum SwirlMotionType {
-		OUT,
-		IN;
-	}
-
-	/**
-	 * Spawns a directional vortex that has rotating particles.
-	 *
-	 * @param world         World the vortex spawns in.
-	 * @param entity        Entity that's spawning the vortex.
-	 * @param direction     The direction that the vortex is spawning in. Although it's just used for proper positioning, use entity.getLookVec()
-	 *                      or some other directional Vec3d.
-	 * @param maxAngle      The amount of particles/the maximum angle that the circle ticks to. 240 would mean there are 240 particles spiraling away.
-	 * @param vortexLength  How long the vortex is. This is initially used at the height, before rotating the vortex.
-	 * @param radiusScale   The maximum radius and how much the radius increases by. Always use your value for the maxAngle here-
-	 *                      otherwise you can get some funky effects. Ex: maxAngle / 1.5 would give you a max radius of 1.5 times your adius.
-	 *                      Note: It might only be a diamater of 1.5 blocks- if so, uhhh... My bad.
-	 * @param particle      The wizardry particle type. I had to create two methods- for for normal particles, one for wizardry ones.
-	 * @param position      The starting/reference position of the vortex. Used along with the direction position to determine the actual starting position.
-	 * @param particleSpeed How fast the particles are spinning. You don't need to include complex maths here- that's all handled by this method.
-	 * @param entitySpeed   The speed of the entity that is rendering these particles. If the player/entity spawns a tornado, this is the speed of the tornado. If there's no entity,
-	 *                      do Vec3d.ZERO.
-	 */
-	public static void spawnSpinningDirectionalVortex(World world, EntityLivingBase entity, Vec3d direction, int maxAngle, double vortexLength, double minRadius, double radiusScale, EnumParticleTypes particle, Vec3d position,
-													  Vec3d particleSpeed, Vec3d entitySpeed) {
-		for (int angle = 0; angle < maxAngle; angle++) {
-			double angle2 = world.rand.nextDouble() * Math.PI * 2;
-			double radius = minRadius + (angle / radiusScale);
-			double x = radius * cos(angle);
-			double y = angle / (maxAngle / vortexLength);
-			double z = radius * sin(angle);
-			double speed = world.rand.nextDouble() * 2 + 1;
-			double omega = Math.signum(speed * ((Math.PI * 2) / 20 - speed / (20 * radius)));
-			angle2 += omega;
-			Vec3d pos = new Vec3d(x, y, z);
-			if (entity != null && direction != null) {
-				Vec3d pVel = new Vec3d(particleSpeed.x * radius * omega * cos(angle2), particleSpeed.y, particleSpeed.z * radius * omega * sin(angle2));
-				pVel = rotateAroundAxisX(pVel, entity.rotationPitch - 90);
-				pVel = rotateAroundAxisY(pVel, entity.rotationYaw);
-				pos = rotateAroundAxisX(pos, entity.rotationPitch + 90);
-				pos = rotateAroundAxisY(pos, entity.rotationYaw);
-				world.spawnParticle(particle, true, pos.x + position.x + direction.x, pos.y + position.y + direction.y,
-						pos.z + position.z + direction.z, pVel.x + entitySpeed.x, pVel.y + entitySpeed.y, pVel.z + entitySpeed.z);
-			}
-		}
-	}
-
-	/**
-	 * Spawns a directional vortex that has rotating particles.
-	 *
-	 * @param world         World the vortex spawns in.
-	 * @param maxAngle      The amount of particles/the maximum angle that the circle ticks to. 240 would mean there are 240 particles spiraling away.
-	 * @param vortexHeight  How tall the vortex is.
-	 * @param radiusScale   The maximum radius and how much the radius increases by. Always use your value for the maxAngle here-
-	 *                      otherwise you can get some funky effects. Ex: maxAngle/1.5 would give you a max radius of 1.5 blocks.
-	 *                      Note: It might only be a diameter of 1.5 blocks- if so, uhhh... My bad.
-	 * @param particle      The wizardry particle type. I had to create two methods- for for normal particles, one for wizardry ones.
-	 * @param position      The starting/reference position of the vortex. Used along with the direction position to determine the actual starting position.
-	 * @param particleSpeed How fast the particles are spinning. You don't need to include complex maths here- that's all handled by this method.
-	 * @param entitySpeed   The speed of the entity that is spawning the particles. If this is used for a quickburst, just make this 0. This is so
-	 *                      particles move with the entity that's directly spawning it.
-	 */
-
-	public static void spawnSpinningVortex(World world, int maxAngle, double vortexHeight, double minRadius, double radiusScale, EnumParticleTypes particle, Vec3d position,
-										   Vec3d particleSpeed, Vec3d entitySpeed) {
-		for (int angle = 0; angle < maxAngle; angle++) {
-			double angle2 = world.rand.nextDouble() * Math.PI * 2;
-			double radius = minRadius + (angle / radiusScale);
-			double x = radius * cos(angle);
-			double y = angle / (maxAngle / vortexHeight);
-			double z = radius * sin(angle);
-			double speed = world.rand.nextDouble() * 2 + 1;
-			double omega = Math.signum(speed * ((Math.PI * 2) / 20 - speed / (20 * radius)));
-			angle2 += omega;
-			world.spawnParticle(particle, false, x + position.x, y + position.y, z + position.z,
-					(particleSpeed.x * radius * omega * cos(angle2)) + entitySpeed.x, particleSpeed.y + entitySpeed.y, (particleSpeed.z * radius * omega * sin(angle2)) + entitySpeed.z);
-
-		}
-	}
+    public static Vec3d rotateAroundAxisZ(Vec3d v, double angle) {
+        angle = Math.toRadians(angle);
+        double x, y, cos, sin;
+        cos = cos(angle);
+        sin = sin(angle);
+        x = v.x * cos - v.y * sin;
+        y = v.x * sin + v.y * cos;
+        return new Vec3d(x, y, v.z);
+    }
 
 
-	public static void spawnDirectionalHelix(World world, Entity entity, Vec3d direction, int maxAngle, double vortexLength, double radius, EnumParticleTypes particle, Vec3d position,
-											 Vec3d particleSpeed) {
-		for (int angle = 0; angle < maxAngle; angle++) {
-			double x = radius * cos(angle);
-			double y = angle / (maxAngle / vortexLength);
-			double z = radius * sin(angle);
-			Vec3d pos = new Vec3d(x, y, z);
-			if (entity != null && direction != null) {
-				pos = rotateAroundAxisX(pos, entity.rotationPitch + 90);
-				pos = rotateAroundAxisY(pos, entity.rotationYaw);
-				world.spawnParticle(particle, true, pos.x + position.x + direction.x, pos.y + position.z + direction.y,
-						pos.z + position.z + direction.z, particleSpeed.z, particleSpeed.y, particleSpeed.z);
-			} else {
-				world.spawnParticle(particle, false, x + position.x, y + position.y,
-						z + position.z, particleSpeed.z, particleSpeed.y, particleSpeed.z);
-			}
-		}
-	}
+    //NOTE: ONLY USE ENUMPARTICLETYPE SPAWN METHODS IN RENDERING FILES. DUE TO VANILLA'S WEIRD PARTICLE SPAWNING SYSTEM,
+    //YOU CANNOT SPAWN PARTICLES IN ENTITY CLASSES AND SUCH RELIABLY. CUSTOM PARTICLES IN THIS CASE ARE FINE, THOUGH.
+    public static void spawnDirectionalVortex(World world, EntityLivingBase entity, Vec3d direction, int particleAmount, double vortexLength, double minRadius, double radiusScale, EnumParticleTypes particle, double posX, double posY, double posZ,
+                                              double velX, double velY, double velZ) {
+        for (int angle = 0; angle < particleAmount; angle++) {
+            double radius = minRadius + (angle / radiusScale);
+            //Why isn't this in radians
+            double x = radius * cos(angle);
+            double y = angle / (particleAmount / vortexLength);
+            double z = radius * sin(angle);
+            Vec3d pos = new Vec3d(x, y, z);
+            if (entity != null && direction != null) {
+                pos = rotateAroundAxisX(pos, entity.rotationPitch + 90);
+                pos = rotateAroundAxisY(pos, entity.rotationYaw);
+                world.spawnParticle(particle, true, pos.x + posX + direction.x, pos.y + posY + direction.y,
+                        pos.z + posZ + direction.z, velX, velY, velZ);
+            } else {
+                world.spawnParticle(particle, false, x + posX, y + posY,
+                        z + posZ, velX, velY, velZ);
+            }
+        }
+    }
 
+    /**
+     * @param rings
+     * @param particles
+     * @param radius
+     * @param iterationSize Size between particles going in
+     * @param spinSpeed
+     * @param velMult
+     * @param entity
+     * @param world
+     * @param shield
+     * @param pos
+     * @param builder
+     * @param type
+     */
+    public static void swirl(int rings, int particles, float radius, float iterationSize,
+                             float spinSpeed, float velMult, EntityLivingBase entity, World world, boolean shield,
+                             Vec3d pos, ParticleBuilder builder, SwirlMotionType type) {
+        for (int i = 0; i < rings; i++) {
+            //Drawing from the player to the edge of the radius
+            for (double j = 0; j < (radius); j += iterationSize) {
+                //Particles
+                for (int h = 0; h < particles; h++) {
+                    double rScale = 0;
+                    switch (type) {
+                        case IN:
+                            rScale = j;
+                            break;
+                        case OUT:
+                            rScale = radius - j;
+                            break;
+                    }
+                    //Flow animation
+                    double yaw = Math.toRadians(i * (180F / rings));
+                    //For some reason, -90 breaks multiple rings (they stack instead of spreading). However,
+                    //in order to make a horizontal ring, you need -90.s
+                    double pitch = Math.toRadians(i > 0 ? 0 : -90);
+                    Vec3d circlePos = Vector.getOrthogonalVector(Vector.toRectangular(yaw, pitch),
+                            //The ternary operator with the radius ensures a shield effect rather than a simple implode effect;
+                            //spherical layers stay out/rings stay out rather than imploding with the horizontal axis
+                            (entity.ticksExisted % 360) * spinSpeed + h * (360F / particles), shield && i > 0 ? radius : rScale)
+                            .times(shield && i > 0 ? rScale : 1).toMinecraft().add(pos);
+                    Vec3d targetPos = Vector.getOrthogonalVector(Vector.toRectangular(yaw, pitch),
+                            ((entity.ticksExisted + 1) % 360) * spinSpeed + h * (360F / particles), shield && i > 0 ? radius : rScale)
+                            .times(shield && i > 0 ? rScale : 1).toMinecraft().add(pos);
+                    Vec3d vel = new Vec3d(world.rand.nextGaussian() / 240, world.rand.nextGaussian() / 240, world.rand.nextGaussian() / 240);
+                    vel = targetPos.subtract(circlePos).normalize().scale(0.10 * velMult).add(vel);
+                    try {
+                        builder.particle(ParticleBuilder.Type.CUBE).pos(circlePos).vel(vel).spawn(world);
+                    }
+                    catch (IllegalStateException ignored) {
 
-	public static void spawnSpinningDirectionalHelix(World world, Entity entity, Vec3d direction, Vec3d entitySpeed, int maxAngle, double vortexLength, double radius, EnumParticleTypes particle, Vec3d position,
-													 Vec3d particleSpeed, int maxAge, float r, float g, float b) {
-		for (int angle = 0; angle < maxAngle; angle++) {
-			double actAngle = Math.toRadians(angle);
-			double angle2 = world.rand.nextDouble() * Math.PI * 2;
-			double x = radius * cos(actAngle);
-			double y = angle / (maxAngle / vortexLength);
-			double z = radius * sin(actAngle);
-			double speed = world.rand.nextDouble() * 2 + 1;
-			double omega = Math.signum(speed * ((Math.PI * 2) / 20 - speed / (20 * radius)));
-			angle2 += omega;
-			Vec3d pos = new Vec3d(x, y, z);
-			if (entity != null && direction != null) {
-				Vec3d pVel = new Vec3d(particleSpeed.x * radius * omega * cos(angle2), particleSpeed.y, particleSpeed.z * radius * omega * sin(angle2));
-				pVel = rotateAroundAxisX(pVel, entity.rotationPitch - 90);
-				pos = rotateAroundAxisX(pos, entity.rotationPitch + 90);
-				pos = rotateAroundAxisY(pos, entity.rotationYaw);
-				world.spawnParticle(particle, true, pos.x + position.x + direction.x, pos.y + position.y + direction.y,
-						pos.z + position.z + direction.z, pVel.x + entitySpeed.x, pVel.y + entitySpeed.y, pVel.z + entitySpeed.z);
-			}
-		}
-	}
+                    }
+                }
+            }
+        }
 
+    }
 
-	public static void spawnSpinningHelix(World world, int maxAngle, double vortexLength, double radius, EnumParticleTypes particle, Vec3d position,
-										  Vec3d particleSpeed, Vec3d entitySpeed) {
-		for (int angle = 0; angle < maxAngle; angle++) {
-			double angle2 = world.rand.nextDouble() * Math.PI * 2;
-			double x = radius * cos(angle);
-			double y = angle / (maxAngle / vortexLength);
-			double z = radius * sin(angle);
-			double speed = world.rand.nextDouble() * 2 + 1;
-			double omega = Math.signum(speed * ((Math.PI * 2) / 20 - speed / (20 * radius)));
-			angle2 += omega;
-			world.spawnParticle(particle, x + position.x, y + position.y,
-					z + position.z, (particleSpeed.x * radius * omega * cos(angle2)) + entitySpeed.x, particleSpeed.y + entitySpeed.y, (particleSpeed.z * radius * omega * sin(angle2)) + entitySpeed.z);
-		}
-	}
+    /**
+     * Spawns a directional vortex that has rotating particles.
+     *
+     * @param world         World the vortex spawns in.
+     * @param entity        Entity that's spawning the vortex.
+     * @param direction     The direction that the vortex is spawning in. Although it's just used for proper positioning, use entity.getLookVec()
+     *                      or some other directional Vec3d.
+     * @param maxAngle      The amount of particles/the maximum angle that the circle ticks to. 240 would mean there are 240 particles spiraling away.
+     * @param vortexLength  How long the vortex is. This is initially used at the height, before rotating the vortex.
+     * @param radiusScale   The maximum radius and how much the radius increases by. Always use your value for the maxAngle here-
+     *                      otherwise you can get some funky effects. Ex: maxAngle / 1.5 would give you a max radius of 1.5 times your adius.
+     *                      Note: It might only be a diamater of 1.5 blocks- if so, uhhh... My bad.
+     * @param particle      The wizardry particle type. I had to create two methods- for for normal particles, one for wizardry ones.
+     * @param position      The starting/reference position of the vortex. Used along with the direction position to determine the actual starting position.
+     * @param particleSpeed How fast the particles are spinning. You don't need to include complex maths here- that's all handled by this method.
+     * @param entitySpeed   The speed of the entity that is rendering these particles. If the player/entity spawns a tornado, this is the speed of the tornado. If there's no entity,
+     *                      do Vec3d.ZERO.
+     */
+    public static void spawnSpinningDirectionalVortex(World world, EntityLivingBase entity, Vec3d direction, int maxAngle, double vortexLength, double minRadius, double radiusScale, EnumParticleTypes particle, Vec3d position,
+                                                      Vec3d particleSpeed, Vec3d entitySpeed) {
+        for (int angle = 0; angle < maxAngle; angle++) {
+            double angle2 = world.rand.nextDouble() * Math.PI * 2;
+            double radius = minRadius + (angle / radiusScale);
+            double x = radius * cos(angle);
+            double y = angle / (maxAngle / vortexLength);
+            double z = radius * sin(angle);
+            double speed = world.rand.nextDouble() * 2 + 1;
+            double omega = Math.signum(speed * ((Math.PI * 2) / 20 - speed / (20 * radius)));
+            angle2 += omega;
+            Vec3d pos = new Vec3d(x, y, z);
+            if (entity != null && direction != null) {
+                Vec3d pVel = new Vec3d(particleSpeed.x * radius * omega * cos(angle2), particleSpeed.y, particleSpeed.z * radius * omega * sin(angle2));
+                pVel = rotateAroundAxisX(pVel, entity.rotationPitch - 90);
+                pVel = rotateAroundAxisY(pVel, entity.rotationYaw);
+                pos = rotateAroundAxisX(pos, entity.rotationPitch + 90);
+                pos = rotateAroundAxisY(pos, entity.rotationYaw);
+                world.spawnParticle(particle, true, pos.x + position.x + direction.x, pos.y + position.y + direction.y,
+                        pos.z + position.z + direction.z, pVel.x + entitySpeed.x, pVel.y + entitySpeed.y, pVel.z + entitySpeed.z);
+            }
+        }
+    }
 
+    /**
+     * Spawns a directional vortex that has rotating particles.
+     *
+     * @param world         World the vortex spawns in.
+     * @param maxAngle      The amount of particles/the maximum angle that the circle ticks to. 240 would mean there are 240 particles spiraling away.
+     * @param vortexHeight  How tall the vortex is.
+     * @param radiusScale   The maximum radius and how much the radius increases by. Always use your value for the maxAngle here-
+     *                      otherwise you can get some funky effects. Ex: maxAngle/1.5 would give you a max radius of 1.5 blocks.
+     *                      Note: It might only be a diameter of 1.5 blocks- if so, uhhh... My bad.
+     * @param particle      The wizardry particle type. I had to create two methods- for for normal particles, one for wizardry ones.
+     * @param position      The starting/reference position of the vortex. Used along with the direction position to determine the actual starting position.
+     * @param particleSpeed How fast the particles are spinning. You don't need to include complex maths here- that's all handled by this method.
+     * @param entitySpeed   The speed of the entity that is spawning the particles. If this is used for a quickburst, just make this 0. This is so
+     *                      particles move with the entity that's directly spawning it.
+     */
 
-	public static Vec3d getVectorForRotation(float pitch, float yaw) {
-		float f = MathHelper.cos(-yaw * 0.017453292F - (float) Math.PI);
-		float f1 = MathHelper.sin(-yaw * 0.017453292F - (float) Math.PI);
-		float f2 = -MathHelper.cos(-pitch * 0.017453292F);
-		float f3 = MathHelper.sin(-pitch * 0.017453292F);
-		return new Vec3d(f1 * f2, f3, f * f2);
-	}
+    public static void spawnSpinningVortex(World world, int maxAngle, double vortexHeight, double minRadius, double radiusScale, EnumParticleTypes particle, Vec3d position,
+                                           Vec3d particleSpeed, Vec3d entitySpeed) {
+        for (int angle = 0; angle < maxAngle; angle++) {
+            double angle2 = world.rand.nextDouble() * Math.PI * 2;
+            double radius = minRadius + (angle / radiusScale);
+            double x = radius * cos(angle);
+            double y = angle / (maxAngle / vortexHeight);
+            double z = radius * sin(angle);
+            double speed = world.rand.nextDouble() * 2 + 1;
+            double omega = Math.signum(speed * ((Math.PI * 2) / 20 - speed / (20 * radius)));
+            angle2 += omega;
+            world.spawnParticle(particle, false, x + position.x, y + position.y, z + position.z,
+                    (particleSpeed.x * radius * omega * cos(angle2)) + entitySpeed.x, particleSpeed.y + entitySpeed.y, (particleSpeed.z * radius * omega * sin(angle2)) + entitySpeed.z);
 
-	public static Vec3d getDirectionalVortexEndPos(EntityLivingBase entity, Vec3d direction, int maxAngle, double vortexLength, double radiusScale, double posX, double posY, double posZ) {
-		double radius = maxAngle / radiusScale;
-		double x = radius * cos(maxAngle);
-		double z = radius * sin(maxAngle);
-		Vec3d pos = new Vec3d(x, vortexLength, z);
-		if (entity != null && direction != null) {
-			pos = rotateAroundAxisX(pos, entity.rotationPitch + 90);
-			pos = rotateAroundAxisY(pos, entity.rotationYaw);
-			return new Vec3d(pos.x + posX + direction.x, pos.y + posY + direction.y,
-					pos.z + posZ + direction.z);
-		} else {
-			return new Vec3d(x + posX, vortexLength + posY, z + posZ);
-		}
-	}
+        }
+    }
+
+    public static void spawnDirectionalHelix(World world, Entity entity, Vec3d direction, int maxAngle, double vortexLength, double radius, EnumParticleTypes particle, Vec3d position,
+                                             Vec3d particleSpeed) {
+        for (int angle = 0; angle < maxAngle; angle++) {
+            double x = radius * cos(angle);
+            double y = angle / (maxAngle / vortexLength);
+            double z = radius * sin(angle);
+            Vec3d pos = new Vec3d(x, y, z);
+            if (entity != null && direction != null) {
+                pos = rotateAroundAxisX(pos, entity.rotationPitch + 90);
+                pos = rotateAroundAxisY(pos, entity.rotationYaw);
+                world.spawnParticle(particle, true, pos.x + position.x + direction.x, pos.y + position.z + direction.y,
+                        pos.z + position.z + direction.z, particleSpeed.z, particleSpeed.y, particleSpeed.z);
+            } else {
+                world.spawnParticle(particle, false, x + position.x, y + position.y,
+                        z + position.z, particleSpeed.z, particleSpeed.y, particleSpeed.z);
+            }
+        }
+    }
+
+    public static void spawnSpinningDirectionalHelix(World world, Entity entity, Vec3d direction, Vec3d entitySpeed, int maxAngle, double vortexLength, double radius, EnumParticleTypes particle, Vec3d position,
+                                                     Vec3d particleSpeed, int maxAge, float r, float g, float b) {
+        for (int angle = 0; angle < maxAngle; angle++) {
+            double actAngle = Math.toRadians(angle);
+            double angle2 = world.rand.nextDouble() * Math.PI * 2;
+            double x = radius * cos(actAngle);
+            double y = angle / (maxAngle / vortexLength);
+            double z = radius * sin(actAngle);
+            double speed = world.rand.nextDouble() * 2 + 1;
+            double omega = Math.signum(speed * ((Math.PI * 2) / 20 - speed / (20 * radius)));
+            angle2 += omega;
+            Vec3d pos = new Vec3d(x, y, z);
+            if (entity != null && direction != null) {
+                Vec3d pVel = new Vec3d(particleSpeed.x * radius * omega * cos(angle2), particleSpeed.y, particleSpeed.z * radius * omega * sin(angle2));
+                pVel = rotateAroundAxisX(pVel, entity.rotationPitch - 90);
+                pos = rotateAroundAxisX(pos, entity.rotationPitch + 90);
+                pos = rotateAroundAxisY(pos, entity.rotationYaw);
+                world.spawnParticle(particle, true, pos.x + position.x + direction.x, pos.y + position.y + direction.y,
+                        pos.z + position.z + direction.z, pVel.x + entitySpeed.x, pVel.y + entitySpeed.y, pVel.z + entitySpeed.z);
+            }
+        }
+    }
+
+    public static void spawnSpinningHelix(World world, int maxAngle, double vortexLength, double radius, EnumParticleTypes particle, Vec3d position,
+                                          Vec3d particleSpeed, Vec3d entitySpeed) {
+        for (int angle = 0; angle < maxAngle; angle++) {
+            double angle2 = world.rand.nextDouble() * Math.PI * 2;
+            double x = radius * cos(angle);
+            double y = angle / (maxAngle / vortexLength);
+            double z = radius * sin(angle);
+            double speed = world.rand.nextDouble() * 2 + 1;
+            double omega = Math.signum(speed * ((Math.PI * 2) / 20 - speed / (20 * radius)));
+            angle2 += omega;
+            world.spawnParticle(particle, x + position.x, y + position.y,
+                    z + position.z, (particleSpeed.x * radius * omega * cos(angle2)) + entitySpeed.x, particleSpeed.y + entitySpeed.y, (particleSpeed.z * radius * omega * sin(angle2)) + entitySpeed.z);
+        }
+    }
+
+    public static Vec3d getVectorForRotation(float pitch, float yaw) {
+        float f = MathHelper.cos(-yaw * 0.017453292F - (float) Math.PI);
+        float f1 = MathHelper.sin(-yaw * 0.017453292F - (float) Math.PI);
+        float f2 = -MathHelper.cos(-pitch * 0.017453292F);
+        float f3 = MathHelper.sin(-pitch * 0.017453292F);
+        return new Vec3d(f1 * f2, f3, f * f2);
+    }
+
+    public static Vec3d getDirectionalVortexEndPos(EntityLivingBase entity, Vec3d direction, int maxAngle, double vortexLength, double radiusScale, double posX, double posY, double posZ) {
+        double radius = maxAngle / radiusScale;
+        double x = radius * cos(maxAngle);
+        double z = radius * sin(maxAngle);
+        Vec3d pos = new Vec3d(x, vortexLength, z);
+        if (entity != null && direction != null) {
+            pos = rotateAroundAxisX(pos, entity.rotationPitch + 90);
+            pos = rotateAroundAxisY(pos, entity.rotationYaw);
+            return new Vec3d(pos.x + posX + direction.x, pos.y + posY + direction.y,
+                    pos.z + posZ + direction.z);
+        } else {
+            return new Vec3d(x + posX, vortexLength + posY, z + posZ);
+        }
+    }
+
+    public enum SwirlMotionType {
+        OUT,
+        IN
+    }
 
 }

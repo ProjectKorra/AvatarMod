@@ -7,6 +7,7 @@ import com.crowsofwar.avatar.bending.bending.water.Waterbending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.entity.AvatarEntity;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
+import com.crowsofwar.avatar.util.AvatarParticleUtils;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.TickHandler;
@@ -73,7 +74,7 @@ public class WaterParticleSpawner extends TickHandler {
                     int rings = blast.getBooleanProperty(AbilityWaterBlast.SHIELD, abilityData) ? 6 : 1;
                     //Rings around the player (not around your finger; the police want you)
                     // C u l t u r e
-                    for (int i = 0; i < rings; i++) {
+                 /*   for (int i = 0; i < rings; i++) {
                         //Drawing from the player to the edge of the radius
                         for (double j = 0; j < (radius); j += size / 2F) {
                             //Particles
@@ -98,18 +99,18 @@ public class WaterParticleSpawner extends TickHandler {
                                         .time(16).collideParticles(true).element(new Waterbending()).spawn(world);
                             }
                         }
-                    }
+                    }**/
+                    ParticleBuilder builder = ParticleBuilder.create(ParticleBuilder.Type.CUBE).spawnEntity(entity).clr(0, 102, 255, 145).scale(size)
+                            .time(16).collideParticles(true).element(new Waterbending());
+                    AvatarParticleUtils.swirl(rings, particles, (float) radius, size / 2F, (float) maxRadius * 20,
+                            (1 / size), entity, world, true, pos,
+                            builder, AvatarParticleUtils.SwirlMotionType.IN);
                 } else {
-                    AxisAlignedBB box = new AxisAlignedBB(entity.posX + radius, entity.posY + entity.getEyeHeight() / 2 + radius / 4, entity.posZ + radius,
-                            entity.posX - radius, entity.posY + entity.getEyeHeight() / 2 - radius / 4, entity.posZ - radius);
-                    List<EntityThrowable> projectiles = world.getEntitiesWithinAABB(EntityThrowable.class, box);
-                    if (!projectiles.isEmpty()) {
-                        for (Entity e : projectiles) {
-                            Vector vel = Vector.getVelocity(e).times(-1);
-                            e.addVelocity(vel.x(), 0, vel.z());
-                        }
-                    }
-                    if (abilityData.getLevel() >= 2) {
+                    double hitRadius = maxRadius / 2 + radius / 2;
+                    AxisAlignedBB box = new AxisAlignedBB(entity.posX + hitRadius, entity.posY + entity.getEyeHeight() / 2 + hitRadius / 2, entity.posZ + hitRadius,
+                            entity.posX - hitRadius, entity.posY + entity.getEyeHeight() / 2 - radius / 2, entity.posZ - hitRadius);
+
+                    if (blast.getBooleanProperty(AbilityWaterBlast.SHIELD, abilityData)) {
                         List<Entity> bolts = world.getEntitiesWithinAABB(Entity.class, box);
                         if (!bolts.isEmpty()) {
                             for (Entity e : bolts) {
@@ -123,7 +124,15 @@ public class WaterParticleSpawner extends TickHandler {
                                 }
                             }
                         }
+                        List<EntityThrowable> projectiles = world.getEntitiesWithinAABB(EntityThrowable.class, box);
+                        if (!projectiles.isEmpty()) {
+                            for (Entity e : projectiles) {
+                                Vector vel = Vector.getVelocity(e).times(-1);
+                                e.addVelocity(vel.x(), 0, vel.z());
+                            }
+                        }
                     }
+
                 }
                 return false;
 
