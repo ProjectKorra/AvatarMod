@@ -78,7 +78,7 @@
       "burnOut": 25.0,
       "burnOutRecoverTick": 0.75,
       "performanceAmount": 2,
-      "lifeTime": 70,
+      "lifeTime": 50,
       "size": 2,
       "speed": 32.5,
       "knockback": 2.25,

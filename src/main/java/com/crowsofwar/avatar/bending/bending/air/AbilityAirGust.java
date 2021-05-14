@@ -164,7 +164,7 @@ public class AbilityAirGust extends Ability {
                     Vec3d pos = AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(entity.velocity().toMinecraft().scale(0.002));
                     pos = pos.add(0, entity.getAvgSize() / 2, 0);
                     ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Airbending()).collide(true)
-                            .clr(0.95F, 0.95F, 0.95F, 0.05F + (float) (0.0025F * entity.velocity().magnitude())).time(14 + AvatarUtils.getRandomNumberInRange(0, 10))
+                            .clr(0.95F, 0.95F, 0.95F, 0.05F + (float) (0.0025F * entity.velocity().magnitude())).time(10 + AvatarUtils.getRandomNumberInRange(0, 10))
                             .scale(size).spawnEntity(entity).swirl(rings, particles, entity.getAvgSize() * 0.75F,
                             size / 2, (float) (entity.velocity().magnitude() * 10), (1 / size), entity,
                             world, true, pos, ParticleBuilder.SwirlMotionType.IN,
@@ -173,7 +173,7 @@ public class AbilityAirGust extends Ability {
                 entity.motionX *= 0.95;
                 entity.motionY *= 0.95;
                 entity.motionZ *= 0.95;
-                if (entity.velocity().sqrMagnitude() < 0.5 * 0.5)
+                if (entity.velocity().sqrMagnitude() < 0.75 * 0.75)
                     entity.Dissipate();
                 float expansionRate = 1f / 80;
                 entity.setEntitySize(entity.getAvgSize() + expansionRate);

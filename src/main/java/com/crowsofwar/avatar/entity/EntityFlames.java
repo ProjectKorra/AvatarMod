@@ -71,6 +71,7 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
         this.lightTnt = true;
         this.setsFires = false;
         this.smelts = false;
+        this.ignoreFrustumCheck = true;
     }
 
     public boolean getTrailingFires() {

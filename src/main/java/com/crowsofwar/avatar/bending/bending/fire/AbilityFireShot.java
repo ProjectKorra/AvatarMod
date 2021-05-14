@@ -42,6 +42,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.Random;
@@ -167,11 +168,13 @@ public class AbilityFireShot extends Ability {
                 wave.setFireTime(fireTime);
                 wave.setElement(new Firebending());
                 wave.setAbility(this);
+                wave.setRGB(getProperty(FIRE_R, ctx).intValue(), getProperty(FIRE_G, ctx).intValue(), getProperty(FIRE_B, ctx).intValue());
+                wave.setFade(getProperty(FADE_R, ctx).intValue(), getProperty(FADE_G, ctx).intValue(), getProperty(FADE_B, ctx).intValue());
                 wave.setParticle(AvatarParticles.getParticleFlames());
                 wave.setDamage(damage);
                 wave.setPerformanceAmount(performance);
                 wave.setBehaviour(new FireShockwaveBehaviour());
-                wave.setSpeed(speed);
+                wave.setSpeed(speed * 0.05F);
                 wave.setPush(knockback);
                 wave.setKnockbackHeight(0.15);
                 wave.setParticleSpeed(0.18F);
@@ -206,6 +209,7 @@ public class AbilityFireShot extends Ability {
 
         @Override
         public OffensiveBehaviour onUpdate(EntityOffensive entity) {
+            World world = entity.world;
             if (entity.getOwner() != null) {
                 if (entity instanceof EntityShockwave) {
                     for (double angle = 0; angle < 2 * Math.PI; angle += Math.PI / (entity.ticksExisted * 3)) {
@@ -222,36 +226,58 @@ public class AbilityFireShot extends Ability {
                             }
                         }
                     }
-                } else if (entity instanceof EntityFlames) {
-                    if (entity.world.isRemote && entity.ticksExisted > 1) {
+                    if (world.isRemote) {
+                        float maxRadius = (float) ((EntityShockwave) entity).getRange();
                         int[] fade = entity.getFade();
                         int[] rgb = entity.getRGB();
-                        for (int h = 0; h < Math.max(entity.velocity().magnitude() / 10, 1); h++) {
-                            for (double i = 0; i < entity.width; i += 0.1 * entity.getAvgSize() * 4) {
-                                int rRandom = fade[0] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[0] * 2) : AvatarUtils.getRandomNumberInRange(fade[0] / 2,
-                                        fade[0] * 2);
-                                int gRandom = fade[1] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[1] * 2) : AvatarUtils.getRandomNumberInRange(fade[1] / 2,
-                                        fade[1] * 2);
-                                int bRandom = fade[2] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[2] * 2) : AvatarUtils.getRandomNumberInRange(fade[2] / 2,
-                                        fade[2] * 2);
-                                Random random = new Random();
-                                AxisAlignedBB boundingBox = entity.getEntityBoundingBox();
-                                double spawnX = boundingBox.minX + random.nextDouble() * (boundingBox.maxX - boundingBox.minX);
-                                double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
-                                double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
-                                ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 60,
-                                        entity.world.rand.nextGaussian() / 60, entity.world.rand.nextGaussian() / 60).time(12 - (int) (entity.velocity().magnitude() / 10) + AvatarUtils.getRandomNumberInRange(2, 4)).clr(rgb[0], rgb[1], rgb[2])
-                                        .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).scale(entity.getAvgSize() * 1.75F).element(entity.getElement())
-                                        .ability(entity.getAbility()).spawnEntity(entity.getOwner()).spawn(entity.world);
-                                ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 60,
-                                        entity.world.rand.nextGaussian() / 60, entity.world.rand.nextGaussian() / 60).time(12 - (int) (entity.velocity().magnitude() / 10) + AvatarUtils.getRandomNumberInRange(2, 4)).clr(rgb[0], rgb[1], rgb[2])
-                                        .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).scale(entity.getAvgSize() * 1.75F).element(entity.getElement())
-                                        .ability(entity.getAbility()).spawnEntity(entity.getOwner()).spawn(entity.world);
-                                ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(AvatarEntityUtils.getMiddleOfEntity(entity)).vel(entity.world.rand.nextGaussian() / 40,
-                                        entity.world.rand.nextGaussian() / 40, entity.world.rand.nextGaussian() / 40).time(12 - (int) (entity.velocity().magnitude() / 10) + AvatarUtils.getRandomNumberInRange(2, 4)).scale(entity.getAvgSize() / 2)
-                                        .element(entity.getElement()).ability(entity.getAbility()).spawnEntity(entity.getOwner()).spawn(entity.world);
-                            }
-                        }
+                        float radius = (float) (entity.ticksExisted * ((EntityShockwave) entity).getSpeed());
+                        int rings = (int) (maxRadius * 6);
+                        float size = (float) (Math.sqrt(maxRadius) * 0.75F);
+                        int particles = Math.min((int) (maxRadius * 2 * Math.PI), 4);
+                        int rRandom = fade[0] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[0] * 2) : AvatarUtils.getRandomNumberInRange(fade[0] / 2,
+                                fade[0] * 2);
+                        int gRandom = fade[1] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[1] * 2) : AvatarUtils.getRandomNumberInRange(fade[1] / 2,
+                                fade[1] * 2);
+                        int bRandom = fade[2] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[2] * 2) : AvatarUtils.getRandomNumberInRange(fade[2] / 2,
+                                fade[2] * 2);
+                        Vec3d centre = AvatarEntityUtils.getBottomMiddleOfEntity(entity);
+                        //In case I forget: Really good shockwave code!
+                        ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Firebending()).collide(true)
+                                .clr(rgb[0], rgb[1], rgb[2], 0.125F)//.fade(rRandom, gRandom, bRandom, (int) (0.125F * AvatarUtils.getRandomNumberInRange(100, 175)))
+                                .time(14 + AvatarUtils.getRandomNumberInRange(0, 10)).spawnEntity(entity.getOwner())
+                                .scale(size).spawnEntity(entity).swirl(rings, particles, maxRadius,
+                                size, maxRadius * 20, -1 / size, entity,
+                                world, false, centre, ParticleBuilder.SwirlMotionType.IN,
+                                false, false);
+                    }
+                } else if (entity instanceof EntityFlames) {
+                    if (entity.world.isRemote && entity.getOwner() != null) {
+                        //NOTE: THis won't work if the entity's size is too small! (<0.25)
+                        int[] fade = entity.getFade();
+                        int[] rgb = entity.getRGB();
+                        int rings = (int) (Math.sqrt(entity.getAvgSize()) * 4) + 2;
+                        float size = (float) (Math.sqrt(entity.getAvgSize()) * 0.75F);
+                        int particles = (int) (Math.min((int) (entity.getAvgSize() * 2 * Math.PI), 4) + (entity.velocity().magnitude() / 20));
+                        int rRandom = fade[0] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[0] * 2) : AvatarUtils.getRandomNumberInRange(fade[0] / 2,
+                                fade[0] * 2);
+                        int gRandom = fade[1] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[1] * 2) : AvatarUtils.getRandomNumberInRange(fade[1] / 2,
+                                fade[1] * 2);
+                        int bRandom = fade[2] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[2] * 2) : AvatarUtils.getRandomNumberInRange(fade[2] / 2,
+                                fade[2] * 2);
+                        Random random = new Random();
+                        AxisAlignedBB boundingBox = entity.getEntityBoundingBox();
+                        double randX = 0.125 * random.nextDouble() * random.nextGaussian() * (boundingBox.maxX - boundingBox.minX);
+                        double randY = 0.125 * random.nextDouble() * random.nextGaussian() * (boundingBox.maxY - boundingBox.minY);
+                        double randZ = 0.125 * random.nextDouble() * random.nextGaussian() * (boundingBox.maxZ - boundingBox.minZ);
+
+                        Vec3d centre = AvatarEntityUtils.getBottomMiddleOfEntity(entity);
+                        centre = centre.add(randX, randY + entity.getAvgSize() / 2, randZ);
+                        ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Firebending()).collide(true)
+                                .clr(rgb[0], rgb[1], rgb[2]).fade(rRandom, gRandom, bRandom, (int) (0.70F * AvatarUtils.getRandomNumberInRange(100, 175))).time(10 + AvatarUtils.getRandomNumberInRange(0, 10))
+                                .scale(size).spawnEntity(entity).swirl(rings, particles, entity.getAvgSize() * 0.75F,
+                                size / 2, (float) (entity.velocity().magnitude() * 10), size * 2, entity,
+                                world, true, centre, ParticleBuilder.SwirlMotionType.IN,
+                                false, true);
                     }
                 }
             }

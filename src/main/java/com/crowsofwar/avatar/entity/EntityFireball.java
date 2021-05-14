@@ -105,23 +105,27 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
                     fade[1] * 2);
             int bRandom = fade[2] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[2] * 2) : AvatarUtils.getRandomNumberInRange(fade[2] / 2,
                     fade[2] * 2);
-
             int rings = (int) (Math.sqrt(getAvgSize()) * 4) + 2;
-            float size = 0.75F * getAvgSize() * (1 / getAvgSize());
+            float size = (float) (0.675F * Math.sqrt(getAvgSize()));
             int particles = (int) (Math.min((int) (getAvgSize() * Math.PI * 2), 4) + (velocity().magnitude() / 20));
+
+            Random random = new Random();
+            AxisAlignedBB boundingBox = getEntityBoundingBox();
+            double randX = 0.125 * random.nextDouble() * random.nextGaussian() * (boundingBox.maxX - boundingBox.minX);
+            double randY = 0.125 * random.nextDouble() * random.nextGaussian() * (boundingBox.maxY - boundingBox.minY);
+            double randZ = 0.125 * random.nextDouble() * random.nextGaussian() * (boundingBox.maxZ - boundingBox.minZ);
+
             Vec3d centre = AvatarEntityUtils.getBottomMiddleOfEntity(this);
-            centre = centre.add(0, getAvgSize() / 2, 0);
+            centre = centre.add(randX, randY + getAvgSize() / 2, randZ);
             ParticleBuilder.create(ParticleBuilder.Type.FLASH).clr(rgb[0], rgb[1], rgb[2])
                     .fade(rRandom, gRandom, bRandom, (int) (0.75F * AvatarUtils.getRandomNumberInRange(100, 175)))
-                    .scale(size / 1.5F).element(getElement()).spawnEntity(getOwner()).time(16 + AvatarUtils.getRandomNumberInRange(0, 4)).
-                            swirl(rings, particles, getAvgSize() * 1.25F,
-                                    size / 2.5F, (float) (velocity().magnitude() * 10), (1 / size), this,
-                                    world, false, centre, ParticleBuilder.SwirlMotionType.IN,
-                                    true, true);
+                    .scale(size).element(getElement()).spawnEntity(getOwner()).time(6).
+                    swirl(rings, particles, getAvgSize() * 1.125F,
+                            size / 1.75F, (float) (velocity().magnitude() * 15), (1 / size) * 0.75F, this,
+                            world, false, centre, ParticleBuilder.SwirlMotionType.IN,
+                            true, true);
 
             for (double h = 0; h < width; h += 0.1) {
-                Random random = new Random();
-                AxisAlignedBB boundingBox = getEntityBoundingBox();
                 double spawnX = boundingBox.minX + random.nextDouble() * (boundingBox.maxX - boundingBox.minX);
                 double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
                 double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
@@ -136,8 +140,6 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
             }
 
             for (double h = 0; h < width; h += 0.3) {
-                Random random = new Random();
-                AxisAlignedBB boundingBox = getEntityBoundingBox();
                 double spawnX = boundingBox.minX + random.nextDouble() * (boundingBox.maxX - boundingBox.minX);
                 double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
                 double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);

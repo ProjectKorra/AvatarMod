@@ -264,6 +264,7 @@ public final class ParticleBuilder {
                     try {
                         this.pos(circlePos).vel(vel).spawn(world, false);
                     } catch (IllegalStateException ignored) {
+                        ignored.printStackTrace();
                     }
                 }
             }
