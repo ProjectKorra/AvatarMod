@@ -158,42 +158,17 @@ public class AbilityAirGust extends Ability {
             if (entity != null) {
                 World world = entity.world;
                 if (world.isRemote && entity.getOwner() != null) {
-                    for (int i = 0; i < 4; i++) {
-                        Vec3d mid = AvatarEntityUtils.getMiddleOfEntity(entity);
-                        double spawnX = mid.x + world.rand.nextGaussian() / 20;
-                        double spawnY = mid.y + world.rand.nextGaussian() / 20;
-                        double spawnZ = mid.z + world.rand.nextGaussian() / 20;
-                        ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 25, world.rand.nextGaussian() / 25,
-                                world.rand.nextGaussian() / 25).time(4 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(0.95F, 0.95F, 0.95F, 0.05F).spawnEntity(entity)
-                                .scale(entity.getAvgSize() * (1 / entity.getAvgSize() + 1)).element(entity.getElement()).collide(true).spawn(world);
-                        ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 45 + entity.motionX,
-                                world.rand.nextGaussian() / 45 + entity.motionY, world.rand.nextGaussian() / 45 + entity.motionZ)
-                                .time(14 + AvatarUtils.getRandomNumberInRange(0, 10)).clr(0.95F, 0.95F, 0.95F, 0.05F).spawnEntity(entity)
-                                .scale(entity.getAvgSize() * (1 / entity.getAvgSize() + 0.5F)).element(entity.getElement()).collide(true).spawn(world);
-                    }
-                    for (int i = 0; i < 2; i++) {
-                        Vec3d pos = Vector.getOrthogonalVector(entity.getLookVec(), i * 180 + (entity.ticksExisted % 360) * 20 *
-                                (1 / entity.getAvgSize()), entity.getAvgSize() / 1.5F).toMinecraft();
-                        Vec3d velocity;
-                        Vec3d entityPos = AvatarEntityUtils.getMiddleOfEntity(entity);
-
-                        pos = pos.add(entityPos);
-                        velocity = pos.subtract(entityPos).normalize();
-                        velocity = velocity.scale(AvatarUtils.getSqrMagnitude(entity.getVelocity()) / 400000);
-                        double spawnX = pos.x;
-                        double spawnY = pos.y;
-                        double spawnZ = pos.z;
-                        ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x,
-                                world.rand.nextGaussian() / 80 + velocity.y, world.rand.nextGaussian() / 80 + velocity.z)
-                                .time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(0.95F, 0.95F, 0.95F, 0.1F).spawnEntity(entity)
-                                .scale(0.75F * entity.getAvgSize() * (1 / entity.getAvgSize())).element(new Airbending()).collide(true).collideParticles(true).spawn(world);
-                        ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x,
-                                world.rand.nextGaussian() / 80 + velocity.y, world.rand.nextGaussian() / 80 + velocity.z)
-                                .time(10 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(0.95F, 0.95F, 0.95F, 0.1F).spawnEntity(entity)
-                                .scale(0.75F * entity.getAvgSize() * (1 / entity.getAvgSize())).element(new Airbending()).collide(true).collideParticles(true).spawn(world);
-
-                    }
-
+                    int rings = (int) (Math.sqrt(entity.getAvgSize()) * 4);
+                    float size = 0.75F * entity.getAvgSize() * (1 / entity.getAvgSize());
+                    int particles = (int) (Math.min((int) (entity.getAvgSize() * Math.PI), 2) + (entity.velocity().magnitude() / 20));
+                    Vec3d pos = AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(entity.velocity().toMinecraft().scale(0.002));
+                    pos = pos.add(0, entity.getAvgSize() / 2, 0);
+                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Airbending()).collide(true)
+                            .clr(0.95F, 0.95F, 0.95F, 0.05F + (float) (0.0025F * entity.velocity().magnitude())).time(14 + AvatarUtils.getRandomNumberInRange(0, 10))
+                            .scale(size).spawnEntity(entity).swirl(rings, particles, entity.getAvgSize() * 0.75F,
+                            size / 2, (float) (entity.velocity().magnitude() * 10), (1 / size), entity,
+                            world, true, pos, ParticleBuilder.SwirlMotionType.IN,
+                            false);
                 }
                 entity.motionX *= 0.95;
                 entity.motionY *= 0.95;

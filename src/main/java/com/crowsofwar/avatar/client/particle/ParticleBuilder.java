@@ -225,7 +225,7 @@ public final class ParticleBuilder {
      * @param type
      */
     public void swirl(int rings, int particles, float radius, float iterationSize,
-                      float spinSpeed, float velMult, EntityLivingBase entity, World world, boolean shield,
+                      float spinSpeed, float velMult, Entity entity, World world, boolean shield,
                       Vec3d pos, SwirlMotionType type, boolean followEntity) {
         for (int i = 0; i < rings + 1; i++) {
             //Drawing from the player to the edge of the radius
@@ -242,7 +242,7 @@ public final class ParticleBuilder {
                             break;
                     }
                     //Flow animation
-                    double yaw = Math.toRadians(i > 0 ? i * (180F / (rings + 1)) : 0);
+                    double yaw = Math.toRadians(i > 0 ? i * (180F / (rings)) : 0);
                     //For some reason, -90 breaks multiple rings (they stack instead of spreading). However,
                     //in order to make a horizontal ring, you need -90.s
                     double pitch = Math.toRadians(i > 0 ? 0 : -90);

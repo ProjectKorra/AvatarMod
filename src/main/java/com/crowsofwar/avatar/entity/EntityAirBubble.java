@@ -159,8 +159,8 @@ public class EntityAirBubble extends EntityShield {
             int particles = (int) (getSize() * 2 * Math.PI);
 
             ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size).time(12 + AvatarUtils.getRandomNumberInRange(0, 4))
-                    .element(getElement()).clr(0.95F, 0.95F, 0.95F, 0.05F).spawnEntity(this)
-                    .swirl(rings, particles, getSize() * 1.125F, size * 5, getSize() * 10, (-1 / size),
+                    .element(getElement()).clr(0.95F, 0.95F, 0.95F, 0.075F).spawnEntity(this)
+                    .swirl(rings, particles, getSize(), size * 5, getSize() * 10, (-1 / size),
                             getOwner(), world, false, centre, ParticleBuilder.SwirlMotionType.OUT, true);
 
         }
