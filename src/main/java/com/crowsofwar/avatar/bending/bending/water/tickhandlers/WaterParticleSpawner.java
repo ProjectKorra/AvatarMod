@@ -76,7 +76,7 @@ public class WaterParticleSpawner extends TickHandler {
                     ParticleBuilder.create(ParticleBuilder.Type.CUBE).spawnEntity(entity).clr(0, 102, 255, 145).scale(size)
                             .time(16).collideParticles(true).element(new Waterbending()).swirl(rings, particles, (float) radius, size / 2F, (float) maxRadius * 20,
                             (1 / size), entity, world, true, pos,
-                            ParticleBuilder.SwirlMotionType.IN, true);
+                            ParticleBuilder.SwirlMotionType.IN, true, true);
                 } else {
                     double hitRadius = maxRadius / 2 + radius / 2;
                     AxisAlignedBB box = new AxisAlignedBB(entity.posX + hitRadius, entity.posY + entity.getEyeHeight() / 2 + hitRadius / 2, entity.posZ + hitRadius,

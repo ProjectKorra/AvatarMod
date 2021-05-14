@@ -166,7 +166,7 @@ public class ShootAirBurstHandler extends TickHandler {
                         .scale(size).spawnEntity(entity).swirl(rings, particles, entity.getAvgSize() * 0.875F,
                         size / 2, (float) (entity.velocity().magnitude() * 10), (-1 / size), entity,
                         world, true, pos, ParticleBuilder.SwirlMotionType.IN,
-                        false);
+                        false, true);
             }
             /*
             if (world.isRemote && entity.getOwner() != null && entity instanceof EntityAirGust) {

@@ -106,6 +106,19 @@ public class EntityFireball extends EntityOffensive implements IGlowingEntity {
             int bRandom = fade[2] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[2] * 2) : AvatarUtils.getRandomNumberInRange(fade[2] / 2,
                     fade[2] * 2);
 
+            int rings = (int) (Math.sqrt(getAvgSize()) * 4) + 2;
+            float size = 0.75F * getAvgSize() * (1 / getAvgSize());
+            int particles = (int) (Math.min((int) (getAvgSize() * Math.PI * 2), 4) + (velocity().magnitude() / 20));
+            Vec3d centre = AvatarEntityUtils.getBottomMiddleOfEntity(this);
+            centre = centre.add(0, getAvgSize() / 2, 0);
+            ParticleBuilder.create(ParticleBuilder.Type.FLASH).clr(rgb[0], rgb[1], rgb[2])
+                    .fade(rRandom, gRandom, bRandom, (int) (0.75F * AvatarUtils.getRandomNumberInRange(100, 175)))
+                    .scale(size / 1.5F).element(getElement()).spawnEntity(getOwner()).time(16 + AvatarUtils.getRandomNumberInRange(0, 4)).
+                            swirl(rings, particles, getAvgSize() * 1.25F,
+                                    size / 2.5F, (float) (velocity().magnitude() * 10), (1 / size), this,
+                                    world, false, centre, ParticleBuilder.SwirlMotionType.IN,
+                                    true, true);
+
             for (double h = 0; h < width; h += 0.1) {
                 Random random = new Random();
                 AxisAlignedBB boundingBox = getEntityBoundingBox();

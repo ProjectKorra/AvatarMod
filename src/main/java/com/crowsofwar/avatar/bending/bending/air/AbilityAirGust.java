@@ -168,7 +168,7 @@ public class AbilityAirGust extends Ability {
                             .scale(size).spawnEntity(entity).swirl(rings, particles, entity.getAvgSize() * 0.75F,
                             size / 2, (float) (entity.velocity().magnitude() * 10), (1 / size), entity,
                             world, true, pos, ParticleBuilder.SwirlMotionType.IN,
-                            false);
+                            false, true);
                 }
                 entity.motionX *= 0.95;
                 entity.motionY *= 0.95;

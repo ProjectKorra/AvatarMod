@@ -124,17 +124,17 @@ public class AirBurstHandler extends TickHandler {
             if (world.isRemote && duration <= durationToFire) {
                 Vec3d pos = AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(0, entity.getEyeHeight() / 2, 0);
                 //Size starts small gets big
-                float size = (float) Math.min((1F / (inverseRadius / 2F)) * charge * 2 * abilityData.getXpModifier(), 1.5F * abilityData.getXpModifier());
+                float size = (float) ((1F / (inverseRadius / 2F)) * 0.5F + charge * 0.25F * abilityData.getXpModifier());
                 //In case you forgot year 7 maths, radius * 2 * pi = circumference
                 int particles = (int) (radius * Math.PI);
                 int rings = (int) (Math.sqrt(radius) * 6);
                 //Rings around the player (not around your finger; the police want you)
                 // C u l t u r e
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).clr(0.975F, 0.975F, 0.975F, 0.05F).
-                        scale(size).time(20 + AvatarUtils.getRandomNumberInRange(0, 5)).element(new Airbending())
-                        .swirl(rings, particles, (float) inverseRadius, size / 2, radius * 40,
-                                (-2F / size) * abilityData.getXpModifier() * charge, entity, world, false, pos,
-                                ParticleBuilder.SwirlMotionType.IN, true);
+                        scale(size).time(14 + AvatarUtils.getRandomNumberInRange(0, 4)).element(new Airbending())
+                        .swirl(rings, particles, (float) inverseRadius, size / 1.5F, radius * 40,
+                                (1F / size) * abilityData.getXpModifier() * charge, entity, world, false, pos,
+                                ParticleBuilder.SwirlMotionType.IN, true, true);
             }
             world.playSound(null, new BlockPos(entity), SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.PLAYERS, 0.25F * charge, 0.8F + world.rand.nextFloat() / 10);
 

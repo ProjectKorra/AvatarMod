@@ -226,7 +226,7 @@ public final class ParticleBuilder {
      */
     public void swirl(int rings, int particles, float radius, float iterationSize,
                       float spinSpeed, float velMult, Entity entity, World world, boolean shield,
-                      Vec3d pos, SwirlMotionType type, boolean followEntity) {
+                      Vec3d pos, SwirlMotionType type, boolean followEntity, boolean randomVel) {
         for (int i = 0; i < rings + 1; i++) {
             //Drawing from the player to the edge of the radius
             for (double j = 0; j < (radius); j += iterationSize) {
@@ -254,7 +254,10 @@ public final class ParticleBuilder {
                     Vec3d targetPos = Vector.getOrthogonalVector(Vector.toRectangular(yaw, pitch),
                             ((entity.ticksExisted + 1) % 360) * spinSpeed + h * (360F / particles), shield && i > 0 ? radius : rScale)
                             .times(shield && i > 0 ? rScale : 1).toMinecraft().add(pos);
-                    Vec3d vel = new Vec3d(world.rand.nextGaussian() / 240, world.rand.nextGaussian() / 240, world.rand.nextGaussian() / 240);
+                    Vec3d vel = Vec3d.ZERO;
+                    if (randomVel)
+                        vel = vel.add(new Vec3d(world.rand.nextGaussian() * velMult / 120, world.rand.nextGaussian() * velMult / 120,
+                                world.rand.nextGaussian() * velMult / 120));
                     vel = targetPos.subtract(circlePos).normalize().scale(0.10 * velMult).add(vel);
                     if (followEntity)
                         vel = vel.add(entity.motionX, entity.motionY, entity.motionZ);

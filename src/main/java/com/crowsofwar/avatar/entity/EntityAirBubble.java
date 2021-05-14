@@ -153,7 +153,7 @@ public class EntityAirBubble extends EntityShield {
         //	System.out.println("Yaw: " + getOwner().rotationYaw);
         //Particles go spin!
         if (world.isRemote && getOwner() != null) {
-            Vec3d centre = AvatarEntityUtils.getBottomMiddleOfEntity(getOwner()).add(0, getOwner().getEyeHeight() / 2, 0);
+            Vec3d centre = AvatarEntityUtils.getBottomMiddleOfEntity(getOwner()).add(0, getSize() / 2, 0);
             float size = 0.75F * getSize() * (1 / getSize());
             int rings = (int) (getSize() * 8);
             int particles = (int) (getSize() * 2 * Math.PI);
@@ -161,7 +161,7 @@ public class EntityAirBubble extends EntityShield {
             ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size).time(12 + AvatarUtils.getRandomNumberInRange(0, 4))
                     .element(getElement()).clr(0.95F, 0.95F, 0.95F, 0.075F).spawnEntity(this)
                     .swirl(rings, particles, getSize(), size * 5, getSize() * 10, (-1 / size),
-                            getOwner(), world, false, centre, ParticleBuilder.SwirlMotionType.OUT, true);
+                            getOwner(), world, false, centre, ParticleBuilder.SwirlMotionType.OUT, true, true);
 
         }
         if (getOwner() != null) {
