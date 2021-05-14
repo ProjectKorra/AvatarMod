@@ -1,5 +1,6 @@
 package com.crowsofwar.avatar.util;
 
+import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
@@ -93,63 +94,6 @@ public class AvatarParticleUtils {
         }
     }
 
-    /**
-     * @param rings
-     * @param particles
-     * @param radius
-     * @param iterationSize Size between particles going in
-     * @param spinSpeed
-     * @param velMult
-     * @param entity
-     * @param world
-     * @param shield
-     * @param pos
-     * @param builder
-     * @param type
-     */
-    public static void swirl(int rings, int particles, float radius, float iterationSize,
-                             float spinSpeed, float velMult, EntityLivingBase entity, World world, boolean shield,
-                             Vec3d pos, ParticleBuilder builder, SwirlMotionType type) {
-        for (int i = 0; i < rings; i++) {
-            //Drawing from the player to the edge of the radius
-            for (double j = 0; j < (radius); j += iterationSize) {
-                //Particles
-                for (int h = 0; h < particles; h++) {
-                    double rScale = 0;
-                    switch (type) {
-                        case IN:
-                            rScale = j;
-                            break;
-                        case OUT:
-                            rScale = radius - j;
-                            break;
-                    }
-                    //Flow animation
-                    double yaw = Math.toRadians(i * (180F / rings));
-                    //For some reason, -90 breaks multiple rings (they stack instead of spreading). However,
-                    //in order to make a horizontal ring, you need -90.s
-                    double pitch = Math.toRadians(i > 0 ? 0 : -90);
-                    Vec3d circlePos = Vector.getOrthogonalVector(Vector.toRectangular(yaw, pitch),
-                            //The ternary operator with the radius ensures a shield effect rather than a simple implode effect;
-                            //spherical layers stay out/rings stay out rather than imploding with the horizontal axis
-                            (entity.ticksExisted % 360) * spinSpeed + h * (360F / particles), shield && i > 0 ? radius : rScale)
-                            .times(shield && i > 0 ? rScale : 1).toMinecraft().add(pos);
-                    Vec3d targetPos = Vector.getOrthogonalVector(Vector.toRectangular(yaw, pitch),
-                            ((entity.ticksExisted + 1) % 360) * spinSpeed + h * (360F / particles), shield && i > 0 ? radius : rScale)
-                            .times(shield && i > 0 ? rScale : 1).toMinecraft().add(pos);
-                    Vec3d vel = new Vec3d(world.rand.nextGaussian() / 240, world.rand.nextGaussian() / 240, world.rand.nextGaussian() / 240);
-                    vel = targetPos.subtract(circlePos).normalize().scale(0.10 * velMult).add(vel);
-                    try {
-                        builder.particle(ParticleBuilder.Type.CUBE).pos(circlePos).vel(vel).spawn(world);
-                    }
-                    catch (IllegalStateException ignored) {
-
-                    }
-                }
-            }
-        }
-
-    }
 
     /**
      * Spawns a directional vortex that has rotating particles.
@@ -304,11 +248,6 @@ public class AvatarParticleUtils {
         } else {
             return new Vec3d(x + posX, vortexLength + posY, z + posZ);
         }
-    }
-
-    public enum SwirlMotionType {
-        OUT,
-        IN
     }
 
 }

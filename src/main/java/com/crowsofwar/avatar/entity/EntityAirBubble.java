@@ -153,34 +153,15 @@ public class EntityAirBubble extends EntityShield {
         //	System.out.println("Yaw: " + getOwner().rotationYaw);
         //Particles go spin!
         if (world.isRemote && getOwner() != null) {
-            for (int i = 0; i < 10; i++) {
-                double x1, y1, z1, xVel, yVel, zVel;
-                double theta = (ticksExisted % 180) * 10 + i * 36;
-                double dphi = 30 / Math.sin(Math.toRadians(theta));
-                double phi = ((ticksExisted % 360) * dphi) + i * 36;
-                double rphi = Math.toRadians(phi);
-                double rtheta = Math.toRadians(theta);
+            Vec3d centre = AvatarEntityUtils.getBottomMiddleOfEntity(getOwner()).add(0, getOwner().getEyeHeight() / 2, 0);
+            float size = 0.75F * getSize() * (1 / getSize());
+            int rings = (int) (getSize() * 8);
+            int particles = (int) (getSize() * 2 * Math.PI);
 
-                x1 = getSize() * Math.cos(rphi) * Math.sin(rtheta);
-                y1 = getSize() * Math.sin(rphi) * Math.sin(rtheta);
-                z1 = getSize() * Math.cos(rtheta);
-                xVel = x1 * world.rand.nextGaussian() / 200;
-                yVel = y1 * world.rand.nextGaussian() / 200;
-                zVel = z1 * world.rand.nextGaussian() / 200;
-
-                Vec3d centre = AvatarEntityUtils.getMiddleOfEntity(this);
-                double x = centre.x;
-                double y = centre.y;
-                double z = centre.z;
-
-                ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(x1 + x, y1 + y, z1 + z).vel(xVel, yVel, zVel)
-                        .clr(0.95F, 0.95F, 0.95F, 0.1F).time(15 + AvatarUtils.getRandomNumberInRange(0, 10)).spawnEntity(getOwner())
-                        .scale(0.75F * getSize() * (1 / getSize())).element(getElement()).spawn(world);
-                ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(x1 + x, y1 + y, z1 + z).vel(xVel, yVel, zVel)
-                        .clr(0.95F, 0.95F, 0.95F, 0.1F).time(15 + AvatarUtils.getRandomNumberInRange(0, 10)).spawnEntity(getOwner())
-                        .scale(0.75F * getSize() * (1 / getSize())).element(getElement()).spawn(world);
-            }
-
+            ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size).time(12 + AvatarUtils.getRandomNumberInRange(0, 4))
+                    .element(getElement()).clr(0.95F, 0.95F, 0.95F, 0.05F).spawnEntity(this)
+                    .swirl(rings, particles, getSize() * 1.125F, size * 5, getSize() * 10, (-1 / size),
+                            getOwner(), world, false, centre, ParticleBuilder.SwirlMotionType.OUT, true);
 
         }
         if (getOwner() != null) {

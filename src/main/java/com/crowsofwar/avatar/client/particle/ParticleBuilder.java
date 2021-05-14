@@ -9,6 +9,8 @@ import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import com.crowsofwar.avatar.client.particles.newparticles.ParticleAvatar;
 import com.crowsofwar.avatar.client.particles.newparticles.behaviour.ParticleAvatarBehaviour;
 import com.crowsofwar.avatar.client.particles.newparticles.renderlayers.ParticleBatchRenderer;
+import com.crowsofwar.avatar.util.AvatarParticleUtils;
+import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumFacing;
@@ -207,6 +209,64 @@ public final class ParticleBuilder {
         ParticleBuilder.create(Type.BUFF).entity(entity).clr(1, 1, 0.3f).spawn(world);
     }
 
+    /**
+     * Swirls given particles. Couldn't figure out how to make this dynamic, chose this solution. It works.
+     *
+     * @param rings
+     * @param particles
+     * @param radius
+     * @param iterationSize
+     * @param spinSpeed
+     * @param velMult
+     * @param entity
+     * @param world
+     * @param shield
+     * @param pos
+     * @param type
+     */
+    public void swirl(int rings, int particles, float radius, float iterationSize,
+                      float spinSpeed, float velMult, EntityLivingBase entity, World world, boolean shield,
+                      Vec3d pos, SwirlMotionType type, boolean followEntity) {
+        for (int i = 0; i < rings + 1; i++) {
+            //Drawing from the player to the edge of the radius
+            for (double j = 0; j < (radius); j += iterationSize) {
+                //Particles
+                for (int h = 0; h < particles; h++) {
+                    double rScale = 0;
+                    switch (type) {
+                        case IN:
+                            rScale = j;
+                            break;
+                        case OUT:
+                            rScale = radius - j;
+                            break;
+                    }
+                    //Flow animation
+                    double yaw = Math.toRadians(i > 0 ? i * (180F / (rings + 1)) : 0);
+                    //For some reason, -90 breaks multiple rings (they stack instead of spreading). However,
+                    //in order to make a horizontal ring, you need -90.s
+                    double pitch = Math.toRadians(i > 0 ? 0 : -90);
+                    Vec3d circlePos = Vector.getOrthogonalVector(Vector.toRectangular(yaw, pitch),
+                            //The ternary operator with the radius ensures a shield effect rather than a simple implode effect;
+                            //spherical layers stay out/rings stay out rather than imploding with the horizontal axis
+                            (entity.ticksExisted % 360) * spinSpeed + h * (360F / particles), shield && i > 0 ? radius : rScale)
+                            .times(shield && i > 0 ? rScale : 1).toMinecraft().add(pos);
+                    Vec3d targetPos = Vector.getOrthogonalVector(Vector.toRectangular(yaw, pitch),
+                            ((entity.ticksExisted + 1) % 360) * spinSpeed + h * (360F / particles), shield && i > 0 ? radius : rScale)
+                            .times(shield && i > 0 ? rScale : 1).toMinecraft().add(pos);
+                    Vec3d vel = new Vec3d(world.rand.nextGaussian() / 240, world.rand.nextGaussian() / 240, world.rand.nextGaussian() / 240);
+                    vel = targetPos.subtract(circlePos).normalize().scale(0.10 * velMult).add(vel);
+                    if (followEntity)
+                        vel = vel.add(entity.motionX, entity.motionY, entity.motionZ);
+                    try {
+                        this.pos(circlePos).vel(vel).spawn(world, false);
+                    } catch (IllegalStateException ignored) {
+                    }
+                }
+            }
+        }
+        reset();
+    }
 
     public ParticleBuilder glow(boolean glow) {
         this.glow = glow;
@@ -531,8 +591,6 @@ public final class ParticleBuilder {
         return this.clr(r, g, b);
     }
 
-    // Used to say Affects: {@link Type#ICE ICE}, {@link Type#SPARKLE SPARKLE} - not sure that's true any more
-
     /**
      * Sets the scale of the particle being built. If unspecified, this defaults to 1.
      * <p></p>
@@ -547,6 +605,8 @@ public final class ParticleBuilder {
         this.scale = scale;
         return this;
     }
+
+    // Used to say Affects: {@link Type#ICE ICE}, {@link Type#SPARKLE SPARKLE} - not sure that's true any more
 
     /**
      * Sets the lifetime of the particle being built. If unspecified, this defaults to the particle's default lifetime,
@@ -563,8 +623,6 @@ public final class ParticleBuilder {
         this.lifetime = lifetime;
         return this;
     }
-
-    //TODO: Option for colliding with other particles and/or entities!
 
     /**
      * Sets the seed of the particle being built. If unspecified, this defaults to the particle's default seed,
@@ -584,6 +642,8 @@ public final class ParticleBuilder {
         this.seed = seed;
         return this;
     }
+
+    //TODO: Option for colliding with other particles and/or entities!
 
     /**
      * Sets the spin parameters of the particle being built. If unspecified, these both default to 0.
@@ -655,8 +715,6 @@ public final class ParticleBuilder {
         return this;
     }
 
-    // ============================================= Targeted-only methods =============================================
-
     /**
      * Sets the entity of the particle being built. This will cause the particle to move with the given entity, and will
      * make the position specified using {@link ParticleBuilder#pos(double, double, double)} <i>relative to</i> that
@@ -675,6 +733,8 @@ public final class ParticleBuilder {
         this.spawnEntity = entity;
         return this;
     }
+
+    // ============================================= Targeted-only methods =============================================
 
     /**
      * @param entity The spawn entity to set the particle to. Used for determining particle collision boxes.
@@ -788,13 +848,6 @@ public final class ParticleBuilder {
         return tvel(vel.x, vel.y, vel.z);
     }
 
-    // ============================================== Convenience methods ==============================================
-
-    // These may seem to go against the whole point of this class, but of course they return the ParticleBuilder instance
-    // so anything else can still be chained onto them - centralising commonly-used particle spawning patterns without
-    // losing any of the flexibility of the particle builder. In addition, callers of these methods are still free to
-    // change any of the parameters that were set within them afterwards.
-
     /**
      * Sets the target and target velocity of the particle being built. This method takes an origin entity and a
      * position and estimates the position of the target point based on the given entity's rotational velocities and its
@@ -811,6 +864,13 @@ public final class ParticleBuilder {
         return this;
     }
 
+    // ============================================== Convenience methods ==============================================
+
+    // These may seem to go against the whole point of this class, but of course they return the ParticleBuilder instance
+    // so anything else can still be chained onto them - centralising commonly-used particle spawning patterns without
+    // losing any of the flexibility of the particle builder. In addition, callers of these methods are still free to
+    // change any of the parameters that were set within them afterwards.
+
     /**
      * Sets the target of the particle being built. This will cause the particle to stretch to touch the given entity.
      * <p></p>
@@ -825,8 +885,6 @@ public final class ParticleBuilder {
         this.target = target;
         return this;
     }
-
-    // Methods for spawning specific effects (similar to the FX playing methods with the ids in RenderGlobal)
 
     /**
      * Spawns the particle that has been built and resets the particle builder.
@@ -923,6 +981,104 @@ public final class ParticleBuilder {
         reset();
     }
 
+    // Methods for spawning specific effects (similar to the FX playing methods with the ids in RenderGlobal)
+
+    /**
+     * Spawns the particle that has been built and optionally resets the particle builder.
+     *
+     * @param world The world in which to spawn the particle
+     * @throws IllegalStateException if the particle builder is not yet building.
+     */
+    public void spawn(World world, boolean reset) {
+
+        if (!building) throw new IllegalStateException("Not building yet!");
+
+        if (y < 0 && entity == null)
+            AvatarLog.warn(AvatarLog.WarningType.INVALID_CODE, "Spawning particle below y = 0 - are you sure the position/entity "
+                    + "has been set correctly?");
+
+        if (!world.isRemote) {
+            AvatarLog.warn(AvatarLog.WarningType.BAD_CLIENT_PACKET, "ParticleBuilder.spawn(...) called on the server side! ParticleBuilder has prevented a "
+                    + "server crash, but calling it on the server will do nothing. Consider adding a world.isRemote check.");
+            // Must stop here because the line after this if statement would crash the server!
+            reset();
+            return;
+        }
+
+        ParticleAvatar particle = AvatarMod.proxy.createParticle(type, world, x, y, z);
+
+        if (particle == null) {
+            // No need to display a warning here, we already did it in the client proxy
+            reset();
+            return;
+        }
+
+        boolean colourShift = true;
+        float[] colourShiftInterval = new float[4];
+        colourShiftInterval[0] = rSI;
+        colourShiftInterval[1] = gSI;
+        colourShiftInterval[2] = bSI;
+        colourShiftInterval[3] = aSI;
+
+        float[] colourShiftRange = new float[4];
+        colourShiftInterval[0] = rSR;
+        colourShiftInterval[1] = gSR;
+        colourShiftInterval[2] = bSR;
+        colourShiftInterval[3] = aSR;
+
+        // Anything with an if statement here allows default values to be set in particle constructors
+        if (!Double.isNaN(vx) && !Double.isNaN(vy) && !Double.isNaN(vz)) particle.setVelocity(vx, vy, vz);
+        if (r >= 0 && g >= 0 && b >= 0) particle.setRBGColorF(r, g, b);
+        if (a >= 0) particle.setAlphaF(a);
+        if (fr >= 0 && fg >= 0 && fb >= 0) particle.setFadeColour(fr, fg, fb);
+
+        for (int i = 0; i < 4; i++) {
+            if (colourShiftInterval[i] < 0 || colourShiftRange[i] < 0) {
+                colourShift = false;
+            }
+        }
+        if (colourShift)
+            particle.setColourShift(colourShiftInterval, colourShiftRange);
+
+        if (lifetime >= 0) particle.setMaxAge(lifetime);
+        if (radius > 0) particle.setSpin(radius, rpt);
+        if (!Float.isNaN(yaw) && !Float.isNaN(pitch)) particle.setFacing(yaw, pitch);
+        if (seed != 0) particle.setSeed(seed);
+        if (!Double.isNaN(tvx) && !Double.isNaN(tvy) && !Double.isNaN(tvz)) particle.setTargetVelocity(tvx, tvy, tvz);
+        if (length > 0) particle.setLength(length);
+        if (element != null) particle.setElement(element);
+        if (ability != null) particle.setAbility(ability);
+        if (behaviour != null) particle.setBehaviour(behaviour);
+
+        UUID id = UUID.randomUUID();
+
+        particle.setUUID(id);
+        particle.multipleParticleScaleBy(scale);
+        particle.setGravity(gravity);
+        particle.setShaded(shaded);
+        particle.setGlowing(glow);
+        particle.setSparkle(sparkle);
+        particle.setCollisions(collide);
+        particle.canCollideParticles = collideParticles;
+        particle.setEntity(entity);
+        particle.setSpawnEntity(spawnEntity);
+        particle.setTargetPosition(tx, ty, tz);
+        particle.setTargetEntity(target);
+
+        float width = scale / 8;
+        particle.setBoundingBox(new AxisAlignedBB(x - width, y, z - width, x + width, y + scale / 4, z + width));
+
+
+        if (particle.getCustomRenderLayer() != null) {
+            ParticleBatchRenderer.addParticle(particle);
+        } else {
+            net.minecraft.client.Minecraft.getMinecraft().effectRenderer.addEffect(particle);
+        }
+
+        if (reset)
+            reset();
+    }
+
     /**
      * Resets the state of the particle builder and resets all the builder variables to their default values.
      */
@@ -970,6 +1126,11 @@ public final class ParticleBuilder {
         behaviour = null;
         seed = 0;
         length = -1;
+    }
+
+    public enum SwirlMotionType {
+        OUT,
+        IN
     }
 
     /**

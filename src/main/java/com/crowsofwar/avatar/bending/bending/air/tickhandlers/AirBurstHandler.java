@@ -122,13 +122,19 @@ public class AirBurstHandler extends TickHandler {
             suction -= (float) duration / 400;
 
             if (world.isRemote && duration <= durationToFire) {
-                for (int i = 0; i < 12; i++) {
-                    Vector lookpos = Vector.toRectangular(Math.toRadians(entity.rotationYaw +
-                            i * 30), 0).times(inverseRadius).withY(entity.getEyeHeight() / 2);
-                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(lookpos.toMinecraft()))
-                            .collide(true).scale(abilityData.getXpModifier() * 0.85F * charge).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
-                            world.rand.nextGaussian() / 60).clr(0.975F, 0.975F, 0.975F, 0.05F).element(new Airbending()).spawn(world);
-                }
+                Vec3d pos = AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(0, entity.getEyeHeight() / 2, 0);
+                //Size starts small gets big
+                float size = (float) Math.min((1F / (inverseRadius / 2F)) * charge * 2 * abilityData.getXpModifier(), 1.5F * abilityData.getXpModifier());
+                //In case you forgot year 7 maths, radius * 2 * pi = circumference
+                int particles = (int) (radius * Math.PI);
+                int rings = (int) (Math.sqrt(radius) * 6);
+                //Rings around the player (not around your finger; the police want you)
+                // C u l t u r e
+                ParticleBuilder.create(ParticleBuilder.Type.FLASH).clr(0.975F, 0.975F, 0.975F, 0.05F).
+                        scale(size).time(20 + AvatarUtils.getRandomNumberInRange(0, 5)).element(new Airbending())
+                        .swirl(rings, particles, (float) inverseRadius, size / 2, radius * 40,
+                                (-2F / size) * abilityData.getXpModifier() * charge, entity, world, false, pos,
+                                ParticleBuilder.SwirlMotionType.IN, true);
             }
             world.playSound(null, new BlockPos(entity), SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.PLAYERS, 0.25F * charge, 0.8F + world.rand.nextFloat() / 10);
 
