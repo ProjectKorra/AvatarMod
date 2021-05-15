@@ -174,7 +174,7 @@ public class AbilityFireShot extends Ability {
                 wave.setDamage(damage);
                 wave.setPerformanceAmount(performance);
                 wave.setBehaviour(new FireShockwaveBehaviour());
-                wave.setSpeed(speed * 0.05F);
+                wave.setSpeed(speed / 20);
                 wave.setPush(knockback);
                 wave.setKnockbackHeight(0.15);
                 wave.setParticleSpeed(0.18F);
@@ -212,28 +212,30 @@ public class AbilityFireShot extends Ability {
             World world = entity.world;
             if (entity.getOwner() != null) {
                 if (entity instanceof EntityShockwave) {
-                    for (double angle = 0; angle < 2 * Math.PI; angle += Math.PI / (entity.ticksExisted * 3)) {
-                        int x = entity.posX < 0 ? (int) (entity.posX + ((entity.ticksExisted * ((EntityShockwave) entity).getSpeed())) * Math.sin(angle) - 1)
-                                : (int) (entity.posX + ((entity.ticksExisted * ((EntityShockwave) entity).getSpeed()) * Math.sin(angle)));
-                        int z = entity.posZ < 0 ? (int) (entity.posZ + ((entity.ticksExisted * ((EntityShockwave) entity).getSpeed()) * Math.cos(angle) - 1))
-                                : (int) (entity.posZ + ((entity.ticksExisted * ((EntityShockwave) entity).getSpeed())) * Math.cos(angle));
+                    for (double angle = 0; angle < 2 * Math.PI; angle += Math.PI / (entity.ticksExisted * 2)) {
+                        if (world.rand.nextBoolean()) {
+                            int x = entity.posX < 0 ? (int) (entity.posX + ((entity.ticksExisted * ((EntityShockwave) entity).getSpeed())) * Math.sin(angle) - 1)
+                                    : (int) (entity.posX + ((entity.ticksExisted * ((EntityShockwave) entity).getSpeed()) * Math.sin(angle)));
+                            int z = entity.posZ < 0 ? (int) (entity.posZ + ((entity.ticksExisted * ((EntityShockwave) entity).getSpeed()) * Math.cos(angle) - 1))
+                                    : (int) (entity.posZ + ((entity.ticksExisted * ((EntityShockwave) entity).getSpeed())) * Math.cos(angle));
 
-                        BlockPos spawnPos = new BlockPos(x, (int) (entity.posY), z);
-                        if (BlockUtils.canPlaceFireAt(entity.world, spawnPos)) {
-                            if (spawnPos != entity.getPosition()) {
-                                int time = entity.ticksExisted * ((EntityShockwave) entity).getSpeed() >= ((EntityShockwave) entity).getRange() - 0.2 ? 120 : 10;
-                                BlockTemp.createTempBlock(entity.world, spawnPos, time, Blocks.FIRE.getDefaultState());
+                            BlockPos spawnPos = new BlockPos(x, (int) (entity.posY), z);
+                            if (BlockUtils.canPlaceFireAt(entity.world, spawnPos)) {
+                                if (spawnPos != entity.getPosition()) {
+                                    int time = entity.ticksExisted * ((EntityShockwave) entity).getSpeed() >= ((EntityShockwave) entity).getRange() - 0.2 ? 60 : 10;
+                                    BlockTemp.createTempBlock(entity.world, spawnPos, time, Blocks.FIRE.getDefaultState());
+                                }
                             }
                         }
                     }
                     if (world.isRemote) {
                         float maxRadius = (float) ((EntityShockwave) entity).getRange();
-                        int[] fade = entity.getFade();
                         int[] rgb = entity.getRGB();
+                        int[] fade = entity.getFade();
                         float radius = (float) (entity.ticksExisted * ((EntityShockwave) entity).getSpeed());
-                        int rings = (int) (maxRadius * 6);
-                        float size = (float) (Math.sqrt(maxRadius) * 0.75F);
-                        int particles = Math.min((int) (maxRadius * 2 * Math.PI), 4);
+                        int rings = (int) (maxRadius * 2);
+                        float size = (0.75F * maxRadius) * (1 / maxRadius);
+                        int particles = Math.min((int) (maxRadius * 2 * Math.PI), 2);
                         int rRandom = fade[0] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[0] * 2) : AvatarUtils.getRandomNumberInRange(fade[0] / 2,
                                 fade[0] * 2);
                         int gRandom = fade[1] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[1] * 2) : AvatarUtils.getRandomNumberInRange(fade[1] / 2,
@@ -241,14 +243,13 @@ public class AbilityFireShot extends Ability {
                         int bRandom = fade[2] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[2] * 2) : AvatarUtils.getRandomNumberInRange(fade[2] / 2,
                                 fade[2] * 2);
                         Vec3d centre = AvatarEntityUtils.getBottomMiddleOfEntity(entity);
-                        //In case I forget: Really good shockwave code!
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Firebending()).collide(true)
-                                .clr(rgb[0], rgb[1], rgb[2], 0.125F)//.fade(rRandom, gRandom, bRandom, (int) (0.125F * AvatarUtils.getRandomNumberInRange(100, 175)))
-                                .time(14 + AvatarUtils.getRandomNumberInRange(0, 10)).spawnEntity(entity.getOwner())
+                                .clr(rgb[0], rgb[1], rgb[2]).fade(rRandom, gRandom, bRandom, (int) (0.75F * AvatarUtils.getRandomNumberInRange(100, 175)))
+                                .time(16).spawnEntity(entity.getOwner())
                                 .scale(size).spawnEntity(entity).swirl(rings, particles, maxRadius,
-                                size, maxRadius * 20, -1 / size, entity,
-                                world, false, centre, ParticleBuilder.SwirlMotionType.IN,
-                                false, false);
+                                size * 2, maxRadius * 10, -2F / size, entity,
+                                world, false, centre, ParticleBuilder.SwirlMotionType.OUT,
+                                false, true);
                     }
                 } else if (entity instanceof EntityFlames) {
                     if (entity.world.isRemote && entity.getOwner() != null) {

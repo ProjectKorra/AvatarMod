@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.bending.bending.air.tickhandlers;
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.air.AbilityAirBurst;
 import com.crowsofwar.avatar.bending.bending.air.Airbending;
+import com.crowsofwar.avatar.bending.bending.fire.Firebending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.entity.*;
 import com.crowsofwar.avatar.entity.data.OffensiveBehaviour;
@@ -261,43 +262,22 @@ public class AirBurstHandler extends TickHandler {
             if (entity instanceof EntityShockwave) {
                 World world = entity.world;
                 if (world.isRemote) {
-                    //TODO: Fix particle speed
-                    if (entity.ticksExisted == 2) {
-                        double x1, y1, z1, xVel, yVel, zVel;
-                        if (CLIENT_CONFIG.airRenderSettings.airBurstSphere) {
-                            for (double theta = 0; theta <= 180; theta += 1) {
-                                double dphi = (((EntityShockwave) entity).getParticleController() - ((EntityShockwave) entity).getParticleAmount()) / Math.sin(Math.toRadians(theta));
-                                for (double phi = 0; phi < 360; phi += dphi) {
-                                    double rphi = Math.toRadians(phi);
-                                    double rtheta = Math.toRadians(theta);
+                    float maxRadius = (float) ((EntityShockwave) entity).getRange();
+                    int[] rgb = entity.getRGB();
+                    float radius = (float) (entity.ticksExisted * ((EntityShockwave) entity).getSpeed());
+                    int rings = (int) (maxRadius * 6);
+                    float size = (float) (Math.sqrt(maxRadius) * 0.75F);
+                    int particles = Math.min((int) (maxRadius * 2 * Math.PI), 4);
+                    Vec3d centre = AvatarEntityUtils.getBottomMiddleOfEntity(entity);
+                    //In case I forget: Really good shockwave code!
+                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Airbending()).collide(true)
+                            .clr(rgb[0], rgb[1], rgb[2], 0.125F)//.fade(rRandom, gRandom, bRandom, (int) (0.125F * AvatarUtils.getRandomNumberInRange(100, 175)))
+                            .time(14 + AvatarUtils.getRandomNumberInRange(0, 10)).spawnEntity(entity.getOwner())
+                            .scale(size).spawnEntity(entity).swirl(rings, particles, maxRadius,
+                            size, maxRadius * 20, -1 / size, entity,
+                            world, false, centre, ParticleBuilder.SwirlMotionType.IN,
+                            false, false);
 
-                                    x1 = entity.ticksExisted * ((EntityShockwave) entity).getSpeed() * Math.cos(rphi) * Math.sin(rtheta);
-                                    y1 = entity.ticksExisted * ((EntityShockwave) entity).getSpeed() * Math.sin(rphi) * Math.sin(rtheta);
-                                    z1 = entity.ticksExisted * ((EntityShockwave) entity).getSpeed() * Math.cos(rtheta);
-                                    xVel = x1 * entity.getParticleSpeed() * 0.375 + world.rand.nextGaussian() / 16;
-                                    yVel = y1 * entity.getParticleSpeed() * 0.375 + world.rand.nextGaussian() / 16;
-                                    zVel = z1 * entity.getParticleSpeed() * 0.375 + world.rand.nextGaussian() / 16;
-
-                                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(x1 + entity.posX, y1 + entity.posY, z1 + entity.posZ).vel(xVel, yVel, zVel)
-                                            .clr(0.95F, 0.95F, 0.95F, 0.05F).time(12 + AvatarUtils.getRandomNumberInRange(2, 4)).collide(true)
-                                            .scale((float) (0.325F + 0.5F * ((EntityShockwave) entity).getSpeed() * (float) ((EntityShockwave) entity).getRange()))
-                                            .element(new Airbending()).spawnEntity(entity.getOwner()).spawn(world);
-
-                                }
-                            }
-
-                        } //else {
-                        for (double i = 0; i < ((EntityShockwave) entity).getRange() + ((EntityShockwave) entity).getParticleAmount(); i += 0.5) {
-                            Vec3d vel = new Vec3d(world.rand.nextGaussian(), world.rand.nextGaussian(), world.rand.nextGaussian());
-                            vel = vel.scale(0.3F * entity.getParticleSpeed());
-                            ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(entity.posX, entity.posY, entity.posZ).vel(vel)
-                                    .clr(0.95F, 0.95F, 0.95F, 0.075F).time(8 + AvatarUtils.getRandomNumberInRange(0, 10)).collide(true)
-                                    .scale((float) (0.4f + 0.575F * (float) ((EntityShockwave) entity).getRange() * ((EntityShockwave) entity).getSpeed())).
-                                    element(new Airbending()).spawn(world);
-
-                        }
-                    }
-                    //}
                 }
             }
             return this;
