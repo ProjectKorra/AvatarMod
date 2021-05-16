@@ -243,6 +243,7 @@ public final class ParticleBuilder {
                     }
                     //Flow animation
                     double yaw = Math.toRadians(i > 0 ? i * (180F / (rings)) : 0);
+                   // yaw += Math.toRadians(entity.rotationYaw);
                     //For some reason, -90 breaks multiple rings (they stack instead of spreading). However,
                     //in order to make a horizontal ring, you need -90.s
                     double pitch = Math.toRadians(i > 0 ? 0 : -90);

@@ -3,7 +3,6 @@ package com.crowsofwar.avatar.bending.bending.air.tickhandlers;
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.air.AbilityAirBurst;
 import com.crowsofwar.avatar.bending.bending.air.Airbending;
-import com.crowsofwar.avatar.bending.bending.fire.Firebending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.entity.*;
 import com.crowsofwar.avatar.entity.data.OffensiveBehaviour;
@@ -37,7 +36,6 @@ import java.util.UUID;
 
 import static com.crowsofwar.avatar.bending.bending.Ability.*;
 import static com.crowsofwar.avatar.bending.bending.air.AbilityAirBurst.*;
-import static com.crowsofwar.avatar.config.ConfigClient.CLIENT_CONFIG;
 import static com.crowsofwar.avatar.util.data.StatusControlController.RELEASE_AIR_BURST;
 import static com.crowsofwar.avatar.util.data.StatusControlController.SHOOT_AIR_BURST;
 
@@ -259,24 +257,21 @@ public class AirBurstHandler extends TickHandler {
 
         @Override
         public OffensiveBehaviour onUpdate(EntityOffensive entity) {
-            if (entity instanceof EntityShockwave) {
+            if (entity instanceof EntityShockwave && entity.getOwner() != null) {
                 World world = entity.world;
                 if (world.isRemote) {
                     float maxRadius = (float) ((EntityShockwave) entity).getRange();
-                    int[] rgb = entity.getRGB();
-                    float radius = (float) (entity.ticksExisted * ((EntityShockwave) entity).getSpeed());
-                    int rings = (int) (maxRadius * 6);
-                    float size = (float) (Math.sqrt(maxRadius) * 0.75F);
-                    int particles = Math.min((int) (maxRadius * 2 * Math.PI), 4);
+                    int rings = (int) (maxRadius * 4 + 6);
+                    float size = (float) (Math.sqrt(maxRadius) * 0.5F);
+                    int particles = (int) (Math.sqrt(maxRadius) / 1.5F * Math.PI);
                     Vec3d centre = AvatarEntityUtils.getBottomMiddleOfEntity(entity);
-                    //In case I forget: Really good shockwave code!
-                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Airbending()).collide(true)
-                            .clr(rgb[0], rgb[1], rgb[2], 0.125F)//.fade(rRandom, gRandom, bRandom, (int) (0.125F * AvatarUtils.getRandomNumberInRange(100, 175)))
-                            .time(14 + AvatarUtils.getRandomNumberInRange(0, 10)).spawnEntity(entity.getOwner())
-                            .scale(size).spawnEntity(entity).swirl(rings, particles, maxRadius,
-                            size, maxRadius * 20, -1 / size, entity,
-                            world, false, centre, ParticleBuilder.SwirlMotionType.IN,
-                            false, false);
+                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size)
+                            .time(12).collide(true)
+                            .element(entity.getElement()).clr(0.95F, 0.95F, 0.95F, 0.030F).spawnEntity(entity.getOwner())
+                            .swirl(rings, particles, maxRadius * 0.675F, 0.35F + maxRadius / 20, maxRadius * 40, (-2 / size),
+                                    entity.getOwner(), world, true, centre, ParticleBuilder.SwirlMotionType.OUT,
+                                    false, true);
+
 
                 }
             }

@@ -156,71 +156,40 @@ public class ShootAirBurstHandler extends TickHandler {
         public OffensiveBehaviour onUpdate(EntityOffensive entity) {
             World world = entity.world;
             if (world.isRemote && entity.getOwner() != null && entity instanceof EntityAirGust) {
-                int rings = (int) (Math.sqrt(entity.getAvgSize()) * 6);
-                float size = 0.75F * entity.getAvgSize() * (1 / entity.getAvgSize());
-                int particles = (int) (Math.min((int) (entity.getAvgSize() * 2 * Math.PI), 4) + (entity.velocity().magnitude() / 20));
-                Vec3d pos = AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(entity.velocity().toMinecraft().scale(0.002));
-                pos = pos.add(0, entity.getAvgSize() / 2, 0);
+                int rings = (int) (entity.getAvgSize() * 2) + 4;
+                float size = entity.getAvgSize() * (1 / entity.getAvgSize() + 0.5F);
+                int particles = (int) (Math.min((int) (entity.getAvgSize() * Math.PI), 2) + (entity.velocity().magnitude() / 20));
+                Vec3d centre = AvatarEntityUtils.getMiddleOfEntity(entity);
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Airbending()).collide(true)
-                        .clr(0.95F, 0.95F, 0.95F, 0.05F + (float) (0.0025F * entity.velocity().magnitude())).time(14 + AvatarUtils.getRandomNumberInRange(0, 10))
-                        .scale(size).spawnEntity(entity).swirl(rings, particles, entity.getAvgSize() * 0.875F,
-                        size / 2, (float) (entity.velocity().magnitude() * 10), (-1 / size), entity,
-                        world, true, pos, ParticleBuilder.SwirlMotionType.IN,
+                        .clr(0.95F, 0.95F, 0.95F, 0.05F).time(16)
+                        .scale(size * 0.875F).spawnEntity(entity).swirl(rings, particles, entity.getAvgSize(),
+                        size / 4F, (float) (entity.velocity().sqrMagnitude() * entity.getAvgSize()), (-1F / size), entity,
+                        world, true, centre, ParticleBuilder.SwirlMotionType.IN,
                         false, true);
-            }
-            /*
-            if (world.isRemote && entity.getOwner() != null && entity instanceof EntityAirGust) {
-                for (int i = 0; i < 4; i++) {
-                    Vec3d mid = AvatarEntityUtils.getMiddleOfEntity(entity);
-                    double spawnX = mid.x + world.rand.nextGaussian() / 20;
-                    double spawnY = mid.y + world.rand.nextGaussian() / 20;
-                    double spawnZ = mid.z + world.rand.nextGaussian() / 20;
-                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45,
-                            world.rand.nextGaussian() / 45).time(4 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(0.95F, 0.95F, 0.95F, 0.075F).spawnEntity(entity)
-                            .scale(entity.getAvgSize() * (1 / entity.getAvgSize() + 1)).element(entity.getElement()).collide(true).spawn(world);
-                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 45 + entity.motionX,
-                            world.rand.nextGaussian() / 45 + entity.motionY, world.rand.nextGaussian() / 45 + entity.motionZ)
-                            .time(14 + AvatarUtils.getRandomNumberInRange(0, 10)).clr(0.95F, 0.95F, 0.95F, 0.075F).spawnEntity(entity)
-                            .scale(entity.getAvgSize() * (1 / entity.getAvgSize() + 0.5F)).element(entity.getElement()).collide(true).spawn(world);
-                }
-                for (int i = 0; i < 2; i++) {
-                    Vec3d pos = Vector.getOrthogonalVector(entity.getLookVec(), i * 180 + (entity.ticksExisted % 360) * 20 *
+                int max = (int) (entity.getAvgSize() * 4);
+                for (int i = 0; i < max; i++) {
+                    Vec3d pos = Vector.getOrthogonalVector(entity.getLookVec(), i * (360F / max) + (entity.ticksExisted % 360) * 20 *
                             (1 / entity.getAvgSize()), entity.getAvgSize() / 1.5F).toMinecraft();
                     Vec3d velocity;
                     Vec3d entityPos = AvatarEntityUtils.getMiddleOfEntity(entity);
 
                     pos = pos.add(entityPos);
                     velocity = pos.subtract(entityPos).normalize();
-                    velocity = velocity.scale(AvatarUtils.getSqrMagnitude(entity.getVelocity()) / 400000);
+                    velocity = velocity.scale(entity.velocity().sqrMagnitude() / 400000);
                     double spawnX = pos.x;
                     double spawnY = pos.y;
                     double spawnZ = pos.z;
                     ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x,
                             world.rand.nextGaussian() / 80 + velocity.y, world.rand.nextGaussian() / 80 + velocity.z)
-                            .time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(0.95F, 0.95F, 0.95F, 0.1F).spawnEntity(entity)
-                            .scale(0.75F * entity.getAvgSize() * (1 / entity.getAvgSize())).element(new Airbending()).collide(true).collideParticles(true).spawn(world);
+                            .time(4 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(0.95F, 0.95F, 0.95F, 0.1F).spawnEntity(entity)
+                            .scale(1.25F * entity.getAvgSize() * (1 / entity.getAvgSize())).element(new Airbending()).collide(true).collideParticles(true).spawn(world);
                     ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x,
                             world.rand.nextGaussian() / 80 + velocity.y, world.rand.nextGaussian() / 80 + velocity.z)
-                            .time(10 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(0.95F, 0.95F, 0.95F, 0.1F).spawnEntity(entity)
-                            .scale(0.75F * entity.getAvgSize() * (1 / entity.getAvgSize())).element(new Airbending()).collide(true).collideParticles(true).spawn(world);
+                            .time(16 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(0.95F, 0.95F, 0.95F, 0.1F).spawnEntity(entity)
+                            .scale(1.25F * entity.getAvgSize() * (1 / entity.getAvgSize())).element(new Airbending()).collide(true).collideParticles(true).spawn(world);
 
                 }
-                for (double angle = 0; angle < 360; angle += Math.max((int) (entity.getAvgSize() * 25) + (entity.ticksExisted % 360) * 20, 20)) {
-                    Vector position = Vector.getOrthogonalVector(entity.getLookVec(), angle, entity.getAvgSize());
-                    position = position.plus(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20);
-                    position = position.plus(AvatarEntityUtils.getMiddleOfEntity(entity).x, AvatarEntityUtils.getMiddleOfEntity(entity).y,
-                            AvatarEntityUtils.getMiddleOfEntity(entity).z);
-                    double spawnX = position.x();
-                    double spawnY = position.y();
-                    double spawnZ = position.z();
-                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45,
-                            world.rand.nextGaussian() / 45).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(0.95F, 0.95F, 0.95F, 0.075F).spawnEntity(entity.getOwner())
-                            .scale(entity.getAvgSize() * (1 / entity.getAvgSize() + 0.25F)).element(entity.getElement()).collide(true).collideParticles(true).spawn(world);
-                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 45, world.rand.nextGaussian() / 45,
-                            world.rand.nextGaussian() / 45).time(10 + AvatarUtils.getRandomNumberInRange(0, 10)).clr(0.95F, 0.95F, 0.95F, 0.075F).spawnEntity(entity.getOwner())
-                            .scale(entity.getAvgSize() * (1 / entity.getAvgSize() + 0.25F)).element(entity.getElement()).collide(true).collideParticles(true).spawn(world);
-                }
-            }**/
+            }
             float expansionRate = 1f / 100;
             if (entity.ticksExisted % 4 == 0)
                 entity.setEntitySize(entity.getAvgSize() + expansionRate);
