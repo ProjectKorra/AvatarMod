@@ -333,4 +333,9 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
             return super.getVolume();
         else return 0.125F * world.rand.nextFloat();
     }
+
+    @Override
+    public boolean setVelocity() {
+        return false;
+    }
 }

@@ -158,17 +158,23 @@ public class AbilityAirGust extends Ability {
             if (entity != null) {
                 World world = entity.world;
                 if (world.isRemote && entity.getOwner() != null) {
-                    int rings = (int) (Math.sqrt(entity.getAvgSize()) * 4);
-                    float size = 0.75F * entity.getAvgSize() * (1 / entity.getAvgSize());
+                    int rings = (int) (entity.getAvgSize() * 4) + 2;
+                    float size = 0.75F * entity.getAvgSize();
                     int particles = (int) (Math.min((int) (entity.getAvgSize() * Math.PI), 2) + (entity.velocity().magnitude() / 20));
                     Vec3d pos = AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(entity.velocity().toMinecraft().scale(0.002));
                     pos = pos.add(0, entity.getAvgSize() / 2, 0);
                     ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Airbending()).collide(true)
-                            .clr(0.95F, 0.95F, 0.95F, 0.05F + (float) (0.0025F * entity.velocity().magnitude())).time(10 + AvatarUtils.getRandomNumberInRange(0, 10))
+                            .clr(0.95F, 0.95F, 0.95F, 0.0125F).time(12)
                             .scale(size).spawnEntity(entity).swirl(rings, particles, entity.getAvgSize() * 0.75F,
-                            size / 2, (float) (entity.velocity().magnitude() * 10), (1 / size), entity,
+                            size / 2F, (float) (entity.velocity().magnitude() * 10), (-1 / size), entity,
+                            world, false, pos, ParticleBuilder.SwirlMotionType.IN,
+                            false, false);
+                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Airbending()).collide(true)
+                            .clr(0.95F, 0.95F, 0.95F, 0.0125F).time(12)
+                            .scale(size * 0.75F).spawnEntity(entity).swirl(rings, particles, entity.getAvgSize() * 0.75F,
+                            size / 2F, (float) (entity.velocity().magnitude() * 10), (-1 / size), entity,
                             world, true, pos, ParticleBuilder.SwirlMotionType.IN,
-                            false, true);
+                            false, false);
                 }
                 entity.motionX *= 0.95;
                 entity.motionY *= 0.95;

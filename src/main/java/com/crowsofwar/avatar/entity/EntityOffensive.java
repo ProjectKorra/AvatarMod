@@ -89,6 +89,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
     private int fireTime;
     private boolean dynamicSpreadingCollision;
     private boolean collidedWithSolid;
+    private boolean setVelocity;
     private int performanceAmount;
     private int ticks = 0, ticksMoving = 0;
     private double prevVelX, prevVelY, prevVelZ;
@@ -114,6 +115,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
         this.chiHit = 1;
         this.explosionStrength = 0.4F;
         this.explosionDamage = 1;
+        this.setVelocity = false;
     }
 
     @Override

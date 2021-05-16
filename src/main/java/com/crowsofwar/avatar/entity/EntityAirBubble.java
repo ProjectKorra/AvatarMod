@@ -149,8 +149,6 @@ public class EntityAirBubble extends EntityShield {
         setPosition(AvatarEntityUtils.getBottomMiddleOfEntity(getOwner()));
         this.motionX = this.motionY = this.motionZ = 0;
 
-        //	System.out.println("Pitch: " + getOwner().rotationPitch);
-        //	System.out.println("Yaw: " + getOwner().rotationYaw);
         //Particles go spin!
         if (world.isRemote && getOwner() != null) {
             Vec3d centre = AvatarEntityUtils.getBottomMiddleOfEntity(getOwner()).add(0, getSize() / 2, 0);

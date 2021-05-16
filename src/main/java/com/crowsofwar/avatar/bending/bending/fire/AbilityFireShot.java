@@ -79,7 +79,7 @@ public class AbilityFireShot extends Ability {
         Vector pos = Vector.getEyePos(entity);
 
         float speed = getProperty(SPEED, ctx).floatValue() * 2;
-        float knockback = getProperty(KNOCKBACK, ctx).floatValue() / 10;
+        float knockback = getProperty(KNOCKBACK, ctx).floatValue();
         float size = getProperty(SIZE, ctx).floatValue();
         float damage = getProperty(DAMAGE, ctx).floatValue();
         float chi = getChiCost(ctx);
@@ -175,11 +175,11 @@ public class AbilityFireShot extends Ability {
                 wave.setPerformanceAmount(performance);
                 wave.setBehaviour(new FireShockwaveBehaviour());
                 wave.setSpeed(speed / 20);
-                wave.setPush(knockback);
-                wave.setKnockbackHeight(0.15);
-                wave.setParticleSpeed(0.18F);
-                wave.setParticleWaves(2);
-                wave.setParticleAmount(10);
+                wave.setPush(knockback / 2);
+                wave.setKnockbackHeight(0.75F);
+//                wave.setParticleSpeed(0.18F);
+//                wave.setParticleWaves(2);
+//                wave.setParticleAmount(10);
                 wave.setRange(radius);
                 world.playSound(entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 1.75F +
                         world.rand.nextFloat(), 0.5F + world.rand.nextFloat(), false);
