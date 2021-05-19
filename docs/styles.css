@@ -372,7 +372,8 @@ ________________________________________
 #homepage .fg-text {
   width: 65%;
   min-width: 600px;
-  max-width: 850px; }
+/*   max-width: 850px; */
+}
 
 #download h1 {
   text-align: center;
