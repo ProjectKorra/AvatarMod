@@ -89,7 +89,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
     private int fireTime;
     private boolean dynamicSpreadingCollision;
     private boolean collidedWithSolid;
-    private boolean setVelocity;
+    private final boolean setVelocity;
     private int performanceAmount;
     private int ticks = 0, ticksMoving = 0;
     private double prevVelX, prevVelY, prevVelZ;
@@ -261,12 +261,12 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
         dataManager.set(SYNC_FADE_B, fade[2]);
     }
 
-    public void setRedirectable(boolean redirectable) {
-        dataManager.set(SYNC_REDIRECTABLE, redirectable);
-    }
-
     public boolean isRedirectable() {
         return dataManager.get(SYNC_REDIRECTABLE);
+    }
+
+    public void setRedirectable(boolean redirectable) {
+        dataManager.set(SYNC_REDIRECTABLE, redirectable);
     }
 
     //This just makes the methods easier to use.
@@ -363,6 +363,14 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
                     Explode();
             }
         }
+
+        if (onCollideWithSolid()) {
+            if (shouldExplode())
+                Explode();
+            if (shouldDissipate())
+                Dissipate();
+        }
+
         if (shouldDissipate() || shouldExplode())
             ticksMoving++;
 

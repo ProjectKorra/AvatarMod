@@ -530,13 +530,20 @@ public class AbilityData {
     /**
      * @param xp The xp used to increase the power level; called independently by the ability elsewhere.
      *           Abilities will keep gaining in power after you hit the level limit,
-     *           if enabled in the config.
+     *           if enabled in the config. Calculation copied from normally adding xp, but adjusted slightly.
      */
     public void addAbilityPower(float xp) {
         float x = xp / 100;
-        this.abilityPowerLevel += 0.07f - .01f * (x - 3) * (x - 3);
+        this.abilityPowerLevel += 0.07f * Math.sqrt(x / 10);
+
+        //May need to change later but eh
+        if (abilityPowerLevel < 1)
+            abilityPowerLevel = 1;
     }
 
+    public void clearAbilityPower() {
+        this.abilityPowerLevel = 1;
+    }
     /**
      * Returns whether this ability is locked and the player cannot use it.
      */

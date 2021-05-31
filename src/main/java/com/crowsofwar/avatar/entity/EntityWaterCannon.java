@@ -107,11 +107,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
 
     @Override
     public boolean onCollideWithSolid() {
-        if (super.onCollideWithSolid()) {
-            setVelocity(Vector.ZERO);
-            setLifeTime(30);
-            setDamageMult(0);
-        }
+        System.out.println("Collided? " + super.onCollideWithSolid());
         return super.onCollideWithSolid();
     }
 
@@ -126,6 +122,8 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
     @Override
     public void setDead() {
         super.setDead();
+        if (!world.isRemote)
+            Thread.dumpStack();
     }
 
     @Override
@@ -189,6 +187,10 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
         if (getOwner() == null) {
             this.setDead();
         }
+
+        if (ticksExisted >= getLifeTime())
+            setDead();
+        
         setEntitySize(getAvgSize());
 
         if (world.isRemote && getOwner() != null){

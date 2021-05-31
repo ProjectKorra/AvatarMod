@@ -1,15 +1,16 @@
 package com.crowsofwar.avatar.bending.bending.water.tickhandlers;
 
+import com.crowsofwar.avatar.bending.bending.Abilities;
+import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.water.AbilityWaterBlast;
-import com.crowsofwar.avatar.bending.bending.water.Waterbending;
-import com.crowsofwar.avatar.util.data.*;
-import com.crowsofwar.avatar.util.data.ctx.BendingContext;
 import com.crowsofwar.avatar.entity.AvatarEntity;
 import com.crowsofwar.avatar.entity.EntityLightCylinder;
 import com.crowsofwar.avatar.entity.EntityWaterCannon;
 import com.crowsofwar.avatar.entity.data.Behavior;
 import com.crowsofwar.avatar.entity.data.LightCylinderBehaviour;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
+import com.crowsofwar.avatar.util.data.*;
+import com.crowsofwar.avatar.util.data.ctx.BendingContext;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -26,195 +27,147 @@ import net.minecraft.world.World;
 import java.util.UUID;
 
 import static com.crowsofwar.avatar.config.ConfigSkills.SKILLS_CONFIG;
-import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
 
 public class WaterChargeHandler extends TickHandler {
-	public static final UUID WATER_CHARGE_MOVEMENT_ID = UUID.fromString("87a0458a-38ea-4d7a-be3b-0fee10217aa6");
+    public static final UUID WATER_CHARGE_MOVEMENT_ID = UUID.fromString("87a0458a-38ea-4d7a-be3b-0fee10217aa6");
 
-	public WaterChargeHandler(int id) {
-		super(id);
-	}
+    public WaterChargeHandler(int id) {
+        super(id);
+    }
 
-	@Override
-	public boolean tick(BendingContext ctx) {
+    @Override
+    public boolean tick(BendingContext ctx) {
 
-		AbilityData abilityData = ctx.getData().getAbilityData("water_blast");
-		World world = ctx.getWorld();
-		EntityLivingBase entity = ctx.getBenderEntity();
-		BendingData data = ctx.getData();
-		Bender bender = ctx.getBender();
+        AbilityData abilityData = ctx.getData().getAbilityData("water_blast");
+        World world = ctx.getWorld();
+        EntityLivingBase entity = ctx.getBenderEntity();
+        BendingData data = ctx.getData();
+        Bender bender = ctx.getBender();
+        AbilityWaterBlast blast = (AbilityWaterBlast) Abilities.get("water_blast");
 
-		//TODO: Adjust this for new property system
-		double powerRating = ctx.getBender().calcPowerRating(Waterbending.ID);
-		int duration = data.getTickHandlerDuration(this);
-		double speed = abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND) ? 40 : 0;
-		float damage;
-		float maxRange = abilityData.getLevel() >= 1 ? 40 : 60;
-		Vec3d knockback = entity.getLookVec().scale(maxRange / 50).scale(STATS_CONFIG.waterCannonSettings.waterCannonKnockbackMult);
-		float movementMultiplier = 0.6f - 0.7f * MathHelper.sqrt(duration / 40f);
-		float size;
-		//Multiply by 1.5 to get water cannon size
-		float ticks = 50;
-		int durationToFire = 40;
-		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-			durationToFire = 60;
-		}
-
+        if (blast != null) {
+            //TODO: Adjust this for new property system
+            float powerMod = (float) abilityData.getDamageMult();
+            float xpMod = abilityData.getXpModifier();
+            float speed = blast.getProperty(Ability.SPEED, abilityData).floatValue() * 2;
+            int maxDuration = blast.getProperty(Ability.CHARGE_TIME, abilityData).intValue();
+            int duration = data.getTickHandlerDuration(this);
+            double radius = ((float) maxDuration - duration) / 10F;
+            float damage = blast.getProperty(Ability.DAMAGE, abilityData).floatValue();
+            float movementMultiplier = 0.6f - 0.7f * MathHelper.sqrt(duration / 40f);
+            float size = blast.getProperty(Ability.SIZE, abilityData).floatValue();
+            float lifetime = blast.getProperty(Ability.LIFETIME, abilityData).floatValue();
+            int charge;
 
 
-		applyMovementModifier(entity, MathHelper.clamp(movementMultiplier, 0.1f, 1));
+            maxDuration *= (2 - powerMod);
+            maxDuration -= xpMod * 10;
+            damage = blast.powerModify(damage, abilityData);
+            lifetime = blast.powerModify(lifetime, abilityData);
+            speed = blast.powerModify(speed, abilityData);
+            size = blast.powerModify(size, abilityData);
 
-		if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND) && !data.hasStatusControl(StatusControlController.RELEASE_WATER)) {
+            /* Makes sure the charge is never 0. */
+            charge = Math.max((3 * (duration / maxDuration)) + 1, 1);
+            charge = Math.min(charge, 4);
+            //We don't want the charge going over 4.
 
-			size = 0.1F;
-			ticks = 50;
-			damage = (float) (STATS_CONFIG.waterCannonSettings.waterCannonDamage * 0.5 * bender.getDamageMult(Waterbending.ID));
-			knockback.scale(damage);
-
-			// Fire once every 10 ticks, until we get to 100 ticks
-			// So at fire at 60, 70, 80, 90, 100
-			if (duration >= 40 && duration % 10 == 0) {
-
-				fireCannon(world, entity, damage, speed, size, ticks, maxRange, knockback);
-				world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.BLOCK_WATER_AMBIENT, SoundCategory.PLAYERS, 1, 2);
-				entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(WATER_CHARGE_MOVEMENT_ID);
-
-				return duration >= 100;
-
-			}
-
-		} else if (!data.hasStatusControl(StatusControlController.RELEASE_WATER)) {
-
-			speed = abilityData.getLevel() >= 1 ? 20 : 30;
-			speed += powerRating / 15;
-			damage = (float) (STATS_CONFIG.waterCannonSettings.waterCannonDamage * bender.getDamageMult(Waterbending.ID));
-			//Default damage is 1
-			size = 0.5F;
-
-			if (abilityData.getLevel() >= 1) {
-				damage = (float) (STATS_CONFIG.waterCannonSettings.waterCannonDamage * 1.25 * bender.getDamageMult(Waterbending.ID));
-				size = 0.75f;
-				ticks = 75;
-			}
-			if (abilityData.getLevel() >= 2) {
-				damage = (float) (STATS_CONFIG.waterCannonSettings.waterCannonDamage * 1.5 * bender.getDamageMult(Waterbending.ID));
-				size = 1f;
-				ticks = 100;
-			}
-			if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-				damage = (float) (STATS_CONFIG.waterCannonSettings.waterCannonDamage * 2.5 * bender.getDamageMult(Waterbending.ID));
-				ticks = 125;
-			}
-
-			damage *= bender.getDamageMult(Waterbending.ID);
-			knockback.scale(damage);
-			fireCannon(world, entity, damage, speed, size, ticks, maxRange, knockback);
-			world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GENERIC_SPLASH, SoundCategory.PLAYERS, 1, 2);
-			entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(WATER_CHARGE_MOVEMENT_ID);
+            //Things are maxed at level 3
+            damage *= (0.25 + 0.25 * charge);
+            speed *= (0.50 + 0.16667 * charge);
+            size *= (0.50 + 0.16667 * charge);
+            lifetime *= (0.70 + 0.10 * charge);
 
 
-			return true;
-		}
+            applyMovementModifier(entity, MathHelper.clamp(movementMultiplier, 0.1f, 1));
+            if (!data.hasStatusControl(StatusControlController.RELEASE_WATER)) {
+                fireCannon(world, entity, damage, speed, size, lifetime, blast);
+                world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GENERIC_SPLASH, SoundCategory.PLAYERS, 1, 2);
+                entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(WATER_CHARGE_MOVEMENT_ID);
 
-		return false;
+                return true;
+            }
+            return false;
+        }
+        return true;
 
-	}
+    }
 
-	private void fireCannon(World world, EntityLivingBase entity, float damage, double speed, float size, float ticks, float maxRange, Vec3d knockBack) {
+    private void fireCannon(World world, EntityLivingBase entity, float damage, double speed, float size, float ticks,
+                            AbilityWaterBlast blast) {
 
-		EntityWaterCannon cannon = new EntityWaterCannon(world);
+        EntityWaterCannon cannon = new EntityWaterCannon(world);
 
-		cannon.setOwner(entity);
-		cannon.setDamage(damage);
-		cannon.setEntitySize(1.5F * size);
-		cannon.setPosition(Vector.getEyePos(entity).minusY(0.8));
-		cannon.setLifeTime((int) ticks);
-		cannon.setXp(SKILLS_CONFIG.waterHit / 2);
-		cannon.rotationPitch = entity.rotationPitch;
-		cannon.rotationYaw = entity.rotationYaw;
-		cannon.setTier(new AbilityWaterBlast().getCurrentTier(AbilityData.get(entity, "water_blast")));
-		cannon.setAbility(new AbilityWaterBlast());
+        cannon.setOwner(entity);
+        cannon.setDamage(damage);
+        cannon.setEntitySize(size);
+        cannon.setPosition(Vector.getEyePos(entity).minusY(0.8));
+        cannon.setLifeTime((int) ticks);
+        cannon.setXp(SKILLS_CONFIG.waterHit / 2);
+        cannon.rotationPitch = entity.rotationPitch;
+        cannon.rotationYaw = entity.rotationYaw;
+        cannon.setTier(blast.getCurrentTier(AbilityData.get(entity, "water_blast")));
+        cannon.setAbility(blast);
 
-		Vector velocity = Vector.getLookRectangular(entity);
-		velocity = velocity.normalize().times(speed);
-		cannon.setSpeed((float) speed);
-		cannon.setVelocity(velocity);
-		if (!world.isRemote)
-			world.spawnEntity(cannon);
+        Vector velocity = Vector.getLookRectangular(entity);
+        velocity = velocity.normalize().times(speed);
+        cannon.setSpeed((float) speed);
+        cannon.setVelocity(velocity);
+        if (!world.isRemote)
+            world.spawnEntity(cannon);
 
-		/*EntityLightCylinder cylinder = new EntityLightCylinder(world);
-		cylinder.setShouldSpin(true);
-		cylinder.setPosition(entity.getPositionVector().add(0, entity.getEyeHeight() - 0.3, 0).add(entity.getLookVec().scale(0.4)));
-		cylinder.setTexture("avatarmod:textures/entity/water-ribbon.png");
-		cylinder.setLightRadius(0);
-		cylinder.setLightAmount(0);
-		//TODO: Later use colours instead of a texture, for colour shifting
-		cylinder.setColorA(1F);
-		cylinder.setColorB(1.0F);
-		cylinder.setColorG(1.0F);
-		cylinder.setColorR(1.0F);
-		cylinder.setOwner(entity);
-		cylinder.setType(EntityLightCylinder.EnumType.SQUARE);
-		cylinder.setCylinderSize(size / 2);
-		cylinder.setCylinderPitch(entity.rotationPitch);
-		cylinder.setCylinderYaw(entity.rotationYaw);
-		cylinder.setCylinderLength(1);
-		cylinder.setBehaviour(new WaterCylinderBehaviour());**/
-		//world.spawnEntity(cylinder);
+    }
 
-	}
+    private void applyMovementModifier(EntityLivingBase entity, float multiplier) {
 
-	private void applyMovementModifier(EntityLivingBase entity, float multiplier) {
+        IAttributeInstance moveSpeed = entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
 
-		IAttributeInstance moveSpeed = entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
+        moveSpeed.removeModifier(WATER_CHARGE_MOVEMENT_ID);
 
-		moveSpeed.removeModifier(WATER_CHARGE_MOVEMENT_ID);
+        moveSpeed.applyModifier(new AttributeModifier(WATER_CHARGE_MOVEMENT_ID, "Water charge modifier", multiplier - 1, 1));
 
-		moveSpeed.applyModifier(new AttributeModifier(WATER_CHARGE_MOVEMENT_ID, "Water charge modifier", multiplier - 1, 1));
+    }
 
-	}
+    public static class WaterCylinderBehaviour extends LightCylinderBehaviour {
 
-	public static class WaterCylinderBehaviour extends LightCylinderBehaviour {
+        @Override
+        public Behavior onUpdate(EntityLightCylinder entity) {
+            if (entity.getOwner() != null) {
+                EntityWaterCannon cannon = AvatarEntity.lookupControlledEntity(entity.world, EntityWaterCannon.class, entity.getOwner());
+                if (cannon != null) {
+                    entity.setCylinderLength(cannon.getDistance(entity.getOwner()));
+                    Vec3d height = entity.getOwner().getPositionVector().add(0, entity.getOwner().getEyeHeight() - 0.15, 0);
+                    Vec3d dist = cannon.getPositionVector().subtract(height).normalize();
+                    entity.setPosition(height.add(dist.scale(0.075)));
+                    AvatarEntityUtils.setRotationFromPosition(entity, cannon);
+                } else {
+                    if (entity.ticksExisted > 1)
+                        entity.setDead();
+                }
+            } else entity.setDead();
+            return this;
+        }
 
-		@Override
-		public Behavior onUpdate(EntityLightCylinder entity) {
-			if (entity.getOwner() != null) {
-				EntityWaterCannon cannon = AvatarEntity.lookupControlledEntity(entity.world, EntityWaterCannon.class, entity.getOwner());
-				if (cannon != null) {
-					entity.setCylinderLength(cannon.getDistance(entity.getOwner()));
-					Vec3d height = entity.getOwner().getPositionVector().add(0, entity.getOwner().getEyeHeight() - 0.15, 0);
-					Vec3d dist = cannon.getPositionVector().subtract(height).normalize();
-					entity.setPosition(height.add(dist.scale(0.075)));
-					AvatarEntityUtils.setRotationFromPosition(entity, cannon);
-				} else {
-					if (entity.ticksExisted > 1)
-						entity.setDead();
-				}
-			}
-			else entity.setDead();
-			return this;
-		}
+        @Override
+        public void fromBytes(PacketBuffer buf) {
 
-		@Override
-		public void fromBytes(PacketBuffer buf) {
+        }
 
-		}
+        @Override
+        public void toBytes(PacketBuffer buf) {
 
-		@Override
-		public void toBytes(PacketBuffer buf) {
+        }
 
-		}
+        @Override
+        public void load(NBTTagCompound nbt) {
 
-		@Override
-		public void load(NBTTagCompound nbt) {
+        }
 
-		}
+        @Override
+        public void save(NBTTagCompound nbt) {
 
-		@Override
-		public void save(NBTTagCompound nbt) {
-
-		}
-	}
+        }
+    }
 
 }
 

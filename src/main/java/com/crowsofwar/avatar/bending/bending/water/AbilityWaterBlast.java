@@ -49,8 +49,8 @@ public class AbilityWaterBlast extends Ability {
     @Override
     public void init() {
         super.init();
-        addProperties(WATER_AMOUNT, SOURCE_ANGLES, SOURCE_RANGE);
-        addBooleanProperties(PLANT_BEND, SHIELD, BURST, PULL);
+        addProperties(WATER_AMOUNT, SOURCE_ANGLES, SOURCE_RANGE, EFFECT_DAMAGE, EFFECT_RADIUS, EFFECT_LEVEl);
+        addBooleanProperties(PLANT_BEND, SHIELD, BURST, PULL, PIERCING);
     }
 
     @Override

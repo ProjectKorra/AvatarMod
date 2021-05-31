@@ -87,7 +87,8 @@ public abstract class Ability {
             COLOUR_R = "colouR",
             COLOUR_G = "colourG",
             COLOUR_B = "colourB",
-            POTION_EFFECTS = "potionEffects";
+            POTION_EFFECTS = "potionEffects",
+            PIERCING = "piercing";
     //Airbending stuff
     public static final String
             PUSH_REDSTONE = "pushRedstone",

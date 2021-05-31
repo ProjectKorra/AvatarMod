@@ -90,6 +90,7 @@ public class NodeXpSet extends NodeFunctional {
 			abilityData.setLevel(level);
 			abilityData.setXp(xp);
 			abilityData.setPath(path);
+			abilityData.clearAbilityPower();
 
 			MSG_XPSET_SUCCESS.send(call.getFrom(), playerName, ability.getName(), specification);
 

@@ -9,8 +9,8 @@
       "burnOut": 15.0,
       "burnOutRecoverTick": 0.5,
       "performanceAmount": 15,
-      "lifeTime": 30,
-      "size": 0.5,
+      "lifeTime": 35,
+      "size": 0.85,
       "speed": 5,
       "knockback": 2,
       "chiOnHit": 1.5,
@@ -23,7 +23,8 @@
       "shield": false,
       "burst": false,
       "aoe": false,
-      "pull": false
+      "pull": false,
+      "piercing": false
     },
     "level2": {
       "tier": 3,
@@ -33,8 +34,8 @@
       "burnOut": 15.0,
       "burnOutRecoverTick": 0.75,
       "performanceAmount": 25,
-      "lifeTime": 25,
-      "size": 0.75,
+      "lifeTime": 30,
+      "size": 1.0,
       "speed": 7,
       "knockback": 3,
       "chiOnHit": 1.625,
@@ -53,7 +54,7 @@
       "burnOutRecoverTick": 1.0,
       "performanceAmount": 30,
       "lifeTime": 30,
-      "size": 1.0,
+      "size": 1.25,
       "speed": 9,
       "knockback": 4,
       "chiOnHit": 1.75,
@@ -64,7 +65,8 @@
       "waterAmount": 3,
       "plantbend": true,
       "shield": true,
-      "burst": true
+      "burst": true,
+      "piercing": true
     },
     "level4_1": {
       "tier": 5,
@@ -75,14 +77,14 @@
       "burnOutRecoverTick": 1.25,
       "performanceAmount": 35,
       "lifeTime": 35,
-      "size": 1.25,
+      "size": 1.75,
       "speed": 11,
       "knockback": 5,
       "chiOnHit": 1.875,
       "damage": 7,
       "chargeTime": 25,
-      "aoe": false,
-      "pull": false
+      "aoe": true,
+      "pull": true
     },
     "level4_2": {
       "tier": 5,
@@ -92,8 +94,8 @@
       "burnOut": 30.0,
       "burnOutRecoverTick": 1.5,
       "performanceAmount": 40,
-      "lifeTime": 40,
-      "size": 1.5,
+      "lifeTime": 25,
+      "size": 1.15,
       "speed": 13,
       "knockback": 6,
       "chiOnHit": 2.0,
