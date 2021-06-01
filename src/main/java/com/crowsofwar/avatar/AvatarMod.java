@@ -28,9 +28,12 @@ import com.crowsofwar.avatar.bending.bending.combustion.Combustionbending;
 import com.crowsofwar.avatar.bending.bending.custom.dark.AbilityCorrupt;
 import com.crowsofwar.avatar.bending.bending.custom.dark.AbilityDeathDescent;
 import com.crowsofwar.avatar.bending.bending.custom.dark.Darkbending;
+import com.crowsofwar.avatar.bending.bending.custom.demonic.AbilityDemonicAura;
 import com.crowsofwar.avatar.bending.bending.custom.ki.AbilityKaioKen;
 import com.crowsofwar.avatar.bending.bending.custom.ki.AbilityKiFlight;
 import com.crowsofwar.avatar.bending.bending.custom.ki.Kibending;
+import com.crowsofwar.avatar.bending.bending.custom.light.AbilityHeavenlyFlight;
+import com.crowsofwar.avatar.bending.bending.custom.light.AbilityPurify;
 import com.crowsofwar.avatar.bending.bending.custom.light.Lightbending;
 import com.crowsofwar.avatar.bending.bending.earth.*;
 import com.crowsofwar.avatar.bending.bending.fire.*;
@@ -179,8 +182,12 @@ public class AvatarMod {
         Abilities.register(new AbilityKiFlight());
 
         /*              Light               */
+        Abilities.register(new AbilityPurify());
+        Abilities.register(new AbilityHeavenlyFlight());
 
         /*              Demon               */
+        Abilities.register(new AbilityDemonicAura());
+        Abilities.register(new AbilityDeathDescent());
 
 
     }
