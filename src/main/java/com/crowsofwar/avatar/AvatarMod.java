@@ -25,6 +25,13 @@ import com.crowsofwar.avatar.bending.bending.air.*;
 import com.crowsofwar.avatar.bending.bending.combustion.AbilityExplosion;
 import com.crowsofwar.avatar.bending.bending.combustion.AbilityExplosivePillar;
 import com.crowsofwar.avatar.bending.bending.combustion.Combustionbending;
+import com.crowsofwar.avatar.bending.bending.custom.dark.AbilityCorrupt;
+import com.crowsofwar.avatar.bending.bending.custom.dark.AbilityDeathDescent;
+import com.crowsofwar.avatar.bending.bending.custom.dark.Darkbending;
+import com.crowsofwar.avatar.bending.bending.custom.ki.AbilityKaioKen;
+import com.crowsofwar.avatar.bending.bending.custom.ki.AbilityKiFlight;
+import com.crowsofwar.avatar.bending.bending.custom.ki.Kibending;
+import com.crowsofwar.avatar.bending.bending.custom.light.Lightbending;
 import com.crowsofwar.avatar.bending.bending.earth.*;
 import com.crowsofwar.avatar.bending.bending.fire.*;
 import com.crowsofwar.avatar.bending.bending.ice.AbilityIceBurst;
@@ -161,6 +168,20 @@ public class AvatarMod {
         Abilities.register(new AbilityExplosion());
         Abilities.register(new AbilityExplosivePillar());
 
+        /*              CUSTOM              */
+
+        /*              Dark               */
+        Abilities.register(new AbilityCorrupt());
+        Abilities.register(new AbilityDeathDescent());
+
+        /*              Ki                  */
+        Abilities.register(new AbilityKaioKen());
+        Abilities.register(new AbilityKiFlight());
+
+        /*              Light               */
+
+        /*              Demon               */
+
 
     }
 
@@ -174,6 +195,12 @@ public class AvatarMod {
         BendingStyles.register(new Sandbending());
         BendingStyles.register(new Lightningbending());
         BendingStyles.register(new Combustionbending());
+
+        //Custom
+        BendingStyles.register(new Darkbending());
+        BendingStyles.register(new Kibending());
+        BendingStyles.register(new Lightbending());
+
     }
 
     @EventHandler
