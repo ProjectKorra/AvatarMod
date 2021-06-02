@@ -120,7 +120,7 @@ public class AbilityDemonicAura extends Ability {
             orb.setColor(1F, 0.5F, 0F, 3F);
             orb.setLightRadius(lightRadius);
             orb.setEmittingEntity(entity);
-            orb.setBehavior(new AbilityCorrupt.CorruptLightOrbBehaviour());
+            orb.setBehavior(new DemonicAuraLightOrbBehaviour());
             orb.setType(EntityLightOrb.EnumType.COLOR_CUBE);
             if (!world.isRemote)
                 world.spawnEntity(orb);
@@ -137,7 +137,7 @@ public class AbilityDemonicAura extends Ability {
         return 5;
     }
 
-    public static class CorruptLightOrbBehaviour extends LightOrbBehavior.FollowPlayer {
+    public static class DemonicAuraLightOrbBehaviour extends LightOrbBehavior.FollowPlayer {
         @Override
         public Behavior<EntityLightOrb> onUpdate(EntityLightOrb entity) {
             super.onUpdate(entity);

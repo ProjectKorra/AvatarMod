@@ -17,6 +17,10 @@
 
 package com.crowsofwar.avatar.entity.data;
 
+import com.crowsofwar.avatar.bending.bending.custom.dark.AbilityCorrupt;
+import com.crowsofwar.avatar.bending.bending.custom.demonic.AbilityDemonicAura;
+import com.crowsofwar.avatar.bending.bending.custom.ki.AbilityKaioKen;
+import com.crowsofwar.avatar.bending.bending.custom.light.AbilityPurify;
 import com.crowsofwar.avatar.bending.bending.fire.AbilityFlameStrike;
 import com.crowsofwar.avatar.bending.bending.fire.AbilityImmolate;
 import com.crowsofwar.avatar.bending.bending.fire.tickhandlers.FlamethrowerUpdateTick;
@@ -51,6 +55,10 @@ public abstract class LightOrbBehavior extends Behavior<EntityLightOrb> {
 		registerBehavior(FollowPlayer.class);
 		registerBehavior(AbilityFlameStrike.FlameStrikeLightOrb.class);
 		registerBehavior(AbilityImmolate.ImmolateLightOrbBehaviour.class);
+		registerBehavior(AbilityCorrupt.CorruptLightOrbBehaviour.class);
+		registerBehavior(AbilityDemonicAura.DemonicAuraLightOrbBehaviour.class);
+		registerBehavior(AbilityKaioKen.KaioKenLightOrbBehaviour.class);
+		registerBehavior(AbilityPurify.PurifyLightOrbBehaviour.class);
 	}
 
 	public static class Idle extends LightOrbBehavior {
