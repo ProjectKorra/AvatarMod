@@ -19,13 +19,13 @@ public class Demonbending extends BendingStyle {
 
     public Demonbending() {
         registerAbilities();
-        Color light = new Color(100, 200, 255);
-        Color dark = new Color(50, 100, 175);
-        Color iconClr = new Color(255, 255, 255);
+        Color light = new Color(255, 0, 0);
+        Color dark = new Color(50, 0, 0);
+        Color iconClr = new Color(150, 0, 0 );
         MenuTheme.ThemeColor background = new MenuTheme.ThemeColor(light, dark);
         MenuTheme.ThemeColor edge = new MenuTheme.ThemeColor(dark, dark);
         MenuTheme.ThemeColor icon = new MenuTheme.ThemeColor(iconClr, iconClr);
-        MenuTheme theme = new MenuTheme(background, edge, icon, 0xffffff);
+        MenuTheme theme = new MenuTheme(background, edge, icon, 0x990000);
         this.menu = new BendingMenuInfo(theme, this);
     }
 
@@ -36,7 +36,7 @@ public class Demonbending extends BendingStyle {
 
     @Override
     public int getTextColour() {
-        return 0xffffff;
+        return 0x990000;
     }
 
     @Override
@@ -61,12 +61,12 @@ public class Demonbending extends BendingStyle {
 
     @Override
     public SoundEvent getRadialMenuSound() {
-        return SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE;
+        return SoundEvents.ENTITY_GHAST_DEATH;
     }
 
     @Override
     public TextFormatting getTextFormattingColour() {
-        return TextFormatting.AQUA;
+        return TextFormatting.DARK_RED;
     }
 }
 
