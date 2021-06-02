@@ -4,6 +4,7 @@ import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.custom.dark.AbilityCorrupt;
 import com.crowsofwar.avatar.bending.bending.custom.dark.Darkbending;
+import com.crowsofwar.avatar.bending.bending.custom.demonic.AbilityDemonicAura;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.data.AbilityData;
@@ -25,23 +26,23 @@ public class DemonicAuraHandler extends TickHandler {
     public boolean tick(BendingContext ctx) {
         EntityLivingBase entity = ctx.getBenderEntity();
         BendingData data = ctx.getData();
-        AbilityData aD = data.getAbilityData("corrupt");
+        AbilityData aD = data.getAbilityData("demonic_aura");
         World world = ctx.getWorld();
 
-        AbilityCorrupt corrupt = (AbilityCorrupt) Abilities.get("corrupt");
+        AbilityDemonicAura demonic_aura = (AbilityDemonicAura) Abilities.get("demonic_aura");
         int duration = data.getTickHandlerDuration(this);
         float scale = 0.75F + Math.max(0, aD.getLevel()) * 0.125F;
 
-        assert corrupt != null;
-        int corruptDuration = corrupt.getProperty(Ability.DURATION, aD).intValue();
+        assert demonic_aura != null;
+        int corruptDuration = demonic_aura.getProperty(Ability.DURATION, aD).intValue();
 
 		int r, g, b, fadeR, fadeG, fadeB;
-		r = corrupt.getProperty(Ability.R, aD).intValue();
-		g = corrupt.getProperty(Ability.G, aD).intValue();
-		b = corrupt.getProperty(Ability.B, aD).intValue();
-		fadeR = corrupt.getProperty(Ability.FADE_R, aD).intValue();
-		fadeG = corrupt.getProperty(Ability.FADE_G, aD).intValue();
-		fadeB = corrupt.getProperty(Ability.FADE_B, aD).intValue();
+		r = demonic_aura.getProperty(Ability.R, aD).intValue();
+		g = demonic_aura.getProperty(Ability.G, aD).intValue();
+		b = demonic_aura.getProperty(Ability.B, aD).intValue();
+		fadeR = demonic_aura.getProperty(Ability.FADE_R, aD).intValue();
+		fadeG = demonic_aura.getProperty(Ability.FADE_G, aD).intValue();
+		fadeB = demonic_aura.getProperty(Ability.FADE_B, aD).intValue();
 
         scale *= (float) aD.getDamageMult() * aD.getXpModifier();
 
@@ -66,7 +67,7 @@ public class DemonicAuraHandler extends TickHandler {
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(location.plus(Vector.getEntityPos(entity)).toMinecraft()).time(4 + AvatarUtils.getRandomNumberInRange(1, 4)).
                         vel(world.rand.nextGaussian() / 40, world.rand.nextDouble() / 2, world.rand.nextGaussian() / 40)
                         .clr(r, g, b, 150).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(50, 140))
-                        .element(new Darkbending()).scale(scale).spawn(world);
+                        .element(new Darkbending()).scale(scale).glow(true).spawn(world);
             }
         }
         return duration >= corruptDuration;

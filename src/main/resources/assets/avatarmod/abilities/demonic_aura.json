@@ -17,11 +17,11 @@
       "strengthLevel": 1,
       "strengthDuration": 75,
       "R": 255,
-      "G": 95,
-      "B": 14,
-      "fadeR": 255,
-      "fadeG": 95,
-      "fadeB": 14
+      "G": 20,
+      "B": 20,
+      "fadeR": 150,
+      "fadeG": 10,
+      "fadeB": 10
     },
     "level2": {
       "tier": 5,
@@ -36,9 +36,6 @@
       "speedDuration": 100,
       "strengthLevel": 1,
       "strengthDuration": 90,
-      "R": 253,
-      "G": 80,
-      "B": 16
     },
     "level3": {
       "tier": 6,
@@ -53,9 +50,9 @@
       "speedDuration": 130,
       "strengthLevel": 2,
       "strengthDuration": 105,
-      "fadeR": 252,
-      "fadeG": 65,
-      "fadeB": 18
+      "fadeR": 100,
+      "fadeG": 0,
+      "fadeB": 0
     },
     "level4_1": {
       "tier": 7,
@@ -72,9 +69,6 @@
       "speedDuration": 190,
       "strengthLevel": 3,
       "strengthDuration": 150,
-      "fadeR": 140,
-      "fadeG": 90,
-      "fadeB": 90
     },
     "level4_2": {
       "tier": 7,
@@ -89,9 +83,9 @@
       "speedDuration": 140,
       "strengthLevel": 4,
       "strengthDuration": 112,
-      "fadeR": 250,
-      "fadeG": 45,
-      "fadeB": 20
+      "fadeR": 50,
+      "fadeG": 0,
+      "fadeB": 0
     }
   }
 }

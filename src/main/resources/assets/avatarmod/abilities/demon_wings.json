@@ -17,13 +17,13 @@
       "chiOnHit": 1.5,
       "damage": 2,
       "duration": 60,
-      "R": 255,
-      "B": 15,
-      "G": 5,
-      "fadeR": 255,
-      "fadeG": 15,
-      "fadeB": 5,
-      "fallAbsorption": 3,
+      "R": 250,
+      "B": 0,
+      "G": 0,
+      "fadeR": 75,
+      "fadeG": 10,
+      "fadeB": 10,
+      "fallAbsorption": 10,
       "stopShockwave": false
     },
     "level2": {
@@ -41,7 +41,7 @@
       "chiOnHit": 1.625,
       "damage": 3,
       "duration": 100,
-      "fallAbsorption": 4
+      "fallAbsorption": 12
     },
     "level3": {
       "tier": 3,
@@ -58,7 +58,7 @@
       "chiOnHit": 1.75,
       "damage": 6,
       "duration": 120,
-      "fallAbsorption": 5,
+      "fallAbsorption": 14,
       "stopShockwave": true
     },
     "level4_1": {
@@ -76,7 +76,7 @@
       "chiOnHit": 1.875,
       "damage": 3.5,
       "duration": 120,
-      "fallAbsorption": 8,
+      "fallAbsorption": 15,
       "stopShockwave": true
     },
     "level4_2": {
@@ -94,10 +94,10 @@
       "chiOnHit": 2.0,
       "damage": 6,
       "duration": 200,
-      "fadeR": 190,
-      "fadeB": 70,
-      "fadeG": 40,
-      "fallAbsorption": 12,
+      "fadeR": 50,
+      "fadeB": 0,
+      "fadeG": 0,
+      "fallAbsorption": 20,
       "stopShockwave": false
     }
   }
