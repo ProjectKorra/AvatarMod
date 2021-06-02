@@ -16,8 +16,6 @@ import static com.crowsofwar.avatar.util.data.TickHandlerController.FLAME_GLIDE_
 
 public class AbilityFlameGlide extends Ability {
 
-    public static final String JET_STREAM = "jetStream";
-
     public AbilityFlameGlide() {
         super(Firebending.ID, "flame_glide");
     }
@@ -28,7 +26,7 @@ public class AbilityFlameGlide extends Ability {
                 SPEED, CHI_HIT, PERFORMANCE, XP_HIT, SIZE, KNOCKBACK, DAMAGE, XP_USE, FIRE_TIME);
         addProperties(DURATION, FIRE_R, FIRE_G, FIRE_B, FADE_R, FADE_G, FADE_B,
                 FALL_ABSORPTION);
-        addBooleanProperties(STOP_SHOCKWAVE, JET_STREAM);
+        addBooleanProperties(STOP_SHOCKWAVE);
     }
 
     @Override
