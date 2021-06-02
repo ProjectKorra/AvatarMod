@@ -22,7 +22,7 @@ import java.util.Objects;
 import static com.crowsofwar.avatar.bending.bending.fire.AbilityImmolate.FIRE_CHANCE;
 import static com.crowsofwar.avatar.bending.bending.fire.AbilityImmolate.INCINERATE_PROJECTILES;
 
-public class KIPowerModifier extends BuffPowerModifier {
+public class KaioKenPowerModifier extends BuffPowerModifier {
 
     @Override
     public double get(BendingContext ctx) {

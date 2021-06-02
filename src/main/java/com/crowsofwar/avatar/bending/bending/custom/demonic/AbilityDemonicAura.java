@@ -30,7 +30,7 @@ import static com.crowsofwar.avatar.util.data.TickHandlerController.PURIFY_PARTI
 public class AbilityDemonicAura extends Ability {
 
     public AbilityDemonicAura() {
-        super(Darkbending.ID, "corrupt");
+        super(Demonbending.ID, "demonic_aura");
     }
 
     @Override
