@@ -1,10 +1,8 @@
 package com.crowsofwar.avatar.bending.bending.custom.demonic;
 
 import com.crowsofwar.avatar.bending.bending.Ability;
-import com.crowsofwar.avatar.bending.bending.custom.dark.AbilityCorrupt;
 import com.crowsofwar.avatar.bending.bending.custom.dark.Darkbending;
 import com.crowsofwar.avatar.bending.bending.custom.dark.powermods.CorrupPowerModifier;
-import com.crowsofwar.avatar.bending.bending.fire.powermods.ImmolatePowerModifier;
 import com.crowsofwar.avatar.entity.EntityLightOrb;
 import com.crowsofwar.avatar.entity.data.Behavior;
 import com.crowsofwar.avatar.entity.data.LightOrbBehavior;
@@ -23,9 +21,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.Objects;
-import java.util.UUID;
 
-import static com.crowsofwar.avatar.util.data.TickHandlerController.PURIFY_PARTICLE_SPAWNER;
+import static com.crowsofwar.avatar.util.data.TickHandlerController.DEMONIC_AURA_HANDLER;
 
 public class AbilityDemonicAura extends Ability {
 
@@ -102,7 +99,7 @@ public class AbilityDemonicAura extends Ability {
 
             if (data.hasBendingId(getBendingId())) {
 
-                ImmolatePowerModifier modifier = new ImmolatePowerModifier();
+                CorrupPowerModifier modifier = new CorrupPowerModifier();
                 modifier.setTicks(duration);
 
                 // Ignore warning; we know manager != null if they have the bending style
@@ -125,7 +122,7 @@ public class AbilityDemonicAura extends Ability {
             if (!world.isRemote)
                 world.spawnEntity(orb);
             abilityData.addXp(getProperty(XP_USE, ctx).floatValue());
-            data.addTickHandler(PURIFY_PARTICLE_SPAWNER, ctx);
+            data.addTickHandler(DEMONIC_AURA_HANDLER, ctx);
 
         }
 
@@ -153,7 +150,7 @@ public class AbilityDemonicAura extends Ability {
                 int lightRadius = 5;
                 //Stops constant spam and calculations
                 if (entity.ticksExisted == 1) {
-                    AbilityData aD = AbilityData.get(emitter, "corrupt");
+                    AbilityData aD = AbilityData.get(emitter, "demonic_aura");
                     if (aD != null) {
                         int level = aD.getLevel();
                         if (level >= 1) {

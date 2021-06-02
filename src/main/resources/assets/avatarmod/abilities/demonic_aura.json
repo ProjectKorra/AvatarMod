@@ -35,7 +35,7 @@
       "powerrating": 45,
       "speedDuration": 100,
       "strengthLevel": 1,
-      "strengthDuration": 90,
+      "strengthDuration": 90
     },
     "level3": {
       "tier": 6,
@@ -68,7 +68,7 @@
       "healthDuration": 190,
       "speedDuration": 190,
       "strengthLevel": 3,
-      "strengthDuration": 150,
+      "strengthDuration": 150
     },
     "level4_2": {
       "tier": 7,

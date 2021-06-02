@@ -1,5 +1,9 @@
 package com.crowsofwar.avatar.util.data;
 
+import com.crowsofwar.avatar.bending.bending.custom.dark.tickhandlers.CorruptHandler;
+import com.crowsofwar.avatar.bending.bending.custom.demonic.tickhandlers.DemonicAuraHandler;
+import com.crowsofwar.avatar.bending.bending.custom.ki.tickhandlers.KaioKenHandler;
+import com.crowsofwar.avatar.bending.bending.custom.light.tickhandlers.PurifyHandler;
 import com.crowsofwar.avatar.bending.bending.earth.tickhandlers.EarthSpikeHandler;
 import com.crowsofwar.avatar.client.gui.RenderElementHandler;
 import com.crowsofwar.avatar.bending.bending.air.tickhandlers.*;
@@ -49,6 +53,10 @@ public class TickHandlerController {
 	public static TickHandler SLIPSTREAM_WALK_HANDLER = new SlipstreamAirWalkHandler(23);
 	public static TickHandler RELEASE_EARTHSPIKE = new EarthSpikeHandler(24);
 	public static TickHandler SHOOT_AIRBURST = new ShootAirBurstHandler(25);
+	public static TickHandler DEMONIC_AURA_HANDLER = new DemonicAuraHandler(26);
+	public static TickHandler PURIFY_HANDLER = new PurifyHandler(27);
+	public static TickHandler KAIO_KEN_HANDLER = new KaioKenHandler(28);
+	public static TickHandler CORRUPT_HANDLER = new CorruptHandler(29);
 
 
 
