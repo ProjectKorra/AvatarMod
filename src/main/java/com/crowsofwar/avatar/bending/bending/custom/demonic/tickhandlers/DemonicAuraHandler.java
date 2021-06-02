@@ -49,6 +49,17 @@ public class DemonicAuraHandler extends TickHandler {
         //Maybe use swirls instead???
 
 
+        if (world.isRemote) {
+            int rRandom = fadeR < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeR * 2) : AvatarUtils.getRandomNumberInRange(fadeR / 2,
+                    fadeR * 2);
+            int gRandom = fadeG < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeG * 2) : AvatarUtils.getRandomNumberInRange(fadeG / 2,
+                    fadeG * 2);
+            int bRandom = fadeB < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeB * 2) : AvatarUtils.getRandomNumberInRange(fadeB / 2,
+                    fadeB * 2);
+            ParticleBuilder.create(ParticleBuilder.Type.FLASH).time(4 + AvatarUtils.getRandomNumberInRange(1, 4)).
+                    clr(r, g, b, 150).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(50, 140))
+                    .element(new Darkbending()).scale(scale).glow(true).swirl();
+        }
 
         //The particles take a while to disappear after the ability finishes- so you decrease the time the particles can spawn
         if (world.isRemote) {
