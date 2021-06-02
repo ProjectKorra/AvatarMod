@@ -9,15 +9,15 @@ import net.minecraft.util.ResourceLocation;
 public enum Vision {
 
 	/**
-	 * Purify vision for level I-II
+	 * Immolate vision for level I-II
 	 */
 	IMMOLATE_WEAK("shaders/post/immolate_weak.json"),
 	/**
-	 * Purify vision for Level III
+	 * Immolate vision for Level III
 	 */
 	IMMOLATE_MEDIUM("shaders/post/immolate_medium.json"),
 	/**
-	 * Purify vision for Level IV
+	 * Immolate vision for Level IV
 	 */
 	IMMOLATE_POWERFUL("shaders/post/immolate_powerful.json"),
 	/**

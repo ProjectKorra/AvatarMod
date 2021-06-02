@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.bending.bending.custom.dark.powermods;
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BuffPowerModifier;
+import com.crowsofwar.avatar.bending.bending.custom.dark.AbilityCorrupt;
 import com.crowsofwar.avatar.bending.bending.fire.AbilityImmolate;
 import com.crowsofwar.avatar.entity.AvatarEntity;
 import com.crowsofwar.avatar.util.data.AbilityData;
@@ -28,10 +29,10 @@ public class CorrupPowerModifier extends BuffPowerModifier {
     public double get(BendingContext ctx) {
 
         BendingData data = ctx.getData();
-        AbilityData abilityData = data.getAbilityData(new AbilityImmolate().getName());
+        AbilityData abilityData = data.getAbilityData(new AbilityCorrupt().getName());
 
         //Powerrating should be an integer but I'll leave it as a double toa count for user error
-        return Objects.requireNonNull(Abilities.get("immolate")).getProperty(Ability.POWERRATING, abilityData).doubleValue();
+        return Objects.requireNonNull(Abilities.get("corrupt")).getProperty(Ability.POWERRATING, abilityData).doubleValue();
 
     }
 
@@ -39,51 +40,19 @@ public class CorrupPowerModifier extends BuffPowerModifier {
     public boolean onUpdate(BendingContext ctx) {
 
         EntityLivingBase entity = ctx.getBenderEntity();
-        AbilityData abilityData = AbilityData.get(entity, "immolate");
-
-        // Intermittently light on fire
-        if (entity.ticksExisted % 15 == 0) {
-
-            double chance = Objects.requireNonNull(Abilities.get("immolate")).getProperty(FIRE_CHANCE, abilityData).floatValue() / 10;
-            if (Math.random() < chance) {
-                entity.setFire(2);
-            }
-
-        }
-
-        if (Objects.requireNonNull(Abilities.get("immolate")).getBooleanProperty(INCINERATE_PROJECTILES, abilityData)) {
-            AxisAlignedBB box = new AxisAlignedBB(entity.posX - 2, entity.posY, entity.posZ - 2, entity.posX + 2, entity.posY + 3, entity.posZ + 2);
-            List<Entity> targets = entity.world.getEntitiesWithinAABB(Entity.class, box);
-            if (!entity.world.isRemote) {
-                if (!targets.isEmpty()) {
-                    for (Entity e : targets) {
-                        if ((e instanceof AvatarEntity && ((AvatarEntity) e).canCollideWith(entity)) || e != entity) {
-                            e.setFire(5);
-                            if (e instanceof EntityThrowable || e instanceof EntityItem) {
-                                e.setFire(1);
-                                e.setDead();
-                            }
-                            if (e instanceof EntityArrow) {
-                                e.setFire(1);
-                                e.setDead();
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        AbilityData abilityData = AbilityData.get(entity, "corrupt");
 
         return super.onUpdate(ctx);
     }
 
     @Override
     protected Vision[] getVisions() {
-        return new Vision[]{Vision.IMMOLATE_WEAK, Vision.IMMOLATE_MEDIUM, Vision.IMMOLATE_POWERFUL};
+        return null;
     }
 
     @Override
     protected String getAbilityName() {
-        return new AbilityImmolate().getName();
+        return new AbilityCorrupt().getName();
     }
 
 }
