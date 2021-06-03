@@ -68,12 +68,12 @@ public class DemonWingsHandler extends TickHandler {
                         .fade(rRandom, gRandom, bRandom, 160 + AvatarUtils.getRandomNumberInRange(0, 40))
                         .pos(pos.toMinecraft()).vel(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20)
                         .scale(size).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(new Demonbending()).collide(true)
-                        .ability(wings).spawnEntity(target).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 50).spawn(world);
+                        .ability(wings).spawnEntity(target).glow(true).spawn(world);
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).clr(r, g * 4, b, 215 + AvatarUtils.getRandomNumberInRange(0, 40))
                         .fade(rRandom, gRandom * 4, bRandom, 160 + AvatarUtils.getRandomNumberInRange(0, 40))
                         .pos(pos.toMinecraft()).vel(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20)
                         .scale(size).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(new Demonbending()).collide(true)
-                        .ability(wings).spawnEntity(target).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 50).spawn(world);
+                        .ability(wings).spawnEntity(target).glow(true).spawn(world);
             }
         }
         int duration = 40;
@@ -147,8 +147,8 @@ public class DemonWingsHandler extends TickHandler {
 
         World world = ctx.getWorld();
         EntityLivingBase entity = ctx.getBenderEntity();
-        AbilityData abilityData = ctx.getData().getAbilityData("flame_glide");
-        AbilityDemonWings jump = (AbilityDemonWings) Abilities.get("flame_glide");
+        AbilityData abilityData = ctx.getData().getAbilityData("demon_wings");
+        AbilityDemonWings jump = (AbilityDemonWings) Abilities.get("demon_wings");
 
         if (jump != null && jump.getBooleanProperty(STOP_SHOCKWAVE, abilityData)) {
             float speed = jump.getProperty(SPEED, abilityData).floatValue() / 5;

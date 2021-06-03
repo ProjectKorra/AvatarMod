@@ -3,7 +3,7 @@ package com.crowsofwar.avatar.bending.bending.custom.light.statctrls;
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.custom.light.AbilityHeavenlyFlight;
 import com.crowsofwar.avatar.bending.bending.custom.light.Lightbending;
-import com.crowsofwar.avatar.bending.bending.fire.tickhandlers.FlameGlideHandler;
+import com.crowsofwar.avatar.bending.bending.custom.light.tickhandlers.HeavenlyFlightHandler;
 import com.crowsofwar.avatar.client.controls.AvatarControl;
 import com.crowsofwar.avatar.entity.EntityShockwave;
 import com.crowsofwar.avatar.entity.mob.EntityBender;
@@ -180,7 +180,7 @@ public class StatCtrlHeavenlyFlight extends StatusControl {
             wave.setPerformanceAmount(performance);
             wave.setPush(knockback);
             wave.setParticleWaves(lifetime * 5);
-            wave.setBehaviour(new FlameGlideHandler.FireJumpShockwave());
+            wave.setBehaviour(new HeavenlyFlightHandler.HeavenlyFlightShockwave());
             wave.setParticleSpeed(speed / 30F);
             wave.setParticleAmount(30);
             wave.setRGB(r, g, b);

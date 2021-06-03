@@ -1,7 +1,8 @@
 package com.crowsofwar.avatar.bending.bending.custom.dark.tickhandlers;
 
 import com.crowsofwar.avatar.bending.bending.Abilities;
-import com.crowsofwar.avatar.bending.bending.fire.AbilityFlameGlide;
+import com.crowsofwar.avatar.bending.bending.custom.dark.AbilityDeathDescent;
+import com.crowsofwar.avatar.bending.bending.custom.dark.Darkbending;
 import com.crowsofwar.avatar.bending.bending.fire.Firebending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.entity.EntityOffensive;
@@ -36,8 +37,8 @@ public class DeathDescentHandler extends TickHandler {
         EntityLivingBase target = ctx.getBenderEntity();
         Bender bender = ctx.getBender();
         World world = ctx.getWorld();
-        AbilityData data = ctx.getData().getAbilityData(new AbilityFlameGlide());
-        AbilityFlameGlide jump = (AbilityFlameGlide) Abilities.get(new AbilityFlameGlide().getName());
+        AbilityData data = ctx.getData().getAbilityData(new AbilityDeathDescent());
+        AbilityDeathDescent jump = (AbilityDeathDescent) Abilities.get(new AbilityDeathDescent().getName());
         Vector pos = Vector.getEntityPos(target).minusY(0.05);
 
         if (world.isRemote && jump != null) {
@@ -47,9 +48,9 @@ public class DeathDescentHandler extends TickHandler {
             float size = jump.getProperty(SIZE, data).floatValue() / 2;
             int r, g, b, fadeR, fadeG, fadeB;
 
-            r = jump.getProperty(FIRE_R, data).intValue();
-            g = jump.getProperty(FIRE_G, data).intValue();
-            b = jump.getProperty(FIRE_B, data).intValue();
+            r = jump.getProperty(R, data).intValue();
+            g = jump.getProperty(G, data).intValue();
+            b = jump.getProperty(B, data).intValue();
             fadeR = jump.getProperty(FADE_R, data).intValue();
             fadeG = jump.getProperty(FADE_G, data).intValue();
             fadeB = jump.getProperty(FADE_B, data).intValue();
@@ -67,13 +68,13 @@ public class DeathDescentHandler extends TickHandler {
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).clr(r, g, b, 215 + AvatarUtils.getRandomNumberInRange(0, 40))
                         .fade(rRandom, gRandom, bRandom, 160 + AvatarUtils.getRandomNumberInRange(0, 40))
                         .pos(pos.toMinecraft()).vel(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20)
-                        .scale(size).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(new Firebending()).collide(true)
-                        .ability(jump).spawnEntity(target).spawn(world);
+                        .scale(size).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(new Darkbending()).collide(true)
+                        .ability(jump).spawnEntity(target).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 50).spawn(world);
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).clr(r, g * 4, b, 215 + AvatarUtils.getRandomNumberInRange(0, 40))
                         .fade(rRandom, gRandom * 4, bRandom, 160 + AvatarUtils.getRandomNumberInRange(0, 40))
                         .pos(pos.toMinecraft()).vel(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20)
-                        .scale(size).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(new Firebending()).collide(true)
-                        .ability(jump).spawnEntity(target).spawn(world);
+                        .scale(size).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(new Darkbending()).collide(true)
+                        .ability(jump).spawnEntity(target).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 50).spawn(world);
             }
         }
         int duration = 40;
@@ -148,7 +149,7 @@ public class DeathDescentHandler extends TickHandler {
         World world = ctx.getWorld();
         EntityLivingBase entity = ctx.getBenderEntity();
         AbilityData abilityData = ctx.getData().getAbilityData("flame_glide");
-        AbilityFlameGlide jump = (AbilityFlameGlide) Abilities.get("flame_glide");
+        AbilityDeathDescent jump = (AbilityDeathDescent) Abilities.get("flame_glide");
 
         if (jump != null && jump.getBooleanProperty(STOP_SHOCKWAVE, abilityData)) {
             float speed = jump.getProperty(SPEED, abilityData).floatValue() / 5;
@@ -241,14 +242,16 @@ public class DeathDescentHandler extends TickHandler {
 
                             int time = 10;
                             time = Math.max(time, (entity.getLifeTime() - ((EntityShockwave) entity).getParticleWaves()) * 2);
-                            ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Firebending()).vel(speed.toMinecraft())
+                            ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Darkbending()).vel(speed.toMinecraft())
                                     .spawnEntity(owner).collide(true).collideParticles(true).clr(rgb[0], rgb[1], rgb[2], 180 + AvatarUtils.getRandomNumberInRange(0, 40)).
                                     fade(rRandom, gRandom, bRandom, 160 + AvatarUtils.getRandomNumberInRange(0, 40)).pos(x2, y2, z2).
-                                    scale(entity.getAvgSize() * 2).time(time + AvatarUtils.getRandomNumberInRange(0, 2)).spawn(world);
-                            ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Firebending()).vel(speed.toMinecraft())
+                                    scale(entity.getAvgSize() * 2).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 50)
+                                    .time(time + AvatarUtils.getRandomNumberInRange(0, 2)).spawn(world);
+                            ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Darkbending()).vel(speed.toMinecraft())
                                     .spawnEntity(owner).collide(true).collideParticles(true).clr(rgb[0], rgb[1] * 8, rgb[2] * 4, 180 + AvatarUtils.getRandomNumberInRange(0, 40)).
                                     fade(rRandom, gRandom * 2, bRandom, 160 + AvatarUtils.getRandomNumberInRange(0, 40)).pos(x2, y2, z2).
-                                    scale(entity.getAvgSize() * 2).time(time + AvatarUtils.getRandomNumberInRange(0, 2)).spawn(world);
+                                    scale(entity.getAvgSize() * 2).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 50)
+                                    .time(time + AvatarUtils.getRandomNumberInRange(0, 2)).spawn(world);
                         }
                     }
                 }

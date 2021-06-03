@@ -9,8 +9,8 @@ import com.crowsofwar.avatar.util.data.StatusControl;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
 
-import static com.crowsofwar.avatar.util.data.StatusControlController.FIRE_JUMP;
-import static com.crowsofwar.avatar.util.data.TickHandlerController.FLAME_GLIDE_HANDLER;
+import static com.crowsofwar.avatar.util.data.StatusControlController.DEATH_DESCENT;
+import static com.crowsofwar.avatar.util.data.TickHandlerController.DEATH_DESCENT_HANDLER;
 
 public class AbilityDeathDescent extends Ability {
 
@@ -46,11 +46,11 @@ public class AbilityDeathDescent extends Ability {
         Bender bender = ctx.getBender();
         AbilityData abilityData = ctx.getAbilityData();
 
-        if (!data.hasStatusControl(FIRE_JUMP) && bender.consumeChi(getChiCost(abilityData) / 8)) {
+        if (!data.hasStatusControl(DEATH_DESCENT) && bender.consumeChi(getChiCost(abilityData) / 8)) {
 
-            data.addStatusControl(FIRE_JUMP);
-            if (data.hasTickHandler(FLAME_GLIDE_HANDLER)) {
-                StatusControl sc = FIRE_JUMP;
+            data.addStatusControl(DEATH_DESCENT);
+            if (data.hasTickHandler(DEATH_DESCENT_HANDLER)) {
+                StatusControl sc = DEATH_DESCENT;
                 Raytrace.Result raytrace = Raytrace.getTargetBlock(ctx.getBenderEntity(), -1);
                 if (sc.execute(
                         new BendingContext(data, ctx.getBenderEntity(), ctx.getBender(), raytrace))) {
