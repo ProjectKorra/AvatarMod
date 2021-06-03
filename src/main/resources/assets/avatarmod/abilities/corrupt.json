@@ -19,9 +19,9 @@
       "R": 0,
       "G": 0,
       "B": 0,
-      "fadeR": 100,
+      "fadeR": 50,
       "fadeG": 0,
-      "fadeB": 200
+      "fadeB": 75
     },
     "level2": {
       "tier": 5,
@@ -50,9 +50,9 @@
       "speedDuration": 130,
       "strengthLevel": 2,
       "strengthDuration": 105,
-      "fadeR": 75,
+      "fadeR": 50,
       "fadeG": 0,
-      "fadeB": 75
+      "fadeB": 50
     },
     "level4_1": {
       "tier": 7,
@@ -83,7 +83,7 @@
       "speedDuration": 140,
       "strengthLevel": 4,
       "strengthDuration": 112,
-      "fadeR": 50,
+      "fadeR": 35,
       "fadeG": 0,
       "fadeB": 50
     }

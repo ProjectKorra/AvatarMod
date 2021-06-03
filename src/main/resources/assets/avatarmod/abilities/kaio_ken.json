@@ -17,11 +17,11 @@
       "strengthLevel": 1,
       "strengthDuration": 75,
       "R": 255,
-      "G": 95,
-      "B": 14,
-      "fadeR": 255,
-      "fadeG": 95,
-      "fadeB": 14
+      "G": 255,
+      "B": 255,
+      "fadeR": 20,
+      "fadeG": 255,
+      "fadeB": 255
     },
     "level2": {
       "tier": 5,
@@ -52,10 +52,7 @@
       "powerrating": 60,
       "speedDuration": 130,
       "strengthLevel": 2,
-      "strengthDuration": 105,
-      "fadeR": 252,
-      "fadeG": 65,
-      "fadeB": 18
+      "strengthDuration": 105
     },
     "level4_1": {
       "tier": 7,
@@ -71,10 +68,7 @@
       "healthDuration": 190,
       "speedDuration": 190,
       "strengthLevel": 3,
-      "strengthDuration": 150,
-      "fadeR": 140,
-      "fadeG": 90,
-      "fadeB": 90
+      "strengthDuration": 150
     },
     "level4_2": {
       "tier": 7,
@@ -88,10 +82,7 @@
       "powerrating": 95,
       "speedDuration": 140,
       "strengthLevel": 4,
-      "strengthDuration": 112,
-      "fadeR": 250,
-      "fadeG": 45,
-      "fadeB": 20
+      "strengthDuration": 112
     }
   }
 }
