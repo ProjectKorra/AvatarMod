@@ -137,7 +137,7 @@ public class KiFlightHandler extends TickHandler {
             }
         }
 
-        return target.isInWater() || target.isSneaking() || bender.isFlying() || duration <= ctx.getData().getTickHandlerDuration(this);
+        return false;//target.isInWater() || target.isSneaking() || bender.isFlying() || duration <= ctx.getData().getTickHandlerDuration(this);
 
     }
 
@@ -204,6 +204,9 @@ public class KiFlightHandler extends TickHandler {
         }
         if (flight != null)
             abilityData.setAbilityCooldown(flight.getCooldown(abilityData));
+
+        if (entity instanceof EntityPlayer)
+            ((EntityPlayer) entity).capabilities.isFlying = false;
     }
 
     //TODO: Fire entity for visual fx/sparks/embers from fire

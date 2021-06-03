@@ -100,7 +100,7 @@ public class AbilityKaioKen extends Ability {
                 if (data.hasBendingId(getBendingId())) {
 
                     KaioKenPowerModifier modifier = new KaioKenPowerModifier();
-                    modifier.setTicks(duration);
+                    modifier.setTicks(-1);
 
                     // Ignore warning; we know manager != null if they have the bending style
                     //noinspection ConstantConditions

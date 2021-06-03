@@ -138,7 +138,7 @@ public class DemonWingsHandler extends TickHandler {
         }
 
         //Want this toggleable
-        return target.isInWater() || target.isSneaking();// || bender.isFlying() || duration <= ctx.getData().getTickHandlerDuration(this);
+        return false;// || bender.isFlying() || duration <= ctx.getData().getTickHandlerDuration(this);
 
     }
 

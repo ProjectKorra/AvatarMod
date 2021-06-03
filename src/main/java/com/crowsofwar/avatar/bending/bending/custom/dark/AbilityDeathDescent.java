@@ -46,18 +46,23 @@ public class AbilityDeathDescent extends Ability {
         Bender bender = ctx.getBender();
         AbilityData abilityData = ctx.getAbilityData();
 
-        if (!data.hasStatusControl(DEATH_DESCENT) && bender.consumeChi(getChiCost(abilityData) / 8)) {
-
-            data.addStatusControl(DEATH_DESCENT);
-            if (data.hasTickHandler(DEATH_DESCENT_HANDLER)) {
-                StatusControl sc = DEATH_DESCENT;
-                Raytrace.Result raytrace = Raytrace.getTargetBlock(ctx.getBenderEntity(), -1);
-                if (sc.execute(
-                        new BendingContext(data, ctx.getBenderEntity(), ctx.getBender(), raytrace))) {
-                    data.removeStatusControl(sc);
+        if (!data.hasTickHandler(DEATH_DESCENT_HANDLER)) {
+            if (!data.hasStatusControl(DEATH_DESCENT) && bender.consumeChi(getChiCost(abilityData) / 8)) {
+                data.addStatusControl(DEATH_DESCENT);
+                if (data.hasTickHandler(DEATH_DESCENT_HANDLER)) {
+                    StatusControl sc = DEATH_DESCENT;
+                    Raytrace.Result raytrace = Raytrace.getTargetBlock(ctx.getBenderEntity(), -1);
+                    if (sc.execute(
+                            new BendingContext(data, ctx.getBenderEntity(), ctx.getBender(), raytrace))) {
+                        data.removeStatusControl(sc);
+                    }
                 }
             }
-
+        }
+        else {
+            data.removeTickHandler(DEATH_DESCENT_HANDLER, ctx);
+            if (data.hasStatusControl(DEATH_DESCENT))
+                data.removeStatusControl(DEATH_DESCENT);
         }
     }
 

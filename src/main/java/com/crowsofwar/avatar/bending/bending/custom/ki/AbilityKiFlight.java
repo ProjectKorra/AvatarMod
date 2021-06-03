@@ -44,18 +44,24 @@ public class AbilityKiFlight extends Ability {
         Bender bender = ctx.getBender();
         AbilityData abilityData = ctx.getAbilityData();
 
-        if (!data.hasStatusControl(KI_FLIGHT) && bender.consumeChi(getChiCost(abilityData) / 8)) {
+        if (!data.hasTickHandler(KI_FLIGHT_HANDlER)) {
+            if (!data.hasStatusControl(KI_FLIGHT) && bender.consumeChi(getChiCost(abilityData) / 8)) {
 
-            data.addStatusControl(KI_FLIGHT);
-            if (data.hasTickHandler(KI_FLIGHT_HANDlER)) {
-                StatusControl sc = KI_FLIGHT;
-                Raytrace.Result raytrace = Raytrace.getTargetBlock(ctx.getBenderEntity(), -1);
-                if (sc.execute(
-                        new BendingContext(data, ctx.getBenderEntity(), ctx.getBender(), raytrace))) {
-                    data.removeStatusControl(sc);
+                data.addStatusControl(KI_FLIGHT);
+                if (data.hasTickHandler(KI_FLIGHT_HANDlER)) {
+                    StatusControl sc = KI_FLIGHT;
+                    Raytrace.Result raytrace = Raytrace.getTargetBlock(ctx.getBenderEntity(), -1);
+                    if (sc.execute(
+                            new BendingContext(data, ctx.getBenderEntity(), ctx.getBender(), raytrace))) {
+                        data.removeStatusControl(sc);
+                    }
                 }
             }
-
+        }
+        else {
+            data.removeTickHandler(KI_FLIGHT_HANDlER, ctx);
+            if (data.hasStatusControl(KI_FLIGHT))
+                data.removeStatusControl(KI_FLIGHT);
         }
     }
 

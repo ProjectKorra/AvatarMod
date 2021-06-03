@@ -14,6 +14,7 @@ import com.crowsofwar.avatar.util.data.TickHandler;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 
@@ -57,11 +58,13 @@ public class CorruptHandler extends TickHandler {
                     fadeG * 2);
             int bRandom = fadeB < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeB * 2) : AvatarUtils.getRandomNumberInRange(fadeB / 2,
                     fadeB * 2);
+            Vec3d pos = AvatarEntityUtils.getBottomMiddleOfEntity(entity);
+            pos = entity.onGround ? pos.add(0, entity.getEyeHeight(), 0) : pos.add(0, entity.getEyeHeight() / 2, 0);
             ParticleBuilder.create(ParticleBuilder.Type.FLASH).time(25 + AvatarUtils.getRandomNumberInRange(1, 2)).
-                    clr(r, g, b, 25 + AvatarUtils.getRandomNumberInRange(0, 15)).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(50, 140))
-                    .element(new Darkbending()).scale(scale).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 50).swirl((int) (corruptDuration / 20 * scale),
-                    (int) (scale * Math.PI * 2), scale, scale / 4, corruptDuration * 20, (-1 / scale),
-                    entity, world, false, AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(0, entity.getEyeHeight() / 2, 0),
+                    clr(r, g, b, 150).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(50, 140))
+                    .element(new Darkbending()).scale(scale).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 75).swirl((int) (corruptDuration / 20 * scale),
+                    (int) (scale * Math.PI), scale, scale / 2, corruptDuration * 20, (0.75F / scale),
+                    entity, world, true, pos,
                     ParticleBuilder.SwirlMotionType.OUT, true, true);
         }
 
@@ -85,7 +88,7 @@ public class CorruptHandler extends TickHandler {
                         .element(new Lightbending()).scale(scale).glow(true).spawn(world);
             }
         }
-        return duration >= corruptDuration;
+        return false;//duration >= corruptDuration;
     }
 }
 
