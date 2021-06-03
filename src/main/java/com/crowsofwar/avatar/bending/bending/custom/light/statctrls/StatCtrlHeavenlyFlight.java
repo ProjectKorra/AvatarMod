@@ -118,6 +118,8 @@ public class StatCtrlHeavenlyFlight extends StatusControl {
                 //Ensure the ability can't be spammed after activating.
                 abilityData.setAbilityCooldown(cooldown == 0 ? 0 : heavenlyFlight.getCooldown(abilityData) - heavenlyFlight.getProperty(DURATION, abilityData).intValue());
 
+                if (entity instanceof EntityPlayer)
+                    ((EntityPlayer) entity).capabilities.isFlying = true;
                 return true;
 
             }

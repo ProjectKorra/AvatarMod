@@ -206,6 +206,9 @@ public class HeavenlyFlightHandler extends TickHandler {
         }
         if (jump != null)
             abilityData.setAbilityCooldown(jump.getCooldown(abilityData));
+
+        if (entity instanceof EntityPlayer)
+            ((EntityPlayer) entity).capabilities.isFlying = false;
     }
 
     //TODO: Fire entity for visual fx/sparks/embers from fire

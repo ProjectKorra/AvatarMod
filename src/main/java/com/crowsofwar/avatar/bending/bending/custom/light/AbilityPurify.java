@@ -22,6 +22,7 @@ import net.minecraft.world.World;
 import java.util.Objects;
 
 import static com.crowsofwar.avatar.util.data.TickHandlerController.HEAVENLY_FLIGHT_HANDLER;
+import static com.crowsofwar.avatar.util.data.TickHandlerController.PURIFY_HANDLER;
 
 public class AbilityPurify extends Ability {
 
@@ -53,7 +54,7 @@ public class AbilityPurify extends Ability {
         float chi = getChiCost(ctx);
 
 
-        if (!data.hasTickHandler(HEAVENLY_FLIGHT_HANDLER)) {
+        if (!data.hasTickHandler(PURIFY_HANDLER)) {
             if (bender.consumeChi(chi)) {
 
                 //Buff abilities are unaffected by powerrating, otherwise they'd be stupid good
@@ -107,6 +108,7 @@ public class AbilityPurify extends Ability {
                     data.getPowerRatingManager(getBendingId()).addModifier(modifier, ctx);
 
                 }
+                data.addTickHandler(PURIFY_HANDLER, ctx);
 
 //                EntityLightOrb orb = new EntityLightOrb(world);
 //                orb.setOwner(entity);
@@ -126,7 +128,7 @@ public class AbilityPurify extends Ability {
 
             }
         } else {
-            data.removeTickHandler(HEAVENLY_FLIGHT_HANDLER, ctx);
+            data.removeTickHandler(PURIFY_HANDLER, ctx);
             Objects.requireNonNull(data.getPowerRatingManager(getBendingId())).clearModifiers(ctx);
         }
 

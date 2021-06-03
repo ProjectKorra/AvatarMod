@@ -206,9 +206,10 @@ public class DemonWingsHandler extends TickHandler {
                 world.spawnEntity(wave);
         }
 
-        if (entity instanceof EntityPlayer)
+        if (entity instanceof EntityPlayer) {
+            //isSneaking only calls this server-side
             ((EntityPlayer) entity).capabilities.isFlying = false;
-
+        }
         if (jump != null)
             abilityData.setAbilityCooldown(jump.getCooldown(abilityData));
     }

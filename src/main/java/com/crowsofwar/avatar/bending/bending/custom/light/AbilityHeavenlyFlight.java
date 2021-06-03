@@ -46,18 +46,19 @@ public class AbilityHeavenlyFlight extends Ability {
         Bender bender = ctx.getBender();
         AbilityData abilityData = ctx.getAbilityData();
 
-        if (!data.hasStatusControl(HEAVENLY_FLIGHT) && bender.consumeChi(getChiCost(abilityData) / 8)) {
-            data.addStatusControl(HEAVENLY_FLIGHT);
-            if (data.hasTickHandler(HEAVENLY_FLIGHT_HANDLER)) {
-                StatusControl sc = HEAVENLY_FLIGHT;
-                Raytrace.Result raytrace = Raytrace.getTargetBlock(ctx.getBenderEntity(), -1);
-                if (sc.execute(
-                        new BendingContext(data, ctx.getBenderEntity(), ctx.getBender(), raytrace))) {
-                    data.removeStatusControl(sc);
+        if (!data.hasTickHandler(HEAVENLY_FLIGHT_HANDLER)) {
+            if (!data.hasStatusControl(HEAVENLY_FLIGHT) && bender.consumeChi(getChiCost(abilityData) / 8)) {
+                data.addStatusControl(HEAVENLY_FLIGHT);
+                if (data.hasTickHandler(HEAVENLY_FLIGHT_HANDLER)) {
+                    StatusControl sc = HEAVENLY_FLIGHT;
+                    Raytrace.Result raytrace = Raytrace.getTargetBlock(ctx.getBenderEntity(), -1);
+                    if (sc.execute(
+                            new BendingContext(data, ctx.getBenderEntity(), ctx.getBender(), raytrace))) {
+                        data.removeStatusControl(sc);
+                    }
                 }
             }
-        }
-        else {
+        } else {
             data.removeTickHandler(HEAVENLY_FLIGHT_HANDLER, ctx);
             if (data.hasStatusControl(HEAVENLY_FLIGHT))
                 data.removeStatusControl(HEAVENLY_FLIGHT);

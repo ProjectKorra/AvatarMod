@@ -53,76 +53,82 @@ public class AbilityKaioKen extends Ability {
 
         float chi = getChiCost(ctx);
 
-        if (bender.consumeChi(chi)) {
+        if (!data.hasTickHandler(KAIO_KEN_HANDLER)) {
+            if (bender.consumeChi(chi)) {
 
-            //Buff abilities are unaffected by powerrating, otherwise they'd be stupid good
-            int duration = getProperty(DURATION, ctx).intValue();
-            int strengthLevel, strengthDuration, healthLevel, healthDuration, speedLevel, speedDuration;
-            strengthLevel = getProperty(STRENGTH_LEVEL, ctx).intValue();
-            strengthDuration = getProperty(STRENGTH_DURATION, ctx).intValue();
-            healthLevel = getProperty(HEALTH_LEVEL, ctx).intValue();
-            healthDuration = getProperty(HEALTH_DURATION, ctx).intValue();
-            speedLevel = getProperty(SPEED_LEVEL, ctx).intValue();
-            speedDuration = getProperty(SPEED_DURATION, ctx).intValue();
+                //Buff abilities are unaffected by powerrating, otherwise they'd be stupid good
+                int duration = getProperty(DURATION, ctx).intValue();
+                int strengthLevel, strengthDuration, healthLevel, healthDuration, speedLevel, speedDuration;
+                strengthLevel = getProperty(STRENGTH_LEVEL, ctx).intValue();
+                strengthDuration = getProperty(STRENGTH_DURATION, ctx).intValue();
+                healthLevel = getProperty(HEALTH_LEVEL, ctx).intValue();
+                healthDuration = getProperty(HEALTH_DURATION, ctx).intValue();
+                speedLevel = getProperty(SPEED_LEVEL, ctx).intValue();
+                speedDuration = getProperty(SPEED_DURATION, ctx).intValue();
 
-            int lightRadius = 5;
+                int lightRadius = 5;
 
-            if (abilityData.getLevel() == 1) {
-                lightRadius = 7;
+                if (abilityData.getLevel() == 1) {
+                    lightRadius = 7;
+                }
+
+                if (abilityData.getLevel() == 2) {
+                    lightRadius = 10;
+                }
+
+                if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+                    lightRadius = 9;
+                }
+
+                if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+                    lightRadius = 12;
+                }
+
+                speedDuration *= ctx.getPowerRatingDamageMod() * abilityData.getXpModifier();
+                strengthDuration *= ctx.getPowerRatingDamageMod() * abilityData.getXpModifier();
+                healthDuration *= ctx.getPowerRatingDamageMod() * abilityData.getXpModifier();
+
+                if (strengthLevel > 0)
+                    entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, strengthDuration, strengthLevel - 1, false, false));
+
+                if (healthLevel > 0)
+                    entity.addPotionEffect(new PotionEffect(MobEffects.HEALTH_BOOST, healthDuration, healthLevel - 1, false, false));
+
+                if (speedLevel > 0)
+                    entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, speedDuration, speedLevel - 1, false, false));
+
+                if (data.hasBendingId(getBendingId())) {
+
+                    KaioKenPowerModifier modifier = new KaioKenPowerModifier();
+                    modifier.setTicks(duration);
+
+                    // Ignore warning; we know manager != null if they have the bending style
+                    //noinspection ConstantConditions
+                    data.getPowerRatingManager(getBendingId()).addModifier(modifier, ctx);
+
+                }
+
+//                EntityLightOrb orb = new EntityLightOrb(world);
+//                orb.setOwner(entity);
+//                orb.setAbility(this);
+//                orb.setPosition(new Vec3d(entity.posX, entity.getEntityBoundingBox().minY + entity.height / 2, entity.posZ));
+//                orb.setOrbSize(0.005F);
+//                orb.setLifeTime(duration);
+//                orb.setColor(1F, 0.5F, 0F, 3F);
+//                orb.setLightRadius(lightRadius);
+//                orb.setEmittingEntity(entity);
+//                orb.setBehavior(new KaioKenLightOrbBehaviour());
+//                orb.setType(EntityLightOrb.EnumType.COLOR_CUBE);
+//                if (!world.isRemote)
+//                    world.spawnEntity(orb);
+                abilityData.addXp(getProperty(XP_USE, ctx).floatValue());
+                data.addTickHandler(KAIO_KEN_HANDLER, ctx);
+
             }
-
-            if (abilityData.getLevel() == 2) {
-                lightRadius = 10;
-            }
-
-            if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-                lightRadius = 9;
-            }
-
-            if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-                lightRadius = 12;
-            }
-
-            speedDuration *= ctx.getPowerRatingDamageMod() * abilityData.getXpModifier();
-            strengthDuration *= ctx.getPowerRatingDamageMod() * abilityData.getXpModifier();
-            healthDuration *= ctx.getPowerRatingDamageMod() * abilityData.getXpModifier();
-
-            if (strengthLevel > 0)
-                entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, strengthDuration, strengthLevel - 1, false, false));
-
-            if (healthLevel > 0)
-                entity.addPotionEffect(new PotionEffect(MobEffects.HEALTH_BOOST, healthDuration, healthLevel - 1, false, false));
-
-            if (speedLevel > 0)
-                entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, speedDuration, speedLevel - 1, false, false));
-
-            if (data.hasBendingId(getBendingId())) {
-
-                KaioKenPowerModifier modifier = new KaioKenPowerModifier();
-                modifier.setTicks(duration);
-
-                // Ignore warning; we know manager != null if they have the bending style
-                //noinspection ConstantConditions
-                data.getPowerRatingManager(getBendingId()).addModifier(modifier, ctx);
-
-            }
-
-            EntityLightOrb orb = new EntityLightOrb(world);
-            orb.setOwner(entity);
-            orb.setAbility(this);
-            orb.setPosition(new Vec3d(entity.posX, entity.getEntityBoundingBox().minY + entity.height / 2, entity.posZ));
-            orb.setOrbSize(0.005F);
-            orb.setLifeTime(duration);
-            orb.setColor(1F, 0.5F, 0F, 3F);
-            orb.setLightRadius(lightRadius);
-            orb.setEmittingEntity(entity);
-            orb.setBehavior(new KaioKenLightOrbBehaviour());
-            orb.setType(EntityLightOrb.EnumType.COLOR_CUBE);
-            if (!world.isRemote)
-                world.spawnEntity(orb);
-            abilityData.addXp(getProperty(XP_USE, ctx).floatValue());
-            data.addTickHandler(KAIO_KEN_HANDLER, ctx);
-
+        }
+        else {
+            data.removeTickHandler(KAIO_KEN_HANDLER, ctx);
+            Objects.requireNonNull(data.getPowerRatingManager(getBendingId())).clearModifiers(ctx);
         }
 
     }
