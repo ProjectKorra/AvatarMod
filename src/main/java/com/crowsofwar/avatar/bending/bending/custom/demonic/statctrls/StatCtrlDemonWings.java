@@ -1,8 +1,8 @@
 package com.crowsofwar.avatar.bending.bending.custom.demonic.statctrls;
 
 import com.crowsofwar.avatar.bending.bending.Abilities;
-import com.crowsofwar.avatar.bending.bending.fire.AbilityFlameGlide;
-import com.crowsofwar.avatar.bending.bending.fire.Firebending;
+import com.crowsofwar.avatar.bending.bending.custom.demonic.AbilityDemonWings;
+import com.crowsofwar.avatar.bending.bending.custom.demonic.Demonbending;
 import com.crowsofwar.avatar.bending.bending.fire.tickhandlers.FlameGlideHandler;
 import com.crowsofwar.avatar.client.controls.AvatarControl;
 import com.crowsofwar.avatar.entity.EntityShockwave;
@@ -26,7 +26,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.bending.bending.Ability.*;
-import static com.crowsofwar.avatar.util.data.TickHandlerController.FLAME_GLIDE_HANDLER;
+import static com.crowsofwar.avatar.util.data.TickHandlerController.DEMON_WINGS_HANDLER;
 
 public class StatCtrlDemonWings extends StatusControl {
 
@@ -43,8 +43,8 @@ public class StatCtrlDemonWings extends StatusControl {
         BendingData data = ctx.getData();
         World world = ctx.getWorld();
 
-        AbilityData abilityData = data.getAbilityData("flame_glide");
-        AbilityFlameGlide jump = (AbilityFlameGlide) Abilities.get("flame_glide");
+        AbilityData abilityData = data.getAbilityData("demon_wings");
+        AbilityDemonWings jump = (AbilityDemonWings) Abilities.get("demon_wings");
 
         if (jump != null) {
             float chiCost, exhaustion, burnOut;
@@ -105,12 +105,12 @@ public class StatCtrlDemonWings extends StatusControl {
                 }
 
 
-                data.addTickHandler(FLAME_GLIDE_HANDLER, ctx);
+                data.addTickHandler(DEMON_WINGS_HANDLER, ctx);
                 data.getMiscData().setFallAbsorption(fallAbsorption);
 
                 abilityData.addXp(jump.getProperty(XP_USE, abilityData).floatValue());
 
-                entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 1, .7f);
+                entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_GHAST_DEATH, SoundCategory.PLAYERS, 1, .7f);
 
                 if (entity instanceof EntityPlayer)
                     ((EntityPlayer) entity).addExhaustion(exhaustion);
@@ -131,8 +131,8 @@ public class StatCtrlDemonWings extends StatusControl {
 
         World world = ctx.getWorld();
         EntityLivingBase entity = ctx.getBenderEntity();
-        AbilityData abilityData = ctx.getData().getAbilityData("flame_glide");
-        AbilityFlameGlide jump = (AbilityFlameGlide) Abilities.get("flame_glide");
+        AbilityData abilityData = ctx.getData().getAbilityData("demon_wings");
+        AbilityDemonWings jump = (AbilityDemonWings) Abilities.get("demon_wings");
 
         if (jump != null) {
             float speed = jump.getProperty(SPEED, abilityData).floatValue() / 10;
@@ -145,9 +145,9 @@ public class StatCtrlDemonWings extends StatusControl {
             float chiHit = jump.getProperty(CHI_HIT, abilityData).floatValue() / 4;
             int r, g, b, fadeR, fadeG, fadeB;
 
-            r = jump.getProperty(FIRE_R, abilityData).intValue();
-            g = jump.getProperty(FIRE_G, abilityData).intValue();
-            b = jump.getProperty(FIRE_B, abilityData).intValue();
+            r = jump.getProperty(R, abilityData).intValue();
+            g = jump.getProperty(G, abilityData).intValue();
+            b = jump.getProperty(B, abilityData).intValue();
             fadeR = jump.getProperty(FADE_R, abilityData).intValue();
             fadeG = jump.getProperty(FADE_G, abilityData).intValue();
             fadeB = jump.getProperty(FADE_B, abilityData).intValue();
@@ -163,11 +163,11 @@ public class StatCtrlDemonWings extends StatusControl {
 
             EntityShockwave wave = new EntityShockwave(world);
             wave.setOwner(entity);
-            wave.setDamageSource("avatar_Fire_shockwave");
+            wave.setDamageSource("avatar_Demon_shockwave");
             wave.setPosition(AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(0, 0.5, 0));
             wave.setFireTime(fireTime);
             wave.setEntitySize(size / 5);
-            wave.setElement(new Firebending());
+            wave.setElement(new Demonbending());
             wave.setAbility(jump);
             wave.setDamage(damage);
             wave.setOwner(entity);

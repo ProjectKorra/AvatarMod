@@ -6,6 +6,10 @@ import com.crowsofwar.avatar.bending.bending.air.AbilityAirblade;
 import com.crowsofwar.avatar.bending.bending.air.tickhandlers.AirBurstHandler;
 import com.crowsofwar.avatar.bending.bending.air.tickhandlers.ShootAirBurstHandler;
 import com.crowsofwar.avatar.bending.bending.air.tickhandlers.SmashGroundHandler;
+import com.crowsofwar.avatar.bending.bending.custom.dark.tickhandlers.DeathDescentHandler;
+import com.crowsofwar.avatar.bending.bending.custom.demonic.tickhandlers.DemonWingsHandler;
+import com.crowsofwar.avatar.bending.bending.custom.ki.tickhandlers.KiFlightHandler;
+import com.crowsofwar.avatar.bending.bending.custom.light.tickhandlers.HeavenlyFlightHandler;
 import com.crowsofwar.avatar.bending.bending.earth.AbilityRavine;
 import com.crowsofwar.avatar.bending.bending.earth.tickhandlers.EarthSpikeHandler;
 import com.crowsofwar.avatar.bending.bending.fire.AbilityFireRedirect;
@@ -52,6 +56,10 @@ public abstract class OffensiveBehaviour extends Behavior<EntityOffensive> {
         CloudburstBehavior.register();
         registerBehavior(Redirect.class);
         registerBehavior(AbilityFireRedirect.AbsorbBehaviour.class);
+        registerBehavior(DemonWingsHandler.DemonWingsShockwave.class);
+        registerBehavior(HeavenlyFlightHandler.HeavenlyFlightShockwave.class);
+        registerBehavior(KiFlightHandler.KiFlightShockwave.class);
+        registerBehavior(DeathDescentHandler.DeathDescentShockwave.class);
     }
 
     public static class Idle extends OffensiveBehaviour {

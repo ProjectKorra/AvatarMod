@@ -31,9 +31,13 @@ avatar.icebending.demonym=§3§lIcebender
 avatar.sandbending=§6§lSandbending
 avatar.sandbending.demonym=§6§lSandbender
 
-# Custom #
+# Custom. TODO: Formatting and ability descriptors + names #
 avatar.kibending.demonym=§b§lKibending
 avatar.darkbending.demonym=Voidbending
+avatar.demonbending.demonym=Demonbending
+avatar.lightbending.demonym=Divinebending
+
+
 item.avatarmod:basic_glider.name=§lAcolyte Glider
 item.avatarmod:master_glider.name=§l§nMaster Glider
 item.avatarmod:glider_part.wing_left.name=Glider Wing (Left)

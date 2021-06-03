@@ -1,8 +1,8 @@
 package com.crowsofwar.avatar.bending.bending.custom.light.tickhandlers;
 
 import com.crowsofwar.avatar.bending.bending.Abilities;
-import com.crowsofwar.avatar.bending.bending.fire.AbilityFlameGlide;
-import com.crowsofwar.avatar.bending.bending.fire.Firebending;
+import com.crowsofwar.avatar.bending.bending.custom.light.AbilityHeavenlyFlight;
+import com.crowsofwar.avatar.bending.bending.custom.light.Lightbending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.entity.EntityOffensive;
 import com.crowsofwar.avatar.entity.EntityShockwave;
@@ -36,23 +36,23 @@ public class HeavenlyFlightHandler extends TickHandler {
         EntityLivingBase target = ctx.getBenderEntity();
         Bender bender = ctx.getBender();
         World world = ctx.getWorld();
-        AbilityData data = ctx.getData().getAbilityData(new AbilityFlameGlide());
-        AbilityFlameGlide jump = (AbilityFlameGlide) Abilities.get(new AbilityFlameGlide().getName());
+        AbilityData data = ctx.getData().getAbilityData(new AbilityHeavenlyFlight());
+        AbilityHeavenlyFlight flight = (AbilityHeavenlyFlight) Abilities.get(new AbilityHeavenlyFlight().getName());
         Vector pos = Vector.getEntityPos(target).minusY(0.05);
 
-        if (world.isRemote && jump != null) {
+        if (world.isRemote && flight != null) {
             double minY = target.getEntityBoundingBox().minY;
             pos = pos.plus(Vector.getVelocity(target).times(0.1));
             pos = pos.withY(Math.max(pos.y(), minY));
-            float size = jump.getProperty(SIZE, data).floatValue() / 2;
+            float size = flight.getProperty(SIZE, data).floatValue() / 2;
             int r, g, b, fadeR, fadeG, fadeB;
 
-            r = jump.getProperty(FIRE_R, data).intValue();
-            g = jump.getProperty(FIRE_G, data).intValue();
-            b = jump.getProperty(FIRE_B, data).intValue();
-            fadeR = jump.getProperty(FADE_R, data).intValue();
-            fadeG = jump.getProperty(FADE_G, data).intValue();
-            fadeB = jump.getProperty(FADE_B, data).intValue();
+            r = flight.getProperty(R, data).intValue();
+            g = flight.getProperty(G, data).intValue();
+            b = flight.getProperty(B, data).intValue();
+            fadeR = flight.getProperty(FADE_R, data).intValue();
+            fadeG = flight.getProperty(FADE_G, data).intValue();
+            fadeB = flight.getProperty(FADE_B, data).intValue();
 
             size *= data.getDamageMult() * data.getXpModifier();
 
@@ -67,25 +67,25 @@ public class HeavenlyFlightHandler extends TickHandler {
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).clr(r, g, b, 215 + AvatarUtils.getRandomNumberInRange(0, 40))
                         .fade(rRandom, gRandom, bRandom, 160 + AvatarUtils.getRandomNumberInRange(0, 40))
                         .pos(pos.toMinecraft()).vel(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20)
-                        .scale(size).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(new Firebending()).collide(true)
-                        .ability(jump).spawnEntity(target).spawn(world);
+                        .scale(size).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(new Lightbending()).collide(true)
+                        .ability(flight).spawnEntity(target).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 50).spawn(world);
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).clr(r, g * 4, b, 215 + AvatarUtils.getRandomNumberInRange(0, 40))
                         .fade(rRandom, gRandom * 4, bRandom, 160 + AvatarUtils.getRandomNumberInRange(0, 40))
                         .pos(pos.toMinecraft()).vel(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20)
-                        .scale(size).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(new Firebending()).collide(true)
-                        .ability(jump).spawnEntity(target).spawn(world);
+                        .scale(size).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(new Lightbending()).collide(true)
+                        .ability(flight).spawnEntity(target).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 50).spawn(world);
             }
         }
         int duration = 40;
-        if (jump != null) {
-            duration = jump.getProperty(DURATION, data).intValue();
+        if (flight != null) {
+            duration = flight.getProperty(DURATION, data).intValue();
             duration *= data.getDamageMult() * data.getXpModifier();
         }
 
-        if (jump != null && ctx.getData().getTickHandlerDuration(this) < duration) {
+        if (flight != null && ctx.getData().getTickHandlerDuration(this) < duration) {
 
-            if (bender.consumeChi(jump.getChiCost(data) / 20)) {
-                double targetSpeed = jump.getProperty(SPEED, data).floatValue() / 4;
+            if (bender.consumeChi(flight.getChiCost(data) / 20)) {
+                double targetSpeed = flight.getProperty(SPEED, data).floatValue() / 4;
                 targetSpeed *= data.getDamageMult() * data.getXpModifier();
 
                 if (target.moveForward != 0) {
@@ -130,9 +130,9 @@ public class HeavenlyFlightHandler extends TickHandler {
 
                 AvatarUtils.afterVelocityAdded(target);
                 if (target instanceof EntityBender || target instanceof EntityPlayer && !((EntityPlayer) target).isCreative())
-                    data.addBurnout(jump.getBurnOut(data) / 20);
+                    data.addBurnout(flight.getBurnOut(data) / 20);
                 if (target instanceof EntityPlayer)
-                    ((EntityPlayer) target).addExhaustion(jump.getExhaustion(data) / 20);
+                    ((EntityPlayer) target).addExhaustion(flight.getExhaustion(data) / 20);
 
             }
         }
@@ -147,8 +147,8 @@ public class HeavenlyFlightHandler extends TickHandler {
 
         World world = ctx.getWorld();
         EntityLivingBase entity = ctx.getBenderEntity();
-        AbilityData abilityData = ctx.getData().getAbilityData("flame_glide");
-        AbilityFlameGlide jump = (AbilityFlameGlide) Abilities.get("flame_glide");
+        AbilityData abilityData = ctx.getData().getAbilityData("heavenly_flight");
+        AbilityHeavenlyFlight jump = (AbilityHeavenlyFlight) Abilities.get("heavenly_flight");
 
         if (jump != null && jump.getBooleanProperty(STOP_SHOCKWAVE, abilityData)) {
             float speed = jump.getProperty(SPEED, abilityData).floatValue() / 5;
@@ -161,9 +161,9 @@ public class HeavenlyFlightHandler extends TickHandler {
             float chiHit = jump.getProperty(CHI_HIT, abilityData).floatValue() / 4;
             int r, g, b, fadeR, fadeG, fadeB;
 
-            r = jump.getProperty(FIRE_R, abilityData).intValue();
-            g = jump.getProperty(FIRE_G, abilityData).intValue();
-            b = jump.getProperty(FIRE_B, abilityData).intValue();
+            r = jump.getProperty(R, abilityData).intValue();
+            g = jump.getProperty(G, abilityData).intValue();
+            b = jump.getProperty(B, abilityData).intValue();
             fadeR = jump.getProperty(FADE_R, abilityData).intValue();
             fadeG = jump.getProperty(FADE_G, abilityData).intValue();
             fadeB = jump.getProperty(FADE_B, abilityData).intValue();
@@ -179,11 +179,11 @@ public class HeavenlyFlightHandler extends TickHandler {
 
             EntityShockwave wave = new EntityShockwave(world);
             wave.setOwner(entity);
-            wave.setDamageSource("avatar_Fire_shockwave");
+            wave.setDamageSource("avatar_Light_shockwave");
             wave.setPosition(AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(0, 0.5, 0));
             wave.setFireTime(fireTime);
             wave.setEntitySize(size / 5F);
-            wave.setElement(new Firebending());
+            wave.setElement(new Lightbending());
             wave.setAbility(jump);
             wave.setDamage(damage);
             wave.setOwner(entity);
@@ -194,7 +194,7 @@ public class HeavenlyFlightHandler extends TickHandler {
             wave.setChiHit(chiHit);
             wave.setPerformanceAmount(performance);
             wave.setPush(knockback);
-            wave.setBehaviour(new FireJumpShockwave());
+            wave.setBehaviour(new HeavenlyFlightShockwave());
             wave.setParticleSpeed(speed / 45F);
             wave.setParticleAmount(20);
             wave.setRGB(r, g, b);
@@ -209,7 +209,7 @@ public class HeavenlyFlightHandler extends TickHandler {
     }
 
     //TODO: Fire entity for visual fx/sparks/embers from fire
-    public static class FireJumpShockwave extends OffensiveBehaviour {
+    public static class HeavenlyFlightShockwave extends OffensiveBehaviour {
 
         @Override
         public OffensiveBehaviour onUpdate(EntityOffensive entity) {
@@ -223,12 +223,9 @@ public class HeavenlyFlightHandler extends TickHandler {
                         int[] rgb = entity.getRGB();
                         for (double angle = 0; angle < 2 * Math.PI; angle += Math.PI / (((EntityShockwave) entity).getRange() *
                                 ((EntityShockwave) entity).getParticleAmount()) * entity.ticksExisted) {
-                            int rRandom = fade[0] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[0] * 2) : AvatarUtils.getRandomNumberInRange(fade[0] / 2,
-                                    fade[0] * 2);
-                            int gRandom = fade[1] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[1] * 2) : AvatarUtils.getRandomNumberInRange(fade[1] / 2,
-                                    fade[1] * 2);
-                            int bRandom = fade[2] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[2] * 2) : AvatarUtils.getRandomNumberInRange(fade[2] / 2,
-                                    fade[2] * 2);
+                            int rRandom = AvatarUtils.getRandomNumberInRange(fade[0] / 2, fade[0] * 2);
+                            int gRandom = AvatarUtils.getRandomNumberInRange(fade[1] / 2, fade[1] * 2);
+                            int bRandom = AvatarUtils.getRandomNumberInRange(fade[2] / 2, fade[2] * 2);
 
                             //Even though the maths is technically wrong, you use sin if you want a shockwave, and cos if you want a sphere (for x).
                             double x2 = entity.posX + (entity.ticksExisted * ((EntityShockwave) entity).getSpeed()) * Math.sin(angle);
@@ -241,14 +238,14 @@ public class HeavenlyFlightHandler extends TickHandler {
 
                             int time = 10;
                             time = Math.max(time, (entity.getLifeTime() - ((EntityShockwave) entity).getParticleWaves()) * 2);
-                            ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Firebending()).vel(speed.toMinecraft())
+                            ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Lightbending()).vel(speed.toMinecraft())
                                     .spawnEntity(owner).collide(true).collideParticles(true).clr(rgb[0], rgb[1], rgb[2], 180 + AvatarUtils.getRandomNumberInRange(0, 40)).
                                     fade(rRandom, gRandom, bRandom, 160 + AvatarUtils.getRandomNumberInRange(0, 40)).pos(x2, y2, z2).
-                                    scale(entity.getAvgSize() * 2).time(time + AvatarUtils.getRandomNumberInRange(0, 2)).spawn(world);
-                            ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Firebending()).vel(speed.toMinecraft())
+                                    scale(entity.getAvgSize() * 2).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 40).time(time + AvatarUtils.getRandomNumberInRange(0, 2)).spawn(world);
+                            ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Lightbending()).vel(speed.toMinecraft())
                                     .spawnEntity(owner).collide(true).collideParticles(true).clr(rgb[0], rgb[1] * 8, rgb[2] * 4, 180 + AvatarUtils.getRandomNumberInRange(0, 40)).
                                     fade(rRandom, gRandom * 2, bRandom, 160 + AvatarUtils.getRandomNumberInRange(0, 40)).pos(x2, y2, z2).
-                                    scale(entity.getAvgSize() * 2).time(time + AvatarUtils.getRandomNumberInRange(0, 2)).spawn(world);
+                                    scale(entity.getAvgSize() * 2).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 40).time(time + AvatarUtils.getRandomNumberInRange(0, 2)).spawn(world);
                         }
                     }
                 }

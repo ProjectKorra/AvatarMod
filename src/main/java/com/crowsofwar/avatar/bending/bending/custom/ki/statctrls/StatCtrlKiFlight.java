@@ -144,9 +144,9 @@ public class StatCtrlKiFlight extends StatusControl {
             float chiHit = flight.getProperty(CHI_HIT, abilityData).floatValue() / 4;
             int r, g, b, fadeR, fadeG, fadeB;
 
-            r = flight.getProperty(FIRE_R, abilityData).intValue();
-            g = flight.getProperty(FIRE_G, abilityData).intValue();
-            b = flight.getProperty(FIRE_B, abilityData).intValue();
+            r = flight.getProperty(R, abilityData).intValue();
+            g = flight.getProperty(G, abilityData).intValue();
+            b = flight.getProperty(B, abilityData).intValue();
             fadeR = flight.getProperty(FADE_R, abilityData).intValue();
             fadeG = flight.getProperty(FADE_G, abilityData).intValue();
             fadeB = flight.getProperty(FADE_B, abilityData).intValue();

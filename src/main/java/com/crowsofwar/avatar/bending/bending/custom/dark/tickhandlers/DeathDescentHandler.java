@@ -194,7 +194,7 @@ public class DeathDescentHandler extends TickHandler {
             wave.setChiHit(chiHit);
             wave.setPerformanceAmount(performance);
             wave.setPush(knockback);
-            wave.setBehaviour(new FireJumpShockwave());
+            wave.setBehaviour(new DeathDescentShockwave());
             wave.setParticleSpeed(speed / 45F);
             wave.setParticleAmount(20);
             wave.setRGB(r, g, b);
@@ -209,7 +209,7 @@ public class DeathDescentHandler extends TickHandler {
     }
 
     //TODO: Fire entity for visual fx/sparks/embers from fire
-    public static class FireJumpShockwave extends OffensiveBehaviour {
+    public static class DeathDescentShockwave extends OffensiveBehaviour {
 
         @Override
         public OffensiveBehaviour onUpdate(EntityOffensive entity) {

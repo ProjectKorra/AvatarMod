@@ -1,7 +1,6 @@
 package com.crowsofwar.avatar.bending.bending.custom.demonic;
 
 import com.crowsofwar.avatar.bending.bending.Ability;
-import com.crowsofwar.avatar.bending.bending.custom.ki.Kibending;
 import com.crowsofwar.avatar.util.Raytrace;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
@@ -10,10 +9,8 @@ import com.crowsofwar.avatar.util.data.StatusControl;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
 
-import java.util.UUID;
-
-import static com.crowsofwar.avatar.util.data.StatusControlController.FIRE_JUMP;
-import static com.crowsofwar.avatar.util.data.TickHandlerController.FLAME_GLIDE_HANDLER;
+import static com.crowsofwar.avatar.util.data.StatusControlController.DEMON_WINGS;
+import static com.crowsofwar.avatar.util.data.TickHandlerController.DEMON_WINGS_HANDLER;
 
 public class AbilityDemonWings extends Ability {
 
@@ -40,7 +37,6 @@ public class AbilityDemonWings extends Ability {
         return true;
     }
 
-    //Todo: Add waves of fire that follow the player
     @Override
     public void execute(AbilityContext ctx) {
 
@@ -48,11 +44,11 @@ public class AbilityDemonWings extends Ability {
         Bender bender = ctx.getBender();
         AbilityData abilityData = ctx.getAbilityData();
 
-        if (!data.hasStatusControl(FIRE_JUMP) && bender.consumeChi(getChiCost(abilityData) / 8)) {
+        if (!data.hasStatusControl(DEMON_WINGS) && bender.consumeChi(getChiCost(abilityData) / 8)) {
 
-            data.addStatusControl(FIRE_JUMP);
-            if (data.hasTickHandler(FLAME_GLIDE_HANDLER)) {
-                StatusControl sc = FIRE_JUMP;
+            data.addStatusControl(DEMON_WINGS);
+            if (data.hasTickHandler(DEMON_WINGS_HANDLER)) {
+                StatusControl sc = DEMON_WINGS;
                 Raytrace.Result raytrace = Raytrace.getTargetBlock(ctx.getBenderEntity(), -1);
                 if (sc.execute(
                         new BendingContext(data, ctx.getBenderEntity(), ctx.getBender(), raytrace))) {

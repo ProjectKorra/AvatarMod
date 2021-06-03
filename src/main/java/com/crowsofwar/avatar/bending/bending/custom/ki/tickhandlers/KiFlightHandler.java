@@ -47,9 +47,9 @@ public class KiFlightHandler extends TickHandler {
             float size = fly.getProperty(SIZE, data).floatValue() / 2;
             int r, g, b, fadeR, fadeG, fadeB;
 
-            r = fly.getProperty(FIRE_R, data).intValue();
-            g = fly.getProperty(FIRE_G, data).intValue();
-            b = fly.getProperty(FIRE_B, data).intValue();
+            r = fly.getProperty(R, data).intValue();
+            g = fly.getProperty(G, data).intValue();
+            b = fly.getProperty(B, data).intValue();
             fadeR = fly.getProperty(FADE_R, data).intValue();
             fadeG = fly.getProperty(FADE_G, data).intValue();
             fadeB = fly.getProperty(FADE_B, data).intValue();
@@ -160,9 +160,9 @@ public class KiFlightHandler extends TickHandler {
             float chiHit = flight.getProperty(CHI_HIT, abilityData).floatValue() / 4;
             int r, g, b, fadeR, fadeG, fadeB;
 
-            r = flight.getProperty(FIRE_R, abilityData).intValue();
-            g = flight.getProperty(FIRE_G, abilityData).intValue();
-            b = flight.getProperty(FIRE_B, abilityData).intValue();
+            r = flight.getProperty(R, abilityData).intValue();
+            g = flight.getProperty(G, abilityData).intValue();
+            b = flight.getProperty(B, abilityData).intValue();
             fadeR = flight.getProperty(FADE_R, abilityData).intValue();
             fadeG = flight.getProperty(FADE_G, abilityData).intValue();
             fadeB = flight.getProperty(FADE_B, abilityData).intValue();

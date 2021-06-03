@@ -1,7 +1,10 @@
 package com.crowsofwar.avatar.util.data;
 
 import com.crowsofwar.avatar.bending.bending.air.statctrls.*;
+import com.crowsofwar.avatar.bending.bending.custom.dark.statctrls.StatCtrlDeathDescent;
+import com.crowsofwar.avatar.bending.bending.custom.demonic.statctrls.StatCtrlDemonWings;
 import com.crowsofwar.avatar.bending.bending.custom.ki.statctrls.StatCtrlKiFlight;
+import com.crowsofwar.avatar.bending.bending.custom.light.statctrls.StatCtrlHeavenlyFlight;
 import com.crowsofwar.avatar.bending.bending.earth.statctrls.*;
 import com.crowsofwar.avatar.bending.bending.fire.statctrls.*;
 import com.crowsofwar.avatar.bending.bending.ice.StatCtrlShieldShatter;
@@ -62,7 +65,10 @@ public class StatusControlController {
 			EARTH_REDIRECT = new StatCtrlEarthRedirect(),
 			CHARGE_EARTH_SPIKE = new StatCtrlChargeEarthspike(true),
 			RELEASE_EARTH_SPIKE = new StatCtrlChargeEarthspike(false),
-			KI_FLIGHT = new StatCtrlKiFlight();
+			DEMON_WINGS = new StatCtrlDemonWings(),
+			HEAVENLY_FLIGHT = new StatCtrlHeavenlyFlight(),
+			KI_FLIGHT = new StatCtrlKiFlight(),
+			DEATH_DESCENT = new StatCtrlDeathDescent();
 	// @formatter:on
 
 	public static StatusControl lookup(int id) {

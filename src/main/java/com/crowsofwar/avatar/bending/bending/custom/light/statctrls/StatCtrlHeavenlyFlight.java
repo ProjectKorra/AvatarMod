@@ -1,8 +1,8 @@
 package com.crowsofwar.avatar.bending.bending.custom.light.statctrls;
 
 import com.crowsofwar.avatar.bending.bending.Abilities;
-import com.crowsofwar.avatar.bending.bending.fire.AbilityFlameGlide;
-import com.crowsofwar.avatar.bending.bending.fire.Firebending;
+import com.crowsofwar.avatar.bending.bending.custom.light.AbilityHeavenlyFlight;
+import com.crowsofwar.avatar.bending.bending.custom.light.Lightbending;
 import com.crowsofwar.avatar.bending.bending.fire.tickhandlers.FlameGlideHandler;
 import com.crowsofwar.avatar.client.controls.AvatarControl;
 import com.crowsofwar.avatar.entity.EntityShockwave;
@@ -26,7 +26,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.bending.bending.Ability.*;
-import static com.crowsofwar.avatar.util.data.TickHandlerController.FLAME_GLIDE_HANDLER;
+import static com.crowsofwar.avatar.util.data.TickHandlerController.HEAVENLY_FLIGHT_HANDLER;
 
 public class StatCtrlHeavenlyFlight extends StatusControl {
 
@@ -43,16 +43,16 @@ public class StatCtrlHeavenlyFlight extends StatusControl {
         BendingData data = ctx.getData();
         World world = ctx.getWorld();
 
-        AbilityData abilityData = data.getAbilityData("flame_glide");
-        AbilityFlameGlide jump = (AbilityFlameGlide) Abilities.get("flame_glide");
+        AbilityData abilityData = data.getAbilityData("heavenly_flight");
+        AbilityHeavenlyFlight heavenlyFlight = (AbilityHeavenlyFlight) Abilities.get("heavenly_flight");
 
-        if (jump != null) {
+        if (heavenlyFlight != null) {
             float chiCost, exhaustion, burnOut;
             int cooldown;
-            chiCost = jump.getChiCost(abilityData);
-            exhaustion = jump.getExhaustion(abilityData);
-            burnOut = jump.getBurnOut(abilityData);
-            cooldown = jump.getCooldown(abilityData);
+            chiCost = heavenlyFlight.getChiCost(abilityData);
+            exhaustion = heavenlyFlight.getExhaustion(abilityData);
+            burnOut = heavenlyFlight.getBurnOut(abilityData);
+            cooldown = heavenlyFlight.getCooldown(abilityData);
 
 
             if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative())
@@ -63,11 +63,11 @@ public class StatCtrlHeavenlyFlight extends StatusControl {
             if (bender.consumeChi(chiCost)) {
 
 
-                double jumpMultiplier = jump.getProperty(SPEED, abilityData).doubleValue() / 20;
-                float fallAbsorption = jump.getProperty(FALL_ABSORPTION, abilityData).floatValue();
+                double jumpMultiplier = heavenlyFlight.getProperty(SPEED, abilityData).doubleValue() / 20;
+                float fallAbsorption = heavenlyFlight.getProperty(FALL_ABSORPTION, abilityData).floatValue();
 
 
-                // Calculate direction to jump -- in the direction the player is currently already going
+                // Calculate direction to heavenly_flight -- in the direction the player is currently already going
 
                 // For some reason, velocity is 0 here when player is walking, so must instead
                 // calculate using delta position
@@ -105,18 +105,18 @@ public class StatCtrlHeavenlyFlight extends StatusControl {
                 }
 
 
-                data.addTickHandler(FLAME_GLIDE_HANDLER, ctx);
+                data.addTickHandler(HEAVENLY_FLIGHT_HANDLER, ctx);
                 data.getMiscData().setFallAbsorption(fallAbsorption);
 
-                abilityData.addXp(jump.getProperty(XP_USE, abilityData).floatValue());
+                abilityData.addXp(heavenlyFlight.getProperty(XP_USE, abilityData).floatValue());
 
-                entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 1, .7f);
+                entity.world.playSound(null, new BlockPos(entity), SoundEvents.BLOCK_NOTE_CHIME, SoundCategory.PLAYERS, 1, .7f);
 
                 if (entity instanceof EntityPlayer)
                     ((EntityPlayer) entity).addExhaustion(exhaustion);
                 abilityData.addBurnout(burnOut);
                 //Ensure the ability can't be spammed after activating.
-                abilityData.setAbilityCooldown(cooldown == 0 ? 0 : jump.getCooldown(abilityData) - jump.getProperty(DURATION, abilityData).intValue());
+                abilityData.setAbilityCooldown(cooldown == 0 ? 0 : heavenlyFlight.getCooldown(abilityData) - heavenlyFlight.getProperty(DURATION, abilityData).intValue());
 
                 return true;
 
@@ -131,8 +131,8 @@ public class StatCtrlHeavenlyFlight extends StatusControl {
 
         World world = ctx.getWorld();
         EntityLivingBase entity = ctx.getBenderEntity();
-        AbilityData abilityData = ctx.getData().getAbilityData("flame_glide");
-        AbilityFlameGlide jump = (AbilityFlameGlide) Abilities.get("flame_glide");
+        AbilityData abilityData = ctx.getData().getAbilityData("heavenly_flight");
+        AbilityHeavenlyFlight jump = (AbilityHeavenlyFlight) Abilities.get("heavenly_flight");
 
         if (jump != null) {
             float speed = jump.getProperty(SPEED, abilityData).floatValue() / 10;
@@ -145,9 +145,9 @@ public class StatCtrlHeavenlyFlight extends StatusControl {
             float chiHit = jump.getProperty(CHI_HIT, abilityData).floatValue() / 4;
             int r, g, b, fadeR, fadeG, fadeB;
 
-            r = jump.getProperty(FIRE_R, abilityData).intValue();
-            g = jump.getProperty(FIRE_G, abilityData).intValue();
-            b = jump.getProperty(FIRE_B, abilityData).intValue();
+            r = jump.getProperty(R, abilityData).intValue();
+            g = jump.getProperty(G, abilityData).intValue();
+            b = jump.getProperty(B, abilityData).intValue();
             fadeR = jump.getProperty(FADE_R, abilityData).intValue();
             fadeG = jump.getProperty(FADE_G, abilityData).intValue();
             fadeB = jump.getProperty(FADE_B, abilityData).intValue();
@@ -163,11 +163,11 @@ public class StatCtrlHeavenlyFlight extends StatusControl {
 
             EntityShockwave wave = new EntityShockwave(world);
             wave.setOwner(entity);
-            wave.setDamageSource("avatar_Fire_shockwave");
+            wave.setDamageSource("avatar_Light_shockwave");
             wave.setPosition(AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(0, 0.5, 0));
             wave.setFireTime(fireTime);
             wave.setEntitySize(size / 5);
-            wave.setElement(new Firebending());
+            wave.setElement(new Lightbending());
             wave.setAbility(jump);
             wave.setDamage(damage);
             wave.setOwner(entity);

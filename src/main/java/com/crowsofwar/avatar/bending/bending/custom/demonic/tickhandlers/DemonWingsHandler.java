@@ -1,8 +1,8 @@
 package com.crowsofwar.avatar.bending.bending.custom.demonic.tickhandlers;
 
 import com.crowsofwar.avatar.bending.bending.Abilities;
-import com.crowsofwar.avatar.bending.bending.fire.AbilityFlameGlide;
-import com.crowsofwar.avatar.bending.bending.fire.Firebending;
+import com.crowsofwar.avatar.bending.bending.custom.demonic.AbilityDemonWings;
+import com.crowsofwar.avatar.bending.bending.custom.demonic.Demonbending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.entity.EntityOffensive;
 import com.crowsofwar.avatar.entity.EntityShockwave;
@@ -36,23 +36,23 @@ public class DemonWingsHandler extends TickHandler {
         EntityLivingBase target = ctx.getBenderEntity();
         Bender bender = ctx.getBender();
         World world = ctx.getWorld();
-        AbilityData data = ctx.getData().getAbilityData(new AbilityFlameGlide());
-        AbilityFlameGlide jump = (AbilityFlameGlide) Abilities.get(new AbilityFlameGlide().getName());
+        AbilityData data = ctx.getData().getAbilityData(new AbilityDemonWings());
+        AbilityDemonWings wings = (AbilityDemonWings) Abilities.get(new AbilityDemonWings().getName());
         Vector pos = Vector.getEntityPos(target).minusY(0.05);
 
-        if (world.isRemote && jump != null) {
+        if (world.isRemote && wings != null) {
             double minY = target.getEntityBoundingBox().minY;
             pos = pos.plus(Vector.getVelocity(target).times(0.1));
             pos = pos.withY(Math.max(pos.y(), minY));
-            float size = jump.getProperty(SIZE, data).floatValue() / 2;
+            float size = wings.getProperty(SIZE, data).floatValue() / 2;
             int r, g, b, fadeR, fadeG, fadeB;
 
-            r = jump.getProperty(FIRE_R, data).intValue();
-            g = jump.getProperty(FIRE_G, data).intValue();
-            b = jump.getProperty(FIRE_B, data).intValue();
-            fadeR = jump.getProperty(FADE_R, data).intValue();
-            fadeG = jump.getProperty(FADE_G, data).intValue();
-            fadeB = jump.getProperty(FADE_B, data).intValue();
+            r = wings.getProperty(R, data).intValue();
+            g = wings.getProperty(G, data).intValue();
+            b = wings.getProperty(B, data).intValue();
+            fadeR = wings.getProperty(FADE_R, data).intValue();
+            fadeG = wings.getProperty(FADE_G, data).intValue();
+            fadeB = wings.getProperty(FADE_B, data).intValue();
 
             size *= data.getDamageMult() * data.getXpModifier();
 
@@ -67,25 +67,25 @@ public class DemonWingsHandler extends TickHandler {
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).clr(r, g, b, 215 + AvatarUtils.getRandomNumberInRange(0, 40))
                         .fade(rRandom, gRandom, bRandom, 160 + AvatarUtils.getRandomNumberInRange(0, 40))
                         .pos(pos.toMinecraft()).vel(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20)
-                        .scale(size).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(new Firebending()).collide(true)
-                        .ability(jump).spawnEntity(target).spawn(world);
+                        .scale(size).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(new Demonbending()).collide(true)
+                        .ability(wings).spawnEntity(target).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 50).spawn(world);
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).clr(r, g * 4, b, 215 + AvatarUtils.getRandomNumberInRange(0, 40))
                         .fade(rRandom, gRandom * 4, bRandom, 160 + AvatarUtils.getRandomNumberInRange(0, 40))
                         .pos(pos.toMinecraft()).vel(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20)
-                        .scale(size).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(new Firebending()).collide(true)
-                        .ability(jump).spawnEntity(target).spawn(world);
+                        .scale(size).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(new Demonbending()).collide(true)
+                        .ability(wings).spawnEntity(target).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 50).spawn(world);
             }
         }
         int duration = 40;
-        if (jump != null) {
-            duration = jump.getProperty(DURATION, data).intValue();
+        if (wings != null) {
+            duration = wings.getProperty(DURATION, data).intValue();
             duration *= data.getDamageMult() * data.getXpModifier();
         }
 
-        if (jump != null && ctx.getData().getTickHandlerDuration(this) < duration) {
+        if (wings != null && ctx.getData().getTickHandlerDuration(this) < duration) {
 
-            if (bender.consumeChi(jump.getChiCost(data) / 20)) {
-                double targetSpeed = jump.getProperty(SPEED, data).floatValue() / 4;
+            if (bender.consumeChi(wings.getChiCost(data) / 20)) {
+                double targetSpeed = wings.getProperty(SPEED, data).floatValue() / 4;
                 targetSpeed *= data.getDamageMult() * data.getXpModifier();
 
                 if (target.moveForward != 0) {
@@ -130,9 +130,9 @@ public class DemonWingsHandler extends TickHandler {
 
                 AvatarUtils.afterVelocityAdded(target);
                 if (target instanceof EntityBender || target instanceof EntityPlayer && !((EntityPlayer) target).isCreative())
-                    data.addBurnout(jump.getBurnOut(data) / 20);
+                    data.addBurnout(wings.getBurnOut(data) / 20);
                 if (target instanceof EntityPlayer)
-                    ((EntityPlayer) target).addExhaustion(jump.getExhaustion(data) / 20);
+                    ((EntityPlayer) target).addExhaustion(wings.getExhaustion(data) / 20);
 
             }
         }
@@ -148,7 +148,7 @@ public class DemonWingsHandler extends TickHandler {
         World world = ctx.getWorld();
         EntityLivingBase entity = ctx.getBenderEntity();
         AbilityData abilityData = ctx.getData().getAbilityData("flame_glide");
-        AbilityFlameGlide jump = (AbilityFlameGlide) Abilities.get("flame_glide");
+        AbilityDemonWings jump = (AbilityDemonWings) Abilities.get("flame_glide");
 
         if (jump != null && jump.getBooleanProperty(STOP_SHOCKWAVE, abilityData)) {
             float speed = jump.getProperty(SPEED, abilityData).floatValue() / 5;
@@ -179,11 +179,11 @@ public class DemonWingsHandler extends TickHandler {
 
             EntityShockwave wave = new EntityShockwave(world);
             wave.setOwner(entity);
-            wave.setDamageSource("avatar_Fire_shockwave");
+            wave.setDamageSource("avatar_Demon_shockwave");
             wave.setPosition(AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(0, 0.5, 0));
             wave.setFireTime(fireTime);
             wave.setEntitySize(size / 5F);
-            wave.setElement(new Firebending());
+            wave.setElement(new Demonbending());
             wave.setAbility(jump);
             wave.setDamage(damage);
             wave.setOwner(entity);
@@ -194,7 +194,7 @@ public class DemonWingsHandler extends TickHandler {
             wave.setChiHit(chiHit);
             wave.setPerformanceAmount(performance);
             wave.setPush(knockback);
-            wave.setBehaviour(new FireJumpShockwave());
+            wave.setBehaviour(new DemonWingsShockwave());
             wave.setParticleSpeed(speed / 45F);
             wave.setParticleAmount(20);
             wave.setRGB(r, g, b);
@@ -209,7 +209,7 @@ public class DemonWingsHandler extends TickHandler {
     }
 
     //TODO: Fire entity for visual fx/sparks/embers from fire
-    public static class FireJumpShockwave extends OffensiveBehaviour {
+    public static class DemonWingsShockwave extends OffensiveBehaviour {
 
         @Override
         public OffensiveBehaviour onUpdate(EntityOffensive entity) {
@@ -241,14 +241,14 @@ public class DemonWingsHandler extends TickHandler {
 
                             int time = 10;
                             time = Math.max(time, (entity.getLifeTime() - ((EntityShockwave) entity).getParticleWaves()) * 2);
-                            ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Firebending()).vel(speed.toMinecraft())
+                            ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Demonbending()).vel(speed.toMinecraft())
                                     .spawnEntity(owner).collide(true).collideParticles(true).clr(rgb[0], rgb[1], rgb[2], 180 + AvatarUtils.getRandomNumberInRange(0, 40)).
                                     fade(rRandom, gRandom, bRandom, 160 + AvatarUtils.getRandomNumberInRange(0, 40)).pos(x2, y2, z2).
-                                    scale(entity.getAvgSize() * 2).time(time + AvatarUtils.getRandomNumberInRange(0, 2)).spawn(world);
-                            ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Firebending()).vel(speed.toMinecraft())
+                                    scale(entity.getAvgSize() * 2).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 50).time(time + AvatarUtils.getRandomNumberInRange(0, 2)).spawn(world);
+                            ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Demonbending()).vel(speed.toMinecraft())
                                     .spawnEntity(owner).collide(true).collideParticles(true).clr(rgb[0], rgb[1] * 8, rgb[2] * 4, 180 + AvatarUtils.getRandomNumberInRange(0, 40)).
                                     fade(rRandom, gRandom * 2, bRandom, 160 + AvatarUtils.getRandomNumberInRange(0, 40)).pos(x2, y2, z2).
-                                    scale(entity.getAvgSize() * 2).time(time + AvatarUtils.getRandomNumberInRange(0, 2)).spawn(world);
+                                    scale(entity.getAvgSize() * 2).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 50).time(time + AvatarUtils.getRandomNumberInRange(0, 2)).spawn(world);
                         }
                     }
                 }
