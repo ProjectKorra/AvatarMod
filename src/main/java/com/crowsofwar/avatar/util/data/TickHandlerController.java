@@ -1,8 +1,12 @@
 package com.crowsofwar.avatar.util.data;
 
 import com.crowsofwar.avatar.bending.bending.custom.dark.tickhandlers.CorruptHandler;
+import com.crowsofwar.avatar.bending.bending.custom.dark.tickhandlers.DeathDescentHandler;
+import com.crowsofwar.avatar.bending.bending.custom.demonic.tickhandlers.DemonWingsHandler;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.tickhandlers.DemonicAuraHandler;
 import com.crowsofwar.avatar.bending.bending.custom.ki.tickhandlers.KaioKenHandler;
+import com.crowsofwar.avatar.bending.bending.custom.ki.tickhandlers.KiFlightHandler;
+import com.crowsofwar.avatar.bending.bending.custom.light.tickhandlers.HeavenlyFlightHandler;
 import com.crowsofwar.avatar.bending.bending.custom.light.tickhandlers.PurifyHandler;
 import com.crowsofwar.avatar.bending.bending.earth.tickhandlers.EarthSpikeHandler;
 import com.crowsofwar.avatar.client.gui.RenderElementHandler;
@@ -57,6 +61,10 @@ public class TickHandlerController {
 	public static TickHandler PURIFY_HANDLER = new PurifyHandler(27);
 	public static TickHandler KAIO_KEN_HANDLER = new KaioKenHandler(28);
 	public static TickHandler CORRUPT_HANDLER = new CorruptHandler(29);
+	public static TickHandler DEMON_WINGS_HANDLER = new DemonWingsHandler(30);
+	public static TickHandler HEAVENLY_FLIGHT_HANDLER = new HeavenlyFlightHandler(31);
+	public static TickHandler KI_FLIGHT_HANDlER = new KiFlightHandler(32);
+	public static TickHandler DEATH_DESCENT_HANDLER = new DeathDescentHandler(33);
 
 
 

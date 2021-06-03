@@ -1,9 +1,6 @@
 package com.crowsofwar.avatar.bending.bending.custom.ki;
 
 import com.crowsofwar.avatar.bending.bending.Ability;
-import com.crowsofwar.avatar.bending.bending.BendingAi;
-import com.crowsofwar.avatar.bending.bending.fire.AiFlameGlide;
-import com.crowsofwar.avatar.bending.bending.fire.Firebending;
 import com.crowsofwar.avatar.util.Raytrace;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
@@ -11,12 +8,9 @@ import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.StatusControl;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
-import net.minecraft.entity.EntityLiving;
 
-import java.util.UUID;
-
-import static com.crowsofwar.avatar.util.data.StatusControlController.FIRE_JUMP;
-import static com.crowsofwar.avatar.util.data.TickHandlerController.FLAME_GLIDE_HANDLER;
+import static com.crowsofwar.avatar.util.data.StatusControlController.KI_FLIGHT;
+import static com.crowsofwar.avatar.util.data.TickHandlerController.KI_FLIGHT_HANDlER;
 
 public class AbilityKiFlight extends Ability {
 
@@ -43,7 +37,6 @@ public class AbilityKiFlight extends Ability {
         return true;
     }
 
-    //Todo: Add waves of fire that follow the player
     @Override
     public void execute(AbilityContext ctx) {
 
@@ -51,11 +44,11 @@ public class AbilityKiFlight extends Ability {
         Bender bender = ctx.getBender();
         AbilityData abilityData = ctx.getAbilityData();
 
-        if (!data.hasStatusControl(FIRE_JUMP) && bender.consumeChi(getChiCost(abilityData) / 8)) {
+        if (!data.hasStatusControl(KI_FLIGHT) && bender.consumeChi(getChiCost(abilityData) / 8)) {
 
-            data.addStatusControl(FIRE_JUMP);
-            if (data.hasTickHandler(FLAME_GLIDE_HANDLER)) {
-                StatusControl sc = FIRE_JUMP;
+            data.addStatusControl(KI_FLIGHT);
+            if (data.hasTickHandler(KI_FLIGHT_HANDlER)) {
+                StatusControl sc = KI_FLIGHT;
                 Raytrace.Result raytrace = Raytrace.getTargetBlock(ctx.getBenderEntity(), -1);
                 if (sc.execute(
                         new BendingContext(data, ctx.getBenderEntity(), ctx.getBender(), raytrace))) {

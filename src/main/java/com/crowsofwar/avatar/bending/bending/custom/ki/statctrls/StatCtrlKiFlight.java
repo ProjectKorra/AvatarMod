@@ -1,9 +1,9 @@
 package com.crowsofwar.avatar.bending.bending.custom.ki.statctrls;
 
 import com.crowsofwar.avatar.bending.bending.Abilities;
-import com.crowsofwar.avatar.bending.bending.fire.AbilityFlameGlide;
-import com.crowsofwar.avatar.bending.bending.fire.Firebending;
-import com.crowsofwar.avatar.bending.bending.fire.tickhandlers.FlameGlideHandler;
+import com.crowsofwar.avatar.bending.bending.custom.ki.AbilityKiFlight;
+import com.crowsofwar.avatar.bending.bending.custom.ki.Kibending;
+import com.crowsofwar.avatar.bending.bending.custom.ki.tickhandlers.KiFlightHandler;
 import com.crowsofwar.avatar.client.controls.AvatarControl;
 import com.crowsofwar.avatar.entity.EntityShockwave;
 import com.crowsofwar.avatar.entity.mob.EntityBender;
@@ -26,7 +26,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.bending.bending.Ability.*;
-import static com.crowsofwar.avatar.util.data.TickHandlerController.FLAME_GLIDE_HANDLER;
+import static com.crowsofwar.avatar.util.data.TickHandlerController.KI_FLIGHT_HANDlER;
 
 public class StatCtrlKiFlight extends StatusControl {
 
@@ -43,16 +43,16 @@ public class StatCtrlKiFlight extends StatusControl {
         BendingData data = ctx.getData();
         World world = ctx.getWorld();
 
-        AbilityData abilityData = data.getAbilityData("flame_glide");
-        AbilityFlameGlide jump = (AbilityFlameGlide) Abilities.get("flame_glide");
+        AbilityData abilityData = data.getAbilityData("ki_flight");
+        AbilityKiFlight flight = (AbilityKiFlight) Abilities.get("ki_flight");
 
-        if (jump != null) {
+        if (flight != null) {
             float chiCost, exhaustion, burnOut;
             int cooldown;
-            chiCost = jump.getChiCost(abilityData);
-            exhaustion = jump.getExhaustion(abilityData);
-            burnOut = jump.getBurnOut(abilityData);
-            cooldown = jump.getCooldown(abilityData);
+            chiCost = flight.getChiCost(abilityData);
+            exhaustion = flight.getExhaustion(abilityData);
+            burnOut = flight.getBurnOut(abilityData);
+            cooldown = flight.getCooldown(abilityData);
 
 
             if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative())
@@ -63,11 +63,11 @@ public class StatCtrlKiFlight extends StatusControl {
             if (bender.consumeChi(chiCost)) {
 
 
-                double jumpMultiplier = jump.getProperty(SPEED, abilityData).doubleValue() / 20;
-                float fallAbsorption = jump.getProperty(FALL_ABSORPTION, abilityData).floatValue();
+                double jumpMultiplier = flight.getProperty(SPEED, abilityData).doubleValue() / 20;
+                float fallAbsorption = flight.getProperty(FALL_ABSORPTION, abilityData).floatValue();
 
 
-                // Calculate direction to jump -- in the direction the player is currently already going
+                // Calculate direction to flight -- in the direction the player is currently already going
 
                 // For some reason, velocity is 0 here when player is walking, so must instead
                 // calculate using delta position
@@ -105,18 +105,18 @@ public class StatCtrlKiFlight extends StatusControl {
                 }
 
 
-                data.addTickHandler(FLAME_GLIDE_HANDLER, ctx);
+                data.addTickHandler(KI_FLIGHT_HANDlER, ctx);
                 data.getMiscData().setFallAbsorption(fallAbsorption);
 
-                abilityData.addXp(jump.getProperty(XP_USE, abilityData).floatValue());
+                abilityData.addXp(flight.getProperty(XP_USE, abilityData).floatValue());
 
-                entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 1, .7f);
+                entity.world.playSound(null, new BlockPos(entity), SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE, SoundCategory.PLAYERS, 1, .7f);
 
                 if (entity instanceof EntityPlayer)
                     ((EntityPlayer) entity).addExhaustion(exhaustion);
                 abilityData.addBurnout(burnOut);
                 //Ensure the ability can't be spammed after activating.
-                abilityData.setAbilityCooldown(cooldown == 0 ? 0 : jump.getCooldown(abilityData) - jump.getProperty(DURATION, abilityData).intValue());
+                abilityData.setAbilityCooldown(cooldown == 0 ? 0 : flight.getCooldown(abilityData) - flight.getProperty(DURATION, abilityData).intValue());
 
                 return true;
 
@@ -131,44 +131,42 @@ public class StatCtrlKiFlight extends StatusControl {
 
         World world = ctx.getWorld();
         EntityLivingBase entity = ctx.getBenderEntity();
-        AbilityData abilityData = ctx.getData().getAbilityData("flame_glide");
-        AbilityFlameGlide jump = (AbilityFlameGlide) Abilities.get("flame_glide");
+        AbilityData abilityData = ctx.getData().getAbilityData("ki_flight");
+        AbilityKiFlight flight = (AbilityKiFlight) Abilities.get("ki_flight");
 
-        if (jump != null) {
-            float speed = jump.getProperty(SPEED, abilityData).floatValue() / 10;
-            float size = jump.getProperty(SIZE, abilityData).floatValue() / 2;
+        if (flight != null) {
+            float speed = flight.getProperty(SPEED, abilityData).floatValue() / 10;
+            float size = flight.getProperty(SIZE, abilityData).floatValue() / 2;
             int lifetime = (int) (speed / size * 10);
-            float knockback = jump.getProperty(KNOCKBACK, abilityData).floatValue();
-            float damage = jump.getProperty(DAMAGE, abilityData).floatValue();
-            int fireTime = jump.getProperty(FIRE_TIME, abilityData).intValue();
-            int performance = jump.getProperty(PERFORMANCE, abilityData).intValue() / 10;
-            float chiHit = jump.getProperty(CHI_HIT, abilityData).floatValue() / 4;
+            float knockback = flight.getProperty(KNOCKBACK, abilityData).floatValue();
+            float damage = flight.getProperty(DAMAGE, abilityData).floatValue();
+            int performance = flight.getProperty(PERFORMANCE, abilityData).intValue() / 10;
+            float chiHit = flight.getProperty(CHI_HIT, abilityData).floatValue() / 4;
             int r, g, b, fadeR, fadeG, fadeB;
 
-            r = jump.getProperty(FIRE_R, abilityData).intValue();
-            g = jump.getProperty(FIRE_G, abilityData).intValue();
-            b = jump.getProperty(FIRE_B, abilityData).intValue();
-            fadeR = jump.getProperty(FADE_R, abilityData).intValue();
-            fadeG = jump.getProperty(FADE_G, abilityData).intValue();
-            fadeB = jump.getProperty(FADE_B, abilityData).intValue();
+            r = flight.getProperty(FIRE_R, abilityData).intValue();
+            g = flight.getProperty(FIRE_G, abilityData).intValue();
+            b = flight.getProperty(FIRE_B, abilityData).intValue();
+            fadeR = flight.getProperty(FADE_R, abilityData).intValue();
+            fadeG = flight.getProperty(FADE_G, abilityData).intValue();
+            fadeB = flight.getProperty(FADE_B, abilityData).intValue();
 
             speed *= abilityData.getDamageMult() * abilityData.getXpModifier();
             size *= abilityData.getDamageMult() * abilityData.getXpModifier();
             lifetime *= abilityData.getDamageMult() * abilityData.getXpModifier();
             knockback *= abilityData.getDamageMult() * abilityData.getXpModifier();
             damage *= abilityData.getDamageMult() * abilityData.getXpModifier();
-            fireTime *= abilityData.getDamageMult() * abilityData.getXpModifier();
             performance *= abilityData.getDamageMult() * abilityData.getXpModifier();
             chiHit *= abilityData.getDamageMult() * abilityData.getXpModifier();
 
             EntityShockwave wave = new EntityShockwave(world);
             wave.setOwner(entity);
-            wave.setDamageSource("avatar_Fire_shockwave");
+            wave.setDamageSource("avatar_Ki_shockwave");
             wave.setPosition(AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(0, 0.5, 0));
-            wave.setFireTime(fireTime);
+            wave.setFireTime(0);
             wave.setEntitySize(size / 5);
-            wave.setElement(new Firebending());
-            wave.setAbility(jump);
+            wave.setElement(new Kibending());
+            wave.setAbility(flight);
             wave.setDamage(damage);
             wave.setOwner(entity);
             wave.setSphere(false);
@@ -180,12 +178,12 @@ public class StatCtrlKiFlight extends StatusControl {
             wave.setPerformanceAmount(performance);
             wave.setPush(knockback);
             wave.setParticleWaves(lifetime * 5);
-            wave.setBehaviour(new FlameGlideHandler.FireJumpShockwave());
+            wave.setBehaviour(new KiFlightHandler.KiFlightShockwave());
             wave.setParticleSpeed(speed / 30F);
             wave.setParticleAmount(30);
             wave.setRGB(r, g, b);
             wave.setFade(fadeR, fadeG, fadeB);
-            wave.setXp(jump.getProperty(XP_HIT, abilityData).floatValue());
+            wave.setXp(flight.getProperty(XP_HIT, abilityData).floatValue());
             if (!world.isRemote)
                 world.spawnEntity(wave);
         }

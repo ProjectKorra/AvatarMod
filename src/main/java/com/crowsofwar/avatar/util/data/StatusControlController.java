@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.util.data;
 
 import com.crowsofwar.avatar.bending.bending.air.statctrls.*;
+import com.crowsofwar.avatar.bending.bending.custom.ki.statctrls.StatCtrlKiFlight;
 import com.crowsofwar.avatar.bending.bending.earth.statctrls.*;
 import com.crowsofwar.avatar.bending.bending.fire.statctrls.*;
 import com.crowsofwar.avatar.bending.bending.ice.StatCtrlShieldShatter;
@@ -60,7 +61,8 @@ public class StatusControlController {
 			SPLIT_FIRE = new StatCtrlFireSplit(),
 			EARTH_REDIRECT = new StatCtrlEarthRedirect(),
 			CHARGE_EARTH_SPIKE = new StatCtrlChargeEarthspike(true),
-			RELEASE_EARTH_SPIKE = new StatCtrlChargeEarthspike(false);
+			RELEASE_EARTH_SPIKE = new StatCtrlChargeEarthspike(false),
+			KI_FLIGHT = new StatCtrlKiFlight();
 	// @formatter:on
 
 	public static StatusControl lookup(int id) {
