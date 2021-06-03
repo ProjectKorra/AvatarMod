@@ -57,7 +57,7 @@ public class DemonicAuraHandler extends TickHandler {
             int bRandom = fadeB < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeB * 2) : AvatarUtils.getRandomNumberInRange(fadeB / 2,
                     fadeB * 2);
             ParticleBuilder.create(ParticleBuilder.Type.FLASH).time(25 + AvatarUtils.getRandomNumberInRange(1, 2)).
-                    clr(r, g, b, 50 + AvatarUtils.getRandomNumberInRange(0, 30)).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(50, 140))
+                    clr(r, g, b, 255).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(50, 140))
                     .element(new Darkbending()).scale(scale).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 25).swirl((int) (demonicAuraDuration / 20 * scale),
                     (int) (scale * Math.PI * 2), scale * 1.5F, scale / 4, demonicAuraDuration * 20, (-1 / scale),
                     entity, world, true, AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(0, entity.getEyeHeight() / 2, 0),
