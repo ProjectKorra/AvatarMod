@@ -137,7 +137,8 @@ public class DemonWingsHandler extends TickHandler {
             }
         }
 
-        return target.isInWater() || target.isSneaking() || bender.isFlying() || duration <= ctx.getData().getTickHandlerDuration(this);
+        //Want this toggleable
+        return target.isInWater() || target.isSneaking();// || bender.isFlying() || duration <= ctx.getData().getTickHandlerDuration(this);
 
     }
 
@@ -204,6 +205,10 @@ public class DemonWingsHandler extends TickHandler {
             if (!world.isRemote)
                 world.spawnEntity(wave);
         }
+
+        if (entity instanceof EntityPlayer)
+            ((EntityPlayer) entity).capabilities.isFlying = false;
+
         if (jump != null)
             abilityData.setAbilityCooldown(jump.getCooldown(abilityData));
     }

@@ -109,8 +109,9 @@ public class ConfigSkills {
 		@Load
 		public float speedMult  = 1;
 
+		//No Chi Cost in this mod
 		@Load
-		public float chiMult = 1;
+		public float chiMult = 0;
 
 		@Load
 		public float chiHitMult = 1;

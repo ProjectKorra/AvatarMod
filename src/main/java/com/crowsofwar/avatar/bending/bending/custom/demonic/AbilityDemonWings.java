@@ -44,18 +44,22 @@ public class AbilityDemonWings extends Ability {
         Bender bender = ctx.getBender();
         AbilityData abilityData = ctx.getAbilityData();
 
-        if (!data.hasStatusControl(DEMON_WINGS) && bender.consumeChi(getChiCost(abilityData) / 8)) {
-
-            data.addStatusControl(DEMON_WINGS);
-            if (data.hasTickHandler(DEMON_WINGS_HANDLER)) {
-                StatusControl sc = DEMON_WINGS;
-                Raytrace.Result raytrace = Raytrace.getTargetBlock(ctx.getBenderEntity(), -1);
-                if (sc.execute(
-                        new BendingContext(data, ctx.getBenderEntity(), ctx.getBender(), raytrace))) {
-                    data.removeStatusControl(sc);
+        if (!data.hasTickHandler(DEMON_WINGS_HANDLER)) {
+            if (!data.hasStatusControl(DEMON_WINGS) && bender.consumeChi(getChiCost(abilityData) / 8)) {
+                data.addStatusControl(DEMON_WINGS);
+                if (data.hasTickHandler(DEMON_WINGS_HANDLER)) {
+                    StatusControl sc = DEMON_WINGS;
+                    Raytrace.Result raytrace = Raytrace.getTargetBlock(ctx.getBenderEntity(), -1);
+                    if (sc.execute(
+                            new BendingContext(data, ctx.getBenderEntity(), ctx.getBender(), raytrace))) {
+                        data.removeStatusControl(sc);
+                    }
                 }
             }
-
+        } else {
+            data.removeTickHandler(DEMON_WINGS_HANDLER, ctx);
+            if (data.hasStatusControl(DEMON_WINGS))
+                data.removeStatusControl(DEMON_WINGS);
         }
     }
 

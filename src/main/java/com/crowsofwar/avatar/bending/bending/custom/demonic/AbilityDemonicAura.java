@@ -10,6 +10,7 @@ import com.crowsofwar.avatar.entity.mob.EntityBender;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
+import com.crowsofwar.avatar.util.data.PowerRatingManager;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,7 +18,6 @@ import net.minecraft.init.MobEffects;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.Objects;
@@ -54,76 +54,84 @@ public class AbilityDemonicAura extends Ability {
         float chi = getChiCost(ctx);
         //TODO: Literally all of this
 
-        if (bender.consumeChi(chi)) {
+        if (data.hasTickHandler(DEMONIC_AURA_HANDLER)) {
+            if (bender.consumeChi(chi)) {
 
-            //Buff abilities are unaffected by powerrating, otherwise they'd be stupid good
-            int duration = getProperty(DURATION, ctx).intValue();
-            int strengthLevel, strengthDuration, healthLevel, healthDuration, speedLevel, speedDuration;
-            strengthLevel = getProperty(STRENGTH_LEVEL, ctx).intValue();
-            strengthDuration = getProperty(STRENGTH_DURATION, ctx).intValue();
-            healthLevel = getProperty(HEALTH_LEVEL, ctx).intValue();
-            healthDuration = getProperty(HEALTH_DURATION, ctx).intValue();
-            speedLevel = getProperty(SPEED_LEVEL, ctx).intValue();
-            speedDuration = getProperty(SPEED_DURATION, ctx).intValue();
+                //Buff abilities are unaffected by powerrating, otherwise they'd be stupid good
+                int duration = getProperty(DURATION, ctx).intValue();
+                int strengthLevel, strengthDuration, healthLevel, healthDuration, speedLevel, speedDuration;
+                strengthLevel = getProperty(STRENGTH_LEVEL, ctx).intValue();
+                strengthDuration = getProperty(STRENGTH_DURATION, ctx).intValue();
+                healthLevel = getProperty(HEALTH_LEVEL, ctx).intValue();
+                healthDuration = getProperty(HEALTH_DURATION, ctx).intValue();
+                speedLevel = getProperty(SPEED_LEVEL, ctx).intValue();
+                speedDuration = getProperty(SPEED_DURATION, ctx).intValue();
 
-            int lightRadius = 5;
+                int lightRadius = 5;
 
-            if (abilityData.getLevel() == 1) {
-                lightRadius = 7;
+                if (abilityData.getLevel() == 1) {
+                    lightRadius = 7;
+                }
+
+                if (abilityData.getLevel() == 2) {
+                    lightRadius = 10;
+                }
+
+                if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
+                    lightRadius = 9;
+                }
+
+                if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
+                    lightRadius = 12;
+                }
+
+                speedDuration *= ctx.getPowerRatingDamageMod() * abilityData.getXpModifier();
+                strengthDuration *= ctx.getPowerRatingDamageMod() * abilityData.getXpModifier();
+                healthDuration *= ctx.getPowerRatingDamageMod() * abilityData.getXpModifier();
+
+                if (strengthLevel > 0)
+                    entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, strengthDuration, strengthLevel - 1, false, false));
+
+                if (healthLevel > 0)
+                    entity.addPotionEffect(new PotionEffect(MobEffects.HEALTH_BOOST, healthDuration, healthLevel - 1, false, false));
+
+                if (speedLevel > 0)
+                    entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, speedDuration, speedLevel - 1, false, false));
+
+                if (data.hasBendingId(getBendingId())) {
+
+                    DemonicAuraPowerModifier modifier = new DemonicAuraPowerModifier();
+                    modifier.setTicks(-1);
+
+                    // Ignore warning; we know manager != null if they have the bending style
+                    //noinspection ConstantConditions
+                    data.getPowerRatingManager(getBendingId()).addModifier(modifier, ctx);
+
+                }
+
+//            EntityLightOrb orb = new EntityLightOrb(world);
+//            orb.setOwner(entity);
+//            orb.setAbility(this);
+//            orb.setPosition(new Vec3d(entity.posX, entity.getEntityBoundingBox().minY + entity.height / 2, entity.posZ));
+//            orb.setOrbSize(0.005F);
+//            orb.setLifeTime(-1);
+//            orb.setColor(1F, 0.5F, 0F, 3F);
+//            orb.setLightRadius(lightRadius);
+//            orb.setEmittingEntity(entity);
+//            orb.setBehavior(new DemonicAuraLightOrbBehaviour());
+//            orb.setType(EntityLightOrb.EnumType.COLOR_CUBE);
+//            if (!world.isRemote)
+//                world.spawnEntity(orb);
+                abilityData.addXp(getProperty(XP_USE, ctx).floatValue());
+                data.addTickHandler(DEMONIC_AURA_HANDLER, ctx);
             }
-
-            if (abilityData.getLevel() == 2) {
-                lightRadius = 10;
+        } else {
+            data.removeTickHandler(DEMONIC_AURA_HANDLER, ctx);
+            PowerRatingManager manager = data.getPowerRatingManager(getBendingId());
+            //Hacky method but oh well
+            if (manager != null && manager.hasModifier(DemonicAuraPowerModifier.class)) {
+                manager.clearModifiers(ctx);
             }
-
-            if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-                lightRadius = 9;
-            }
-
-            if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-                lightRadius = 12;
-            }
-
-            speedDuration *= ctx.getPowerRatingDamageMod() * abilityData.getXpModifier();
-            strengthDuration *= ctx.getPowerRatingDamageMod() * abilityData.getXpModifier();
-            healthDuration *= ctx.getPowerRatingDamageMod() * abilityData.getXpModifier();
-
-            if (strengthLevel > 0)
-                entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, strengthDuration, strengthLevel - 1, false, false));
-
-            if (healthLevel > 0)
-                entity.addPotionEffect(new PotionEffect(MobEffects.HEALTH_BOOST, healthDuration, healthLevel - 1, false, false));
-
-            if (speedLevel > 0)
-                entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, speedDuration, speedLevel - 1, false, false));
-
-            if (data.hasBendingId(getBendingId())) {
-
-                DemonicAuraPowerModifier modifier = new DemonicAuraPowerModifier();
-                modifier.setTicks(duration);
-
-                // Ignore warning; we know manager != null if they have the bending style
-                //noinspection ConstantConditions
-                data.getPowerRatingManager(getBendingId()).addModifier(modifier, ctx);
-
-            }
-
-            EntityLightOrb orb = new EntityLightOrb(world);
-            orb.setOwner(entity);
-            orb.setAbility(this);
-            orb.setPosition(new Vec3d(entity.posX, entity.getEntityBoundingBox().minY + entity.height / 2, entity.posZ));
-            orb.setOrbSize(0.005F);
-            orb.setLifeTime(duration);
-            orb.setColor(1F, 0.5F, 0F, 3F);
-            orb.setLightRadius(lightRadius);
-            orb.setEmittingEntity(entity);
-            orb.setBehavior(new DemonicAuraLightOrbBehaviour());
-            orb.setType(EntityLightOrb.EnumType.COLOR_CUBE);
-            if (!world.isRemote)
-                world.spawnEntity(orb);
-            abilityData.addXp(getProperty(XP_USE, ctx).floatValue());
-            data.addTickHandler(DEMONIC_AURA_HANDLER, ctx);
-
         }
 
     }
