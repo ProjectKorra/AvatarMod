@@ -54,7 +54,7 @@ public class AbilityDemonicAura extends Ability {
         float chi = getChiCost(ctx);
         //TODO: Literally all of this
 
-        if (data.hasTickHandler(DEMONIC_AURA_HANDLER)) {
+        if (!data.hasTickHandler(DEMONIC_AURA_HANDLER)) {
             if (bender.consumeChi(chi)) {
 
                 //Buff abilities are unaffected by powerrating, otherwise they'd be stupid good

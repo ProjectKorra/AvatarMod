@@ -47,7 +47,6 @@ public class AbilityHeavenlyFlight extends Ability {
         AbilityData abilityData = ctx.getAbilityData();
 
         if (!data.hasStatusControl(HEAVENLY_FLIGHT) && bender.consumeChi(getChiCost(abilityData) / 8)) {
-
             data.addStatusControl(HEAVENLY_FLIGHT);
             if (data.hasTickHandler(HEAVENLY_FLIGHT_HANDLER)) {
                 StatusControl sc = HEAVENLY_FLIGHT;
@@ -57,7 +56,11 @@ public class AbilityHeavenlyFlight extends Ability {
                     data.removeStatusControl(sc);
                 }
             }
-
+        }
+        else {
+            data.removeTickHandler(HEAVENLY_FLIGHT_HANDLER, ctx);
+            if (data.hasStatusControl(HEAVENLY_FLIGHT))
+                data.removeStatusControl(HEAVENLY_FLIGHT);
         }
     }
 

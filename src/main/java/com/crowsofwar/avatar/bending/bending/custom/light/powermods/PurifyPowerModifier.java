@@ -25,9 +25,7 @@ public class PurifyPowerModifier extends PowerRatingModifier {
 
     @Override
     public boolean onUpdate(BendingContext ctx) {
-
-
-        return super.onUpdate(ctx);
+        return false;
     }
 
 }

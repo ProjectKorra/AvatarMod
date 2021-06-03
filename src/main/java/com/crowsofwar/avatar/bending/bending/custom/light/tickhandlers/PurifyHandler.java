@@ -2,7 +2,6 @@ package com.crowsofwar.avatar.bending.bending.custom.light.tickhandlers;
 
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
-import com.crowsofwar.avatar.bending.bending.custom.dark.Darkbending;
 import com.crowsofwar.avatar.bending.bending.custom.light.AbilityPurify;
 import com.crowsofwar.avatar.bending.bending.custom.light.Lightbending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
@@ -14,6 +13,7 @@ import com.crowsofwar.avatar.util.data.TickHandler;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 
@@ -54,11 +54,13 @@ public class PurifyHandler extends TickHandler {
             int rRandom = AvatarUtils.getRandomNumberInRange((int) (fadeR * 0.75), fadeR * 2);
             int gRandom = AvatarUtils.getRandomNumberInRange((int) (fadeG * 0.75), fadeG * 2);
             int bRandom = AvatarUtils.getRandomNumberInRange((int) (fadeB * 0.75), fadeB * 2);
+            Vec3d pos = AvatarEntityUtils.getBottomMiddleOfEntity(entity);
+            pos = entity.onGround ? pos.add(0, entity.getEyeHeight(), 0) : pos.add(0, entity.getEyeHeight() / 2, 0);
             ParticleBuilder.create(ParticleBuilder.Type.FLASH).time(25 + AvatarUtils.getRandomNumberInRange(1, 2)).
-                    clr(r / 255F, g / 255F, b / 255F, 0.0001F).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(50, 140))
+                    clr(r / 255F, g / 255F, b / 255F, 0.0005F).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(50, 140))
                     .element(new Lightbending()).scale(scale).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 95).swirl((int) (purifyDuration / 20 * scale),
-                    (int) (scale * Math.PI), scale, scale / 2, purifyDuration * 20, (-0.5F / scale),
-                    entity, world, false, AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(0, entity.getEyeHeight() / 2, 0),
+                    (int) (scale * Math.PI), scale, scale / 2, purifyDuration * 20, (0.75F / scale),
+                    entity, world, true, pos,
                     ParticleBuilder.SwirlMotionType.OUT, true, true);
         }
 
@@ -82,7 +84,7 @@ public class PurifyHandler extends TickHandler {
                         .element(new Lightbending()).scale(scale).glow(true).spawn(world);
             }
         }
-        return duration >= purifyDuration;
+        return false;//duration >= purifyDuration;
     }
 }
 

@@ -13,6 +13,7 @@ import com.crowsofwar.avatar.util.data.TickHandler;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 
@@ -56,11 +57,13 @@ public class DemonicAuraHandler extends TickHandler {
                     fadeG * 2);
             int bRandom = fadeB < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeB * 2) : AvatarUtils.getRandomNumberInRange(fadeB / 2,
                     fadeB * 2);
+            Vec3d pos = AvatarEntityUtils.getBottomMiddleOfEntity(entity);
+            pos = entity.onGround ? pos.add(0, entity.getEyeHeight(), 0) : pos.add(0, entity.getEyeHeight() / 2, 0);
             ParticleBuilder.create(ParticleBuilder.Type.FLASH).time(25 + AvatarUtils.getRandomNumberInRange(1, 2)).
                     clr(r, g, b, 255).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(50, 140))
                     .element(new Darkbending()).scale(scale).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 25).swirl((int) (demonicAuraDuration / 20 * scale),
-                    (int) (scale * Math.PI), scale, scale / 2, demonicAuraDuration * 20, (-1F / scale),
-                    entity, world, true, AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(0, entity.getEyeHeight(), 0),
+                    (int) (scale * Math.PI), scale, scale / 2, demonicAuraDuration * 20, (0.75F / scale),
+                    entity, world, true, pos,
                     ParticleBuilder.SwirlMotionType.OUT, true, true);
         }
 

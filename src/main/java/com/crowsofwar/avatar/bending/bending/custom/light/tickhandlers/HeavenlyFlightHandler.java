@@ -137,7 +137,7 @@ public class HeavenlyFlightHandler extends TickHandler {
             }
         }
 
-        return target.isInWater() || target.isSneaking() || bender.isFlying() || duration <= ctx.getData().getTickHandlerDuration(this);
+        return target.isInWater() || target.isSneaking();// || bender.isFlying() || duration <= ctx.getData().getTickHandlerDuration(this);
 
     }
 
