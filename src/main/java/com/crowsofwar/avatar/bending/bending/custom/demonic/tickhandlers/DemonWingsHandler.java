@@ -67,13 +67,13 @@ public class DemonWingsHandler extends TickHandler {
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).clr(r, g, b, 215 + AvatarUtils.getRandomNumberInRange(0, 40))
                         .fade(rRandom, gRandom, bRandom, 160 + AvatarUtils.getRandomNumberInRange(0, 40))
                         .pos(pos.toMinecraft()).vel(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20)
-                        .scale(size).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(new Demonbending()).collide(true)
-                        .ability(wings).spawnEntity(target).glow(true).spawn(world);
+                        .scale(size * 4).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(new Demonbending()).collide(true)
+                        .ability(wings).spawnEntity(target).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 50).spawn(world);
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).clr(r, g * 4, b, 215 + AvatarUtils.getRandomNumberInRange(0, 40))
                         .fade(rRandom, gRandom * 4, bRandom, 160 + AvatarUtils.getRandomNumberInRange(0, 40))
                         .pos(pos.toMinecraft()).vel(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20)
-                        .scale(size).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(new Demonbending()).collide(true)
-                        .ability(wings).spawnEntity(target).glow(true).spawn(world);
+                        .scale(size * 4).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(new Demonbending()).collide(true)
+                        .ability(wings).spawnEntity(target).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 50).spawn(world);
             }
         }
         int duration = 40;

@@ -148,8 +148,8 @@ public class DeathDescentHandler extends TickHandler {
 
         World world = ctx.getWorld();
         EntityLivingBase entity = ctx.getBenderEntity();
-        AbilityData abilityData = ctx.getData().getAbilityData("flame_glide");
-        AbilityDeathDescent jump = (AbilityDeathDescent) Abilities.get("flame_glide");
+        AbilityData abilityData = ctx.getData().getAbilityData("death_descent");
+        AbilityDeathDescent jump = (AbilityDeathDescent) Abilities.get("death_descent");
 
         if (jump != null && jump.getBooleanProperty(STOP_SHOCKWAVE, abilityData)) {
             float speed = jump.getProperty(SPEED, abilityData).floatValue() / 5;
