@@ -51,15 +51,12 @@ public class PurifyHandler extends TickHandler {
 
 
         if (world.isRemote) {
-            int rRandom = fadeR < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeR * 2) : AvatarUtils.getRandomNumberInRange(fadeR / 2,
-                    fadeR * 2);
-            int gRandom = fadeG < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeG * 2) : AvatarUtils.getRandomNumberInRange(fadeG / 2,
-                    fadeG * 2);
-            int bRandom = fadeB < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeB * 2) : AvatarUtils.getRandomNumberInRange(fadeB / 2,
-                    fadeB * 2);
+            int rRandom = AvatarUtils.getRandomNumberInRange((int) (fadeR * 0.75), fadeR * 2);
+            int gRandom = AvatarUtils.getRandomNumberInRange((int) (fadeG * 0.75), fadeG * 2);
+            int bRandom = AvatarUtils.getRandomNumberInRange((int) (fadeB * 0.75), fadeB * 2);
             ParticleBuilder.create(ParticleBuilder.Type.FLASH).time(25 + AvatarUtils.getRandomNumberInRange(1, 2)).
-                    clr(r, g, b, 10 + AvatarUtils.getRandomNumberInRange(0, 15)).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(50, 140))
-                    .element(new Lightbending()).scale(scale).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 25).swirl((int) (purifyDuration / 20 * scale),
+                    clr(r / 255F, g / 255F, b / 255F, 0.0001F).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(50, 140))
+                    .element(new Lightbending()).scale(scale).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 95).swirl((int) (purifyDuration / 20 * scale),
                     (int) (scale * Math.PI * 2), scale * 1.5F, scale / 4, purifyDuration * 20, (-1 / scale),
                     entity, world, false, AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(0, entity.getEyeHeight() / 2, 0),
                     ParticleBuilder.SwirlMotionType.OUT, true, true);

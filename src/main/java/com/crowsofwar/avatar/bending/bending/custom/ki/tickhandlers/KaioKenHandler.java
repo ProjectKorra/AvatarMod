@@ -56,7 +56,7 @@ public class KaioKenHandler extends TickHandler {
             int bRandom = fadeB < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeB * 2) : AvatarUtils.getRandomNumberInRange(fadeB / 2,
                     fadeB * 2);
             ParticleBuilder.create(ParticleBuilder.Type.FLASH).time(25 + AvatarUtils.getRandomNumberInRange(1, 2)).
-                    clr(r, g, b, 50 + AvatarUtils.getRandomNumberInRange(0, 15)).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(50, 140))
+                    clr(r, g, b, 30 + AvatarUtils.getRandomNumberInRange(0, 15)).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(50, 140))
                     .element(new Kibending()).scale(scale).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 25).swirl((int) (kaioKenDuration / 20 * scale),
                     (int) (scale * Math.PI * 2), scale * 1.5F, scale / 4, kaioKenDuration * 20, (-1 / scale),
                     entity, world, false, AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(0, entity.getEyeHeight() / 2, 0),
