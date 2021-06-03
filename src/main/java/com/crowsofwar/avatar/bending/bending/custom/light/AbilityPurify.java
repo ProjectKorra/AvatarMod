@@ -1,11 +1,8 @@
 package com.crowsofwar.avatar.bending.bending.custom.light;
 
 import com.crowsofwar.avatar.bending.bending.Ability;
-import com.crowsofwar.avatar.bending.bending.custom.dark.AbilityCorrupt;
 import com.crowsofwar.avatar.bending.bending.custom.dark.Darkbending;
-import com.crowsofwar.avatar.bending.bending.custom.dark.powermods.CorrupPowerModifier;
-import com.crowsofwar.avatar.bending.bending.custom.demonic.Demonbending;
-import com.crowsofwar.avatar.bending.bending.fire.powermods.ImmolatePowerModifier;
+import com.crowsofwar.avatar.bending.bending.custom.light.powermods.PurifyPowerModifier;
 import com.crowsofwar.avatar.entity.EntityLightOrb;
 import com.crowsofwar.avatar.entity.data.Behavior;
 import com.crowsofwar.avatar.entity.data.LightOrbBehavior;
@@ -24,9 +21,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.Objects;
-import java.util.UUID;
 
-import static com.crowsofwar.avatar.util.data.TickHandlerController.PURIFY_PARTICLE_SPAWNER;
+import static com.crowsofwar.avatar.util.data.TickHandlerController.PURIFY_HANDLER;
 
 public class AbilityPurify extends Ability {
 
@@ -103,7 +99,7 @@ public class AbilityPurify extends Ability {
 
             if (data.hasBendingId(getBendingId())) {
 
-                ImmolatePowerModifier modifier = new ImmolatePowerModifier();
+                PurifyPowerModifier modifier = new PurifyPowerModifier();
                 modifier.setTicks(duration);
 
                 // Ignore warning; we know manager != null if they have the bending style
@@ -126,7 +122,7 @@ public class AbilityPurify extends Ability {
             if (!world.isRemote)
                 world.spawnEntity(orb);
             abilityData.addXp(getProperty(XP_USE, ctx).floatValue());
-            data.addTickHandler(PURIFY_PARTICLE_SPAWNER, ctx);
+            data.addTickHandler(PURIFY_HANDLER, ctx);
 
         }
 
@@ -147,7 +143,7 @@ public class AbilityPurify extends Ability {
                 assert emitter instanceof EntityPlayer || emitter instanceof EntityBender;
                 Bender b = Bender.get(emitter);
                 if (b != null && BendingData.getFromEntity(emitter) != null && entity.ticksExisted > 1) {
-                    if (!Objects.requireNonNull(b.getData().getPowerRatingManager(Darkbending.ID)).hasModifier(CorrupPowerModifier.class)) {
+                    if (!Objects.requireNonNull(b.getData().getPowerRatingManager(Darkbending.ID)).hasModifier(PurifyPowerModifier.class)) {
                         entity.setDead();
                     }
                 }

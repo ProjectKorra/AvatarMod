@@ -2,8 +2,6 @@ package com.crowsofwar.avatar.bending.bending.custom.dark;
 
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.custom.dark.powermods.CorrupPowerModifier;
-import com.crowsofwar.avatar.bending.bending.fire.Firebending;
-import com.crowsofwar.avatar.bending.bending.fire.powermods.ImmolatePowerModifier;
 import com.crowsofwar.avatar.entity.EntityLightOrb;
 import com.crowsofwar.avatar.entity.data.Behavior;
 import com.crowsofwar.avatar.entity.data.LightOrbBehavior;
@@ -23,7 +21,7 @@ import net.minecraft.world.World;
 
 import java.util.Objects;
 
-import static com.crowsofwar.avatar.util.data.TickHandlerController.PURIFY_PARTICLE_SPAWNER;
+import static com.crowsofwar.avatar.util.data.TickHandlerController.CORRUPT_HANDLER;
 
 /**
  * Part of a series of custom abilities and elements.
@@ -104,7 +102,7 @@ public class AbilityCorrupt extends Ability {
 
             if (data.hasBendingId(getBendingId())) {
 
-                ImmolatePowerModifier modifier = new ImmolatePowerModifier();
+                CorrupPowerModifier modifier = new CorrupPowerModifier();
                 modifier.setTicks(duration);
 
                 // Ignore warning; we know manager != null if they have the bending style
@@ -127,7 +125,7 @@ public class AbilityCorrupt extends Ability {
             if (!world.isRemote)
                 world.spawnEntity(orb);
             abilityData.addXp(getProperty(XP_USE, ctx).floatValue());
-            data.addTickHandler(PURIFY_PARTICLE_SPAWNER, ctx);
+            data.addTickHandler(CORRUPT_HANDLER, ctx);
 
         }
 

@@ -7,7 +7,6 @@ import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.PowerRatingModifier;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
-import net.minecraft.entity.EntityLivingBase;
 
 import java.util.Objects;
 
@@ -26,10 +25,6 @@ public class CorrupPowerModifier extends PowerRatingModifier {
 
     @Override
     public boolean onUpdate(BendingContext ctx) {
-
-        EntityLivingBase entity = ctx.getBenderEntity();
-        AbilityData abilityData = AbilityData.get(entity, "corrupt");
-
         return super.onUpdate(ctx);
     }
 

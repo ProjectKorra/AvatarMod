@@ -2,10 +2,10 @@ package com.crowsofwar.avatar.bending.bending.custom.demonic.tickhandlers;
 
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
-import com.crowsofwar.avatar.bending.bending.custom.dark.AbilityCorrupt;
 import com.crowsofwar.avatar.bending.bending.custom.dark.Darkbending;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.AbilityDemonicAura;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
+import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.BendingData;
@@ -29,20 +29,20 @@ public class DemonicAuraHandler extends TickHandler {
         AbilityData aD = data.getAbilityData("demonic_aura");
         World world = ctx.getWorld();
 
-        AbilityDemonicAura demonic_aura = (AbilityDemonicAura) Abilities.get("demonic_aura");
+        AbilityDemonicAura demonicAura = (AbilityDemonicAura) Abilities.get("demonic_aura");
         int duration = data.getTickHandlerDuration(this);
         float scale = 0.75F + Math.max(0, aD.getLevel()) * 0.125F;
 
-        assert demonic_aura != null;
-        int corruptDuration = demonic_aura.getProperty(Ability.DURATION, aD).intValue();
+        assert demonicAura != null;
+        int demonicAuraDuration = demonicAura.getProperty(Ability.DURATION, aD).intValue();
 
 		int r, g, b, fadeR, fadeG, fadeB;
-		r = demonic_aura.getProperty(Ability.R, aD).intValue();
-		g = demonic_aura.getProperty(Ability.G, aD).intValue();
-		b = demonic_aura.getProperty(Ability.B, aD).intValue();
-		fadeR = demonic_aura.getProperty(Ability.FADE_R, aD).intValue();
-		fadeG = demonic_aura.getProperty(Ability.FADE_G, aD).intValue();
-		fadeB = demonic_aura.getProperty(Ability.FADE_B, aD).intValue();
+		r = demonicAura.getProperty(Ability.R, aD).intValue();
+		g = demonicAura.getProperty(Ability.G, aD).intValue();
+		b = demonicAura.getProperty(Ability.B, aD).intValue();
+		fadeR = demonicAura.getProperty(Ability.FADE_R, aD).intValue();
+		fadeG = demonicAura.getProperty(Ability.FADE_G, aD).intValue();
+		fadeB = demonicAura.getProperty(Ability.FADE_B, aD).intValue();
 
         scale *= (float) aD.getDamageMult() * aD.getXpModifier();
 
@@ -56,9 +56,12 @@ public class DemonicAuraHandler extends TickHandler {
                     fadeG * 2);
             int bRandom = fadeB < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeB * 2) : AvatarUtils.getRandomNumberInRange(fadeB / 2,
                     fadeB * 2);
-            ParticleBuilder.create(ParticleBuilder.Type.FLASH).time(4 + AvatarUtils.getRandomNumberInRange(1, 4)).
-                    clr(r, g, b, 150).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(50, 140))
-                    .element(new Darkbending()).scale(scale).glow(true).swirl();
+            ParticleBuilder.create(ParticleBuilder.Type.FLASH).time(25 + AvatarUtils.getRandomNumberInRange(1, 2)).
+                    clr(r, g, b, 50 + AvatarUtils.getRandomNumberInRange(0, 30)).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(50, 140))
+                    .element(new Darkbending()).scale(scale).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 50).swirl((int) (demonicAuraDuration / 20 * scale),
+                    (int) (scale * Math.PI * 2), scale * 1.5F, scale / 4, demonicAuraDuration * 20, (-1 / scale),
+                    entity, world, true, AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(0, entity.getEyeHeight() / 2, 0),
+                    ParticleBuilder.SwirlMotionType.OUT, true, true);
         }
 
         //The particles take a while to disappear after the ability finishes- so you decrease the time the particles can spawn
@@ -81,7 +84,7 @@ public class DemonicAuraHandler extends TickHandler {
                         .element(new Darkbending()).scale(scale).glow(true).spawn(world);
             }
         }
-        return duration >= corruptDuration;
+        return duration >= demonicAuraDuration;
     }
 }
 

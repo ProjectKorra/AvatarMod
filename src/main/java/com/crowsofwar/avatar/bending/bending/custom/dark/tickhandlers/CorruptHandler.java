@@ -3,12 +3,9 @@ package com.crowsofwar.avatar.bending.bending.custom.dark.tickhandlers;
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.custom.dark.AbilityCorrupt;
-import com.crowsofwar.avatar.bending.bending.custom.dark.Darkbending;
-import com.crowsofwar.avatar.bending.bending.fire.AbilityImmolate;
-import com.crowsofwar.avatar.bending.bending.fire.Firebending;
-import com.crowsofwar.avatar.client.particle.NetworkParticleSpawner;
+import com.crowsofwar.avatar.bending.bending.custom.light.Lightbending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
-import com.crowsofwar.avatar.client.particle.ParticleSpawner;
+import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.BendingData;
@@ -39,29 +36,43 @@ public class CorruptHandler extends TickHandler {
         assert corrupt != null;
         int corruptDuration = corrupt.getProperty(Ability.DURATION, aD).intValue();
 
-		int r, g, b, fadeR, fadeG, fadeB;
-		r = corrupt.getProperty(Ability.R, aD).intValue();
-		g = corrupt.getProperty(Ability.G, aD).intValue();
-		b = corrupt.getProperty(Ability.B, aD).intValue();
-		fadeR = corrupt.getProperty(Ability.FADE_R, aD).intValue();
-		fadeG = corrupt.getProperty(Ability.FADE_G, aD).intValue();
-		fadeB = corrupt.getProperty(Ability.FADE_B, aD).intValue();
+        int r, g, b, fadeR, fadeG, fadeB;
+        r = corrupt.getProperty(Ability.R, aD).intValue();
+        g = corrupt.getProperty(Ability.G, aD).intValue();
+        b = corrupt.getProperty(Ability.B, aD).intValue();
+        fadeR = corrupt.getProperty(Ability.FADE_R, aD).intValue();
+        fadeG = corrupt.getProperty(Ability.FADE_G, aD).intValue();
+        fadeB = corrupt.getProperty(Ability.FADE_B, aD).intValue();
 
         scale *= (float) aD.getDamageMult() * aD.getXpModifier();
 
         //Maybe use swirls instead???
 
 
+        if (world.isRemote) {
+            int rRandom = fadeR < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeR * 2) : AvatarUtils.getRandomNumberInRange(fadeR / 2,
+                    fadeR * 2);
+            int gRandom = fadeG < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeG * 2) : AvatarUtils.getRandomNumberInRange(fadeG / 2,
+                    fadeG * 2);
+            int bRandom = fadeB < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeB * 2) : AvatarUtils.getRandomNumberInRange(fadeB / 2,
+                    fadeB * 2);
+            ParticleBuilder.create(ParticleBuilder.Type.FLASH).time(25 + AvatarUtils.getRandomNumberInRange(1, 2)).
+                    clr(r, g, b, 25 + AvatarUtils.getRandomNumberInRange(0, 15)).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(50, 140))
+                    .element(new Lightbending()).scale(scale).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 25).swirl((int) (corruptDuration / 20 * scale),
+                    (int) (scale * Math.PI * 2), scale * 1.5F, scale / 4, corruptDuration * 20, (-1 / scale),
+                    entity, world, false, AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(0, entity.getEyeHeight() / 2, 0),
+                    ParticleBuilder.SwirlMotionType.OUT, true, true);
+        }
 
         //The particles take a while to disappear after the ability finishes- so you decrease the time the particles can spawn
         if (world.isRemote) {
             for (int i = 0; i < 10 + Math.max(aD.getLevel(), 1) * 2; i++) {
-				int rRandom = fadeR < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeR * 2) : AvatarUtils.getRandomNumberInRange(fadeR / 2,
-						fadeR * 2);
-				int gRandom = fadeG < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeG * 2) : AvatarUtils.getRandomNumberInRange(fadeG / 2,
-						fadeG * 2);
-				int bRandom = fadeB < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeB * 2) : AvatarUtils.getRandomNumberInRange(fadeB / 2,
-						fadeB * 2);
+                int rRandom = fadeR < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeR * 2) : AvatarUtils.getRandomNumberInRange(fadeR / 2,
+                        fadeR * 2);
+                int gRandom = fadeG < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeG * 2) : AvatarUtils.getRandomNumberInRange(fadeG / 2,
+                        fadeG * 2);
+                int bRandom = fadeB < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeB * 2) : AvatarUtils.getRandomNumberInRange(fadeB / 2,
+                        fadeB * 2);
 
                 double random = world.rand.nextGaussian();
                 double radius = world.rand.nextDouble() * 0.2F * Math.max(aD.getLevel(), 0);
@@ -70,7 +81,7 @@ public class CorruptHandler extends TickHandler {
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(location.plus(Vector.getEntityPos(entity)).toMinecraft()).time(4 + AvatarUtils.getRandomNumberInRange(1, 4)).
                         vel(world.rand.nextGaussian() / 40, world.rand.nextDouble() / 2, world.rand.nextGaussian() / 40)
                         .clr(r, g, b, 150).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(50, 140))
-                        .element(new Darkbending()).scale(scale).spawn(world);
+                        .element(new Lightbending()).scale(scale).glow(true).spawn(world);
             }
         }
         return duration >= corruptDuration;

@@ -1,11 +1,8 @@
 package com.crowsofwar.avatar.bending.bending.custom.ki;
 
 import com.crowsofwar.avatar.bending.bending.Ability;
-import com.crowsofwar.avatar.bending.bending.custom.dark.AbilityCorrupt;
 import com.crowsofwar.avatar.bending.bending.custom.dark.Darkbending;
-import com.crowsofwar.avatar.bending.bending.custom.dark.powermods.CorrupPowerModifier;
 import com.crowsofwar.avatar.bending.bending.custom.ki.powermods.KaioKenPowerModifier;
-import com.crowsofwar.avatar.bending.bending.fire.powermods.ImmolatePowerModifier;
 import com.crowsofwar.avatar.entity.EntityLightOrb;
 import com.crowsofwar.avatar.entity.data.Behavior;
 import com.crowsofwar.avatar.entity.data.LightOrbBehavior;
@@ -24,9 +21,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.Objects;
-import java.util.UUID;
 
-import static com.crowsofwar.avatar.util.data.TickHandlerController.PURIFY_PARTICLE_SPAWNER;
+import static com.crowsofwar.avatar.util.data.TickHandlerController.KAIO_KEN_HANDLER;
 
 public class AbilityKaioKen extends Ability {
 
@@ -125,7 +121,7 @@ public class AbilityKaioKen extends Ability {
             if (!world.isRemote)
                 world.spawnEntity(orb);
             abilityData.addXp(getProperty(XP_USE, ctx).floatValue());
-            data.addTickHandler(PURIFY_PARTICLE_SPAWNER, ctx);
+            data.addTickHandler(KAIO_KEN_HANDLER, ctx);
 
         }
 
@@ -146,7 +142,7 @@ public class AbilityKaioKen extends Ability {
                 assert emitter instanceof EntityPlayer || emitter instanceof EntityBender;
                 Bender b = Bender.get(emitter);
                 if (b != null && BendingData.getFromEntity(emitter) != null && entity.ticksExisted > 1) {
-                    if (!Objects.requireNonNull(b.getData().getPowerRatingManager(Darkbending.ID)).hasModifier(CorrupPowerModifier.class)) {
+                    if (!Objects.requireNonNull(b.getData().getPowerRatingManager(Darkbending.ID)).hasModifier(KaioKenPowerModifier.class)) {
                         entity.setDead();
                     }
                 }
