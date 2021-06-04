@@ -28,12 +28,12 @@ buildscript {
     }
 }
 
-apply plugin: "java"
-apply plugin: "idea"
-apply plugin: "net.minecraftforge.gradle.forge"
-apply plugin: "com.github.johnrengelman.shadow"
-apply plugin: "org.sonarqube"
-apply plugin: "maven-publish"
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'org.sonarqube'
+apply plugin: 'maven-publish'
 
 ext.config = parseConfig(file("build.properties"))
 ext.dependenciesConfig = parseConfig(file("dependencies.properties"))
