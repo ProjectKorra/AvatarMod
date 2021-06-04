@@ -8,7 +8,7 @@ buildscript {
         }
         maven {
             name = "forge"
-            url = "http://files.minecraftforge.net/maven/"
+            url = "http://maven.minecraftforge.net"
         }
         maven {
             name = "sonatype"
@@ -74,7 +74,7 @@ repositories {
     
     maven {
         name = "forge"
-        url = "https://files.minecraftforge.net/maven"
+        url = "https://maven.minecraftforge.net"
     }
     
     maven {
