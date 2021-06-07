@@ -20,6 +20,8 @@ public class StatCtrlShootAirburst extends StatusControl {
 
 	@Override
 	public boolean execute(BendingContext ctx) {
+		//This was because status controls were not originally executed client and server side.
+		//I've changed that but haven't changed this; not too concerned, we are going to rewrite after all.
 		BendingData data = ctx.getData();
 		if (ctx.getData().hasTickHandler(TickHandlerController.AIRBURST_CHARGE_HANDLER)) {
 			data.addTickHandler(TickHandlerController.SHOOT_AIRBURST, ctx);

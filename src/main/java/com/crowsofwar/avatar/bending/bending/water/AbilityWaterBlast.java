@@ -2,7 +2,6 @@ package com.crowsofwar.avatar.bending.bending.water;
 
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
-import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.StatusControlController;
@@ -26,7 +25,7 @@ import java.util.Objects;
  * Level 1 - Simple Water Blast. Animated swirl charging.
  * Level 2 - Faster, Stronger, Bigger, Cooler. Ya know. Pierces.
  * Level 3 - Charging now creates a shield, and you can left click to burst! 3D Animated Swirl. Draw from plants!
- *           Big source radius.
+ * Big source radius.
  * Level 4 Path 1: Crushing Cyclone - When charging, your shield has an AOE slow and damaging effect. Additionally, your burst pulls nearby enemies in
  * before annihilating them.
  * Level 4 Path 2: Piercing Maelstrom - Your blasts are significantly empowered, creating massive explosions upon hitting a surface.
@@ -39,7 +38,8 @@ public class AbilityWaterBlast extends Ability {
     public static String
             SHIELD = "shield",
             BURST = "burst",
-            PULL = "pull";
+            PULL = "pull",
+            PULL_TIME = "pullTime";
 
     public AbilityWaterBlast() {
         super(Waterbending.ID, "water_blast");
@@ -49,7 +49,8 @@ public class AbilityWaterBlast extends Ability {
     @Override
     public void init() {
         super.init();
-        addProperties(WATER_AMOUNT, SOURCE_ANGLES, SOURCE_RANGE, EFFECT_DAMAGE, EFFECT_RADIUS, EFFECT_LEVEl);
+        addProperties(WATER_AMOUNT, SOURCE_ANGLES, SOURCE_RANGE, EFFECT_DAMAGE,
+                EFFECT_RADIUS, EFFECT_LEVEl, PULL_TIME, CONE_WIDTH, BURST_RANGE, BURST_RADIUS);
         addBooleanProperties(PLANT_BEND, SHIELD, BURST, PULL, PIERCING);
     }
 
@@ -61,7 +62,6 @@ public class AbilityWaterBlast extends Ability {
         EntityLivingBase entity = ctx.getBenderEntity();
         BendingData data = ctx.getData();
         World world = ctx.getWorld();
-        AbilityData abilityData = ctx.getAbilityData();
 
         Vector targetPos = Waterbending.getClosestWaterbendableBlock(entity,
                 Objects.requireNonNull(Abilities.get("water_blast")), ctx);

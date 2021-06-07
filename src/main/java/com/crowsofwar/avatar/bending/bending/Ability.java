@@ -34,7 +34,6 @@ import com.crowsofwar.avatar.network.packets.PacketCSyncAbilityProperties;
 import com.crowsofwar.avatar.util.Raytrace;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
-import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
@@ -88,7 +87,11 @@ public abstract class Ability {
             COLOUR_G = "colourG",
             COLOUR_B = "colourB",
             POTION_EFFECTS = "potionEffects",
-            PIERCING = "piercing";
+            PIERCING = "piercing",
+            //In degrees
+            CONE_WIDTH = "coneWidth",
+            BURST_RANGE = "burstRange",
+            BURST_RADIUS = "burstRadius";
     //Airbending stuff
     public static final String
             PUSH_REDSTONE = "pushRedstone",

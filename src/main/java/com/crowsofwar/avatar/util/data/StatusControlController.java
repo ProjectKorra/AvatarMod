@@ -8,6 +8,7 @@ import com.crowsofwar.avatar.bending.bending.lightning.StatCtrlThrowLightningSpe
 import com.crowsofwar.avatar.bending.bending.sand.StatCtrlSandstormRedirect;
 import com.crowsofwar.avatar.bending.bending.water.statctrls.*;
 import com.crowsofwar.avatar.bending.bending.water.statctrls.waterarc.StatCtrlThrowWater;
+import com.crowsofwar.avatar.bending.bending.water.statctrls.waterblast.StatCtrlBurstWaterBlast;
 import com.crowsofwar.avatar.bending.bending.water.statctrls.waterblast.StatCtrlChargeWaterBlast;
 import com.crowsofwar.avatar.bending.bending.water.statctrls.waterbubble.StatCtrlLobBubble;
 import com.crowsofwar.avatar.bending.bending.water.statctrls.waterskate.StatCtrlSkateJump;
@@ -56,6 +57,7 @@ public class StatusControlController {
 			THROW_WATER = new StatCtrlThrowWater(),
 			CHARGE_WATER = new StatCtrlChargeWaterBlast(true),
 			RELEASE_WATER = new StatCtrlChargeWaterBlast(false),
+			BURST_WATER = new StatCtrlBurstWaterBlast(),
 			REDIRECT_FIRE = new StatCtrlFireRedirect(),
 			SPLIT_FIRE = new StatCtrlFireSplit(),
 			EARTH_REDIRECT = new StatCtrlEarthRedirect(),

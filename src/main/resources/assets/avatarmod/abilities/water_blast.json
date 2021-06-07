@@ -19,6 +19,10 @@
       "sourceRange": 1,
       "sourceAngles": 45,
       "waterAmount": 1,
+      "pullTime": 0,
+      "coneWidth": 0,
+      "burstRadius": 0,
+      "burstRange": 0,
       "plantbend": false,
       "shield": false,
       "burst": false,
@@ -63,6 +67,9 @@
       "sourceRange": 5,
       "sourceAngles": 45,
       "waterAmount": 3,
+      "coneWidth": 30,
+      "burstRadius": 2,
+      "burstRange": 4,
       "plantbend": true,
       "shield": true,
       "burst": true,
@@ -83,6 +90,10 @@
       "chiOnHit": 1.875,
       "damage": 7,
       "chargeTime": 25,
+      "pullTime": 10,
+      "coneWidth": 45,
+      "burstRadius": 4,
+      "burstRange": 6,
       "aoe": true,
       "pull": true
     },
@@ -100,7 +111,9 @@
       "knockback": 6,
       "chiOnHit": 2.0,
       "damage": 8,
-      "chargeTime": 20
+      "chargeTime": 20,
+      "pullTime": 0,
+      "pull": false
     }
   }
 }

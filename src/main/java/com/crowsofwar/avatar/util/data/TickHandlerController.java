@@ -49,6 +49,7 @@ public class TickHandlerController {
 	public static TickHandler SLIPSTREAM_WALK_HANDLER = new SlipstreamAirWalkHandler(23);
 	public static TickHandler RELEASE_EARTHSPIKE = new EarthSpikeHandler(24);
 	public static TickHandler SHOOT_AIRBURST = new ShootAirBurstHandler(25);
+	public static TickHandler WATER_BURST = new WaterBurstHandler(26);
 
 
 
