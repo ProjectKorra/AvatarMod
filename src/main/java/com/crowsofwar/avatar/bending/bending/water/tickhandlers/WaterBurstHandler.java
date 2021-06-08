@@ -22,12 +22,10 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.crowsofwar.avatar.bending.bending.air.tickhandlers.AirBurstHandler.AIRBURST_MOVEMENT_MODIFIER_ID;
@@ -60,10 +58,11 @@ public class WaterBurstHandler extends TickHandler {
         if (burst != null && abilityData != null && bender.consumeChi(burst.getChiCost(abilityData))) {
 
             //Only used for determining the charge amount
-            int durationToFire = burst.getProperty(AbilityWaterBlast.PULL_TIME, abilityData).intValue();
+            int chargeDuration = burst.getProperty(AbilityWaterBlast.CHARGE_TIME, abilityData).intValue();
+            int pullDuration = burst.getProperty(AbilityWaterBlast.PULL_TIME, abilityData).intValue();
 
-            durationToFire *= (2 - abilityData.getDamageMult());
-            durationToFire -= abilityData.getXpModifier() * 10;
+            chargeDuration *= (2 - abilityData.getDamageMult());
+            chargeDuration -= abilityData.getXpModifier() * 10;
 
 
             float damage = burst.getProperty(Ability.DAMAGE, abilityData).floatValue();
@@ -85,13 +84,13 @@ public class WaterBurstHandler extends TickHandler {
             }
             //Copies the charge calculations
             //Makes sure the charge is never 0.
-            charge = Math.max((3 * (duration / durationToFire)) + 1, 1);
+            charge = Math.max((3 * (duration / chargeDuration)) + 1, 1);
             charge = Math.min(charge, 4);
             //We don't want the charge going over 4
 
             size = burst.powerModify(size, abilityData);
             damage = burst.powerModify(damage, abilityData);
-            speed = burst.powerModify(size, abilityData);
+            speed = burst.powerModify(speed, abilityData);
             length = burst.powerModify(length, abilityData);
 
             damage *= (0.5 + 0.125 * charge);
@@ -102,7 +101,7 @@ public class WaterBurstHandler extends TickHandler {
             //You know what I'm gonna do.
 
             if (world.isRemote) {
-                double dtheta = 360.0 / (2 * Math.PI * length) - 1;
+                double dtheta = 360.0 / (2 * Math.PI * length * 5) - 1;
                 for (double theta = 0; theta < 360; theta += dtheta) {
                     double rtheta = Math.toRadians(theta);
                     Vector vector = new Vector(Math.cos(rtheta), 0, Math.sin(rtheta));
@@ -110,37 +109,25 @@ public class WaterBurstHandler extends TickHandler {
                             (Ability.CONE_WIDTH, abilityData).intValue()) {
                         //Water cube time
                         //What if swirl???
+                        //Welp this is being called, time to figure out why I can't see it
                         ParticleBuilder.create(ParticleBuilder.Type.CUBE).element(new Waterbending())
-                                .clr(0, 102, 255, 145).pos(vector.toMinecraft())
-                                .vel(vector.normalize().toMinecraft().add(world.rand.nextGaussian() / 10,
-                                        world.rand.nextGaussian() / 10, world.rand.nextGaussian() / 10))
-                                .spawnEntity(entity).scale(size / 5).ability(burst)
+                                .clr(0, 102, 255, 145).pos(vector.toMinecraft().add(Vector.getEyePos(entity).toMinecraft()))
+                                .vel(vector.normalize().times(0.0005).toMinecraft().add(world.rand.nextGaussian() / 40,
+                                        world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40))
+                                .spawnEntity(entity).scale(size / 2).ability(burst).time(14 + AvatarUtils.getRandomNumberInRange(0, 5))
                                 .collideParticles(true).spawn(world);
                     }
                 }
             }
             //Time to damage stuff
             if (!world.isRemote) {
-                List<Entity> hit = new ArrayList<>();
+                Vec3d startPos = Vector.getEyePos(entity).toMinecraft().add(0, -0.15, 0);
+                List<Entity> hit;
                 //What we wanna do is kind of approximate the hitbox, so we just make a bunch of AABB things
                 //and make them the same size as the particle.
-                double dtheta = 360.0 / (2 * Math.PI * length) - 1;
-                for (double theta = 0; theta < 360; theta += dtheta) {
-                    double rtheta = Math.toRadians(theta);
-                    Vector vector = new Vector(Math.cos(rtheta), 0, Math.sin(rtheta));
-                    if (vector.angle(Vector.getLookRectangular(entity)) < burst.getProperty
-                            (Ability.CONE_WIDTH, abilityData).intValue()) {
-                        AxisAlignedBB hitBox = new AxisAlignedBB(vector.x() - size / 10,
-                                vector.y() - size / 10, vector.z() - size / 10, vector.x() + size / 10,
-                                vector.y() + size / 10, vector.z() + size / 10);
-                        hit.addAll(world.getEntitiesWithinAABB(Entity.class, hitBox));
-                    }
-                }
-
-                //Then we wanna check through the player's vision to make sure they didn't miss it
-                // (e.g it's sitting in the middle of the cone)
-                hit.addAll(Raytrace.entityRaytrace(world, Vector.getEyePos(entity).minusY(0.15).toMinecraft(),
-                        entity.getLookVec(), size / 2, length));
+                hit = Raytrace.directionalVortexCollision(world, entity, entity.getLookVec(),
+                        (int) (length), 10, length, 0.05, size, startPos.x, startPos.y,
+                        startPos.z, size / 10);
 
                 if (!hit.isEmpty()) {
                     for (Entity target : hit) {
@@ -173,11 +160,17 @@ public class WaterBurstHandler extends TickHandler {
             if (modifier != null && entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(modifier)) {
                 entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(modifier);
             }
+            handleRemoval(ctx);
+            return duration >= pullDuration;
         }
+        handleRemoval(ctx);
+        return true;
+    }
+
+    public void handleRemoval(BendingContext ctx) {
         ctx.getData().removeTickHandler(WATER_CHARGE, ctx);
         ctx.getData().removeStatusControl(CHARGE_WATER);
         ctx.getData().removeStatusControl(BURST_WATER);
-        return true;
     }
 
     public void handleContact(AvatarEntity hit, AbilityWaterBlast blast,

@@ -26,7 +26,9 @@ import net.minecraft.world.World;
 
 import java.util.UUID;
 
+import static com.crowsofwar.avatar.bending.bending.water.AbilityWaterBlast.BURST;
 import static com.crowsofwar.avatar.config.ConfigSkills.SKILLS_CONFIG;
+import static com.crowsofwar.avatar.util.data.StatusControlController.BURST_WATER;
 
 public class WaterChargeHandler extends TickHandler {
     public static final UUID WATER_CHARGE_MOVEMENT_ID = UUID.fromString("87a0458a-38ea-4d7a-be3b-0fee10217aa6");
@@ -77,6 +79,9 @@ public class WaterChargeHandler extends TickHandler {
             speed *= (0.50 + 0.16667 * charge);
             size *= (0.50 + 0.16667 * charge);
             lifetime *= (0.70 + 0.10 * charge);
+
+            if (blast.getBooleanProperty(BURST, abilityData))
+                data.addStatusControl(BURST_WATER);
 
 
             applyMovementModifier(entity, MathHelper.clamp(movementMultiplier, 0.1f, 1));

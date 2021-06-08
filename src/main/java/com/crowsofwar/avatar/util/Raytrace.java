@@ -43,6 +43,11 @@ import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
+import static com.crowsofwar.avatar.util.AvatarParticleUtils.rotateAroundAxisX;
+import static com.crowsofwar.avatar.util.AvatarParticleUtils.rotateAroundAxisY;
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+
 public class Raytrace {
 
     //TODO: Some way to detect raytraces hitting each other!
@@ -243,6 +248,62 @@ public class Raytrace {
 
         return hit;
 
+    }
+
+    /**
+     * Good for vortex collision! Accurately gets entities within the cone.
+     * Iterates both over each individual point and also a point through the raytrace.
+     *
+     * @param world
+     * @param entity
+     * @param direction
+     * @param vortexLength
+     * @param minRadius
+     * @param radiusScale
+     * @param posX
+     * @param posY
+     * @param posZ
+     * @param borderSize
+     * @return
+     */
+    public static List<Entity> directionalVortexCollision(World world, EntityLivingBase entity, Vec3d direction,
+                                                          int rotations, int iterationSize, double vortexLength,
+                                                          double minRadius, double maxRadius, double posX, double posY,
+                                                          double posZ, float borderSize) {
+        List<Entity> targets = new ArrayList<>();
+        for (int rotation = 0; rotation < rotations; rotation++) {
+            for (int angle = 0; angle < 360; angle += iterationSize) {
+                double scale = angle / 360F * (rotation + 1);
+                //Essentially, this increases the radius across 360 degrees. If there's more than one rotation,
+                //it slows down how fast the radius increases
+                double radius = minRadius + scale * (maxRadius / rotations);
+                if (radius > maxRadius)
+                    radius = maxRadius;
+                //Why isn't this in radians
+                double x = radius * cos(Math.toRadians(angle));
+                double y = scale * (vortexLength / rotations);
+                if (y > vortexLength)
+                    y = vortexLength;
+                double z = radius * sin(Math.toRadians(angle));
+                Vec3d pos = new Vec3d(x, y, z);
+                if (entity != null && direction != null) {
+                    pos = rotateAroundAxisX(pos, entity.rotationPitch + 90);
+                    pos = rotateAroundAxisY(pos, entity.rotationYaw);
+                    pos = pos.add(posX, posY, posZ);
+
+                    AxisAlignedBB targetBox = new AxisAlignedBB(pos.x - borderSize, pos.y - borderSize,
+                            pos.z - borderSize, pos.x + borderSize, pos.y + borderSize, pos.z + borderSize);
+                    targets.addAll(world.getEntitiesWithinAABB(Entity.class, targetBox));
+                    //Starts out really small with a long distance, and inversely increases size while decreasing the
+                    //length of the raytrace.
+                    targets.addAll(entityRaytrace(world, new Vec3d(posX, posY, posZ).add(direction.scale(y)), direction,
+                            (float) radius, vortexLength - y));
+
+                }
+            }
+        }
+
+        return targets;
     }
 
     public static List<Entity> entityRaytrace(World world, Vec3d start, Vec3d direction,

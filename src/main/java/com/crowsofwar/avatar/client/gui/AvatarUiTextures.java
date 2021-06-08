@@ -104,7 +104,7 @@ public class AvatarUiTextures {
 
 	public static ResourceLocation getChiTexture(UUID bendingID) {
 		BendingStyle style = BendingStyles.get(bendingID);
-		ResourceLocation loc;
+		assert style != null;
 		String suffix = "_" + style.getName();
 		String prefix = "chi";
 		return new ResourceLocation("avatarmod", "textures/gui/chi/" + prefix + suffix + ".png");

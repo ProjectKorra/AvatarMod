@@ -58,6 +58,8 @@ public class DamageUtils {
             else
                 return (target.canBePushed() && target.canBeCollidedWith()) || target instanceof EntityLivingBase || target instanceof AvatarEntity;
         } else {
+            if (attacker == target)
+                return false;
             if (attacker instanceof EntityLivingBase) {
                 if (attacker.getTeam() != null && attacker.getTeam() == target.getTeam())
                     return false;
