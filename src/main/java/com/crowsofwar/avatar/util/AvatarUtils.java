@@ -375,6 +375,7 @@ public class AvatarUtils {
             ((EntityPlayerMP) entity).connection.sendPacket(new SPacketEntityTeleport(entity));
             ((EntityPlayerMP) entity).connection.sendPacket(new SPacketEntityVelocity(entity));
         }
+        entity.velocityChanged = true;
     }
 
     public static void setVelocity(Entity entity, Vec3d vel) {
@@ -672,6 +673,12 @@ public class AvatarUtils {
 
         }
 
+    }
+
+    public static Vec3d scale(Vec3d initial, Vec3d scaler) {
+        Vec3d toReturn;
+        toReturn = new Vec3d(initial.x * scaler.x, initial.y * scaler.y, initial.z * scaler.z);
+        return toReturn;
     }
 
 

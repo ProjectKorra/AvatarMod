@@ -57,7 +57,7 @@ public class WaterParticleSpawner extends TickHandler {
                     //Rings around the player (not around your finger; the police want you)
                     // C u l t u r e
                     ParticleBuilder.create(ParticleBuilder.Type.CUBE).spawnEntity(entity).clr(0, 102, 255, 145).scale(size)
-                            .time(32).collideParticles(true).element(new Waterbending()).swirl(rings, particles, (float) radius, size / 2F, (float) maxRadius * 20,
+                            .time(28).collideParticles(true).element(new Waterbending()).swirl(rings, particles, (float) radius, size / 1.5F, (float) maxRadius * 20,
                             (1 / size), entity, world, true, pos,
                             ParticleBuilder.SwirlMotionType.IN, true, true);
                 } else {

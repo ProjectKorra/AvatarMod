@@ -107,7 +107,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
 
     @Override
     public boolean onCollideWithSolid() {
-        System.out.println("Collided? " + super.onCollideWithSolid());
         return super.onCollideWithSolid();
     }
 
@@ -122,8 +121,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
     @Override
     public void setDead() {
         super.setDead();
-        if (!world.isRemote)
-            Thread.dumpStack();
     }
 
     @Override
@@ -194,7 +191,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
         setEntitySize(getAvgSize());
 
         if (world.isRemote && getOwner() != null){
-            for (int i = 0; i < 2 * (width); i++) {
+            for (int i = 0; i < 3 * (width); i++) {
                 Vec3d mid = AvatarEntityUtils.getMiddleOfEntity(this);
                 double spawnX = mid.x + world.rand.nextGaussian() / 20;
                 double spawnY = mid.y + world.rand.nextGaussian() / 20;

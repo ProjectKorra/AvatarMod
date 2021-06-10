@@ -74,10 +74,10 @@ public class DamageUtils {
 
     public static boolean isDamageable(Entity attacker, Entity target) {
         boolean attackable = true;
-        if (target instanceof EntityLivingBase) {
+        /*if (target instanceof EntityLivingBase) {
             if (((EntityLivingBase) target).hurtTime > 0)
                 attackable = false;
-        } else if (target instanceof AvatarEntity)
+        } else **/if (target instanceof AvatarEntity)
             attackable = target instanceof IShieldEntity;
 
         return attackable && isValidTarget(attacker, target) && target.canBeAttackedWithItem()

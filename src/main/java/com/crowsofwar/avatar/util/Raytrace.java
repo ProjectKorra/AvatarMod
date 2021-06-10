@@ -253,17 +253,6 @@ public class Raytrace {
     /**
      * Good for vortex collision! Accurately gets entities within the cone.
      * Iterates both over each individual point and also a point through the raytrace.
-     *
-     * @param world
-     * @param entity
-     * @param direction
-     * @param vortexLength
-     * @param minRadius
-     * @param radiusScale
-     * @param posX
-     * @param posY
-     * @param posZ
-     * @param borderSize
      * @return
      */
     public static List<Entity> directionalVortexCollision(World world, EntityLivingBase entity, Vec3d direction,

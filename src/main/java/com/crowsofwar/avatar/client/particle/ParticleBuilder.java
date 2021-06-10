@@ -9,7 +9,7 @@ import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import com.crowsofwar.avatar.client.particles.newparticles.ParticleAvatar;
 import com.crowsofwar.avatar.client.particles.newparticles.behaviour.ParticleAvatarBehaviour;
 import com.crowsofwar.avatar.client.particles.newparticles.renderlayers.ParticleBatchRenderer;
-import com.crowsofwar.avatar.util.AvatarParticleUtils;
+import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -25,6 +25,10 @@ import java.util.Random;
 import java.util.UUID;
 
 import static com.crowsofwar.avatar.config.ConfigClient.CLIENT_CONFIG;
+import static com.crowsofwar.avatar.util.AvatarParticleUtils.rotateAroundAxisX;
+import static com.crowsofwar.avatar.util.AvatarParticleUtils.rotateAroundAxisY;
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
 
 /**
  * <i>"Don't waste time spawning particles manually - let {@code ParticleBuilder} do the work for you!"</i>
@@ -243,7 +247,7 @@ public final class ParticleBuilder {
                     }
                     //Flow animation
                     double yaw = Math.toRadians(i > 0 ? i * (180F / (rings)) : 0);
-                   // yaw += Math.toRadians(entity.rotationYaw);
+                    // yaw += Math.toRadians(entity.rotationYaw);
                     //For some reason, -90 breaks multiple rings (they stack instead of spreading). However,
                     //in order to make a horizontal ring, you need -90.s
                     double pitch = Math.toRadians(i > 0 ? 0 : -90);
@@ -262,15 +266,65 @@ public final class ParticleBuilder {
                     vel = targetPos.subtract(circlePos).normalize().scale(0.10 * velMult).add(vel);
                     if (followEntity)
                         vel = vel.add(entity.motionX, entity.motionY, entity.motionZ);
-                    try {
-                        this.pos(circlePos).vel(vel).spawn(world, false);
-                    } catch (IllegalStateException ignored) {
-                        ignored.printStackTrace();
-                    }
+                    this.pos(circlePos).vel(vel).spawn(world, false);
                 }
             }
         }
         reset();
+    }
+
+    /**
+     * Vortexes given particles around a given direction axis.
+     *
+     * @param world
+     * @param entity
+     * @param direction
+     * @param rotations
+     * @param iterationSize
+     * @param vortexLength
+     * @param minRadius
+     * @param maxRadius
+     * @param posX
+     * @param posY
+     * @param posZ
+     * @return
+     */
+    public void vortex(World world, EntityLivingBase entity, Vec3d direction,
+                       int rotations, int iterationSize, double vortexLength,
+                       double minRadius, double maxRadius, double posX, double posY,
+                       double posZ, Vec3d velMult, float randomVelMult,
+                       float particleScale) {
+        for (int rotation = 0; rotation < rotations; rotation++) {
+            for (int angle = 0; angle < 360; angle += iterationSize) {
+                double scale = angle / 360F * (rotation + 1);
+                //Essentially, this increases the radius across 360 degrees. If there's more than one rotation,
+                //it slows down how fast the radius increases
+                double radius = minRadius + scale * (maxRadius / rotations);
+                if (radius > maxRadius)
+                    radius = maxRadius;
+                //Why isn't this in radians
+                double x = radius * cos(Math.toRadians(angle));
+                double y = scale * (vortexLength / rotations);
+                if (y > vortexLength)
+                    y = vortexLength;
+                double z = radius * sin(Math.toRadians(angle));
+                Vec3d pos = new Vec3d(x, y, z);
+                if (entity != null && direction != null) {
+                    pos = rotateAroundAxisX(pos, entity.rotationPitch + 90);
+                    pos = rotateAroundAxisY(pos, entity.rotationYaw);
+                    pos = pos.add(posX, posY, posZ);
+
+                    Vec3d randomVel = new Vec3d(world.rand.nextGaussian() * randomVelMult, world.rand.nextGaussian() * randomVelMult,
+                            world.rand.nextGaussian() * randomVelMult);
+                    this.pos(pos).vel(AvatarUtils.scale(direction, velMult).add(randomVel)).spawn(world, false);
+                    //Starts out really small with a long distance, and inversely increases size while decreasing the
+                    //length of the raytrace.
+                    this.pos(new Vec3d(posX, posY, posZ).add(direction.scale(y))).scale((float) (particleScale * radius))
+                            .vel(AvatarUtils.scale(direction, velMult).add(randomVel)).spawn(world, false);
+
+                }
+            }
+        }
     }
 
     public ParticleBuilder glow(boolean glow) {
@@ -293,7 +347,10 @@ public final class ParticleBuilder {
         if (building) {
             //Stops crashes, but lets the dev know they goofed
             AvatarLog.warn("Already building! Particle being built: " + getCurrentParticleString());
+            if (entity != null)
+                this.spawn(entity.world);
             this.reset();
+
             //throw new IllegalStateException("Already building! Particle being built: " + getCurrentParticleString());
         }
         this.type = type;

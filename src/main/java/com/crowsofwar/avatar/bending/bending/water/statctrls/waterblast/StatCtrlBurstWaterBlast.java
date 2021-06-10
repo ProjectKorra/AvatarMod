@@ -31,8 +31,6 @@ public class StatCtrlBurstWaterBlast extends StatusControl {
             }
         }
         data.addTickHandler(WATER_BURST, ctx);
-        data.removeTickHandler(WATER_CHARGE, ctx);
-        data.removeStatusControl(BURST_WATER);
         return true;
     }
 

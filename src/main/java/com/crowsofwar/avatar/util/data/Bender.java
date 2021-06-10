@@ -414,6 +414,7 @@ public abstract class Bender {
 
         }
 
+        //Why is this not always executed client+server-side?
         // Tick the TickHandlers
         List<TickHandler> tickHandlers = data.getAllTickHandlers();
         if (tickHandlers != null) {
