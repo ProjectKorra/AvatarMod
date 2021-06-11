@@ -48,7 +48,9 @@ public class WaterParticleSpawner extends TickHandler {
                 if (world.isRemote) {
                     //NOTE: Remember to add the look vec for burst/spheres in front!
                     Vec3d pos = AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(0, entity.getEyeHeight() / 2, 0);
-
+                    if (entity.onGround)
+                        pos.add(0, entity.getEyeHeight() / 2, 0);
+                    
                     //Size starts small gets big
                     float size = Math.min((float) (1F / (radius / 2F)), 1.5F);
                     //In case you forgot year 7 maths, radius * 2 * pi = circumference
@@ -56,7 +58,7 @@ public class WaterParticleSpawner extends TickHandler {
                     int rings = blast.getBooleanProperty(AbilityWaterBlast.SHIELD, abilityData) ? 6 : 1;
                     //Rings around the player (not around your finger; the police want you)
                     // C u l t u r e
-                    ParticleBuilder.create(ParticleBuilder.Type.CUBE).spawnEntity(entity).clr(0, 102, 255, 145).scale(size)
+                    ParticleBuilder.create(ParticleBuilder.Type.CUBE).spawnEntity(entity).clr(0, 102, 255, 65).scale(size)
                             .time(28).collideParticles(true).element(new Waterbending()).swirl(rings, particles, (float) radius, size / 1.5F, (float) maxRadius * 20,
                             (1 / size), entity, world, true, pos,
                             ParticleBuilder.SwirlMotionType.IN, true, true);

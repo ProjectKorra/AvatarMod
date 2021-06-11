@@ -101,76 +101,95 @@ public class WaterBurstHandler extends TickHandler {
             size *= (0.5 + 0.125 * charge);
             speed *= (0.5 + 0.125 * charge);
 
-            //Two methods for cones: create randomised particle shape, or search it up on ProjectKorra.
-            //You know what I'm gonna do.
+
+            //Fix executing twice.
+            //Also should probably have a method for this lmao (abstraction is good)
+            //Ok so when executing once, it doesn't always execute client and server-side.
             Vec3d startPos = Vector.getEyePos(entity).toMinecraft().add(0, -entity.getEyeHeight() / 2, 0);
-            if (world.isRemote) {
-                //Water cube time
-                //What if swirl???
-                ParticleBuilder.create(ParticleBuilder.Type.CUBE).element(new Waterbending())
-                        .clr(0, 102, 255, 145).spawnEntity(entity).scale(size).ability(burst)
-                        .time((int) (12 + AvatarUtils.getRandomNumberInRange(0, 2) + size * 2))
-                        .collideParticles(true).vortex(world, entity, entity.getLookVec(), (int) length, 20,
-                        length / 2, 0.05, size, startPos.x, startPos.y, startPos.z, new Vec3d(0.5, 0.5, 0.5),
-                        0.15F, size);
+
+            //particles spawn twice in case it doesn't execute client-side
+            if (duration == pullDuration) {
+                if (world.isRemote) {
+                    //Water cube time
+                    //What if swirl???
+                    ParticleBuilder.create(ParticleBuilder.Type.CUBE).element(new Waterbending())
+                            .clr(0, 102, 255, 200).spawnEntity(entity).scale(size).ability(burst)
+                            .time((int) (12 + AvatarUtils.getRandomNumberInRange(0, 2) + size * 2))
+                            .collideParticles(true).vortex(world, entity, entity.getLookVec(), (int) length, 20,
+                            length / 2, 0.05, size, startPos.x, startPos.y, startPos.z, new Vec3d(0.5, 0.5, 0.5),
+                            0.15F, size);
 
 
+                }
             }
-            //Time to damage stuff
-            if (!world.isRemote) {
-                List<Entity> hit;
-                //What we wanna do is kind of approximate the hitbox, so we just make a bunch of AABB things
-                //and make them the same size as the particle.
-                hit = Raytrace.directionalVortexCollision(world, entity, entity.getLookVec(),
-                        (int) (length), 10, length, 0.05, size, startPos.x, startPos.y,
-                        startPos.z, size / 2);
+            if (duration == pullDuration + 1) {
+                 if (world.isRemote) {
+                    //Water cube time
+                    //What if swirl???
+                    ParticleBuilder.create(ParticleBuilder.Type.CUBE).element(new Waterbending())
+                            .clr(0, 102, 255, 200).spawnEntity(entity).scale(size).ability(burst)
+                            .time((int) (12 + AvatarUtils.getRandomNumberInRange(0, 2) + size * 2))
+                            .collideParticles(true).vortex(world, entity, entity.getLookVec(), (int) length, 20,
+                            length / 2, 0.05, size, startPos.x, startPos.y, startPos.z, new Vec3d(0.5, 0.5, 0.5),
+                            0.15F, size);
 
-                if (!hit.isEmpty()) {
-                    for (Entity target : hit) {
-                        if (DamageUtils.isDamageable(entity, target)) {
-                            Vec3d vel = entity.getLookVec().scale(speed / 15000);
-                            target.addVelocity(vel.x, vel.y, vel.z);
-                            AvatarUtils.afterVelocityAdded(target);
-                            DamageUtils.attackEntity(entity, target,
-                                    AvatarDamageSource.causeWaterCannonDamage(target, entity), damage, performance,
-                                    burst, xp);
-                        } else if (DamageUtils.isValidTarget(entity, target)) {
-                            if (target instanceof AvatarEntity) {
-                                handleContact((AvatarEntity) target, burst, abilityData);
+
+                }
+                //Time to damage stuff
+                if (!world.isRemote) {
+                    List<Entity> hit;
+                    //What we wanna do is kind of approximate the hitbox, so we just make a bunch of AABB things
+                    //and make them the same size as the particle.
+                    hit = Raytrace.directionalVortexCollision(world, entity, entity.getLookVec(),
+                            (int) (length), 10, length * 1.25, 0.05, size, startPos.x, startPos.y,
+                            startPos.z, size / 2);
+
+                    if (!hit.isEmpty()) {
+                        for (Entity target : hit) {
+                            if (DamageUtils.isDamageable(entity, target)) {
+                                Vec3d vel = entity.getLookVec().scale(speed / 2500);
+                                target.addVelocity(vel.x, vel.y, vel.z);
+                                AvatarUtils.afterVelocityAdded(target);
+                                DamageUtils.attackEntity(entity, target,
+                                        AvatarDamageSource.causeWaterCannonDamage(target, entity), damage, performance,
+                                        burst, xp);
+                            } else if (DamageUtils.isValidTarget(entity, target)) {
+                                if (target instanceof AvatarEntity) {
+                                    handleContact((AvatarEntity) target, burst, abilityData);
+                                }
                             }
                         }
                     }
                 }
+
+                abilityData.addBurnout(burnout);
+                if (entity instanceof EntityPlayer)
+                    ((EntityPlayer) entity).addExhaustion(exhaustion);
+                abilityData.setAbilityCooldown(cooldown);
+
+                entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_GENERIC_SPLASH, entity.getSoundCategory(),
+                        1.0F + Math.max(abilityData.getLevel(), 0) / 2F, 0.9F + world.rand.nextFloat() / 10);
+                entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_LIGHTNING_IMPACT, entity.getSoundCategory(), 2.0F, 3.0F);
+
+                AttributeModifier modifier = entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(AIRBURST_MOVEMENT_MODIFIER_ID);
+                if (modifier != null && entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(modifier)) {
+                    entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(modifier);
+                }
+
+                handleRemoval(ctx);
+                return true;
             }
-
-            abilityData.addBurnout(burnout);
-            if (entity instanceof EntityPlayer)
-                ((EntityPlayer) entity).addExhaustion(exhaustion);
-            abilityData.setAbilityCooldown(cooldown);
-
-            entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_GENERIC_SPLASH, entity.getSoundCategory(),
-                    1.0F + Math.max(abilityData.getLevel(), 0) / 2F, 0.9F + world.rand.nextFloat() / 10);
-            entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_LIGHTNING_IMPACT, entity.getSoundCategory(), 2.0F, 3.0F);
-
-            AttributeModifier modifier = entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(AIRBURST_MOVEMENT_MODIFIER_ID);
-            if (modifier != null && entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(modifier)) {
-                entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(modifier);
-            }
-            handleRemoval(ctx);
-            //Fix executing twice.
-            //Ok so when executing once, it doesn't always execute client and server-side.
-            return true;//duration > pullDuration;
+            return false;
 
         }
         handleRemoval(ctx);
-        return false;
+        return true;
     }
 
     public void handleRemoval(BendingContext ctx) {
         ctx.getData().removeTickHandler(WATER_CHARGE, ctx);
         ctx.getData().removeStatusControl(RELEASE_WATER);
         ctx.getData().removeStatusControl(BURST_WATER);
-        //data.addTickHandler(TickHandlerController.SHOOT_AIRBURST, ctx);
         AttributeModifier mod = ctx.getBenderEntity().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED)
                 .getModifier(WATER_CHARGE_MOVEMENT_ID);
         if (mod != null) {
