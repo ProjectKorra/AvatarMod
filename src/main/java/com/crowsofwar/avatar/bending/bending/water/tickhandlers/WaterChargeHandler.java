@@ -85,7 +85,8 @@ public class WaterChargeHandler extends TickHandler {
 
 
             applyMovementModifier(entity, MathHelper.clamp(movementMultiplier, 0.1f, 1));
-            if (!data.hasStatusControl(StatusControlController.RELEASE_WATER)) {
+            //2nd tick handler check ensures it doesn't execute in parallel
+            if (!data.hasStatusControl(StatusControlController.RELEASE_WATER) && !data.hasTickHandler(TickHandlerController.WATER_BURST)) {
                 fireCannon(world, entity, damage, speed, size, lifetime, blast);
                 world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GENERIC_SPLASH, SoundCategory.PLAYERS, 1, 2);
                 entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(WATER_CHARGE_MOVEMENT_ID);

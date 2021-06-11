@@ -98,7 +98,7 @@ public class WaterBurstHandler extends TickHandler {
             length = burst.powerModify(length, abilityData);
 
             damage *= (0.5 + 0.125 * charge);
-            size *= (0.5 + 0.125 * charge);
+            size *= (0.75 + 0.06125 * charge);
             speed *= (0.5 + 0.125 * charge);
 
 
@@ -113,11 +113,11 @@ public class WaterBurstHandler extends TickHandler {
                     //Water cube time
                     //What if swirl???
                     ParticleBuilder.create(ParticleBuilder.Type.CUBE).element(new Waterbending())
-                            .clr(0, 102, 255, 200).spawnEntity(entity).scale(size).ability(burst)
-                            .time((int) (12 + AvatarUtils.getRandomNumberInRange(0, 2) + size * 2))
+                            .clr(0, 102, 255, 145).spawnEntity(entity).scale(size).ability(burst)
+                            .time((int) (12 + AvatarUtils.getRandomNumberInRange(0, 2) + size))
                             .collideParticles(true).vortex(world, entity, entity.getLookVec(), (int) length, 20,
                             length / 2, 0.05, size, startPos.x, startPos.y, startPos.z, new Vec3d(0.5, 0.5, 0.5),
-                            0.15F, size);
+                            0.15F, size * 0.75F);
 
 
                 }
@@ -127,11 +127,11 @@ public class WaterBurstHandler extends TickHandler {
                     //Water cube time
                     //What if swirl???
                     ParticleBuilder.create(ParticleBuilder.Type.CUBE).element(new Waterbending())
-                            .clr(0, 102, 255, 200).spawnEntity(entity).scale(size).ability(burst)
-                            .time((int) (12 + AvatarUtils.getRandomNumberInRange(0, 2) + size * 2))
+                            .clr(0, 102, 255, 145).spawnEntity(entity).scale(size).ability(burst)
+                            .time((int) (12 + AvatarUtils.getRandomNumberInRange(0, 2) + size))
                             .collideParticles(true).vortex(world, entity, entity.getLookVec(), (int) length, 20,
                             length / 2, 0.05, size, startPos.x, startPos.y, startPos.z, new Vec3d(0.5, 0.5, 0.5),
-                            0.15F, size);
+                            0.15F, size * 0.75F);
 
 
                 }
