@@ -1,5 +1,7 @@
 package com.crowsofwar.avatar.util;
 
+import com.crowsofwar.avatar.entity.*;
+import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -59,6 +61,50 @@ public class AvatarEntityUtils {
         if (!entity.world.isRemote)
             entity.world.spawnEntity(item);
         entity.setDead();
+    }
+
+    public static void pullEntities(Entity collided, Vector suckPos, double suction) {
+        Vector velocity = Vector.getEntityPos(collided).minus(suckPos);
+        velocity = velocity.times(suction).times(-1);
+
+        double x = (velocity.x());
+        double y = (velocity.y());
+        double z = (velocity.z());
+
+        if (!collided.world.isRemote) {
+            collided.addVelocity(x, y, z);
+
+            if (collided instanceof AvatarEntity) {
+                if (!(collided instanceof EntityWall) && !(collided instanceof EntityWallSegment) && !(collided instanceof EntityIcePrison) && !(collided instanceof EntitySandPrison)) {
+                    AvatarEntity avent = (AvatarEntity) collided;
+                    avent.addVelocity(x, y, z);
+                }
+                collided.isAirBorne = true;
+                AvatarUtils.afterVelocityAdded(collided);
+            }
+        }
+    }
+
+    public static void pullEntities(Entity collided, Vec3d suckPos, double suction) {
+        Vec3d velocity = collided.getPositionVector().subtract(suckPos);
+        velocity = velocity.scale(suction).scale(-1);
+
+        double x = (velocity.x);
+        double y = (velocity.y);
+        double z = (velocity.z);
+
+        if (!collided.world.isRemote) {
+            collided.addVelocity(x, y, z);
+
+            if (collided instanceof AvatarEntity) {
+                if (!(collided instanceof EntityWall) && !(collided instanceof EntityWallSegment) && !(collided instanceof EntityIcePrison) && !(collided instanceof EntitySandPrison)) {
+                    AvatarEntity avent = (AvatarEntity) collided;
+                    avent.addVelocity(x, y, z);
+                }
+                collided.isAirBorne = true;
+                AvatarUtils.afterVelocityAdded(collided);
+            }
+        }
     }
 
     public static void smeltItemEntity(EntityItem entity, int smeltLevel) {

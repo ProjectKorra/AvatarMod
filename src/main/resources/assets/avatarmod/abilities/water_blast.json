@@ -23,11 +23,12 @@
       "coneWidth": 0,
       "burstRadius": 0,
       "burstRange": 0,
+      "suctionStrength": 0,
       "plantbend": false,
       "shield": false,
       "burst": false,
       "aoe": false,
-      "pull": false,
+      "pullsEnemies": false,
       "piercing": false
     },
     "level2": {
@@ -94,8 +95,9 @@
       "coneWidth": 45,
       "burstRadius": 4,
       "burstRange": 6,
+      "suctionStrength": 0.1,
       "aoe": true,
-      "pull": true
+      "pullsEnemies": true
     },
     "level4_2": {
       "tier": 5,
@@ -113,7 +115,8 @@
       "damage": 8,
       "chargeTime": 20,
       "pullTime": 0,
-      "pull": false
+      "suctionStrength": 0,
+      "pullsEnemies": false
     }
   }
 }

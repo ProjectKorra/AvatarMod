@@ -91,7 +91,16 @@ public abstract class Ability {
             //In degrees
             CONE_WIDTH = "coneWidth",
             BURST_RANGE = "burstRange",
-            BURST_RADIUS = "burstRadius";
+            BURST_RADIUS = "burstRadius",
+            PULL_ENEMIES = "pullsEnemies",
+    //Should probably organise these lol
+            BLINDNESS_LEVEL = "blindnessLevel",
+            BLINDNESS_DURATION = "blindnessDuration",
+            WEAKNESS_LEVEL = "weaknessLevel",
+            WEAKNESS_DURATION = "weaknessDuration",
+            BLAST_LEVEL = "blastLevel",
+            SLOW_MULT = "slowMult",
+            SUCTION_STRENGTH = "suctionStrength";
     //Airbending stuff
     public static final String
             PUSH_REDSTONE = "pushRedstone",
@@ -112,8 +121,8 @@ public abstract class Ability {
     public static final String
             //Amount is the amount consumed
             WATER_AMOUNT = "waterAmount",
-            //Level is the HP of it (applies to source abilities such as water bubble)
-            WATER_LEVEL = "waterLevel",
+    //Level is the HP of it (applies to source abilities such as water bubble)
+    WATER_LEVEL = "waterLevel",
             SOURCE_RANGE = "sourceRange",
             SOURCE_ANGLES = "sourceAngles",
             PLANT_BEND = "plantbend";
@@ -741,7 +750,7 @@ public abstract class Ability {
             if (this.globalProperties == null)
                 this.globalProperties = properties;
         } else {
-         //   AvatarLog.info("A mod attempted to set an ability's properties, but they were already initialised.");
+            //   AvatarLog.info("A mod attempted to set an ability's properties, but they were already initialised.");
             //   Thread.dumpStack();
         }
     }

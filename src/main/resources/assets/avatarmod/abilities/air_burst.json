@@ -26,6 +26,7 @@
       "blindnessLevel": 0,
       "blindnessDuration": 0,
       "slowMult": 0.55,
+      "suctionStrength": 0,
       "pullsEnemies": false,
       "potionEffects": false
     },
@@ -121,6 +122,7 @@
       "slownessDuration": 0,
       "blindnessLevel": 0,
       "blindnessDuration": 0,
+      "suctionStrength": 0.05,
       "pullsEnemies": true,
       "potionEffects": false
     }

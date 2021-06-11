@@ -7,6 +7,7 @@ import com.crowsofwar.avatar.bending.bending.water.Waterbending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.entity.AvatarEntity;
 import com.crowsofwar.avatar.entity.IOffensiveEntity;
+import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.Raytrace;
 import com.crowsofwar.avatar.util.damageutils.AvatarDamageSource;
@@ -22,12 +23,14 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.List;
 
+import static com.crowsofwar.avatar.bending.bending.air.AbilityAirBurst.PULL_ENEMIES;
 import static com.crowsofwar.avatar.bending.bending.air.tickhandlers.AirBurstHandler.AIRBURST_MOVEMENT_MODIFIER_ID;
 import static com.crowsofwar.avatar.bending.bending.water.tickhandlers.WaterChargeHandler.WATER_CHARGE_MOVEMENT_ID;
 import static com.crowsofwar.avatar.util.data.StatusControlController.BURST_WATER;
@@ -75,6 +78,7 @@ public class WaterBurstHandler extends TickHandler {
             int performance = burst.getProperty(Ability.PERFORMANCE, abilityData).intValue();
             float xp = burst.getProperty(Ability.XP_HIT, abilityData).intValue();
             float length = burst.getProperty(Ability.BURST_RANGE, abilityData).floatValue();
+            float suction = burst.getProperty(Ability.SUCTION_STRENGTH).floatValue();
             int charge;
 
             float exhaustion, burnout;
@@ -96,17 +100,40 @@ public class WaterBurstHandler extends TickHandler {
             damage = burst.powerModify(damage, abilityData);
             speed = burst.powerModify(speed, abilityData);
             length = burst.powerModify(length, abilityData);
+            suction -= (float) duration / pullDuration * suction;
 
             damage *= (0.5 + 0.125 * charge);
             size *= (0.75 + 0.06125 * charge);
             speed *= (0.5 + 0.125 * charge);
 
 
-            //Fix executing twice.
+            /*
+                Pull Method stuff
+             */
+            Vec3d swirlPos = entity.getPositionVector().add(0, entity.getEyeHeight() / 2, 0)
+                    .add(entity.getLookVec().scale(length / 4));
+            if (burst.getBooleanProperty(PULL_ENEMIES, abilityData)) {
+                AxisAlignedBB box = new AxisAlignedBB(entity.posX + size, entity.posY + size,
+                        entity.posZ + size, entity.posX - size, entity.posY - size, entity.posZ - size);
+                List<Entity> collided = world.getEntitiesWithinAABB(Entity.class, box, entity1 -> entity1 != entity);
+                if (!collided.isEmpty()) {
+                    for (Entity e : collided) {
+                        if (DamageUtils.isValidTarget(entity, e)) {
+                            AvatarEntityUtils.pullEntities(e, swirlPos, suction);
+                        }
+                    }
+                }
+
+                if (world.isRemote) {
+                    //Particle time bois and girls (S W O R L)
+                }
+            }
+
+
+
             //Also should probably have a method for this lmao (abstraction is good)
             //Ok so when executing once, it doesn't always execute client and server-side.
             Vec3d startPos = Vector.getEyePos(entity).toMinecraft().add(0, -entity.getEyeHeight() / 2, 0);
-
             //particles spawn twice in case it doesn't execute client-side
             if (duration == pullDuration) {
                 if (world.isRemote) {

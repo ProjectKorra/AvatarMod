@@ -38,7 +38,6 @@ public class AbilityWaterBlast extends Ability {
     public static String
             SHIELD = "shield",
             BURST = "burst",
-            PULL = "pull",
             PULL_TIME = "pullTime";
 
     public AbilityWaterBlast() {
@@ -50,8 +49,8 @@ public class AbilityWaterBlast extends Ability {
     public void init() {
         super.init();
         addProperties(WATER_AMOUNT, SOURCE_ANGLES, SOURCE_RANGE, EFFECT_DAMAGE,
-                EFFECT_RADIUS, EFFECT_LEVEl, PULL_TIME, CONE_WIDTH, BURST_RANGE, BURST_RADIUS);
-        addBooleanProperties(PLANT_BEND, SHIELD, BURST, PULL, PIERCING);
+                EFFECT_RADIUS, EFFECT_LEVEl, PULL_TIME, CONE_WIDTH, BURST_RANGE, BURST_RADIUS, SUCTION_STRENGTH);
+        addBooleanProperties(PLANT_BEND, SHIELD, BURST, PULL_ENEMIES, PIERCING);
     }
 
     @Override
