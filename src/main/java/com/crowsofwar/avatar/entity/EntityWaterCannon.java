@@ -234,7 +234,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
                     if (targetPos != circlePos)
                         vel = targetPos == Vec3d.ZERO ? vel : targetPos.subtract(circlePos).normalize().scale(0.15).add(vel);
                     ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(circlePos).spawnEntity(this).vel(vel)
-                            .clr(0, 102, 255, 145).scale(getAvgSize()).target(targetPos == Vec3d.ZERO ? pos : targetPos)
+                            .clr(0, 102, 255, 85).scale(getAvgSize()).target(targetPos == Vec3d.ZERO ? pos : targetPos)
                             .time(14 + AvatarUtils.getRandomNumberInRange(0, 4)).collide(true).collideParticles(true).element(new Waterbending()).spawn(world);
                 }
 
@@ -242,7 +242,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
                 for (int h = 0; h < 4; h++) {
                     pos = pos.add(AvatarUtils.bezierCurve(((points.length - i - 1D / (h + 1)) / points.length), points));
                     ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(pos).spawnEntity(this).vel(world.rand.nextGaussian() / 40 * getAvgSize(),
-                            world.rand.nextGaussian() / 40 * getAvgSize(), world.rand.nextGaussian() / 40 * getAvgSize()).scale(getAvgSize()).clr(0, 102, 255, 185)
+                            world.rand.nextGaussian() / 40 * getAvgSize(), world.rand.nextGaussian() / 40 * getAvgSize()).scale(getAvgSize()).clr(0, 102, 255, 85)
                             .time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).collide(true).collideParticles(true).element(new Waterbending()).spawn(world);
 
                 }
@@ -250,7 +250,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
                 for (int h = 0; h < 1; h++) {
                     pos = pos.add(AvatarUtils.bezierCurve(((points.length - i - 1D / (h + 1)) / points.length), points));
                     ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(pos).spawnEntity(this).vel(world.rand.nextGaussian() / 20,
-                            world.rand.nextDouble() / 12, world.rand.nextGaussian() / 20).clr(0, 102, 255, 185)
+                            world.rand.nextDouble() / 12, world.rand.nextGaussian() / 20).clr(0, 102, 255, 85)
                             .time(6 + AvatarUtils.getRandomNumberInRange(0, 3)).target(pos).scale(getAvgSize()).gravity(true).collide(true).collideParticles(true).element(new Waterbending()).spawn(world);
                 }
                 //}
