@@ -315,7 +315,7 @@ avatar.ability.water_skate.desc=Run on the surface of water, or compatible block
 avatar.ability.water_skate.lvl1=Slip across the water, can't use abilities
 avatar.ability.water_skate.lvl2=Can use abilities while skating, faster!
 avatar.ability.water_skate.lvl3=Much faster, and you can now skate on flowing water! Block projectiles coming near you!
-avatar.ability.water_skate.lvl4_1=§9§l§oStillness in Woe;; Can skate even on solid, nonbendable blocks!
+avatar.ability.water_skate.lvl4_1=§9§l§oStillness in Woe ;; Can skate even on solid, nonbendable blocks!
 avatar.ability.water_skate.lvl4_2=§9§l§oRaging Seas ;; You can jump and repeatedly create shockwaves after landing.
 
 avatar.ability.water_blast=§9§lWater §9§lBlast
@@ -323,8 +323,8 @@ avatar.ability.water_blast.desc=Make a continuous stream of water acts as crowd 
 avatar.ability.water_blast.lvl1=Basic charge, projectile, and burst.
 avatar.ability.water_blast.lvl2=Deals more damage, slightly larger. Can use snow and ice.
 avatar.ability.water_blast.lvl3=Deals even more damage; you can now just be near a waterbendable block to use water cannon, you don't have to look at one!
-avatar.ability.water_blast.lvl4_1=§9§l§oBoom and Burst ;; Charging speed and size reduced, but damage and knockback increased!
-avatar.ability.water_blast.lvl4_2=§9§l§Push and Pull ;; Gain a shield while charging, and the charge is holdable indefinitely. Enemies are pulled towards you when charging.
+avatar.ability.water_blast.lvl4_1=§9§l§Push and Pull ;; Gain a shield while charging, and the charge is holdable indefinitely. Enemies are pulled towards you when charging.
+avatar.ability.water_blast.lvl4_2=§9§l§oBoom and Burst ;; Charging speed and size reduced, but damage and knockback increased!
 
 avatar.ability.cleanse=§9§lCleanse
 avatar.ability.cleanse.desc=Grant yourself and nearby players restorative health effects, plus bending buffs

@@ -33,6 +33,7 @@ import java.util.Objects;
  *
  * @author FavouriteDragon
  */
+//TODO: Fix suction, add visual effects for suction
 public class AbilityWaterBlast extends Ability {
 
     public static String

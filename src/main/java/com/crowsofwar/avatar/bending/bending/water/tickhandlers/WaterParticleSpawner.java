@@ -39,11 +39,12 @@ public class WaterParticleSpawner extends TickHandler {
         AbilityWaterBlast blast = (AbilityWaterBlast) Abilities.get("water_blast");
 
         if (blast != null) {
-            int maxDuration = blast.getProperty(Ability.CHARGE_TIME, abilityData).intValue();//int) -blast.powerModify(blast.getProperty(Ability.CHARGE_TIME, abilityData).floatValue(), abilityData);
+            int maxDuration = blast.getProperty(Ability.CHARGE_TIME, abilityData).intValue();
             int duration = data.getTickHandlerDuration(this);
             double radius = ((float) maxDuration - duration) / 10F;
             double maxRadius = maxDuration / 10F;
 
+            //AOE that deflects projectiles.
             if (data.hasTickHandler(WATER_CHARGE) && radius >= 0) {
                 if (world.isRemote) {
                     //NOTE: Remember to add the look vec for burst/spheres in front!

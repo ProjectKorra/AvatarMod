@@ -101,9 +101,9 @@ public class AvatarEntityUtils {
                     AvatarEntity avent = (AvatarEntity) collided;
                     avent.addVelocity(x, y, z);
                 }
-                collided.isAirBorne = true;
-                AvatarUtils.afterVelocityAdded(collided);
             }
+            collided.isAirBorne = true;
+            AvatarUtils.afterVelocityAdded(collided);
         }
     }
 

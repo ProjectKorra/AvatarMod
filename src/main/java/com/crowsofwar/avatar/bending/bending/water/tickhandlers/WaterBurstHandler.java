@@ -78,7 +78,7 @@ public class WaterBurstHandler extends TickHandler {
             int performance = burst.getProperty(Ability.PERFORMANCE, abilityData).intValue();
             float xp = burst.getProperty(Ability.XP_HIT, abilityData).intValue();
             float length = burst.getProperty(Ability.BURST_RANGE, abilityData).floatValue();
-            float suction = burst.getProperty(Ability.SUCTION_STRENGTH).floatValue();
+            float suction = burst.getProperty(Ability.SUCTION_STRENGTH, abilityData).floatValue();
             int charge;
 
             float exhaustion, burnout;
@@ -103,29 +103,40 @@ public class WaterBurstHandler extends TickHandler {
             suction -= (float) duration / pullDuration * suction;
 
             damage *= (0.5 + 0.125 * charge);
-            size *= (0.75 + 0.06125 * charge);
+            size *= (0.5 + 0.125 * charge);
             speed *= (0.5 + 0.125 * charge);
+
+            float particleSize = (float) (Math.sqrt(length) / 2);
 
 
             /*
                 Pull Method stuff
              */
-            Vec3d swirlPos = entity.getPositionVector().add(0, entity.getEyeHeight() / 2, 0)
+            //TODO: Fix suction
+            Vec3d swirlPos = entity.getPositionVector().add(0, entity.getEyeHeight() * 0.75F, 0)
                     .add(entity.getLookVec().scale(length / 4));
             if (burst.getBooleanProperty(PULL_ENEMIES, abilityData)) {
-                AxisAlignedBB box = new AxisAlignedBB(entity.posX + size, entity.posY + size,
-                        entity.posZ + size, entity.posX - size, entity.posY - size, entity.posZ - size);
-                List<Entity> collided = world.getEntitiesWithinAABB(Entity.class, box, entity1 -> entity1 != entity);
+                AxisAlignedBB box = new AxisAlignedBB(entity.posX + length * 0.75F, entity.posY + length  * 0.75F,
+                        entity.posZ + length * 0.75F, entity.posX - length * 0.75F, entity.posY - length * 0.75F,
+                        entity.posZ - length * 0.75F);
+                List<Entity> collided = world.getEntitiesWithinAABB(Entity.class, box);
                 if (!collided.isEmpty()) {
                     for (Entity e : collided) {
                         if (DamageUtils.isValidTarget(entity, e)) {
-                            AvatarEntityUtils.pullEntities(e, swirlPos, suction);
+                             AvatarEntityUtils.pullEntities(e, swirlPos, suction);
                         }
                     }
                 }
 
                 if (world.isRemote) {
                     //Particle time bois and girls (S W O R L)
+                    int rings = (int) (length * 2);
+                    int particles = (int) length;
+                    ParticleBuilder.create(ParticleBuilder.Type.CUBE).spawnEntity(entity).scale(particleSize * 0.625F)
+                            .time(6 + AvatarUtils.getRandomNumberInRange(0, 2)).element(new Waterbending())
+                            .clr(0, 102, 255, 65).swirl(rings, particles, length / 5,
+                            size / 4, speed * 20, (-1 / speed), entity, world,
+                            false, swirlPos, ParticleBuilder.SwirlMotionType.IN, true, true);
                 }
             }
 
@@ -140,11 +151,11 @@ public class WaterBurstHandler extends TickHandler {
                     //Water cube time
                     //What if swirl???
                     ParticleBuilder.create(ParticleBuilder.Type.CUBE).element(new Waterbending())
-                            .clr(0, 102, 255, 145).spawnEntity(entity).scale(size).ability(burst)
+                            .clr(0, 102, 255, 145).spawnEntity(entity).scale(particleSize).ability(burst)
                             .time((int) (12 + AvatarUtils.getRandomNumberInRange(0, 2) + size))
                             .collideParticles(true).vortex(world, entity, entity.getLookVec(), (int) length, 20,
                             length / 2, 0.05, size, startPos.x, startPos.y, startPos.z, new Vec3d(0.5, 0.5, 0.5),
-                            0.15F, size * 0.75F);
+                            0.15F, particleSize * 0.75F);
 
 
                 }
@@ -202,14 +213,11 @@ public class WaterBurstHandler extends TickHandler {
                 if (modifier != null && entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(modifier)) {
                     entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(modifier);
                 }
-
-                handleRemoval(ctx);
                 return true;
             }
             return false;
 
         }
-        handleRemoval(ctx);
         return true;
     }
 
@@ -239,8 +247,9 @@ public class WaterBurstHandler extends TickHandler {
     @Override
     public void onRemoved(BendingContext ctx) {
         super.onRemoved(ctx);
-        AbilityData abilityData = AbilityData.get(ctx.getBenderEntity(), "air_burst");
+        AbilityData abilityData = AbilityData.get(ctx.getBenderEntity(), "water_blast");
         if (abilityData != null)
             abilityData.setRegenBurnout(true);
+        handleRemoval(ctx);
     }
 }

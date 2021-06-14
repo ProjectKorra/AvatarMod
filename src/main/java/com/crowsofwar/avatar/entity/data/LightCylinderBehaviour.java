@@ -16,7 +16,6 @@ public abstract class LightCylinderBehaviour extends Behavior<EntityLightCylinde
 	public static void register() {
 		DataSerializers.registerSerializer(DATA_SERIALIZER);
 		registerBehavior(Idle.class);
-		registerBehavior(WaterChargeHandler.WaterCylinderBehaviour.class);
 	}
 
 	public static class Idle extends LightCylinderBehaviour {

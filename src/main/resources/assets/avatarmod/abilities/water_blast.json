@@ -95,7 +95,7 @@
       "coneWidth": 45,
       "burstRadius": 4,
       "burstRange": 6,
-      "suctionStrength": 0.1,
+      "suctionStrength": 0.0625,
       "aoe": true,
       "pullsEnemies": true
     },

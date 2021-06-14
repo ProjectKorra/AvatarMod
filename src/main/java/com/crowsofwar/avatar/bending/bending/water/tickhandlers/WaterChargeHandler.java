@@ -3,12 +3,7 @@ package com.crowsofwar.avatar.bending.bending.water.tickhandlers;
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.water.AbilityWaterBlast;
-import com.crowsofwar.avatar.entity.AvatarEntity;
-import com.crowsofwar.avatar.entity.EntityLightCylinder;
 import com.crowsofwar.avatar.entity.EntityWaterCannon;
-import com.crowsofwar.avatar.entity.data.Behavior;
-import com.crowsofwar.avatar.entity.data.LightCylinderBehaviour;
-import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.data.*;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
 import com.crowsofwar.gorecore.util.Vector;
@@ -17,11 +12,8 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.UUID;
@@ -93,7 +85,8 @@ public class WaterChargeHandler extends TickHandler {
                 ctx.getData().removeStatusControl(BURST_WATER);
                 return true;
             }
-            return false;
+            //Makes sure to remove it
+            return data.hasTickHandler(TickHandlerController.WATER_BURST);
         }
         ctx.getData().removeStatusControl(BURST_WATER);
         return true;
@@ -133,47 +126,6 @@ public class WaterChargeHandler extends TickHandler {
 
         moveSpeed.applyModifier(new AttributeModifier(WATER_CHARGE_MOVEMENT_ID, "Water charge modifier", multiplier - 1, 1));
 
-    }
-
-    public static class WaterCylinderBehaviour extends LightCylinderBehaviour {
-
-        @Override
-        public Behavior onUpdate(EntityLightCylinder entity) {
-            if (entity.getOwner() != null) {
-                EntityWaterCannon cannon = AvatarEntity.lookupControlledEntity(entity.world, EntityWaterCannon.class, entity.getOwner());
-                if (cannon != null) {
-                    entity.setCylinderLength(cannon.getDistance(entity.getOwner()));
-                    Vec3d height = entity.getOwner().getPositionVector().add(0, entity.getOwner().getEyeHeight() - 0.15, 0);
-                    Vec3d dist = cannon.getPositionVector().subtract(height).normalize();
-                    entity.setPosition(height.add(dist.scale(0.075)));
-                    AvatarEntityUtils.setRotationFromPosition(entity, cannon);
-                } else {
-                    if (entity.ticksExisted > 1)
-                        entity.setDead();
-                }
-            } else entity.setDead();
-            return this;
-        }
-
-        @Override
-        public void fromBytes(PacketBuffer buf) {
-
-        }
-
-        @Override
-        public void toBytes(PacketBuffer buf) {
-
-        }
-
-        @Override
-        public void load(NBTTagCompound nbt) {
-
-        }
-
-        @Override
-        public void save(NBTTagCompound nbt) {
-
-        }
     }
 
 }
