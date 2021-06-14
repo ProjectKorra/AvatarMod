@@ -26,20 +26,21 @@ import java.util.Objects;
  * Level 2 - Faster, Stronger, Bigger, Cooler. Ya know. Pierces.
  * Level 3 - Charging now creates a shield, and you can left click to burst! 3D Animated Swirl. Draw from plants!
  * Big source radius.
- * Level 4 Path 1: Crushing Cyclone - When charging, your shield has an AOE slow and damaging effect. Additionally, your burst pulls nearby enemies in
+ * Level 4 Path 1: Push and Pull - When charging, your shield has an AOE slow and damaging effect. Additionally, your burst pulls nearby enemies in
  * before annihilating them.
- * Level 4 Path 2: Piercing Maelstrom - Your blasts are significantly empowered, creating massive explosions upon hitting a surface.
+ * Level 4 Path 2: Boom and Burst - Your blasts are significantly empowered, creating massive explosions upon hitting a surface.
  * They carry hit objects to where they explode.
  *
  * @author FavouriteDragon
  */
-//TODO: Fix suction, add visual effects for suction
+//TODO: AOE slow, shield, 2nd path
 public class AbilityWaterBlast extends Ability {
 
     public static String
             SHIELD = "shield",
             BURST = "burst",
-            PULL_TIME = "pullTime";
+            PULL_TIME = "pullTime",
+            AOE = "aoe";
 
     public AbilityWaterBlast() {
         super(Waterbending.ID, "water_blast");
@@ -50,8 +51,9 @@ public class AbilityWaterBlast extends Ability {
     public void init() {
         super.init();
         addProperties(WATER_AMOUNT, SOURCE_ANGLES, SOURCE_RANGE, EFFECT_DAMAGE,
-                EFFECT_RADIUS, EFFECT_LEVEl, PULL_TIME, CONE_WIDTH, BURST_RANGE, BURST_RADIUS, SUCTION_STRENGTH);
-        addBooleanProperties(PLANT_BEND, SHIELD, BURST, PULL_ENEMIES, PIERCING);
+                EFFECT_RADIUS, EFFECT_LEVEl, PULL_TIME, CONE_WIDTH, BURST_RANGE, BURST_RADIUS, SUCTION_STRENGTH,
+                EXPLOSION_DAMAGE, EXPLOSION_SIZE);
+        addBooleanProperties(PLANT_BEND, SHIELD, BURST, PULL_ENEMIES, PIERCING, AOE);
     }
 
     @Override

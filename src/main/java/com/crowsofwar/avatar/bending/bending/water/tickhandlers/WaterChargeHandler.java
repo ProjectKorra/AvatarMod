@@ -18,6 +18,8 @@ import net.minecraft.world.World;
 
 import java.util.UUID;
 
+import static com.crowsofwar.avatar.bending.bending.Ability.EXPLOSION_DAMAGE;
+import static com.crowsofwar.avatar.bending.bending.Ability.EXPLOSION_SIZE;
 import static com.crowsofwar.avatar.bending.bending.water.AbilityWaterBlast.BURST;
 import static com.crowsofwar.avatar.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.util.data.StatusControlController.BURST_WATER;
@@ -51,6 +53,9 @@ public class WaterChargeHandler extends TickHandler {
             float movementMultiplier = 0.6f - 0.7f * MathHelper.sqrt(duration / 40f);
             float size = blast.getProperty(Ability.SIZE, abilityData).floatValue();
             float lifetime = blast.getProperty(Ability.LIFETIME, abilityData).floatValue();
+            boolean piercing = blast.getBooleanProperty(Ability.PIERCING, abilityData);
+            float explosionSize = blast.getProperty(EXPLOSION_SIZE, abilityData).floatValue();
+            float explosionDamage = blast.getProperty(EXPLOSION_DAMAGE, abilityData).floatValue();
             int charge;
 
 
@@ -60,6 +65,8 @@ public class WaterChargeHandler extends TickHandler {
             lifetime = blast.powerModify(lifetime, abilityData);
             speed = blast.powerModify(speed, abilityData);
             size = blast.powerModify(size, abilityData);
+            explosionSize = blast.powerModify(explosionSize, abilityData);
+            explosionDamage = blast.powerModify(explosionDamage, abilityData);
 
             /* Makes sure the charge is never 0. */
             charge = Math.max((3 * (duration / maxDuration)) + 1, 1);
@@ -71,6 +78,8 @@ public class WaterChargeHandler extends TickHandler {
             speed *= (0.50 + 0.16667 * charge);
             size *= (0.50 + 0.16667 * charge);
             lifetime *= (0.70 + 0.10 * charge);
+            explosionSize *= (0.50 + 0.10 * charge);
+            explosionDamage *= (0.50 + 0.10 * charge);
 
             if (blast.getBooleanProperty(BURST, abilityData))
                 data.addStatusControl(BURST_WATER);
@@ -79,7 +88,8 @@ public class WaterChargeHandler extends TickHandler {
             applyMovementModifier(entity, MathHelper.clamp(movementMultiplier, 0.1f, 1));
             //2nd tick handler check ensures it doesn't execute in parallel
             if (!data.hasStatusControl(StatusControlController.RELEASE_WATER) && !data.hasTickHandler(TickHandlerController.WATER_BURST)) {
-                fireCannon(world, entity, damage, speed, size, lifetime, blast);
+                fireCannon(world, entity, damage, speed, size, lifetime, piercing, explosionSize,
+                        explosionDamage, blast);
                 world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GENERIC_SPLASH, SoundCategory.PLAYERS, 1, 2);
                 entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(WATER_CHARGE_MOVEMENT_ID);
                 ctx.getData().removeStatusControl(BURST_WATER);
@@ -94,7 +104,7 @@ public class WaterChargeHandler extends TickHandler {
     }
 
     private void fireCannon(World world, EntityLivingBase entity, float damage, double speed, float size, float ticks,
-                            AbilityWaterBlast blast) {
+                            boolean piercing, float explosionSize, float explosionDamage, AbilityWaterBlast blast) {
 
         EntityWaterCannon cannon = new EntityWaterCannon(world);
 
@@ -108,6 +118,10 @@ public class WaterChargeHandler extends TickHandler {
         cannon.rotationYaw = entity.rotationYaw;
         cannon.setTier(blast.getCurrentTier(AbilityData.get(entity, "water_blast")));
         cannon.setAbility(blast);
+        cannon.setPiercing(piercing);
+        cannon.setExplosionDamage(explosionDamage);
+        cannon.setEntitySize(explosionSize);
+        cannon.setExplosionStrength((float) (speed / 10F));
 
         Vector velocity = Vector.getLookRectangular(entity);
         velocity = velocity.normalize().times(speed);

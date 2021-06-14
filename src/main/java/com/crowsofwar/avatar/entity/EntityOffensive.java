@@ -221,11 +221,20 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
         this.explosionDamage = damage;
     }
 
+    public float getExplosionSize() {
+        return dataManager.get(SYNC_EXPLOSION_SIZE);
+    }
+
+    public float getExplosionStrength() {
+        return this.explosionStrength;
+    }
+
     public void setRGB(int r, int g, int b) {
         dataManager.set(SYNC_R, r);
         dataManager.set(SYNC_G, g);
         dataManager.set(SYNC_B, b);
     }
+
 
     public int[] getRGB() {
         int[] rgb = new int[3];

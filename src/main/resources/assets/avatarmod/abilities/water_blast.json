@@ -24,6 +24,10 @@
       "burstRadius": 0,
       "burstRange": 0,
       "suctionStrength": 0,
+      "effectRadius": 1,
+      "effectLevel": -1,
+      "explosionSize": 1,
+      "explosionDamage": 1,
       "plantbend": false,
       "shield": false,
       "burst": false,
@@ -48,7 +52,9 @@
       "chargeTime": 35,
       "sourceRange": 2,
       "sourceAngles": 45,
-      "waterAmount": 2
+      "waterAmount": 2,
+      "explosionSize": 1.25,
+      "explosionDamage": 1.5
     },
     "level3": {
       "tier": 4,
@@ -71,6 +77,8 @@
       "coneWidth": 30,
       "burstRadius": 2,
       "burstRange": 4,
+      "explosionSize": 1.5,
+      "explosionDamage": 2,
       "plantbend": true,
       "shield": true,
       "burst": true,
@@ -96,6 +104,9 @@
       "burstRadius": 4,
       "burstRange": 6,
       "suctionStrength": 0.0625,
+      "effectLevel": 1,
+      "explosionSize": 2,
+      "explosionDamage": 2.5,
       "aoe": true,
       "pullsEnemies": true
     },
@@ -116,6 +127,8 @@
       "chargeTime": 20,
       "pullTime": 0,
       "suctionStrength": 0,
+      "explosionSize": 4,
+      "explosionDamage": 6,
       "pullsEnemies": false
     }
   }

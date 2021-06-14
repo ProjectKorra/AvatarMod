@@ -7,6 +7,7 @@ import com.crowsofwar.avatar.bending.bending.water.Waterbending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.entity.AvatarEntity;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
+import com.crowsofwar.avatar.util.damageutils.DamageUtils;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.TickHandler;
@@ -16,6 +17,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.entity.projectile.EntityThrowable;
+import net.minecraft.init.MobEffects;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -40,6 +43,7 @@ public class WaterParticleSpawner extends TickHandler {
 
         if (blast != null) {
             int maxDuration = blast.getProperty(Ability.CHARGE_TIME, abilityData).intValue();
+            int effectLevel = blast.getProperty(Ability.EFFECT_LEVEl, abilityData).intValue();
             int duration = data.getTickHandlerDuration(this);
             double radius = ((float) maxDuration - duration) / 10F;
             double maxRadius = maxDuration / 10F;
@@ -69,9 +73,9 @@ public class WaterParticleSpawner extends TickHandler {
                             entity.posX - hitRadius, entity.posY + entity.getEyeHeight() / 2 - radius / 2, entity.posZ - hitRadius);
 
                     if (blast.getBooleanProperty(AbilityWaterBlast.SHIELD, abilityData)) {
-                        List<Entity> bolts = world.getEntitiesWithinAABB(Entity.class, box);
-                        if (!bolts.isEmpty()) {
-                            for (Entity e : bolts) {
+                        List<Entity> targets = world.getEntitiesWithinAABB(Entity.class, box);
+                        if (!targets.isEmpty()) {
+                            for (Entity e : targets) {
                                 if (e instanceof EntityArrow) {
                                     Vector vel = Vector.getVelocity(e).times(-1);
                                     e.addVelocity(vel.x(), 0, vel.z());
@@ -80,6 +84,11 @@ public class WaterParticleSpawner extends TickHandler {
                                     ((AvatarEntity) e).onMajorWaterContact();
                                     ((AvatarEntity) e).setVelocity(((AvatarEntity) e).velocity().times(0.5F));
                                 }
+                                if (blast.getBooleanProperty(AbilityWaterBlast.AOE, abilityData))
+                                    if (DamageUtils.isDamageable(entity, e) && e instanceof EntityLivingBase)
+                                        ((EntityLivingBase) e).addPotionEffect(new PotionEffect(MobEffects.SLOWNESS,
+                                                10, effectLevel, false, false));
+
                             }
                         }
                         List<EntityThrowable> projectiles = world.getEntitiesWithinAABB(EntityThrowable.class, box);
