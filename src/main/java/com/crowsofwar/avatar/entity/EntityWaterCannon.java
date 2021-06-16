@@ -239,10 +239,10 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
                 }
 
                 //Particles along the line
-                for (int h = 0; h < 4; h++) {
+                for (int h = 0; h < 5; h++) {
                     pos = pos.add(AvatarUtils.bezierCurve(((points.length - i - 1D / (h + 1)) / points.length), points));
                     ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(pos).spawnEntity(this).vel(world.rand.nextGaussian() / 40 * getAvgSize(),
-                            world.rand.nextGaussian() / 40 * getAvgSize(), world.rand.nextGaussian() / 40 * getAvgSize()).scale(getAvgSize()).clr(0, 102, 255, 85)
+                            world.rand.nextGaussian() / 40 * getAvgSize(), world.rand.nextGaussian() / 40 * getAvgSize()).scale(getAvgSize()).clr(0, 102, 255, 105)
                             .time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).collide(true).collideParticles(true).element(new Waterbending()).spawn(world);
 
                 }
