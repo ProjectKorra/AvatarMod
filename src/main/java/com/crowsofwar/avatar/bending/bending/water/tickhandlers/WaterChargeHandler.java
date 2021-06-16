@@ -78,8 +78,8 @@ public class WaterChargeHandler extends TickHandler {
             speed *= (0.50 + 0.16667 * charge);
             size *= (0.50 + 0.16667 * charge);
             lifetime *= (0.70 + 0.10 * charge);
-            explosionSize *= (0.50 + 0.10 * charge);
-            explosionDamage *= (0.50 + 0.10 * charge);
+            explosionSize *= (0.50 + 0.16667 * charge);
+            explosionDamage *= (0.50 + 0.16667 * charge);
 
             if (blast.getBooleanProperty(BURST, abilityData))
                 data.addStatusControl(BURST_WATER);
@@ -110,7 +110,7 @@ public class WaterChargeHandler extends TickHandler {
 
         cannon.setOwner(entity);
         cannon.setDamage(damage);
-        cannon.setEntitySize(size);
+        cannon.setEntitySize(size * 0.625F);
         cannon.setPosition(Vector.getEyePos(entity).minusY(0.8));
         cannon.setLifeTime((int) ticks);
         cannon.setXp(SKILLS_CONFIG.waterHit / 2);
@@ -120,7 +120,7 @@ public class WaterChargeHandler extends TickHandler {
         cannon.setAbility(blast);
         cannon.setPiercing(piercing);
         cannon.setExplosionDamage(explosionDamage);
-        cannon.setEntitySize(explosionSize);
+        cannon.setExplosionSize(explosionSize);
         cannon.setExplosionStrength((float) (speed / 10F));
 
         Vector velocity = Vector.getLookRectangular(entity);
@@ -129,6 +129,7 @@ public class WaterChargeHandler extends TickHandler {
         cannon.setVelocity(velocity);
         if (!world.isRemote)
             world.spawnEntity(cannon);
+        //TODO: Change # of ctrl points based on size??
 
     }
 

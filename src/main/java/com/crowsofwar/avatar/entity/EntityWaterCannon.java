@@ -11,7 +11,6 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -40,6 +39,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
         this.damageMult = 1;
         this.putsOutFires = true;
         this.velocityMultiplier = 5;
+        this.ignoreFrustumCheck = true;
     }
 
     public float getDamageMult() {
@@ -107,11 +107,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
     }
 
     @Override
-    public boolean onCollideWithSolid() {
-        return super.onCollideWithSolid();
-    }
-
-    @Override
     public void applyElementalContact(AvatarEntity entity) {
         super.applyElementalContact(entity);
         if (entity.getTier() <= getTier())
@@ -126,8 +121,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
 
     @Override
     protected void updateCpBehavior() {
-        getLeader().setPosition(position().plusY(height / 2).plus(Vector.getLookRectangular(this)
-                .times(getAvgSize() / 4)));
+        getLeader().setPosition(Vector.fromVec3d(AvatarEntityUtils.getMiddleOfEntity(this)));
         getLeader().setVelocity(velocity());
 
         // Move control points to follow leader
@@ -139,27 +133,32 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
             Vector leadPos = leader.position();
             double sqrDist = p.position().sqrDist(leadPos);
 
-            if (sqrDist > getControlPointTeleportDistanceSq() && getControlPointTeleportDistanceSq() != -1) {
+            //Sets the last point to in front of the player
+            if (i < points.size() - 1) {
+                if (sqrDist > getControlPointTeleportDistanceSq() && getControlPointTeleportDistanceSq() != -1) {
 
-                Vector toFollowerDir = p.position().minus(leader.position()).normalize();
+                    Vector toFollowerDir = p.position().minus(leader.position()).normalize();
 
-                double idealDist = Math.sqrt(getControlPointTeleportDistanceSq());
-                if (idealDist > 1) idealDist -= 1; // Make sure there is some room
+                    double idealDist = Math.sqrt(getControlPointTeleportDistanceSq());
+                    if (idealDist > 1) idealDist -= 1; // Make sure there is some room
 
-                Vector revisedOffset = leader.position().plus(toFollowerDir.times(idealDist));
-                p.setPosition(revisedOffset);
-                leader.setPosition(revisedOffset);
-                p.setVelocity(Vector.ZERO);
+                    Vector revisedOffset = leader.position().plus(toFollowerDir.times(idealDist));
+                    p.setPosition(revisedOffset);
+                    leader.setPosition(revisedOffset);
+                    p.setVelocity(Vector.ZERO);
 
-            } else if (sqrDist > getControlPointMaxDistanceSq() && getControlPointMaxDistanceSq() != -1) {
+                } else if (sqrDist > getControlPointMaxDistanceSq() && getControlPointMaxDistanceSq() != -1) {
 
-                Vector diff = leader.position().minus(p.position());
-                diff = diff.normalize().times(getVelocityMultiplier());
-                p.setVelocity(p.velocity().plus(diff));
+                    Vector diff = leader.position().minus(p.position());
+                    diff = diff.normalize().times(getVelocityMultiplier());
+                    p.setVelocity(p.velocity().plus(diff));
 
+                }
             }
 
         }
+        if (getOwner() != null)
+            getControlPoint(points.size() - 1).setPosition(Vector.getEyePos(getOwner()).minusY(getOwner().getEyeHeight() / 2));
     }
 
     @Override
@@ -190,6 +189,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
             setDead();
 
         setEntitySize(getAvgSize());
+        System.out.println(getAvgSize());
 
         if (world.isRemote && getOwner() != null) {
             for (int i = 0; i < 3 * (width); i++) {
@@ -275,16 +275,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
         return false;
     }
 
-    public boolean canPlaySplash() {
-        return lastPlayedSplash == -1;
-    }
-
-    public void playSplash() {
-        world.playSound(posX, posY, posZ, SoundEvents.ENTITY_GENERIC_SWIM, SoundCategory.PLAYERS, 0.3f,
-                1.5f, false);
-        lastPlayedSplash = 0;
-    }
-
     @Override
     public boolean multiHit() {
         return true;
@@ -337,7 +327,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
 
     @Override
     protected double getControlPointMaxDistanceSq() {
-        return 5F;
+        return getAvgSize() * 20;
     }
 
     @Override

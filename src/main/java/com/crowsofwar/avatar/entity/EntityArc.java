@@ -51,6 +51,13 @@ public abstract class EntityArc<T extends ControlPoint> extends EntityOffensive 
 
 	}
 
+	public void generateControlPoints() {
+		this.points = new ArrayList<>();
+		for (int i = 0; i < getAmountOfControlPoints(); i++) {
+			points.add(createControlPoint(getAvgSize(), i));
+		}
+	}
+
 	public void setNumberofPoints(int points) {
 		dataManager.set(SYNC_POINTS, points);
 	}
