@@ -323,16 +323,16 @@ avatar.ability.water_blast.desc=Make a continuous stream of water acts as crowd 
 avatar.ability.water_blast.lvl1=Basic charge, projectile, and burst.
 avatar.ability.water_blast.lvl2=Deals more damage, slightly larger. Can use snow and ice.
 avatar.ability.water_blast.lvl3=Deals even more damage; you can now just be near a waterbendable block to use water cannon, you don't have to look at one!
-avatar.ability.water_blast.lvl4_1=§9§l§Push and Pull ;; Gain a shield while charging, and the charge is holdable indefinitely. Enemies are pulled towards you when charging.
+avatar.ability.water_blast.lvl4_1=§9§l§oPush and Pull ;; Gain a shield while charging, and the charge is holdable indefinitely. Enemies are pulled towards you when charging.
 avatar.ability.water_blast.lvl4_2=§9§l§oBoom and Burst ;; Charging speed and size reduced, but damage and knockback increased!
 
 avatar.ability.cleanse=§9§lCleanse
-avatar.ability.cleanse.desc=Grant yourself and nearby players restorative health effects, plus bending buffs
-avatar.ability.cleanse.lvl1=§oIt's like a free shower!
-avatar.ability.cleanse.lvl2=Share regeneration with nearby players
-avatar.ability.cleanse.lvl3=Give yourself saturation
-avatar.ability.cleanse.lvl4_1=§9§l§oInvigoration ;; Also receive instant health boost
-avatar.ability.cleanse.lvl4_2=§9§l§oFocus ;; Deal much more damage in combat and move much more quickly
+avatar.ability.cleanse.desc=Grant yourself and nearby players restorative health effects, plus bending buffs!
+avatar.ability.cleanse.lvl1=Bless your team with water!
+avatar.ability.cleanse.lvl2=Grant movement speed to yourself and nearby players!
+avatar.ability.cleanse.lvl3=Give yourself saturation! You can now use plants to cleanse your allies!
+avatar.ability.cleanse.lvl4_1=§9§l§oOcean's Grace ;; Increased regeneration, instant health!
+avatar.ability.cleanse.lvl4_2=§9§l§oWater's Fall ;; Deal much more damage in combat and move much more quickly!
 
 
 avatar.ability.air_gust=§f§lAir Gust

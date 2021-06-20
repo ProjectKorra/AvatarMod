@@ -1,34 +1,42 @@
 package com.crowsofwar.avatar.bending.bending.water;
 
+import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.water.tickhandlers.CleansePowerModifier;
-import com.crowsofwar.avatar.util.Raytrace;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 import java.util.List;
-import java.util.function.BiPredicate;
+import java.util.Objects;
 import java.util.function.Consumer;
 
-import static com.crowsofwar.avatar.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
-import static java.lang.Math.toRadians;
 
+/**
+ * @author FavouriteDragon
+ * <p>
+ * Desc: Heal yourself and nearby allies, while improving your bending! Also extinguishes flame.
+ * <p>
+ * Level 1 - Heal and buff!
+ * Level 2 - Stronger healing, bigger radius! Movement speed.
+ * Level 3 - Removes basic negative effects. Applies saturation.
+ * Level 4 Path 1 - Ocean's Grace: Regeneration and Instant Health
+ * Level 4 Path 2 - Water's Fall: Speed and Bending Power
+ */
 public class AbilityCleanse extends Ability {
+
+    public static final String
+            //For bad effects
+            HIGHEST_LEVEL_CLEANSED = "highestLevelCleansed";
 
     public AbilityCleanse() {
         super(Waterbending.ID, "cleanse");
@@ -40,79 +48,77 @@ public class AbilityCleanse extends Ability {
     }
 
     @Override
+    public void init() {
+        super.init();
+        addProperties(SPEED_DURATION, SPEED_LEVEL, SLOWNESS_DURATION, SLOWNESS_LEVEL,
+                SATURATION_DURATION, SATURATION_LEVEL, RADIUS, REGEN_DURATION, REGEN_LEVEL,
+                INSTANT_HEALTH_LEVEL, SOURCE_RANGE, SOURCE_ANGLES, HIGHEST_LEVEL_CLEANSED, WATER_LEVEL,
+                ABSORPTION_DURATION, ABSORPTION_LEVEL);
+        addBooleanProperties(PLANT_BEND);
+    }
+
+    @Override
     public void execute(AbilityContext ctx) {
 
         BendingData data = ctx.getData();
         EntityLivingBase entity = ctx.getBenderEntity();
         Bender bender = ctx.getBender();
         AbilityData abilityData = data.getAbilityData(this);
+        AbilityCleanse cleanse = (AbilityCleanse) Abilities.get("cleanse");
 
-        float chi = STATS_CONFIG.chiBuff;
-        if (abilityData.getLevel() == 1) {
-            chi = STATS_CONFIG.chiBuffLvl2;
-        } else if (abilityData.getLevel() == 2) {
-            chi = STATS_CONFIG.chiBuffLvl3;
-        } else if (abilityData.getLevel() == 3) {
-            chi = STATS_CONFIG.chiBuffLvl4;
-        }
 
-        Vector targetPos = getClosestWaterBlock(entity, ctx.getLevel() * 3);
+        Vector targetPos = Waterbending.getClosestWaterbendableBlock(entity, this, ctx);
 
-        if ((bender.consumeChi(chi) && targetPos != null || (entity instanceof EntityPlayerMP && ((EntityPlayerMP) entity).isCreative())
+        if (cleanse != null && (bender.consumeChi(getChiCost(ctx)) && targetPos != null || (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative())
                 || ctx.consumeWater(4))) {
 
-            // Duration: 5-10s
-            int duration = abilityData.getLevel() < 2 ? 100 : 200;
-            int regenLevel = MathHelper.clamp(abilityData.getLevel(), 0, 2);
+            //TODO: Water breathing??
+            int duration = cleanse.getProperty(DURATION, ctx).intValue();
+            duration = (int) powerModify(duration, abilityData);
 
-            abilityData.addXp(SKILLS_CONFIG.buffUsed);
+            int radius = cleanse.getProperty(RADIUS, ctx).intValue();
+            int regenLevel = cleanse.getProperty(REGEN_LEVEL, ctx).intValue();
+            int regenDuration = cleanse.getProperty(REGEN_DURATION, ctx).intValue();
+            int saturationLevel = cleanse.getProperty(SATURATION_LEVEL, ctx).intValue();
+            int saturationDuration = cleanse.getProperty(SATURATION_DURATION, ctx).intValue();
+            int speedLevel = cleanse.getProperty(SPEED_LEVEL, ctx).intValue();
+            int speedDuration = cleanse.getProperty(SPEED_DURATION, ctx).intValue();
+            int healthLevel = cleanse.getProperty(INSTANT_HEALTH_LEVEL, ctx).intValue();
+            int absorptionLevel = cleanse.getProperty(ABSORPTION_LEVEL, ctx).intValue();
+            int absorptionDuration = cleanse.getProperty(ABSORPTION_DURATION, ctx).intValue();
 
-            // Apply basic potion effects
 
-            entity.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, duration, regenLevel));
+            //Potion effects
+            PotionEffect regen = new PotionEffect(MobEffects.REGENERATION, regenDuration, regenLevel);
+            PotionEffect saturation = new PotionEffect(MobEffects.SATURATION, saturationDuration, saturationLevel);
+            PotionEffect speed = new PotionEffect(MobEffects.SPEED, speedDuration, speedLevel);
+            PotionEffect health = new PotionEffect(MobEffects.INSTANT_HEALTH, 1, healthLevel);
+            PotionEffect absorption = new PotionEffect(MobEffects.ABSORPTION, absorptionDuration, absorptionLevel);
 
-            if (abilityData.getLevel() >= 2) {
-                entity.addPotionEffect(new PotionEffect(MobEffects.SATURATION, duration));
-            }
+            //Potion effects to the player
+            entity.addPotionEffect(regen);
+            entity.addPotionEffect(saturation);
+            entity.addPotionEffect(speed);
+            entity.addPotionEffect(health);
+            entity.addPotionEffect(absorption);
 
-            if (abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)) {
-                entity.addPotionEffect(new PotionEffect(MobEffects.ABSORPTION, duration, 1));
-                entity.addPotionEffect(new PotionEffect(MobEffects.SATURATION, duration, 1));
-                entity.addPotionEffect(new PotionEffect(MobEffects.INSTANT_HEALTH, 0, 0));
-            }
+            //Potion effects to nearby players
+            applyGroupEffect(ctx, radius, player -> player.addPotionEffect(regen));
+            applyGroupEffect(ctx, radius, player -> player.addPotionEffect(saturation));
+            applyGroupEffect(ctx, radius, player -> player.addPotionEffect(speed));
+            applyGroupEffect(ctx, radius, player -> player.addPotionEffect(health));
+            applyGroupEffect(ctx, radius, player -> player.addPotionEffect(absorption));
 
-            if (abilityData.isMasterPath(AbilityData.AbilityTreePath.SECOND)) {
-                entity.addPotionEffect(new PotionEffect(MobEffects.WATER_BREATHING, duration));
-                entity.addPotionEffect(new PotionEffect(MobEffects.SPEED, duration, 1));
-                entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, duration));
-            }
-
-            // Perform group heal?
-
-            if (abilityData.getLevel() >= 1) {
-
-                int groupLevel = abilityData.isMasterPath(AbilityData.AbilityTreePath.FIRST)
-                        ? 1 : 0;
-                int groupDuration = abilityData.getLevel() == 3 ? 100 : 60;
-                int groupRadius = abilityData.getLevel() >= 2 ? 6 : 4;
-
-                PotionEffect groupEffect = new PotionEffect(MobEffects.REGENERATION, groupDuration,
-                        groupLevel);
-                applyGroupEffect(ctx, groupRadius, player -> player.addPotionEffect(groupEffect));
-                applyGroupEffect(ctx, groupRadius, this::addChiBonus);
-
-            }
-
-            // Apply power modifier
-
-            CleansePowerModifier modifier = new CleansePowerModifier();
-            modifier.setTicks(duration);
-            // Ignore warning; we know they have the bending, so manager for that bending != null
-            //noinspection ConstantConditions
-            data.getPowerRatingManager(getBendingId()).addModifier(modifier, ctx);
+            //Power modifiers
+            //Initially to self
+            applyPowerMod(entity, ctx, duration);
+            //Now to group (frickin lambdas)
+            int finalDuration = duration;
+            applyGroupEffect(ctx, radius, player -> applyPowerMod(player, ctx, finalDuration));
+            abilityData.addXp(cleanse.getProperty(XP_USE, ctx).floatValue());
 
         } else {
-            bender.sendMessage("avatar.cleanseFail");
+            bender.sendMessage("avatar.waterSourceFail");
         }
 
     }
@@ -161,40 +167,12 @@ public class AbilityCleanse extends Ability {
         }
     }
 
-
-    private Vector getClosestWaterBlock(EntityLivingBase entity, int level) {
-        World world = entity.world;
-
-        Vector eye = Vector.getEyePos(entity);
-
-        double rangeMult = 0.6;
-        if (level >= 1) {
-            rangeMult = 1;
-        }
-
-        double range = STATS_CONFIG.cleanseSearchRadius * rangeMult;
-        for (int i = 0; i < STATS_CONFIG.cleanseAngles; i++) {
-            for (int j = 0; j < STATS_CONFIG.cleanseAngles; j++) {
-
-                double yaw = entity.rotationYaw + i * 360.0 / STATS_CONFIG.cleanseAngles;
-                double pitch = entity.rotationPitch + j * 360.0 / STATS_CONFIG.cleanseAngles;
-
-                BiPredicate<BlockPos, IBlockState> isWater = (pos, state) -> state.getBlock() == Blocks.WATER
-                        || state.getBlock() == Blocks.FLOWING_WATER || state.getBlock() == Blocks.ICE || state.getBlock() == Blocks.SNOW_LAYER
-                        || state.getBlock() == Blocks.SNOW;
-
-                Vector angle = Vector.toRectangular(toRadians(yaw), toRadians(pitch));
-                Raytrace.Result result = Raytrace.predicateRaytrace(world, eye, angle, range, isWater);
-                if (result.hitSomething()) {
-                    return result.getPosPrecise();
-                }
-
-            }
-
-        }
-
-        return null;
-
+    private void applyPowerMod(EntityLivingBase entity, AbilityContext ctx, int duration) {
+        BendingData data = BendingData.getFromEntity(entity);
+        CleansePowerModifier modifier = new CleansePowerModifier();
+        modifier.setTicks(duration);
+        if (data != null && data.getPowerRatingManager(Waterbending.ID) != null)
+            Objects.requireNonNull(data.getPowerRatingManager(Waterbending.ID)).addModifier(modifier, ctx);
     }
 
     @Override

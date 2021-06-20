@@ -215,8 +215,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
             //Iterate through all of the control points.
             //0 is the leader/front one
             for (int i = 0; i < getAmountOfControlPoints(); i++) {
-                //  if (i < getAmountOfControlPoints() - 1) {
-                //for (int j = 0; j < 4; j++) {
                 Vec3d pos = getControlPoint(points.length - i - 1).position().toMinecraft();
                 Vec3d pos2 = i < points.length - 1 ? getControlPoint(Math.max(points.length - i - 2, 0)).position().toMinecraft() : Vec3d.ZERO;
 
@@ -253,8 +251,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
                             world.rand.nextDouble() / 12, world.rand.nextGaussian() / 20).clr(0, 102, 255, 85)
                             .time(6 + AvatarUtils.getRandomNumberInRange(0, 3)).target(pos).scale(getAvgSize()).gravity(true).collide(true).collideParticles(true).element(new Waterbending()).spawn(world);
                 }
-                //}
-                // }
             }
         }
     }

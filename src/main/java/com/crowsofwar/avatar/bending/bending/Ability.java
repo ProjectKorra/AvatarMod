@@ -98,6 +98,9 @@ public abstract class Ability {
             BLINDNESS_DURATION = "blindnessDuration",
             WEAKNESS_LEVEL = "weaknessLevel",
             WEAKNESS_DURATION = "weaknessDuration",
+            INSTANT_HEALTH_LEVEL = "instantHealthLevel",
+            ABSORPTION_LEVEL = "absorptionLevel",
+            ABSORPTION_DURATION = "absorptionDuration",
             BLAST_LEVEL = "blastLevel",
             SLOW_MULT = "slowMult",
             SUCTION_STRENGTH = "suctionStrength";
