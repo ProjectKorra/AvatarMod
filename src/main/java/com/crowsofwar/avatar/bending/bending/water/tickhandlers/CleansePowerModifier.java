@@ -46,20 +46,23 @@ public class CleansePowerModifier extends BuffPowerModifier {
         if (cleanse != null) {
             float radius = cleanse.getProperty(Ability.RADIUS, AbilityData.get(ctx.getBenderEntity(),
                     getAbilityName())).floatValue();
-            int rings = (int) (radius * 4);
-            int particles = (int) radius / 2;
+            int rings = (int) (radius * 3);
+            int particles = 2;
             if (world.isRemote) {
-                ParticleBuilder.create(ParticleBuilder.Type.CUBE).spawnEntity(entity)
-                .time(28 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(0, 102, 255, 95).scale(radius / 5F * world.rand.nextFloat())
-                        .swirl(rings, particles, radius * 0.5F, particles / 5F, rings * 2,
-                                (1 / (radius / 10F)), entity, world, false, AvatarEntityUtils.getMiddleOfEntity(entity),
-                                ParticleBuilder.SwirlMotionType.OUT, false, true);
-                ParticleBuilder.create(ParticleBuilder.Type.FLASH).spawnEntity(entity)
-                .time(16 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(AvatarUtils.getRandomNumberInRange(0, 50),
-                        180 + AvatarUtils.getRandomNumberInRange(0, 70), 235 + AvatarUtils.getRandomNumberInRange(0, 20)).scale(radius / 2F * world.rand.nextFloat())
-                        .glow(true).swirl(rings, particles, radius * 0.5F, particles / 5F, rings,
-                        (0.5F / (radius / 10F)), entity, world, false, AvatarEntityUtils.getMiddleOfEntity(entity),
-                        ParticleBuilder.SwirlMotionType.OUT, false, true);
+            //    if (entity.ticksExisted % 3 == 0)
+//                ParticleBuilder.create(ParticleBuilder.Type.CUBE).spawnEntity(entity)
+//                .time(28 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(0, 102, 255, 95).scale(radius / 2F * world.rand.nextFloat())
+//                        .swirl(rings, particles, radius * 0.5F, particles / 5F, rings * 2,
+//                                (1 / (radius / 10F)), entity, world, false, AvatarEntityUtils.getMiddleOfEntity(entity),
+//                                ParticleBuilder.SwirlMotionType.OUT, false, true);
+                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).spawnEntity(entity)
+                            .time(38 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(AvatarUtils.getRandomNumberInRange(0, 50),
+                            180 + AvatarUtils.getRandomNumberInRange(0, 70), 235 + AvatarUtils.getRandomNumberInRange(0, 20),
+                            (int) (5)).scale(radius * world.rand.nextFloat())
+                            //The .max and .min functions ensure it doesn't infinite loop if the radius is too small
+                            .glow(AvatarUtils.getRandomNumberInRange(1, 100) > 15 - radius).swirl(rings, particles, (float) Math.sqrt(radius),
+                            particles / 18F * (radius), rings / 2F, (radius / 3F), entity, world, true, AvatarEntityUtils.getMiddleOfEntity(entity),
+                            ParticleBuilder.SwirlMotionType.OUT, false, true);
             }
         }
         return super.onUpdate(ctx);
