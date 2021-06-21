@@ -65,7 +65,7 @@ public class CorruptHandler extends TickHandler {
                     .element(new Darkbending()).scale(scale).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 75).swirl((int) (corruptDuration / 20 * scale),
                     (int) (scale * Math.PI), scale, scale / 2, corruptDuration * 20, (0.75F / scale),
                     entity, world, true, pos,
-                    ParticleBuilder.SwirlMotionType.OUT, true, true);
+                    ParticleBuilder.SwirlMotionType.OUT, false, true);
         }
 
         //The particles take a while to disappear after the ability finishes- so you decrease the time the particles can spawn
