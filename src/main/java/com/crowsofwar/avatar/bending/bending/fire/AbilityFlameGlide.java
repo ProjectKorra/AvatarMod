@@ -11,7 +11,9 @@ import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
 import net.minecraft.entity.EntityLiving;
 
+import static com.crowsofwar.avatar.util.data.StatusControlController.DEMON_WINGS;
 import static com.crowsofwar.avatar.util.data.StatusControlController.FIRE_JUMP;
+import static com.crowsofwar.avatar.util.data.TickHandlerController.DEMON_WINGS_HANDLER;
 import static com.crowsofwar.avatar.util.data.TickHandlerController.FLAME_GLIDE_HANDLER;
 
 public class AbilityFlameGlide extends Ability {
@@ -49,18 +51,24 @@ public class AbilityFlameGlide extends Ability {
         Bender bender = ctx.getBender();
         AbilityData abilityData = ctx.getAbilityData();
 
-        if (!data.hasStatusControl(FIRE_JUMP) && bender.consumeChi(getChiCost(abilityData) / 8)) {
+        if (!data.hasTickHandler(FLAME_GLIDE_HANDLER)) {
+            if (!data.hasStatusControl(FIRE_JUMP) && bender.consumeChi(getChiCost(abilityData) / 8)) {
 
-            data.addStatusControl(FIRE_JUMP);
-            if (data.hasTickHandler(FLAME_GLIDE_HANDLER)) {
-                StatusControl sc = FIRE_JUMP;
-                Raytrace.Result raytrace = Raytrace.getTargetBlock(ctx.getBenderEntity(), -1);
-                if (sc.execute(
-                        new BendingContext(data, ctx.getBenderEntity(), ctx.getBender(), raytrace))) {
-                    data.removeStatusControl(sc);
+                data.addStatusControl(FIRE_JUMP);
+                if (data.hasTickHandler(FLAME_GLIDE_HANDLER)) {
+                    StatusControl sc = FIRE_JUMP;
+                    Raytrace.Result raytrace = Raytrace.getTargetBlock(ctx.getBenderEntity(), -1);
+                    if (sc.execute(
+                            new BendingContext(data, ctx.getBenderEntity(), ctx.getBender(), raytrace))) {
+                        data.removeStatusControl(sc);
+                    }
                 }
             }
-
+        }
+        else {
+            data.removeTickHandler(FLAME_GLIDE_HANDLER, ctx);
+            if (data.hasStatusControl(FIRE_JUMP))
+                data.removeStatusControl(FIRE_JUMP);
         }
     }
 
