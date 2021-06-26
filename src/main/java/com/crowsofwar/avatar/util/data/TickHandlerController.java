@@ -52,7 +52,7 @@ public class TickHandlerController {
 	//public static TickHandler AIR_DODGE = new AirDodgeHandler(18);
 	public static TickHandler RENDER_ELEMENT_HANDLER = new RenderElementHandler(19);
 	public static TickHandler STAFF_GUST_HANDLER = new StaffGustCooldown(20);
-	public static TickHandler PURIFY_PARTICLE_SPAWNER = new ImmolateParticleHandler(21);
+	public static TickHandler IMMOLATE_HANDLER = new ImmolateParticleHandler(21);
 	public static TickHandler RESTORE_PARTICLE_SPAWNER = new RestoreParticleHandler(22);
 	public static TickHandler SLIPSTREAM_WALK_HANDLER = new SlipstreamAirWalkHandler(23);
 	public static TickHandler RELEASE_EARTHSPIKE = new EarthSpikeHandler(24);
