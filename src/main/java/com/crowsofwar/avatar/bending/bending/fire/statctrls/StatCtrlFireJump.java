@@ -118,6 +118,8 @@ public class StatCtrlFireJump extends StatusControl {
                 //Ensure the ability can't be spammed after activating.
                 abilityData.setAbilityCooldown(cooldown == 0 ? 0 : jump.getCooldown(abilityData) - jump.getProperty(DURATION, abilityData).intValue());
 
+                if (entity instanceof EntityPlayer)
+                    ((EntityPlayer) entity).capabilities.isFlying = true;
                 return true;
 
             }

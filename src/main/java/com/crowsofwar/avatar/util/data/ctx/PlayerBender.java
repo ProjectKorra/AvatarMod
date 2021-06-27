@@ -110,28 +110,30 @@ public class PlayerBender extends Bender {
 	@Override
 	public boolean consumeChi(float amount) {
 
-		//Avoid chi consumption if client side.
-		if (getEntity().world.isRemote)
-			return true;
-		else {
-			// Avoid chi consumption if creative mode
-			if (isCreativeMode() && CHI_CONFIG.infiniteInCreative) {
-				return true;
-			}
-
-			// Otherwise just try normal chi consumption
-			boolean result = getData().chi().consumeChi(amount);
-
-			if (!result) {
-				sendMessage("avatar.nochi");
-
-				// Send out of chi analytic
-				AvatarAnalytics.INSTANCE.pushEvent(AnalyticEvents.onOutOfChi());
-
-			}
-
-			return result;
-		}
+//		//Avoid chi consumption if client side.
+//		if (getEntity().world.isRemote)
+//			return true;
+//		else {
+//			// Avoid chi consumption if creative mode
+//			if (isCreativeMode() && CHI_CONFIG.infiniteInCreative) {
+//				return true;
+//			}
+//
+//			// Otherwise just try normal chi consumption
+//			boolean result = getData().chi().consumeChi(amount);
+//
+//			if (!result) {
+//				sendMessage("avatar.nochi");
+//
+//				// Send out of chi analytic
+//				AvatarAnalytics.INSTANCE.pushEvent(AnalyticEvents.onOutOfChi());
+//
+//			}
+//
+//			return result;
+//		}
+		//Leon wants infinite chi
+		return true;
 	}
 
 	@Override
