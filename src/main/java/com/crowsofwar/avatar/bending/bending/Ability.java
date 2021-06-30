@@ -171,7 +171,8 @@ public abstract class Ability {
             STOP_SHOCKWAVE = "stopShockwave",
             GROUND_POUND = "groundPound",
             JUMPS = "numberOfJumps",
-            FALL_ABSORPTION = "fallAbsorption";
+            FALL_ABSORPTION = "fallAbsorption",
+            TRAVEL_SPEED = "travelSpeed";
     //Shield stuff
     public static final String
             CHI_PERCENT = "chiPercentOnHit",

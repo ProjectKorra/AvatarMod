@@ -17,6 +17,7 @@
 package com.crowsofwar.avatar.bending.bending.water.tickhandlers;
 
 import com.crowsofwar.avatar.bending.bending.water.Waterbending;
+import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.util.data.Bender;
@@ -173,6 +174,11 @@ public class WaterSkateHandler extends TickHandler {
 				if (player.ticksExisted % 5 == 0) {
 					world.playSound(null, player.getPosition(), SoundEvents.ENTITY_PLAYER_SPLASH,
 							SoundCategory.PLAYERS, 0.4f, 2f);
+				}
+
+				//TODO: Actual water particles!!!!!
+				if (world.isRemote) {
+					ParticleBuilder.create(ParticleBuilder.Type.CUBE).element(new Waterbending());
 				}
 				particles.spawnParticles(world, EnumParticleTypes.WATER_SPLASH, 50, 60,
 						Vector.getEntityPos(player).plus(0, .1, 0), new Vector(.2, 0.2, .2), true);

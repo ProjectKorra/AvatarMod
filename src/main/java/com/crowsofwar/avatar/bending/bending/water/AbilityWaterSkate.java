@@ -17,10 +17,8 @@
 package com.crowsofwar.avatar.bending.bending.water;
 
 import com.crowsofwar.avatar.bending.bending.Ability;
-import com.crowsofwar.avatar.util.Raytrace;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
-import com.crowsofwar.avatar.util.data.ctx.BendingContext;
 
 import static com.crowsofwar.avatar.util.data.StatusControlController.SKATING_START;
 import static com.crowsofwar.avatar.util.data.TickHandlerController.WATER_SKATE;
@@ -30,8 +28,19 @@ import static com.crowsofwar.avatar.util.data.TickHandlerController.WATER_SKATE;
  */
 public class AbilityWaterSkate extends Ability {
 
+	public static String
+			RUN_ON_LAND = "runOnLand",
+			USE_ABILITIES = "useAbilities";
+
 	public AbilityWaterSkate() {
 		super(Waterbending.ID, "water_skate");
+	}
+
+	@Override
+	public void init() {
+		super.init();
+		addProperties(TRAVEL_SPEED);
+		addBooleanProperties(RUN_ON_LAND, USE_ABILITIES, GROUND_POUND);
 	}
 
 	@Override
