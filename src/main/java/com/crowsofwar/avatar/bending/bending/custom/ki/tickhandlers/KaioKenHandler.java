@@ -64,7 +64,7 @@ public class KaioKenHandler extends TickHandler {
                     .element(new Kibending()).scale(scale).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 5).swirl((int) (kaioKenDuration / 20 * scale),
                     (int) (scale * Math.PI), scale, scale / 2, kaioKenDuration * 20, (0.75F / scale),
                     entity, world, true, pos,
-                    ParticleBuilder.SwirlMotionType.OUT, true, true);
+                    ParticleBuilder.SwirlMotionType.OUT, false, true);
         }
 
         //The particles take a while to disappear after the ability finishes- so you decrease the time the particles can spawn

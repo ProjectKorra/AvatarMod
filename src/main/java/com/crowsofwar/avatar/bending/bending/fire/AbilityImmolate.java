@@ -71,9 +71,6 @@ public class AbilityImmolate extends Ability {
 
                 int lightRadius = 5;
 
-                if (getProperty(FIRE_CHANCE, ctx).floatValue() / 10 > 0.5)
-                    entity.setFire(1);
-
                 if (abilityData.getLevel() == 1) {
                     lightRadius = 7;
                 }

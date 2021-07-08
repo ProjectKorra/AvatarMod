@@ -137,7 +137,7 @@ public class FlameGlideHandler extends TickHandler {
             }
         }
 
-        return target.isInWater() || target.isSneaking() || bender.isFlying() || duration <= ctx.getData().getTickHandlerDuration(this);
+        return false;//target.isInWater() || target.isSneaking() || bender.isFlying() || duration <= ctx.getData().getTickHandlerDuration(this);
 
     }
 
@@ -204,8 +204,8 @@ public class FlameGlideHandler extends TickHandler {
             if (!world.isRemote)
                 world.spawnEntity(wave);
         }
-        if (jump != null)
-            abilityData.setAbilityCooldown(jump.getCooldown(abilityData));
+        if (entity instanceof EntityPlayer)
+            ((EntityPlayer) entity).capabilities.isFlying = false;
     }
 
     //TODO: Fire entity for visual fx/sparks/embers from fire

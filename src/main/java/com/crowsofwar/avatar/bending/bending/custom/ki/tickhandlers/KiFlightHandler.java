@@ -202,8 +202,6 @@ public class KiFlightHandler extends TickHandler {
             if (!world.isRemote)
                 world.spawnEntity(wave);
         }
-        if (flight != null)
-            abilityData.setAbilityCooldown(flight.getCooldown(abilityData));
 
         if (entity instanceof EntityPlayer)
             ((EntityPlayer) entity).capabilities.isFlying = false;

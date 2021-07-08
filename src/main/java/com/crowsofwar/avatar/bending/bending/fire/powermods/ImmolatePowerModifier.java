@@ -41,16 +41,6 @@ public class ImmolatePowerModifier extends BuffPowerModifier {
         EntityLivingBase entity = ctx.getBenderEntity();
         AbilityData abilityData = AbilityData.get(entity, "immolate");
 
-        // Intermittently light on fire
-        if (entity.ticksExisted % 15 == 0) {
-
-            double chance = Objects.requireNonNull(Abilities.get("immolate")).getProperty(FIRE_CHANCE, abilityData).floatValue() / 10;
-            if (Math.random() < chance) {
-                entity.setFire(2);
-            }
-
-        }
-
         if (Objects.requireNonNull(Abilities.get("immolate")).getBooleanProperty(INCINERATE_PROJECTILES, abilityData)) {
             AxisAlignedBB box = new AxisAlignedBB(entity.posX - 2, entity.posY, entity.posZ - 2, entity.posX + 2, entity.posY + 3, entity.posZ + 2);
             List<Entity> targets = entity.world.getEntitiesWithinAABB(Entity.class, box);
