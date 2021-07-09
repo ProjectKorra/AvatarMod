@@ -16,6 +16,9 @@
 */
 package com.crowsofwar.avatar.bending.bending.water.tickhandlers;
 
+import com.crowsofwar.avatar.bending.bending.Abilities;
+import com.crowsofwar.avatar.bending.bending.Ability;
+import com.crowsofwar.avatar.bending.bending.water.AbilityWaterSkate;
 import com.crowsofwar.avatar.bending.bending.water.Waterbending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.util.data.AbilityData;
@@ -102,99 +105,93 @@ public class WaterSkateHandler extends TickHandler {
 	private boolean skate(BendingData data, EntityLivingBase player, Bender bender) {
 
 		AbilityData abilityData = data.getAbilityData("water_skate");
-		double powerRating = bender.calcPowerRating(Waterbending.ID);
+		AbilityWaterSkate skate = (AbilityWaterSkate) Abilities.get("water_skate");
+		if (skate != null) {
+			double powerRating = bender.calcPowerRating(Waterbending.ID);
 
-		World world = player.world;
-		int yPos = getSurfacePos(player);
+			World world = player.world;
+			int yPos = getSurfacePos(player);
 
-		if (!player.world.isRemote && !shouldSkate(player, abilityData)) {
-			return true;
-		} else {
+			if (!player.world.isRemote && !shouldSkate(player, abilityData)) {
+				return true;
+			} else {
 
-			float requiredChi = STATS_CONFIG.chiWaterSkateSecond / 20f;
-			requiredChi -= powerRating / 100 * 0.25f;
-			if (bender.consumeChi(requiredChi)) {
+				float requiredChi = STATS_CONFIG.chiWaterSkateSecond / 20f;
+				requiredChi -= powerRating / 100 * 0.25f;
+				if (bender.consumeChi(requiredChi)) {
 
-				double targetSpeed = abilityData.getLevel() >= 2 ? 1.2 : 0.8;
-				targetSpeed += powerRating / 400f;
+					double targetSpeed = skate.getProperty(Ability.TRAVEL_SPEED, abilityData).doubleValue();
+					targetSpeed = skate.powerModify((float) targetSpeed, abilityData);
 
-				if (player.moveForward != 0) {
-					if (player.moveForward < 0) {
-						targetSpeed /= 2;
-					} else {
-						targetSpeed *= 1.3;
-					}
-				}
-
-				/*Block belowBlock = player.world.getBlockState(new BlockPos(player.getPosition()).down()).getBlock();
-				Block playerBlock = player.world.getBlockState(new BlockPos(player.getPosition())).getBlock();
-
-				if (belowBlock != Blocks.WATER && belowBlock != Blocks.FLOWING_WATER) {
-					if (playerBlock == Blocks.AIR) {
-						world.setBlockState(new BlockPos(player.getPosition()), Blocks.FLOWING_WATER.getBlockLayer()getDefaultState());
-					}
-
-				}**/
-
-				player.setPosition(player.posX, yPos, player.posZ);
-				Vector currentVelocity = new Vector(player.motionX, player.motionY, player.motionZ);
-				Vector targetVelocity = toRectangular(toRadians(player.rotationYaw), 0).times(targetSpeed);
-
-				double targetWeight = 0.1;
-				currentVelocity = currentVelocity.times(1 - targetWeight);
-				targetVelocity = targetVelocity.times(targetWeight);
-
-				double targetSpeedWeight = 0.2;
-				double speed = currentVelocity.magnitude() * (1 - targetSpeedWeight)
-						+ targetSpeed * targetSpeedWeight;
-
-				Vector newVelocity = currentVelocity.plus(targetVelocity).normalize().times(speed);
-
-				Vector playerMovement = toRectangular(toRadians(player.rotationYaw - 90),
-						toRadians(player.rotationPitch)).times(player.moveStrafing * 0.02);
-
-				newVelocity = newVelocity.plus(playerMovement);
-
-				player.motionX = newVelocity.x();
-				player.motionY = 0;
-				player.motionZ = newVelocity.z();
-
-				if (abilityData.isMasterPath(AbilityTreePath.SECOND)) {
-					AxisAlignedBB box = new AxisAlignedBB(player.posX - 1.5, player.posY,
-							player.posZ - 1.5, player.posX, player.posY + 1.5, player.posZ + 1.5);
-					List<EntityLivingBase> nearby = world.getEntitiesWithinAABB(EntityLivingBase.class, box);
-					for (EntityLivingBase target : nearby) {
-						if (target != player) {
-							pushEntitiesAway(target, player);
+					if (player.moveForward != 0) {
+						if (player.moveForward < 0) {
+							targetSpeed /= 2;
+						} else {
+							targetSpeed *= 1.3;
 						}
 					}
 
-				}
 
-				if (player.ticksExisted % 5 == 0) {
-					world.playSound(null, player.getPosition(), SoundEvents.ENTITY_PLAYER_SPLASH,
-							SoundCategory.PLAYERS, 0.4f, 2f);
-				}
+					player.setPosition(player.posX, yPos, player.posZ);
+					Vector currentVelocity = new Vector(player.motionX, player.motionY, player.motionZ);
+					Vector targetVelocity = toRectangular(toRadians(player.rotationYaw), 0).times(targetSpeed);
 
-				//TODO: Actual water particles!!!!!
-				if (world.isRemote) {
-					ParticleBuilder.create(ParticleBuilder.Type.CUBE).element(new Waterbending());
-				}
-				particles.spawnParticles(world, EnumParticleTypes.WATER_SPLASH, 50, 60,
-						Vector.getEntityPos(player).plus(0, .1, 0), new Vector(.2, 0.2, .2), true);
+					double targetWeight = 0.1;
+					currentVelocity = currentVelocity.times(1 - targetWeight);
+					targetVelocity = targetVelocity.times(targetWeight);
 
+					double targetSpeedWeight = 0.2;
+					double speed = currentVelocity.magnitude() * (1 - targetSpeedWeight)
+							+ targetSpeed * targetSpeedWeight;
+
+					Vector newVelocity = currentVelocity.plus(targetVelocity).normalize().times(speed);
+
+					Vector playerMovement = toRectangular(toRadians(player.rotationYaw - 90),
+							toRadians(player.rotationPitch)).times(player.moveStrafing * 0.02);
+
+					newVelocity = newVelocity.plus(playerMovement);
+
+					player.motionX = newVelocity.x();
+					player.motionY = 0;
+					player.motionZ = newVelocity.z();
+
+					if (skate.getBooleanProperty(AbilityWaterSkate.PUSH_AWAY, abilityData)) {
+						AxisAlignedBB box = new AxisAlignedBB(player.posX - 1.5, player.posY,
+								player.posZ - 1.5, player.posX, player.posY + 1.5, player.posZ + 1.5);
+						List<EntityLivingBase> nearby = world.getEntitiesWithinAABB(EntityLivingBase.class, box);
+						for (EntityLivingBase target : nearby) {
+							if (target != player) {
+								pushEntitiesAway(target, player);
+							}
+						}
+
+					}
+
+					if (player.ticksExisted % 5 == 0) {
+						world.playSound(null, player.getPosition(), SoundEvents.ENTITY_PLAYER_SPLASH,
+								SoundCategory.PLAYERS, 0.4f, 2f);
+					}
+
+					//TODO: Actual water particles!!!!!
+					if (world.isRemote) {
+						ParticleBuilder.create(ParticleBuilder.Type.CUBE).element(new Waterbending());
+					}
+					particles.spawnParticles(world, EnumParticleTypes.WATER_SPLASH, 50, 60,
+							Vector.getEntityPos(player).plus(0, .1, 0), new Vector(.2, 0.2, .2), true);
+
+
+					if (player.ticksExisted % 10 == 0) {
+						abilityData.addXp(SKILLS_CONFIG.waterSkateOneSecond / 2);
+					}
+					data.getMiscData().setCanUseAbilities(abilityData.getLevel() >= 1);
+
+				}
 
 				if (player.ticksExisted % 10 == 0) {
 					abilityData.addXp(SKILLS_CONFIG.waterSkateOneSecond / 2);
 				}
-				data.getMiscData().setCanUseAbilities(abilityData.getLevel() >= 1);
 
 			}
-
-			if (player.ticksExisted % 10 == 0) {
-				abilityData.addXp(SKILLS_CONFIG.waterSkateOneSecond / 2);
-			}
-
 		}
 		return false;
 

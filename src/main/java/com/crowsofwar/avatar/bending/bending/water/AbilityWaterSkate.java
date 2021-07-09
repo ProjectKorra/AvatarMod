@@ -30,7 +30,8 @@ public class AbilityWaterSkate extends Ability {
 
 	public static String
 			RUN_ON_LAND = "runOnLand",
-			USE_ABILITIES = "useAbilities";
+			USE_ABILITIES = "useAbilities",
+			PUSH_AWAY = "pushAway";
 
 	public AbilityWaterSkate() {
 		super(Waterbending.ID, "water_skate");
@@ -40,7 +41,7 @@ public class AbilityWaterSkate extends Ability {
 	public void init() {
 		super.init();
 		addProperties(TRAVEL_SPEED);
-		addBooleanProperties(RUN_ON_LAND, USE_ABILITIES, GROUND_POUND);
+		addBooleanProperties(RUN_ON_LAND, USE_ABILITIES, PUSH_AWAY);
 	}
 
 	@Override

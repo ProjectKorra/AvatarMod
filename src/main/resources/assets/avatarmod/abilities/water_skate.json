@@ -8,10 +8,10 @@
       "exhaustion": 2.0,
       "burnOut": 10.0,
       "burnOutRecoverTick": 0.5,
-      "travelSpeed": 0,
+      "travelSpeed": 0.6,
       "runOnLand": false,
       "useAbilities": false,
-      "groundPound": false
+      "pushAway": false
     },
     "level2": {
       "tier": 2,
@@ -19,7 +19,9 @@
       "cooldown": 5,
       "exhaustion": 2.5,
       "burnOut": 15.0,
-      "burnOutRecoverTick": 0.75
+      "burnOutRecoverTick": 0.75,
+      "travelSpeed": 0.8,
+      "useAbilities": true
     },
     "level3": {
       "tier": 3,
@@ -28,7 +30,8 @@
       "exhaustion": 3.0,
       "burnOut": 20.0,
       "burnOutRecoverTick": 1.0,
-      "performanceAmount": 30
+      "performanceAmount": 30,
+      "travelSpeed": 1
     },
     "level4_1": {
       "tier": 4,
@@ -36,7 +39,9 @@
       "cooldown": 15,
       "exhaustion": 3.5,
       "burnOut": 25.0,
-      "burnOutRecoverTick": 1.25
+      "burnOutRecoverTick": 1.25,
+      "travelSpeed": 1.2,
+      "runOnLand": true
     },
     "level4_2": {
       "tier": 4,
@@ -44,7 +49,10 @@
       "cooldown": 20,
       "exhaustion": 4.0,
       "burnOut": 30.0,
-      "burnOutRecoverTick": 1.5
+      "burnOutRecoverTick": 1.5,
+      "travelSpeed": 1.4,
+      "pushAway": true,
+      "runOnLand": false
     }
   }
 }
