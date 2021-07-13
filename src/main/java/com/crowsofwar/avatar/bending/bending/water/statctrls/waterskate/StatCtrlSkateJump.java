@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.bending.bending.water.statctrls.waterskate;
 
+import com.crowsofwar.avatar.bending.bending.water.AbilityWaterSkate;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.util.data.BendingData;
@@ -35,34 +36,31 @@ import static com.crowsofwar.avatar.util.data.TickHandlerController.WATER_SKATE;
  */
 public class StatCtrlSkateJump extends StatusControl {
 
-	public StatCtrlSkateJump() {
-		super(9, CONTROL_JUMP, BELOW_CROSSHAIR);
-	}
+    public StatCtrlSkateJump() {
+        super(9, CONTROL_JUMP, BELOW_CROSSHAIR);
+    }
 
-	@Override
-	public boolean execute(BendingContext ctx) {
-		BendingData data = ctx.getData();
-		EntityLivingBase entity = ctx.getBenderEntity();
-		if (data.hasTickHandler(WATER_SKATE)) {
-			data.removeTickHandler(WATER_SKATE, ctx);
-			data.getMiscData().setCanUseAbilities(true);
+    @Override
+    public boolean execute(BendingContext ctx) {
+        BendingData data = ctx.getData();
+        EntityLivingBase entity = ctx.getBenderEntity();
+        AbilityData abilityData = data.getAbilityData("water_skate");
 
-			Vector velocity = Vector.getLookRectangular(entity).times(1.5);
-			entity.motionX = velocity.x();
-			entity.motionY = velocity.y();
-			entity.motionZ = velocity.z();
-			AvatarUtils.afterVelocityAdded(entity);
+        if (data.hasTickHandler(WATER_SKATE)) {
+            data.removeTickHandler(WATER_SKATE, ctx);
+            data.getMiscData().setCanUseAbilities(true);
+            abilityData.setRegenBurnout(true);
+            Vector velocity = Vector.getLookRectangular(entity).times(1.5);
+            entity.motionX = velocity.x();
+            entity.motionY = velocity.y();
+            entity.motionZ = velocity.z();
+            AvatarUtils.afterVelocityAdded(entity);
 
-			data.getMiscData().setFallAbsorption(9);
+            data.getMiscData().setFallAbsorption(9);
 
-			AbilityData abilityData = data.getAbilityData("water_skate");
-			if (abilityData.isMasterPath(AbilityTreePath.SECOND)) {
-				data.addTickHandler(SMASH_GROUND_WATER, ctx);
-			}
+        }
 
-		}
-
-		return true;
-	}
+        return true;
+    }
 
 }

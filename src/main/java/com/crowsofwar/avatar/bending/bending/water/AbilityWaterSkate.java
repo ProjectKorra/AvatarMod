@@ -25,6 +25,8 @@ import static com.crowsofwar.avatar.util.data.TickHandlerController.WATER_SKATE;
 
 /**
  * @author CrowsOfWar
+ *
+ * TODO: Autostepping up blocks
  */
 public class AbilityWaterSkate extends Ability {
 
