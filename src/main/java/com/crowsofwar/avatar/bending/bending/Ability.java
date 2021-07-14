@@ -125,7 +125,7 @@ public abstract class Ability {
             //Amount is the amount consumed
             WATER_AMOUNT = "waterAmount",
     //Level is the HP of it (applies to source abilities such as water bubble)
-    WATER_LEVEL = "waterLevel",
+            WATER_LEVEL = "waterLevel",
             SOURCE_RANGE = "sourceRange",
             SOURCE_ANGLES = "sourceAngles",
             PLANT_BEND = "plantbend";
@@ -180,7 +180,6 @@ public abstract class Ability {
             BURNOUT_HIT = "burnOutOnHit",
             MAX_HEALTH = "maxHealth",
             EXHAUSTION_HIT = "exhaustionOnHit";
-
     //Redirect
     public static final String
             DESTROY_TIER = "destroyTier",
@@ -189,6 +188,9 @@ public abstract class Ability {
             ABSORB_TIER = "absorbTier",
             POWER_BOOST = "powerBoost",
             POWER_DURATION = "powerDuration";
+    //Stuff consumed per tick
+    public static final String
+            XP_PER_SECOND = "xpPerSecond";
 
     public static final int MAX_TIER = 7;
 

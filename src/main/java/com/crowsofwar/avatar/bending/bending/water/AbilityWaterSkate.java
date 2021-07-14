@@ -62,4 +62,9 @@ public class AbilityWaterSkate extends Ability {
 	public int getBaseTier() {
 		return 2;
 	}
+
+	@Override
+	public float getChiCost(AbilityContext ctx) {
+		return 0;
+	}
 }

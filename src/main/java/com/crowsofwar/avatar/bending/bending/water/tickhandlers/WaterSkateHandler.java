@@ -24,8 +24,8 @@ import com.crowsofwar.avatar.client.particle.NetworkParticleSpawner;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.client.particle.ParticleSpawner;
 import com.crowsofwar.avatar.util.AvatarUtils;
+import com.crowsofwar.avatar.util.damageutils.DamageUtils;
 import com.crowsofwar.avatar.util.data.AbilityData;
-import com.crowsofwar.avatar.util.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.TickHandler;
@@ -47,6 +47,9 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
+import static com.crowsofwar.avatar.bending.bending.Ability.XP_USE;
+import static com.crowsofwar.avatar.bending.bending.water.AbilityWaterSkate.RUN_ON_LAND;
+import static com.crowsofwar.avatar.bending.bending.water.AbilityWaterSkate.USE_ABILITIES;
 import static com.crowsofwar.avatar.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.util.data.StatusControlController.SKATING_JUMP;
@@ -93,7 +96,7 @@ public class WaterSkateHandler extends TickHandler {
     private void tryStartSkating(BendingData data, EntityLivingBase player) {
 
         if (!player.world.isRemote && data.hasStatusControl(SKATING_START)) {
-            if (shouldSkate(player, data.getAbilityData("water_skate"))) {
+            if (shouldSkate(player, data.getAbilityData("water_skate"), getSurfacePos(player))) {
                 data.removeStatusControl(SKATING_START);
                 data.addStatusControl(SKATING_JUMP);
             }
@@ -115,13 +118,16 @@ public class WaterSkateHandler extends TickHandler {
             World world = player.world;
             int yPos = getSurfacePos(player);
 
-            if (!player.world.isRemote && !shouldSkate(player, abilityData)) {
+//            if (player.collidedHorizontally)
+//                yPos += 1;
+            if (!player.world.isRemote && !shouldSkate(player, abilityData, yPos)) {
                 return true;
             } else {
 
-                float requiredChi = STATS_CONFIG.chiWaterSkateSecond / 20f;
+                float requiredChi = skate.getChiCost(abilityData) / 20;
                 requiredChi -= powerRating / 100 * 0.25f;
                 if (bender.consumeChi(requiredChi)) {
+
 
                     double targetSpeed = skate.getProperty(Ability.TRAVEL_SPEED, abilityData).doubleValue();
                     targetSpeed = skate.powerModify((float) targetSpeed, abilityData);
@@ -135,7 +141,7 @@ public class WaterSkateHandler extends TickHandler {
                     }
 
 
-                    player.setPosition(player.posX, yPos, player.posZ);
+                    //player.setPosition(player.posX, yPos, player.posZ);
                     Vector currentVelocity = new Vector(player.motionX, player.motionY, player.motionZ);
                     Vector targetVelocity = toRectangular(toRadians(player.rotationYaw), 0).times(targetSpeed);
 
@@ -155,20 +161,44 @@ public class WaterSkateHandler extends TickHandler {
                     newVelocity = newVelocity.plus(playerMovement);
 
                     player.motionX = newVelocity.x();
-                    player.motionY = 0;
+                    if (!world.isAirBlock(player.getPosition().down()))
+                        player.motionY = 0;
                     player.motionZ = newVelocity.z();
 
-                    //TODO: Push particles?
+                    if (player.collidedHorizontally)
+                        player.motionY = 0.5;
+                    AvatarUtils.afterVelocityAdded(player);
+
+//                    if (!world.isRemote) {
+//                        if (world.isAirBlock(player.getPosition().down()))
+//                            if (!world.isAirBlock(player.getPosition().down(2)))
+//                                player.setPosition(player.posX, player.posY - 1, player.posZ);
+//                       else   if (player.collidedHorizontally)
+//                                player.setPosition(player.posX, player.posY + 1, player.posZ);
+//                    }
+
+                    //TODO: Custom hitbox for determining whether the player is on the ground
                     if (skate.getBooleanProperty(AbilityWaterSkate.PUSH_AWAY, abilityData)) {
-                        AxisAlignedBB box = new AxisAlignedBB(player.posX - 1.5, player.posY,
-                                player.posZ - 1.5, player.posX, player.posY + 1.5, player.posZ + 1.5);
+                        AxisAlignedBB box = new AxisAlignedBB(player.posX - 1.5, player.getEntityBoundingBox().minY - 1,
+                                player.posZ - 1.5, player.posX, player.getEntityBoundingBox().maxY + 1, player.posZ + 1.5);
                         List<EntityLivingBase> nearby = world.getEntitiesWithinAABB(EntityLivingBase.class, box);
                         for (EntityLivingBase target : nearby) {
                             if (target != player) {
                                 pushEntitiesAway(target, player);
                             }
                         }
-
+                        if (world.isRemote) {
+                            int particles = (int) (targetSpeed * 4) + 2;
+                            for (int i = 0; i < particles * 4; i++) {
+                                Vec3d pos = Vector.getEntityPos(player).plus(newVelocity.x(), 0, newVelocity.z())
+                                        .plus(world.rand.nextGaussian() / 2, world.rand.nextDouble() * 2, world.rand.nextGaussian() / 2).toMinecraft();
+                                ParticleBuilder.create(ParticleBuilder.Type.CUBE).element(new Waterbending())
+                                        .clr(0, 240, 255, 850).time(16 + AvatarUtils.getRandomNumberInRange(0, 2))
+                                        .spawnEntity(player).scale((float) speed * 1.5F * world.rand.nextFloat()).pos(pos)
+                                        .vel(world.rand.nextGaussian() / 5, world.rand.nextGaussian() * targetSpeed / 10,
+                                                world.rand.nextGaussian() / 5).spawnEntity(player).spawn(world);
+                            }
+                        }
                     }
 
                     if (player.ticksExisted % 5 == 0) {
@@ -195,17 +225,10 @@ public class WaterSkateHandler extends TickHandler {
                             Vector.getEntityPos(player).plus(0, .1, 0), new Vector(.2, 0.2, .2), true);
 
 
-                    if (player.ticksExisted % 10 == 0) {
-                        abilityData.addXp(SKILLS_CONFIG.waterSkateOneSecond / 2);
-                    }
-                    data.getMiscData().setCanUseAbilities(abilityData.getLevel() >= 1);
+                    abilityData.addXp(skate.getProperty(XP_USE).floatValue() / 20);
+                    data.getMiscData().setCanUseAbilities(skate.getBooleanProperty(USE_ABILITIES, abilityData));
 
                 }
-
-                if (player.ticksExisted % 10 == 0) {
-                    abilityData.addXp(SKILLS_CONFIG.waterSkateOneSecond / 2);
-                }
-
             }
         }
         return false;
@@ -228,29 +251,31 @@ public class WaterSkateHandler extends TickHandler {
     /**
      * Determine if the player is in the ideal conditions to water-skate.
      */
-    private boolean shouldSkate(EntityLivingBase player, AbilityData data) {
+    private boolean shouldSkate(EntityLivingBase player, AbilityData data, int surface) {
 
-        //TODO: Auto step-up
-        IBlockState below = player.world.getBlockState(new BlockPos(player.getPosition()).down());
-        IBlockState playerPos = player.world.getBlockState(new BlockPos(player.getPosition()));
-        int surface = getSurfacePos(player);
+        AbilityWaterSkate skate = (AbilityWaterSkate) Abilities.get("water_skate");
+        if (skate != null) {
+            //TODO: Auto step-up
+            IBlockState below = player.world.getBlockState(new BlockPos(player.getPosition()).down());
+            IBlockState playerPos = player.world.getBlockState(new BlockPos(player.getPosition()));
 
-        boolean allowWaterfallSkating = data.getLevel() >= 2;
-        boolean allowGroundSkating = data.isMasterPath(AbilityTreePath.FIRST);
-        boolean onGround = below.getBlock() != Blocks.AIR && below.getBlock() != Blocks.LAVA && below.getBlock() != Blocks.FLOWING_LAVA;
-        boolean onWaterBendableBlock = STATS_CONFIG.waterBendableBlocks.contains(below.getBlock());
-        boolean onSnowLayer = playerPos.getBlock() == Blocks.SNOW_LAYER;
-        boolean onSlab = !playerPos.isFullBlock() && playerPos.getBlock() != Blocks.AIR && playerPos.getBlock() != Blocks.LAVA && playerPos.getBlock() != Blocks.FLOWING_LAVA;
-        boolean inWaterBlock = ((below.getBlock() == Blocks.WATER)
-                && (below.getValue(BlockLiquid.LEVEL) == 0 || allowWaterfallSkating)) || (player.world.isRainingAt(player.getPosition()) && (onGround || onSlab) || onWaterBendableBlock || onSnowLayer);
+            boolean allowWaterfallSkating = data.getLevel() >= 2;
+            boolean allowGroundSkating = skate.getBooleanProperty(RUN_ON_LAND, data) || (player.world.isRainingAt(player.getPosition()));
+            boolean onGround = below.getBlock() != Blocks.AIR && below.getBlock() != Blocks.LAVA && below.getBlock() != Blocks.FLOWING_LAVA;
+            boolean onWaterBendableBlock = STATS_CONFIG.waterBendableBlocks.contains(below.getBlock());
+            boolean onSnowLayer = playerPos.getBlock() == Blocks.SNOW_LAYER;
+            boolean onSlab = !playerPos.isFullBlock() && playerPos.getBlock() != Blocks.AIR && playerPos.getBlock() != Blocks.LAVA && playerPos.getBlock() != Blocks.FLOWING_LAVA;
+            boolean inWaterBlock = ((below.getBlock() == Blocks.WATER)
+                    && (below.getValue(BlockLiquid.LEVEL) == 0 || allowWaterfallSkating)) || (player.world.isRainingAt(player.getPosition()) && (onGround || onSlab) || onWaterBendableBlock || onSnowLayer);
 
 
-        if (allowGroundSkating && onGround) {
-            return (!player.isSneaking() && surface != -1
-                    && surface - player.posY <= 3);
-        } else return !player.isSneaking() && (player.isInWater() || inWaterBlock) && surface != -1
-                && surface - player.posY <= 3;
-
+            if (allowGroundSkating && onGround) {
+                return (!player.isSneaking() && surface != -1
+                        && surface - player.posY <= 3);
+            } else return !player.isSneaking() && (player.isInWater() || inWaterBlock) && surface != -1
+                    && surface - player.posY <= 3;
+        }
+        return false;
 
     }
 
@@ -263,14 +288,29 @@ public class WaterSkateHandler extends TickHandler {
     private int getSurfacePos(EntityLivingBase player) {
 
         World world = player.world;
-        if (!player.isInWater()) return (int) player.posY;
 
-        Block in = world.getBlockState(player.getPosition()).getBlock();
 
-        int increased = 1;
-        while (in == WATER && increased <= 3) {
-            increased++;
-            in = world.getBlockState(player.getPosition().up(increased)).getBlock();
+        BlockPos pos = player.getPosition();
+        IBlockState state = world.getBlockState(pos);
+        Block in = state.getBlock();
+
+        int increased = 0;
+
+        if (player.isInWater()) {
+            while (in == WATER && increased <= 3) {
+                increased++;
+                in = world.getBlockState(player.getPosition().up(increased)).getBlock();
+            }
+        } else {
+//            while (world.isAirBlock(pos.down()) && increased >= -3) {
+//                increased--;
+//                pos = pos.down();
+//            }
+
+            if (!world.isAirBlock(pos) && world.isBlockFullCube(pos) || player.collidedHorizontally)
+                increased++;
+
+
         }
 
         return (int) player.posY + increased;
@@ -278,10 +318,14 @@ public class WaterSkateHandler extends TickHandler {
     }
 
     private void pushEntitiesAway(EntityLivingBase target, EntityLivingBase entity) {
-        Vector velocity = Vector.getEntityPos(target).minus(Vector.getEntityPos(entity));
-        velocity = velocity.withY(0.1).times(2F / 20);
-        target.addVelocity(velocity.x(), velocity.y(), velocity.z());
-        AvatarUtils.afterVelocityAdded(target);
+        if (!entity.world.isRemote) {
+            if (DamageUtils.isValidTarget(entity, target)) {
+                Vector velocity = Vector.getEntityPos(target).minus(Vector.getEntityPos(entity));
+                velocity = velocity.withY(0.1).times(2F);
+                target.addVelocity(velocity.x(), velocity.y(), velocity.z());
+                AvatarUtils.afterVelocityAdded(target);
+            }
+        }
     }
 
 }
