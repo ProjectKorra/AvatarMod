@@ -37,13 +37,13 @@ import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
 /**
  * Are you proud of me, dad? I'm outlining how this should work in the documentation.
  * I'm actually following conventions. Praise be!
- *
+ * <p>
  * Wave -- Waterbending
  * This ability is designed for mobility and offense. It's a staple of waterbenders, and allows them
  * to dominate in water, snow, or rain. Charge up to create a bigger wave! As with most waterbending abilities,
  * it can be frozen and electrocuted.
  * Rideable.
- *
+ * <p>
  * Level 1 - Simple Wave.
  * Level 2 - Faster, Stronger, Bigger, Cooler. Ya know. Pierces. Works on land (with applicable water source nearby).
  * Level 3 - It's now rideable! Woo! Bigger source radius! Drawn from plants!
@@ -54,20 +54,20 @@ import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
  */
 public class AbilityCreateWave extends Ability {
 
-	public AbilityCreateWave() {
-		super(Waterbending.ID, "wave");
-	}
+    public AbilityCreateWave() {
+        super(Waterbending.ID, "wave");
+    }
 
-	@Override
-	public void execute(AbilityContext ctx) {
-		EntityLivingBase entity = ctx.getBenderEntity();
-		Bender bender = ctx.getBender();
-		World world = ctx.getWorld();
+    @Override
+    public void execute(AbilityContext ctx) {
+        EntityLivingBase entity = ctx.getBenderEntity();
+        Bender bender = ctx.getBender();
+        World world = ctx.getWorld();
 
-		Vector look = Vector.getLookRectangular(entity);
-		Raytrace.Result result = Raytrace.predicateRaytrace(world, Vector.getEntityPos(entity).minusY(1)
-				, look, 4 + ctx.getLevel(), (pos, blockState) -> blockState.getBlock() == Blocks
-						.WATER);
+        Vector look = Vector.getLookRectangular(entity);
+        Raytrace.Result result = Raytrace.predicateRaytrace(world, Vector.getEntityPos(entity).minusY(1)
+                , look, 4 + ctx.getLevel(), (pos, blockState) -> blockState.getBlock() == Blocks
+                        .WATER);
 		/*Raytrace.Result extraResult = Raytrace.predicateRaytrace(world, Vector.getEntityPos(entity).minusY(1), look,
 				4 + ctx.getLevel(), (blockPos, iBlockState) -> iBlockState.getBlock() == Blocks.SNOW || iBlockState.getBlock() == Blocks.FLOWING_WATER
 						|| iBlockState.getBlock() == Blocks.ICE);**/
@@ -126,65 +126,65 @@ public class AbilityCreateWave extends Ability {
 			}
 
 		}**/
-		if (result.hitSomething()) {
+        if (result.hitSomething()) {
 
-			VectorI pos = result.getPos();
-			//IBlockState hitBlockState = world.getBlockState(pos.toBlockPos());
-			assert pos != null;
-			IBlockState up = world.getBlockState(pos.toBlockPos().up());
+            VectorI pos = result.getPos();
+            //IBlockState hitBlockState = world.getBlockState(pos.toBlockPos());
+            assert pos != null;
+            IBlockState up = world.getBlockState(pos.toBlockPos().up());
 
-			for (int i = 0; i < 3; i++) {
-				if (up.getBlock() == Blocks.AIR) {
+            for (int i = 0; i < 3; i++) {
+                if (up.getBlock() == Blocks.AIR) {
 
-					if (bender.consumeChi(STATS_CONFIG.chiWave)) {
+                    if (bender.consumeChi(STATS_CONFIG.chiWave)) {
 
-						float size = 2;
-						double speed = 6.5;
-						if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
-							speed = 12.5;
-							size = 5F;
-						}
-						if (ctx.isMasterLevel(AbilityTreePath.SECOND)) {
-							speed = 17;
-							size = 2.75F;
-						}
-						if (ctx.getLevel() == 1) {
-							size = 2.5F;
-							speed = 8;
-						}
-						if (ctx.getLevel() == 2) {
-							size = 3;
-							speed = 10;
-						}
+                        float size = 2;
+                        double speed = 6.5;
+                        if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
+                            speed = 12.5;
+                            size = 5F;
+                        }
+                        if (ctx.isMasterLevel(AbilityTreePath.SECOND)) {
+                            speed = 17;
+                            size = 2.75F;
+                        }
+                        if (ctx.getLevel() == 1) {
+                            size = 2.5F;
+                            speed = 8;
+                        }
+                        if (ctx.getLevel() == 2) {
+                            size = 3;
+                            speed = 10;
+                        }
 
-						size += ctx.getPowerRating() / 100;
+                        size += ctx.getPowerRating() / 100;
 
-						speed += ctx.getPowerRating() / 100 * 8;
+                        speed += ctx.getPowerRating() / 100 * 8;
 
-						EntityWave wave = new EntityWave(world);
-						wave.setOwner(entity);
-						wave.setVelocity(look.times(speed));
-						wave.setPosition(pos.x(), pos.y(), pos.z());
-						wave.setAbility(this);
-						wave.rotationYaw = (float) Math.toDegrees(look.toSpherical().y());
+                        EntityWave wave = new EntityWave(world);
+                        wave.setOwner(entity);
+                        wave.setVelocity(look.times(speed));
+                        wave.setPosition(pos.x(), pos.y(), pos.z());
+                        wave.setAbility(this);
+                        wave.rotationYaw = (float) Math.toDegrees(look.toSpherical().y());
 
-						float damageMult = ctx.getLevel() >= 1 ? 1.5f : 1;
-						damageMult *= ctx.getPowerRatingDamageMod();
-						wave.setDamageMultiplier(damageMult);
-						wave.setWaveSize(size);
+                        float damageMult = ctx.getLevel() >= 1 ? 1.5f : 1;
+                        damageMult *= ctx.getPowerRatingDamageMod();
+                        wave.setDamage(damageMult);
+                        wave.setEntitySize(size * 0.75F, size * 1.5F);
 
-						wave.setCreateExplosion(ctx.isMasterLevel(AbilityTreePath.SECOND));
-						world.spawnEntity(wave);
+                        if (!world.isRemote)
+                            world.spawnEntity(wave);
 
-					}
+                    }
 
-					break;
+                    break;
 
-				}
-				pos.add(0, 1, 0);
-			}
+                }
+                pos.add(0, 1, 0);
+            }
 
-		} /*else if (ctx.consumeWater(2)) {
+        } /*else if (ctx.consumeWater(2)) {
 			for (int i = 0; i < 3; i++) {
 				if (bender.consumeChi(STATS_CONFIG.chiWave)) {
 
@@ -232,26 +232,26 @@ public class AbilityCreateWave extends Ability {
 			}
 		}**/
 
-	}
+    }
 
-	@Override
-	public int getBaseTier() {
-		return 2;
-	}
+    @Override
+    public int getBaseTier() {
+        return 2;
+    }
 
-	@Override
-	public boolean isProjectile() {
-		return true;
-	}
+    @Override
+    public boolean isProjectile() {
+        return true;
+    }
 
-	@Override
-	public boolean isOffensive() {
-		return true;
-	}
+    @Override
+    public boolean isOffensive() {
+        return true;
+    }
 
-	@Override
-	public BendingAi getAi(EntityLiving entity, Bender bender) {
-		return new AiWave(this, entity, bender);
-	}
+    @Override
+    public BendingAi getAi(EntityLiving entity, Bender bender) {
+        return new AiWave(this, entity, bender);
+    }
 
 }

@@ -23,6 +23,7 @@ import com.crowsofwar.avatar.client.gui.BendingMenuInfo;
 import com.crowsofwar.avatar.client.gui.MenuTheme;
 import com.crowsofwar.avatar.client.gui.MenuTheme.ThemeColor;
 import com.crowsofwar.avatar.util.Raytrace;
+import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.state.IBlockState;
@@ -45,90 +46,106 @@ import static java.lang.Math.toRadians;
 
 public class Waterbending extends BendingStyle {
 
-	public static final UUID ID = UUID.fromString("33486f81-29cc-4f7e-84ee-972a73b03b95");
+    public static final UUID ID = UUID.fromString("33486f81-29cc-4f7e-84ee-972a73b03b95");
 
-	private BendingMenuInfo menu;
+    private final BendingMenuInfo menu;
 
-	public Waterbending() {
-		registerAbilities();
-		Color base = new Color(228, 255, 225);
-		Color edge = new Color(60, 188, 145);
-		Color icon = new Color(129, 149, 148);
-		ThemeColor background = new ThemeColor(base, edge);
-		menu = new BendingMenuInfo(new MenuTheme(background, new ThemeColor(edge, edge),
-				new ThemeColor(icon, base), 0x57E8F2), this);
-	}
+    public Waterbending() {
+        registerAbilities();
+        Color base = new Color(228, 255, 225);
+        Color edge = new Color(60, 188, 145);
+        Color icon = new Color(129, 149, 148);
+        ThemeColor background = new ThemeColor(base, edge);
+        menu = new BendingMenuInfo(new MenuTheme(background, new ThemeColor(edge, edge),
+                new ThemeColor(icon, base), 0x57E8F2), this);
+    }
 
-	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
+    public static Vector getClosestWaterbendableBlock(EntityLivingBase entity, Ability ability, AbilityContext ctx) {
+        World world = entity.world;
 
-	}
+        Vector eye = Vector.getEyePos(entity);
 
-	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+        double range = ability.getProperty(SOURCE_RANGE, ctx).doubleValue();
+        int angles = ability.getProperty(SOURCE_ANGLES, ctx).intValue();
+        boolean plantbend = ability.getBooleanProperty(PLANT_BEND, ctx);
 
-	}
+        range = ability.powerModify((float) range, ctx.getAbilityData());
 
-	@Override
-	public int getTextColour() {
-		return 0x0066CC;
-	}
+        for (int i = 0; i < angles; i++) {
+            for (int j = 0; j < angles; j++) {
 
-	@Override
-	public BendingMenuInfo getRadialMenu() {
-		return menu;
-	}
+                double yaw = entity.rotationYaw + i * 360.0 / angles;
+                double pitch = entity.rotationPitch + j * 360.0 / angles;
 
-	@Override
-	public String getName() {
-		return "waterbending";
-	}
+                BiPredicate<BlockPos, IBlockState> isWater = (pos, state) ->
+                        (STATS_CONFIG.waterBendableBlocks.contains(state.getBlock()) || STATS_CONFIG.plantBendableBlocks
+                                .contains(state.getBlock()) && plantbend) && state.getBlock() != Blocks.AIR;
 
-	@Override
-	public UUID getId() {
-		return ID;
-	}
+                Vector angle = Vector.toRectangular(toRadians(yaw), toRadians(pitch));
+                Raytrace.Result result = Raytrace.predicateRaytrace(world, eye, angle, range, isWater);
+                if (result.hitSomething()) {
+                    return result.getPosPrecise();
+                }
 
-	@Override
-	public SoundEvent getRadialMenuSound() {
-		return SoundEvents.ENTITY_GENERIC_SWIM;
-	}
+            }
 
-	@Override
-	public TextFormatting getTextFormattingColour() {
-		return TextFormatting.BLUE;
-	}
+        }
+        return null;
+    }
 
-	public static Vector getClosestWaterbendableBlock(EntityLivingBase entity, Ability ability, AbilityContext ctx) {
-		World world = entity.world;
+    /**
+     * Assumes that the ability has PLANT_BEND as a property; should only be used for waterbending abilities.
+     * @param ability
+     * @param state
+     * @param entity
+     * @return
+     */
+    public static boolean isBendable(Ability ability, IBlockState state,
+                                     EntityLivingBase entity) {
+        boolean bendable = STATS_CONFIG.waterBendableBlocks.contains(state.getBlock());
+        if (ability.getBooleanProperty(PLANT_BEND, AbilityData.get(entity, ability.getName())))
+            bendable |= STATS_CONFIG.plantBendableBlocks.contains(state.getBlock());
 
-		Vector eye = Vector.getEyePos(entity);
+        return bendable;
+    }
 
-		double range = ability.getProperty(SOURCE_RANGE, ctx).doubleValue();
-		int angles = ability.getProperty(SOURCE_ANGLES, ctx).intValue();
-		boolean plantbend = ability.getBooleanProperty(PLANT_BEND, ctx);
+    @Override
+    public void readFromNBT(NBTTagCompound nbt) {
 
-		range = ability.powerModify((float) range, ctx.getAbilityData());
+    }
 
-		for (int i = 0; i < angles; i++) {
-			for (int j = 0; j < angles; j++) {
+    @Override
+    public void writeToNBT(NBTTagCompound nbt) {
 
-				double yaw = entity.rotationYaw + i * 360.0 / angles;
-				double pitch = entity.rotationPitch + j * 360.0 / angles;
+    }
 
-				BiPredicate<BlockPos, IBlockState> isWater = (pos, state) ->
-						(STATS_CONFIG.waterBendableBlocks.contains(state.getBlock()) || STATS_CONFIG.plantBendableBlocks
-								.contains(state.getBlock()) && plantbend) && state.getBlock() != Blocks.AIR;
+    @Override
+    public int getTextColour() {
+        return 0x0066CC;
+    }
 
-				Vector angle = Vector.toRectangular(toRadians(yaw), toRadians(pitch));
-				Raytrace.Result result = Raytrace.predicateRaytrace(world, eye, angle, range, isWater);
-				if (result.hitSomething()) {
-					return result.getPosPrecise();
-				}
+    @Override
+    public BendingMenuInfo getRadialMenu() {
+        return menu;
+    }
 
-			}
+    @Override
+    public String getName() {
+        return "waterbending";
+    }
 
-		}
-		return null;
-	}
+    @Override
+    public UUID getId() {
+        return ID;
+    }
+
+    @Override
+    public SoundEvent getRadialMenuSound() {
+        return SoundEvents.ENTITY_GENERIC_SWIM;
+    }
+
+    @Override
+    public TextFormatting getTextFormattingColour() {
+        return TextFormatting.BLUE;
+    }
 }

@@ -17,159 +17,289 @@
 
 package com.crowsofwar.avatar.entity;
 
-import com.crowsofwar.avatar.util.damageutils.AvatarDamageSource;
-import com.crowsofwar.avatar.bending.bending.BattlePerformanceScore;
-import com.crowsofwar.avatar.util.data.AbilityData;
+import com.crowsofwar.avatar.bending.bending.Abilities;
+import com.crowsofwar.avatar.bending.bending.BendingStyle;
+import com.crowsofwar.avatar.bending.bending.earth.Earthbending;
+import com.crowsofwar.avatar.bending.bending.water.Waterbending;
+import com.crowsofwar.avatar.client.particle.ParticleBuilder;
+import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.block.*;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityFallingBlock;
+import net.minecraft.init.Blocks;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 
-import java.util.List;
+import javax.annotation.Nullable;
+import java.util.Objects;
 
-import static com.crowsofwar.avatar.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
 
-public class EntityWave extends AvatarEntity {
+public class EntityWave extends EntityOffensive {
 
-	private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityWave.class,
-			DataSerializers.FLOAT);
+    private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityWave.class,
+            DataSerializers.FLOAT);
 
-	private float damageMult;
-	private boolean createExplosion;
-	private float Size;
-	private Vector initialSpeed;
-	private int groundTime;
+    private Vector initialPosition;
+    private double maxTravelDistanceSq;
+    private boolean dropEquipment;
 
-	public EntityWave(World world) {
-		super(world);
-		this.Size = 2;
-		setSize(Size, Size * 0.75F);
-		damageMult = 1;
-		this.putsOutFires = true;
-		this.initialSpeed = this.velocity();
-		this.groundTime = 0;
-	}
+    /**
+     * @param world
+     */
+    public EntityWave(World world) {
+        super(world);
+        setSize(0.125F, 0.125F);
+        this.noClip = true;
+    }
 
-	@Override
-	protected void entityInit() {
-		super.entityInit();
-		dataManager.register(SYNC_SIZE, Size);
-	}
+    @Override
+    protected void entityInit() {
+        super.entityInit();
+    }
 
-	public void setDamageMultiplier(float damageMult) {
-		this.damageMult = damageMult;
-	}
+    @Override
+    public boolean isInRangeToRender3d(double x, double y, double z) {
+        return true;
+    }
 
-	public float getWaveSize() {
-		return dataManager.get(SYNC_SIZE);
-	}
+    @Override
+    public boolean isInRangeToRenderDist(double distance) {
+        return true;
+    }
 
-	public void setWaveSize(float size) {
-		dataManager.set(SYNC_SIZE, size);
-	}
+    @Override
+    public boolean shouldRenderInPass(int pass) {
+        return true;
+    }
 
-	@Override
-	public boolean canBeCollidedWith() {
-		return false;
-	}
+    @Override
+    public double getExpandedHitboxWidth() {
+        return 0.5;
+    }
 
-	@Override
-	public boolean canBePushed() {
-		return false;
-	}
-
-	@Override
-	public void onUpdate() {
-
-		super.onUpdate();
-		this.noClip = true;
+    @Override
+    public double getExpandedHitboxHeight() {
+        return 0.5;
+    }
 
 
-		if (this.velocity() == Vector.ZERO || (this.velocity().magnitude() < (initialSpeed.magnitude() / 100))) {
-			this.setDead();
-		}
-
-		setSize(getWaveSize(), getWaveSize() * 0.75F);
-
-		if (!this.inWater) {
-			this.setVelocity(velocity().dividedBy(40));
-			groundTime++;
-		}
-
-		EntityLivingBase owner = getOwner();
-
-		Vector move = velocity().dividedBy(20);
-		Vector newPos = position().plus(move);
-		setPosition(newPos.x(), newPos.y(), newPos.z());
+    public void setDistance(double dist) {
+        maxTravelDistanceSq = dist * dist;
+    }
 
 
-		if (!world.isRemote) {
-			WorldServer World = (WorldServer) world;
-			World.spawnParticle(EnumParticleTypes.WATER_WAKE, posX, posY, posZ, 300, getWaveSize() / 2.5, getWaveSize() / 5, getWaveSize() / 2.5, 0);
-			World.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, posX, posY + (Size * 0.75F), posZ, 1, getWaveSize() / 5, getWaveSize() / 20, getWaveSize() / 5, 0);
-			World.spawnParticle(EnumParticleTypes.WATER_SPLASH, posX, posY + (Size * 0.75F), posZ, 30, getWaveSize() / 5, 0, getWaveSize() / 5, 0);
-
-			List<Entity> collided = world.getEntitiesInAABBexcluding(this, getEntityBoundingBox(), entity -> entity != owner);
-			for (Entity entity : collided) {
-				if (canCollideWith(entity)) {
-					Vector motion = velocity().dividedBy(20).times(STATS_CONFIG.waveSettings.push);
-					motion = motion.withY(Size * 0.75 / 10);
-					entity.addVelocity(motion.x(), motion.y(), motion.z());
-
-					if (this.canDamageEntity(entity)) {
-						if (entity.attackEntityFrom(AvatarDamageSource.causeWaveDamage(entity, owner),
-								STATS_CONFIG.waveSettings.damage * damageMult)) {
-
-							AbilityData.get(owner, getAbility().getName()).addXp(SKILLS_CONFIG.waveHit);
-							BattlePerformanceScore.addLargeScore(getOwner());
-
-						}
-
-						if (createExplosion) {
-							world.createExplosion(null, posX, posY, posZ, 2, false);
-						}
-					}
-
-				}
-			}
-		}
-
-		if (groundTime >= 30) {
-			this.setDead();
-		}
-
-		if (ticksExisted >= 250) {
-			this.setDead();
-		}
-
-	}
+    public double getSqrDistanceTravelled() {
+        return position().sqrDist(initialPosition);
+    }
 
 
-	@Override
-	public void onCollideWithEntity(Entity entity) {
-		if (entity instanceof AvatarEntity) {
-			((AvatarEntity) entity).onMajorWaterContact();
-		}
-	}
+    @Override
+    public boolean isProjectile() {
+        return true;
+    }
 
-	@Override
-	public boolean onCollideWithSolid() {
-		return false;
-	}
+    @Override
+    public Vec3d getKnockback() {
+        return super.getKnockback();
+    }
 
-	@Override
-	public boolean shouldRenderInPass(int pass) {
-		return true;
-	}
+    @Override
+    public Vec3d getKnockbackMult() {
+        return new Vec3d(STATS_CONFIG.ravineSettings.push, STATS_CONFIG.ravineSettings.push * 2,
+                STATS_CONFIG.ravineSettings.push);
+    }
 
-	public void setCreateExplosion(boolean createExplosion) {
-		this.createExplosion = createExplosion;
-	}
+    public void spawnEntity() {
+        if (!world.isRemote) {
+            BlockPos pos = new BlockPos(posX, posY, posZ);
 
+            //TODO: BUG - Spawns weirdly/not at all with snow layers and such. Fix.
+            if (world.getBlockState(pos.down()).getBlockHardness(world, pos.down()) != -1 && !world.isAirBlock(pos.down())
+                    && world.isBlockNormalCube(pos.down(), false)
+                    // Checks that the block above is not solid, since this causes the falling blocks to vanish.
+                    && !world.isBlockNormalCube(pos, false)) {
+
+                // Falling blocks do the setting block to air themselves.
+                //Fixed issues with floating blocks not appearing??? Now time to fix going up areas with
+                //non-solid blocks.
+                EntityFallingBlock fallingblock = new EntityFallingBlock(world, posX, (int) (posY - 0.5) + 0.5,
+                        posZ, world.getBlockState(new BlockPos(posX, posY - 1, posZ)));
+                fallingblock.motionY = 0.15 + getAvgSize() / 10;
+                world.spawnEntity(fallingblock);
+            }
+        }
+    }
+
+    @Override
+    public void onEntityUpdate() {
+        super.onEntityUpdate();
+
+        if (initialPosition == null) {
+            initialPosition = position();
+        }
+
+
+        if (!world.isRemote && getSqrDistanceTravelled() > maxTravelDistanceSq) {
+            Dissipate();
+        }
+
+        if (ticksExisted >= getLifeTime())
+            setDead();
+
+        BlockPos below = getPosition().offset(EnumFacing.DOWN);
+
+        //Lowers the wave if there's a step below
+        if (!Waterbending.isBendable(Objects.requireNonNull(Abilities.get("water_skate")), world.getBlockState(below),
+                getOwner())) {
+            if (!Waterbending.isBendable(Objects.requireNonNull(Abilities.get("water_skate")),
+                    world.getBlockState(below.down()), getOwner()))
+                Dissipate();
+            else {
+                setPosition(position().minusY(1));
+            }
+        }
+
+
+        boolean bendable = Earthbending.isBendable(world, getPosition(), world.getBlockState(getPosition()), 2);
+        if (bendable)
+            setPosition(position().plusY(1));
+
+        if (world.isRemote && getOwner() != null) {
+            //It's maths time boys and girls
+            for (double w = 0; w < width; w += 0.2) {
+                ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(0, 200, 255, 135)
+                        .time(12 + AvatarUtils.getRandomNumberInRange(0, 4)).gravity(true)
+                        .vel(world.rand.nextGaussian() / 20, world.rand.nextDouble(), world.rand.nextGaussian() / 20)
+                        .spawnEntity(this).element(new Waterbending()).spawn(world);
+            }
+        }
+        // Destroy non-solid blocks in the ravine
+        IBlockState inBlock = world.getBlockState(getPosition());
+        if (isDefaultBreakableBlock(world, getPosition())) {
+            if (inBlock.getBlock() instanceof BlockLiquid)
+                Dissipate();
+            breakBlock(getPosition());
+        }
+    }
+
+    @Nullable
+    @Override
+    public SoundEvent[] getSounds() {
+        return new SoundEvent[0];
+    }
+
+    @Override
+    public boolean isPiercing() {
+        return true;
+    }
+
+    @Override
+    public boolean shouldDissipate() {
+        return true;
+    }
+
+    @Override
+    public int getFireTime() {
+        return 0;
+    }
+
+    @Override
+    public void Dissipate() {
+        if (getOwner() != null) {
+            if (onCollideWithSolid() || !Waterbending.isBendable(Objects.requireNonNull(Abilities.get("water_skate")),
+                    world.getBlockState(getPosition().down()), getOwner())) {
+                spawnDissipateParticles(world, getPositionVector());
+                setDead();
+            }
+        }
+        super.Dissipate();
+    }
+
+
+    @Override
+    public void spawnExplosionParticles(World world, Vec3d pos) {
+
+    }
+
+    @Override
+    public void spawnDissipateParticles(World world, Vec3d pos) {
+
+    }
+
+    @Override
+    public void spawnPiercingParticles(World world, Vec3d pos) {
+
+    }
+
+    @Override
+    public void onCollideWithEntity(Entity entity) {
+        super.onCollideWithEntity(entity);
+        if (canCollideWith(entity)) {
+            if (dropEquipment && entity instanceof EntityLivingBase) {
+
+                EntityLivingBase living = (EntityLivingBase) entity;
+
+                for (EntityEquipmentSlot slot : EntityEquipmentSlot.values()) {
+
+                    ItemStack stack = living.getItemStackFromSlot(slot);
+                    if (!stack.isEmpty()) {
+                        double chance = slot.getSlotType() == EntityEquipmentSlot.Type.HAND ? 40 : 20;
+                        if (rand.nextDouble() * 100 <= chance) {
+                            living.entityDropItem(stack, 0);
+                            living.setItemStackToSlot(slot, ItemStack.EMPTY);
+                        }
+                    }
+
+                }
+
+            }
+        }
+    }
+
+
+    @Override
+    public boolean onCollideWithSolid() {
+        // Destroy if in a block
+        IBlockState inBlock = world.getBlockState(getPosition());
+        if (getOwner() != null) {
+            if (inBlock.isFullBlock() && Waterbending.isBendable(Objects.requireNonNull(Abilities.get("water_skate")), world.getBlockState(getPosition()),
+                    getOwner())) {
+                inBlock = world.getBlockState(getPosition().up());
+                if ((inBlock.getBlock() == Blocks.AIR || isDefaultBreakableBlock(world, getPosition().up()) &&
+                        Waterbending.isBendable(Objects.requireNonNull(Abilities.get("water_skate")), world.getBlockState(getPosition()),
+                                getOwner()))) {
+                    setPosition(position().plusY(1));
+                    return false;
+                }
+
+            }
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public BendingStyle getElement() {
+        return new Waterbending();
+    }
+
+    public boolean isDefaultBreakableBlock(World world, BlockPos pos) {
+        IBlockState state = world.getBlockState(pos);
+        return (state.getBlock() instanceof BlockSnow || state.getBlock()
+                instanceof BlockBush) || state.getBlockHardness(world, pos) == 0 && !state.isFullBlock();
+    }
 }
