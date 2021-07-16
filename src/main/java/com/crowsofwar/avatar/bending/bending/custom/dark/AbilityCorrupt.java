@@ -1,7 +1,7 @@
 package com.crowsofwar.avatar.bending.bending.custom.dark;
 
 import com.crowsofwar.avatar.bending.bending.Ability;
-import com.crowsofwar.avatar.bending.bending.custom.dark.powermods.CorrupPowerModifier;
+import com.crowsofwar.avatar.bending.bending.custom.dark.powermods.CorruptPowerModifier;
 import com.crowsofwar.avatar.entity.EntityLightOrb;
 import com.crowsofwar.avatar.entity.data.Behavior;
 import com.crowsofwar.avatar.entity.data.LightOrbBehavior;
@@ -102,7 +102,7 @@ public class AbilityCorrupt extends Ability {
 
                 if (data.hasBendingId(getBendingId())) {
 
-                    CorrupPowerModifier modifier = new CorrupPowerModifier();
+                    CorruptPowerModifier modifier = new CorruptPowerModifier();
                     modifier.setTicks(-1);
 
                     // Ignore warning; we know manager != null if they have the bending style
@@ -149,7 +149,7 @@ public class AbilityCorrupt extends Ability {
                 assert emitter instanceof EntityPlayer || emitter instanceof EntityBender;
                 Bender b = Bender.get(emitter);
                 if (b != null && BendingData.getFromEntity(emitter) != null && entity.ticksExisted > 1) {
-                    if (!Objects.requireNonNull(b.getData().getPowerRatingManager(Darkbending.ID)).hasModifier(CorrupPowerModifier.class)) {
+                    if (!Objects.requireNonNull(b.getData().getPowerRatingManager(Darkbending.ID)).hasModifier(CorruptPowerModifier.class)) {
                         entity.setDead();
                     }
                 }
