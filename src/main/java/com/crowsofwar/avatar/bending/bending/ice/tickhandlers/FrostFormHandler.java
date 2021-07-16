@@ -2,10 +2,8 @@ package com.crowsofwar.avatar.bending.bending.ice.tickhandlers;
 
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
-import com.crowsofwar.avatar.bending.bending.custom.dark.AbilityCorrupt;
-import com.crowsofwar.avatar.bending.bending.custom.dark.Darkbending;
-import com.crowsofwar.avatar.bending.bending.custom.light.Lightbending;
 import com.crowsofwar.avatar.bending.bending.ice.AbilityFrostForm;
+import com.crowsofwar.avatar.bending.bending.ice.Icebending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
@@ -52,22 +50,20 @@ public class FrostFormHandler extends TickHandler {
 
 
         if (world.isRemote) {
-            int rRandom = fadeR < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeR * 2) : AvatarUtils.getRandomNumberInRange(fadeR / 2,
-                    fadeR * 2);
-            int gRandom = fadeG < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeG * 2) : AvatarUtils.getRandomNumberInRange(fadeG / 2,
-                    fadeG * 2);
-            int bRandom = fadeB < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeB * 2) : AvatarUtils.getRandomNumberInRange(fadeB / 2,
-                    fadeB * 2);
+            int rRandom = AvatarUtils.getRandomNumberInRange((int) (fadeR * 0.975), (int) (fadeR * 1.15));
+            int gRandom = AvatarUtils.getRandomNumberInRange((int) (fadeG * 0.975), (int) (fadeG * 1.15));
+            int bRandom = AvatarUtils.getRandomNumberInRange((int) (fadeB * 0.975), (int) (fadeB * 1.15));
             Vec3d pos = AvatarEntityUtils.getBottomMiddleOfEntity(entity);
             pos = entity.onGround ? pos.add(0, entity.getEyeHeight(), 0) : pos.add(0, entity.getEyeHeight() / 2, 0);
             ParticleBuilder.create(ParticleBuilder.Type.FLASH).time(25 + AvatarUtils.getRandomNumberInRange(1, 2)).
                     clr(r, g, b, 150).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(50, 140))
-                    .element(new Darkbending()).scale(scale).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 75).swirl((int) (corruptDuration / 20 * scale),
+                    .element(new Icebending()).scale(scale).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 90).swirl((int) (corruptDuration / 20 * scale),
                     (int) (scale * Math.PI), scale, scale / 2, corruptDuration * 20, (0.75F / scale),
                     entity, world, true, pos,
                     ParticleBuilder.SwirlMotionType.OUT, false, true);
         }
 
+        //180, 243, 255
         //The particles take a while to disappear after the ability finishes- so you decrease the time the particles can spawn
         if (world.isRemote) {
             for (int i = 0; i < 10 + Math.max(aD.getLevel(), 1) * 2; i++) {
@@ -81,11 +77,10 @@ public class FrostFormHandler extends TickHandler {
                 double random = world.rand.nextGaussian();
                 double radius = world.rand.nextDouble() * 0.2F * Math.max(aD.getLevel(), 0);
                 Vector location = Vector.toRectangular(Math.toRadians(entity.rotationYaw + (i * 30) + (random * 2)), 0).times(radius).withY(entity.getEyeHeight() - 0.7);
-                //Temporary solution to colour fading: randomising the colour between crimson and orangey-yellow for each particle.
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(location.plus(Vector.getEntityPos(entity)).toMinecraft()).time(4 + AvatarUtils.getRandomNumberInRange(1, 4)).
                         vel(world.rand.nextGaussian() / 40, world.rand.nextDouble() / 2, world.rand.nextGaussian() / 40)
                         .clr(r, g, b, 150).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(50, 140))
-                        .element(new Lightbending()).scale(scale).glow(true).spawn(world);
+                        .element(new Icebending()).scale(scale).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 25).spawn(world);
             }
         }
         return false;//duration >= corruptDuration;

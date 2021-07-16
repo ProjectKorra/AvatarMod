@@ -138,7 +138,7 @@ public class DeathDescentHandler extends TickHandler {
             }
         }
 
-        return target.isInWater() || target.isSneaking() || bender.isFlying() || duration <= ctx.getData().getTickHandlerDuration(this);
+        return false;//target.isInWater() || target.isSneaking() || bender.isFlying() || duration <= ctx.getData().getTickHandlerDuration(this);
 
     }
 

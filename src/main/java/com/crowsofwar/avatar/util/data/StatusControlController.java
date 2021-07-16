@@ -8,10 +8,12 @@ import com.crowsofwar.avatar.bending.bending.custom.light.statctrls.StatCtrlHeav
 import com.crowsofwar.avatar.bending.bending.earth.statctrls.*;
 import com.crowsofwar.avatar.bending.bending.fire.statctrls.*;
 import com.crowsofwar.avatar.bending.bending.ice.StatCtrlShieldShatter;
+import com.crowsofwar.avatar.bending.bending.ice.statctrls.StatCtrlGlacialGlide;
 import com.crowsofwar.avatar.bending.bending.lightning.StatCtrlThrowLightningSpear;
 import com.crowsofwar.avatar.bending.bending.sand.StatCtrlSandstormRedirect;
 import com.crowsofwar.avatar.bending.bending.water.statctrls.*;
 import com.crowsofwar.avatar.bending.bending.water.statctrls.waterarc.StatCtrlThrowWater;
+import com.crowsofwar.avatar.bending.bending.water.statctrls.waterblast.StatCtrlBurstWaterBlast;
 import com.crowsofwar.avatar.bending.bending.water.statctrls.waterblast.StatCtrlChargeWaterBlast;
 import com.crowsofwar.avatar.bending.bending.water.statctrls.waterbubble.StatCtrlLobBubble;
 import com.crowsofwar.avatar.bending.bending.water.statctrls.waterskate.StatCtrlSkateJump;
@@ -68,7 +70,8 @@ public class StatusControlController {
 			DEMON_WINGS = new StatCtrlDemonWings(),
 			HEAVENLY_FLIGHT = new StatCtrlHeavenlyFlight(),
 			KI_FLIGHT = new StatCtrlKiFlight(),
-			DEATH_DESCENT = new StatCtrlDeathDescent();
+			DEATH_DESCENT = new StatCtrlDeathDescent(),
+			GLACIAL_GLIDE = new StatCtrlGlacialGlide();
 	// @formatter:on
 
 	public static StatusControl lookup(int id) {

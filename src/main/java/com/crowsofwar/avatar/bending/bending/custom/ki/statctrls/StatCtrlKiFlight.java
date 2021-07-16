@@ -116,8 +116,7 @@ public class StatCtrlKiFlight extends StatusControl {
                     ((EntityPlayer) entity).addExhaustion(exhaustion);
                 abilityData.addBurnout(burnOut);
                 //Ensure the ability can't be spammed after activating.
-                abilityData.setAbilityCooldown(cooldown == 0 ? 0 : flight.getCooldown(abilityData) - flight.getProperty(DURATION, abilityData).intValue());
-
+                abilityData.setAbilityCooldown(0);
                 if (entity instanceof EntityPlayer)
                     ((EntityPlayer) entity).capabilities.isFlying = true;
                 

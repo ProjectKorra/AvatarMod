@@ -39,9 +39,7 @@ import com.crowsofwar.avatar.bending.bending.custom.light.AbilityPurify;
 import com.crowsofwar.avatar.bending.bending.custom.light.Lightbending;
 import com.crowsofwar.avatar.bending.bending.earth.*;
 import com.crowsofwar.avatar.bending.bending.fire.*;
-import com.crowsofwar.avatar.bending.bending.ice.AbilityIceBurst;
-import com.crowsofwar.avatar.bending.bending.ice.AbilityIcePrison;
-import com.crowsofwar.avatar.bending.bending.ice.Icebending;
+import com.crowsofwar.avatar.bending.bending.ice.*;
 import com.crowsofwar.avatar.bending.bending.lightning.*;
 import com.crowsofwar.avatar.bending.bending.sand.AbilitySandPrison;
 import com.crowsofwar.avatar.bending.bending.sand.AbilitySandstorm;
@@ -161,6 +159,8 @@ public class AvatarMod {
         /*    			Ice		  			*/
         Abilities.register(new AbilityIceBurst());
         Abilities.register(new AbilityIcePrison());
+        Abilities.register(new AbilityFrostForm());
+        Abilities.register(new AbilityGlacialGlide());
         /*    			Sand	  			*/
         Abilities.register(new AbilitySandPrison());
         Abilities.register(new AbilitySandstorm());
