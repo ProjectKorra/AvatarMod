@@ -24,11 +24,12 @@ import com.crowsofwar.avatar.bending.bending.water.Waterbending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.block.*;
+import net.minecraft.block.BlockBush;
+import net.minecraft.block.BlockLiquid;
+import net.minecraft.block.BlockSnow;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityFallingBlock;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
@@ -36,8 +37,6 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -50,8 +49,8 @@ import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
 
 public class EntityWave extends EntityOffensive {
 
-    private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityWave.class,
-            DataSerializers.FLOAT);
+    private static final DataParameter<Boolean> SYNC_RUN_ON_LAND = EntityDataManager.createKey(EntityWave.class,
+            DataSerializers.BOOLEAN);
 
     private Vector initialPosition;
     private double maxTravelDistanceSq;
@@ -69,6 +68,7 @@ public class EntityWave extends EntityOffensive {
     @Override
     protected void entityInit() {
         super.entityInit();
+        dataManager.register(SYNC_RUN_ON_LAND, false);
     }
 
     @Override
@@ -106,6 +106,13 @@ public class EntityWave extends EntityOffensive {
         return position().sqrDist(initialPosition);
     }
 
+    public void setRunOnLand(boolean land) {
+        dataManager.set(SYNC_RUN_ON_LAND, land);
+    }
+
+    public boolean shouldRunOnLand() {
+        return dataManager.get(SYNC_RUN_ON_LAND);
+    }
 
     @Override
     public boolean isProjectile() {
@@ -123,26 +130,6 @@ public class EntityWave extends EntityOffensive {
                 STATS_CONFIG.ravineSettings.push);
     }
 
-    public void spawnEntity() {
-        if (!world.isRemote) {
-            BlockPos pos = new BlockPos(posX, posY, posZ);
-
-            //TODO: BUG - Spawns weirdly/not at all with snow layers and such. Fix.
-            if (world.getBlockState(pos.down()).getBlockHardness(world, pos.down()) != -1 && !world.isAirBlock(pos.down())
-                    && world.isBlockNormalCube(pos.down(), false)
-                    // Checks that the block above is not solid, since this causes the falling blocks to vanish.
-                    && !world.isBlockNormalCube(pos, false)) {
-
-                // Falling blocks do the setting block to air themselves.
-                //Fixed issues with floating blocks not appearing??? Now time to fix going up areas with
-                //non-solid blocks.
-                EntityFallingBlock fallingblock = new EntityFallingBlock(world, posX, (int) (posY - 0.5) + 0.5,
-                        posZ, world.getBlockState(new BlockPos(posX, posY - 1, posZ)));
-                fallingblock.motionY = 0.15 + getAvgSize() / 10;
-                world.spawnEntity(fallingblock);
-            }
-        }
-    }
 
     @Override
     public void onEntityUpdate() {
@@ -162,11 +149,17 @@ public class EntityWave extends EntityOffensive {
 
         BlockPos below = getPosition().offset(EnumFacing.DOWN);
 
-        //Lowers the wave if there's a step below
-        if (!Waterbending.isBendable(Objects.requireNonNull(Abilities.get("water_skate")), world.getBlockState(below),
-                getOwner())) {
-            if (!Waterbending.isBendable(Objects.requireNonNull(Abilities.get("water_skate")),
-                    world.getBlockState(below.down()), getOwner()))
+        //Lowers the wave if there's a step below; also need to check against another boolean
+        boolean bendableBlock = Waterbending.isBendable(Objects.requireNonNull(Abilities.get("water_skate")), world.getBlockState(below),
+                getOwner());
+        bendableBlock |= shouldRunOnLand() && world.getBlockState(below).isFullBlock();
+        if (!bendableBlock && shouldDissipate()) {
+
+            bendableBlock = Waterbending.isBendable(Objects.requireNonNull(Abilities.get("water_skate")),
+                    world.getBlockState(below.down()), getOwner()) ||
+                    shouldRunOnLand() && world.getBlockState(below.down()).isFullBlock();
+
+            if (!bendableBlock)
                 Dissipate();
             else {
                 setPosition(position().minusY(1));
@@ -174,7 +167,9 @@ public class EntityWave extends EntityOffensive {
         }
 
 
-        boolean bendable = Earthbending.isBendable(world, getPosition(), world.getBlockState(getPosition()), 2);
+        boolean bendable = Waterbending.isBendable(Objects.requireNonNull(Abilities.get("water_skate")),
+                world.getBlockState(getPosition()), getOwner()) || shouldRunOnLand() &&
+                world.getBlockState(getPosition()).isFullBlock();
         if (bendable)
             setPosition(position().plusY(1));
 
@@ -187,11 +182,8 @@ public class EntityWave extends EntityOffensive {
                         .spawnEntity(this).element(new Waterbending()).spawn(world);
             }
         }
-        // Destroy non-solid blocks in the ravine
-        IBlockState inBlock = world.getBlockState(getPosition());
+        // Destroy non-solid blocks in the wave
         if (isDefaultBreakableBlock(world, getPosition())) {
-            if (inBlock.getBlock() instanceof BlockLiquid)
-                Dissipate();
             breakBlock(getPosition());
         }
     }
@@ -302,4 +294,6 @@ public class EntityWave extends EntityOffensive {
         return (state.getBlock() instanceof BlockSnow || state.getBlock()
                 instanceof BlockBush) || state.getBlockHardness(world, pos) == 0 && !state.isFullBlock();
     }
+
+
 }

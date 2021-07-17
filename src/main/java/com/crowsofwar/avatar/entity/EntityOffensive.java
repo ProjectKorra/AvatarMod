@@ -72,6 +72,10 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
             DataSerializers.VARINT);
     private static final DataParameter<Boolean> SYNC_REDIRECTABLE = EntityDataManager.createKey(EntityOffensive.class,
             DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> SYNC_DISSIPATE = EntityDataManager.createKey(EntityOffensive.class,
+            DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> SYNC_EXPLODE = EntityDataManager.createKey(EntityOffensive.class,
+            DataSerializers.BOOLEAN);
 
     /**
      * The fraction of the impact velocity that should be the maximum spread speed added on impact.
@@ -81,7 +85,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
      * Lateral velocity is reduced by this factor on impact, before adding random spread velocity.
      */
     private static final double IMPACT_FRICTION = 0.4;
-
+    private final boolean setVelocity;
     private float xp;
     private float push;
     //Bloody hell
@@ -89,7 +93,6 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
     private int fireTime;
     private boolean dynamicSpreadingCollision;
     private boolean collidedWithSolid;
-    private final boolean setVelocity;
     private int performanceAmount;
     private int ticks = 0, ticksMoving = 0;
     private double prevVelX, prevVelY, prevVelZ;
@@ -209,14 +212,6 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
         dataManager.set(SYNC_DAMAGE, damage);
     }
 
-    public void setExplosionSize(float size) {
-        dataManager.set(SYNC_EXPLOSION_SIZE, size);
-    }
-
-    public void setExplosionStrength(float strength) {
-        this.explosionStrength = strength;
-    }
-
     public void setExplosionDamage(float damage) {
         this.explosionDamage = damage;
     }
@@ -225,8 +220,16 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
         return dataManager.get(SYNC_EXPLOSION_SIZE);
     }
 
+    public void setExplosionSize(float size) {
+        dataManager.set(SYNC_EXPLOSION_SIZE, size);
+    }
+
     public float getExplosionStrength() {
         return this.explosionStrength;
+    }
+
+    public void setExplosionStrength(float strength) {
+        this.explosionStrength = strength;
     }
 
     public void setRGB(int r, int g, int b) {
@@ -278,6 +281,14 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
         dataManager.set(SYNC_REDIRECTABLE, redirectable);
     }
 
+    public void setShouldExplode(boolean explode) {
+        dataManager.set(SYNC_EXPLODE, explode);
+    }
+
+    public void setShouldDissipate(boolean dissipate) {
+        dataManager.set(SYNC_DISSIPATE, dissipate);
+    }
+
     //This just makes the methods easier to use.
     public void Explode() {
         Explode(world, this, getOwner());
@@ -310,6 +321,8 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
         dataManager.register(SYNC_FADE_G, 255);
         dataManager.register(SYNC_FADE_B, 255);
         dataManager.register(SYNC_REDIRECTABLE, false);
+        dataManager.register(SYNC_DISSIPATE, false);
+        dataManager.register(SYNC_EXPLODE, true);
     }
 
     @Override
@@ -746,12 +759,12 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 
     @Override
     public boolean shouldDissipate() {
-        return false;
+        return dataManager.get(SYNC_DISSIPATE);
     }
 
     @Override
     public boolean shouldExplode() {
-        return true;
+        return dataManager.get(SYNC_EXPLODE);
     }
 
     public AxisAlignedBB getExpandedHitbox() {
