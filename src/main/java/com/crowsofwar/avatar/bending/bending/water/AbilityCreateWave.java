@@ -19,6 +19,9 @@ package com.crowsofwar.avatar.bending.bending.water;
 
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingAi;
+import com.crowsofwar.avatar.entity.EntityOffensive;
+import com.crowsofwar.avatar.entity.data.Behavior;
+import com.crowsofwar.avatar.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.util.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
@@ -30,6 +33,8 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
@@ -232,6 +237,35 @@ public class AbilityCreateWave extends Ability {
 			}
 		}**/
 
+    }
+
+    //Makes it spawn a line of geysers!
+    public static class WaveGeyserBehaviour extends OffensiveBehaviour {
+
+        @Override
+        public Behavior onUpdate(EntityOffensive entity) {
+            return null;
+        }
+
+        @Override
+        public void fromBytes(PacketBuffer buf) {
+
+        }
+
+        @Override
+        public void toBytes(PacketBuffer buf) {
+
+        }
+
+        @Override
+        public void load(NBTTagCompound nbt) {
+
+        }
+
+        @Override
+        public void save(NBTTagCompound nbt) {
+
+        }
     }
 
     @Override
