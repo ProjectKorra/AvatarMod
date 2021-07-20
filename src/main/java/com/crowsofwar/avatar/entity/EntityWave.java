@@ -19,13 +19,11 @@ package com.crowsofwar.avatar.entity;
 
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.BendingStyle;
-import com.crowsofwar.avatar.bending.bending.earth.Earthbending;
 import com.crowsofwar.avatar.bending.bending.water.Waterbending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.BlockBush;
-import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.BlockSnow;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -51,6 +49,8 @@ public class EntityWave extends EntityOffensive {
 
     private static final DataParameter<Boolean> SYNC_RUN_ON_LAND = EntityDataManager.createKey(EntityWave.class,
             DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> SYNC_RIDEABLE = EntityDataManager.createKey(EntityWave.class,
+            DataSerializers.BOOLEAN);
 
     private Vector initialPosition;
     private double maxTravelDistanceSq;
@@ -65,10 +65,12 @@ public class EntityWave extends EntityOffensive {
         this.noClip = true;
     }
 
+
     @Override
     protected void entityInit() {
         super.entityInit();
         dataManager.register(SYNC_RUN_ON_LAND, false);
+        dataManager.register(SYNC_RIDEABLE, false);
     }
 
     @Override
@@ -114,6 +116,14 @@ public class EntityWave extends EntityOffensive {
         return dataManager.get(SYNC_RUN_ON_LAND);
     }
 
+    public boolean isRideable() {
+        return dataManager.get(SYNC_RIDEABLE);
+    }
+
+    public void setRideable(boolean rideable) {
+        dataManager.set(SYNC_RIDEABLE, rideable);
+    }
+
     @Override
     public boolean isProjectile() {
         return true;
@@ -150,12 +160,12 @@ public class EntityWave extends EntityOffensive {
         BlockPos below = getPosition().offset(EnumFacing.DOWN);
 
         //Lowers the wave if there's a step below; also need to check against another boolean
-        boolean bendableBlock = Waterbending.isBendable(Objects.requireNonNull(Abilities.get("water_skate")), world.getBlockState(below),
+        boolean bendableBlock = Waterbending.isBendable(Objects.requireNonNull(Abilities.get("wave")), world.getBlockState(below),
                 getOwner());
         bendableBlock |= shouldRunOnLand() && world.getBlockState(below).isFullBlock();
         if (!bendableBlock && shouldDissipate()) {
 
-            bendableBlock = Waterbending.isBendable(Objects.requireNonNull(Abilities.get("water_skate")),
+            bendableBlock = Waterbending.isBendable(Objects.requireNonNull(Abilities.get("wave")),
                     world.getBlockState(below.down()), getOwner()) ||
                     shouldRunOnLand() && world.getBlockState(below.down()).isFullBlock();
 
@@ -167,7 +177,7 @@ public class EntityWave extends EntityOffensive {
         }
 
 
-        boolean bendable = Waterbending.isBendable(Objects.requireNonNull(Abilities.get("water_skate")),
+        boolean bendable = Waterbending.isBendable(Objects.requireNonNull(Abilities.get("wave")),
                 world.getBlockState(getPosition()), getOwner()) || shouldRunOnLand() &&
                 world.getBlockState(getPosition()).isFullBlock();
         if (bendable)
@@ -212,7 +222,7 @@ public class EntityWave extends EntityOffensive {
     @Override
     public void Dissipate() {
         if (getOwner() != null) {
-            if (onCollideWithSolid() || !Waterbending.isBendable(Objects.requireNonNull(Abilities.get("water_skate")),
+            if (onCollideWithSolid() || !Waterbending.isBendable(Objects.requireNonNull(Abilities.get("wave")),
                     world.getBlockState(getPosition().down()), getOwner())) {
                 spawnDissipateParticles(world, getPositionVector());
                 setDead();
@@ -268,11 +278,11 @@ public class EntityWave extends EntityOffensive {
         // Destroy if in a block
         IBlockState inBlock = world.getBlockState(getPosition());
         if (getOwner() != null) {
-            if (inBlock.isFullBlock() && Waterbending.isBendable(Objects.requireNonNull(Abilities.get("water_skate")), world.getBlockState(getPosition()),
+            if (inBlock.isFullBlock() && Waterbending.isBendable(Objects.requireNonNull(Abilities.get("wave")), world.getBlockState(getPosition()),
                     getOwner())) {
                 inBlock = world.getBlockState(getPosition().up());
                 if ((inBlock.getBlock() == Blocks.AIR || isDefaultBreakableBlock(world, getPosition().up()) &&
-                        Waterbending.isBendable(Objects.requireNonNull(Abilities.get("water_skate")), world.getBlockState(getPosition()),
+                        Waterbending.isBendable(Objects.requireNonNull(Abilities.get("wave")), world.getBlockState(getPosition()),
                                 getOwner()))) {
                     setPosition(position().plusY(1));
                     return false;

@@ -17,99 +17,130 @@
 package com.crowsofwar.avatar.util.data.ctx;
 
 import com.crowsofwar.avatar.bending.bending.Ability;
+import com.crowsofwar.avatar.bending.bending.water.Waterbending;
+import com.crowsofwar.avatar.util.Raytrace.Result;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
-import com.crowsofwar.avatar.util.Raytrace.Result;
+import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.Blocks;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+
+import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
 
 /**
  * @author CrowsOfWar
  */
 public class AbilityContext extends BendingContext {
 
-	private final Ability ability;
-	private final double powerRating;
-	private final boolean switchPath;
+    private final Ability ability;
+    private final double powerRating;
+    private final boolean switchPath;
 
-	public AbilityContext(BendingData data, Result raytrace, Ability ability, EntityLivingBase entity,
-			double powerRating, boolean switchPath) {
-		super(data, entity, raytrace);
-		this.ability = ability;
-		this.powerRating = powerRating;
-		this.switchPath = switchPath;
-	}
+    public AbilityContext(BendingData data, Result raytrace, Ability ability, EntityLivingBase entity,
+                          double powerRating, boolean switchPath) {
+        super(data, entity, raytrace);
+        this.ability = ability;
+        this.powerRating = powerRating;
+        this.switchPath = switchPath;
+    }
 
-	public AbilityContext(BendingData data, EntityLivingBase entity, Bender bender, Result raytrace, Ability ability,
-			double powerRating, boolean switchPath) {
-		super(data, entity, bender, raytrace);
-		this.ability = ability;
-		this.powerRating = powerRating;
-		this.switchPath = switchPath;
-	}
+    public AbilityContext(BendingData data, EntityLivingBase entity, Bender bender, Result raytrace, Ability ability,
+                          double powerRating, boolean switchPath) {
+        super(data, entity, bender, raytrace);
+        this.ability = ability;
+        this.powerRating = powerRating;
+        this.switchPath = switchPath;
+    }
 
-	public AbilityData getAbilityData() {
-		return getData().getAbilityData(ability);
-	}
+    public AbilityData getAbilityData() {
+        return getData().getAbilityData(ability);
+    }
 
-	public int getLevel() {
-		return getAbilityData().getLevel();
-	}
+    public int getLevel() {
+        return getAbilityData().getLevel();
+    }
 
-	public AbilityTreePath getPath() {
-		return getAbilityData().getPath();
-	}
+    public AbilityTreePath getPath() {
+        return getAbilityData().getPath();
+    }
 
-	/*
-	 * Same as getPath(), but accounts for a dynamic change
-	 */
-	public AbilityTreePath getDynamicPath() {
-		AbilityTreePath currentPath = getPath();
-		if (switchPath) {
-			if (currentPath == AbilityTreePath.FIRST) {
-				return AbilityTreePath.SECOND;
-			} else if (currentPath == AbilityTreePath.SECOND) {
-				return AbilityTreePath.FIRST;
-			} else {
-				return AbilityTreePath.MAIN;
-			}
-		} else {
-			return currentPath;
-		}
-	}
+    /*
+     * Same as getPath(), but accounts for a dynamic change
+     */
+    public AbilityTreePath getDynamicPath() {
+        AbilityTreePath currentPath = getPath();
+        if (switchPath) {
+            if (currentPath == AbilityTreePath.FIRST) {
+                return AbilityTreePath.SECOND;
+            } else if (currentPath == AbilityTreePath.SECOND) {
+                return AbilityTreePath.FIRST;
+            } else {
+                return AbilityTreePath.MAIN;
+            }
+        } else {
+            return currentPath;
+        }
+    }
 
-	/**
-	 * Returns true if ability is on level 4 and has selected that path.
-	 */
-	public boolean isMasterLevel(AbilityTreePath path) {
-		return getLevel() == 3 && getPath() == path;
-	}
+    /**
+     * Returns true if ability is on level 4 and has selected that path.
+     */
+    public boolean isMasterLevel(AbilityTreePath path) {
+        return getLevel() == 3 && getPath() == path;
+    }
 
-	/**
-	 * Same as isMasterLevel(), but accounts for a dynamic change
-	 */
-	public boolean isDynamicMasterLevel(AbilityTreePath path) {
-		return getLevel() == 3 && getDynamicPath() == path;
-	}
+    /**
+     * Same as isMasterLevel(), but accounts for a dynamic change
+     */
+    public boolean isDynamicMasterLevel(AbilityTreePath path) {
+        return getLevel() == 3 && getDynamicPath() == path;
+    }
 
-	/**
-	 * Gets the current power rating, from -100 to +100.
-	 */
-	public double getPowerRating() {
-		return powerRating;
-	}
+    /**
+     * Gets the current power rating, from -100 to +100.
+     */
+    public double getPowerRating() {
+        return powerRating;
+    }
 
-	/**
-	 * Gets the power rating, but in the range 0.25 to 2.0 for convenience in damage
-	 * calculations.
-	 * <ul>
-	 * <li>-100 power rating gives 0.25; damage would be 1/4 of normal</li>
-	 * <li>0 power rating gives 1; damage would be the same as normal</li>
-	 * <li>100 power rating gives 2; damage would be twice as much as usual</li>
-	 */
-	public double getPowerRatingDamageMod() {
-		return getAbilityData().getDamageMult();
-	}
+    /**
+     * Gets the power rating, but in the range 0.25 to 2.0 for convenience in damage
+     * calculations.
+     * <ul>
+     * <li>-100 power rating gives 0.25; damage would be 1/4 of normal</li>
+     * <li>0 power rating gives 1; damage would be the same as normal</li>
+     * <li>100 power rating gives 2; damage would be twice as much as usual</li>
+     */
+    public double getPowerRatingDamageMod() {
+        return getAbilityData().getDamageMult();
+    }
 
+    @Override
+    public boolean consumeWater(int amount) {
+        if (getAbilityData().getAbility() != null) {
+            Vector pos = Waterbending.getClosestWaterbendableBlock(getBenderEntity(), getAbilityData().getAbility(),
+                    this);
+            if (pos != null) {
+                BlockPos blockPos = pos.toBlockPos();
+                World world = getWorld();
+                EntityLivingBase entity = getBenderEntity();
+                Block block = world.getBlockState(blockPos).getBlock();
+                if (STATS_CONFIG.plantBendableBlocks.contains(world.getBlockState(blockPos).getBlock()))
+                    if (amount > 0)
+                        world.setBlockToAir(blockPos);
+                if (block == Blocks.WATER || block == Blocks.FLOWING_WATER)
+                    if (amount > 2)
+                        world.setBlockToAir(blockPos);
+                if (STATS_CONFIG.waterBendableBlocks.contains(world.getBlockState(blockPos).getBlock()))
+                    if (amount > 1)
+                        world.setBlockToAir(blockPos);
+            }
+        }
+        return super.consumeWater(amount);
+    }
 }

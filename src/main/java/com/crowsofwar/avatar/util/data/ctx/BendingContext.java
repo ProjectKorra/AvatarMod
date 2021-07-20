@@ -18,6 +18,7 @@
 package com.crowsofwar.avatar.util.data.ctx;
 
 import com.crowsofwar.avatar.AvatarLog;
+import com.crowsofwar.avatar.bending.bending.water.Waterbending;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.Raytrace;
@@ -27,6 +28,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockCauldron;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -45,94 +47,94 @@ import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
  */
 public class BendingContext {
 
-	private final BendingData data;
-	private final Bender bender;
+    private final BendingData data;
+    private final Bender bender;
 
-	/**
-	 * The results of a raytrace which was performed client-side.
-	 */
-	@Nullable
-	private Raytrace.Result raytrace;
+    /**
+     * The results of a raytrace which was performed client-side.
+     */
+    @Nullable
+    private final Raytrace.Result raytrace;
 
-	/**
-	 * Create context for execution.
-	 *
-	 * @param data     Player data instance.
-	 * @param raytrace Result of the raytrace, from client
-	 */
-	public BendingContext(BendingData data, EntityLivingBase entity, Raytrace.Result raytrace) {
-		this.data = data;
-		this.bender = Bender.get(entity);
-		this.raytrace = raytrace;
-		verifyClientRaytrace();
-	}
+    /**
+     * Create context for execution.
+     *
+     * @param data     Player data instance.
+     * @param raytrace Result of the raytrace, from client
+     */
+    public BendingContext(BendingData data, EntityLivingBase entity, Raytrace.Result raytrace) {
+        this.data = data;
+        this.bender = Bender.get(entity);
+        this.raytrace = raytrace;
+        verifyClientRaytrace();
+    }
 
-	public BendingContext(BendingData data, EntityLivingBase entity, Bender bender,
-						  Raytrace.Result raytrace) {
+    public BendingContext(BendingData data, EntityLivingBase entity, Bender bender,
+                          Raytrace.Result raytrace) {
 
-		this.data = data;
-		this.bender = bender;
-		this.raytrace = raytrace;
-		verifyClientRaytrace();
+        this.data = data;
+        this.bender = bender;
+        this.raytrace = raytrace;
+        verifyClientRaytrace();
 
-	}
+    }
 
-	public BendingData getData() {
-		return data;
-	}
+    public BendingData getData() {
+        return data;
+    }
 
-	public Bender getBender() {
-		return bender;
-	}
+    public Bender getBender() {
+        return bender;
+    }
 
-	public EntityLivingBase getBenderEntity() {
-		return bender.getEntity();
-	}
+    public EntityLivingBase getBenderEntity() {
+        return bender.getEntity();
+    }
 
-	public World getWorld() {
-		return bender == null ? null : bender.getWorld();
-	}
+    public World getWorld() {
+        return bender == null ? null : bender.getWorld();
+    }
 
-	@Nullable
-	public VectorI getLookPosI() {
-		if (raytrace == null) {
-			return null;
-		}
-		return raytrace.getPos();
-	}
+    @Nullable
+    public VectorI getLookPosI() {
+        if (raytrace == null) {
+            return null;
+        }
+        return raytrace.getPos();
+    }
 
-	@Nullable
-	public EnumFacing getLookSide() {
-		if (raytrace == null) {
-			return null;
-		}
-		return raytrace.getSide();
-	}
+    @Nullable
+    public EnumFacing getLookSide() {
+        if (raytrace == null) {
+            return null;
+        }
+        return raytrace.getSide();
+    }
 
-	/**
-	 * Returns whether the player is looking at a block right now
-	 */
-	public boolean isLookingAtBlock() {
-		return raytrace != null && raytrace.hitSomething();
-	}
+    /**
+     * Returns whether the player is looking at a block right now
+     */
+    public boolean isLookingAtBlock() {
+        return raytrace != null && raytrace.hitSomething();
+    }
 
-	@Nullable
-	public Vector getLookPos() {
-		if (raytrace == null) {
-			return null;
-		}
-		return raytrace.getPosPrecise();
-	}
+    @Nullable
+    public Vector getLookPos() {
+        if (raytrace == null) {
+            return null;
+        }
+        return raytrace.getPosPrecise();
+    }
 
-	/**
-	 * For certain circumstances, the client performs a raytrace and then sends the result to the server, which is
-	 * usable here (ex. {@link #isLookingAtBlock()}). Raytrace isn't performed on server since the server and client can
-	 * have minor discrepancies, so the server might think the player's rotation is 20 degrees off from what the client
-	 * thinks, resulting in glitchy raytracing.
-	 * <p>
-	 * Performed once to ensure that the client's targeted block is reasonable, to avoid hacking.
-	 */
-	private void verifyClientRaytrace() {
+    /**
+     * For certain circumstances, the client performs a raytrace and then sends the result to the server, which is
+     * usable here (ex. {@link #isLookingAtBlock()}). Raytrace isn't performed on server since the server and client can
+     * have minor discrepancies, so the server might think the player's rotation is 20 degrees off from what the client
+     * thinks, resulting in glitchy raytracing.
+     * <p>
+     * Performed once to ensure that the client's targeted block is reasonable, to avoid hacking.
+     */
+    private void verifyClientRaytrace() {
 
 		/*if (raytrace != null) {
 
@@ -152,128 +154,129 @@ public class BendingContext {
 			}
 
 		}**/
-		//To be honest I couldn't care less about anti-cheat, and this can break some other abilities.
+        //To be honest I couldn't care less about anti-cheat, and this can break some other abilities.
 
-	}
+    }
 
-	/**
-	 * Consumes the given amount of water either from direct water source, from
-	 * a water pouch, or several other sources.
-	 * <p>
-	 * First looks to see if looking at water block - any values >= 3 will also
-	 * consume the water block. Then, tries to see if there is a water pouch
-	 * with sufficient amount of water.
-	 * <p>
-	 * <b>NOTE:</b> If this is not working, ensure that the Ability constructor is calling
-	 * requireRaytrace, because otherwise no raytrace will be performed, and then this won't be able
-	 * to detect if the player is looking at water.
-	 */
-	//TODO: Update for property files
-	public boolean consumeWater(int amount) {
+    /**
+     * Consumes the given amount of water either from direct water source, from
+     * a water pouch, or several other sources.
+     * <p>
+     * First looks to see if looking at water block - any values >= 3 will also
+     * consume the water block. Then, tries to see if there is a water pouch
+     * with sufficient amount of water.
+     * <p>
+     * <b>NOTE:</b> If this is not working, ensure that the Ability constructor is calling
+     * requireRaytrace, because otherwise no raytrace will be performed, and then this won't be able
+     * to detect if the player is looking at water.
+     */
+    //TODO: Update for property files
+    public boolean consumeWater(int amount) {
 
-		World world = bender.getWorld();
+        World world = bender.getWorld();
 
-		if (world.isRainingAt(bender.getEntity().getPosition())) {
-			return true;
-		}
+        if (world.isRainingAt(bender.getEntity().getPosition())) {
+            return true;
+        }
 
-		EntityLivingBase entity = bender.getEntity();
+        EntityLivingBase entity = bender.getEntity();
 
-		if (entity.getHeldItemMainhand().getItem() == Items.WATER_BUCKET) {
-			entity.setHeldItem(EnumHand.MAIN_HAND, new ItemStack(Items.BUCKET, 1));
-			return true;
-		}
-		if (entity.getHeldItemOffhand().getItem() == Items.WATER_BUCKET) {
-			entity.setHeldItem(EnumHand.OFF_HAND, new ItemStack(Items.BUCKET, 1));
-			return true;
-		}
+        if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
+            return true;
+        }
 
-
-		VectorI targetPos = getLookPosI();
-		if (targetPos != null) {
-			Block lookAt = world.getBlockState(targetPos.toBlockPos()).getBlock();
-			//Will need to adjust for passives
-			if (lookAt == Blocks.WATER || lookAt == Blocks.FLOWING_WATER) {
-
-				if (amount >= 3) {
-					world.setBlockToAir(targetPos.toBlockPos());
-				}
-				return true;
-
-			}
-
-			if (lookAt == Blocks.CAULDRON) {
-				IBlockState ibs = world.getBlockState(targetPos.toBlockPos());
-				int waterLevel = ibs.getValue(BlockCauldron.LEVEL);
-				if (waterLevel > 0) {
-					world.setBlockState(targetPos.toBlockPos(),
-							ibs.withProperty(BlockCauldron.LEVEL, waterLevel - 1));
-					return true;
-				}
-			}
-
-		}
-
-		return bender.consumeWaterLevel(amount);
-
-	}
+        if (entity.getHeldItemMainhand().getItem() == Items.WATER_BUCKET) {
+            entity.setHeldItem(EnumHand.MAIN_HAND, new ItemStack(Items.BUCKET, 1));
+            return true;
+        }
+        if (entity.getHeldItemOffhand().getItem() == Items.WATER_BUCKET) {
+            entity.setHeldItem(EnumHand.OFF_HAND, new ItemStack(Items.BUCKET, 1));
+            return true;
+        }
 
 
+        VectorI targetPos = getLookPosI();
+        if (targetPos != null) {
+            Block lookAt = world.getBlockState(targetPos.toBlockPos()).getBlock();
+            //Will need to adjust for passives
+            if (lookAt == Blocks.WATER || lookAt == Blocks.FLOWING_WATER) {
 
-	public boolean consumeSnow(int amount) {
+                if (amount >= 3) {
+                    world.setBlockToAir(targetPos.toBlockPos());
+                }
+                return true;
 
-		World world = bender.getWorld();
+            }
 
-		if (world.isRainingAt(bender.getEntity().getPosition())) {
-			return true;
-		}
+            if (lookAt == Blocks.CAULDRON) {
+                IBlockState ibs = world.getBlockState(targetPos.toBlockPos());
+                int waterLevel = ibs.getValue(BlockCauldron.LEVEL);
+                if (waterLevel > 0) {
+                    world.setBlockState(targetPos.toBlockPos(),
+                            ibs.withProperty(BlockCauldron.LEVEL, waterLevel - 1));
+                    return true;
+                }
+            }
+        }
 
-		VectorI targetPos = getLookPosI();
-		if (targetPos != null) {
-			Block lookAt = world.getBlockState(targetPos.toBlockPos()).getBlock();
-			//Will need to adjust for passives
-			if (STATS_CONFIG.waterBendableBlocks.contains(lookAt)) {
-				if (amount >= 3) {
-					world.setBlockToAir(targetPos.toBlockPos());
-				}
-				return true;
+        return bender.consumeWaterLevel(amount);
 
-			}
-
-
-		}
-
-		return bender.consumeWaterLevel(amount);
-
-	}
-
-
-
-	public boolean consumePlants(int amount) {
-
-		World world = bender.getWorld();
-
-		if (world.isRainingAt(bender.getEntity().getPosition())) {
-			return true;
-		}
-
-		VectorI targetPos = getLookPosI();
-		if (targetPos != null) {
-			Block lookAt = world.getBlockState(targetPos.toBlockPos()).getBlock();
-			//Will need to adjust for passives
-			if (STATS_CONFIG.plantBendableBlocks.contains(lookAt)) {
-
-				if (amount >= 3) {
-					world.setBlockToAir(targetPos.toBlockPos());
-				}
-				return true;
-
-			}
+    }
 
 
-		}
+    public boolean consumeSnow(int amount) {
 
-		return bender.consumeWaterLevel(amount);
+        World world = bender.getWorld();
 
-	}
+        if (world.isRainingAt(bender.getEntity().getPosition())) {
+            return true;
+        }
+
+        VectorI targetPos = getLookPosI();
+        if (targetPos != null) {
+            Block lookAt = world.getBlockState(targetPos.toBlockPos()).getBlock();
+            //Will need to adjust for passives
+            if (STATS_CONFIG.waterBendableBlocks.contains(lookAt)) {
+                if (amount >= 3) {
+                    world.setBlockToAir(targetPos.toBlockPos());
+                }
+                return true;
+
+            }
+
+
+        }
+
+        return bender.consumeWaterLevel(amount);
+
+    }
+
+
+    public boolean consumePlants(int amount) {
+
+        World world = bender.getWorld();
+
+        if (world.isRainingAt(bender.getEntity().getPosition())) {
+            return true;
+        }
+
+        VectorI targetPos = getLookPosI();
+        if (targetPos != null) {
+            Block lookAt = world.getBlockState(targetPos.toBlockPos()).getBlock();
+            //Will need to adjust for passives
+            if (STATS_CONFIG.plantBendableBlocks.contains(lookAt)) {
+
+                if (amount >= 3) {
+                    world.setBlockToAir(targetPos.toBlockPos());
+                }
+                return true;
+
+            }
+
+
+        }
+
+        return bender.consumeWaterLevel(amount);
+
+    }
 }

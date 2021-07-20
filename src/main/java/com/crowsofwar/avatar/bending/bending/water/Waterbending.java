@@ -95,6 +95,7 @@ public class Waterbending extends BendingStyle {
 
     /**
      * Assumes that the ability has PLANT_BEND as a property; should only be used for waterbending abilities.
+     *
      * @param ability
      * @param state
      * @param entity
@@ -102,11 +103,14 @@ public class Waterbending extends BendingStyle {
      */
     public static boolean isBendable(Ability ability, IBlockState state,
                                      EntityLivingBase entity) {
-        boolean bendable = STATS_CONFIG.waterBendableBlocks.contains(state.getBlock());
-        if (ability.getBooleanProperty(PLANT_BEND, AbilityData.get(entity, ability.getName())))
-            bendable |= STATS_CONFIG.plantBendableBlocks.contains(state.getBlock());
+        if (entity != null) {
+            boolean bendable = STATS_CONFIG.waterBendableBlocks.contains(state.getBlock());
+            if (ability.getBooleanProperty(PLANT_BEND, AbilityData.get(entity, ability.getName())))
+                bendable |= STATS_CONFIG.plantBendableBlocks.contains(state.getBlock());
+            return bendable;
+        }
+        return false;
 
-        return bendable;
     }
 
     @Override

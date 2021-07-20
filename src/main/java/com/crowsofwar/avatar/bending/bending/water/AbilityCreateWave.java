@@ -17,27 +17,23 @@
 
 package com.crowsofwar.avatar.bending.bending.water;
 
+import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingAi;
 import com.crowsofwar.avatar.entity.EntityOffensive;
+import com.crowsofwar.avatar.entity.EntityWave;
 import com.crowsofwar.avatar.entity.data.Behavior;
 import com.crowsofwar.avatar.entity.data.OffensiveBehaviour;
-import com.crowsofwar.avatar.util.data.AbilityData.AbilityTreePath;
+import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
-import com.crowsofwar.avatar.entity.EntityWave;
-import com.crowsofwar.avatar.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
-import com.crowsofwar.gorecore.util.VectorI;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
-import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
 
 /**
  * Are you proud of me, dad? I'm outlining how this should work in the documentation.
@@ -53,14 +49,29 @@ import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
  * Level 2 - Faster, Stronger, Bigger, Cooler. Ya know. Pierces. Works on land (with applicable water source nearby).
  * Level 3 - It's now rideable! Woo! Bigger source radius! Drawn from plants!
  * Level 4 Path 1 : Sundering Tsunami - Waves are now closer to geysers of water in a line. Think ravine but water and stronger.
- * Level 4 Path 2: Voluminous Falls - Waves are now thicker, and can be controlled into shapes (walls)!
+ * Level 4 Path 2 : Voluminous Falls - Waves are now thicker, and can be controlled/charged into shapes (walls)!
  *
  * @author CrowsofWar, FavouriteDragon (mainly me)
+ *
+ * TODO: Finish property file
  */
 public class AbilityCreateWave extends Ability {
 
+    public static final String
+            GEYSER = "geysers",
+            CHARGEABLE = "chargeable",
+            RIDEABLE = "rideable",
+            LAND = "land";
+
     public AbilityCreateWave() {
         super(Waterbending.ID, "wave");
+    }
+
+    @Override
+    public void init() {
+        super.init();
+        addProperties(SOURCE_ANGLES, SOURCE_RANGE, WATER_AMOUNT);
+        addBooleanProperties(GEYSER, CHARGEABLE, RIDEABLE, PLANT_BEND, LAND);
     }
 
     @Override
@@ -68,175 +79,120 @@ public class AbilityCreateWave extends Ability {
         EntityLivingBase entity = ctx.getBenderEntity();
         Bender bender = ctx.getBender();
         World world = ctx.getWorld();
+        AbilityCreateWave abilityWave = (AbilityCreateWave) Abilities.get("wave");
+        AbilityData abilityData = ctx.getAbilityData();
 
         Vector look = Vector.getLookRectangular(entity);
-        Raytrace.Result result = Raytrace.predicateRaytrace(world, Vector.getEntityPos(entity).minusY(1)
-                , look, 4 + ctx.getLevel(), (pos, blockState) -> blockState.getBlock() == Blocks
-                        .WATER);
-		/*Raytrace.Result extraResult = Raytrace.predicateRaytrace(world, Vector.getEntityPos(entity).minusY(1), look,
-				4 + ctx.getLevel(), (blockPos, iBlockState) -> iBlockState.getBlock() == Blocks.SNOW || iBlockState.getBlock() == Blocks.FLOWING_WATER
-						|| iBlockState.getBlock() == Blocks.ICE);**/
+        Vector pos = Vector.getEntityPos(entity);
+        if (bender.consumeChi(getChiCost(ctx)) && abilityWave != null) {
+            if (ctx.consumeWater(getProperty(WATER_AMOUNT, ctx).intValue())) {
+                //Entity damage values and such go here
+                float damage = getProperty(DAMAGE, ctx).floatValue();
+                float speed = getProperty(SPEED, ctx).floatValue() * 5;
+                int lifetime = getProperty(LIFETIME, ctx).intValue();
+                float push = getProperty(KNOCKBACK, ctx).floatValue() / 2;
+                float size = getProperty(SIZE, ctx).floatValue() / 2;
 
-		/*Raytrace.Result rayTraceResult = Raytrace.getTargetBlock(entity, 4 + ctx.getLevel(), true);
+                damage = powerModify(damage, abilityData);
+                speed = powerModify(speed, abilityData);
+                lifetime = (int) powerModify(lifetime, abilityData);
+                push = powerModify(push, abilityData);
+                size = powerModify(size, abilityData);
 
-		if (rayTraceResult.hitSomething() && rayTraceResult.getPos() != null) {
-			Block hitBlock = world.getBlockState(rayTraceResult.getPos().toBlockPos()).getBlock();
-			if (STATS_CONFIG.waterBendableBlocks.contains(hitBlock)) {
-				VectorI pos = rayTraceResult.getPos();
-				assert pos != null;
-				IBlockState up = world.getBlockState(pos.toBlockPos().up());
-				if (up.getBlock() == Blocks.AIR) {
-					if (bender.consumeChi(STATS_CONFIG.chiWave)) {
+                //Logic for spawning the wave
+                Vector firstPos = pos.plus(look).minusY(1);
+                Vector secondPos = firstPos.minusY(1);
+                BlockPos pos1 = firstPos.toBlockPos();
+                BlockPos pos2 = secondPos.toBlockPos();
+                boolean firstBendable;
+                boolean secondBendable;
 
-						float size = 2;
-						double speed = 6.5;
-						if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
-							speed = 12.5;
-							size = 5F;
-						}
-						if (ctx.isMasterLevel(AbilityTreePath.SECOND)) {
-							speed = 17;
-							size = 2.75F;
-						}
-						if (ctx.getLevel() == 1) {
-							size = 2.5F;
-							speed = 8;
-						}
-						if (ctx.getLevel() == 2) {
-							size = 3;
-							speed = 10;
-						}
+                //Either the wave can go on land or there's a compatible block to use
+                firstBendable = Waterbending.isBendable(abilityWave, world.getBlockState(pos1),
+                        entity);
+                firstBendable |= getBooleanProperty(LAND, ctx) && world.getBlockState(pos1).isFullBlock();
+                secondBendable = Waterbending.isBendable(abilityWave, world.getBlockState(pos2),
+                        entity);
+                secondBendable |= getBooleanProperty(LAND, ctx) && world.getBlockState(pos2).isFullBlock();
 
-						size += ctx.getPowerRating() / 100;
+                EntityWave wave = new EntityWave(world);
+                wave.setOwner(entity);
+                wave.setRunOnLand(getBooleanProperty(LAND, ctx));
+                wave.setRideable(getBooleanProperty(RIDEABLE, ctx));
+                wave.setDamage(damage);
+                wave.setDistance(lifetime * speed / 10);
+                wave.setAbility(this);
+                wave.setPush(push);
+                wave.setLifeTime(lifetime);
+                wave.setTier(getCurrentTier(ctx));
+                wave.setEntitySize(size * 0.75F, size * 1.5F);
+                wave.setXp(getProperty(XP_HIT).floatValue());
+                wave.rotationPitch = entity.rotationPitch;
+                wave.rotationYaw = entity.rotationYaw;
+                if (getBooleanProperty(GEYSER, ctx))
+                    wave.setBehaviour(new WaveGeyserBehaviour());
 
-						speed += ctx.getPowerRating() / 100 * 8;
 
-						EntityWave wave = new EntityWave(world);
-						wave.setOwner(entity);
-						wave.setVelocity(look.times(speed));
-						wave.setPosition(pos.x(), pos.y(), pos.z());
-						wave.setAbility(this);
-						wave.rotationYaw = (float) Math.toDegrees(look.toSpherical().y());
-
-						float damageMult = ctx.getLevel() >= 1 ? 1.5f : 1;
-						damageMult *= ctx.getPowerRatingDamageMod();
-						wave.setDamageMultiplier(damageMult);
-						wave.setWaveSize(size);
-
-						wave.setCreateExplosion(ctx.isMasterLevel(AbilityTreePath.SECOND));
-						world.spawnEntity(wave);
-
-					}
-				}
-			}
-
-		}**/
-        if (result.hitSomething()) {
-
-            VectorI pos = result.getPos();
-            //IBlockState hitBlockState = world.getBlockState(pos.toBlockPos());
-            assert pos != null;
-            IBlockState up = world.getBlockState(pos.toBlockPos().up());
-
-            for (int i = 0; i < 3; i++) {
-                if (up.getBlock() == Blocks.AIR) {
-
-                    if (bender.consumeChi(STATS_CONFIG.chiWave)) {
-
-                        float size = 2;
-                        double speed = 6.5;
-                        if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
-                            speed = 12.5;
-                            size = 5F;
-                        }
-                        if (ctx.isMasterLevel(AbilityTreePath.SECOND)) {
-                            speed = 17;
-                            size = 2.75F;
-                        }
-                        if (ctx.getLevel() == 1) {
-                            size = 2.5F;
-                            speed = 8;
-                        }
-                        if (ctx.getLevel() == 2) {
-                            size = 3;
-                            speed = 10;
-                        }
-
-                        size += ctx.getPowerRating() / 100;
-
-                        speed += ctx.getPowerRating() / 100 * 8;
-
-                        EntityWave wave = new EntityWave(world);
-                        wave.setOwner(entity);
-                        wave.setVelocity(look.times(speed));
-                        wave.setPosition(pos.x(), pos.y(), pos.z());
-                        wave.setAbility(this);
-                        wave.rotationYaw = (float) Math.toDegrees(look.toSpherical().y());
-
-                        float damageMult = ctx.getLevel() >= 1 ? 1.5f : 1;
-                        damageMult *= ctx.getPowerRatingDamageMod();
-                        wave.setDamage(damageMult);
-                        wave.setEntitySize(size * 0.75F, size * 1.5F);
-
-                        if (!world.isRemote)
-                            world.spawnEntity(wave);
-
-                    }
-
-                    break;
-
+                if (getBooleanProperty(CHARGEABLE, ctx)) {
+                    //Add a tick handler/stat ctrl for charging
                 }
-                pos.add(0, 1, 0);
-            }
+                if (getBooleanProperty(RIDEABLE, ctx)) {
+                    //Add a status control here
+                }
 
-        } /*else if (ctx.consumeWater(2)) {
-			for (int i = 0; i < 3; i++) {
-				if (bender.consumeChi(STATS_CONFIG.chiWave)) {
+                //Block at feet is bendable
+                if (firstBendable) {
+                    //Pos is the source block, we want it to be above the source block
+                    wave.setPosition(firstPos.plusY(1));
+                }
+                //Block below feet is bendable
+                else if (secondBendable) {
+                    //Same thing here. Above source block.
+                    wave.setPosition(secondPos.plusY(1));
+                }
+                //If the blocks beneath the player's feet aren't bendable
+                else {
+                    firstPos = Waterbending.getClosestWaterbendableBlock(entity,
+                            abilityWave, ctx);
 
-					float size = 2;
-					double speed = 6.5;
-					if (ctx.isMasterLevel(AbilityTreePath.FIRST)) {
-						speed = 12.5;
-						size = 5;
-					}
-					if (ctx.isMasterLevel(AbilityTreePath.SECOND)) {
-						speed = 17;
-						size = 2.75F;
-					}
-					if (ctx.getLevel() == 1) {
-						size = 2.5F;
-						speed = 8;
-					}
-					if (ctx.getLevel() == 2) {
-						size = 3;
-						speed = 10;
-					}
+                    if (firstPos != null) {
+                        pos1 = firstPos.toBlockPos();
 
-					size += ctx.getPowerRating() / 100;
+                        firstBendable = Waterbending.isBendable(abilityWave, world.getBlockState(pos1),
+                                entity);
+                        if (firstBendable) {
+                            wave.setPosition(firstPos);
+                        }
+                    }
+                }
 
-					speed += ctx.getPowerRating() / 100 * 8;
+                if (!world.isRemote && (firstBendable || secondBendable))
+                    world.spawnEntity(wave);
 
-					Vector direction = Vector.getLookRectangular(entity).withY(0);
-					EntityWave wave = new EntityWave(world);
-					wave.setOwner(entity);
-					wave.setVelocity(direction.times(speed));
-					wave.setPosition(direction.minusY(1));
-					wave.setAbility(this);
-					wave.rotationYaw = (float) Math.toDegrees(look.toSpherical().y());
+            } else bender.sendMessage("avatar.waterSourceFail");
+        }
 
-					float damageMult = ctx.getLevel() >= 1 ? 1.5f : 1;
-					damageMult *= ctx.getPowerRatingDamageMod();
-					wave.setDamageMultiplier(damageMult);
-					wave.setWaveSize(size);
+        super.execute(ctx);
+    }
 
-					wave.setCreateExplosion(ctx.isMasterLevel(AbilityTreePath.SECOND));
-					world.spawnEntity(wave);
+    @Override
+    public int getBaseTier() {
+        return 2;
+    }
 
-				}
+    @Override
+    public boolean isProjectile() {
+        return true;
+    }
 
-			}
-		}**/
+    @Override
+    public boolean isOffensive() {
+        return true;
+    }
 
+    @Override
+    public BendingAi getAi(EntityLiving entity, Bender bender) {
+        return new AiWave(this, entity, bender);
     }
 
     //Makes it spawn a line of geysers!
@@ -244,7 +200,7 @@ public class AbilityCreateWave extends Ability {
 
         @Override
         public Behavior onUpdate(EntityOffensive entity) {
-            return null;
+            return this;
         }
 
         @Override
@@ -266,26 +222,6 @@ public class AbilityCreateWave extends Ability {
         public void save(NBTTagCompound nbt) {
 
         }
-    }
-
-    @Override
-    public int getBaseTier() {
-        return 2;
-    }
-
-    @Override
-    public boolean isProjectile() {
-        return true;
-    }
-
-    @Override
-    public boolean isOffensive() {
-        return true;
-    }
-
-    @Override
-    public BendingAi getAi(EntityLiving entity, Bender bender) {
-        return new AiWave(this, entity, bender);
     }
 
 }
