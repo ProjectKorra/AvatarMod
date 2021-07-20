@@ -88,7 +88,7 @@ public class AbilityCreateWave extends Ability {
             if (ctx.consumeWater(getProperty(WATER_AMOUNT, ctx).intValue())) {
                 //Entity damage values and such go here
                 float damage = getProperty(DAMAGE, ctx).floatValue();
-                float speed = getProperty(SPEED, ctx).floatValue() * 5;
+                float speed = getProperty(SPEED, ctx).floatValue();
                 int lifetime = getProperty(LIFETIME, ctx).intValue();
                 float push = getProperty(KNOCKBACK, ctx).floatValue() / 2;
                 float size = getProperty(SIZE, ctx).floatValue() / 2;
@@ -129,6 +129,7 @@ public class AbilityCreateWave extends Ability {
                 wave.setXp(getProperty(XP_HIT).floatValue());
                 wave.rotationPitch = entity.rotationPitch;
                 wave.rotationYaw = entity.rotationYaw;
+                wave.setVelocity(look.x() * speed / 5, 0, look.z() * speed / 5);
                 if (getBooleanProperty(GEYSER, ctx))
                     wave.setBehaviour(new WaveGeyserBehaviour());
 

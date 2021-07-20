@@ -211,7 +211,14 @@ public class EntityWave extends EntityOffensive {
 
     @Override
     public boolean shouldDissipate() {
-        return true;
+        //TODO: Update this based on running on land + below block
+        return false;
+    }
+
+    @Override
+    public boolean shouldExplode() {
+        //TODO: Update this based on running on land + below block
+        return false;
     }
 
     @Override
@@ -231,6 +238,12 @@ public class EntityWave extends EntityOffensive {
         super.Dissipate();
     }
 
+    @Override
+    public void setDead() {
+        super.setDead();
+        if (!world.isRemote && this.isDead)
+            Thread.dumpStack();
+    }
 
     @Override
     public void spawnExplosionParticles(World world, Vec3d pos) {
