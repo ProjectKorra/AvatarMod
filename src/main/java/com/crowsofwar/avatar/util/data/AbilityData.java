@@ -192,11 +192,13 @@ public class AbilityData {
     }
 
     public int getAbilityCooldown() {
-        return abilityCooldown;
+        //Leon doesn't want cooldowns
+        return 0;//abilityCooldown;
     }
 
     public void setAbilityCooldown(int cooldown) {
-        abilityCooldown = cooldown;
+        abilityCooldown = 0;
+        //abilityCooldown = cooldown;
     }
 
     public int getAbilityCooldown(EntityLivingBase entity) {
