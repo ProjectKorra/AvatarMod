@@ -20,8 +20,6 @@ package com.crowsofwar.avatar.entity;
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import com.crowsofwar.avatar.bending.bending.water.Waterbending;
-import com.crowsofwar.avatar.client.particle.ParticleBuilder;
-import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.BlockBush;
 import net.minecraft.block.BlockSnow;
@@ -63,6 +61,7 @@ public class EntityWave extends EntityOffensive {
         super(world);
         setSize(0.125F, 0.125F);
         this.noClip = true;
+        this.ignoreFrustumCheck = true;
     }
 
 
@@ -183,15 +182,6 @@ public class EntityWave extends EntityOffensive {
         if (bendable)
             setPosition(position().plusY(1));
 
-        if (world.isRemote && getOwner() != null) {
-            //It's maths time boys and girls
-            for (double w = 0; w < width; w += 0.2) {
-                ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(0, 200, 255, 135)
-                        .time(12 + AvatarUtils.getRandomNumberInRange(0, 4)).gravity(true)
-                        .vel(world.rand.nextGaussian() / 20, world.rand.nextDouble(), world.rand.nextGaussian() / 20)
-                        .spawnEntity(this).element(new Waterbending()).spawn(world);
-            }
-        }
         // Destroy non-solid blocks in the wave
         if (isDefaultBreakableBlock(world, getPosition())) {
             breakBlock(getPosition());
@@ -241,8 +231,13 @@ public class EntityWave extends EntityOffensive {
     @Override
     public void setDead() {
         super.setDead();
-        if (!world.isRemote && this.isDead)
-            Thread.dumpStack();
+//        if (!world.isRemote && this.isDead)
+//            Thread.dumpStack();
+    }
+
+    @Override
+    public void resetPositionToBB() {
+
     }
 
     @Override

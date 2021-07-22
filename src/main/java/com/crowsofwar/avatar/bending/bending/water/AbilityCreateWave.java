@@ -20,19 +20,25 @@ package com.crowsofwar.avatar.bending.bending.water;
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingAi;
+import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.entity.EntityOffensive;
 import com.crowsofwar.avatar.entity.EntityWave;
 import com.crowsofwar.avatar.entity.data.Behavior;
 import com.crowsofwar.avatar.entity.data.OffensiveBehaviour;
+import com.crowsofwar.avatar.util.AvatarEntityUtils;
+import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityFallingBlock;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 /**
@@ -52,7 +58,7 @@ import net.minecraft.world.World;
  * Level 4 Path 2 : Voluminous Falls - Waves are now thicker, and can be controlled/charged into shapes (walls)!
  *
  * @author CrowsofWar, FavouriteDragon (mainly me)
- *
+ * <p>
  * TODO: Finish property file
  */
 public class AbilityCreateWave extends Ability {
@@ -65,6 +71,24 @@ public class AbilityCreateWave extends Ability {
 
     public AbilityCreateWave() {
         super(Waterbending.ID, "wave");
+    }
+
+    private static void spawnEntity(EntityOffensive spawner) {
+        if (!spawner.world.isRemote) {
+            BlockPos pos = new BlockPos(spawner.posX, spawner.posY, spawner.posZ);
+
+            //TODO: BUG - Spawns weirdly/not at all with snow layers and such. Fix.
+            if (spawner.world.getBlockState(pos.down()).getBlock() == Blocks.WATER) {
+
+                // Falling blocks do the setting block to air themselves.
+                //Fixed issues with floating blocks not appearing??? Now time to fix going up areas with
+                //non-solid blocks.
+                EntityFallingBlock fallingblock = new EntityFallingBlock(spawner.world, spawner.posX, (int) (spawner.posY - 0.5) + 0.5,
+                        spawner.posZ, spawner.world.getBlockState(new BlockPos(spawner.posX, spawner.posY - 1, spawner.posZ)));
+                fallingblock.motionY = 0.15 + spawner.getAvgSize() / 10;
+                spawner.world.spawnEntity(fallingblock);
+            }
+        }
     }
 
     @Override
@@ -82,16 +106,16 @@ public class AbilityCreateWave extends Ability {
         AbilityCreateWave abilityWave = (AbilityCreateWave) Abilities.get("wave");
         AbilityData abilityData = ctx.getAbilityData();
 
-        Vector look = Vector.getLookRectangular(entity);
+        Vector look = Vector.getLookRectangular(entity).times(0.25);
         Vector pos = Vector.getEntityPos(entity);
         if (bender.consumeChi(getChiCost(ctx)) && abilityWave != null) {
             if (ctx.consumeWater(getProperty(WATER_AMOUNT, ctx).intValue())) {
                 //Entity damage values and such go here
                 float damage = getProperty(DAMAGE, ctx).floatValue();
-                float speed = getProperty(SPEED, ctx).floatValue();
+                float speed = getProperty(SPEED, ctx).floatValue() * 2;
                 int lifetime = getProperty(LIFETIME, ctx).intValue();
                 float push = getProperty(KNOCKBACK, ctx).floatValue() / 2;
-                float size = getProperty(SIZE, ctx).floatValue() / 2;
+                float size = getProperty(SIZE, ctx).floatValue();
 
                 damage = powerModify(damage, abilityData);
                 speed = powerModify(speed, abilityData);
@@ -125,13 +149,14 @@ public class AbilityCreateWave extends Ability {
                 wave.setPush(push);
                 wave.setLifeTime(lifetime);
                 wave.setTier(getCurrentTier(ctx));
-                wave.setEntitySize(size * 0.75F, size * 1.5F);
+                wave.setEntitySize(size, size * 1.75F);
                 wave.setXp(getProperty(XP_HIT).floatValue());
                 wave.rotationPitch = entity.rotationPitch;
                 wave.rotationYaw = entity.rotationYaw;
                 wave.setVelocity(look.x() * speed / 5, 0, look.z() * speed / 5);
                 if (getBooleanProperty(GEYSER, ctx))
                     wave.setBehaviour(new WaveGeyserBehaviour());
+                else wave.setBehaviour(new WaveBehaviour());
 
 
                 if (getBooleanProperty(CHARGEABLE, ctx)) {
@@ -194,6 +219,137 @@ public class AbilityCreateWave extends Ability {
     @Override
     public BendingAi getAi(EntityLiving entity, Bender bender) {
         return new AiWave(this, entity, bender);
+    }
+
+    public static class WaveBehaviour extends OffensiveBehaviour {
+
+        @Override
+        public OffensiveBehaviour onUpdate(EntityOffensive entity) {
+            if (entity != null && entity.getOwner() != null) {
+                if (entity.world.isRemote) {
+                    World world = entity.world;
+                    Vec3d look = Vector.getLookRectangular(entity).withY(0).toMinecraft();
+                    Vec3d pos = AvatarEntityUtils.getBottomMiddleOfEntity(entity).subtract(0, entity.height , 0);
+                    Vec3d foamPos = AvatarEntityUtils.getMiddleOfEntity(entity).subtract(0, entity.height / 4, 0);
+                    //It's maths time boys and girls
+                    //We want kinda a curved triangle shape, so we need two curves (one with less height)
+                    for (double w = 0; w < entity.width; w += 0.2) {
+                        //We want to start in the middle then go right and left/scale right and left
+                        //Going right
+                        Vec3d posRight = Vector.getOrthogonalVector(look, 90, w / (entity.width)).toMinecraft();
+                        Vec3d lowerWaterVel = new Vec3d(world.rand.nextGaussian() / 60 + entity.motionX * 2, entity.getHeight() * 0.075F + world.rand.nextDouble() / 10,
+                                world.rand.nextGaussian() / 60 + entity.motionZ * 2);
+                        Vec3d upperWaterVel = new Vec3d(world.rand.nextGaussian() / 60 + entity.motionX * 2, entity.getHeight() * 0.1F + world.rand.nextDouble() / 4,
+                                world.rand.nextGaussian() / 60 + entity.motionZ * 2);
+                        ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(0, 200, 255, 75)
+                                .time(12 + AvatarUtils.getRandomNumberInRange(0, 1)).gravity(true)
+                                .vel(lowerWaterVel).spawnEntity(entity).element(new Waterbending())
+                                .pos(pos.add(posRight)).scale(entity.getAvgSize()).collide(true).glow(true).spawn(world);
+                        ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(0, 200, 255, 75)
+                                .time(12 + AvatarUtils.getRandomNumberInRange(0, 1)).gravity(true)
+                                .vel(upperWaterVel).spawnEntity(entity).element(new Waterbending())
+                                .pos(pos.add(posRight)).scale(entity.getAvgSize()).collide(true).glow(true).spawn(world);
+
+//                        //Foam
+//                        ParticleBuilder.create(ParticleBuilder.Type.SNOW).clr(255, 255, 255, 85)
+//                                .time(8 + AvatarUtils.getRandomNumberInRange(0, 1))
+//                                .vel(world.rand.nextGaussian() / 30, entity.getHeight() * 0.075F + world.rand.nextGaussian() / 30, world.rand.nextGaussian() / 30)
+//                                .spawnEntity(entity).element(new Waterbending()).pos(foamPos.add(posRight)).scale(entity.getAvgSize() * 0.75F)
+//                                .collide(true).glow(true).spawn(world);
+//                        ParticleBuilder.create(ParticleBuilder.Type.SNOW).clr(255, 255, 255, 85)
+//                                .time(8 + AvatarUtils.getRandomNumberInRange(0, 1))
+//                                .vel(world.rand.nextGaussian() / 30, entity.getHeight() * 0.1F + world.rand.nextGaussian() / 15, world.rand.nextGaussian() / 30)
+//                                .spawnEntity(entity).element(new Waterbending()).pos(foamPos.add(posRight)).scale(entity.getAvgSize() * 0.75F)
+//                                .collide(true).glow(true).spawn(world);
+                    }
+                    for (double w = 0; w < entity.width; w += 0.2) {
+                        //We want to start in the middle then go right and left/scale right and left
+                        Vec3d posLeft = Vector.getOrthogonalVector(look, -90, w / (entity.width)).toMinecraft();
+                        Vec3d lowerWaterVel = new Vec3d(world.rand.nextGaussian() / 60 + entity.motionX * 2, entity.getHeight() * 0.075F + world.rand.nextDouble() / 10,
+                                world.rand.nextGaussian() / 60 + entity.motionZ * 2);
+                        Vec3d upperWaterVel = new Vec3d(world.rand.nextGaussian() / 60 + entity.motionX * 2, entity.getHeight() * 0.1F + world.rand.nextDouble() / 4,
+                                world.rand.nextGaussian() / 60 + entity.motionZ * 2);
+
+                        ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(0, 200, 255, 75)
+                                .time(12 + AvatarUtils.getRandomNumberInRange(0, 1)).gravity(true)
+                                .vel(lowerWaterVel)
+                                .spawnEntity(entity).element(new Waterbending()).pos(pos.add(posLeft)).scale(entity.getAvgSize())
+                                .collide(true).glow(true).spawn(world);
+                        ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(0, 200, 255, 75)
+                                .time(12 + AvatarUtils.getRandomNumberInRange(0, 1)).gravity(true)
+                                .vel(upperWaterVel)
+                                .spawnEntity(entity).element(new Waterbending()).pos(pos.add(posLeft)).scale(entity.getAvgSize())
+                                .collide(true).glow(true).spawn(world);
+
+//                        //Foam
+//                        ParticleBuilder.create(ParticleBuilder.Type.SNOW).clr(255, 255, 255, 85)
+//                                .time(8 + AvatarUtils.getRandomNumberInRange(0, 1))
+//                                .vel(world.rand.nextGaussian() / 30 + entity.motionX * 2, entity.getHeight() * 0.075F + world.rand.nextGaussian() / 30,
+//                                        world.rand.nextGaussian() / 30 + entity.motionZ * 2)
+//                                .spawnEntity(entity).element(new Waterbending()).pos(foamPos.add(posLeft)).scale(entity.getAvgSize() * 0.75F)
+//                                .collide(true).glow(true).spawn(world);
+//                        ParticleBuilder.create(ParticleBuilder.Type.SNOW).clr(255, 255, 255, 85)
+//                                .time(8 + AvatarUtils.getRandomNumberInRange(0, 1))
+//                                .vel(world.rand.nextGaussian() / 30 + entity.motionX * 2, entity.getHeight() * 0.1F + world.rand.nextGaussian() / 15,
+//                                        world.rand.nextGaussian() / 30 * entity.motionZ * 2)
+//                                .spawnEntity(entity).element(new Waterbending()).pos(foamPos.add(posLeft)).scale(entity.getAvgSize() * 0.75F)
+//                                .collide(true).glow(true).spawn(world);
+                    }
+
+                    Vec3d lowerWaterVel = new Vec3d(world.rand.nextGaussian() / 60 + entity.motionX * 2, entity.getHeight() * 0.075F + world.rand.nextDouble() / 10,
+                            world.rand.nextGaussian() / 60 + entity.motionZ * 2);
+                    Vec3d upperWaterVel = new Vec3d(world.rand.nextGaussian() / 60 + entity.motionX * 2, entity.getHeight() * 0.1F + world.rand.nextDouble() / 4,
+                            world.rand.nextGaussian() / 60 + entity.motionZ * 2);
+
+                    ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(0, 200, 255, 75)
+                            .time(12 + AvatarUtils.getRandomNumberInRange(0, 1)).gravity(true)
+                            .vel(lowerWaterVel)
+                            .spawnEntity(entity).element(new Waterbending()).pos(pos).scale(entity.getAvgSize())
+                            .collide(true).spawn(world);
+                    ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(0, 200, 255, 75)
+                            .time(12 + AvatarUtils.getRandomNumberInRange(0, 1)).gravity(true)
+                            .vel(upperWaterVel)
+                            .spawnEntity(entity).element(new Waterbending()).pos(pos).scale(entity.getAvgSize())
+                            .collide(true).glow(true).spawn(world);
+
+//                    //Foam
+//                    ParticleBuilder.create(ParticleBuilder.Type.SNOW).clr(255, 255, 255, 85)
+//                            .time(8 + AvatarUtils.getRandomNumberInRange(0, 1))
+//                            .vel(world.rand.nextGaussian() / 30 + entity.motionX * 2, entity.getHeight() * 0.075F + world.rand.nextGaussian() / 30,
+//                                    world.rand.nextGaussian() / 30 * entity.motionZ * 2)
+//                            .spawnEntity(entity).element(new Waterbending()).pos(foamPos).scale(entity.getAvgSize())
+//                            .collide(true).glow(true).spawn(world);
+//                    ParticleBuilder.create(ParticleBuilder.Type.SNOW).clr(255, 255, 255, 85)
+//                            .time(8 + AvatarUtils.getRandomNumberInRange(0, 1))
+//                            .vel(world.rand.nextGaussian() / 30 + entity.motionX * 2, entity.getHeight() * 0.1F + world.rand.nextGaussian() / 15,
+//                                    world.rand.nextGaussian() / 30 * entity.motionZ * 2)
+//                            .spawnEntity(entity).element(new Waterbending()).pos(foamPos).scale(entity.getAvgSize())
+//                            .collide(true).glow(true).spawn(world);
+                }
+
+            }
+            return this;
+        }
+
+        @Override
+        public void fromBytes(PacketBuffer buf) {
+
+        }
+
+        @Override
+        public void toBytes(PacketBuffer buf) {
+
+        }
+
+        @Override
+        public void load(NBTTagCompound nbt) {
+
+        }
+
+        @Override
+        public void save(NBTTagCompound nbt) {
+
+        }
     }
 
     //Makes it spawn a line of geysers!

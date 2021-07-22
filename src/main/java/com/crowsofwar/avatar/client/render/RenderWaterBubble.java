@@ -17,7 +17,6 @@
 
 package com.crowsofwar.avatar.client.render;
 
-import com.crowsofwar.avatar.client.ResourceManager;
 import com.crowsofwar.avatar.client.TestModel;
 import com.crowsofwar.avatar.entity.EntityWaterBubble;
 import net.minecraft.client.Minecraft;
@@ -53,8 +52,6 @@ public class RenderWaterBubble extends Render<EntityWaterBubble> {
 		GL11.glTranslated(x, y, z);
 		TestModel.test.render();
 		GL11.glPopMatrix();
-		if(true)
-			return;
 		float ticks = bubble.ticksExisted + partialTicks;
 		float colorEnhancement = 1.2f;
 		float size = bubble.getSize();
