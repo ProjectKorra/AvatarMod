@@ -1086,19 +1086,25 @@ public abstract class ParticleAvatar extends Particle {
 
     // Stronger abilities, solid water
     public void onMajorWaterContact() {
-        if (getAbility() != null && getAbility().getElement() instanceof Firebending || element instanceof Firebending) {
-            if (getSpawnEntity() instanceof EntityLivingBase && getAbility() != null) {
-                AbilityData data = AbilityData.get((EntityLivingBase) getSpawnEntity(), getAbility().getName());
-                Ability ability = Abilities.get(getAbility().getName());
-                // Ensures properties actually work
-                if (data != null && ability.getCurrentTier(data) < 6) {
+        if (getAbility() != null) {
+            if (getAbility().getElement() instanceof Firebending || element instanceof Firebending) {
+                if (getSpawnEntity() instanceof EntityLivingBase && getAbility() != null) {
+                    AbilityData data = AbilityData.get((EntityLivingBase) getSpawnEntity(), getAbility().getName());
+                    Ability ability = Abilities.get(getAbility().getName());
+                    // Ensures properties actually work
+                    if (data != null && ability.getCurrentTier(data) < 6) {
+                        spawnSteamParticles();
+                        setExpired();
+                    } else if (particleAge % 2 == 0 && world.rand.nextBoolean())
+                        spawnSteamParticles();
+                } else {
                     spawnSteamParticles();
                     setExpired();
-                } else if (particleAge % 2 == 0 && world.rand.nextBoolean())
-                    spawnSteamParticles();
-            } else {
-                spawnSteamParticles();
-                setExpired();
+                }
+            } else if (getAbility().getElement() instanceof Waterbending) {
+                if (canCollide) {
+
+                }
             }
         }
     }
