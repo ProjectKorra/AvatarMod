@@ -178,8 +178,9 @@ public class EntityWave extends EntityOffensive {
 
         boolean bendable = Waterbending.isBendable(Objects.requireNonNull(Abilities.get("wave")),
                 world.getBlockState(getPosition()), getOwner()) || shouldRunOnLand() &&
-                world.getBlockState(getPosition()).isFullBlock();
-        if (bendable)
+                world.getBlockState(getPosition()).isFullBlock() && world.getBlockState(getPosition()).getBlock()
+                != Blocks.AIR;
+        if (bendable && !world.isRemote)
             setPosition(position().plusY(1));
 
         // Destroy non-solid blocks in the wave

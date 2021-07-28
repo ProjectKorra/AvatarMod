@@ -157,7 +157,10 @@ public class AbilityCreateWave extends Ability {
                 wave.setVelocity(look.x() * speed / 5, 0, look.z() * speed / 5);
                 if (getBooleanProperty(GEYSER, ctx))
                     wave.setBehaviour(new WaveGeyserBehaviour());
-                else wave.setBehaviour(new WaveBehaviour());
+                else {
+                    wave.setBehaviour(new WaveBehaviour());
+                    wave.setEntitySize(size * 0.5F, size * 2F);
+                }
 
 
                 //TODO: Fix positioning so that particles are consistent
@@ -214,13 +217,17 @@ public class AbilityCreateWave extends Ability {
                     i++;
                 }
 
-                wave.setPosition(wave.posX, Math.round(wave.posY), wave.posZ);
+                //At 1.5 it adjusts the height of the wave
+                float adjustment = 0;
+                if (size * 10 % 10 == 5)
+                    adjustment = 0.5F;
+                wave.setPosition(wave.posX, Math.round(wave.posY + adjustment), wave.posZ);
                 if (!world.isRemote && (firstBendable || secondBendable ||
                         Waterbending.isBendable(abilityWave, world.getBlockState(wavePos.down()),
                                 entity))) {
                     world.spawnEntity(wave);
                 }
-
+               // else bender.sendMessage("avatar.waterSourceFail");
             } else bender.sendMessage("avatar.waterSourceFail");
         }
 
@@ -255,7 +262,7 @@ public class AbilityCreateWave extends Ability {
                 if (entity.world.isRemote) {
                     World world = entity.world;
                     Vec3d look = Vector.getLookRectangular(entity).withY(0).toMinecraft();
-                    Vec3d pos = AvatarEntityUtils.getBottomMiddleOfEntity(entity).subtract(0, entity.height , 0);
+                    Vec3d pos = AvatarEntityUtils.getBottomMiddleOfEntity(entity).subtract(0, entity.height / 2, 0);
                     Vec3d foamPos = AvatarEntityUtils.getMiddleOfEntity(entity).add(0, entity.height / 4, 0);
                     //It's maths time boys and girls
                     //We want kinda a curved triangle shape, so we need two curves (one with less height)
