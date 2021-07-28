@@ -237,7 +237,7 @@ public class EntityWave extends EntityOffensive {
 
     @Override
     public void resetPositionToBB() {
-
+       //super.resetPositionToBB();
     }
 
     @Override

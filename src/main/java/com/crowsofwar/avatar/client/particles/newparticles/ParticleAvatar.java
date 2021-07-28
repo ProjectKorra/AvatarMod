@@ -16,6 +16,7 @@ import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.google.common.collect.Queues;
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
@@ -161,7 +162,7 @@ public abstract class ParticleAvatar extends Particle {
      * nothing else. Setting the normal entity will set this.
      */
     @Nullable
-    protected Entity spawnEntity;
+    protected Entity spawnEntity = null;
     /**
      * Coordinates of this particle relative to the linked entity. If the linked
      * entity is null, these are used as the absolute coordinates of the centre
@@ -1086,24 +1087,46 @@ public abstract class ParticleAvatar extends Particle {
 
     // Stronger abilities, solid water
     public void onMajorWaterContact() {
-        if (getAbility() != null) {
-            if (getAbility().getElement() instanceof Firebending || element instanceof Firebending) {
-                if (getSpawnEntity() instanceof EntityLivingBase && getAbility() != null) {
-                    AbilityData data = AbilityData.get((EntityLivingBase) getSpawnEntity(), getAbility().getName());
-                    Ability ability = Abilities.get(getAbility().getName());
-                    // Ensures properties actually work
-                    if (data != null && ability.getCurrentTier(data) < 6) {
-                        spawnSteamParticles();
-                        setExpired();
-                    } else if (particleAge % 2 == 0 && world.rand.nextBoolean())
-                        spawnSteamParticles();
-                } else {
+        if (getAbility() != null && getAbility().getElement() instanceof Firebending || element instanceof Firebending) {
+            if (getSpawnEntity() instanceof EntityLivingBase && getAbility() != null) {
+                AbilityData data = AbilityData.get((EntityLivingBase) getSpawnEntity(), getAbility().getName());
+                Ability ability = Abilities.get(getAbility().getName());
+                // Ensures properties actually work
+                if (data != null && ability.getCurrentTier(data) < 6) {
                     spawnSteamParticles();
                     setExpired();
+                } else if (particleAge % 2 == 0 && world.rand.nextBoolean())
+                    spawnSteamParticles();
+            } else {
+                spawnSteamParticles();
+                setExpired();
+            }
+        } else if (getAbility() != null && getAbility().getElement() instanceof Waterbending || element instanceof Waterbending) {
+            if (canCollide) {
+                Vec3d random = new Vec3d(world.rand.nextGaussian() / 15,
+                        world.rand.nextDouble(),
+                        world.rand.nextGaussian() / 15);
+                Block below = world.getBlockState(getPosition().up()).getBlock();
+                Block in = world.getBlockState(getPosition()).getBlock();
+                boolean upBendable = below == Blocks.WATER || below == Blocks.FLOWING_WATER;
+                //boolean inBendable = in == Blocks.WATER || in == Blocks.FLOWING_WATER;
+                boolean entityBendable = false;
+                if (spawnEntity != null) {
+                    Block entityBlock = world.getBlockState(spawnEntity.getPosition()).getBlock();
+                    entityBendable = entityBlock == Blocks.WATER || entityBlock == Blocks.FLOWING_WATER;
                 }
-            } else if (getAbility().getElement() instanceof Waterbending) {
-                if (canCollide) {
 
+                if (upBendable || entityBendable) {
+                    //Makes water particles collide upon water contact
+
+                    ParticleBuilder.create(ParticleBuilder.Type.SNOW)
+                            .clr(particleRed + world.rand.nextFloat(), particleGreen + world.rand.nextFloat(),
+                                    particleBlue + world.rand.nextFloat(), particleAlpha / 1.75F).pos(posX, posY + 0.5, posZ)
+                            .time((int) (particleMaxAge * 0.75)).collide(true).scale(particleScale * 0.675F).
+                            vel(getVelocity().scale(0.875F).add(getVelocity().add(random)))
+                            .spawnEntity(entity).spawn(world);
+//
+                    setExpired();
                 }
             }
         }
@@ -1143,6 +1166,14 @@ public abstract class ParticleAvatar extends Particle {
                 .pos(posX, posY, posZ)
                 .vel(world.rand.nextGaussian() / 30 + motionX / 8, world.rand.nextDouble() / 15,
                         world.rand.nextGaussian() / 30 + motionZ / 8)
+                .time(particleMaxAge - particleAge + 5).spawn(world);
+    }
+
+    public void spawnFoamParticles() {
+        ParticleBuilder.create(ParticleBuilder.Type.SNOW).scale(Math.min(Math.max(particleScale, 0.125F), 1F))
+                .pos(posX, posY, posZ).clr(255, 255, 255, 100)
+                .vel(world.rand.nextGaussian() / 80 + motionX, world.rand.nextDouble() / 5,
+                        world.rand.nextGaussian() / 80 + motionZ)
                 .time(particleMaxAge - particleAge + 5).spawn(world);
     }
 

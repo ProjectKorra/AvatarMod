@@ -31,6 +31,7 @@ import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityFallingBlock;
@@ -159,6 +160,7 @@ public class AbilityCreateWave extends Ability {
                 else wave.setBehaviour(new WaveBehaviour());
 
 
+                //TODO: Fix positioning so that particles are consistent
                 if (getBooleanProperty(CHARGEABLE, ctx)) {
                     //Add a tick handler/stat ctrl for charging
                 }
@@ -192,8 +194,32 @@ public class AbilityCreateWave extends Ability {
                     }
                 }
 
-                if (!world.isRemote && (firstBendable || secondBendable))
+                //Corrects the position of the wave
+                BlockPos wavePos = new BlockPos(wave.posX, wave.getEntityBoundingBox().minY,
+                        wave.posZ);
+                Block waveBlock = world.getBlockState(wavePos).getBlock();
+                Block belowBlock = world.getBlockState(wavePos.down()).getBlock();
+                //Ensures the wave spawns right on top of the water; also limits the number of tries.
+                int i = 0;
+                while (Waterbending.isBendable(abilityWave, world.getBlockState(wavePos),
+                        entity) && waveBlock != Blocks.AIR && i < getProperty(SOURCE_RANGE, ctx).intValue()) {
+                    wavePos = wavePos.up();
+                    waveBlock = world.getBlockState(wavePos).getBlock();
+                    i++;
+                }
+                i = 0;
+                while (belowBlock == Blocks.AIR && i < getProperty(SOURCE_RANGE, ctx).intValue()) {
+                    wavePos = wavePos.down();
+                    belowBlock = world.getBlockState(wavePos.down()).getBlock();
+                    i++;
+                }
+
+                wave.setPosition(wave.posX, Math.round(wave.posY), wave.posZ);
+                if (!world.isRemote && (firstBendable || secondBendable ||
+                        Waterbending.isBendable(abilityWave, world.getBlockState(wavePos.down()),
+                                entity))) {
                     world.spawnEntity(wave);
+                }
 
             } else bender.sendMessage("avatar.waterSourceFail");
         }
@@ -230,7 +256,7 @@ public class AbilityCreateWave extends Ability {
                     World world = entity.world;
                     Vec3d look = Vector.getLookRectangular(entity).withY(0).toMinecraft();
                     Vec3d pos = AvatarEntityUtils.getBottomMiddleOfEntity(entity).subtract(0, entity.height , 0);
-                    Vec3d foamPos = AvatarEntityUtils.getMiddleOfEntity(entity).subtract(0, entity.height / 4, 0);
+                    Vec3d foamPos = AvatarEntityUtils.getMiddleOfEntity(entity).add(0, entity.height / 4, 0);
                     //It's maths time boys and girls
                     //We want kinda a curved triangle shape, so we need two curves (one with less height)
                     for (double w = 0; w < entity.width; w += 0.2) {
