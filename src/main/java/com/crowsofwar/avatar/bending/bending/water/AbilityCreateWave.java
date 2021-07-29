@@ -135,10 +135,12 @@ public class AbilityCreateWave extends Ability {
                 //Either the wave can go on land or there's a compatible block to use
                 firstBendable = Waterbending.isBendable(abilityWave, world.getBlockState(pos1),
                         entity);
-                firstBendable |= getBooleanProperty(LAND, ctx) && world.getBlockState(pos1).isFullBlock();
+                firstBendable |= getBooleanProperty(LAND, ctx) && world.getBlockState(pos1).isFullBlock() &&
+                world.getBlockState(pos1).getBlock() != Blocks.AIR;
                 secondBendable = Waterbending.isBendable(abilityWave, world.getBlockState(pos2),
                         entity);
-                secondBendable |= getBooleanProperty(LAND, ctx) && world.getBlockState(pos2).isFullBlock();
+                secondBendable |= getBooleanProperty(LAND, ctx) && world.getBlockState(pos2).isFullBlock() &&
+                        world.getBlockState(pos1).getBlock() != Blocks.AIR;
 
                 EntityWave wave = new EntityWave(world);
                 wave.setOwner(entity);
@@ -188,55 +190,45 @@ public class AbilityCreateWave extends Ability {
 
                     if (firstPos != null) {
                         pos1 = firstPos.toBlockPos();
-
-                        firstBendable = Waterbending.isBendable(abilityWave, world.getBlockState(pos1),
+                        BlockPos wavePos = pos1;
+                        Block waveBlock = world.getBlockState(wavePos).getBlock();
+                        Block belowBlock = world.getBlockState(wavePos.down()).getBlock();
+                        //Ensures the wave spawns right on top of the water; also limits the number of tries.
+                        int i = 0;
+                        while (Waterbending.isBendable(abilityWave, world.getBlockState(wavePos),
+                                entity) && waveBlock != Blocks.AIR && i < getProperty(SOURCE_RANGE, ctx).intValue()) {
+                            wavePos = wavePos.up();
+                            waveBlock = world.getBlockState(wavePos).getBlock();
+                            i++;
+                        }
+                        i = 0;
+                        while (belowBlock == Blocks.AIR && i < getProperty(SOURCE_RANGE, ctx).intValue()) {
+                            wavePos = wavePos.down();
+                            belowBlock = world.getBlockState(wavePos.down()).getBlock();
+                            i++;
+                        }
+                        firstBendable = Waterbending.isBendable(abilityWave, world.getBlockState(wavePos),
                                 entity);
                         if (firstBendable) {
-                            wave.setPosition(firstPos);
+                            wave.setPosition(wavePos);
+                            //Corrects the position of the wave
                         }
                     }
                 }
 
-                //Corrects the position of the wave
-                BlockPos wavePos = new BlockPos(wave.posX, wave.getEntityBoundingBox().minY,
-                        wave.posZ);
-                Block waveBlock = world.getBlockState(wavePos).getBlock();
-                Block belowBlock = world.getBlockState(wavePos.down()).getBlock();
-                //Ensures the wave spawns right on top of the water; also limits the number of tries.
-                int i = 0;
-                while (Waterbending.isBendable(abilityWave, world.getBlockState(wavePos),
-                        entity) && waveBlock != Blocks.AIR && i < getProperty(SOURCE_RANGE, ctx).intValue()) {
-                    wavePos = wavePos.up();
-                    waveBlock = world.getBlockState(wavePos).getBlock();
-                    i++;
-                }
-                i = 0;
-                while (belowBlock == Blocks.AIR && i < getProperty(SOURCE_RANGE, ctx).intValue()) {
-                    wavePos = wavePos.down();
-                    belowBlock = world.getBlockState(wavePos.down()).getBlock();
-                    i++;
-                }
 
                 //At 1.5 it adjusts the height of the wave
                 float adjustment = 0;
                 if (size * 10 % 10 == 5)
                     adjustment = 0.5F;
                 wave.setPosition(wave.posX, Math.round(wave.posY + adjustment), wave.posZ);
-                if (!world.isRemote && (firstBendable || secondBendable ||
-                        Waterbending.isBendable(abilityWave, world.getBlockState(wavePos.down()),
-                                entity))) {
+                if (!world.isRemote && (firstBendable || secondBendable)) {
                     world.spawnEntity(wave);
                 }
-               // else bender.sendMessage("avatar.waterSourceFail");
             } else bender.sendMessage("avatar.waterSourceFail");
         }
 
         super.execute(ctx);
-    }
-
-    @Override
-    public int getBaseTier() {
-        return 2;
     }
 
     @Override
@@ -263,7 +255,6 @@ public class AbilityCreateWave extends Ability {
                     World world = entity.world;
                     Vec3d look = Vector.getLookRectangular(entity).withY(0).toMinecraft();
                     Vec3d pos = AvatarEntityUtils.getBottomMiddleOfEntity(entity).subtract(0, entity.height / 2, 0);
-                    Vec3d foamPos = AvatarEntityUtils.getMiddleOfEntity(entity).add(0, entity.height / 4, 0);
                     //It's maths time boys and girls
                     //We want kinda a curved triangle shape, so we need two curves (one with less height)
                     for (double w = 0; w < entity.width; w += 0.2) {
@@ -283,17 +274,6 @@ public class AbilityCreateWave extends Ability {
                                 .vel(upperWaterVel).spawnEntity(entity).element(new Waterbending())
                                 .pos(pos.add(posRight)).scale(entity.getAvgSize()).collide(true).glow(true).spawn(world);
 
-//                        //Foam
-//                        ParticleBuilder.create(ParticleBuilder.Type.SNOW).clr(255, 255, 255, 85)
-//                                .time(8 + AvatarUtils.getRandomNumberInRange(0, 1))
-//                                .vel(world.rand.nextGaussian() / 30, entity.getHeight() * 0.075F + world.rand.nextGaussian() / 30, world.rand.nextGaussian() / 30)
-//                                .spawnEntity(entity).element(new Waterbending()).pos(foamPos.add(posRight)).scale(entity.getAvgSize() * 0.75F)
-//                                .collide(true).glow(true).spawn(world);
-//                        ParticleBuilder.create(ParticleBuilder.Type.SNOW).clr(255, 255, 255, 85)
-//                                .time(8 + AvatarUtils.getRandomNumberInRange(0, 1))
-//                                .vel(world.rand.nextGaussian() / 30, entity.getHeight() * 0.1F + world.rand.nextGaussian() / 15, world.rand.nextGaussian() / 30)
-//                                .spawnEntity(entity).element(new Waterbending()).pos(foamPos.add(posRight)).scale(entity.getAvgSize() * 0.75F)
-//                                .collide(true).glow(true).spawn(world);
                     }
                     for (double w = 0; w < entity.width; w += 0.2) {
                         //We want to start in the middle then go right and left/scale right and left
@@ -314,19 +294,7 @@ public class AbilityCreateWave extends Ability {
                                 .spawnEntity(entity).element(new Waterbending()).pos(pos.add(posLeft)).scale(entity.getAvgSize())
                                 .collide(true).glow(true).spawn(world);
 
-//                        //Foam
-//                        ParticleBuilder.create(ParticleBuilder.Type.SNOW).clr(255, 255, 255, 85)
-//                                .time(8 + AvatarUtils.getRandomNumberInRange(0, 1))
-//                                .vel(world.rand.nextGaussian() / 30 + entity.motionX * 2, entity.getHeight() * 0.075F + world.rand.nextGaussian() / 30,
-//                                        world.rand.nextGaussian() / 30 + entity.motionZ * 2)
-//                                .spawnEntity(entity).element(new Waterbending()).pos(foamPos.add(posLeft)).scale(entity.getAvgSize() * 0.75F)
-//                                .collide(true).glow(true).spawn(world);
-//                        ParticleBuilder.create(ParticleBuilder.Type.SNOW).clr(255, 255, 255, 85)
-//                                .time(8 + AvatarUtils.getRandomNumberInRange(0, 1))
-//                                .vel(world.rand.nextGaussian() / 30 + entity.motionX * 2, entity.getHeight() * 0.1F + world.rand.nextGaussian() / 15,
-//                                        world.rand.nextGaussian() / 30 * entity.motionZ * 2)
-//                                .spawnEntity(entity).element(new Waterbending()).pos(foamPos.add(posLeft)).scale(entity.getAvgSize() * 0.75F)
-//                                .collide(true).glow(true).spawn(world);
+
                     }
 
                     Vec3d lowerWaterVel = new Vec3d(world.rand.nextGaussian() / 60 + entity.motionX * 2, entity.getHeight() * 0.075F + world.rand.nextDouble() / 10,
@@ -345,19 +313,6 @@ public class AbilityCreateWave extends Ability {
                             .spawnEntity(entity).element(new Waterbending()).pos(pos).scale(entity.getAvgSize())
                             .collide(true).glow(true).spawn(world);
 
-//                    //Foam
-//                    ParticleBuilder.create(ParticleBuilder.Type.SNOW).clr(255, 255, 255, 85)
-//                            .time(8 + AvatarUtils.getRandomNumberInRange(0, 1))
-//                            .vel(world.rand.nextGaussian() / 30 + entity.motionX * 2, entity.getHeight() * 0.075F + world.rand.nextGaussian() / 30,
-//                                    world.rand.nextGaussian() / 30 * entity.motionZ * 2)
-//                            .spawnEntity(entity).element(new Waterbending()).pos(foamPos).scale(entity.getAvgSize())
-//                            .collide(true).glow(true).spawn(world);
-//                    ParticleBuilder.create(ParticleBuilder.Type.SNOW).clr(255, 255, 255, 85)
-//                            .time(8 + AvatarUtils.getRandomNumberInRange(0, 1))
-//                            .vel(world.rand.nextGaussian() / 30 + entity.motionX * 2, entity.getHeight() * 0.1F + world.rand.nextGaussian() / 15,
-//                                    world.rand.nextGaussian() / 30 * entity.motionZ * 2)
-//                            .spawnEntity(entity).element(new Waterbending()).pos(foamPos).scale(entity.getAvgSize())
-//                            .collide(true).glow(true).spawn(world);
                 }
 
             }
