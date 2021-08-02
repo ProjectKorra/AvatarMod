@@ -9,6 +9,7 @@ import com.crowsofwar.avatar.entity.IShieldEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.boss.EntityDragon;
+import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.util.DamageSource;
 
 public class DamageUtils {
@@ -37,6 +38,27 @@ public class DamageUtils {
 				}
 			}
 		}
+	}
+
+	public static boolean canCollideWith(Entity attacker, Entity target) {
+		if (attacker == target)
+			return false;
+		if (attacker.getTeam() != null && attacker.getTeam() == target.getTeam())
+			return false;
+		if (!target.canBePushed())
+			return false;
+		if (!target.canBeCollidedWith())
+			return false;
+		if (target instanceof AvatarEntity && !((AvatarEntity) target).canCollideWith(attacker))
+			return false;
+		if (attacker instanceof AvatarEntity && !((AvatarEntity) attacker).canCollideWith(target))
+			return false;
+		return true;
+	}
+
+	public static boolean canDamage(Entity attacker, Entity target) {
+		return canCollideWith(attacker, target) && target.canBeAttackedWithItem()
+				|| target instanceof EntityEnderCrystal;
 	}
 
 }

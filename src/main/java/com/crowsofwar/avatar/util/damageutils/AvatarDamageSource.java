@@ -390,6 +390,17 @@ public class AvatarDamageSource {
 		return new EntityDamageSourceIndirect("avatar_Ice_iceShard", hit, owner).setDamageBypassesArmor().setProjectile();
 	}
 
+	/**
+	 * Create a DamageSource for damage caused by an ice beam.
+	 *
+	 * @param hit   Who was hit by the ice beam
+	 * @param owner Who created the ice bean
+	 */
+	public static DamageSource causeIceBeamDamage(Entity hit, @Nullable Entity owner) {
+		return new EntityDamageSourceIndirect("avatar_Ice_iceBeam", hit, owner).setDamageBypassesArmor().setProjectile();
+	}
+
+
 	//SAND
 
 	/**
