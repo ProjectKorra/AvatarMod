@@ -22,6 +22,7 @@ import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingStyle;
+import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.client.particles.newparticles.ParticleAvatar;
 import com.crowsofwar.avatar.client.particles.newparticles.renderlayers.ParticleBatchRenderer;
 import com.crowsofwar.avatar.client.particles.newparticles.renderlayers.RenderLayer;
@@ -49,6 +50,7 @@ import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -67,6 +69,8 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 import static com.crowsofwar.avatar.AvatarLog.WarningType.INVALID_SAVE;
+import static com.crowsofwar.avatar.util.AvatarParticleUtils.rotateAroundAxisX;
+import static com.crowsofwar.avatar.util.AvatarParticleUtils.rotateAroundAxisY;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 
@@ -365,6 +369,29 @@ public class AvatarUtils {
         }
     }
 
+    public static void spawnDirectionalHelix(World world, Entity entity, Vec3d direction, int maxAngle, double vortexLength, double radius, ResourceLocation particle, Vec3d position,
+                                             Vec3d particleSpeed, int maxAge, boolean glow, float r, float g, float b, float a, float scale) {
+        if (!world.isRemote) return;
+
+        for (int angle = 0; angle < maxAngle; angle++) {
+            double x = radius * cos(angle);
+            double y = angle / (maxAngle / vortexLength);
+            double z = radius * sin(angle);
+            Vec3d pos = new Vec3d(x, y, z);
+            if (entity != null && direction != null) {
+                pos = rotateAroundAxisX(pos, entity.rotationPitch + 90);
+                pos = rotateAroundAxisY(pos, entity.rotationYaw);
+                if (r == -1 && g == -1 && b == -1) {
+                    ParticleBuilder.create(particle).pos(pos.x + position.x + direction.x, pos.y + position.y + direction.y,
+                            pos.z + position.z + direction.z).vel(particleSpeed).time(maxAge).glow(glow).scale(scale).spawn(world);
+                } else {
+                    ParticleBuilder.create(particle).pos(pos.x + position.x + direction.x, pos.y + position.y + direction.y,
+                            pos.z + position.z + direction.z).vel(particleSpeed).time(maxAge).glow(glow).clr(r, g, b, a).scale(scale).spawn(world);
+                }
+            } else {
+            }
+        }
+    }
 
     /**
      * Solves the issue where players on singleplayer/LAN will sometimes not

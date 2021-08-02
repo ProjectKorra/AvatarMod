@@ -314,7 +314,7 @@ public class EntityFlames extends EntityOffensive implements IGlowingEntity, ICu
     @Override
     @Optional.Method(modid = "hammercore")
     public ColoredLight produceColoredLight(float partialTicks) {
-        return ColoredLight.builder().pos(this).color(1f, 0f, 0f, 1f).radius(10f).build();
+        return ColoredLight.builder().pos(this).color(1f, 0f, 0f, 1f).radius(0f).build();
     }
 
     @Override

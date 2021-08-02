@@ -32,10 +32,14 @@ avatar.sandbending=§6§lSandbending
 avatar.sandbending.demonym=§6§lSandbender
 
 # Custom. TODO: Formatting and ability descriptors + names #
-avatar.kibending.demonym=§b§lKibending
-avatar.darkbending.demonym=Voidbending
-avatar.demonbending.demonym=Demonbending
-avatar.lightbending.demonym=Divinebending
+avatar.kibending=Kibending
+avatar.kibending.demonym=Martial Artist
+avatar.darkbending=Voidbending
+avatar.darkbending.demonym=Obliviour
+avatar.demonbending=Demonbending
+avatar.demonbending.demonym=Demon
+avatar.lightbending=Lightbending
+avatar.lightbending.demonym=Paladin
 
 
 item.avatarmod:basic_glider.name=§lAcolyte Glider
@@ -448,6 +452,11 @@ avatar.ability.ice_burst.lvl3=The shield has a little more health.
 avatar.ability.ice_burst.lvl4_1=§3§l§oAiming §3§l§osystem ;; A few ice shards automatically target monsters, invaluable when there are many mobs attacking
 avatar.ability.ice_burst.lvl4_2=§3§l§oHardened §3§l§oice ;; The ice shield has much more health
 
+avatar.ability.ice_raze=Ice Raze
+
+avatar.ability.ice_lance=Ice Lance
+
+avatar.ability.frost_claw=Frost Claw
 
 avatar.ability.sand_prison=§6§lSand Prison
 avatar.ability.sand_prison.desc=Create a snare out of sand to temporarily capture your enemies
@@ -481,6 +490,18 @@ avatar.ability.explosive_pillar.lvl2=Explosions are bigger, occur more frequentl
 avatar.ability.explosive_pillar.lvl3=SUPER-POWERED EXPLOSIONS BABY! Same as above :)
 avatar.ability.explosive_pillar.lvl4_1=§8§l§oEXPLOSION §8§l§oMACHINE §8§lGUN ;; Creates 3 explosive pillars that have small explosions and don't travel too far, but occur rapid-fire and are fun to use.
 avatar.ability.explosive_pillar.lvl4_2=§8§l§oBOOOOOM ;; Ridiculously big explosion that travels far, but doesn't occur frequently. Devastating.
+
+avatar.ability.corrupt=Corrupt
+avatar.ability.death_descent=Death Descent
+
+avatar.ability.demonic_aura=Demonic Aura
+avatar.ability.demon_wings=Demon's Wings
+
+avatar.ability.purify=Purify
+avatar.ability.heavenly_flight=Heavenly Flight
+
+avatar.ability.kaio_ken=Kaio Ken
+avatar.ability.ki_flight=Ki Flight
 
 
 

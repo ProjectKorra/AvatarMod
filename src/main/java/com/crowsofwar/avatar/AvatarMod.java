@@ -161,6 +161,7 @@ public class AvatarMod {
         Abilities.register(new AbilityIcePrison());
         Abilities.register(new AbilityFrostForm());
         Abilities.register(new AbilityGlacialGlide());
+        Abilities.register(new AbilityIceRaze());
         /*    			Sand	  			*/
         Abilities.register(new AbilitySandPrison());
         Abilities.register(new AbilitySandstorm());

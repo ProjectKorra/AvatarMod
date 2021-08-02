@@ -57,7 +57,7 @@ public class PurifyHandler extends TickHandler {
             Vec3d pos = AvatarEntityUtils.getBottomMiddleOfEntity(entity);
             pos = entity.onGround ? pos.add(0, entity.getEyeHeight(), 0) : pos.add(0, entity.getEyeHeight() / 2, 0);
             ParticleBuilder.create(ParticleBuilder.Type.FLASH).time(25 + AvatarUtils.getRandomNumberInRange(1, 2)).
-                    clr(r / 255F, g / 255F, b / 255F, 0.0005F).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(50, 140))
+                    clr(r / 255F, g / 255F, b / 255F, 0.0005F).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(10, 40))
                     .element(new Lightbending()).scale(scale).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 95).swirl((int) (purifyDuration / 20 * scale),
                     (int) (scale * Math.PI), scale, scale / 2, purifyDuration * 20, (0.75F / scale),
                     entity, world, true, pos,

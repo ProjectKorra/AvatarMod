@@ -11,6 +11,7 @@ import com.crowsofwar.avatar.bending.bending.custom.light.tickhandlers.PurifyHan
 import com.crowsofwar.avatar.bending.bending.earth.tickhandlers.EarthSpikeHandler;
 import com.crowsofwar.avatar.bending.bending.ice.tickhandlers.FrostFormHandler;
 import com.crowsofwar.avatar.bending.bending.ice.tickhandlers.GlacialGlideHandler;
+import com.crowsofwar.avatar.bending.bending.ice.tickhandlers.IceRazeHandler;
 import com.crowsofwar.avatar.client.gui.RenderElementHandler;
 import com.crowsofwar.avatar.bending.bending.air.tickhandlers.*;
 import com.crowsofwar.avatar.bending.bending.earth.tickhandlers.RestoreParticleHandler;
@@ -69,6 +70,7 @@ public class TickHandlerController {
 	public static TickHandler DEATH_DESCENT_HANDLER = new DeathDescentHandler(33);
 	public static TickHandler FROST_FORM_HANDLER = new FrostFormHandler(34);
 	public static TickHandler GLACIAL_GLIDE_HANDLER = new GlacialGlideHandler(35);
+	public static TickHandler ICE_RAZE_HANDLER = new IceRazeHandler(36);
 
 
 
