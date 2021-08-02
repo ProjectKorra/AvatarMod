@@ -370,7 +370,7 @@ public class AvatarUtils {
     }
 
     public static void spawnDirectionalHelix(World world, Entity entity, Vec3d direction, int maxAngle, double vortexLength, double radius, ResourceLocation particle, Vec3d position,
-                                             Vec3d particleSpeed, int maxAge, boolean glow, float r, float g, float b, float a, float scale) {
+                                             Vec3d particleSpeed, boolean randomVel, int maxAge, boolean glow, float r, float g, float b, float a, float scale) {
         if (!world.isRemote) return;
 
         for (int angle = 0; angle < maxAngle; angle++) {
@@ -378,6 +378,9 @@ public class AvatarUtils {
             double y = angle / (maxAngle / vortexLength);
             double z = radius * sin(angle);
             Vec3d pos = new Vec3d(x, y, z);
+            if (randomVel)
+                particleSpeed = new Vec3d(world.rand.nextGaussian() / 20,
+                        world.rand.nextDouble() / 20, world.rand.nextGaussian() / 20);
             if (entity != null && direction != null) {
                 pos = rotateAroundAxisX(pos, entity.rotationPitch + 90);
                 pos = rotateAroundAxisY(pos, entity.rotationYaw);

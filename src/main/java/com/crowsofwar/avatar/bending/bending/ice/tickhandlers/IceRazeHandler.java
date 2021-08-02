@@ -17,23 +17,16 @@
 package com.crowsofwar.avatar.bending.bending.ice.tickhandlers;
 
 import com.crowsofwar.avatar.bending.bending.Abilities;
-import com.crowsofwar.avatar.bending.bending.fire.AbilityFlamethrower;
 import com.crowsofwar.avatar.bending.bending.fire.Firebending;
 import com.crowsofwar.avatar.bending.bending.ice.AbilityIceRaze;
-import com.crowsofwar.avatar.bending.bending.ice.Icebending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
-import com.crowsofwar.avatar.entity.AvatarEntity;
-import com.crowsofwar.avatar.entity.EntityFlames;
 import com.crowsofwar.avatar.entity.EntityOffensive;
 import com.crowsofwar.avatar.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.entity.mob.EntityBender;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
-import com.crowsofwar.avatar.util.AvatarParticleUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.Raytrace;
-import com.crowsofwar.avatar.util.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.util.data.AbilityData;
-import com.crowsofwar.avatar.util.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.TickHandler;
@@ -147,41 +140,44 @@ public class IceRazeHandler extends TickHandler {
             Vector look = Vector.toRectangular(toRadians(yawRandom), toRadians(pitchRandom));
             Vector start = look.times(range).plus(eye.minusY(0.45));
 
-            //  if (entity.ticksExisted % 2 == 0) {
-            EntityFlames ice = new EntityFlames(world);
-            ice.setPosition(start);
-            ice.setOwner(entity);
-            ice.setDynamicSpreadingCollision(true);
-            ice.setAbility(new AbilityFlamethrower());
-            ice.setDamageSource(abilityData.isDynamicMasterLevel(AbilityTreePath.FIRST) ? AvatarDamageSource.ICE.getDamageType() + "_dragonIce"
-                    : AvatarDamageSource.ICE.getDamageType() + "_raze");
-            ice.setTier(iceRaze.getCurrentTier(abilityData));
-            ice.setXp(iceRaze.getProperty(XP_HIT, abilityData).floatValue());
-            ice.setVelocity(look.times(speedMult / 8F).toMinecraft());
-            ice.setLifeTime(lifetime + AvatarUtils.getRandomNumberInRange(0, 4));
-            ice.setTrailingFires(iceRaze.getBooleanProperty(SETS_FIRES, abilityData));
-            ice.setFires(iceRaze.getBooleanProperty(SETS_FIRES, abilityData));
-            ice.setFireTime(0);
-            ice.setChiHit(chiHit);
-            ice.setXp(xp);
-            ice.setDamage(damage);
-            ice.setPush(knockback);
-            ice.setRGB(r, g, b);
-            ice.setFade(fadeR, fadeG, fadeB);
-            ice.setSmelts(false);
-            ice.setFireTime(fireTime);
-            ice.setPerformanceAmount((int) performanceAmount);
-            ice.setElement(new Icebending());
-            ice.setDamageSource("avatar_Ice");
-            ice.setRedirectable(true);
-            ice.setBehaviour(new FlamethrowerBehaviour());
-            ice.setChiHit(iceRaze.getProperty(CHI_HIT, abilityData).floatValue());
-            ice.setEntitySize(size / 4);
-            if (!world.isRemote)
-                world.spawnEntity(ice);
+
+//            EntityFlames ice = new EntityFlames(world);
+//            ice.setPosition(start);
+//            ice.setOwner(entity);
+//            ice.setDynamicSpreadingCollision(true);
+//            ice.setAbility(new AbilityFlamethrower());
+//            ice.setDamageSource(abilityData.isDynamicMasterLevel(AbilityTreePath.FIRST) ? AvatarDamageSource.ICE.getDamageType() + "_dragonIce"
+//                    : AvatarDamageSource.ICE.getDamageType() + "_raze");
+//            ice.setTier(iceRaze.getCurrentTier(abilityData));
+//            ice.setXp(iceRaze.getProperty(XP_HIT, abilityData).floatValue());
+//            ice.setVelocity(look.times(speedMult / 8F).toMinecraft());
+//            ice.setLifeTime(lifetime + AvatarUtils.getRandomNumberInRange(0, 4));
+//            ice.setTrailingFires(iceRaze.getBooleanProperty(SETS_FIRES, abilityData));
+//            ice.setFires(iceRaze.getBooleanProperty(SETS_FIRES, abilityData));
+//            ice.setFireTime(0);
+//            ice.setChiHit(chiHit);
+//            ice.setXp(xp);
+//            ice.setDamage(damage);
+//            ice.setPush(knockback);
+//            ice.setRGB(r, g, b);
+//            ice.setFade(fadeR, fadeG, fadeB);
+//            ice.setSmelts(false);
+//            ice.setFireTime(fireTime);
+//            ice.setPerformanceAmount((int) performanceAmount);
+//            ice.setElement(new Icebending());
+//            ice.setDamageSource("avatar_Ice");
+//            ice.setRedirectable(true);
+//            ice.setBehaviour(new FlamethrowerBehaviour());
+//            ice.setChiHit(iceRaze.getProperty(CHI_HIT, abilityData).floatValue());
+//            ice.setEntitySize(size / 4);
+//            if (!world.isRemote)
+//                world.spawnEntity(ice);
 
 
             //Raytrace for the beam; will do collision later
+            //Raytrace collision too
+            //Also need snowflake particles
+
             RayTraceResult res = Raytrace.rayTrace(world, start.toMinecraft(), start.plus(look.times(lifetime)).toMinecraft(), size,
                     true, true, false, Entity.class, Objects::isNull);
             double distance = lifetime;
@@ -192,50 +188,27 @@ public class IceRazeHandler extends TickHandler {
             //Particle code.
             if (world.isRemote) {
                 //Bruh coloured lighting disables the beam
-                    ParticleBuilder.create(ParticleBuilder.Type.BEAM).pos(start.toMinecraft())
-                            .target(start.plus(look.times(distance)).toMinecraft()).scale(size * 5F).time(1)
-                            .clr(100, 250, 255)
-                            .fade(140, 230, 255).collide(true).spawn(world);
+                ParticleBuilder.create(ParticleBuilder.Type.BEAM).pos(start.toMinecraft())
+                        .target(start.plus(look.times(distance)).toMinecraft()).scale(size * 5F).time(1)
+                        .clr(100, 250, 255)
+                        .fade(140, 230, 255).collide(true).spawn(world);
+                //Flash and ice particles
+                AvatarUtils.spawnDirectionalHelix(world, entity, look.toMinecraft(), particles, distance, size * 0.75,
+                        ParticleBuilder.Type.ICE, start.toMinecraft(), Vec3d.ZERO,
+                        true, 10, false, 0.7F, 0.9F, 1.0F, 0.5F, size);
+                AvatarUtils.spawnDirectionalHelix(world, entity, look.toMinecraft(), particles, distance, size * 0.75,
+                        ParticleBuilder.Type.FLASH, start.toMinecraft(), Vec3d.ZERO,
+                        true, 8, true, 0.7F, 0.95F, 1.0F, 0.25F, size * 0.5F);
+                AvatarUtils.spawnDirectionalHelix(world, entity, look.toMinecraft(), particles, distance, size * 0.75,
+                        ParticleBuilder.Type.SNOW, start.toMinecraft(), Vec3d.ZERO,
+                        true, 16, true, -1, -1, -1, 1, size * 0.5F);
 
-                    //Flash and ice particles
-                    AvatarUtils.spawnDirectionalHelix(world, entity, look.toMinecraft(), particles, distance, size * 0.75,
-                            ParticleBuilder.Type.ICE, start.toMinecraft(), new Vec3d(world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 30, world.rand.nextGaussian() / 40),
-                            12, false, 0.7F, 0.9F, 1.0F, 0.5F, size);
-                    AvatarUtils.spawnDirectionalHelix(world, entity, look.toMinecraft(), particles, distance, size * 0.75,
-                            ParticleBuilder.Type.FLASH, start.toMinecraft(), new Vec3d(world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 30, world.rand.nextGaussian() / 40),
-                            8, true, 0.7F, 0.95F, 1.0F, 0.25F, size * 0.5F);
-//                speedMult /= 29.5F;
-//                for (int i = 0; i < flamesPerSecond; i++) {
-//                    int rRandom = fadeR < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeR * 2) : AvatarUtils.getRandomNumberInRange(fadeR / 2,
-//                            fadeR * 2);
-//                    int gRandom = fadeG < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeG * 2) : AvatarUtils.getRandomNumberInRange(fadeG / 2,
-//                            fadeG * 2);
-//                    int bRandom = fadeB < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeB * 2) : AvatarUtils.getRandomNumberInRange(fadeB / 2,
-//                            fadeB * 2);
-//
-//
-//                    double xRand = world.rand.nextGaussian() / 30;
-//                    double yRand = world.rand.nextGaussian() / 30;
-//                    double zRand = world.rand.nextGaussian() / 30;
-//
-//                    ParticleBuilder.create(ParticleBuilder.Type.ICE).pos(start.toMinecraft()).time(lifetime + AvatarUtils.getRandomNumberInRange(4, 8))
-//                            .vel(look.times(speedMult).plus(xRand, yRand, zRand).toMinecraft()).
-//                            clr(r, g, b, 90).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(40, 100)).collide(true).collideParticles(true)
-//                            .spawnEntity(entity).scale(size * 1.5F).element(new Icebending())
-//                            .ability(iceRaze).spawn(world);
-//                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start.toMinecraft()).time(lifetime + AvatarUtils.getRandomNumberInRange(4, 8)).vel(look.times(speedMult).toMinecraft()).
-//                            clr(r, g, b, 120).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(40, 100)).collide(true).collideParticles(true)
-//                            .spawnEntity(entity).scale(size * 1.5F).element(new Icebending())
-//                            .ability(iceRaze).spawn(world);
-//                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start.toMinecraft()).time(lifetime + AvatarUtils.getRandomNumberInRange(4, 8)).vel(look.times(speedMult).toMinecraft()).
-//                            clr(r, g + 15, b, 90).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(40, 100)).collide(true).collideParticles(true)
-//                            .spawnEntity(entity).scale(size * 1.5F).element(new Icebending())
-//                            .ability(iceRaze).spawn(world);
-//                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start.toMinecraft()).time(lifetime + AvatarUtils.getRandomNumberInRange(4, 8)).vel(look.times(speedMult).toMinecraft()).
-//                            clr(r, g , b * 2, 120).fade(rRandom, gRandom + 60, bRandom * 2, AvatarUtils.getRandomNumberInRange(40, 100)).collide(true).collideParticles(true)
-//                            .spawnEntity(entity).scale(size * 1.5F).element(new Icebending())
-//                            .ability(iceRaze).glow(true).spawn(world);
-//                }
+                //Particles at the end of the beam
+                ParticleBuilder.create(ParticleBuilder.Type.SNOW).pos(start.plus(look.times(distance)).toMinecraft())
+                        .scale(size * 1.25F).time(8 + AvatarUtils.getRandomNumberInRange(0, 2)).collide(true).swirl();
+                ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start.plus(look.times(distance)).toMinecraft())
+                        .scale(size * 1.5F).time(8 + AvatarUtils.getRandomNumberInRange(0, 2))
+                        .clr(100, 250, 255, 90).glow(true).collide(true).swirl();
             }
 
             if (ctx.getData().getTickHandlerDuration(this) % 4 == 0)
