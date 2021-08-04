@@ -452,11 +452,15 @@ avatar.ability.ice_burst.lvl3=The shield has a little more health.
 avatar.ability.ice_burst.lvl4_1=§3§l§oAiming §3§l§osystem ;; A few ice shards automatically target monsters, invaluable when there are many mobs attacking
 avatar.ability.ice_burst.lvl4_2=§3§l§oHardened §3§l§oice ;; The ice shield has much more health
 
-avatar.ability.ice_raze=Ice Raze
+avatar.ability.glacial_glide=§3§lGlacial Glide
 
-avatar.ability.ice_lance=Ice Lance
+avatar.ability.frost_form=§3§lFrost Form
 
-avatar.ability.frost_claw=Frost Claw
+avatar.ability.ice_raze=§3§lIce Raze
+
+avatar.ability.ice_lance=§3§lIce Lance
+
+avatar.ability.frost_claw=§3§lFrost Claw
 
 avatar.ability.sand_prison=§6§lSand Prison
 avatar.ability.sand_prison.desc=Create a snare out of sand to temporarily capture your enemies

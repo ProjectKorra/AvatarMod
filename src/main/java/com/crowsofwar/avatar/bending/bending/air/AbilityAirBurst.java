@@ -62,11 +62,6 @@ public class AbilityAirBurst extends Ability {
 	}
 
 	@Override
-	public int getBaseTier() {
-		return 4;
-	}
-
-	@Override
 	public boolean isChargeable() {
 		return true;
 	}
