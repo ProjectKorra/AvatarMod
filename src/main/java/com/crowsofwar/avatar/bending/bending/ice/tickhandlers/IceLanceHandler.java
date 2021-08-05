@@ -161,13 +161,16 @@ public class IceLanceHandler extends TickHandler {
             if (world.isRemote) {
                 int maxAngle = (int) (radius * 30);
                 Vec3d dir = new Vec3d(entity.getLookVec().x, 0, entity.getLookVec().z);
+                Vec3d particleSpeed = Vec3d.ZERO;
+                if (!data.hasStatusControl(RELEASE_ICE_LANCE))
+                    particleSpeed = entity.getLookVec().scale(speed);
                 AvatarParticleUtils.spawnSpinningDirectionalVortex(world, entity, dir.scale(radius * distMult), maxAngle,
                         radius * 2, 0.01, radius / 4, ParticleBuilder.Type.SNOW,
-                        rightSide, Vec3d.ZERO, Vec3d.ZERO, false, 190, 235, 255, 180, true,
+                        rightSide, particleSpeed, Vec3d.ZERO, false, 190, 235, 255, 180, true,
                         6, radius / 2, true, -90);
                 AvatarParticleUtils.spawnSpinningDirectionalVortex(world, entity, dir.scale(radius * distMult), maxAngle,
                         radius * 2, 0.01, radius / 4, ParticleBuilder.Type.FLASH,
-                        rightSide, Vec3d.ZERO, Vec3d.ZERO, true, 130, 235, 255, 40, true,
+                        rightSide, particleSpeed, Vec3d.ZERO, true, 130, 235, 255, 40, true,
                         10, radius / 4, true, -90);
 
             }
@@ -177,7 +180,7 @@ public class IceLanceHandler extends TickHandler {
             if (!data.hasStatusControl(RELEASE_ICE_LANCE)) {
 
                 EntityIceLance lance = new EntityIceLance(world);
-                lance.setEntitySize(radius / 4, radius * 2);
+                lance.setEntitySize(radius / 2, radius * 2);
                 lance.setDamage(damage);
                 lance.setAbility(Objects.requireNonNull(Abilities.get("ice_lance")));
                 lance.setDestroyGrass(true);
@@ -251,21 +254,32 @@ public class IceLanceHandler extends TickHandler {
                 World world = entity.world;
                 if (world.isRemote) {
                     if (entity.ticksExisted > 1) {
+                        //Particles at the front
+                        if (entity.ticksExisted == 2)
+                            AvatarParticleUtils.spawnSpinningDirectionalVortex(world, entity, entity.getLookVec().scale(entity.height),
+                                    (int) (entity.width * 15),
+                                    entity.width, 0.01, entity.height, ParticleBuilder.Type.SNOW,
+                                    AvatarEntityUtils.getMiddleOfEntity(entity), Vec3d.ZERO, entity.velocity().toMinecraft().scale(1 / 20F), true, 190, 235, 255, 140, true,
+                                    entity.getLifeTime() + 20, entity.height * 3, true, -90);
+
+                        //General ice particles
                         AvatarParticleUtils.spawnSpinningDirectionalVortex(world, entity, entity.getLookVec().scale(entity.height),
                                 (int) (entity.width * 20),
                                 entity.width, 0.01, entity.height, ParticleBuilder.Type.FLASH,
                                 AvatarEntityUtils.getMiddleOfEntity(entity), Vec3d.ZERO, Vec3d.ZERO, true, 140, 235, 255, 30, true,
-                                6, entity.height * 3, true, -90);
+                                6, entity.height * 1.5F, true, -90);
                         AvatarParticleUtils.spawnSpinningDirectionalVortex(world, entity, entity.getLookVec().scale(entity.height),
                                 (int) (entity.width * 15),
                                 entity.width, 0.01, entity.height, ParticleBuilder.Type.FLASH,
                                 AvatarEntityUtils.getMiddleOfEntity(entity), Vec3d.ZERO, Vec3d.ZERO, true, 140, 235, 255, 30, true,
-                                14, entity.height * 2, true, -90);
+                                12, entity.height, true, -90);
+
+                        //misc snow particles
                         AvatarParticleUtils.spawnSpinningDirectionalVortex(world, entity, entity.getLookVec().scale(entity.height),
                                 (int) (entity.width * 30),
                                 entity.width, 0.01, entity.height, ParticleBuilder.Type.SNOW,
                                 AvatarEntityUtils.getMiddleOfEntity(entity), Vec3d.ZERO, Vec3d.ZERO, false, 190, 235, 255, 140, true,
-                                14, entity.height * 3, true, -90);
+                                12, entity.height * 3, true, -90);
 
                     }
 

@@ -214,8 +214,8 @@ public class EntityIceLance extends EntityOffensive {
     @Override
     public void setDead() {
         super.setDead();
-        if (!world.isRemote && this.isDead)
-            Thread.dumpStack();
+//        if (!world.isRemote && this.isDead)
+//            Thread.dumpStack();
     }
 
     @Override
