@@ -9,6 +9,7 @@ import com.crowsofwar.avatar.bending.bending.earth.statctrls.*;
 import com.crowsofwar.avatar.bending.bending.fire.statctrls.*;
 import com.crowsofwar.avatar.bending.bending.ice.StatCtrlShieldShatter;
 import com.crowsofwar.avatar.bending.bending.ice.statctrls.StatCtrlGlacialGlide;
+import com.crowsofwar.avatar.bending.bending.ice.statctrls.StatCtrlSetIceLanceCharging;
 import com.crowsofwar.avatar.bending.bending.ice.statctrls.StatCtrlSetIceRaze;
 import com.crowsofwar.avatar.bending.bending.lightning.StatCtrlThrowLightningSpear;
 import com.crowsofwar.avatar.bending.bending.sand.StatCtrlSandstormRedirect;
@@ -74,7 +75,9 @@ public class StatusControlController {
 			DEATH_DESCENT = new StatCtrlDeathDescent(),
 			GLACIAL_GLIDE = new StatCtrlGlacialGlide(),
 			START_ICE_RAZE = new StatCtrlSetIceRaze(true),
-			STOP_ICE_RAZE = new StatCtrlSetIceRaze(false);
+			STOP_ICE_RAZE = new StatCtrlSetIceRaze(false),
+			CHARGE_ICE_LANE = new StatCtrlSetIceLanceCharging(true),
+			RELEASE_ICE_LANCE = new StatCtrlSetIceLanceCharging(false);
 	// @formatter:on
 
 	public static StatusControl lookup(int id) {

@@ -19,6 +19,7 @@ import com.crowsofwar.avatar.bending.bending.fire.statctrls.StatCtrlFlameStrike;
 import com.crowsofwar.avatar.bending.bending.fire.tickhandlers.FlameGlideHandler;
 import com.crowsofwar.avatar.bending.bending.fire.tickhandlers.FlamethrowerUpdateTick;
 import com.crowsofwar.avatar.bending.bending.ice.tickhandlers.GlacialGlideHandler;
+import com.crowsofwar.avatar.bending.bending.ice.tickhandlers.IceLanceHandler;
 import com.crowsofwar.avatar.bending.bending.ice.tickhandlers.IceRazeHandler;
 import com.crowsofwar.avatar.entity.EntityFireball;
 import com.crowsofwar.avatar.entity.EntityFlames;
@@ -64,6 +65,7 @@ public abstract class OffensiveBehaviour extends Behavior<EntityOffensive> {
         registerBehavior(DeathDescentHandler.DeathDescentShockwave.class);
         registerBehavior(GlacialGlideHandler.GlacialGlideShockwave.class);
         registerBehavior(IceRazeHandler.FlamethrowerBehaviour.class);
+        registerBehavior(IceLanceHandler.IceLanceBehaviour.class);
     }
 
     public static class Idle extends OffensiveBehaviour {

@@ -199,7 +199,7 @@ public class IceRazeHandler extends TickHandler {
                             AvatarDamageSource.causeIceShardDamage(entity,
                                     hit), damage, (int) performanceAmount,
                             iceRaze, xp);
-                    Vector vel = look.times(speedMult / 80);
+                    Vector vel = look.times(speedMult / 160);
                     hit.addVelocity(vel.x(), vel.y(), vel.z());
                     AvatarUtils.afterVelocityAdded(hit);
                     hit.isAirBorne = true;

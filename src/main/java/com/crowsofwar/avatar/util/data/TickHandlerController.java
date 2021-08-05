@@ -9,8 +9,10 @@ import com.crowsofwar.avatar.bending.bending.custom.ki.tickhandlers.KiFlightHand
 import com.crowsofwar.avatar.bending.bending.custom.light.tickhandlers.HeavenlyFlightHandler;
 import com.crowsofwar.avatar.bending.bending.custom.light.tickhandlers.PurifyHandler;
 import com.crowsofwar.avatar.bending.bending.earth.tickhandlers.EarthSpikeHandler;
+import com.crowsofwar.avatar.bending.bending.ice.statctrls.StatCtrlSetIceLanceCharging;
 import com.crowsofwar.avatar.bending.bending.ice.tickhandlers.FrostFormHandler;
 import com.crowsofwar.avatar.bending.bending.ice.tickhandlers.GlacialGlideHandler;
+import com.crowsofwar.avatar.bending.bending.ice.tickhandlers.IceLanceHandler;
 import com.crowsofwar.avatar.bending.bending.ice.tickhandlers.IceRazeHandler;
 import com.crowsofwar.avatar.client.gui.RenderElementHandler;
 import com.crowsofwar.avatar.bending.bending.air.tickhandlers.*;
@@ -71,6 +73,7 @@ public class TickHandlerController {
 	public static TickHandler FROST_FORM_HANDLER = new FrostFormHandler(34);
 	public static TickHandler GLACIAL_GLIDE_HANDLER = new GlacialGlideHandler(35);
 	public static TickHandler ICE_RAZE_HANDLER = new IceRazeHandler(36);
+	public static TickHandler ICE_LANCE_HANDLER = new IceLanceHandler(37);
 
 
 

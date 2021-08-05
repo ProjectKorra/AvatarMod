@@ -116,7 +116,8 @@ public class AvatarMod {
 
     public static SimpleNetworkWrapper network;
 
-    public static boolean codeChickenLibCompat, realFirstPersonRender2Compat, cubicChunks, hammerCore;
+    public static boolean codeChickenLibCompat, realFirstPersonRender2Compat,
+            cubicChunks, hammerCore, shoulderSurfingCompat;
 
     public static File configDirectory;
 
@@ -159,6 +160,7 @@ public class AvatarMod {
         /*    			Ice		  			*/
         Abilities.register(new AbilityIceBurst());
         Abilities.register(new AbilityIcePrison());
+        Abilities.register(new AbilityIceLance());
         Abilities.register(new AbilityFrostForm());
         Abilities.register(new AbilityGlacialGlide());
         Abilities.register(new AbilityIceRaze());
@@ -224,6 +226,8 @@ public class AvatarMod {
         cubicChunks = Loader.isModLoaded("cubicchunkscore");
         //Light orbs
         hammerCore = Loader.isModLoaded("hammercore");
+        //Particles
+        shoulderSurfingCompat = Loader.isModLoaded("shouldersurfing");
 
         configDirectory = new File(e.getModConfigurationDirectory(), "avatar");
 
@@ -429,7 +433,7 @@ public class AvatarMod {
         registerEntity(EntityShockwave.class, "Shockwave", 128, 1000, false);
         registerEntity(EntityLightOrb.class, "LightOrb", 128, 1000, true);
         registerEntity(EntityLightCylinder.class, "LightCylinder", 128, 1000, true);
-
+        registerEntity(EntityIceLance.class, "IceLance", 128, 1000, true);
         EntityRegistry.addSpawn(EntityOtterPenguin.class, 10, 3, 6, EnumCreatureType.CREATURE, //
                 COLD_BEACH, ICE_PLAINS, ICE_MOUNTAINS, MUTATED_ICE_FLATS);
         EntityRegistry.addSpawn(EntityOstrichHorse.class, 5, 1, 3, EnumCreatureType.CREATURE, //
