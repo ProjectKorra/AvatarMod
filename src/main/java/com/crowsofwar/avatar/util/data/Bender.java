@@ -280,6 +280,7 @@ public abstract class Bender {
                         if (getData().chi().getAvailableChi() >= ability.getChiCost(abilityCtx) && aD.getAbilityCooldown() == 0 || entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
                             aD.setPowerRating(calcPowerRating(ability.getBendingId()));
                             //This lets the ability disable burnout regeneration
+                            adjustConfigModifier(entity);
                             aD.setRegenBurnout(true);
                             ability.execute(abilityCtx);
                             if (entity instanceof EntityPlayer)

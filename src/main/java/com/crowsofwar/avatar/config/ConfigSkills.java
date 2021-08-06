@@ -104,7 +104,7 @@ public class ConfigSkills {
 		public float powerLevel = 1;
 
 		@Load
-		public float damageMult = 1;
+		public float damageMult = 5;
 
 		@Load
 		public float speedMult  = 1;

@@ -256,6 +256,7 @@ public class IceRazeHandler extends TickHandler {
             if (entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(ICE_RAZE_MOVEMENT_MOD_ID) != null)
                 entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(ICE_RAZE_MOVEMENT_MOD_ID);
             abilityData.setRegenBurnout(true);
+            entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeAllModifiers();
             entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(ICE_RAZE_MOVEMENT_MOD_ID);
             return true;
         }
