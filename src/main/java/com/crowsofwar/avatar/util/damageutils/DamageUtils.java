@@ -10,6 +10,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.item.EntityEnderCrystal;
+import net.minecraft.entity.passive.EntityTameable;
+import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.util.DamageSource;
 
 public class DamageUtils {
@@ -43,17 +45,17 @@ public class DamageUtils {
     public static boolean canCollideWith(Entity attacker, Entity target) {
         if (attacker == target)
             return false;
-        if (attacker.getTeam() != null && attacker.getTeam() == target.getTeam())
+        else if (attacker.getTeam() != null && attacker.getTeam() == target.getTeam()
+        && target instanceof EntityTameable)
             return false;
-        if (target instanceof AvatarEntity && !((AvatarEntity) target).canCollideWith(attacker))
+        else if (target instanceof AvatarEntity && !((AvatarEntity) target).canCollideWith(attacker))
             return false;
-        return !(attacker instanceof AvatarEntity) || target.canBeCollidedWith() && target.canBePushed()
+        else return !(attacker instanceof AvatarEntity) || target.canBeCollidedWith() && target.canBePushed()
                 || ((AvatarEntity) attacker).canCollideWith(target);
     }
 
     public static boolean canDamage(Entity attacker, Entity target) {
-        return canCollideWith(attacker, target) && (target.canBeAttackedWithItem() ||
-                target instanceof EntityLivingBase)
+        return canCollideWith(attacker, target)
                 || target instanceof EntityEnderCrystal;
     }
 

@@ -195,14 +195,16 @@ public class IceRazeHandler extends TickHandler {
             //Damage and knockback
             for (Entity hit : targets) {
                 if (hit != entity) {
-                    DamageUtils.attackEntity(entity, hit,
-                            AvatarDamageSource.causeIceShardDamage(entity,
-                                    hit), damage, (int) performanceAmount,
-                            iceRaze, xp);
-                    Vector vel = look.times(speedMult / 160);
-                    hit.addVelocity(vel.x(), vel.y(), vel.z());
-                    AvatarUtils.afterVelocityAdded(hit);
-                    hit.isAirBorne = true;
+                    if (!world.isRemote) {
+                        DamageUtils.attackEntity(entity, hit,
+                                AvatarDamageSource.causeIceShardDamage(entity,
+                                        hit), damage, (int) performanceAmount,
+                                iceRaze, xp);
+                        Vector vel = look.times(speedMult / 160);
+                        hit.addVelocity(vel.x(), vel.y(), vel.z());
+                        AvatarUtils.afterVelocityAdded(hit);
+                        hit.isAirBorne = true;
+                    }
                     //Maybe slow targets?
                 }
             }
