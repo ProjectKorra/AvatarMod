@@ -234,6 +234,9 @@ public class ConfigClient {
         @Load
         public boolean releaseShaderOnFlashParticleRender = true;
 
+        @Load
+        public boolean releaseShaderOnCubeParticleRender = true;
+
     }
 
 }
