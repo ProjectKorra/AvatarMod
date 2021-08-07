@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Objects;
 
 //This should be deleted
+//NOTE TO SELF: DO NOT MAKE REDIRECTS EVENT BASED, IT'S HOW YOU SCREW UP EVERYTHING
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class FireRedirectHandler {
 

@@ -15,6 +15,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.List;
 
+//Same as firebending: no eventhandlers for redirecting
 //No crashes here
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class EarthRedirectHandler {
