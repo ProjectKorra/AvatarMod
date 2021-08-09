@@ -124,7 +124,7 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
         wave.setFire(3 + AbilityData.get(getOwner(), getAbility().getName()).getLevel() + 1);
         wave.setParticleController(54 - (getSizeMultiplier() * 7));
         wave.setSphere(true);
-        wave.setElement(new Lightningbending());
+        wave.setElement(Lightningbending.ID);
         wave.setPerformanceAmount(10);
         wave.setKnockbackHeight(0.02);
         world.spawnEntity(wave);

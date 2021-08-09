@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.bending.bending.air.tickhandlers;
 
 import com.crowsofwar.avatar.bending.bending.Abilities;
+import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.air.AbilityAirBurst;
 import com.crowsofwar.avatar.bending.bending.air.Airbending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
@@ -163,7 +164,7 @@ public class AirBurstHandler extends TickHandler {
                 shockwave.setOwner(entity);
                 shockwave.setPosition(AvatarEntityUtils.getBottomMiddleOfEntity(entity));
                 shockwave.setRenderNormal(false);
-                shockwave.setElement(new Airbending());
+                shockwave.setElement(Airbending.ID);
                 shockwave.setParticleSpeed(speed);
                 shockwave.setDamageSource("avatar_Air_sphere_shockwave");
                 shockwave.setKnockbackMult(new Vec3d(knockBack, knockBack / 2, knockBack));
@@ -267,7 +268,7 @@ public class AirBurstHandler extends TickHandler {
                     Vec3d centre = AvatarEntityUtils.getBottomMiddleOfEntity(entity);
                     ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size)
                             .time(12).collide(true)
-                            .element(entity.getElement()).clr(0.95F, 0.95F, 0.95F, 0.030F).spawnEntity(entity.getOwner())
+                            .element(BendingStyles.get(entity.getElement())).clr(0.95F, 0.95F, 0.95F, 0.030F).spawnEntity(entity.getOwner())
                             .swirl(rings, particles, maxRadius * 0.675F, 0.35F + maxRadius / 20, maxRadius * 40, (-2 / size),
                                     entity.getOwner(), world, true, centre, ParticleBuilder.SwirlMotionType.OUT,
                                     false, true);

@@ -20,6 +20,7 @@ package com.crowsofwar.avatar.entity;
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingStyle;
+import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.air.Airbending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.entity.data.SyncedEntity;
@@ -56,6 +57,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Predicate;
 
@@ -85,7 +87,8 @@ public abstract class AvatarEntity extends Entity {
     protected boolean pushStoneButton, pushTrapDoor, pushDoor, pushRedstone;
     protected boolean setsFires, lightTnt;
     private double powerRating;
-    private BendingStyle element;
+    //Returning a new bending style each time is very unoptimal and bad
+    private UUID element;
     private BlockPos prevLeverPos = null, prevDoorPos = null, prevTrapdoorPos = null,
             prevButtonPos = null, prevGatePos = null;
     private IBlockState prevLeverState = null;
@@ -857,7 +860,7 @@ public abstract class AvatarEntity extends Entity {
 
     @Override
     public boolean shouldRenderInPass(int pass) {
-        switch (getElement().getName()) {
+        switch (Objects.requireNonNull(BendingStyles.getName(element))) {
             default:
                 return pass == 0;
             case "firebending":
@@ -872,11 +875,11 @@ public abstract class AvatarEntity extends Entity {
     }
 
     //Used to determine what element the entity is
-    public BendingStyle getElement() {
-        return element == null ? new Airbending() : element;
+    public UUID getElement() {
+        return element == null ? Airbending.ID : element;
     }
 
-    public void setElement(BendingStyle element) {
+    public void setElement(UUID element) {
         this.element = element;
     }
 

@@ -721,9 +721,9 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
             if (isProjectile())
                 dmgSource.setProjectile();
             dmgSource.setMagicDamage();
-            if (getElement() instanceof Lightningbending)
+            if (getElement().equals(Lightningbending.ID))
                 dmgSource.setDamageBypassesArmor();
-            if (getElement() instanceof Combustionbending)
+            if (getElement().equals(Combustionbending.ID))
                 dmgSource.setExplosion();
         }
         return dmgSource;
