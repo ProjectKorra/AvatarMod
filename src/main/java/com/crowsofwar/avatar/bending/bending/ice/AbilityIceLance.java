@@ -47,12 +47,8 @@ public class AbilityIceLance extends Ability {
         boolean hasIceCharge = data.hasStatusControl(RELEASE_ICE_LANCE);
 
 
-        if (bender.consumeChi(getChiCost(ctx) / 4) && !hasIceCharge) {
+        if (!hasIceCharge) {
             data.addStatusControl(CHARGE_ICE_LANE);
-        } else if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
-            if (!hasIceCharge) {
-                data.addStatusControl(CHARGE_ICE_LANE);
-            }
         }
         super.execute(ctx);
     }

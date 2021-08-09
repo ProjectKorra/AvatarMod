@@ -18,6 +18,7 @@
 package com.crowsofwar.avatar.bending.bending.ice.statctrls;
 
 import com.crowsofwar.avatar.bending.bending.air.Airbending;
+import com.crowsofwar.avatar.bending.bending.ice.Icebending;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.StatusControl;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
@@ -51,7 +52,7 @@ public class StatCtrlSetIceLanceCharging extends StatusControl {
         BendingData data = ctx.getData();
         EntityLivingBase bender = ctx.getBenderEntity();
 
-        if (data.hasBendingId(Airbending.ID)) {
+        if (data.hasBendingId(Icebending.ID)) {
             if (setting) {
                 data.addStatusControl(RELEASE_ICE_LANCE);
                 data.addTickHandler(ICE_LANCE_HANDLER, ctx);

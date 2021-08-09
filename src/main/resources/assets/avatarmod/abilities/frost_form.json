@@ -3,6 +3,7 @@
     "xpOnUse": 2,
     "level1": {
       "tier": 5,
+      "parentTier": 5,
       "chiCost": 4.0,
       "cooldown": 200,
       "exhaustion": 4.0,
@@ -39,6 +40,7 @@
     },
     "level3": {
       "tier": 6,
+      "parentTier": 7,
       "chiCost": 5.0,
       "cooldown": 215,
       "exhaustion": 5.0,

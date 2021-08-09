@@ -4,6 +4,7 @@ import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingStyle;
+import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.fire.Firebending;
 import com.crowsofwar.avatar.bending.bending.water.Waterbending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
@@ -1168,7 +1169,7 @@ public abstract class ParticleAvatar extends Particle {
 
     public void applyElementalContact(AvatarEntity entity) {
         if (entity.getOwner() != null && entity.getElement() != null) {
-            switch (entity.getElement().getName()) {
+            switch (BendingStyles.getName(entity.getElement())) {
                 case "waterbending":
                     if (entity.getTier() < 3)
                         onMinorWaterContact();

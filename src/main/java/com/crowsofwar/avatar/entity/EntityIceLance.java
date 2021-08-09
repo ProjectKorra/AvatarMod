@@ -17,8 +17,7 @@
 
 package com.crowsofwar.avatar.entity;
 
-import com.crowsofwar.avatar.bending.bending.BendingStyle;
-import com.crowsofwar.avatar.bending.bending.air.Airbending;
+import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.ice.Icebending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
@@ -37,6 +36,8 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+
+import java.util.UUID;
 
 public class EntityIceLance extends EntityOffensive {
 
@@ -91,8 +92,8 @@ public class EntityIceLance extends EntityOffensive {
     }
 
     @Override
-    public BendingStyle getElement() {
-        return new Icebending();
+    public UUID getElement() {
+        return Icebending.ID;
     }
 
     @Override
@@ -117,7 +118,7 @@ public class EntityIceLance extends EntityOffensive {
     @Override
     public boolean pushLevers(BlockPos pos) {
         if (super.pushLevers(pos))
-            if (getElement() instanceof Airbending)
+            if (getElement().equals(Icebending.ID))
                 if (getOwner() != null && getAbility() != null)
                     AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit() / 2);
         return super.pushLevers(pos);
@@ -126,7 +127,7 @@ public class EntityIceLance extends EntityOffensive {
     @Override
     public boolean pushButtons(BlockPos pos) {
         if (super.pushButtons(pos))
-            if (getElement() instanceof Airbending)
+            if (getElement().equals(Icebending.ID))
                 if (getOwner() != null && getAbility() != null)
                     AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit() / 2);
         return super.pushButtons(pos);
@@ -136,7 +137,7 @@ public class EntityIceLance extends EntityOffensive {
     @Override
     public boolean pushTrapDoors(BlockPos pos) {
         if (super.pushTrapDoors(pos))
-            if (getElement() instanceof Airbending)
+            if (getElement().equals(Icebending.ID))
                 if (getOwner() != null && getAbility() != null)
                     AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit() / 2);
         return super.pushTrapDoors(pos);
@@ -146,7 +147,7 @@ public class EntityIceLance extends EntityOffensive {
     @Override
     public boolean pushDoors(BlockPos pos) {
         if (super.pushGates(pos))
-            if (getElement() instanceof Airbending)
+            if (getElement().equals(Icebending.ID))
                 if (getOwner() != null && getAbility() != null)
                     AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit() / 2);
         return super.pushGates(pos);
@@ -228,10 +229,10 @@ public class EntityIceLance extends EntityOffensive {
                 double spawnZ = mid.z + world.rand.nextGaussian() / 10;
                 ParticleBuilder.create(ParticleBuilder.Type.ICE).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20,
                         world.rand.nextGaussian() / 20).time(4).clr(0.95F, 0.95F, 0.95F, 0.25F).spawnEntity(getOwner())
-                        .scale(getAvgSize()).element(getElement()).collide(true).spawn(world);
+                        .scale(getAvgSize()).element(BendingStyles.get(getElement())).collide(true).spawn(world);
                 ParticleBuilder.create(ParticleBuilder.Type.SNOW).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20,
                         world.rand.nextGaussian() / 20).time(12).clr(0.95F, 0.95F, 0.95F, 0.5F).spawnEntity(getOwner())
-                        .scale(getAvgSize() * 1.5F).element(getElement()).collide(true).spawn(world);
+                        .scale(getAvgSize() * 1.5F).element(BendingStyles.get(getElement())).collide(true).spawn(world);
             }
         }
     }

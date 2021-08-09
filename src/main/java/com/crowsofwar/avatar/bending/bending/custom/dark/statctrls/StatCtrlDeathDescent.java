@@ -2,6 +2,7 @@ package com.crowsofwar.avatar.bending.bending.custom.dark.statctrls;
 
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.custom.dark.AbilityDeathDescent;
+import com.crowsofwar.avatar.bending.bending.custom.dark.Darkbending;
 import com.crowsofwar.avatar.bending.bending.custom.dark.tickhandlers.DeathDescentHandler;
 import com.crowsofwar.avatar.bending.bending.fire.Firebending;
 import com.crowsofwar.avatar.client.controls.AvatarControl;
@@ -169,7 +170,7 @@ public class StatCtrlDeathDescent extends StatusControl {
             wave.setPosition(AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(0, 0.5, 0));
             wave.setFireTime(fireTime);
             wave.setEntitySize(size / 5);
-            wave.setElement(new Firebending());
+            wave.setElement(Darkbending.ID);
             wave.setAbility(jump);
             wave.setDamage(damage);
             wave.setOwner(entity);

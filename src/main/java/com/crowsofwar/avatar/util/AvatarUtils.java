@@ -22,6 +22,7 @@ import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingStyle;
+import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.client.particles.newparticles.ParticleAvatar;
 import com.crowsofwar.avatar.client.particles.newparticles.renderlayers.ParticleBatchRenderer;
@@ -648,13 +649,13 @@ public class AvatarUtils {
      */
 
     public static void handlePiercingBeamCollision(World world, EntityLivingBase caster, Vec3d startPos, Vec3d endPos, float borderSize, @Nullable AvatarEntity spellEntity, @Nullable Ability ability,
-                                                   @Nullable BendingStyle element, float damage, Vec3d knockBack, int fireTime, float radius) {
+                                                   @Nullable UUID element, float damage, Vec3d knockBack, int fireTime, float radius) {
         HashSet<Entity> excluded = new HashSet<>();
         RayTraceResult result = standardEntityRayTrace(world, caster, spellEntity, startPos, endPos, borderSize, false, excluded);
         if (result != null && result.entityHit instanceof EntityLivingBase) {
             EntityLivingBase hit = (EntityLivingBase) result.entityHit;
             String abilityName;
-            BendingStyle style;
+            UUID style;
             //Ensures that the damage source exists.
 
             if (spellEntity != null) {
@@ -667,7 +668,7 @@ public class AvatarUtils {
                 abilityName = ability.getName();
             }
 
-            String elementName = style.getName();
+            String elementName = BendingStyles.getName(style);
             String damageName = AvatarDamageSource.getNameFromBendingStyle(elementName);
             DamageSource damageSource = new EntityDamageSourceIndirect("avatar_" + damageName + "_" + abilityName, hit, caster);
 

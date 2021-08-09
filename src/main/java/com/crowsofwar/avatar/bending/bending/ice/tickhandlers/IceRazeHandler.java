@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.bending.bending.ice.tickhandlers;
 
+import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.fire.Firebending;
 import com.crowsofwar.avatar.bending.bending.ice.AbilityIceRaze;
@@ -144,39 +145,6 @@ public class IceRazeHandler extends TickHandler {
             Vector start = look.times(range).plus(eye.minusY(0.45));
 
 
-//            EntityFlames ice = new EntityFlames(world);
-//            ice.setPosition(start);
-//            ice.setOwner(entity);
-//            ice.setDynamicSpreadingCollision(true);
-//            ice.setAbility(new AbilityFlamethrower());
-//            ice.setDamageSource(abilityData.isDynamicMasterLevel(AbilityTreePath.FIRST) ? AvatarDamageSource.ICE.getDamageType() + "_dragonIce"
-//                    : AvatarDamageSource.ICE.getDamageType() + "_raze");
-//            ice.setTier(iceRaze.getCurrentTier(abilityData));
-//            ice.setXp(iceRaze.getProperty(XP_HIT, abilityData).floatValue());
-//            ice.setVelocity(look.times(speedMult / 8F).toMinecraft());
-//            ice.setLifeTime(lifetime + AvatarUtils.getRandomNumberInRange(0, 4));
-//            ice.setTrailingFires(iceRaze.getBooleanProperty(SETS_FIRES, abilityData));
-//            ice.setFires(iceRaze.getBooleanProperty(SETS_FIRES, abilityData));
-//            ice.setFireTime(0);
-//            ice.setChiHit(chiHit);
-//            ice.setXp(xp);
-//            ice.setDamage(damage);
-//            ice.setPush(knockback);
-//            ice.setRGB(r, g, b);
-//            ice.setFade(fadeR, fadeG, fadeB);
-//            ice.setSmelts(false);
-//            ice.setFireTime(fireTime);
-//            ice.setPerformanceAmount((int) performanceAmount);
-//            ice.setElement(new Icebending());
-//            ice.setDamageSource("avatar_Ice");
-//            ice.setRedirectable(true);
-//            ice.setBehaviour(new FlamethrowerBehaviour());
-//            ice.setChiHit(iceRaze.getProperty(CHI_HIT, abilityData).floatValue());
-//            ice.setEntitySize(size / 4);
-//            if (!world.isRemote)
-//                world.spawnEntity(ice);
-
-
             //Raytrace for the beam; will do collision later
             //Raytrace collision too
             //Also need snowflake particles
@@ -197,8 +165,7 @@ public class IceRazeHandler extends TickHandler {
                 if (hit != entity) {
                     if (!world.isRemote) {
                         DamageUtils.attackEntity(entity, hit,
-                                AvatarDamageSource.causeIceShardDamage(entity,
-                                        hit), damage, (int) performanceAmount,
+                                AvatarDamageSource.ICE, damage, (int) performanceAmount,
                                 iceRaze, xp);
                         Vector vel = look.times(speedMult / 160);
                         hit.addVelocity(vel.x(), vel.y(), vel.z());
