@@ -64,10 +64,10 @@ public class StatCtrlEarthRedirect extends StatusControl {
 
             List<EntityOffensive> redirectables = world.getEntitiesWithinAABB(EntityOffensive.class, entity.getEntityBoundingBox().grow(radius));
             redirectables = redirectables.stream().filter(entityOffensive -> entityOffensive.canCollideWith(entity) && entityOffensive.isRedirectable()
-                    && entityOffensive.getElement() instanceof Earthbending).collect(Collectors.toList());
+                    && entityOffensive.getElement().equals(Earthbending.ID)).collect(Collectors.toList());
             List<Entity> rangedRedirectables = new ArrayList<>(Raytrace.entityRaytrace(world, entity.getPositionVector().add(0, entity.getEyeHeight(), 0),
-                    entity.getLookVec(), aimAssist, range, entity1 -> entity1 instanceof EntityOffensive && ((EntityOffensive) entity1).getElement()
-                            instanceof Earthbending && ((EntityOffensive) entity1).canCollideWith(entity)));
+                    entity.getLookVec(), aimAssist, range, entity1 -> entity1 instanceof EntityOffensive && ((EntityOffensive) entity1).getElement().equals(Earthbending.ID)
+                    && ((EntityOffensive) entity1).canCollideWith(entity)));
 
             if (!redirectables.isEmpty()) {
                 for (EntityOffensive e : redirectables) {

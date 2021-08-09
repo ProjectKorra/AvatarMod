@@ -85,7 +85,7 @@ public class AbilityCloudBurst extends Ability {
             cloudball.setAbsorb(getBooleanProperty(ABSORB, ctx));
             cloudball.setChiSmash(getBooleanProperty(CHI_SMASH, ctx));
             cloudball.setAbility(this);
-            cloudball.setElement(new Airbending());
+            cloudball.setElement(Airbending.ID);
             cloudball.setChiHit(chiHit);
             cloudball.setDamageSource("avatar_Air");
             cloudball.setTier(getCurrentTier(ctx));

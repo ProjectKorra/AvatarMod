@@ -305,7 +305,7 @@ public class EarthSpikeHandler extends TickHandler {
                             spawner.setDistance(range);
                             spawner.setDamageSource("avatar_Earth_earthSpike");
                             spawner.setBehaviour(new EarthspikeRavineBehaviour());
-                            spawner.setElement(new Earthbending());
+                            spawner.setElement(Earthbending.ID);
                             if (!world.isRemote)
                                 world.spawnEntity(spawner);
                         }

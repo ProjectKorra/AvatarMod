@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.bending.bending.fire.statctrls;
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
+import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.fire.AbilityFlameStrike;
 import com.crowsofwar.avatar.bending.bending.fire.Firebending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
@@ -189,7 +190,7 @@ public class StatCtrlFlameStrike extends StatusControl {
                         flames.setPerformanceAmount(performance);
                         flames.setRGB(r, g, b);
                         flames.setFade(fadeR, fadeG, fadeB);
-                        flames.setElement(new Firebending());
+                        flames.setElement(Firebending.ID);
                         flames.setTier(strike.getCurrentTier(abilityData));
                         flames.setPosition(x1, y1, z1);
                         flames.setDamageSource("avatar_Fire_flameStrike");
@@ -217,7 +218,7 @@ public class StatCtrlFlameStrike extends StatusControl {
                         flames.setPerformanceAmount(performance);
                         flames.setRGB(r, g, b);
                         flames.setFade(fadeR, fadeG, fadeB);
-                        flames.setElement(new Firebending());
+                        flames.setElement(Firebending.ID);
                         flames.setTier(strike.getCurrentTier(abilityData));
                         flames.setPosition(x1, y1, z1);
                         flames.setDamageSource("avatar_Fire_flameStrike");
@@ -287,15 +288,15 @@ public class StatCtrlFlameStrike extends StatusControl {
                         double spawnZ = box.z + random.nextDouble() * 1.5 * (boundingBox.maxZ - boundingBox.minZ);
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 30,
                                 entity.world.rand.nextGaussian() / 30, entity.world.rand.nextGaussian() / 30).time(5 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(rgb[0], rgb[1], rgb[2])
-                                .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).scale(entity.getAvgSize() * 2F).element(entity.getElement())
+                                .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).scale(entity.getAvgSize() * 2F).element(BendingStyles.get(entity.getElement()))
                                 .ability(entity.getAbility()).spawnEntity(entity.getOwner()).collide(true).collideParticles(true).spawn(entity.world);
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 30,
                                 entity.world.rand.nextGaussian() / 30, entity.world.rand.nextGaussian() / 30).time(5 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(rgb[0], rgb[1], rgb[2])
-                                .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).scale(entity.getAvgSize() * 2F).element(entity.getElement())
+                                .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).scale(entity.getAvgSize() * 2F).element(BendingStyles.get(entity.getElement()))
                                 .ability(entity.getAbility()).spawnEntity(entity.getOwner()).collide(true).collideParticles(true).spawn(entity.world);
                         ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 50,
                                 entity.world.rand.nextGaussian() / 50, entity.world.rand.nextGaussian() / 50).time(5 + AvatarUtils.getRandomNumberInRange(0, 2)).scale(entity.getAvgSize() / 2)
-                                .element(entity.getElement()).ability(entity.getAbility()).spawnEntity(entity.getOwner()).collide(true).collideParticles(true).spawn(entity.world);
+                                .element(BendingStyles.get(entity.getElement())).ability(entity.getAbility()).spawnEntity(entity.getOwner()).collide(true).collideParticles(true).spawn(entity.world);
                     }
                 }
             }

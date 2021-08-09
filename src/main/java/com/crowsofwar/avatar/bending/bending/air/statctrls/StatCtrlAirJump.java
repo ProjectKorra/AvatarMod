@@ -147,7 +147,7 @@ public class StatCtrlAirJump extends StatusControl {
                 wave.setDamageSource("avatar_Air_shockwave");
                 wave.setAbility(jump);
                 wave.setChiHit(chiOnHit);
-                wave.setElement(new Airbending());
+                wave.setElement(Airbending.ID);
                 wave.setParticleSpeed(speed / 60);
                 wave.setPosition(entity.getPositionVector().add(0, 0.5, 0));
                 wave.setOwner(entity);
