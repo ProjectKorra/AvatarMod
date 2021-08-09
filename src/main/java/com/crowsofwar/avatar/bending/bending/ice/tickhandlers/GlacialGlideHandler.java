@@ -5,6 +5,7 @@ import com.crowsofwar.avatar.bending.bending.custom.ki.AbilityKiFlight;
 import com.crowsofwar.avatar.bending.bending.custom.ki.Kibending;
 import com.crowsofwar.avatar.bending.bending.custom.ki.tickhandlers.KiFlightHandler;
 import com.crowsofwar.avatar.bending.bending.ice.AbilityGlacialGlide;
+import com.crowsofwar.avatar.bending.bending.ice.Icebending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.entity.EntityOffensive;
 import com.crowsofwar.avatar.entity.EntityShockwave;
@@ -184,7 +185,7 @@ public class GlacialGlideHandler extends TickHandler {
             wave.setPosition(AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(0, 0.5, 0));
             wave.setFireTime(0);
             wave.setEntitySize(size / 5F);
-            wave.setElement(new Kibending());
+            wave.setElement(Icebending.ID);
             wave.setAbility(flight);
             wave.setDamage(damage);
             wave.setOwner(entity);

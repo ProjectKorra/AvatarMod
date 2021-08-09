@@ -66,7 +66,7 @@ public class StatCtrlFireRedirect extends StatusControl {
 
             List<EntityOffensive> redirectables = world.getEntitiesWithinAABB(EntityOffensive.class, entity.getEntityBoundingBox().grow(radius));
             redirectables = redirectables.stream().filter(entityOffensive -> entityOffensive.canCollideWith(entity) && entityOffensive.isRedirectable()
-                    && entityOffensive.getElement() instanceof Firebending).collect(Collectors.toList());
+                    && entityOffensive.getElement().equals(Firebending.ID)).collect(Collectors.toList());
 
 
             if (!redirectables.isEmpty()) {

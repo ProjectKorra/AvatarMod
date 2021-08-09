@@ -181,7 +181,7 @@ public class KiFlightHandler extends TickHandler {
             wave.setPosition(AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(0, 0.5, 0));
             wave.setFireTime(0);
             wave.setEntitySize(size / 5F);
-            wave.setElement(new Kibending());
+            wave.setElement(Kibending.ID);
             wave.setAbility(flight);
             wave.setDamage(damage);
             wave.setOwner(entity);

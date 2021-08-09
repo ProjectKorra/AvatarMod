@@ -18,6 +18,7 @@ package com.crowsofwar.avatar.bending.bending.ice.tickhandlers;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.bending.bending.Abilities;
+import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.fire.Firebending;
 import com.crowsofwar.avatar.bending.bending.ice.AbilityIceRaze;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
@@ -289,17 +290,17 @@ public class IceRazeHandler extends TickHandler {
                             ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 10 * entity.getAvgSize(),
                                     entity.world.rand.nextGaussian() / 10 * entity.getAvgSize(), entity.world.rand.nextGaussian() / 10 * entity.getAvgSize())
                                     .time(time).clr(rgb[0], rgb[1], rgb[2]).scale(entity.getAvgSize() * scale)
-                                    .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).element(entity.getElement())
+                                    .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).element(BendingStyles.get(entity.getElement()))
                                     .ability(entity.getAbility()).spawnEntity(entity.getOwner()).collide(true).collideParticles(entity.getOwner() instanceof EntityBender).spawn(entity.world);
                             ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 10 * entity.getAvgSize(),
                                     entity.world.rand.nextGaussian() / 10 * entity.getAvgSize(), entity.world.rand.nextGaussian() / 10 * entity.getAvgSize())
                                     .time(time).clr(rgb[0], rgb[1], rgb[2]).scale(entity.getAvgSize() * scale)
-                                    .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).element(entity.getElement())
+                                    .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).element(BendingStyles.get(entity.getElement()))
                                     .ability(entity.getAbility()).spawnEntity(entity.getOwner()).collide(true).collideParticles(entity.getOwner() instanceof EntityBender).spawn(entity.world);
                             ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 7.5 * entity.getAvgSize(),
                                     entity.world.rand.nextGaussian() / 7.5 * entity.getAvgSize(), entity.world.rand.nextGaussian() / 7.5 * entity.getAvgSize())
                                     .time(time + 2).clr(rgb[0], rgb[1], rgb[2]).scale(entity.getAvgSize() / 1.25F * scale)
-                                    .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).element(entity.getElement())
+                                    .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).element(BendingStyles.get(entity.getElement()))
                                     .ability(entity.getAbility()).spawnEntity(entity.getOwner()).collide(true).collideParticles(entity.getOwner() instanceof EntityBender).spawn(entity.world);
                         }
                     }

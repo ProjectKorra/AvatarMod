@@ -17,12 +17,10 @@
 
 package com.crowsofwar.avatar.entity;
 
-import com.crowsofwar.avatar.bending.bending.BendingStyle;
-import com.crowsofwar.avatar.bending.bending.air.AbilityAirblade;
+import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.air.Airbending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
-import com.crowsofwar.avatar.util.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
@@ -34,11 +32,12 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+
+import java.util.UUID;
 
 public class EntityAirGust extends EntityOffensive {
 
@@ -93,8 +92,8 @@ public class EntityAirGust extends EntityOffensive {
     }
 
     @Override
-    public BendingStyle getElement() {
-        return new Airbending();
+    public UUID getElement() {
+        return Airbending.ID;
     }
 
     @Override
@@ -119,7 +118,7 @@ public class EntityAirGust extends EntityOffensive {
     @Override
     public boolean pushLevers(BlockPos pos) {
         if (super.pushLevers(pos))
-            if (getElement() instanceof Airbending)
+            if (getElement().equals(Airbending.ID))
                 if (getOwner() != null && getAbility() != null)
                     AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit() / 2);
         return super.pushLevers(pos);
@@ -128,7 +127,7 @@ public class EntityAirGust extends EntityOffensive {
     @Override
     public boolean pushButtons(BlockPos pos) {
         if (super.pushButtons(pos))
-            if (getElement() instanceof Airbending)
+            if (getElement().equals(Airbending.ID))
                 if (getOwner() != null && getAbility() != null)
                     AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit() / 2);
         return super.pushButtons(pos);
@@ -138,7 +137,7 @@ public class EntityAirGust extends EntityOffensive {
     @Override
     public boolean pushTrapDoors(BlockPos pos) {
         if (super.pushTrapDoors(pos))
-            if (getElement() instanceof Airbending)
+            if (getElement().equals(Airbending.ID))
                 if (getOwner() != null && getAbility() != null)
                     AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit() / 2);
         return super.pushTrapDoors(pos);
@@ -148,7 +147,7 @@ public class EntityAirGust extends EntityOffensive {
     @Override
     public boolean pushDoors(BlockPos pos) {
         if (super.pushGates(pos))
-            if (getElement() instanceof Airbending)
+            if (getElement().equals(Airbending.ID))
                 if (getOwner() != null && getAbility() != null)
                     AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit() / 2);
         return super.pushGates(pos);
@@ -228,10 +227,10 @@ public class EntityAirGust extends EntityOffensive {
                 double spawnZ = mid.z + world.rand.nextGaussian() / 10;
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20,
                         world.rand.nextGaussian() / 20).time(4).clr(0.95F, 0.95F, 0.95F, 0.1F).spawnEntity(getOwner())
-                        .scale(getAvgSize() * 1.25F).element(getElement()).collide(true).spawn(world);
+                        .scale(getAvgSize() * 1.25F).element(BendingStyles.get(getElement())).collide(true).spawn(world);
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20,
                         world.rand.nextGaussian() / 20).time(12).clr(0.95F, 0.95F, 0.95F, 0.1F).spawnEntity(getOwner())
-                        .scale(getAvgSize() * 1.25F).element(getElement()).collide(true).spawn(world);
+                        .scale(getAvgSize() * 1.25F).element(BendingStyles.get(getElement())).collide(true).spawn(world);
             }
         }
     }
@@ -322,7 +321,8 @@ public class EntityAirGust extends EntityOffensive {
             return false;
         } else if (entity instanceof EntityLivingBase && entity.getControllingPassenger() == getOwner()) {
             return false;
-        } else return getOwner() == null || getOwner().getTeam() == null || entity.getTeam() == null || entity.getTeam() != getOwner().getTeam();
+        } else
+            return getOwner() == null || getOwner().getTeam() == null || entity.getTeam() == null || entity.getTeam() != getOwner().getTeam();
     }
 
     @Override

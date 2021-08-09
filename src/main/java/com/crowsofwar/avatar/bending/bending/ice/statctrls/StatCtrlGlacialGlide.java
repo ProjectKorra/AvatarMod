@@ -4,6 +4,7 @@ import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.custom.dark.tickhandlers.DeathDescentHandler;
 import com.crowsofwar.avatar.bending.bending.fire.Firebending;
 import com.crowsofwar.avatar.bending.bending.ice.AbilityGlacialGlide;
+import com.crowsofwar.avatar.bending.bending.ice.Icebending;
 import com.crowsofwar.avatar.bending.bending.ice.tickhandlers.GlacialGlideHandler;
 import com.crowsofwar.avatar.client.controls.AvatarControl;
 import com.crowsofwar.avatar.entity.EntityShockwave;
@@ -170,7 +171,7 @@ public class StatCtrlGlacialGlide extends StatusControl {
             wave.setPosition(AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(0, 0.5, 0));
             wave.setFireTime(fireTime);
             wave.setEntitySize(size / 5);
-            wave.setElement(new Firebending());
+            wave.setElement(Icebending.ID);
             wave.setAbility(jump);
             wave.setDamage(damage);
             wave.setOwner(entity);

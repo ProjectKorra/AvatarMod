@@ -98,7 +98,7 @@ public class AbilityRavine extends Ability {
                     ravine.setPosition(targetBendable ? pos : pos.minusY(1));
                     ravine.setVelocity(look.times(speed));
                     ravine.setAbility(this);
-                    ravine.setElement(new Earthbending());
+                    ravine.setElement(Earthbending.ID);
                     ravine.setLifeTime(lifetime);
                     ravine.setEntitySize(size);
                     ravine.setBehaviour(new RavineBehaviour());

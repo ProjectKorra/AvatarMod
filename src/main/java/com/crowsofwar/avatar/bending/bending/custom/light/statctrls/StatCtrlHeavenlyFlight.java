@@ -169,7 +169,7 @@ public class StatCtrlHeavenlyFlight extends StatusControl {
             wave.setPosition(AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(0, 0.5, 0));
             wave.setFireTime(fireTime);
             wave.setEntitySize(size / 5);
-            wave.setElement(new Lightbending());
+            wave.setElement(Lightbending.ID);
             wave.setAbility(jump);
             wave.setDamage(damage);
             wave.setOwner(entity);

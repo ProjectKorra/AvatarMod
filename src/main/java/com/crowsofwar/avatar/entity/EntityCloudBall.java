@@ -1,6 +1,6 @@
 package com.crowsofwar.avatar.entity;
 
-import com.crowsofwar.avatar.bending.bending.BendingStyle;
+import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.air.Airbending;
 import com.crowsofwar.avatar.bending.bending.air.powermods.CloudburstPowerModifier;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
@@ -61,14 +61,14 @@ public class EntityCloudBall extends EntityOffensive {
     }
 
     @Override
-    public BendingStyle getElement() {
-        return new Airbending();
+    public UUID getElement() {
+        return Airbending.ID;
     }
 
     @Override
     public boolean pushLevers(BlockPos pos) {
         if (super.pushLevers(pos))
-            if (getElement() instanceof Airbending)
+            if (getElement().equals(Airbending.ID))
                 if (getOwner() != null && getAbility() != null)
                     AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit() / 2);
         return super.pushLevers(pos);
@@ -77,7 +77,7 @@ public class EntityCloudBall extends EntityOffensive {
     @Override
     public boolean pushButtons(BlockPos pos) {
         if (super.pushButtons(pos))
-            if (getElement() instanceof Airbending)
+            if (getElement().equals(Airbending.ID))
                 if (getOwner() != null && getAbility() != null)
                     AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit() / 2);
         return super.pushButtons(pos);
@@ -87,7 +87,7 @@ public class EntityCloudBall extends EntityOffensive {
     @Override
     public boolean pushTrapDoors(BlockPos pos) {
         if (super.pushTrapDoors(pos))
-            if (getElement() instanceof Airbending)
+            if (getElement().equals(Airbending.ID))
                 if (getOwner() != null && getAbility() != null)
                     AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit() / 2);
         return super.pushTrapDoors(pos);
@@ -97,7 +97,7 @@ public class EntityCloudBall extends EntityOffensive {
     @Override
     public boolean pushDoors(BlockPos pos) {
         if (super.pushGates(pos))
-            if (getElement() instanceof Airbending)
+            if (getElement().equals(Airbending.ID))
                 if (getOwner() != null && getAbility() != null)
                     AbilityData.get(getOwner(), getAbility().getName()).addXp(getXpPerHit() / 2);
         return super.pushGates(pos);
@@ -373,7 +373,7 @@ public class EntityCloudBall extends EntityOffensive {
             for (int i = 0; i < getSize(); i++)
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(getAvgSize()).collide(true).vel(world.rand.nextGaussian() / 10,
                         world.rand.nextGaussian() / 10, world.rand.nextGaussian() / 10).time(8).pos(AvatarEntityUtils.getMiddleOfEntity(this))
-                        .clr(0.95F, 0.95F, 0.95F, 0.2F).element(getElement()).spawn(world);
+                        .clr(0.95F, 0.95F, 0.95F, 0.2F).element(BendingStyles.get(getElement())).spawn(world);
     }
 
     @Override
@@ -382,7 +382,7 @@ public class EntityCloudBall extends EntityOffensive {
             for (int i = 0; i < getSize(); i++)
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(getAvgSize()).collide(true).vel(world.rand.nextGaussian() / 40,
                         world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40).time(8).pos(AvatarEntityUtils.getMiddleOfEntity(this))
-                        .clr(0.95F, 0.95F, 0.95F, 0.2F).element(getElement()).spawn(world);
+                        .clr(0.95F, 0.95F, 0.95F, 0.2F).element(BendingStyles.get(getElement())).spawn(world);
 
     }
 

@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.bending.bending.air;
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingAi;
+import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.entity.EntityAirGust;
 import com.crowsofwar.avatar.entity.EntityOffensive;
@@ -35,13 +36,12 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.Objects;
 
-/**
+  /**
  * @author CrowsOfWar
  */
 public class AbilityAirblade extends Ability {
@@ -105,7 +105,7 @@ public class AbilityAirblade extends Ability {
             airblade.setVelocity(direction.times(speed));
             airblade.setDamage(damage);
             airblade.setDestroyGrass(getBooleanProperty(DESTROY_GRASS, ctx));
-            airblade.setElement(new Airbending());
+            airblade.setElement(Airbending.ID);
             airblade.setXp(getProperty(XP_HIT, ctx).floatValue());
             airblade.rotationPitch = entity.rotationPitch;
             airblade.rotationYaw = yaw;
@@ -184,13 +184,13 @@ public class AbilityAirblade extends Ability {
                             double spawnZ = AvatarEntityUtils.getMiddleOfEntity(entity).z;
                             ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
                                     world.rand.nextGaussian() / 60).collide(true).time(3 + AvatarUtils.getRandomNumberInRange(0, 1)).clr(1F, 1F, 1F, 0.075F)
-                                    .scale(entity.getAvgSize() / 4).element(entity.getElement()).spawnEntity(entity).spawn(world);
+                                    .scale(entity.getAvgSize() / 4).element(BendingStyles.get(entity.getElement())).spawnEntity(entity).spawn(world);
                             ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(AvatarEntityUtils.getMiddleOfEntity(entity)).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
                                     world.rand.nextGaussian() / 60).collide(true).time(3 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(0.8F, 0.8F, 0.8F, 0.075F)
-                                    .scale(entity.getAvgSize() / 2).element(entity.getElement()).spin(entity.getWidth() * 2, 0.1).spawnEntity(entity).spawn(world);
+                                    .scale(entity.getAvgSize() / 2).element(BendingStyles.get(entity.getElement())).spin(entity.getWidth() * 2, 0.1).spawnEntity(entity).spawn(world);
                             ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(AvatarEntityUtils.getMiddleOfEntity(entity)).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
                                     world.rand.nextGaussian() / 60).collide(true).time(6 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(1F, 1F, 1F, 0.1F)
-                                    .scale(entity.getAvgSize()).element(entity.getElement()).spin(entity.getWidth() * 2, 0.1).spawnEntity(entity).spawn(world);
+                                    .scale(entity.getAvgSize()).element(BendingStyles.get(entity.getElement())).spin(entity.getWidth() * 2, 0.1).spawnEntity(entity).spawn(world);
                         }
 
                     }
@@ -204,10 +204,10 @@ public class AbilityAirblade extends Ability {
                                 pos = new Vec3d(pos.x, pos.y + (entity.getHeight() / 1.75 * Math.sin(Math.toRadians(i))), pos.z);
                                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(pos).vel(world.rand.nextGaussian() / 30, world.rand.nextGaussian() / 30,
                                         world.rand.nextGaussian() / 30).collide(true).time(12 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(0.95F, 095F, 0.95F, 0.2F)
-                                        .scale(entity.getWidth() * 1.5F).element(entity.getElement()).spawnEntity(entity).spawn(world);
+                                        .scale(entity.getWidth() * 1.5F).element(BendingStyles.get(entity.getElement())).spawnEntity(entity).spawn(world);
                                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(pos).vel(entity.motionX, entity.motionY, entity.motionZ).collide(true)
                                         .time(4 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(0.95F, 0.95F, 0.95F, 0.2F)
-                                        .scale(entity.getWidth() * 2F).spawnEntity(entity).element(entity.getElement()).spawn(world);
+                                        .scale(entity.getWidth() * 2F).spawnEntity(entity).element(BendingStyles.get(entity.getElement())).spawn(world);
                             }
                         }
                     }

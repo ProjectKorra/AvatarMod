@@ -125,7 +125,7 @@ public class AbilityFireShot extends Ability {
                 flames.setDamage(damage);
                 flames.setRGB(getProperty(FIRE_R, ctx).intValue(), getProperty(FIRE_G, ctx).intValue(), getProperty(FIRE_B, ctx).intValue());
                 flames.setFade(getProperty(FADE_R, ctx).intValue(), getProperty(FADE_G, ctx).intValue(), getProperty(FADE_B, ctx).intValue());
-                flames.setElement(new Firebending());
+                flames.setElement(Firebending.ID);
                 flames.setPush(knockback);
                 flames.setChiHit(chiHit);
                 flames.setBehaviour(new FireShockwaveBehaviour());
@@ -166,7 +166,7 @@ public class AbilityFireShot extends Ability {
                 wave.rotationYaw = entity.rotationYaw;
                 wave.setPosition(entity.getPositionVector().add(0, entity.getEyeHeight() / 2, 0));
                 wave.setFireTime(fireTime);
-                wave.setElement(new Firebending());
+                wave.setElement(Firebending.ID);
                 wave.setAbility(this);
                 wave.setRGB(getProperty(FIRE_R, ctx).intValue(), getProperty(FIRE_G, ctx).intValue(), getProperty(FIRE_B, ctx).intValue());
                 wave.setFade(getProperty(FADE_R, ctx).intValue(), getProperty(FADE_G, ctx).intValue(), getProperty(FADE_B, ctx).intValue());

@@ -169,7 +169,7 @@ public class StatCtrlDemonWings extends StatusControl {
             wave.setPosition(AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(0, 0.5, 0));
             wave.setFireTime(fireTime);
             wave.setEntitySize(size / 5);
-            wave.setElement(new Demonbending());
+            wave.setElement(Demonbending.ID);
             wave.setAbility(jump);
             wave.setDamage(damage);
             wave.setOwner(entity);

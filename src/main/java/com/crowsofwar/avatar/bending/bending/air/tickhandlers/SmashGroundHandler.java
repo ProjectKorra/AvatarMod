@@ -42,6 +42,8 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import java.util.UUID;
+
 /**
  * @author CrowsOfWar
  */
@@ -156,8 +158,8 @@ public class SmashGroundHandler extends TickHandler {
         return AvatarDamageSource.AIR;
     }
 
-    protected BendingStyle getElement() {
-        return new Airbending();
+    protected UUID getElement() {
+        return Airbending.ID;
     }
 
     protected boolean spawnNormalShockwave() {

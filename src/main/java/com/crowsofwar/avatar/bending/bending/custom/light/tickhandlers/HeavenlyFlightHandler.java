@@ -183,7 +183,7 @@ public class HeavenlyFlightHandler extends TickHandler {
             wave.setPosition(AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(0, 0.5, 0));
             wave.setFireTime(fireTime);
             wave.setEntitySize(size / 5F);
-            wave.setElement(new Lightbending());
+            wave.setElement(Lightbending.ID);
             wave.setAbility(jump);
             wave.setDamage(damage);
             wave.setOwner(entity);

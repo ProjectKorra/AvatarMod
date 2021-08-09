@@ -184,7 +184,7 @@ public class DemonWingsHandler extends TickHandler {
             wave.setPosition(AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(0, 0.5, 0));
             wave.setFireTime(fireTime);
             wave.setEntitySize(size / 5F);
-            wave.setElement(new Demonbending());
+            wave.setElement(Demonbending.ID);
             wave.setAbility(jump);
             wave.setDamage(damage);
             wave.setOwner(entity);

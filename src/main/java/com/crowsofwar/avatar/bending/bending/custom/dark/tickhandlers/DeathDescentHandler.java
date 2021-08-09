@@ -3,7 +3,6 @@ package com.crowsofwar.avatar.bending.bending.custom.dark.tickhandlers;
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.custom.dark.AbilityDeathDescent;
 import com.crowsofwar.avatar.bending.bending.custom.dark.Darkbending;
-import com.crowsofwar.avatar.bending.bending.fire.Firebending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.entity.EntityOffensive;
 import com.crowsofwar.avatar.entity.EntityShockwave;
