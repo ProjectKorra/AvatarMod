@@ -336,32 +336,22 @@ public abstract class Ability {
     //NOTE: These first three methods *ARE NOT* affected by ability modifiers. Use the other two methods if you wish for something
     //to be affected. I.e, all the time.
     public final Number getProperty(String identifier, int abilityLevel) {
-        if (properties == null)
-            syncEntityProperties();
         return properties == null ? 1 : properties.getBaseValue(identifier, abilityLevel, AbilityData.AbilityTreePath.MAIN);
     }
 
     public final Number getProperty(String identifier, int abilityLevel, AbilityData.AbilityTreePath path) {
-        if (properties == null)
-            syncEntityProperties();
         return properties == null ? 1 : properties.getBaseValue(identifier, abilityLevel, path);
     }
 
     public final Number getProperty(String identifier) {
-        if (properties == null)
-            syncEntityProperties();
         return properties == null ? 1 : properties.getBaseValue(identifier, 0, AbilityData.AbilityTreePath.MAIN);
     }
 
     public final Number getProperty(String identifier, AbilityContext ctx) {
-        if (properties == null)
-            syncEntityProperties();
         return properties == null ? 1 : ctx.getAbilityData().modify(identifier, properties.getBaseValue(identifier, ctx.getLevel(), ctx.getDynamicPath()));
     }
 
     public final Number getProperty(String identifier, AbilityData data) {
-        if (properties == null)
-            syncEntityProperties();
         return properties == null ? 1 : data.modify(identifier, properties.getBaseValue(identifier, data.getLevel(), data.getDynamicPath()));
     }
 
@@ -377,32 +367,22 @@ public abstract class Ability {
      * @throws IllegalArgumentException if no property was defined with the given identifier.
      */
     public final boolean getBooleanProperty(String identifier, int abilityLevel) {
-        if (properties == null)
-            syncEntityProperties();
         return properties != null && properties.getBaseBooleanValue(identifier, abilityLevel, AbilityData.AbilityTreePath.MAIN);
     }
 
     public final boolean getBooleanProperty(String identifier, int abilityLevel, AbilityData.AbilityTreePath path) {
-        if (properties == null)
-            syncEntityProperties();
         return properties != null && properties.getBaseBooleanValue(identifier, abilityLevel, path);
     }
 
     public final boolean getBooleanProperty(String identifier) {
-        if (properties == null)
-            syncEntityProperties();
         return properties != null && properties.getBaseBooleanValue(identifier, 0, AbilityData.AbilityTreePath.MAIN);
     }
 
     public final boolean getBooleanProperty(String identifier, AbilityContext ctx) {
-        if (properties == null)
-            syncEntityProperties();
         return properties != null && properties.getBaseBooleanValue(identifier, ctx.getLevel(), ctx.getDynamicPath());
     }
 
     public final boolean getBooleanProperty(String identifier, AbilityData data) {
-        if (properties == null)
-            syncEntityProperties();
         return properties != null && properties.getBaseBooleanValue(identifier, data
                 .getLevel(), data.getDynamicPath());
     }

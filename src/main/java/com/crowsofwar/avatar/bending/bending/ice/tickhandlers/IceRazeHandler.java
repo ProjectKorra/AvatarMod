@@ -16,7 +16,6 @@
 */
 package com.crowsofwar.avatar.bending.bending.ice.tickhandlers;
 
-import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.fire.Firebending;
@@ -226,8 +225,6 @@ public class IceRazeHandler extends TickHandler {
             if (entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(ICE_RAZE_MOVEMENT_MOD_ID) != null)
                 entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(ICE_RAZE_MOVEMENT_MOD_ID);
             abilityData.setRegenBurnout(true);
-            entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeAllModifiers();
-            entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(ICE_RAZE_MOVEMENT_MOD_ID);
             return true;
         }
         return !data.hasStatusControl(STOP_ICE_RAZE);
@@ -242,10 +239,7 @@ public class IceRazeHandler extends TickHandler {
         if (entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(ICE_RAZE_MOVEMENT_MOD_ID) != null)
             entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(ICE_RAZE_MOVEMENT_MOD_ID);
         abilityData.setRegenBurnout(true);
-        entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(ICE_RAZE_MOVEMENT_MOD_ID);
 
-        //Keeping this in for next update then removing it
-        entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeAllModifiers();
     }
 
     private void applyMovementModifier(EntityLivingBase entity, float multiplier) {
