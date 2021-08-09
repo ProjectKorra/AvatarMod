@@ -313,6 +313,7 @@ public abstract class Bender {
             } else {
                 if (entity instanceof EntityPlayer)
                     Ability.syncProperties((EntityPlayer) entity);
+                else Ability.syncEntityProperties();
                 Objects.requireNonNull(Bender.get(entity)).sendMessage("avatar.reload");
             }
         }
