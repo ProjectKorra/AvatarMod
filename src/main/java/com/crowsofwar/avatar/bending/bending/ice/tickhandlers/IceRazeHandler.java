@@ -108,11 +108,9 @@ public class IceRazeHandler extends TickHandler {
             double speedMult = iceRaze.getProperty(SPEED, abilityData).floatValue() * 3;
             double randomness = iceRaze.getProperty(RANDOMNESS, abilityData).doubleValue();
             float size = iceRaze.getProperty(SIZE, abilityData).floatValue();
-            int fireTime = iceRaze.getProperty(FIRE_TIME, abilityData).intValue();
             float damage = iceRaze.getProperty(DAMAGE, abilityData).floatValue();
             float performanceAmount = iceRaze.getProperty(PERFORMANCE, abilityData).floatValue();
             float xp = iceRaze.getProperty(XP_HIT, abilityData).floatValue();
-            float chiHit = iceRaze.getProperty(CHI_HIT, abilityData).floatValue();
             int lifetime = iceRaze.getProperty(LIFETIME, abilityData).intValue();
             float knockback = iceRaze.getProperty(KNOCKBACK, abilityData).floatValue();
 
@@ -129,7 +127,6 @@ public class IceRazeHandler extends TickHandler {
             // Affect stats by power rating
             size *= abilityData.getDamageMult() * abilityData.getXpModifier();
             damage *= abilityData.getDamageMult() * abilityData.getXpModifier();
-            fireTime *= abilityData.getDamageMult() * abilityData.getXpModifier();
             speedMult *= abilityData.getDamageMult() * abilityData.getXpModifier();
             randomness -= bender.calcPowerRating(Firebending.ID) / 100;
             randomness *= (0.5 / abilityData.getPowerRatingMult()) * abilityData.getXpModifier();
@@ -167,7 +164,7 @@ public class IceRazeHandler extends TickHandler {
                         DamageUtils.attackEntity(entity, hit,
                                 AvatarDamageSource.ICE, damage, (int) performanceAmount,
                                 iceRaze, xp);
-                        Vector vel = look.times(speedMult / 160);
+                        Vector vel = look.times(speedMult / 160 * knockback);
                         hit.addVelocity(vel.x(), vel.y(), vel.z());
                         AvatarUtils.afterVelocityAdded(hit);
                         hit.isAirBorne = true;

@@ -1,19 +1,16 @@
 package com.crowsofwar.avatar.util.damageutils;
 
-import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BattlePerformanceScore;
-import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.entity.AvatarEntity;
 import com.crowsofwar.avatar.entity.EntityShield;
 import com.crowsofwar.avatar.entity.IShieldEntity;
+import com.crowsofwar.avatar.util.data.AbilityData;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.passive.EntityTameable;
-import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.util.DamageSource;
 
 public class DamageUtils {
@@ -38,13 +35,6 @@ public class DamageUtils {
                     } else if (hit instanceof EntityLivingBase && ds) {
                         BattlePerformanceScore.addScore(attacker, performance);
                         data.addXp(xp);
-                    }
-                    else if (!ds && hit instanceof EntityLivingBase) {
-                        AvatarLog.info(hit.getName());
-                        //Will this break things? Idk
-                        hit.hurtResistantTime = 0;
-                        hit.attackEntityFrom(source, damage);
-
                     }
                 }
             }

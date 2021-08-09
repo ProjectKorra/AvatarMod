@@ -17,14 +17,14 @@
 
 package com.crowsofwar.avatar.bending.bending.ice.statctrls;
 
-import com.crowsofwar.avatar.bending.bending.fire.Firebending;
+import com.crowsofwar.avatar.bending.bending.ice.Icebending;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.StatusControl;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 
-import static com.crowsofwar.avatar.bending.bending.fire.tickhandlers.FlamethrowerUpdateTick.FLAMETHROWER_MOVEMENT_MODIFIER_ID;
+import static com.crowsofwar.avatar.bending.bending.ice.tickhandlers.IceRazeHandler.ICE_RAZE_MOVEMENT_MOD_ID;
 import static com.crowsofwar.avatar.client.controls.AvatarControl.CONTROL_RIGHT_CLICK_DOWN;
 import static com.crowsofwar.avatar.client.controls.AvatarControl.CONTROL_RIGHT_CLICK_UP;
 import static com.crowsofwar.avatar.util.data.StatusControl.CrosshairPosition.RIGHT_OF_CROSSHAIR;
@@ -50,13 +50,13 @@ public class StatCtrlSetIceRaze extends StatusControl {
         BendingData data = ctx.getData();
         EntityLivingBase bender = ctx.getBenderEntity();
 
-        if (data.hasBendingId(Firebending.ID)) {
+        if (data.hasBendingId(Icebending.ID)) {
             if (setting) {
                 data.addStatusControl(STOP_ICE_RAZE);
                 data.addTickHandler(ICE_RAZE_HANDLER, ctx);
             } else {
-                if (bender.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(FLAMETHROWER_MOVEMENT_MODIFIER_ID) != null)
-                    bender.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(FLAMETHROWER_MOVEMENT_MODIFIER_ID);
+                if (bender.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(ICE_RAZE_MOVEMENT_MOD_ID) != null)
+                    bender.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(ICE_RAZE_MOVEMENT_MOD_ID);
                 data.removeTickHandler(ICE_RAZE_HANDLER, ctx);
             }
         }

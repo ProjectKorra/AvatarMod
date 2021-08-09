@@ -1,6 +1,5 @@
 package com.crowsofwar.avatar.bending.bending.ice.tickhandlers;
 
-import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.ice.AbilityIceLance;
@@ -63,7 +62,6 @@ public class IceLanceHandler extends TickHandler {
         if (abilityData == null)
             Thread.dumpStack();
         if (abilityData != null && iceLance != null) {
-            AvatarLog.info("Ok Leon got here.");
 
             float powerMod = (float) abilityData.getDamageMult();
             float xpMod = abilityData.getXpModifier();
@@ -182,7 +180,6 @@ public class IceLanceHandler extends TickHandler {
 
 
             if (!data.hasStatusControl(RELEASE_ICE_LANCE)) {
-                AvatarLog.info("Ok???");
 
                 EntityIceLance lance = new EntityIceLance(world);
                 lance.setEntitySize(radius / 2, radius * 2);
