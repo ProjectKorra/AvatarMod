@@ -11,6 +11,8 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundEvent;
 
+import java.util.UUID;
+
 public class WaterSmashHandler extends SmashGroundHandler {
 
 	public WaterSmashHandler(int id) {
@@ -63,7 +65,7 @@ public class WaterSmashHandler extends SmashGroundHandler {
 	}
 
 	@Override
-	protected BendingStyle getElement() {
-		return new Waterbending();
+	protected UUID getElement() {
+		return Waterbending.ID;
 	}
 }

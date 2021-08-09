@@ -17,7 +17,6 @@
 
 package com.crowsofwar.avatar.entity;
 
-import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import com.crowsofwar.avatar.bending.bending.earth.Earthbending;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.*;
@@ -41,6 +40,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.UUID;
 
 import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
 
@@ -310,8 +310,8 @@ public class EntityRavine extends EntityOffensive {
     }
 
     @Override
-    public BendingStyle getElement() {
-        return new Earthbending();
+    public UUID getElement() {
+        return Earthbending.ID;
     }
 
     public boolean isDefaultBreakableBlock(World world, BlockPos pos) {

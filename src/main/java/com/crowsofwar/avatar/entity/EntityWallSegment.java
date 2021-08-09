@@ -18,7 +18,6 @@
 package com.crowsofwar.avatar.entity;
 
 import com.crowsofwar.avatar.bending.bending.BattlePerformanceScore;
-import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import com.crowsofwar.avatar.bending.bending.earth.Earthbending;
 import com.crowsofwar.avatar.entity.data.SyncedEntity;
 import com.crowsofwar.avatar.entity.data.WallBehavior;
@@ -96,8 +95,8 @@ public class EntityWallSegment extends AvatarEntity implements IEntityAdditional
     }
 
     @Override
-    public BendingStyle getElement() {
-        return new Earthbending();
+    public UUID getElement() {
+        return Earthbending.ID;
     }
 
     @Override

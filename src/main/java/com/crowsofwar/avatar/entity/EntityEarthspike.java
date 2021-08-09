@@ -17,7 +17,6 @@
 
 package com.crowsofwar.avatar.entity;
 
-import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import com.crowsofwar.avatar.bending.bending.earth.Earthbending;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import net.minecraft.block.Block;
@@ -32,6 +31,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.UUID;
 
 /**
  * @author CrowsOfWar
@@ -69,8 +69,8 @@ public class EntityEarthspike extends EntityOffensive {
     }
 
     @Override
-    public BendingStyle getElement() {
-        return new Earthbending();
+    public UUID getElement() {
+        return Earthbending.ID;
     }
 
     @Override

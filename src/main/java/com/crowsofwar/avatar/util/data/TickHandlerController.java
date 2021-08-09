@@ -9,7 +9,6 @@ import com.crowsofwar.avatar.bending.bending.custom.ki.tickhandlers.KiFlightHand
 import com.crowsofwar.avatar.bending.bending.custom.light.tickhandlers.HeavenlyFlightHandler;
 import com.crowsofwar.avatar.bending.bending.custom.light.tickhandlers.PurifyHandler;
 import com.crowsofwar.avatar.bending.bending.earth.tickhandlers.EarthSpikeHandler;
-import com.crowsofwar.avatar.bending.bending.ice.statctrls.StatCtrlSetIceLanceCharging;
 import com.crowsofwar.avatar.bending.bending.ice.tickhandlers.FrostFormHandler;
 import com.crowsofwar.avatar.bending.bending.ice.tickhandlers.GlacialGlideHandler;
 import com.crowsofwar.avatar.bending.bending.ice.tickhandlers.IceLanceHandler;

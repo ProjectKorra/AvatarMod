@@ -16,10 +16,8 @@
 */
 package com.crowsofwar.avatar.entity;
 
-import com.crowsofwar.avatar.bending.bending.BendingStyle;
-import com.crowsofwar.avatar.bending.bending.air.Airbending;
+import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.lightning.Lightningbending;
-import com.crowsofwar.avatar.client.particle.AvatarParticles;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.entity.data.Behavior;
 import com.crowsofwar.avatar.entity.data.LightningFloodFill;
@@ -51,6 +49,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Objects;
+import java.util.UUID;
 
 import static com.crowsofwar.avatar.config.ConfigSkills.SKILLS_CONFIG;
 
@@ -136,11 +135,11 @@ public class EntityLightningSpear extends EntityOffensive implements IGlowingEnt
                 double spawnZ = mid.z + world.rand.nextGaussian() / 20;
                 ParticleBuilder.create(ParticleBuilder.Type.SPARK).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 25, world.rand.nextGaussian() / 25,
                         world.rand.nextGaussian() / 25).time(4 + AvatarUtils.getRandomNumberInRange(0, 6)).spawnEntity(this)
-                        .scale(mult * getAvgSize() * (1 / getAvgSize() + 1)).element(getElement()).collide(true).spawn(world);
+                        .scale(mult * getAvgSize() * (1 / getAvgSize() + 1)).element(BendingStyles.get(getElement())).collide(true).spawn(world);
                 ParticleBuilder.create(ParticleBuilder.Type.SPARK).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 45 + motionX,
                         world.rand.nextGaussian() / 45 + motionY, world.rand.nextGaussian() / 45 + motionZ)
                         .time(14 + AvatarUtils.getRandomNumberInRange(0, 10)).spawnEntity(this)
-                        .scale(mult * getAvgSize() * (1 / getAvgSize() + 0.5F)).element(getElement()).collide(true).spawn(world);
+                        .scale(mult * getAvgSize() * (1 / getAvgSize() + 0.5F)).element(BendingStyles.get(getElement())).collide(true).spawn(world);
             }
             for (int i = 0; i < 2; i++) {
                 Vec3d pos = Vector.getOrthogonalVector(getLookVec(), i * 180 + (ticksExisted % 360) * 20 *
@@ -157,11 +156,11 @@ public class EntityLightningSpear extends EntityOffensive implements IGlowingEnt
                 ParticleBuilder.create(ParticleBuilder.Type.SPARK).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x,
                         world.rand.nextGaussian() / 80 + velocity.y, world.rand.nextGaussian() / 80 + velocity.z)
                         .time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).spawnEntity(this)
-                        .scale(mult * getAvgSize() * (1 / getAvgSize())).element(getElement()).collide(true).collideParticles(true).spawn(world);
+                        .scale(mult * getAvgSize() * (1 / getAvgSize())).element(BendingStyles.get(getElement())).collide(true).collideParticles(true).spawn(world);
                 ParticleBuilder.create(ParticleBuilder.Type.SPARK).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x,
                         world.rand.nextGaussian() / 80 + velocity.y, world.rand.nextGaussian() / 80 + velocity.z)
                         .time(10 + AvatarUtils.getRandomNumberInRange(0, 6)).spawnEntity(this)
-                        .scale(mult * getAvgSize() * (1 / getAvgSize())).element(getElement()).collide(true).collideParticles(true).spawn(world);
+                        .scale(mult * getAvgSize() * (1 / getAvgSize())).element(BendingStyles.get(getElement())).collide(true).collideParticles(true).spawn(world);
 
             }
         }
@@ -193,8 +192,8 @@ public class EntityLightningSpear extends EntityOffensive implements IGlowingEnt
     }
 
     @Override
-    public BendingStyle getElement() {
-        return new Lightningbending();
+    public UUID getElement() {
+        return Lightningbending.ID;
     }
 
     @Override
