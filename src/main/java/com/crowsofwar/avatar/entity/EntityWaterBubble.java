@@ -17,6 +17,7 @@
 
 package com.crowsofwar.avatar.entity;
 
+import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.fire.Firebending;
 import com.crowsofwar.avatar.bending.bending.lightning.Lightningbending;
 import com.crowsofwar.avatar.bending.bending.water.Waterbending;
@@ -184,11 +185,11 @@ public class EntityWaterBubble extends EntityOffensive implements IShieldEntity 
 				double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
 				ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
 						world.rand.nextGaussian() / 60).time(15 + AvatarUtils.getRandomNumberInRange(0, 10)).clr(0, 102, 255, 255)
-						.scale(getSize()).element(getElement()).spawnEntity(getOwner()).element(new Waterbending())
+						.scale(getSize()).element(BendingStyles.get(getElement())).spawnEntity(getOwner()).element(new Waterbending())
 						.spawn(world);
 				ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
 						world.rand.nextGaussian() / 60).time(15 + AvatarUtils.getRandomNumberInRange(0, 10)).clr(0, 102, 255, 255)
-						.scale(getSize()).element(getElement()).spawnEntity(getOwner()).element(new Waterbending())
+						.scale(getSize()).element(BendingStyles.get(getElement())).spawnEntity(getOwner()).element(new Waterbending())
 						.spawn(world);
 			}
 
@@ -224,13 +225,13 @@ public class EntityWaterBubble extends EntityOffensive implements IShieldEntity 
 			((AvatarEntity) entity).onMajorWaterContact();
 			if (((AvatarEntity) entity).getAbility() != null && ((AvatarEntity) entity).getOwner() != null && getBehavior() != null && getBehavior() instanceof WaterBubbleBehavior.PlayerControlled) {
 				float damage = AbilityData.get(((AvatarEntity) entity).getOwner(), ((AvatarEntity) entity).getAbility().getName()).getLevel();
-				if (((AvatarEntity) entity).getElement() instanceof Firebending) {
+				if (((AvatarEntity) entity).getElement().equals(Firebending.ID)) {
 					damage *= 0.5;
 				}
-				if (((AvatarEntity) entity).getElement() instanceof Lightningbending) {
+				if (((AvatarEntity) entity).getElement().equals(Lightningbending.ID)) {
 					damage *= 2;
 				}
-				if (((AvatarEntity) entity).getElement() instanceof Waterbending) {
+				if (((AvatarEntity) entity).getElement().equals(Waterbending.ID)) {
 					damage *= 0.75;
 				}
 				((AvatarEntity) entity).onCollideWithSolid();

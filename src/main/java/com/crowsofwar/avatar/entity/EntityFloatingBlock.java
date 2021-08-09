@@ -17,7 +17,6 @@
 
 package com.crowsofwar.avatar.entity;
 
-import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import com.crowsofwar.avatar.bending.bending.earth.Earthbending;
 import com.crowsofwar.avatar.entity.data.Behavior;
 import com.crowsofwar.avatar.entity.data.FloatingBlockBehavior;
@@ -50,6 +49,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
+import java.util.UUID;
 
 import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.util.data.StatusControlController.PLACE_BLOCK;
@@ -521,8 +521,8 @@ public class EntityFloatingBlock extends EntityOffensive {
     }
 
     @Override
-    public BendingStyle getElement() {
-        return new Earthbending();
+    public UUID getElement() {
+        return Earthbending.ID;
     }
 
     private void removeStatCtrl() {

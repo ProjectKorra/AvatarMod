@@ -16,12 +16,11 @@
 */
 package com.crowsofwar.avatar.bending.bending.fire.tickhandlers;
 
-import com.crowsofwar.avatar.client.particle.AvatarParticles;
 import com.crowsofwar.avatar.bending.bending.Ability;
-import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import com.crowsofwar.avatar.bending.bending.air.tickhandlers.SmashGroundHandler;
 import com.crowsofwar.avatar.bending.bending.fire.AbilityFlameGlide;
 import com.crowsofwar.avatar.bending.bending.fire.Firebending;
+import com.crowsofwar.avatar.client.particle.AvatarParticles;
 import com.crowsofwar.avatar.util.damageutils.AvatarDamageSource;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
@@ -30,6 +29,8 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundEvent;
+
+import java.util.UUID;
 
 /**
  * @author CrowsOfWar
@@ -96,8 +97,8 @@ public class FireSmashGroundHandler extends SmashGroundHandler {
 	}
 
 	@Override
-	protected BendingStyle getElement() {
-		return new Firebending();
+	protected UUID getElement() {
+		return Firebending.ID;
 	}
 
 	@Override

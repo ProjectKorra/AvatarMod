@@ -1,6 +1,5 @@
 package com.crowsofwar.avatar.entity;
 
-import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import com.crowsofwar.avatar.bending.bending.earth.Earthbending;
 import com.crowsofwar.avatar.config.ConfigStats;
 import com.crowsofwar.avatar.entity.data.EarthspikesBehavior;
@@ -22,6 +21,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.UUID;
 
 public class EntityEarthspikeSpawner extends EntityOffensive {
 
@@ -208,8 +208,8 @@ public class EntityEarthspikeSpawner extends EntityOffensive {
     }
 
     @Override
-    public BendingStyle getElement() {
-        return new Earthbending();
+    public UUID getElement() {
+        return Earthbending.ID;
     }
 
     // Allows setting the spikes type

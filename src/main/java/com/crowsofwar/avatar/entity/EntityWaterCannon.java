@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.entity;
 
 import com.crowsofwar.avatar.bending.bending.BendingStyle;
+import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.water.Waterbending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
@@ -16,6 +17,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.UUID;
 
 
 public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlPoint> implements IShieldEntity {
@@ -199,11 +201,11 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
                 double spawnZ = mid.z + world.rand.nextGaussian() / 20;
                 ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 25, world.rand.nextGaussian() / 25,
                         world.rand.nextGaussian() / 25).time(4 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(0, 102, 255, 145).spawnEntity(this)
-                        .scale(getAvgSize() * (1 / getAvgSize() + 1)).element(getElement()).collide(true).spawn(world);
+                        .scale(getAvgSize() * (1 / getAvgSize() + 1)).element(BendingStyles.get(getElement())).collide(true).spawn(world);
                 ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 45 + motionX,
                         world.rand.nextGaussian() / 45 + motionY, world.rand.nextGaussian() / 45 + motionZ)
                         .time(14 + AvatarUtils.getRandomNumberInRange(0, 10)).clr(0, 102, 255, 145).spawnEntity(getOwner())
-                        .scale(getAvgSize() * (1 / getAvgSize() + 0.5F)).element(getElement()).collide(true).spawn(world);
+                        .scale(getAvgSize() * (1 / getAvgSize() + 0.5F)).element(BendingStyles.get(getElement())).collide(true).spawn(world);
             }
         }
         if (world.isRemote && getOwner() != null && ticksExisted % 2 == 0) {
@@ -342,8 +344,8 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
     }
 
     @Override
-    public BendingStyle getElement() {
-        return new Waterbending();
+    public UUID getElement() {
+        return Waterbending.ID;
     }
 
     static class WaterControlPoint extends ControlPoint {

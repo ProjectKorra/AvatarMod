@@ -860,7 +860,7 @@ public abstract class AvatarEntity extends Entity {
 
     @Override
     public boolean shouldRenderInPass(int pass) {
-        switch (Objects.requireNonNull(BendingStyles.getName(element))) {
+        switch (Objects.requireNonNull(BendingStyles.getName(getElement()))) {
             default:
                 return pass == 0;
             case "firebending":

@@ -14,8 +14,10 @@
   You should have received a copy of the GNU General Public License
   along with AvatarMod. If not, see <http://www.gnu.org/licenses/>.
 */
-package com.crowsofwar.avatar.bending.bending.fire;
+package com.crowsofwar.avatar.bending.bending.fire.tickhandlers;
 
+import com.crowsofwar.avatar.bending.bending.fire.AbilityFlameGlide;
+import com.crowsofwar.avatar.bending.bending.fire.Firebending;
 import com.crowsofwar.avatar.client.particle.AvatarParticles;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingStyle;
@@ -29,6 +31,8 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
+
+import java.util.UUID;
 
 /**
  * @author CrowsOfWar
@@ -110,8 +114,8 @@ public class FireSmashGroundHandlerBig extends SmashGroundHandler {
 	}
 
 	@Override
-	protected BendingStyle getElement() {
-		return new Firebending();
+	protected UUID getElement() {
+		return Firebending.ID;
 	}
 
 	@Override

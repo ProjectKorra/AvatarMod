@@ -166,8 +166,8 @@ public class EntityWall extends AvatarEntity {
 	}
 
 	@Override
-	public BendingStyle getElement() {
-		return new Earthbending();
+	public UUID getElement() {
+		return Earthbending.ID;
 	}
 
 	@Override
