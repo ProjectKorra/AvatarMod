@@ -17,10 +17,8 @@
 package com.crowsofwar.avatar.entity.mob;
 
 import com.crowsofwar.avatar.bending.bending.Ability;
-import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.air.Airbending;
-import com.crowsofwar.avatar.bending.bending.fire.Firebending;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BenderEntityComponent;
 import com.crowsofwar.avatar.util.data.BendingData;

@@ -2,7 +2,6 @@ package com.crowsofwar.avatar.bending.bending.fire.tickhandlers;
 
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
-import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.fire.AbilityImmolate;
 import com.crowsofwar.avatar.bending.bending.fire.Firebending;

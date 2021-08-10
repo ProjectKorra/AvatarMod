@@ -3,14 +3,7 @@ package com.crowsofwar.avatar.bending.bending.fire;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingAi;
 import com.crowsofwar.avatar.util.data.Bender;
-import com.crowsofwar.avatar.util.data.BendingData;
-import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
-
-import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
-import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
-import static java.lang.Math.toDegrees;
 
 public class AiFireShot extends BendingAi {
 

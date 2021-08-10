@@ -2,7 +2,6 @@ package com.crowsofwar.avatar.bending.bending.air;
 
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingAi;
-import com.crowsofwar.avatar.bending.bending.fire.AbilityFireball;
 import com.crowsofwar.avatar.entity.AvatarEntity;
 import com.crowsofwar.avatar.entity.EntityCloudBall;
 import com.crowsofwar.avatar.entity.data.CloudburstBehavior;

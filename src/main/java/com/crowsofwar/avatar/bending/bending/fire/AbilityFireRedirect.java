@@ -9,7 +9,6 @@ import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 

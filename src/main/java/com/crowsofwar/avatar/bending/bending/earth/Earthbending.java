@@ -17,7 +17,6 @@
 
 package com.crowsofwar.avatar.bending.bending.earth;
 
-import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import com.crowsofwar.avatar.client.gui.BendingMenuInfo;

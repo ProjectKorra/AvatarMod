@@ -20,7 +20,6 @@ package com.crowsofwar.avatar.bending.bending.air;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingAi;
 import com.crowsofwar.avatar.bending.bending.BendingStyles;
-import com.crowsofwar.avatar.bending.bending.fire.Firebending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.entity.EntityAirGust;
 import com.crowsofwar.avatar.entity.EntityOffensive;

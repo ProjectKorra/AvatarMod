@@ -1,7 +1,6 @@
 package com.crowsofwar.avatar.bending.bending.water.tickhandlers;
 
 import com.crowsofwar.avatar.bending.bending.Ability;
-import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import com.crowsofwar.avatar.bending.bending.air.tickhandlers.SmashGroundHandler;
 import com.crowsofwar.avatar.bending.bending.water.AbilityWaterSkate;
 import com.crowsofwar.avatar.bending.bending.water.Waterbending;

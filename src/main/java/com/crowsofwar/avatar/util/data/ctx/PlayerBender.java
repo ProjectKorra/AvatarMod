@@ -22,7 +22,6 @@ import net.minecraft.item.ItemStack;
 
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.gui.AvatarUiRenderer;
-import com.crowsofwar.avatar.util.analytics.*;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.lightning.Lightningbending;
 import com.crowsofwar.avatar.util.data.*;
@@ -33,7 +32,6 @@ import com.crowsofwar.avatar.network.packets.*;
 import com.crowsofwar.avatar.util.Raytrace;
 
 import static com.crowsofwar.avatar.network.AvatarChatMessages.MSG_LIGHTNING_REDIRECT_SUCCESS;
-import static com.crowsofwar.avatar.config.ConfigChi.CHI_CONFIG;
 import static com.crowsofwar.avatar.util.data.TickHandlerController.LIGHTNING_REDIRECT;
 
 /**
