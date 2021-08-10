@@ -1,8 +1,6 @@
 package com.crowsofwar.avatar.bending.bending.ice.statctrls;
 
 import com.crowsofwar.avatar.bending.bending.Abilities;
-import com.crowsofwar.avatar.bending.bending.custom.dark.tickhandlers.DeathDescentHandler;
-import com.crowsofwar.avatar.bending.bending.fire.Firebending;
 import com.crowsofwar.avatar.bending.bending.ice.AbilityGlacialGlide;
 import com.crowsofwar.avatar.bending.bending.ice.Icebending;
 import com.crowsofwar.avatar.bending.bending.ice.tickhandlers.GlacialGlideHandler;

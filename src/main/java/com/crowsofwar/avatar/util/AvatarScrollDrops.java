@@ -17,7 +17,6 @@
 package com.crowsofwar.avatar.util;
 
 import com.crowsofwar.avatar.AvatarInfo;
-import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.config.DropInfo;
 import com.crowsofwar.avatar.config.MobDrops;

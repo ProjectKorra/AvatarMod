@@ -5,7 +5,6 @@ import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 
 import static com.crowsofwar.avatar.util.data.StatusControlController.CHARGE_ICE_LANE;
 import static com.crowsofwar.avatar.util.data.StatusControlController.RELEASE_ICE_LANCE;

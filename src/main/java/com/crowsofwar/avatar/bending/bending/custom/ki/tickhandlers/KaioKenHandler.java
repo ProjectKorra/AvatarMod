@@ -2,11 +2,8 @@ package com.crowsofwar.avatar.bending.bending.custom.ki.tickhandlers;
 
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
-import com.crowsofwar.avatar.bending.bending.custom.dark.Darkbending;
 import com.crowsofwar.avatar.bending.bending.custom.ki.AbilityKaioKen;
 import com.crowsofwar.avatar.bending.bending.custom.ki.Kibending;
-import com.crowsofwar.avatar.bending.bending.custom.light.AbilityPurify;
-import com.crowsofwar.avatar.bending.bending.custom.light.Lightbending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;

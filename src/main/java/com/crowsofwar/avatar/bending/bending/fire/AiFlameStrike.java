@@ -17,21 +17,13 @@
 package com.crowsofwar.avatar.bending.bending.fire;
 
 import com.crowsofwar.avatar.bending.bending.Ability;
-import com.crowsofwar.avatar.bending.bending.BendingAi;
 import com.crowsofwar.avatar.bending.bending.BendingAiMelee;
 import com.crowsofwar.avatar.util.data.Bender;
-import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.StatusControl;
 import com.crowsofwar.avatar.util.data.StatusControlController;
-import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
 
-import static com.crowsofwar.avatar.util.AvatarUtils.normalizeAngle;
-import static com.crowsofwar.gorecore.util.Vector.getEntityPos;
-import static com.crowsofwar.gorecore.util.Vector.getRotationTo;
 import static java.lang.Math.abs;
-import static java.lang.Math.toDegrees;
 
 /**
  * @author CrowsOfWar

@@ -20,7 +20,6 @@ import com.crowsofwar.avatar.bending.bending.fire.AbilityFlameGlide;
 import com.crowsofwar.avatar.bending.bending.fire.Firebending;
 import com.crowsofwar.avatar.client.particle.AvatarParticles;
 import com.crowsofwar.avatar.bending.bending.Ability;
-import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import com.crowsofwar.avatar.bending.bending.air.tickhandlers.SmashGroundHandler;
 import com.crowsofwar.avatar.util.damageutils.AvatarDamageSource;
 import net.minecraft.block.Block;

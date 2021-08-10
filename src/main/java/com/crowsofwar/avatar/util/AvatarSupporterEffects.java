@@ -3,11 +3,6 @@ package com.crowsofwar.avatar.util;
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingStyle;
-import com.crowsofwar.avatar.bending.bending.air.Airbending;
-import com.crowsofwar.avatar.bending.bending.fire.Firebending;
-import com.crowsofwar.avatar.bending.bending.lightning.Lightningbending;
-import com.crowsofwar.avatar.bending.bending.sand.Sandbending;
-import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
@@ -21,8 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
-import static com.crowsofwar.avatar.config.ConfigClient.CLIENT_CONFIG;
 
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
 public class AvatarSupporterEffects {

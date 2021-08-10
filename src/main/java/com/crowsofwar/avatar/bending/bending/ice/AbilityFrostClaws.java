@@ -1,7 +1,6 @@
 package com.crowsofwar.avatar.bending.bending.ice;
 
 import com.crowsofwar.avatar.bending.bending.Ability;
-import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 
 public class AbilityFrostClaws extends Ability {

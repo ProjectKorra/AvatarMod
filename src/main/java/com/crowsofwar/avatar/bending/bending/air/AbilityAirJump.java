@@ -31,7 +31,6 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.util.data.StatusControlController.AIR_JUMP;
 import static com.crowsofwar.avatar.util.data.TickHandlerController.AIR_PARTICLE_SPAWNER;
 
