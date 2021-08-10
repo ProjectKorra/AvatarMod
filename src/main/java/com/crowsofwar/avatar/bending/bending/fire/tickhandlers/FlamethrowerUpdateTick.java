@@ -196,15 +196,15 @@ public class FlamethrowerUpdateTick extends TickHandler {
 
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start.toMinecraft()).time(lifetime + AvatarUtils.getRandomNumberInRange(4, 8)).vel(look.times(speedMult).toMinecraft()).
                                 clr(r, g, b, 180).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(40, 100)).collide(true).collideParticles(true)
-                                .spawnEntity(entity).scale(size * 1.5F).element(new Firebending())
+                                .spawnEntity(entity).scale(size * 1.5F).element(BendingStyles.get(Firebending.ID))
                                 .ability(flamethrower).spawn(world);
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start.toMinecraft()).time(lifetime + AvatarUtils.getRandomNumberInRange(4, 8)).vel(look.times(speedMult).toMinecraft()).
                                 clr(r, g + 15, b, 180).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(40, 100)).collide(true).collideParticles(true)
-                                .spawnEntity(entity).scale(size * 1.5F).element(new Firebending())
+                                .spawnEntity(entity).scale(size * 1.5F).element(BendingStyles.get(Firebending.ID))
                                 .ability(flamethrower).spawn(world);
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start.toMinecraft()).time(lifetime + AvatarUtils.getRandomNumberInRange(4, 8)).vel(look.times(speedMult).toMinecraft()).
                                 clr(r, g + 60, b * 2, 180).fade(rRandom, gRandom + 60, bRandom * 2, AvatarUtils.getRandomNumberInRange(40, 100)).collide(true).collideParticles(true)
-                                .spawnEntity(entity).scale(size * 1.5F).element(new Firebending())
+                                .spawnEntity(entity).scale(size * 1.5F).element(BendingStyles.get(Firebending.ID))
                                 .ability(flamethrower).spawn(world);
                     }
                 }

@@ -2,6 +2,8 @@ package com.crowsofwar.avatar.bending.bending.fire.tickhandlers;
 
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
+import com.crowsofwar.avatar.bending.bending.BendingStyle;
+import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.fire.AbilityImmolate;
 import com.crowsofwar.avatar.bending.bending.fire.Firebending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
@@ -61,7 +63,7 @@ public class ImmolateParticleHandler extends TickHandler {
             pos = entity.onGround ? pos.add(0, entity.getEyeHeight(), 0) : pos.add(0, entity.getEyeHeight() / 2, 0);
             ParticleBuilder.create(ParticleBuilder.Type.FLASH).time(17 + AvatarUtils.getRandomNumberInRange(1, 2)).
                     clr(r, g, b, 5).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(10, 40))
-                    .element(new Firebending()).scale(scale).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 5).swirl((int) (immolateDuration / 20 * scale),
+                    .element(BendingStyles.get(Firebending.ID)).scale(scale).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 5).swirl((int) (immolateDuration / 20 * scale),
                     (int) (scale * Math.PI), scale, scale / 2, immolateDuration * 20, (-0.75F / scale),
                     entity, world, false, pos,
                     ParticleBuilder.SwirlMotionType.OUT, false, true);
@@ -85,7 +87,7 @@ public class ImmolateParticleHandler extends TickHandler {
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(location.plus(Vector.getEntityPos(entity)).toMinecraft()).time(4 + AvatarUtils.getRandomNumberInRange(1, 4)).
                         vel(world.rand.nextGaussian() / 40, world.rand.nextDouble() / 2, world.rand.nextGaussian() / 40)
                         .clr(r, g, b, 150).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(50, 140))
-                        .element(new Firebending()).scale(scale).glow(true).spawn(world);
+                        .element(BendingStyles.get(Firebending.ID)).scale(scale).glow(true).spawn(world);
             }
         }
         return duration >= immolateDuration;

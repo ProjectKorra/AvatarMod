@@ -151,7 +151,7 @@ public class StatCtrlFlameStrike extends StatusControl {
                     ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(x1, y1, z1).vel(look.x * mult + world.rand.nextGaussian() * accuracyMult,
                             look.y * mult + world.rand.nextGaussian() * accuracyMult,
                             look.z * mult + world.rand.nextGaussian() * accuracyMult)
-                            .element(new Firebending()).ability(strike).spawnEntity(entity)
+                            .element(BendingStyles.get(Firebending.ID)).ability(strike).spawnEntity(entity)
                             .clr(r, g, b, 150).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(50, 140)).collide(true).collideParticles(true)
                             .scale(size * 0.75F).time(lifeTime + AvatarUtils.getRandomNumberInRange(1, 5)).
                             spawn(world);
@@ -165,7 +165,7 @@ public class StatCtrlFlameStrike extends StatusControl {
                     ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(x1, y1, z1).vel(look.x * mult + world.rand.nextGaussian() * accuracyMult,
                             look.y * mult + world.rand.nextGaussian() * accuracyMult,
                             look.z * mult + world.rand.nextGaussian() * accuracyMult)
-                            .element(new Firebending()).ability(strike).spawnEntity(entity)
+                            .element(BendingStyles.get(Firebending.ID)).ability(strike).spawnEntity(entity)
                             .clr(255, 60 + AvatarUtils.getRandomNumberInRange(0, 60), 10, 150).collide(true).collideParticles(true)
                             .scale(size * 0.75F).time(lifeTime + AvatarUtils.getRandomNumberInRange(1, 5))
                             .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(40, 140)).spawn(world);
