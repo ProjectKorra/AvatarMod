@@ -113,7 +113,7 @@ public class AvatarPlayerTick {
                         int elementID = AvatarUtils.getRandomNumberInRange(1, elements.size());
                         BendingStyle style = BendingStyles.get(elements.get(elementID - 1).getName());
                         if (!MinecraftForge.EVENT_BUS.post(new ElementUnlockEvent(bender, style))) {
-                            data.addBending(style == null ? new Airbending() : style);
+                            data.addBendingId(style == null ? Airbending.ID : style.getId());
 
                             // Unlock first ability
                             //noinspection ConstantConditions - can safely assume bending is present if

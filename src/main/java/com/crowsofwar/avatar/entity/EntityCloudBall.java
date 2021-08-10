@@ -175,7 +175,7 @@ public class EntityCloudBall extends EntityOffensive {
             double spawnZ = boundingBox.minZ + world.rand.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
             ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
                     world.rand.nextGaussian() / 60).time(12).clr(0.95F, 0.95F, 0.95F, 0.1F)
-                    .scale(getSize() * 0.03125F * 2).element(new Airbending()).spawn(world);
+                    .scale(getSize() * 0.03125F * 2).element(BendingStyles.get(getElement())).spawn(world);
             if (getBehavior() instanceof CloudburstBehavior.Thrown)
                 for (int i = 0; i < 4; i++) {
                     Vec3d pos = Vector.getOrthogonalVector(getLookVec(), i * 90 + (ticksExisted % 360) * 10, getAvgSize()).toMinecraft();
@@ -191,11 +191,11 @@ public class EntityCloudBall extends EntityOffensive {
                     ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x,
                             world.rand.nextGaussian() / 80 + velocity.y, world.rand.nextGaussian() / 80 + velocity.z)
                             .time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(0.95F, 0.95F, 0.95F, 0.1F).spawnEntity(getOwner())
-                            .scale(0.75F * getAvgSize() * (1 / getAvgSize())).element(new Airbending()).collide(true).spawn(world);
+                            .scale(0.75F * getAvgSize() * (1 / getAvgSize())).element(BendingStyles.get(getElement())).collide(true).spawn(world);
                     ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x,
                             world.rand.nextGaussian() / 80 + velocity.y, world.rand.nextGaussian() / 80 + velocity.z)
                             .time(10 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(0.95F, 0.95F, 0.95F, 0.1F).spawnEntity(getOwner())
-                            .scale(0.75F * getAvgSize() * (1 / getAvgSize())).element(new Airbending()).collide(true).spawn(world);
+                            .scale(0.75F * getAvgSize() * (1 / getAvgSize())).element(BendingStyles.get(getElement())).collide(true).spawn(world);
 
                 }
         }

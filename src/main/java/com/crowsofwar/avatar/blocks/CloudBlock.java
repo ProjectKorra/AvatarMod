@@ -1,5 +1,6 @@
 package com.crowsofwar.avatar.blocks;
 
+import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.air.Airbending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.registry.AvatarItems;
@@ -155,7 +156,7 @@ public class CloudBlock extends BlockBreakable {
         if (worldIn.isRemote)
             for (int i = 0; i < 3; i++) {
                 float[] colours = worldIn.getBlockState(pos).getValue(COLOR).getColorComponentValues();
-                ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Airbending()).clr(0.5F + 0.5F * colours[0],
+                ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(BendingStyles.get(Airbending.ID)).clr(0.5F + 0.5F * colours[0],
                         0.5F + 0.5F * colours[1], 0.5F + 0.5F * colours[2], 0.075F)
                         .pos(entityIn.posX, pos.getY() + 1, entityIn.posZ).time(15).vel(worldIn.rand.nextGaussian() / 20,
                         worldIn.rand.nextDouble() / 100, worldIn.rand.nextGaussian() / 20).spin(0.25F, 0.125).spawn(worldIn);

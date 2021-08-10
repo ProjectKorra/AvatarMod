@@ -131,7 +131,7 @@ public class AirBurstHandler extends TickHandler {
                 //Rings around the player (not around your finger; the police want you)
                 // C u l t u r e
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).clr(0.975F, 0.975F, 0.975F, 0.05F).
-                        scale(size).time(14 + AvatarUtils.getRandomNumberInRange(0, 4)).element(new Airbending())
+                        scale(size).time(14 + AvatarUtils.getRandomNumberInRange(0, 4)).element(BendingStyles.get(Airbending.ID))
                         .swirl(rings, particles, (float) inverseRadius, size / 1.5F, radius * 40,
                                 (1F / size) * abilityData.getXpModifier() * charge, entity, world, false, pos,
                                 ParticleBuilder.SwirlMotionType.IN, true, true);
