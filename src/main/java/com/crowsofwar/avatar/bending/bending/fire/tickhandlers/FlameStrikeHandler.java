@@ -2,6 +2,7 @@ package com.crowsofwar.avatar.bending.bending.fire.tickhandlers;
 
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.bending.bending.Abilities;
+import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.fire.AbilityFlameStrike;
 import com.crowsofwar.avatar.bending.bending.fire.Firebending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
@@ -120,11 +121,11 @@ public class FlameStrikeHandler extends TickHandler {
                                 fadeB * 2);
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(rightSide).time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).vel(world.rand.nextGaussian() / 40, world.rand.nextDouble() / 40,
                                 world.rand.nextGaussian() / 40).clr(r, g, b).collide(true).
-                                scale(particleSize / 2F).element(new Firebending()).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(20, 100))
+                                scale(particleSize / 2F).element(BendingStyles.get(Firebending.ID)).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(20, 100))
                                 .ability(strike).spawnEntity(entity).spawn(world);
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(rightSide).time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).vel(world.rand.nextGaussian() / 40, world.rand.nextDouble() / 40,
                                 world.rand.nextGaussian() / 40).clr(255, 60 + AvatarUtils.getRandomNumberInRange(0, 60), 10).collide(true).
-                                scale(particleSize / 2F).element(new Firebending()).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(20, 100))
+                                scale(particleSize / 2F).element(BendingStyles.get(Firebending.ID)).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(20, 100))
                                 .ability(strike).spawnEntity(entity).spawn(world);
                     }
 

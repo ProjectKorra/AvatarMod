@@ -40,6 +40,7 @@ import net.minecraft.world.storage.loot.LootTableList;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Objects;
+import java.util.UUID;
 
 import static com.crowsofwar.avatar.network.AvatarChatMessages.MSG_NEED_FIRE_TRADE_ITEM;
 
@@ -122,8 +123,8 @@ public class EntityFirebender extends EntityHumanBender {
     }
 
     @Override
-    public BendingStyle getElement() {
-        return new Firebending();
+    public UUID getElement() {
+        return Firebending.ID;
     }
 
     @Override

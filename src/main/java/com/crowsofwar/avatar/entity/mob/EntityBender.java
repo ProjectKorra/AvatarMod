@@ -18,7 +18,9 @@ package com.crowsofwar.avatar.entity.mob;
 
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingStyle;
+import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.air.Airbending;
+import com.crowsofwar.avatar.bending.bending.fire.Firebending;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BenderEntityComponent;
 import com.crowsofwar.avatar.util.data.BendingData;
@@ -35,6 +37,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
 import javax.annotation.Nullable;
+
+import java.util.UUID;
 
 import static com.crowsofwar.avatar.config.ConfigMobs.MOBS_CONFIG;
 
@@ -73,14 +77,14 @@ public abstract class EntityBender extends EntityCreature implements IEntityAddi
 		// initEntityAI - Constructor is called AFTER initEntityAI
 		bender = initBender();
 		dataManager.register(SYNC_LEVEL, 1);
-		getData().addBending(getElement());
+		getData().addBending(BendingStyles.get(getElement()));
 	}
 
 	@Override
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
 		applyAbilityLevels(getLevel());
-		getData().addBending(getElement());
+		getData().addBending(BendingStyles.get(getElement()));
 	}
 
 	@Override
@@ -122,8 +126,8 @@ public abstract class EntityBender extends EntityCreature implements IEntityAddi
 	}
 
 
-	public BendingStyle getElement() {
-		return new Airbending();
+	public UUID getElement() {
+		return Airbending.ID;
 	}
 
 	@Nullable
@@ -131,7 +135,7 @@ public abstract class EntityBender extends EntityCreature implements IEntityAddi
 	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata) {
 		setLevel(AvatarUtils.getRandomNumberInRange(1, MOBS_CONFIG.benderSettings.maxLevel));
 		applyAbilityLevels(getLevel());
-		getData().addBending(getElement());
+		getData().addBending(BendingStyles.get(getElement()));
 		return super.onInitialSpawn(difficulty, livingdata);
 	}
 
