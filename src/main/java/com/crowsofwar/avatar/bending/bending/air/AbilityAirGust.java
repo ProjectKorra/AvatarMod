@@ -19,6 +19,8 @@ package com.crowsofwar.avatar.bending.bending.air;
 
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingAi;
+import com.crowsofwar.avatar.bending.bending.BendingStyles;
+import com.crowsofwar.avatar.bending.bending.fire.Firebending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.entity.EntityAirGust;
 import com.crowsofwar.avatar.entity.EntityOffensive;
@@ -126,11 +128,11 @@ public class AbilityAirGust extends Ability {
                     ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x(),
                             world.rand.nextGaussian() / 80 + velocity.y(), world.rand.nextGaussian() / 80 + velocity.z())
                             .time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(0.95F, 0.95F, 0.95F, 0.05F).spawnEntity(entity)
-                            .scale(size * (1 / size)).element(new Airbending()).collide(true).spawn(world);
+                            .scale(size * (1 / size)).element(BendingStyles.get(Airbending.ID)).collide(true).spawn(world);
                     ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x(),
                             world.rand.nextGaussian() / 80 + velocity.y(), world.rand.nextGaussian() / 80 + velocity.z())
                             .time(10 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(0.95F, 0.95F, 0.95F, 0.05F).spawnEntity(entity)
-                            .scale(size * (1 / size)).element(new Airbending()).collide(true).spawn(world);
+                            .scale(size * (1 / size)).element(BendingStyles.get(Airbending.ID)).collide(true).spawn(world);
                 }
             }
 
@@ -162,7 +164,7 @@ public class AbilityAirGust extends Ability {
                     float size = 0.75F * entity.getAvgSize() * (1 / entity.getAvgSize() + 0.5F);
                     int particles = (int) (Math.min((int) (entity.getAvgSize() * Math.PI), 2) + (entity.velocity().magnitude() / 20));
                     Vec3d centre = AvatarEntityUtils.getMiddleOfEntity(entity);
-                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Airbending()).collide(true)
+                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(BendingStyles.get(Airbending.ID)).collide(true)
                             .clr(0.95F, 0.95F, 0.95F, 0.035F).time(12)
                             .scale(size * 0.75F).spawnEntity(entity).swirl(rings, particles, entity.getAvgSize() * 0.75F,
                             size / 3F, (float) (entity.velocity().sqrMagnitude() / 10 * entity.getAvgSize()), (-0.75F / size), entity,
@@ -184,11 +186,11 @@ public class AbilityAirGust extends Ability {
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x,
                                 world.rand.nextGaussian() / 80 + velocity.y, world.rand.nextGaussian() / 80 + velocity.z)
                                 .time(4 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(0.95F, 0.95F, 0.95F, 0.1F).spawnEntity(entity)
-                                .scale(1.25F * entity.getAvgSize() * (1 / entity.getAvgSize())).element(new Airbending()).collide(true).collideParticles(true).spawn(world);
+                                .scale(1.25F * entity.getAvgSize() * (1 / entity.getAvgSize())).element(BendingStyles.get(Airbending.ID)).collide(true).collideParticles(true).spawn(world);
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x,
                                 world.rand.nextGaussian() / 80 + velocity.y, world.rand.nextGaussian() / 80 + velocity.z)
                                 .time(16 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(0.95F, 0.95F, 0.95F, 0.1F).spawnEntity(entity)
-                                .scale(1.25F * entity.getAvgSize() * (1 / entity.getAvgSize())).element(new Airbending()).collide(true).collideParticles(true).spawn(world);
+                                .scale(1.25F * entity.getAvgSize() * (1 / entity.getAvgSize())).element(BendingStyles.get(Airbending.ID)).collide(true).collideParticles(true).spawn(world);
 
                     }
                 }

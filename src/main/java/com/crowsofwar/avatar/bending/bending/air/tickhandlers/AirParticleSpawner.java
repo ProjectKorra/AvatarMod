@@ -18,6 +18,7 @@ package com.crowsofwar.avatar.bending.bending.air.tickhandlers;
 
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
+import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.air.AbilityAirJump;
 import com.crowsofwar.avatar.bending.bending.air.Airbending;
 import com.crowsofwar.avatar.client.particle.NetworkParticleSpawner;
@@ -59,7 +60,7 @@ public class AirParticleSpawner extends TickHandler {
                 for (int i = 0; i < 4 + AvatarUtils.getRandomNumberInRange(0, 2); i++) {
                     ParticleBuilder.create(ParticleBuilder.Type.FLASH).clr(0.95F, 0.95F, 0.95F, 0.075F).pos(pos.toMinecraft()).vel(world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40)
                             .scale(size).time(8 + AvatarUtils.getRandomNumberInRange(0, 6))
-                            .element(new Airbending()).collide(true).spawn(world);
+                            .element(BendingStyles.get(Airbending.ID)).collide(true).spawn(world);
                 }
 
             data.setRegenBurnout(false);

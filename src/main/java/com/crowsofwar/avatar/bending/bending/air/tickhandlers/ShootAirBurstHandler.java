@@ -2,6 +2,7 @@ package com.crowsofwar.avatar.bending.bending.air.tickhandlers;
 
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
+import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.air.AbilityAirBurst;
 import com.crowsofwar.avatar.bending.bending.air.Airbending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
@@ -160,7 +161,7 @@ public class ShootAirBurstHandler extends TickHandler {
                 float size = entity.getAvgSize() * (1 / entity.getAvgSize() + 0.5F);
                 int particles = (int) (Math.min((int) (entity.getAvgSize() * Math.PI), 2) + (entity.velocity().magnitude() / 20));
                 Vec3d centre = AvatarEntityUtils.getMiddleOfEntity(entity);
-                ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Airbending()).collide(true)
+                ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(BendingStyles.get(Airbending.ID)).collide(true)
                         .clr(0.95F, 0.95F, 0.95F, 0.05F).time(16)
                         .scale(size * 0.875F).spawnEntity(entity).swirl(rings, particles, entity.getAvgSize(),
                         size / 4F, (float) (entity.velocity().sqrMagnitude() * entity.getAvgSize()), (-1F / size), entity,
@@ -182,11 +183,11 @@ public class ShootAirBurstHandler extends TickHandler {
                     ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x,
                             world.rand.nextGaussian() / 80 + velocity.y, world.rand.nextGaussian() / 80 + velocity.z)
                             .time(4 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(0.95F, 0.95F, 0.95F, 0.1F).spawnEntity(entity)
-                            .scale(1.25F * entity.getAvgSize() * (1 / entity.getAvgSize())).element(new Airbending()).collide(true).collideParticles(true).spawn(world);
+                            .scale(1.25F * entity.getAvgSize() * (1 / entity.getAvgSize())).element(BendingStyles.get(Airbending.ID)).collide(true).collideParticles(true).spawn(world);
                     ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x,
                             world.rand.nextGaussian() / 80 + velocity.y, world.rand.nextGaussian() / 80 + velocity.z)
                             .time(16 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(0.95F, 0.95F, 0.95F, 0.1F).spawnEntity(entity)
-                            .scale(1.25F * entity.getAvgSize() * (1 / entity.getAvgSize())).element(new Airbending()).collide(true).collideParticles(true).spawn(world);
+                            .scale(1.25F * entity.getAvgSize() * (1 / entity.getAvgSize())).element(BendingStyles.get(Airbending.ID)).collide(true).collideParticles(true).spawn(world);
 
                 }
             }

@@ -122,7 +122,7 @@ public class WallJumpManager {
     public ResourceLocation getWallJumpParticleType() {
 
         // Airbender?
-        if (bender.getData().hasBending(new Airbending())) {
+        if (bender.getData().hasBendingId(Airbending.ID)) {
             return ParticleBuilder.Type.FLASH;
         }
 
