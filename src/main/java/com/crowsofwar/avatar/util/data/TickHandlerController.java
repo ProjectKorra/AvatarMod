@@ -9,10 +9,7 @@ import com.crowsofwar.avatar.bending.bending.custom.ki.tickhandlers.KiFlightHand
 import com.crowsofwar.avatar.bending.bending.custom.light.tickhandlers.HeavenlyFlightHandler;
 import com.crowsofwar.avatar.bending.bending.custom.light.tickhandlers.PurifyHandler;
 import com.crowsofwar.avatar.bending.bending.earth.tickhandlers.EarthSpikeHandler;
-import com.crowsofwar.avatar.bending.bending.ice.tickhandlers.FrostFormHandler;
-import com.crowsofwar.avatar.bending.bending.ice.tickhandlers.GlacialGlideHandler;
-import com.crowsofwar.avatar.bending.bending.ice.tickhandlers.IceLanceHandler;
-import com.crowsofwar.avatar.bending.bending.ice.tickhandlers.IceRazeHandler;
+import com.crowsofwar.avatar.bending.bending.ice.tickhandlers.*;
 import com.crowsofwar.avatar.client.gui.RenderElementHandler;
 import com.crowsofwar.avatar.bending.bending.air.tickhandlers.*;
 import com.crowsofwar.avatar.bending.bending.earth.tickhandlers.RestoreParticleHandler;
@@ -23,6 +20,7 @@ import com.crowsofwar.avatar.bending.bending.lightning.LightningRedirectHandler;
 import com.crowsofwar.avatar.bending.bending.water.tickhandlers.*;
 import com.crowsofwar.avatar.entity.mob.BisonSummonHandler;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.util.EnumHand;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -73,6 +71,8 @@ public class TickHandlerController {
 	public static TickHandler GLACIAL_GLIDE_HANDLER = new GlacialGlideHandler(35);
 	public static TickHandler ICE_RAZE_HANDLER = new IceRazeHandler(36);
 	public static TickHandler ICE_LANCE_HANDLER = new IceLanceHandler(37);
+	public static TickHandler FROST_CLAW_MAIN_HAND_HANDLER = new FrostClawHandler(38, EnumHand.MAIN_HAND);
+	public static TickHandler FROST_CLAW_OFF_HAND_HANDLER = new FrostClawHandler(38, EnumHand.OFF_HAND);
 
 
 

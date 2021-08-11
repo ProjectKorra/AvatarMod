@@ -105,7 +105,7 @@ public class AbilityData {
         this.exhaustion = 0;
         this.powerRating = 0;
         this.shouldRegenBurnout = true;
-        this.useNumber = 1;
+        this.useNumber = 0;
         this.sourceInfo = new SourceInfo();
         this.modifiers = new ArrayList<>();
         this.abilityPowerLevel = 1;
@@ -123,7 +123,7 @@ public class AbilityData {
         this.exhaustion = 0;
         this.powerRating = 0;
         this.shouldRegenBurnout = true;
-        this.useNumber = 1;
+        this.useNumber = 0;
         this.sourceInfo = new SourceInfo();
         this.modifiers = new ArrayList<>();
         this.abilityPowerLevel = 1;
@@ -158,6 +158,10 @@ public class AbilityData {
 
     public void setUseNumber(int number) {
         this.useNumber = number;
+    }
+
+    public void incrementUseNumber() {
+        this.useNumber++;
     }
 
     public void setSwitchPath(boolean switchPath) {

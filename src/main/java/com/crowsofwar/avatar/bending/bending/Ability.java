@@ -90,7 +90,9 @@ public abstract class Ability {
             PIERCING = "piercing",
             R = "R",
             G = "G",
-            B = "B";
+            B = "B",
+            //For melee abilities
+            MAX_COMBO = "maxCombo";
     //Airbending stuff
     public static final String
             PUSH_REDSTONE = "pushRedstone",
