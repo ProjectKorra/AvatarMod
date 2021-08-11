@@ -49,6 +49,7 @@ public class PacketCSyncAbilityProperties extends AvatarPacket<PacketCSyncAbilit
         return Side.CLIENT;
     }
 
+
     @Override
     protected Handler<PacketCSyncAbilityProperties> getPacketHandler() {
         return PacketRedirector::redirectMessage;

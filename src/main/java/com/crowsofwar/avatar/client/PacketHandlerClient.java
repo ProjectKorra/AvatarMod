@@ -190,7 +190,7 @@ public class PacketHandlerClient implements IPacketHandler {
         }
         else {
 			for (int i = 0; i < packet.properties.length; i++) {
-				Abilities.all().get(i).setProperties(packet.properties[i]);
+				Abilities.all().get(i).setPropertiesClient(packet.properties[i]);
 			}
 		}
 

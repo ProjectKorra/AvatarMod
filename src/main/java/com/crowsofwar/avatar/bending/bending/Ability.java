@@ -34,15 +34,18 @@ import com.crowsofwar.avatar.network.packets.PacketCSyncAbilityProperties;
 import com.crowsofwar.avatar.util.Raytrace;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
+import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
+import net.minecraftforge.fml.relauncher.Side;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -225,6 +228,17 @@ public abstract class Ability {
         this.raytrace = new Raytrace.Info();
     }
 
+    public void setPropertiesClient(AbilityProperties properties) {
+        if (FMLCommonHandler.instance().getEffectiveSide() != Side.CLIENT) {
+           AvatarLog.warn("Ability#setPropertiesClient called from the server side!");
+        }
+
+        if (!this.arePropertiesInitialised()) {
+            this.properties = properties;
+        }
+
+    }
+
     /**
      * Called from the event handler when a player logs in.
      */
@@ -242,6 +256,11 @@ public abstract class Ability {
             List<Ability> abilities = Abilities.all();
             AvatarMod.network.sendToAll(new PacketCSyncAbilityProperties(abilities.stream().map(a -> a.properties).toArray(AbilityProperties[]::new)));
 
+        }
+        BendingData data = BendingData.getFromEntity(player);
+        if (data != null) {
+            data.removeModifiersFromAll(AbilityModifiers.CONFIG_MODIFIER);
+            Bender.adjustConfigModifier(player);
         }
     }
 
