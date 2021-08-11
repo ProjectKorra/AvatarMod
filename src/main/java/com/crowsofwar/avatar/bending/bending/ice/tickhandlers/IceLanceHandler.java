@@ -96,18 +96,18 @@ public class IceLanceHandler extends TickHandler {
 
             durationToFire *= (2 - powerMod);
             durationToFire -= xpMod * 10;
-            damage *= powerMod * xpMod;
-            radius *= powerMod * xpMod;
-            knockBack *= powerMod * xpMod;
-            slowMult *= powerMod * xpMod;
-            speed *= powerMod * xpMod;
+            damage = iceLance.powerModify(damage, abilityData) * 3;
+            radius = iceLance.powerModify(radius, abilityData);
+            knockBack = iceLance.powerModify(knockBack, abilityData);
+            slowMult  = iceLance.powerModify(slowMult, abilityData);
+            speed = iceLance.powerModify(speed, abilityData);
 
             float movementMultiplier = slowMult - 0.7f * MathHelper.sqrt(duration / 40F);
 
             //how fast the shockwave's particle speed is.
             shockwaveSpeed = knockBack;
             //Affect things by the charge. The charge, at stage 3, should set everything to its max.
-            damage *= (0.20 + 0.20 * charge);
+            damage *= (0.50 + 0.20 * charge);
             //Results in a bigger radius so that it blocks projectiles.
             radius *= (0.60 + 0.10 * charge);
             knockBack *= (0.60 + 0.10 * charge);

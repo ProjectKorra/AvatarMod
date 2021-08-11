@@ -432,7 +432,8 @@ public class AvatarDamageSource {
 			if (AvatarDamageSource.isAvatarDamageSource(source)) {
 				source.setMagicDamage();
 				//Leon wants more damage so
-				event.setAmount(event.getAmount() * 6);
+				//Mfw bosses have 6k+ hp
+				event.setAmount(event.getAmount() * 12);
 			}
 
 			if (AvatarDamageSource.isWaterDamage(source)) {
