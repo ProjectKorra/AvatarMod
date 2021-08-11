@@ -110,7 +110,7 @@ public class StatCtrlGlacialGlide extends StatusControl {
 
                 abilityData.addXp(jump.getProperty(XP_USE, abilityData).floatValue());
 
-                entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 1, .7f);
+                entity.world.playSound(null, new BlockPos(entity), SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.PLAYERS, 0.875F, 1.7f);
 
                 if (entity instanceof EntityPlayer)
                     ((EntityPlayer) entity).addExhaustion(exhaustion);
