@@ -431,6 +431,8 @@ public class AvatarDamageSource {
 		if (hit instanceof EntityLivingBase) {
 			if (AvatarDamageSource.isAvatarDamageSource(source)) {
 				source.setMagicDamage();
+				//Leon wants more damage so
+				event.setAmount(event.getAmount() * 6);
 			}
 
 			if (AvatarDamageSource.isWaterDamage(source)) {

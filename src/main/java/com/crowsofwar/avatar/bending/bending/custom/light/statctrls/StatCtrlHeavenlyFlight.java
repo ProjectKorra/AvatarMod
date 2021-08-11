@@ -101,7 +101,7 @@ public class StatCtrlHeavenlyFlight extends StatusControl {
                 IBlockState state = world.getBlockState(entity.getPosition());
                 Block currentBlock = state.getBlock();
                 if (!(currentBlock instanceof BlockLiquid) && !state.isFullBlock() && !state.isFullCube()) {
-                    damageNearbyEntities(ctx);
+                //    damageNearbyEntities(ctx);
                 }
 
 

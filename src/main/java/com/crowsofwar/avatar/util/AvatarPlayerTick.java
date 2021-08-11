@@ -94,6 +94,7 @@ public class AvatarPlayerTick {
         if (event.player instanceof EntityPlayerMP) {
             Ability.syncProperties(event.player);
         }
+        Bender.adjustConfigModifier(event.player);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
@@ -107,6 +108,7 @@ public class AvatarPlayerTick {
 
             if (event.getEntity() instanceof EntityPlayer)
                 Ability.syncProperties((EntityPlayer) event.getEntity());
+
 
             if (SKILLS_CONFIG.startWithRandomBending && !event.getWorld().isRemote) {
                 EntityLivingBase bender = (EntityLivingBase) event.getEntity();

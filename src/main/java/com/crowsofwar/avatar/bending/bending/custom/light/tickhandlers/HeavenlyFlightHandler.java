@@ -177,32 +177,32 @@ public class HeavenlyFlightHandler extends TickHandler {
             performance *= abilityData.getDamageMult() * abilityData.getXpModifier();
             chiHit *= abilityData.getDamageMult() * abilityData.getXpModifier();
 
-            EntityShockwave wave = new EntityShockwave(world);
-            wave.setOwner(entity);
-            wave.setDamageSource("avatar_Light_shockwave");
-            wave.setPosition(AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(0, 0.5, 0));
-            wave.setFireTime(fireTime);
-            wave.setEntitySize(size / 5F);
-            wave.setElement(Lightbending.ID);
-            wave.setAbility(jump);
-            wave.setDamage(damage);
-            wave.setOwner(entity);
-            wave.setSphere(false);
-            wave.setSpeed(speed);
-            wave.setRange(size * 1.5F);
-            wave.setLifeTime(lifetime);
-            wave.setChiHit(chiHit);
-            wave.setPerformanceAmount(performance);
-            wave.setPush(knockback);
-            wave.setBehaviour(new HeavenlyFlightShockwave());
-            wave.setParticleSpeed(speed / 45F);
-            wave.setParticleAmount(20);
-            wave.setRGB(r, g, b);
-            wave.setFade(fadeR, fadeG, fadeB);
-            wave.setRenderNormal(false);
-            wave.setParticleWaves(lifetime * 2);
-            if (!world.isRemote)
-                world.spawnEntity(wave);
+//            EntityShockwave wave = new EntityShockwave(world);
+//            wave.setOwner(entity);
+//            wave.setDamageSource("avatar_Light_shockwave");
+//            wave.setPosition(AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(0, 0.5, 0));
+//            wave.setFireTime(fireTime);
+//            wave.setEntitySize(size / 5F);
+//            wave.setElement(Lightbending.ID);
+//            wave.setAbility(jump);
+//            wave.setDamage(damage);
+//            wave.setOwner(entity);
+//            wave.setSphere(false);
+//            wave.setSpeed(speed);
+//            wave.setRange(size * 1.5F);
+//            wave.setLifeTime(lifetime);
+//            wave.setChiHit(chiHit);
+//            wave.setPerformanceAmount(performance);
+//            wave.setPush(knockback);
+//            wave.setBehaviour(new HeavenlyFlightShockwave());
+//            wave.setParticleSpeed(speed / 45F);
+//            wave.setParticleAmount(20);
+//            wave.setRGB(r, g, b);
+//            wave.setFade(fadeR, fadeG, fadeB);
+//            wave.setRenderNormal(false);
+//            wave.setParticleWaves(lifetime * 2);
+//            if (!world.isRemote)
+//                world.spawnEntity(wave);
         }
         if (jump != null)
             abilityData.setAbilityCooldown(jump.getCooldown(abilityData));
