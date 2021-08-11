@@ -181,8 +181,9 @@ public class AbilityData {
     }
 
     public void addBurnout(float burnout) {
+
         //Burnout isn't greater than 100 or less than 0
-        this.burnOut += MathHelper.clamp(burnout, 0, 100);
+        //this.burnOut += MathHelper.clamp(burnout, 0, 100);
     }
 
     public float getBurnOut() {
@@ -190,9 +191,9 @@ public class AbilityData {
     }
 
     public void setBurnOut(float burnOut) {
-        this.burnOut = burnOut;
+        this.burnOut = 0;
         //Burnout isn't greater than 100 or less than 0
-        this.burnOut = MathHelper.clamp(this.burnOut, 0, 100);
+        //this.burnOut = MathHelper.clamp(this.burnOut, 0, 100);
     }
 
     public int getAbilityCooldown() {
