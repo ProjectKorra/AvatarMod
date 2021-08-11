@@ -206,14 +206,14 @@ public class IceRazeHandler extends TickHandler {
 
             if (ctx.getData().getTickHandlerDuration(this) % 4 == 0)
                 world.playSound(null, entity.getPosition(), SoundEvents.BLOCK_GLASS_STEP,
-                        SoundCategory.PLAYERS, 0.2f, 0.8f);
+                        SoundCategory.PLAYERS, 0.4f, 0.8f);
 
             float movementModifier = 1F - Math.min(requiredChi * 12.5F, 0.7F);
             if (entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(ICE_RAZE_MOVEMENT_MOD_ID) == null)
                 applyMovementModifier(entity, movementModifier);
 
             entity.world.playSound(null, new BlockPos(entity), SoundEvents.BLOCK_FIRE_EXTINGUISH, entity.getSoundCategory(),
-                    1.0F, 0.8F + world.rand.nextFloat() / 10);
+                    0.6F, 0.8F + world.rand.nextFloat() / 10);
 
 
         } else {

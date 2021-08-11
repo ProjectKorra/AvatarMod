@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.bending.bending.custom.demonic.tickhandlers;
 
 import com.crowsofwar.avatar.bending.bending.Abilities;
+import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.AbilityDemonWings;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.Demonbending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
@@ -8,7 +9,6 @@ import com.crowsofwar.avatar.entity.EntityOffensive;
 import com.crowsofwar.avatar.entity.EntityShockwave;
 import com.crowsofwar.avatar.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.entity.mob.EntityBender;
-import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
@@ -20,6 +20,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.world.World;
+
+import java.util.Objects;
 
 import static com.crowsofwar.avatar.bending.bending.Ability.*;
 import static com.crowsofwar.gorecore.util.Vector.toRectangular;
@@ -36,7 +38,7 @@ public class DemonWingsHandler extends TickHandler {
         EntityLivingBase target = ctx.getBenderEntity();
         Bender bender = ctx.getBender();
         World world = ctx.getWorld();
-        AbilityData data = ctx.getData().getAbilityData(new AbilityDemonWings());
+        AbilityData data = ctx.getData().getAbilityData(Objects.requireNonNull(Abilities.get("demon_wings")));
         AbilityDemonWings wings = (AbilityDemonWings) Abilities.get(new AbilityDemonWings().getName());
         Vector pos = Vector.getEntityPos(target).minusY(0.05);
 
@@ -67,12 +69,12 @@ public class DemonWingsHandler extends TickHandler {
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).clr(r, g, b, 215 + AvatarUtils.getRandomNumberInRange(0, 40))
                         .fade(rRandom, gRandom, bRandom, 160 + AvatarUtils.getRandomNumberInRange(0, 40))
                         .pos(pos.toMinecraft()).vel(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20)
-                        .scale(size).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(new Demonbending()).collide(true)
+                        .scale(size).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(BendingStyles.get(Demonbending.ID)).collide(true)
                         .ability(wings).spawnEntity(target).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 50).spawn(world);
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).clr(r, g * 4, b, 215 + AvatarUtils.getRandomNumberInRange(0, 40))
                         .fade(rRandom, gRandom * 4, bRandom, 160 + AvatarUtils.getRandomNumberInRange(0, 40))
                         .pos(pos.toMinecraft()).vel(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20)
-                        .scale(size).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(new Demonbending()).collide(true)
+                        .scale(size).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(BendingStyles.get(Demonbending.ID)).collide(true)
                         .ability(wings).spawnEntity(target).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 50).spawn(world);
             }
         }
@@ -178,40 +180,38 @@ public class DemonWingsHandler extends TickHandler {
             performance *= abilityData.getDamageMult() * abilityData.getXpModifier();
             chiHit *= abilityData.getDamageMult() * abilityData.getXpModifier();
 
-            EntityShockwave wave = new EntityShockwave(world);
-            wave.setOwner(entity);
-            wave.setDamageSource("avatar_Demon_shockwave");
-            wave.setPosition(AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(0, 0.5, 0));
-            wave.setFireTime(fireTime);
-            wave.setEntitySize(size / 5F);
-            wave.setElement(Demonbending.ID);
-            wave.setAbility(jump);
-            wave.setDamage(damage);
-            wave.setOwner(entity);
-            wave.setSphere(false);
-            wave.setSpeed(speed);
-            wave.setRange(size * 1.5F);
-            wave.setLifeTime(lifetime);
-            wave.setChiHit(chiHit);
-            wave.setPerformanceAmount(performance);
-            wave.setPush(knockback);
-            wave.setBehaviour(new DemonWingsShockwave());
-            wave.setParticleSpeed(speed / 45F);
-            wave.setParticleAmount(20);
-            wave.setRGB(r, g, b);
-            wave.setFade(fadeR, fadeG, fadeB);
-            wave.setRenderNormal(false);
-            wave.setParticleWaves(lifetime * 2);
-            if (!world.isRemote)
-                world.spawnEntity(wave);
+//            EntityShockwave wave = new EntityShockwave(world);
+//            wave.setOwner(entity);
+//            wave.setDamageSource("avatar_Demon_shockwave");
+//            wave.setPosition(AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(0, 0.5, 0));
+//            wave.setFireTime(fireTime);
+//            wave.setEntitySize(size / 5F);
+//            wave.setElement(Demonbending.ID);
+//            wave.setAbility(jump);
+//            wave.setDamage(damage);
+//            wave.setOwner(entity);
+//            wave.setSphere(false);
+//            wave.setSpeed(speed);
+//            wave.setRange(size * 1.5F);
+//            wave.setLifeTime(lifetime);
+//            wave.setChiHit(chiHit);
+//            wave.setPerformanceAmount(performance);
+//            wave.setPush(knockback);
+//            wave.setBehaviour(new DemonWingsShockwave());
+//            wave.setParticleSpeed(speed / 45F);
+//            wave.setParticleAmount(20);
+//            wave.setRGB(r, g, b);
+//            wave.setFade(fadeR, fadeG, fadeB);
+//            wave.setRenderNormal(false);
+//            wave.setParticleWaves(lifetime * 2);
+//            if (!world.isRemote)
+//                world.spawnEntity(wave);
         }
 
         if (entity instanceof EntityPlayer) {
             //isSneaking only calls this server-side
             ((EntityPlayer) entity).capabilities.isFlying = false;
         }
-        if (jump != null)
-            abilityData.setAbilityCooldown(jump.getCooldown(abilityData));
     }
 
     //TODO: Fire entity for visual fx/sparks/embers from fire
@@ -220,44 +220,44 @@ public class DemonWingsHandler extends TickHandler {
         @Override
         public OffensiveBehaviour onUpdate(EntityOffensive entity) {
             if (entity instanceof EntityShockwave && entity.world.isRemote) {
-                World world = entity.world;
-                if (entity.getOwner() != null) {
-                    EntityLivingBase owner = entity.getOwner();
-
-                    if (entity.ticksExisted <= ((EntityShockwave) entity).getParticleWaves()) {
-                        int[] fade = entity.getFade();
-                        int[] rgb = entity.getRGB();
-                        for (double angle = 0; angle < 2 * Math.PI; angle += Math.PI / (((EntityShockwave) entity).getRange() *
-                                ((EntityShockwave) entity).getParticleAmount()) * entity.ticksExisted) {
-                            int rRandom = fade[0] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[0] * 2) : AvatarUtils.getRandomNumberInRange(fade[0] / 2,
-                                    fade[0] * 2);
-                            int gRandom = fade[1] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[1] * 2) : AvatarUtils.getRandomNumberInRange(fade[1] / 2,
-                                    fade[1] * 2);
-                            int bRandom = fade[2] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[2] * 2) : AvatarUtils.getRandomNumberInRange(fade[2] / 2,
-                                    fade[2] * 2);
-
-                            //Even though the maths is technically wrong, you use sin if you want a shockwave, and cos if you want a sphere (for x).
-                            double x2 = entity.posX + (entity.ticksExisted * ((EntityShockwave) entity).getSpeed()) * Math.sin(angle);
-                            double y2 = entity.posY;
-                            double z2 = entity.posZ + (entity.ticksExisted * ((EntityShockwave) entity).getSpeed()) * Math.cos(angle);
-                            Vector speed = new Vector((entity.ticksExisted * ((EntityShockwave) entity).getSpeed()) * Math.sin(angle) *
-                                    (entity.getParticleSpeed() * 10), entity.getParticleSpeed() / 2, (entity.ticksExisted *
-                                    ((EntityShockwave) entity).getSpeed()) * Math.cos(angle) * (entity.getParticleSpeed() * 10));
-                            speed = speed.plus(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20);
-
-                            int time = 10;
-                            time = Math.max(time, (entity.getLifeTime() - ((EntityShockwave) entity).getParticleWaves()) * 2);
-                            ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Demonbending()).vel(speed.toMinecraft())
-                                    .spawnEntity(owner).collide(true).collideParticles(true).clr(rgb[0], rgb[1], rgb[2], 180 + AvatarUtils.getRandomNumberInRange(0, 40)).
-                                    fade(rRandom, gRandom, bRandom, 160 + AvatarUtils.getRandomNumberInRange(0, 40)).pos(x2, y2, z2).
-                                    scale(entity.getAvgSize() * 2).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 50).time(time + AvatarUtils.getRandomNumberInRange(0, 2)).spawn(world);
-                            ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Demonbending()).vel(speed.toMinecraft())
-                                    .spawnEntity(owner).collide(true).collideParticles(true).clr(rgb[0], rgb[1] * 8, rgb[2] * 4, 180 + AvatarUtils.getRandomNumberInRange(0, 40)).
-                                    fade(rRandom, gRandom * 2, bRandom, 160 + AvatarUtils.getRandomNumberInRange(0, 40)).pos(x2, y2, z2).
-                                    scale(entity.getAvgSize() * 2).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 50).time(time + AvatarUtils.getRandomNumberInRange(0, 2)).spawn(world);
-                        }
-                    }
-                }
+//                World world = entity.world;
+//                if (entity.getOwner() != null) {
+//                    EntityLivingBase owner = entity.getOwner();
+//
+//                    if (entity.ticksExisted <= ((EntityShockwave) entity).getParticleWaves()) {
+//                        int[] fade = entity.getFade();
+//                        int[] rgb = entity.getRGB();
+//                        for (double angle = 0; angle < 2 * Math.PI; angle += Math.PI / (((EntityShockwave) entity).getRange() *
+//                                ((EntityShockwave) entity).getParticleAmount()) * entity.ticksExisted) {
+//                            int rRandom = fade[0] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[0] * 2) : AvatarUtils.getRandomNumberInRange(fade[0] / 2,
+//                                    fade[0] * 2);
+//                            int gRandom = fade[1] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[1] * 2) : AvatarUtils.getRandomNumberInRange(fade[1] / 2,
+//                                    fade[1] * 2);
+//                            int bRandom = fade[2] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[2] * 2) : AvatarUtils.getRandomNumberInRange(fade[2] / 2,
+//                                    fade[2] * 2);
+//
+//                            //Even though the maths is technically wrong, you use sin if you want a shockwave, and cos if you want a sphere (for x).
+//                            double x2 = entity.posX + (entity.ticksExisted * ((EntityShockwave) entity).getSpeed()) * Math.sin(angle);
+//                            double y2 = entity.posY;
+//                            double z2 = entity.posZ + (entity.ticksExisted * ((EntityShockwave) entity).getSpeed()) * Math.cos(angle);
+//                            Vector speed = new Vector((entity.ticksExisted * ((EntityShockwave) entity).getSpeed()) * Math.sin(angle) *
+//                                    (entity.getParticleSpeed() * 10), entity.getParticleSpeed() / 2, (entity.ticksExisted *
+//                                    ((EntityShockwave) entity).getSpeed()) * Math.cos(angle) * (entity.getParticleSpeed() * 10));
+//                            speed = speed.plus(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20);
+//
+//                            int time = 10;
+//                            time = Math.max(time, (entity.getLifeTime() - ((EntityShockwave) entity).getParticleWaves()) * 2);
+//                            ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(BendingStyles.get(Demonbending.ID)).vel(speed.toMinecraft())
+//                                    .spawnEntity(owner).collide(true).collideParticles(true).clr(rgb[0], rgb[1], rgb[2], 180 + AvatarUtils.getRandomNumberInRange(0, 40)).
+//                                    fade(rRandom, gRandom, bRandom, 160 + AvatarUtils.getRandomNumberInRange(0, 40)).pos(x2, y2, z2).
+//                                    scale(entity.getAvgSize() * 2).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 50).time(time + AvatarUtils.getRandomNumberInRange(0, 2)).spawn(world);
+//                            ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(BendingStyles.get(Demonbending.ID)).vel(speed.toMinecraft())
+//                                    .spawnEntity(owner).collide(true).collideParticles(true).clr(rgb[0], rgb[1] * 8, rgb[2] * 4, 180 + AvatarUtils.getRandomNumberInRange(0, 40)).
+//                                    fade(rRandom, gRandom * 2, bRandom, 160 + AvatarUtils.getRandomNumberInRange(0, 40)).pos(x2, y2, z2).
+//                                    scale(entity.getAvgSize() * 2).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 50).time(time + AvatarUtils.getRandomNumberInRange(0, 2)).spawn(world);
+//                        }
+//                    }
+//                }
             }
             return this;
         }

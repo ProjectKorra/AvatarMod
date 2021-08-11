@@ -100,9 +100,9 @@ public class StatCtrlDemonWings extends StatusControl {
 
                 IBlockState state = world.getBlockState(entity.getPosition());
                 Block currentBlock = state.getBlock();
-                if (!(currentBlock instanceof BlockLiquid) && !state.isFullBlock() && !state.isFullCube()) {
-                    damageNearbyEntities(ctx);
-                }
+//                if (!(currentBlock instanceof BlockLiquid) && !state.isFullBlock() && !state.isFullCube()) {
+//                    damageNearbyEntities(ctx);
+//                }
 
 
                 data.addTickHandler(DEMON_WINGS_HANDLER, ctx);
@@ -115,8 +115,6 @@ public class StatCtrlDemonWings extends StatusControl {
                 if (entity instanceof EntityPlayer)
                     ((EntityPlayer) entity).addExhaustion(exhaustion);
                 abilityData.addBurnout(burnOut);
-                //Ensure the ability can't be spammed after activating.
-                abilityData.setAbilityCooldown(cooldown == 0 ? 0 : jump.getCooldown(abilityData) - jump.getProperty(DURATION, abilityData).intValue());
 
                 if (entity instanceof EntityPlayer)
                     ((EntityPlayer) entity).capabilities.isFlying = true;
@@ -162,34 +160,34 @@ public class StatCtrlDemonWings extends StatusControl {
             fireTime *= abilityData.getDamageMult() * abilityData.getXpModifier();
             performance *= abilityData.getDamageMult() * abilityData.getXpModifier();
             chiHit *= abilityData.getDamageMult() * abilityData.getXpModifier();
-
-            EntityShockwave wave = new EntityShockwave(world);
-            wave.setOwner(entity);
-            wave.setDamageSource("avatar_Demon_shockwave");
-            wave.setPosition(AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(0, 0.5, 0));
-            wave.setFireTime(fireTime);
-            wave.setEntitySize(size / 5);
-            wave.setElement(Demonbending.ID);
-            wave.setAbility(jump);
-            wave.setDamage(damage);
-            wave.setOwner(entity);
-            wave.setSphere(false);
-            wave.setSpeed(speed);
-            wave.setRenderNormal(false);
-            wave.setRange(size);
-            wave.setLifeTime(lifetime);
-            wave.setChiHit(chiHit);
-            wave.setPerformanceAmount(performance);
-            wave.setPush(knockback);
-            wave.setParticleWaves(lifetime * 5);
-            wave.setBehaviour(new DemonWingsHandler.DemonWingsShockwave());
-            wave.setParticleSpeed(speed / 30F);
-            wave.setParticleAmount(30);
-            wave.setRGB(r, g, b);
-            wave.setFade(fadeR, fadeG, fadeB);
-            wave.setXp(jump.getProperty(XP_HIT, abilityData).floatValue());
-            if (!world.isRemote)
-                world.spawnEntity(wave);
+//
+//            EntityShockwave wave = new EntityShockwave(world);
+//            wave.setOwner(entity);
+//            wave.setDamageSource("avatar_Demon_shockwave");
+//            wave.setPosition(AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(0, 0.5, 0));
+//            wave.setFireTime(fireTime);
+//            wave.setEntitySize(size / 5);
+//            wave.setElement(Demonbending.ID);
+//            wave.setAbility(jump);
+//            wave.setDamage(damage);
+//            wave.setOwner(entity);
+//            wave.setSphere(false);
+//            wave.setSpeed(speed);
+//            wave.setRenderNormal(false);
+//            wave.setRange(size);
+//            wave.setLifeTime(lifetime);
+//            wave.setChiHit(chiHit);
+//            wave.setPerformanceAmount(performance);
+//            wave.setPush(knockback);
+//            wave.setParticleWaves(lifetime * 5);
+//            wave.setBehaviour(new DemonWingsHandler.DemonWingsShockwave());
+//            wave.setParticleSpeed(speed / 30F);
+//            wave.setParticleAmount(30);
+//            wave.setRGB(r, g, b);
+//            wave.setFade(fadeR, fadeG, fadeB);
+//            wave.setXp(jump.getProperty(XP_HIT, abilityData).floatValue());
+//            if (!world.isRemote)
+//                world.spawnEntity(wave);
         }
     }
 
