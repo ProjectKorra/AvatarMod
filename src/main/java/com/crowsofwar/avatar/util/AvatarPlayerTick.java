@@ -30,6 +30,7 @@ import com.crowsofwar.avatar.util.event.AbilityUseEvent;
 import com.crowsofwar.avatar.util.event.ElementUnlockEvent;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -87,6 +88,13 @@ public class AvatarPlayerTick {
         }
     }
 
+    @SubscribeEvent
+    public static void onPlayerLoggedInEvent(PlayerEvent.PlayerLoggedInEvent event) {
+        // When a player logs in, they are sent the glyph data, server settings and spell properties.
+        if (event.player instanceof EntityPlayerMP) {
+            Ability.syncProperties(event.player);
+        }
+    }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void worldJoinEvent(EntityJoinWorldEvent event) {
