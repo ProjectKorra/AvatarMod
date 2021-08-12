@@ -12,6 +12,7 @@ import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.TickHandlerController;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
+import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
@@ -41,10 +42,10 @@ public class AbilityFrostClaws extends Ability {
         EnumHand hand;
         //Main hand is even for combo, off hand is odd
         if (abilityData.getUseNumber() % 2 == 0) {
-            data.addTickHandler(TickHandlerController.FROST_CLAW_MAIN_HAND_HANDLER, ctx);
+       //     data.addTickHandler(TickHandlerController.FROST_CLAW_MAIN_HAND_HANDLER, ctx);
             hand = EnumHand.MAIN_HAND;
         } else {
-            data.addTickHandler(TickHandlerController.FROST_CLAW_OFF_HAND_HANDLER, ctx);
+         //   data.addTickHandler(TickHandlerController.FROST_CLAW_OFF_HAND_HANDLER, ctx);
             hand = EnumHand.OFF_HAND;
         }
 
@@ -53,6 +54,10 @@ public class AbilityFrostClaws extends Ability {
 
         float speed = getProperty(SPEED, ctx).floatValue();
         float size = getProperty(SIZE, ctx).floatValue();
+        float damage = getProperty(DAMAGE, ctx).floatValue();
+        float knockback = getProperty(KNOCKBACK, ctx).floatValue();
+        int lifetime = getProperty(LIFETIME, ctx).intValue();
+        int performance = getProperty(PERFORMANCE, ctx).intValue();
 
         //Controls direction of the claws.
         //Just going to do up and down for now
@@ -78,19 +83,38 @@ public class AbilityFrostClaws extends Ability {
                 break;
         }
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 5; i++) {
+            //Creates 5 big claws
+            Vec3d right = Vector.toRectangular(Math.toRadians(entity.rotationYaw + 90), 0).toMinecraft();
+            right = right.scale(-1 + i * 0.5);
+            right = right.add(Vector.getEntityPos(entity).toMinecraft());
+            right = right.add(0, entity.getEyeHeight() / 2, 0);
             EntityIceClaws claws = new EntityIceClaws(world);
             //Will be used later
-            //TODO: Offset position right and left
-            orient(claws, speed, direction, entity, size);
+            //Handles positioning and velocity
+            orient(right, claws, speed, direction, entity, size, 0.25F);
             claws.setTier(getCurrentTier(ctx));
             claws.setElement(Icebending.ID);
+            claws.setOwner(entity);
+            claws.setDamage(damage);
+            claws.setPiercing(true);
+            claws.setEntitySize(size * 2F, size * 0.5F);
+            claws.setAbility(this);
+            claws.setExpandedHeight(size);
+            claws.setExpandedWidth(size);
+            claws.setLifeTime(lifetime);
+            claws.setPerformanceAmount(performance);
+            claws.setPush(knockback);
+            claws.setBehaviour(new IceClawBehaviour());
+            claws.rotationYaw = entity.rotationYaw;
+            claws.rotationPitch = entity.rotationPitch;
             if (!world.isRemote) {
                 world.spawnEntity(claws);
             }
         }
 
         //This goes at the end; spawning goes above.
+        //Currently the max combo is 2
         if (abilityData.getUseNumber() >=
                 getProperty(MAX_COMBO, abilityData).intValue()) {
             //Resets the combo
@@ -116,22 +140,22 @@ public class AbilityFrostClaws extends Ability {
     }
 
     //Correctly positions the entity and sets its orientation
-    public void orient(EntityIceClaws claws, float speed, EnumClawDirection direction,
-                          EntityLivingBase entity, float size) {
+    public void orient(Vec3d startPos, EntityIceClaws claws, float speed, EnumClawDirection direction,
+                       EntityLivingBase entity, float size, float range) {
         //Position and destination of the ice claws
-        Vec3d pos = entity.getPositionVector(), dest = entity.getPositionVector(), look = entity.getLookVec().scale(2);
+        Vec3d pos = startPos, dest = startPos, look = entity.getLookVec().scale(range);
         Vec3d spd;
         //Only need to cover top bottom and bottom top for now
         if (direction == EnumClawDirection.T_B) {
             pos = pos.add(look).add(0, size * 2, 0);
             dest = dest.add(look).add(0, -size * 2, 0);
-        }
-        else if (direction == EnumClawDirection.B_T) {
+        } else if (direction == EnumClawDirection.B_T) {
             pos = pos.add(look).add(0, -size * 2, 0);
             dest = dest.add(look).add(0, size * 2, 0);
         }
 
-        spd = pos.subtract(dest).scale(speed);
+        spd = dest.subtract(pos).scale(speed / 20).add(look.scale(4));
+        claws.setPosition(pos);
         claws.setVelocity(spd);
     }
 
@@ -165,6 +189,12 @@ public class AbilityFrostClaws extends Ability {
         public OffensiveBehaviour onUpdate(EntityOffensive entity) {
             World world = entity.world;
             //This only works for vertical for now. TODO: Adjust this.
+            entity.motionX *= 0.5;
+            entity.motionY *= 0.5;
+            entity.motionZ *= 0.5;
+            if (entity.velocity().sqrMagnitude() <= 0.5)
+                entity.Dissipate();
+
             if (world.isRemote) {
                 if (entity.ticksExisted % 2 == 0 || entity.ticksExisted <= 2) {
                     for (double i = -90; i <= 90; i += 20) {
@@ -173,10 +203,11 @@ public class AbilityFrostClaws extends Ability {
                         pos = pos.add(newDir);
                         pos = new Vec3d(pos.x, pos.y + (entity.getHeight() / 1.75 * Math.sin(Math.toRadians(i))), pos.z);
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(pos).vel(world.rand.nextGaussian() / 30, world.rand.nextGaussian() / 30,
-                                world.rand.nextGaussian() / 30).collide(true).time(12 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(0.95F, 095F, 0.95F, 0.2F)
-                                .scale(entity.getWidth() * 1.5F).element(BendingStyles.get(entity.getElement())).spawnEntity(entity).spawn(world);
+                                world.rand.nextGaussian() / 30).collide(true).time(12 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(100, 230, 255, 20)
+                                .scale(entity.getWidth() * 1.5F).element(BendingStyles.get(entity.getElement())).spawnEntity(entity).glow(
+                                AvatarUtils.getRandomNumberInRange(1, 100) > 75).spawn(world);
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(pos).vel(entity.motionX, entity.motionY, entity.motionZ).collide(true)
-                                .time(4 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(0.95F, 0.95F, 0.95F, 0.2F)
+                                .time(14 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(90, 255, 255, 60)
                                 .scale(entity.getWidth() * 2F).spawnEntity(entity).element(BendingStyles.get(entity.getElement())).spawn(world);
                     }
                 }

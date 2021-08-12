@@ -26,6 +26,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.fml.common.network.FMLOutboundHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
 import java.util.*;
@@ -122,15 +123,30 @@ public class AvatarPlayerData extends PlayerData {
             //For target point; leaving in in-case something breaks
             double range = Math.sqrt(rangeSq) + 0.01;// +0.01 "just in case"
 
+
+            TargetPoint point = new TargetPoint(player.dimension, player.posX, player.posY, player.posZ,
+                    range);
+            //Again ignore the warnings. Why does this happen??
+            if (point != null) {
+                try {
+                    AvatarMod.network.sendToAllAround(packet, point);
+                } catch (RuntimeException e) {
+                    AvatarMod.network.sendToAll(packet);
+                }
+            }
             //Target points are dumb
             //Player may be null, ignore warning
             //Pls I got crashes because it wasn't an entity, how is that even possible
-            if (player instanceof EntityPlayerMP) {
-                AvatarMod.network.sendTo(packet, (EntityPlayerMP) player);
+            else if (player != null && player instanceof EntityPlayerMP) {
+                try {
+                    AvatarMod.network.sendTo(packet, (EntityPlayerMP) player);
+                } catch (RuntimeException e) {
+                    AvatarMod.network.sendToAll(packet);
+                }
             }
             //Last resort
             //This might lag servers. Woops.
-            AvatarMod.network.sendToAll(packet);
+            else AvatarMod.network.sendToAll(packet);
 
             changed.clear();
 

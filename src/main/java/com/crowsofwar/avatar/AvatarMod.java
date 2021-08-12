@@ -164,6 +164,7 @@ public class AvatarMod {
         Abilities.register(new AbilityFrostForm());
         Abilities.register(new AbilityGlacialGlide());
         Abilities.register(new AbilityIceRaze());
+        Abilities.register(new AbilityFrostClaws());
         /*    			Sand	  			*/
         Abilities.register(new AbilitySandPrison());
         Abilities.register(new AbilitySandstorm());
@@ -434,6 +435,7 @@ public class AvatarMod {
         registerEntity(EntityLightOrb.class, "LightOrb", 128, 1000, true);
         registerEntity(EntityLightCylinder.class, "LightCylinder", 128, 1000, true);
         registerEntity(EntityIceLance.class, "IceLance", 128, 1000, true);
+        registerEntity(EntityIceClaws.class,  "IceClaws", 128, 1000, true);
         EntityRegistry.addSpawn(EntityOtterPenguin.class, 10, 3, 6, EnumCreatureType.CREATURE, //
                 COLD_BEACH, ICE_PLAINS, ICE_MOUNTAINS, MUTATED_ICE_FLATS);
         EntityRegistry.addSpawn(EntityOstrichHorse.class, 5, 1, 3, EnumCreatureType.CREATURE, //

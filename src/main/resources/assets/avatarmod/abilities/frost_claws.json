@@ -1,0 +1,82 @@
+{
+  "custom_properties": {
+    "xpOnHit": 2,
+    "level1": {
+      "tier": 2,
+      "chiCost": 3.0,
+      "cooldown": 80,
+      "exhaustion": 2.0,
+      "burnOut": 10.0,
+      "burnOutRecoverTick": 0.12,
+      "performanceAmount": 15,
+      "lifeTime": 30,
+      "size": 1,
+      "speed": 5,
+      "knockback": 1,
+      "chiOnHit": 1.4,
+      "damage": 12,
+      "fadeDuration": 20,
+      "maxCombo": 2
+    },
+    "level2": {
+      "tier": 2,
+      "chiCost": 3.25,
+      "cooldown": 75,
+      "exhaustion": 2.5,
+      "burnOut": 20.0,
+      "burnOutRecoverTick": 0.21,
+      "performanceAmount": 20,
+      "lifeTime": 35,
+      "size": 1,
+      "speed": 7,
+      "knockback": 1.5,
+      "chiOnHit": 1.6,
+      "damage": 4
+    },
+    "level3": {
+      "tier": 3,
+      "chiCost": 3.5,
+      "cooldown": 70,
+      "exhaustion": 3.0,
+      "burnOut": 25.0,
+      "burnOutRecoverTick": 0.23,
+      "performanceAmount": 25,
+      "lifeTime": 40,
+      "size": 1.25,
+      "speed": 9,
+      "knockback": 1.7,
+      "chiOnHit": 1.7,
+      "damage": 4.5
+    },
+    "level4_1": {
+      "tier": 4,
+      "chiCost": 3.75,
+      "cooldown": 100,
+      "exhaustion": 3.5,
+      "burnOut": 60.0,
+      "burnOutRecoverTick": 0.5,
+      "performanceAmount": 10,
+      "lifeTime": 45,
+      "size": 1.25,
+      "speed": 13,
+      "knockback": 2,
+      "chiOnHit": 1.8,
+      "damage": 3.5
+    },
+    "level4_2": {
+      "tier": 4,
+      "chiCost": 4.0,
+      "cooldown": 80,
+      "exhaustion": 4.0,
+      "burnOut": 30.0,
+      "burnOutRecoverTick": 0.28,
+      "performanceAmount": 15,
+      "lifeTime": 50,
+      "size": 1.75,
+      "speed": 12,
+      "knockback": 3,
+      "chiOnHit": 1.9,
+      "damage": 7
+    }
+  }
+}
