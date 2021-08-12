@@ -207,7 +207,7 @@ public class AbilityFrostClaws extends Ability {
                                 .scale(entity.getWidth() * 1.5F).element(BendingStyles.get(entity.getElement())).spawnEntity(entity).glow(
                                 AvatarUtils.getRandomNumberInRange(1, 100) > 75).spawn(world);
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(pos).vel(entity.motionX, entity.motionY, entity.motionZ).collide(true)
-                                .time(14 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(90, 255, 255, 60)
+                                .time(8 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(90, 255, 255, 60)
                                 .scale(entity.getWidth() * 2F).spawnEntity(entity).element(BendingStyles.get(entity.getElement())).spawn(world);
                     }
                 }

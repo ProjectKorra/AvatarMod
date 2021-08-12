@@ -46,13 +46,15 @@ public class EntityIceClaws extends EntityOffensive {
 
     @Override
     protected void readEntityFromNBT(NBTTagCompound nbt) {
-        super.readEntityFromNBT(nbt);exWidth = nbt.getFloat("Expanded Width");
+        super.readEntityFromNBT(nbt);
+        exWidth = nbt.getFloat("Expanded Width");
         exHeight = nbt.getFloat("Expanded Height");
     }
 
     @Override
     protected void writeEntityToNBT(NBTTagCompound nbt) {
-        super.writeEntityToNBT(nbt);nbt.setFloat("Expanded Width", exWidth);
+        super.writeEntityToNBT(nbt);
+        nbt.setFloat("Expanded Width", exWidth);
         nbt.setFloat("Expanded Height", exHeight);
     }
 
@@ -107,26 +109,10 @@ public class EntityIceClaws extends EntityOffensive {
     @Override
     public void setDead() {
         super.setDead();
-        if (this.isDead && !world.isRemote)
-            Thread.dumpStack();
     }
 
     @Override
     public void spawnDissipateParticles(World world, Vec3d pos) {
-        if (world.isRemote && getOwner() != null) {
-//            for (int i = 0; i < 8; i++) {
-//                Vec3d mid = AvatarEntityUtils.getMiddleOfEntity(this);
-//                double spawnX = mid.x + world.rand.nextGaussian() / 10;
-//                double spawnY = mid.y + world.rand.nextGaussian() / 10;
-//                double spawnZ = mid.z + world.rand.nextGaussian() / 10;
-//                ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20,
-//                        world.rand.nextGaussian() / 20).time(4).clr(130, 255, 255, 30).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 65)
-//                        .spawnEntity(getOwner()).scale(getAvgSize() * 1.25F).element(BendingStyles.get(getElement())).collide(true).spawn(world);
-//                ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20,
-//                        world.rand.nextGaussian() / 20).time(12).clr(140, 230, 255, 80).spawnEntity(getOwner())
-//                        .scale(getAvgSize() * 1.25F).element(BendingStyles.get(getElement())).collide(true).spawn(world);
-//            }
-        }
     }
 
     @Override
@@ -137,7 +123,7 @@ public class EntityIceClaws extends EntityOffensive {
     @Override
     public void applyElementalContact(AvatarEntity entity) {
         super.applyElementalContact(entity);
-        entity.onAirContact();
+        //on ice contact
         if (getDestroyProjectiles()) {
             if (entity instanceof IOffensiveEntity && ((IOffensiveEntity) entity).getDamage() < 6 * getAvgSize() ||
                     entity instanceof EntityOffensive && getAvgSize() < 1.25 * getAvgSize() || (entity.isProjectile() && entity.velocity().sqrMagnitude() <
