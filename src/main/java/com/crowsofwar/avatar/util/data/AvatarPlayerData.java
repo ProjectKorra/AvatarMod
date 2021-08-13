@@ -20,13 +20,11 @@ package com.crowsofwar.avatar.util.data;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.network.packets.PacketCPlayerData;
 import com.crowsofwar.gorecore.data.*;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
 import java.util.*;
 
@@ -124,13 +122,15 @@ public class AvatarPlayerData extends PlayerData {
 
             //Target points are dumb
             //Player may be null, ignore warning
-            //Pls I got crashes because it wasn't an entity, how is that even possible
             if (player instanceof EntityPlayerMP) {
-                AvatarMod.network.sendTo(packet, (EntityPlayerMP) player);
+                //Try statements ftw
+                try {
+                    AvatarMod.network.sendTo(packet, (EntityPlayerMP) player);
+                } catch (RuntimeException exception) {
+                    //This error shouldn't ever happen but forge is not the best
+                    AvatarMod.network.sendToAll(packet);
+                }
             }
-            //Last resort
-            //This might lag servers. Woops.
-            AvatarMod.network.sendToAll(packet);
 
             changed.clear();
 
