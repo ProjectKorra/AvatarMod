@@ -19,8 +19,8 @@
       "sourceAngles": 45,
       "waterAmount": 1,
       "rideable": false,
-      "geysers": false,
-      "chargeable": false,
+      "grow": false,
+      "pulls": false,
       "land": false,
       "plantbend": false
     },
@@ -67,11 +67,11 @@
       "performanceAmount": 35,
       "lifeTime": 60,
       "size": 1.25,
-      "speed": 11,
+      "speed": 6,
       "knockback": 5,
       "chiOnHit": 1.875,
       "damage": 7,
-      "geyser": true
+      "grow": true
     },
     "level4_2": {
       "tier": 4,
@@ -83,12 +83,12 @@
       "performanceAmount": 40,
       "lifeTime": 120,
       "size": 2,
-      "speed": 5,
+      "speed": 8,
       "knockback": 6,
       "chiOnHit": 2.0,
       "damage": 8,
-      "geyser": false,
-      "chargeable": true
+      "grow": false,
+      "pulls": true
     }
   }
 }

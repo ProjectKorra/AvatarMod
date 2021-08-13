@@ -21,7 +21,7 @@ package com.crowsofwar.avatar.util;
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.bending.bending.Ability;
-import com.crowsofwar.avatar.bending.bending.BendingStyle;
+import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.client.particles.newparticles.ParticleAvatar;
 import com.crowsofwar.avatar.client.particles.newparticles.renderlayers.ParticleBatchRenderer;
 import com.crowsofwar.avatar.client.particles.newparticles.renderlayers.RenderLayer;
@@ -73,7 +73,9 @@ import static java.lang.Math.sin;
 @Mod.EventBusSubscriber(value = Side.CLIENT, modid = AvatarInfo.MOD_ID)
 public class AvatarUtils {
 
+    //Used for powering creepers; reflection
     private static final DataParameter<Boolean> POWERED;
+    //Custom particle list to reduce lag
     private static Queue<ParticleAvatar> aliveParticlesCache = null;
     private static Map<Entity, Queue<ParticleAvatar>> particlesByOwnerEntity = null;
 
@@ -638,7 +640,7 @@ public class AvatarUtils {
                 abilityName = ability.getName();
             }
 
-            String elementName = BendingStyles.getName(style);
+            String elementName = BendingStyles.getName(element);
             String damageName = AvatarDamageSource.getNameFromBendingStyle(elementName);
             DamageSource damageSource = new EntityDamageSourceIndirect("avatar_" + damageName + "_" + abilityName, hit, caster);
 

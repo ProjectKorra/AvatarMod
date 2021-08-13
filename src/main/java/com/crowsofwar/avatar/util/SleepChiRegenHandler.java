@@ -41,6 +41,7 @@ public class SleepChiRegenHandler {
 			Chi chi = data.chi();
 			World world = player.world;
 
+			//Checks on sleep
 			if (world.getWorldTime() % 24000 <= 2) {
 				chi.setAvailableChi(CHI_CONFIG.maxAvailableChi);
 				chi.changeTotalChi(STATS_CONFIG.sleepChiRegen);

@@ -18,17 +18,12 @@
 package com.crowsofwar.avatar.entity;
 
 import com.crowsofwar.avatar.bending.bending.Abilities;
-import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import com.crowsofwar.avatar.bending.bending.water.Waterbending;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.BlockBush;
 import net.minecraft.block.BlockSnow;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.ItemStack;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -40,6 +35,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
+import java.util.UUID;
 
 import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
 
@@ -49,13 +45,16 @@ public class EntityWave extends EntityOffensive {
             DataSerializers.BOOLEAN);
     private static final DataParameter<Boolean> SYNC_RIDEABLE = EntityDataManager.createKey(EntityWave.class,
             DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> SYNC_GROWS = EntityDataManager.createKey(EntityWave.class,
+            DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> SYNC_PULLS = EntityDataManager.createKey(EntityWave.class,
+            DataSerializers.BOOLEAN);
 
     private Vector initialPosition;
     private double maxTravelDistanceSq;
-    private boolean dropEquipment;
 
     /**
-     * @param world
+     * @param world The world the entity spawns in
      */
     public EntityWave(World world) {
         super(world);
@@ -70,6 +69,8 @@ public class EntityWave extends EntityOffensive {
         super.entityInit();
         dataManager.register(SYNC_RUN_ON_LAND, false);
         dataManager.register(SYNC_RIDEABLE, false);
+        dataManager.register(SYNC_GROWS, false);
+        dataManager.register(SYNC_PULLS, false);
     }
 
     @Override
@@ -115,12 +116,29 @@ public class EntityWave extends EntityOffensive {
         return dataManager.get(SYNC_RUN_ON_LAND);
     }
 
+    //TODO: Implement this
     public boolean isRideable() {
         return dataManager.get(SYNC_RIDEABLE);
     }
 
     public void setRideable(boolean rideable) {
         dataManager.set(SYNC_RIDEABLE, rideable);
+    }
+
+    public void setGrows(boolean grows) {
+        dataManager.set(SYNC_GROWS, grows);
+    }
+
+    public boolean doesGrow() {
+        return dataManager.get(SYNC_GROWS);
+    }
+
+    public void setPulls(boolean pulls) {
+        dataManager.set(SYNC_PULLS, pulls);
+    }
+
+    public boolean doesPull() {
+        return dataManager.get(SYNC_PULLS);
     }
 
     @Override
@@ -232,13 +250,12 @@ public class EntityWave extends EntityOffensive {
     @Override
     public void setDead() {
         super.setDead();
-//        if (!world.isRemote && this.isDead)
-//            Thread.dumpStack();
+        //This method is here in case I need to debug.
     }
 
     @Override
     public void resetPositionToBB() {
-       //super.resetPositionToBB();
+        //super.resetPositionToBB();
     }
 
     @Override
@@ -254,31 +271,6 @@ public class EntityWave extends EntityOffensive {
     @Override
     public void spawnPiercingParticles(World world, Vec3d pos) {
 
-    }
-
-    @Override
-    public void onCollideWithEntity(Entity entity) {
-        super.onCollideWithEntity(entity);
-        if (canCollideWith(entity)) {
-            if (dropEquipment && entity instanceof EntityLivingBase) {
-
-                EntityLivingBase living = (EntityLivingBase) entity;
-
-                for (EntityEquipmentSlot slot : EntityEquipmentSlot.values()) {
-
-                    ItemStack stack = living.getItemStackFromSlot(slot);
-                    if (!stack.isEmpty()) {
-                        double chance = slot.getSlotType() == EntityEquipmentSlot.Type.HAND ? 40 : 20;
-                        if (rand.nextDouble() * 100 <= chance) {
-                            living.entityDropItem(stack, 0);
-                            living.setItemStackToSlot(slot, ItemStack.EMPTY);
-                        }
-                    }
-
-                }
-
-            }
-        }
     }
 
 
@@ -304,8 +296,8 @@ public class EntityWave extends EntityOffensive {
     }
 
     @Override
-    public BendingStyle getElement() {
-        return new Waterbending();
+    public UUID getElement() {
+        return Waterbending.ID;
     }
 
     public boolean isDefaultBreakableBlock(World world, BlockPos pos) {

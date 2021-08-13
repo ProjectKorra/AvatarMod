@@ -19,6 +19,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import java.util.List;
 import java.util.Objects;
 
+import static com.crowsofwar.avatar.bending.bending.fire.AbilityImmolate.FIRE_CHANCE;
 import static com.crowsofwar.avatar.bending.bending.fire.AbilityImmolate.INCINERATE_PROJECTILES;
 
 public class ImmolatePowerModifier extends BuffPowerModifier {

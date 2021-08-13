@@ -6,7 +6,10 @@ import com.crowsofwar.avatar.entity.EntityLightOrb;
 import com.crowsofwar.avatar.entity.data.Behavior;
 import com.crowsofwar.avatar.entity.data.LightOrbBehavior;
 import com.crowsofwar.avatar.entity.mob.EntityBender;
-import com.crowsofwar.avatar.util.data.*;
+import com.crowsofwar.avatar.util.data.AbilityData;
+import com.crowsofwar.avatar.util.data.Bender;
+import com.crowsofwar.avatar.util.data.BendingData;
+import com.crowsofwar.avatar.util.data.PowerRatingManager;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,11 +17,12 @@ import net.minecraft.init.MobEffects;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.Objects;
 
-import static com.crowsofwar.avatar.util.data.TickHandlerController.*;
+import static com.crowsofwar.avatar.util.data.TickHandlerController.IMMOLATE_HANDLER;
 
 public class AbilityImmolate extends Ability {
 
@@ -112,19 +116,19 @@ public class AbilityImmolate extends Ability {
 
                 }
 
-//                EntityLightOrb orb = new EntityLightOrb(world);
-//                orb.setOwner(entity);
-//                orb.setAbility(this);
-//                orb.setPosition(new Vec3d(entity.posX, entity.getEntityBoundingBox().minY + entity.height / 2, entity.posZ));
-//                orb.setOrbSize(0.005F);
-//                orb.setLifeTime(duration);
-//                orb.setColor(1F, 0.5F, 0F, 3F);
-//                orb.setLightRadius(lightRadius);
-//                orb.setEmittingEntity(entity);
-//                orb.setBehavior(new ImmolateLightOrbBehaviour());
-//                orb.setType(EntityLightOrb.EnumType.COLOR_CUBE);
-//                if (!world.isRemote)
-//                    world.spawnEntity(orb);
+                EntityLightOrb orb = new EntityLightOrb(world);
+                orb.setOwner(entity);
+                orb.setAbility(this);
+                orb.setPosition(new Vec3d(entity.posX, entity.getEntityBoundingBox().minY + entity.height / 2, entity.posZ));
+                orb.setOrbSize(0.005F);
+                orb.setLifeTime(duration);
+                orb.setColor(1F, 0.5F, 0F, 3F);
+                orb.setLightRadius(lightRadius);
+                orb.setEmittingEntity(entity);
+                orb.setBehavior(new ImmolateLightOrbBehaviour());
+                orb.setType(EntityLightOrb.EnumType.COLOR_CUBE);
+                if (!world.isRemote)
+                    world.spawnEntity(orb);
                 abilityData.addXp(getProperty(XP_USE, ctx).floatValue());
                 data.addTickHandler(IMMOLATE_HANDLER, ctx);
             }

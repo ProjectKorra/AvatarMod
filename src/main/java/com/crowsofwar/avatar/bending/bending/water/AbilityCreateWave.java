@@ -20,10 +20,10 @@ package com.crowsofwar.avatar.bending.bending.water;
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingAi;
+import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.entity.EntityOffensive;
 import com.crowsofwar.avatar.entity.EntityWave;
-import com.crowsofwar.avatar.entity.data.Behavior;
 import com.crowsofwar.avatar.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
@@ -34,7 +34,6 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityFallingBlock;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
@@ -65,8 +64,8 @@ import net.minecraft.world.World;
 public class AbilityCreateWave extends Ability {
 
     public static final String
-            GEYSER = "geysers",
-            CHARGEABLE = "chargeable",
+            GROW = "grow",
+            PULLS = "pulls",
             RIDEABLE = "rideable",
             LAND = "land";
 
@@ -74,29 +73,12 @@ public class AbilityCreateWave extends Ability {
         super(Waterbending.ID, "wave");
     }
 
-    private static void spawnEntity(EntityOffensive spawner) {
-        if (!spawner.world.isRemote) {
-            BlockPos pos = new BlockPos(spawner.posX, spawner.posY, spawner.posZ);
-
-            //TODO: BUG - Spawns weirdly/not at all with snow layers and such. Fix.
-            if (spawner.world.getBlockState(pos.down()).getBlock() == Blocks.WATER) {
-
-                // Falling blocks do the setting block to air themselves.
-                //Fixed issues with floating blocks not appearing??? Now time to fix going up areas with
-                //non-solid blocks.
-                EntityFallingBlock fallingblock = new EntityFallingBlock(spawner.world, spawner.posX, (int) (spawner.posY - 0.5) + 0.5,
-                        spawner.posZ, spawner.world.getBlockState(new BlockPos(spawner.posX, spawner.posY - 1, spawner.posZ)));
-                fallingblock.motionY = 0.15 + spawner.getAvgSize() / 10;
-                spawner.world.spawnEntity(fallingblock);
-            }
-        }
-    }
 
     @Override
     public void init() {
         super.init();
         addProperties(SOURCE_ANGLES, SOURCE_RANGE, WATER_AMOUNT);
-        addBooleanProperties(GEYSER, CHARGEABLE, RIDEABLE, PLANT_BEND, LAND);
+        addBooleanProperties(PULLS, GROW, RIDEABLE, PLANT_BEND, LAND);
     }
 
     @Override
@@ -136,7 +118,7 @@ public class AbilityCreateWave extends Ability {
                 firstBendable = Waterbending.isBendable(abilityWave, world.getBlockState(pos1),
                         entity);
                 firstBendable |= getBooleanProperty(LAND, ctx) && world.getBlockState(pos1).isFullBlock() &&
-                world.getBlockState(pos1).getBlock() != Blocks.AIR;
+                        world.getBlockState(pos1).getBlock() != Blocks.AIR;
                 secondBendable = Waterbending.isBendable(abilityWave, world.getBlockState(pos2),
                         entity);
                 secondBendable |= getBooleanProperty(LAND, ctx) && world.getBlockState(pos2).isFullBlock() &&
@@ -157,18 +139,13 @@ public class AbilityCreateWave extends Ability {
                 wave.rotationPitch = entity.rotationPitch;
                 wave.rotationYaw = entity.rotationYaw;
                 wave.setVelocity(look.x() * speed / 5, 0, look.z() * speed / 5);
-                if (getBooleanProperty(GEYSER, ctx))
-                    wave.setBehaviour(new WaveGeyserBehaviour());
-                else {
-                    wave.setBehaviour(new WaveBehaviour());
-                    wave.setEntitySize(size * 0.5F, size * 2F);
-                }
+                wave.setGrows(getBooleanProperty(GROW, ctx));
+                wave.setPulls(getBooleanProperty(PULLS, ctx));
+                wave.setBehaviour(new WaveBehaviour());
+                wave.setEntitySize(size * 0.5F, size * 2F);
 
 
                 //TODO: Fix positioning so that particles are consistent
-                if (getBooleanProperty(CHARGEABLE, ctx)) {
-                    //Add a tick handler/stat ctrl for charging
-                }
                 if (getBooleanProperty(RIDEABLE, ctx)) {
                     //Add a status control here
                 }
@@ -286,12 +263,12 @@ public class AbilityCreateWave extends Ability {
                         ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(0, 200, 255, 75)
                                 .time(12 + AvatarUtils.getRandomNumberInRange(0, 1)).gravity(true)
                                 .vel(lowerWaterVel)
-                                .spawnEntity(entity).element(new Waterbending()).pos(pos.add(posLeft)).scale(entity.getAvgSize())
+                                .spawnEntity(entity).element(BendingStyles.get(Waterbending.ID)).pos(pos.add(posLeft)).scale(entity.getAvgSize())
                                 .collide(true).glow(true).spawn(world);
                         ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(0, 200, 255, 75)
                                 .time(12 + AvatarUtils.getRandomNumberInRange(0, 1)).gravity(true)
                                 .vel(upperWaterVel)
-                                .spawnEntity(entity).element(new Waterbending()).pos(pos.add(posLeft)).scale(entity.getAvgSize())
+                                .spawnEntity(entity).element(BendingStyles.get(Waterbending.ID)).pos(pos.add(posLeft)).scale(entity.getAvgSize())
                                 .collide(true).glow(true).spawn(world);
 
 
@@ -305,46 +282,17 @@ public class AbilityCreateWave extends Ability {
                     ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(0, 200, 255, 75)
                             .time(12 + AvatarUtils.getRandomNumberInRange(0, 1)).gravity(true)
                             .vel(lowerWaterVel)
-                            .spawnEntity(entity).element(new Waterbending()).pos(pos).scale(entity.getAvgSize())
+                            .spawnEntity(entity).element(BendingStyles.get(Waterbending.ID)).pos(pos).scale(entity.getAvgSize())
                             .collide(true).spawn(world);
                     ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(0, 200, 255, 75)
                             .time(12 + AvatarUtils.getRandomNumberInRange(0, 1)).gravity(true)
                             .vel(upperWaterVel)
-                            .spawnEntity(entity).element(new Waterbending()).pos(pos).scale(entity.getAvgSize())
+                            .spawnEntity(entity).element(BendingStyles.get(Waterbending.ID)).pos(pos).scale(entity.getAvgSize())
                             .collide(true).glow(true).spawn(world);
 
                 }
 
             }
-            return this;
-        }
-
-        @Override
-        public void fromBytes(PacketBuffer buf) {
-
-        }
-
-        @Override
-        public void toBytes(PacketBuffer buf) {
-
-        }
-
-        @Override
-        public void load(NBTTagCompound nbt) {
-
-        }
-
-        @Override
-        public void save(NBTTagCompound nbt) {
-
-        }
-    }
-
-    //Makes it spawn a line of geysers!
-    public static class WaveGeyserBehaviour extends OffensiveBehaviour {
-
-        @Override
-        public Behavior onUpdate(EntityOffensive entity) {
             return this;
         }
 

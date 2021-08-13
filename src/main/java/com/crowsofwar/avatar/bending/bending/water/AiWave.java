@@ -18,8 +18,8 @@ package com.crowsofwar.avatar.bending.bending.water;
 
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingAi;
-import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.Raytrace;
+import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.gorecore.util.Vector;
 import com.crowsofwar.gorecore.util.VectorI;
 import net.minecraft.block.state.IBlockState;

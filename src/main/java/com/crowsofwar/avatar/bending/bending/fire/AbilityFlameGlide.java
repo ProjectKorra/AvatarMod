@@ -11,9 +11,7 @@ import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
 import net.minecraft.entity.EntityLiving;
 
-import static com.crowsofwar.avatar.util.data.StatusControlController.DEMON_WINGS;
 import static com.crowsofwar.avatar.util.data.StatusControlController.FIRE_JUMP;
-import static com.crowsofwar.avatar.util.data.TickHandlerController.DEMON_WINGS_HANDLER;
 import static com.crowsofwar.avatar.util.data.TickHandlerController.FLAME_GLIDE_HANDLER;
 
 public class AbilityFlameGlide extends Ability {
