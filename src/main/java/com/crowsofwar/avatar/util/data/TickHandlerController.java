@@ -72,7 +72,7 @@ public class TickHandlerController {
 	public static TickHandler ICE_RAZE_HANDLER = new IceRazeHandler(36);
 	public static TickHandler ICE_LANCE_HANDLER = new IceLanceHandler(37);
 	public static TickHandler FROST_CLAW_MAIN_HAND_HANDLER = new FrostClawHandler(38, EnumHand.MAIN_HAND);
-	public static TickHandler FROST_CLAW_OFF_HAND_HANDLER = new FrostClawHandler(38, EnumHand.OFF_HAND);
+	public static TickHandler FROST_CLAW_OFF_HAND_HANDLER = new FrostClawHandler(39, EnumHand.OFF_HAND);
 
 
 

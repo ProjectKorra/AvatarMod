@@ -42,10 +42,12 @@ public class AbilityFrostClaws extends Ability {
         EnumHand hand;
         //Main hand is even for combo, off hand is odd
         if (abilityData.getUseNumber() % 2 == 0) {
-       //     data.addTickHandler(TickHandlerController.FROST_CLAW_MAIN_HAND_HANDLER, ctx);
+            data.removeTickHandler(TickHandlerController.FROST_CLAW_MAIN_HAND_HANDLER, ctx);
+            data.addTickHandler(TickHandlerController.FROST_CLAW_MAIN_HAND_HANDLER, ctx);
             hand = EnumHand.MAIN_HAND;
         } else {
-         //   data.addTickHandler(TickHandlerController.FROST_CLAW_OFF_HAND_HANDLER, ctx);
+            data.removeTickHandler(TickHandlerController.FROST_CLAW_OFF_HAND_HANDLER, ctx);
+            data.addTickHandler(TickHandlerController.FROST_CLAW_OFF_HAND_HANDLER, ctx);
             hand = EnumHand.OFF_HAND;
         }
 
@@ -203,11 +205,11 @@ public class AbilityFrostClaws extends Ability {
                         pos = pos.add(newDir);
                         pos = new Vec3d(pos.x, pos.y + (entity.getHeight() / 1.75 * Math.sin(Math.toRadians(i))), pos.z);
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(pos).vel(world.rand.nextGaussian() / 30, world.rand.nextGaussian() / 30,
-                                world.rand.nextGaussian() / 30).collide(true).time(12 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(100, 230, 255, 20)
+                                world.rand.nextGaussian() / 30).collide(true).time(12 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(140, 230, 255, 20)
                                 .scale(entity.getWidth() * 1.5F).element(BendingStyles.get(entity.getElement())).spawnEntity(entity).glow(
-                                AvatarUtils.getRandomNumberInRange(1, 100) > 75).spawn(world);
+                                AvatarUtils.getRandomNumberInRange(1, 100) > 40).spawn(world);
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(pos).vel(entity.motionX, entity.motionY, entity.motionZ).collide(true)
-                                .time(8 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(90, 255, 255, 60)
+                                .time(7 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(130, 255, 255, 60)
                                 .scale(entity.getWidth() * 2F).spawnEntity(entity).element(BendingStyles.get(entity.getElement())).spawn(world);
                     }
                 }

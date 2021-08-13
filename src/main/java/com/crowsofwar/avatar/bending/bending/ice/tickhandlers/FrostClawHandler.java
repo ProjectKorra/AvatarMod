@@ -84,12 +84,12 @@ public class FrostClawHandler extends TickHandler {
             if (world.isRemote) {
                 for (int i = 0; i < 10; i++) {
                     ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(rightSide).time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).vel(world.rand.nextGaussian() / 40, world.rand.nextDouble() / 40,
-                            world.rand.nextGaussian() / 40).clr(120, 235, 255, 30).collide(true).
-                            scale(1 / 2F).element(BendingStyles.get(Icebending.ID)).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 65)
+                            world.rand.nextGaussian() / 40).clr(160, 235, 255, 30).collide(true).
+                            scale(1 / 2F).element(BendingStyles.get(Icebending.ID)).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 50)
                             .spawnEntity(entity).spawn(world);
                     ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(rightSide).time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).vel(world.rand.nextGaussian() / 40, world.rand.nextDouble() / 40,
-                            world.rand.nextGaussian() / 40).clr(90, 255, 255, 60).collide(true).
-                            scale(1 / 2F).element(BendingStyles.get(Icebending.ID)).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 90)
+                            world.rand.nextGaussian() / 40).clr(140, 255, 255, 60).collide(true).
+                            scale(1 / 2F).element(BendingStyles.get(Icebending.ID)).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 75)
                             .spawnEntity(entity).spawn(world);
                 }
             }
