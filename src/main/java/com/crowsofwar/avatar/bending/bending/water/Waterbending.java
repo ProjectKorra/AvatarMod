@@ -104,10 +104,12 @@ public class Waterbending extends BendingStyle {
     public static boolean isBendable(Ability ability, IBlockState state,
                                      EntityLivingBase entity) {
         if (entity != null) {
-            boolean bendable = STATS_CONFIG.waterBendableBlocks.contains(state.getBlock());
-            if (ability.getBooleanProperty(PLANT_BEND, AbilityData.get(entity, ability.getName())))
-                bendable |= STATS_CONFIG.plantBendableBlocks.contains(state.getBlock());
-            return bendable;
+            if (state.getBlock() != Blocks.AIR) {
+                boolean bendable = STATS_CONFIG.waterBendableBlocks.contains(state.getBlock());
+                if (ability.getBooleanProperty(PLANT_BEND, AbilityData.get(entity, ability.getName())))
+                    bendable = bendable || STATS_CONFIG.plantBendableBlocks.contains(state.getBlock());
+                return bendable;
+            }
         }
         return false;
 

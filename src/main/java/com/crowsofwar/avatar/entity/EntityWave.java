@@ -198,7 +198,8 @@ public class EntityWave extends EntityOffensive {
                 world.getBlockState(getPosition()), getOwner()) || shouldRunOnLand() &&
                 world.getBlockState(getPosition()).isFullBlock() && world.getBlockState(getPosition()).getBlock()
                 != Blocks.AIR;
-        if (bendable && !world.isRemote)
+
+        if (bendable)
             setPosition(position().plusY(1));
 
         // Destroy non-solid blocks in the wave

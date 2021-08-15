@@ -8,7 +8,6 @@ import com.crowsofwar.avatar.entity.EntityShield;
 import com.crowsofwar.avatar.entity.IShieldEntity;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.item.EntityEnderCrystal;
@@ -37,13 +36,6 @@ public class DamageUtils {
                         BattlePerformanceScore.addScore(attacker, performance);
                         data.addXp(xp);
                     }
-                    else if (!ds && hit instanceof EntityLivingBase) {
-                        AvatarLog.info(hit.getName());
-                        //Will this break things? Idk
-                        hit.hurtResistantTime = 0;
-                        hit.attackEntityFrom(source, damage);
-
-                    }
                 }
             }
         }
@@ -51,21 +43,7 @@ public class DamageUtils {
 
     public static boolean isValidTarget(Entity attacker, Entity target) {
         if (attacker instanceof AvatarEntity) {
-            EntityLivingBase owner = ((AvatarEntity) attacker).getOwner();
-            if (target == owner)
-                return false;
-            else if (target instanceof AvatarEntity && ((AvatarEntity) target).getOwner() == owner)
-                return false;
-            else if (target instanceof EntityLivingBase && target.getControllingPassenger() == owner)
-                return false;
-            else if (owner != null && owner.getTeam() != null && target.getTeam() == owner.getTeam())
-                return false;
-            else if (target instanceof EntityEnderCrystal)
-                return true;
-            else if (target == attacker)
-                return false;
-            else
-                return (target.canBePushed() && target.canBeCollidedWith()) || target instanceof EntityLivingBase || target instanceof AvatarEntity;
+            return ((AvatarEntity) attacker).canCollideWith(target);
         } else {
             if (attacker == target)
                 return false;

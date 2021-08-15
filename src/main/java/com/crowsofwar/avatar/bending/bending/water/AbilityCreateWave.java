@@ -27,19 +27,24 @@ import com.crowsofwar.avatar.entity.EntityWave;
 import com.crowsofwar.avatar.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
+import com.crowsofwar.avatar.util.damageutils.DamageUtils;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+
+import java.util.List;
 
 /**
  * Are you proud of me, dad? I'm outlining how this should work in the documentation.
@@ -171,26 +176,28 @@ public class AbilityCreateWave extends Ability {
                         Block waveBlock = world.getBlockState(wavePos).getBlock();
                         Block belowBlock = world.getBlockState(wavePos.down()).getBlock();
                         //Ensures the wave spawns right on top of the water; also limits the number of tries.
-                        int i = 0;
-                        while (Waterbending.isBendable(abilityWave, world.getBlockState(wavePos),
-                                entity) && waveBlock != Blocks.AIR && i < getProperty(SOURCE_RANGE, ctx).intValue()) {
-                            wavePos = wavePos.up();
-                            waveBlock = world.getBlockState(wavePos).getBlock();
-                            i++;
-                        }
-                        i = 0;
-                        while (belowBlock == Blocks.AIR && i < getProperty(SOURCE_RANGE, ctx).intValue()) {
-                            wavePos = wavePos.down();
-                            belowBlock = world.getBlockState(wavePos.down()).getBlock();
-                            i++;
-                        }
+//                        int i = 0;
+//                        while (Waterbending.isBendable(abilityWave, world.getBlockState(wavePos),
+//                                entity) && waveBlock != Blocks.AIR && i < getProperty(SOURCE_RANGE, ctx).intValue()) {
+//                            wavePos = wavePos.up();
+//                            waveBlock = world.getBlockState(wavePos).getBlock();
+//                            i++;
+//                        }
+//                        i = 0;
+//                        while (belowBlock == Blocks.AIR && i < getProperty(SOURCE_RANGE, ctx).intValue()) {
+//                            wavePos = wavePos.down();
+//                            belowBlock = world.getBlockState(wavePos.down()).getBlock();
+//                            i++;
+//                        }
                         firstBendable = Waterbending.isBendable(abilityWave, world.getBlockState(wavePos),
                                 entity);
                         if (firstBendable) {
-                            wave.setPosition(wavePos);
+                            wave.setPosition(wavePos.up());
                             //Corrects the position of the wave
                         }
-                    }
+                    } else
+                        bender.sendMessage("avatar.waterSourceFail");
+
                 }
 
 
@@ -198,7 +205,8 @@ public class AbilityCreateWave extends Ability {
                 float adjustment = 0;
                 if (size * 10 % 10 == 5)
                     adjustment = 0.5F;
-                wave.setPosition(wave.posX, Math.round(wave.posY + adjustment), wave.posZ);
+                //0.1F is for normal ground level (water is slightly shorter)
+                wave.setPosition(wave.posX, Math.round(wave.posY + adjustment) + 0.1F, wave.posZ);
                 if (!world.isRemote && (firstBendable || secondBendable)) {
                     world.spawnEntity(wave);
                 }
@@ -228,33 +236,58 @@ public class AbilityCreateWave extends Ability {
         @Override
         public OffensiveBehaviour onUpdate(EntityOffensive entity) {
             if (entity != null && entity.getOwner() != null) {
-                if (entity.world.isRemote) {
-                    World world = entity.world;
-                    Vec3d look = Vector.getLookRectangular(entity).withY(0).toMinecraft();
-                    Vec3d pos = AvatarEntityUtils.getBottomMiddleOfEntity(entity).subtract(0, entity.height / 2, 0);
-                    //It's maths time boys and girls
-                    //We want kinda a curved triangle shape, so we need two curves (one with less height)
-                    for (double w = 0; w < entity.width; w += 0.2) {
-                        //We want to start in the middle then go right and left/scale right and left
-                        //Going right
-                        Vec3d posRight = Vector.getOrthogonalVector(look, 90, w / (entity.width)).toMinecraft();
-                        Vec3d lowerWaterVel = new Vec3d(world.rand.nextGaussian() / 60 + entity.motionX * 2, entity.getHeight() * 0.075F + world.rand.nextDouble() / 10,
-                                world.rand.nextGaussian() / 60 + entity.motionZ * 2);
-                        Vec3d upperWaterVel = new Vec3d(world.rand.nextGaussian() / 60 + entity.motionX * 2, entity.getHeight() * 0.1F + world.rand.nextDouble() / 4,
-                                world.rand.nextGaussian() / 60 + entity.motionZ * 2);
-                        ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(0, 200, 255, 75)
-                                .time(12 + AvatarUtils.getRandomNumberInRange(0, 1)).gravity(true)
-                                .vel(lowerWaterVel).spawnEntity(entity).element(new Waterbending())
-                                .pos(pos.add(posRight)).scale(entity.getAvgSize()).collide(true).glow(true).spawn(world);
-                        ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(0, 200, 255, 75)
-                                .time(12 + AvatarUtils.getRandomNumberInRange(0, 1)).gravity(true)
-                                .vel(upperWaterVel).spawnEntity(entity).element(new Waterbending())
-                                .pos(pos.add(posRight)).scale(entity.getAvgSize()).collide(true).glow(true).spawn(world);
+                World world = entity.world;
+                if (entity instanceof EntityWave) {
 
-                    }
-                    for (double w = 0; w < entity.width; w += 0.2) {
-                        //We want to start in the middle then go right and left/scale right and left
-                        Vec3d posLeft = Vector.getOrthogonalVector(look, -90, w / (entity.width)).toMinecraft();
+                    if (world.isRemote) {
+                        Vec3d look = Vector.getLookRectangular(entity).withY(0).toMinecraft();
+                        Vec3d pos = AvatarEntityUtils.getBottomMiddleOfEntity(entity).subtract(0, entity.height / 2, 0);
+                        //It's maths time boys and girls
+                        //We want kinda a curved triangle shape, so we need two curves (one with less height)
+                        //Also need to optimise this; high levels kill it
+                        double widthInc = entity.width / 10 + 0.2;
+                        for (double w = 0; w < entity.width; w += widthInc) {
+                            //We want to start in the middle then go right and left/scale right and left
+                            //Going right
+                            Vec3d posRight = Vector.getOrthogonalVector(look, 90, w / (entity.width)).toMinecraft();
+                            Vec3d lowerWaterVel = new Vec3d(world.rand.nextGaussian() / 60 + entity.motionX * 2, entity.getHeight() * 0.075F + world.rand.nextDouble() / 10,
+                                    world.rand.nextGaussian() / 60 + entity.motionZ * 2);
+                            Vec3d upperWaterVel = new Vec3d(world.rand.nextGaussian() / 60 + entity.motionX * 2, entity.getHeight() * 0.1F + world.rand.nextDouble() / 4,
+                                    world.rand.nextGaussian() / 60 + entity.motionZ * 2);
+                            ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(0, 200, 255, 75)
+                                    .time(12 + AvatarUtils.getRandomNumberInRange(0, 1)).gravity(true)
+                                    .vel(lowerWaterVel).spawnEntity(entity).element(new Waterbending())
+                                    .pos(pos.add(posRight)).scale(entity.getAvgSize()).collide(true).glow(true).spawn(world);
+                            ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(0, 200, 255, 75)
+                                    .time(12 + AvatarUtils.getRandomNumberInRange(0, 1)).gravity(true)
+                                    .vel(upperWaterVel).spawnEntity(entity).element(new Waterbending())
+                                    .pos(pos.add(posRight)).scale(entity.getAvgSize()).collide(true).glow(true).spawn(world);
+
+                        }
+                        for (double w = 0; w < entity.width; w += widthInc) {
+                            //We want to start in the middle then go right and left/scale right and left
+                            Vec3d posLeft = Vector.getOrthogonalVector(look, -90, w / (entity.width)).toMinecraft();
+                            Vec3d lowerWaterVel = new Vec3d(world.rand.nextGaussian() / 60 + entity.motionX * 2, entity.getHeight() * 0.075F + world.rand.nextDouble() / 10,
+                                    world.rand.nextGaussian() / 60 + entity.motionZ * 2);
+                            Vec3d upperWaterVel = new Vec3d(world.rand.nextGaussian() / 60 + entity.motionX * 2, entity.getHeight() * 0.1F + world.rand.nextDouble() / 4,
+                                    world.rand.nextGaussian() / 60 + entity.motionZ * 2);
+
+                            ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(0, 200, 255, 75)
+                                    .time(12 + AvatarUtils.getRandomNumberInRange(0, 1)).gravity(true)
+                                    .vel(lowerWaterVel)
+                                    .spawnEntity(entity).element(BendingStyles.get(Waterbending.ID)).pos(pos.add(posLeft)).scale(entity.getAvgSize())
+                                    .collide(true).glow(true).spawn(world);
+                            ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(0, 200, 255, 75)
+                                    .time(12 + AvatarUtils.getRandomNumberInRange(0, 1)).gravity(true)
+                                    .vel(upperWaterVel)
+                                    .spawnEntity(entity).element(BendingStyles.get(Waterbending.ID)).pos(pos.add(posLeft)).scale(entity.getAvgSize())
+                                    .collide(true).glow(true).spawn(world);
+
+                            //All foam behaviour is handled within the particle class (call .collide(true) and make the
+                            //element waterbending.
+
+                        }
+
                         Vec3d lowerWaterVel = new Vec3d(world.rand.nextGaussian() / 60 + entity.motionX * 2, entity.getHeight() * 0.075F + world.rand.nextDouble() / 10,
                                 world.rand.nextGaussian() / 60 + entity.motionZ * 2);
                         Vec3d upperWaterVel = new Vec3d(world.rand.nextGaussian() / 60 + entity.motionX * 2, entity.getHeight() * 0.1F + world.rand.nextDouble() / 4,
@@ -263,35 +296,51 @@ public class AbilityCreateWave extends Ability {
                         ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(0, 200, 255, 75)
                                 .time(12 + AvatarUtils.getRandomNumberInRange(0, 1)).gravity(true)
                                 .vel(lowerWaterVel)
-                                .spawnEntity(entity).element(BendingStyles.get(Waterbending.ID)).pos(pos.add(posLeft)).scale(entity.getAvgSize())
-                                .collide(true).glow(true).spawn(world);
+                                .spawnEntity(entity).element(BendingStyles.get(Waterbending.ID)).pos(pos).scale(entity.getAvgSize())
+                                .collide(true).spawn(world);
                         ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(0, 200, 255, 75)
                                 .time(12 + AvatarUtils.getRandomNumberInRange(0, 1)).gravity(true)
                                 .vel(upperWaterVel)
-                                .spawnEntity(entity).element(BendingStyles.get(Waterbending.ID)).pos(pos.add(posLeft)).scale(entity.getAvgSize())
+                                .spawnEntity(entity).element(BendingStyles.get(Waterbending.ID)).pos(pos).scale(entity.getAvgSize())
                                 .collide(true).glow(true).spawn(world);
-
 
                     }
 
-                    Vec3d lowerWaterVel = new Vec3d(world.rand.nextGaussian() / 60 + entity.motionX * 2, entity.getHeight() * 0.075F + world.rand.nextDouble() / 10,
-                            world.rand.nextGaussian() / 60 + entity.motionZ * 2);
-                    Vec3d upperWaterVel = new Vec3d(world.rand.nextGaussian() / 60 + entity.motionX * 2, entity.getHeight() * 0.1F + world.rand.nextDouble() / 4,
-                            world.rand.nextGaussian() / 60 + entity.motionZ * 2);
+                    EntityWave wave = (EntityWave) entity;
+                    if (wave.doesGrow()) {
+                        wave.setEntitySize(wave.getHeight() * 1.025F, wave.getWidth() * 1.025F);
+                        wave.motionX *= 1.05;
+                        wave.motionY *= 1.05;
+                        wave.motionZ *= 1.05;
+                    }
 
-                    ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(0, 200, 255, 75)
-                            .time(12 + AvatarUtils.getRandomNumberInRange(0, 1)).gravity(true)
-                            .vel(lowerWaterVel)
-                            .spawnEntity(entity).element(BendingStyles.get(Waterbending.ID)).pos(pos).scale(entity.getAvgSize())
-                            .collide(true).spawn(world);
-                    ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(0, 200, 255, 75)
-                            .time(12 + AvatarUtils.getRandomNumberInRange(0, 1)).gravity(true)
-                            .vel(upperWaterVel)
-                            .spawnEntity(entity).element(BendingStyles.get(Waterbending.ID)).pos(pos).scale(entity.getAvgSize())
-                            .collide(true).glow(true).spawn(world);
+                    if (wave.doesPull()) {
+                        //Maybe particle effects later?
+                        //First, create an AABB, then pull enemies in.
+                        AxisAlignedBB pullBox = entity.getExpandedHitbox().grow(entity.width / 4);
+                        List<Entity> targets = world.getEntitiesWithinAABB(Entity.class, pullBox);
+                        if (!targets.isEmpty()) {
+                            for (Entity target : targets) {
+                                if (target != entity && target != entity.getOwner()) {
+                                    if (DamageUtils.isValidTarget(entity, target)) {
+                                        if (!world.isRemote) {
+                                            Vec3d entityVel = entity.velocity().toMinecraft();
+                                            Vec3d futurePos = entity.getPositionVector().add(entityVel.scale(1 / 20F));
+                                            Vec3d targetPos = target.getPositionVector();
+                                            Vec3d vel = futurePos.subtract(targetPos).scale(-1 / 10F);
+                                            target.motionX = vel.x;
+                                            target.motionY = 0.1;
+                                            target.motionZ = vel.z;
+                                            AvatarUtils.afterVelocityAdded(target);
+                                        }
+                                    }
+                                }
+                            }
+                        }
 
+                        //Now, particles or else it looks a bit weird
+                    }
                 }
-
             }
             return this;
         }
