@@ -307,8 +307,8 @@ avatar.ability.wave.desc=Summon a wave of water to push nearby enemies away!
 avatar.ability.wave.lvl1=F l o w
 avatar.ability.wave.lvl2=Bigger, badder, faster, stronger
 avatar.ability.wave.lvl3=Increase in size
-avatar.ability.wave.lvl4_1=§9§l§oTsunami ;; Creates a massive wave
-avatar.ability.wave.lvl4_2=§9§l§oEbb and Flow ;; Gain the ability to summon waves pulling enemies towards you.
+avatar.ability.wave.lvl4_1=§9§l§oTsunami ;; Creates a small wave that exponentially grows and becomes faster!
+avatar.ability.wave.lvl4_2=§9§l§oEbb and Flow ;; Gain the ability to summon waves pulling enemies towards themselves.
 
 avatar.ability.water_skate=§9§lWater §9§lSkate
 avatar.ability.water_skate.desc=Run on the surface of water, or compatible blocks. Useful as an evasive ability, or just to get around.
