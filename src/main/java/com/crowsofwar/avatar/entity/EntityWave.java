@@ -239,8 +239,9 @@ public class EntityWave extends EntityOffensive {
     @Override
     public void Dissipate() {
         if (getOwner() != null) {
-            if (onCollideWithSolid() || !Waterbending.isBendable(Objects.requireNonNull(Abilities.get("wave")),
-                    world.getBlockState(getPosition().down()), getOwner())) {
+            //Well that explains why the wave wouldn't run on land
+            if (onCollideWithSolid()/* || !Waterbending.isBendable(Objects.requireNonNull(Abilities.get("wave")),
+                    world.getBlockState(getPosition().down()), getOwner())**/) {
                 spawnDissipateParticles(world, getPositionVector());
                 setDead();
             }

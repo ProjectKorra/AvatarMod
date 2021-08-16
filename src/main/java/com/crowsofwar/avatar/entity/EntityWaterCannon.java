@@ -1,10 +1,10 @@
 package com.crowsofwar.avatar.entity;
 
-import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.water.Waterbending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
+import com.crowsofwar.avatar.util.AvatarParticleUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
@@ -29,7 +29,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
      * The amount of ticks since last played splash sound. -1 for splashable.
      */
     private int lastPlayedSplash;
-    private boolean isSpear;
     private float damageMult;
 
 
@@ -51,11 +50,6 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
     public void setDamageMult(float mult) {
         this.damageMult = mult;
     }
-
-    public void isSpear(boolean isSpear) {
-        this.isSpear = isSpear;
-    }
-
 
     public float getSpeed() {
         return dataManager.get(SYNC_SPEED);
@@ -193,28 +187,26 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
         setEntitySize(getAvgSize());
         System.out.println(getAvgSize());
 
-        if (world.isRemote && getOwner() != null) {
-            for (int i = 0; i < 3 * (width); i++) {
-                Vec3d mid = AvatarEntityUtils.getMiddleOfEntity(this);
-                double spawnX = mid.x + world.rand.nextGaussian() / 20;
-                double spawnY = mid.y + world.rand.nextGaussian() / 20;
-                double spawnZ = mid.z + world.rand.nextGaussian() / 20;
-                ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 25, world.rand.nextGaussian() / 25,
-                        world.rand.nextGaussian() / 25).time(4 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(0, 102, 255, 145).spawnEntity(this)
-                        .scale(getAvgSize() * (1 / getAvgSize() + 1)).element(BendingStyles.get(getElement())).collide(true).spawn(world);
-                ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 45 + motionX,
-                        world.rand.nextGaussian() / 45 + motionY, world.rand.nextGaussian() / 45 + motionZ)
-                        .time(14 + AvatarUtils.getRandomNumberInRange(0, 10)).clr(0, 102, 255, 145).spawnEntity(getOwner())
-                        .scale(getAvgSize() * (1 / getAvgSize() + 0.5F)).element(BendingStyles.get(getElement())).collide(true).spawn(world);
-            }
-        }
+
         if (world.isRemote && getOwner() != null && ticksExisted % 2 == 0) {
+            //Expanding vortex???
+            double dist = getControlPoint(getAmountOfControlPoints() - 1).getDistance(getLeader());
+
+            //Spawns a spinning vortex near the player. Let's hope this works.
+            AvatarParticleUtils.spawnSpinningDirectionalVortex(world, this,
+                    position().plus(Vector.getLookRectangular(this).times(-dist)).toMinecraft(),
+                    (int) (dist * getAvgSize() * 60), dist, 0.1F,
+                    Math.min(getAvgSize() * 2 * dist / getLifeTime(), getAvgSize() * 2),
+                    ParticleBuilder.Type.CUBE, Vec3d.ZERO,
+                    Vec3d.ZERO, true,
+                    20, 120, 255, 120,4, BendingStyles.get(Waterbending.ID),
+                    false, getAvgSize() / 2);
+
             Vec3d[] points = new Vec3d[getAmountOfControlPoints()];
             for (int i = 0; i < points.length; i++)
                 points[i] = getControlPoint(i).position().toMinecraft();
             //Particles! Let's do this.
             //First, we need a bezier curve. Joy.
-            //Iterate through all of the control points.
             //0 is the leader/front one
             for (int i = 0; i < getAmountOfControlPoints(); i++) {
                 Vec3d pos = getControlPoint(points.length - i - 1).position().toMinecraft();
