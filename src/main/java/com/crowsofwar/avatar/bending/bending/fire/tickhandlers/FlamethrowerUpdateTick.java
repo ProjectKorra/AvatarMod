@@ -261,48 +261,48 @@ public class FlamethrowerUpdateTick extends TickHandler {
         @Override
         public OffensiveBehaviour onUpdate(EntityOffensive entity) {
             if (entity.getOwner() != null) {
-                entity.motionX *= 0.95;
-                entity.motionY *= 0.95;
-                entity.motionZ *= 0.95;
-                if (entity.world.isRemote && entity.ticksExisted > 1) {
-                    int[] fade = entity.getFade();
-                    int[] rgb = entity.getRGB();
-                    for (int h = 0; h < Math.max(1, entity.getOwner() instanceof EntityPlayer ? 1 : entity.velocity().magnitude() / 10); h++) {
-                        for (double i = 0; i < entity.width; i += entity.getOwner() instanceof EntityPlayer ? entity.width / 2 : 0.25 * entity.getAvgSize() * 2) {
-                            int rRandom = fade[0] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[0] * 2) : AvatarUtils.getRandomNumberInRange(fade[0] / 2,
-                                    fade[0] * 2);
-                            int gRandom = fade[1] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[1] * 2) : AvatarUtils.getRandomNumberInRange(fade[1] / 2,
-                                    fade[1] * 2);
-                            int bRandom = fade[2] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[2] * 2) : AvatarUtils.getRandomNumberInRange(fade[2] / 2,
-                                    fade[2] * 2);
-                            Random random = new Random();
-                            Vec3d box = AvatarEntityUtils.getMiddleOfEntity(entity);
-                            AxisAlignedBB boundingBox = entity.getEntityBoundingBox();
-                            double spawnX = box.x + random.nextDouble() * 0.125 * (boundingBox.maxX - boundingBox.minX);
-                            double spawnY = box.y + random.nextDouble() * 0.125 * (boundingBox.maxY - boundingBox.minY);
-                            double spawnZ = box.z + random.nextDouble() * 0.125 * (boundingBox.maxZ - boundingBox.minZ);
-                            int time = 10 - (int) (entity.velocity().magnitude() / 20) + AvatarUtils.getRandomNumberInRange(0, 2);
-                            float scale = entity.getOwner() instanceof EntityBender ? 2.0F : 1.0F;
-                            if (entity.getOwner() instanceof EntityPlayer)
-                                time = 4 - (int) (entity.velocity().magnitude() / 20) + AvatarUtils.getRandomNumberInRange(0, 2);
-                            ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 10 * entity.getAvgSize(),
-                                    entity.world.rand.nextGaussian() / 10 * entity.getAvgSize(), entity.world.rand.nextGaussian() / 10 * entity.getAvgSize())
-                                    .time(time).clr(rgb[0], rgb[1], rgb[2]).scale(entity.getAvgSize() * scale)
-                                    .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).element(BendingStyles.get(entity.getElement()))
-                                    .ability(entity.getAbility()).spawnEntity(entity.getOwner()).collide(true).collideParticles(entity.getOwner() instanceof EntityBender).spawn(entity.world);
-                            ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 10 * entity.getAvgSize(),
-                                    entity.world.rand.nextGaussian() / 10 * entity.getAvgSize(), entity.world.rand.nextGaussian() / 10 * entity.getAvgSize())
-                                    .time(time).clr(rgb[0], rgb[1], rgb[2]).scale(entity.getAvgSize() * scale)
-                                    .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).element(BendingStyles.get(entity.getElement()))
-                                    .ability(entity.getAbility()).spawnEntity(entity.getOwner()).collide(true).collideParticles(entity.getOwner() instanceof EntityBender).spawn(entity.world);
-                            ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 7.5 * entity.getAvgSize(),
-                                    entity.world.rand.nextGaussian() / 7.5 * entity.getAvgSize(), entity.world.rand.nextGaussian() / 7.5 * entity.getAvgSize())
-                                    .time(time + 2).clr(rgb[0], rgb[1], rgb[2]).scale(entity.getAvgSize() / 1.25F * scale)
-                                    .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).element(BendingStyles.get(entity.getElement()))
-                                    .ability(entity.getAbility()).spawnEntity(entity.getOwner()).collide(true).collideParticles(entity.getOwner() instanceof EntityBender).spawn(entity.world);
-                        }
-                    }
-                }
+//                entity.motionX *= 0.95;
+//                entity.motionY *= 0.95;
+//                entity.motionZ *= 0.95;
+//                if (entity.world.isRemote && entity.ticksExisted > 1) {
+//                    int[] fade = entity.getFade();
+//                    int[] rgb = entity.getRGB();
+//                    for (int h = 0; h < Math.max(1, entity.getOwner() instanceof EntityPlayer ? 1 : entity.velocity().magnitude() / 10); h++) {
+//                        for (double i = 0; i < entity.width; i += entity.getOwner() instanceof EntityPlayer ? entity.width / 2 : 0.25 * entity.getAvgSize() * 2) {
+//                            int rRandom = fade[0] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[0] * 2) : AvatarUtils.getRandomNumberInRange(fade[0] / 2,
+//                                    fade[0] * 2);
+//                            int gRandom = fade[1] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[1] * 2) : AvatarUtils.getRandomNumberInRange(fade[1] / 2,
+//                                    fade[1] * 2);
+//                            int bRandom = fade[2] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[2] * 2) : AvatarUtils.getRandomNumberInRange(fade[2] / 2,
+//                                    fade[2] * 2);
+//                            Random random = new Random();
+//                            Vec3d box = AvatarEntityUtils.getMiddleOfEntity(entity);
+//                            AxisAlignedBB boundingBox = entity.getEntityBoundingBox();
+//                            double spawnX = box.x + random.nextDouble() * 0.125 * (boundingBox.maxX - boundingBox.minX);
+//                            double spawnY = box.y + random.nextDouble() * 0.125 * (boundingBox.maxY - boundingBox.minY);
+//                            double spawnZ = box.z + random.nextDouble() * 0.125 * (boundingBox.maxZ - boundingBox.minZ);
+//                            int time = 10 - (int) (entity.velocity().magnitude() / 20) + AvatarUtils.getRandomNumberInRange(0, 2);
+//                            float scale = entity.getOwner() instanceof EntityBender ? 2.0F : 1.0F;
+//                            if (entity.getOwner() instanceof EntityPlayer)
+//                                time = 4 - (int) (entity.velocity().magnitude() / 20) + AvatarUtils.getRandomNumberInRange(0, 2);
+//                            ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 10 * entity.getAvgSize(),
+//                                    entity.world.rand.nextGaussian() / 10 * entity.getAvgSize(), entity.world.rand.nextGaussian() / 10 * entity.getAvgSize())
+//                                    .time(time).clr(rgb[0], rgb[1], rgb[2]).scale(entity.getAvgSize() * scale)
+//                                    .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).element(BendingStyles.get(entity.getElement()))
+//                                    .ability(entity.getAbility()).spawnEntity(entity.getOwner()).collide(true).collideParticles(entity.getOwner() instanceof EntityBender).spawn(entity.world);
+//                            ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 10 * entity.getAvgSize(),
+//                                    entity.world.rand.nextGaussian() / 10 * entity.getAvgSize(), entity.world.rand.nextGaussian() / 10 * entity.getAvgSize())
+//                                    .time(time).clr(rgb[0], rgb[1], rgb[2]).scale(entity.getAvgSize() * scale)
+//                                    .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).element(BendingStyles.get(entity.getElement()))
+//                                    .ability(entity.getAbility()).spawnEntity(entity.getOwner()).collide(true).collideParticles(entity.getOwner() instanceof EntityBender).spawn(entity.world);
+//                            ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 7.5 * entity.getAvgSize(),
+//                                    entity.world.rand.nextGaussian() / 7.5 * entity.getAvgSize(), entity.world.rand.nextGaussian() / 7.5 * entity.getAvgSize())
+//                                    .time(time + 2).clr(rgb[0], rgb[1], rgb[2]).scale(entity.getAvgSize() / 1.25F * scale)
+//                                    .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).element(BendingStyles.get(entity.getElement()))
+//                                    .ability(entity.getAbility()).spawnEntity(entity.getOwner()).collide(true).collideParticles(entity.getOwner() instanceof EntityBender).spawn(entity.world);
+//                        }
+//                    }
+//                }
             }
             return this;
         }
