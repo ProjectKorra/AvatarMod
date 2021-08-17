@@ -215,6 +215,10 @@ public abstract class Ability {
      * A reference to the global properties for this ability, so they are only loaded once.
      */
     private AbilityProperties globalProperties;
+    /**
+     * The modifiers associated with this ability.
+     */
+    public AbilityModifiers modifiers;
     private Raytrace.Info raytrace;
 
 
@@ -272,7 +276,6 @@ public abstract class Ability {
         // On the server side, send a packet to the player to synchronise their spell properties
         List<Ability> abilities = Abilities.all();
         AvatarMod.network.sendToAll(new PacketCSyncAbilityProperties(abilities.stream().map(a -> a.properties).toArray(AbilityProperties[]::new)));
-
         //Prevents NPCS from yeeting
     }
 

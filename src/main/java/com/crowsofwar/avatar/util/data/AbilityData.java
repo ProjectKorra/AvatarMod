@@ -66,7 +66,8 @@ public class AbilityData {
     //This is the most small brain solution ever, but we're rewriting later so who really cares
     private int useNumber;
     private SourceInfo sourceInfo;
-    //TODO: Move this to the ability class (like properties). It'll massively reduce lag.
+    //TODO: Either move this to the Ability class *or* add a packet to sync them.
+    //Currently only works server-side when syncing.
     private List<AbilityModifier> modifiers;
     /**
      * Current burnout amount of the ability.
@@ -208,8 +209,8 @@ public class AbilityData {
     public Number modify(String property, Number val) {
         //Returns the property's base value/1 by default
         float baseVal = val.floatValue();
-//        for (AbilityModifier modifier : getModifiers())
-//            baseVal *= modifier.getProperty(property).floatValue();
+        for (AbilityModifier modifier : getModifiers())
+            baseVal *= modifier.getProperty(property).floatValue();
         return baseVal;
     }
 
@@ -232,7 +233,7 @@ public class AbilityData {
             this.modifiers.removeAll(Arrays.asList(modifiers.clone()));
     }
 
-    public void clearModifier() {
+    public void clearModifiers() {
         this.modifiers = new ArrayList<>();
     }
 
