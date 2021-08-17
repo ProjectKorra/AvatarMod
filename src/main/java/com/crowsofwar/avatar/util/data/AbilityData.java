@@ -224,13 +224,14 @@ public class AbilityData {
 
     public void addModifiers(AbilityModifier... modifiers) {
         if (!this.modifiers.contains(modifiers))
-            this.modifiers.addAll(Arrays.asList(modifiers.clone()));
+            this.modifiers.addAll(Arrays.asList(modifiers));
     }
 
+    //This method is *very* laggy.
     public void removeModifiers(AbilityModifier... modifiers) {
-        //mutable ugh
+        //Mutable
         if (this.modifiers.contains(modifiers))
-            this.modifiers.removeAll(Arrays.asList(modifiers.clone()));
+            this.modifiers.removeAll(Arrays.asList(modifiers));
     }
 
     public void clearModifiers() {

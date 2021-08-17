@@ -22,7 +22,7 @@ public class AbilityModifiers {
             FIREBENDER_MODIFIER = new AbilityModifier(FIREBENDER_ID),
             CONFIG_MODIFIER = new AbilityModifier(CONFIG_ID);
 
-    //Just reference the class to set stuf fup
+    //Just reference the class to set stuff up
     public static void init() {
     }
 

@@ -230,6 +230,16 @@ public class BendingData {
             getAbilityData(ability).removeModifiers(modifiers);
     }
 
+    public void clearModifiers(List<Ability> abilities) {
+        for (Ability ability : abilities)
+            getAbilityData(ability).clearModifiers();
+    }
+
+    public void clearModifiers() {
+        for (Ability ability : Abilities.all())
+            getAbilityData(ability).clearModifiers();
+    }
+
     public Rank getRank(BendingStyle style, int newLevels) {
         List<Ability> abilities = Abilities.all().stream().filter(ability -> ability.getElement() == style).collect(Collectors.toList());
         int maxLevel = abilities.size() * 4;

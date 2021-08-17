@@ -99,6 +99,31 @@ public class ItemGliderBase extends ItemSword implements IGlider, AvatarItem {
 
     }
 
+    @SubscribeEvent
+    public static void onAbilityEvent(AbilityUseEvent event) {
+        EntityLivingBase entity = event.getEntityLiving();
+        BendingData data = BendingData.getFromEntity(entity);
+        if (data != null) {
+            ItemGliderBase base;
+            if (entity.getHeldItemMainhand().getItem() instanceof ItemGliderBase) {
+                //Periodically refreshes the modifier
+                    base = (ItemGliderBase) entity.getHeldItemMainhand().getItem();
+                    List<Ability> abilities = Abilities.all().stream().filter(ability -> ability.getBendingId().equals(Airbending.ID))
+                            .collect(Collectors.toList());
+                      if (abilities.contains(event.getAbility()))
+                        data.applyModifiersToAbilities(abilities, base.getAbilityModifier());
+
+            } else if (entity.getHeldItemOffhand().getItem() instanceof ItemGliderBase) {
+                //Periodically refreshes the modifier
+                base = (ItemGliderBase) entity.getHeldItemOffhand().getItem();
+                List<Ability> abilities = Abilities.all().stream().filter(ability -> ability.getBendingId().equals(Airbending.ID))
+                        .collect(Collectors.toList());
+                if (abilities.contains(event.getAbility()))
+                    data.applyModifiersToAbilities(abilities, base.getAbilityModifier());
+
+            }
+        }
+    }
 
     @Override
     public float getAttackDamage() {
@@ -144,8 +169,7 @@ public class ItemGliderBase extends ItemSword implements IGlider, AvatarItem {
                 }
             }
 
-        }
-        else {
+        } else {
             if (entityIn.ticksExisted % 100 == 0)
                 if (entityIn instanceof EntityLivingBase) {
 //                    BendingData data = BendingData.getFromEntity((EntityLivingBase) entityIn);
@@ -202,31 +226,6 @@ public class ItemGliderBase extends ItemSword implements IGlider, AvatarItem {
         }
 
         return multimap;
-    }
-
-    @SubscribeEvent
-    public static void onAbilityEvent(AbilityUseEvent event) {
-        EntityLivingBase entity = event.getEntityLiving();
-        BendingData data = BendingData.getFromEntity(entity);
-        if (data != null) {
-            ItemGliderBase base;
-            if (entity.getHeldItemMainhand().getItem() instanceof ItemGliderBase) {
-                base = (ItemGliderBase) entity.getHeldItemMainhand().getItem();
-                List<Ability> abilities = Abilities.all().stream().filter(ability -> ability.getBendingId().equals(Airbending.ID))
-                        .collect(Collectors.toList());
-               //TODO: Optimise this system
-//                // data.removeModifiersFromAbilities(abilities, base.getAbilityModifier());
-//                if (abilities.contains(event.getAbility()))
-//                    data.applyModifiersToAbilities(abilities, base.getAbilityModifier());
-            }
-            else if (entity.getHeldItemOffhand().getItem() instanceof ItemGliderBase) {
-                base = (ItemGliderBase) entity.getHeldItemOffhand().getItem();
-                List<Ability> abilities = Abilities.all().stream().filter(ability -> ability.getBendingId().equals(Airbending.ID))
-                        .collect(Collectors.toList());
-//                if (abilities.contains(event.getAbility()))
-//                    data.applyModifiersToAbilities(abilities, base.getAbilityModifier());
-            }
-        }
     }
 
     /**
@@ -445,6 +444,5 @@ public class ItemGliderBase extends ItemSword implements IGlider, AvatarItem {
 
     public AbilityModifier getAbilityModifier() {
         return AbilityModifiers.STAFF_BASE_MODIFIER;
-
     }
 }

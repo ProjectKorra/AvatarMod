@@ -63,9 +63,9 @@ public class ItemGliderMaster extends ItemGliderBase implements AvatarItem {
         properties.put(Ability.EXHAUSTION, 0.75);
         properties.put(Ability.BURNOUT, 0.75);
         properties.put(Ability.CHI_COST, 0.75);
-        properties.put(Ability.DAMAGE, 1.125F);
-        properties.put(Ability.KNOCKBACK, 1.125F);
-        properties.put(Ability.SPEED, 1.125F);
+        properties.put(Ability.DAMAGE, 1.25F);
+        properties.put(Ability.KNOCKBACK, 1.25F);
+        properties.put(Ability.SPEED, 1.25F);
 
         modifier.addProperties(properties);
         return modifier;

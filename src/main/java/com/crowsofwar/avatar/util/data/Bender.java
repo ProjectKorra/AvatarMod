@@ -83,9 +83,7 @@ public abstract class Bender {
     }
 
     //Config modifier for power levels
-    //Have to remove it for now
     public static void adjustConfigModifier(EntityLivingBase bender) {
-
         for (Ability ability : Abilities.all()) {
             if (ability.properties != null) {
                 AbilityModifier modifier = AbilityModifiers.CONFIG_MODIFIER;
@@ -119,8 +117,7 @@ public abstract class Bender {
                 modifier.addProperties(properties);
                 BendingData data = BendingData.getFromEntity(bender);
                 if (data != null) {
-                    //Clear modifiers
-                    data.getAbilityData(ability).removeModifiers(AbilityModifiers.CONFIG_MODIFIER);
+                    data.clearModifiers();
                     //Add modifiers
                     data.getAbilityData(ability).addModifiers(modifier);
                 }
@@ -296,6 +293,9 @@ public abstract class Bender {
                                     aD.setAbilityCooldown(0);
                                     aD.setBurnOut(0);
                                 }
+
+                                //Clear properties
+                                aD.clearModifiers();
                             } else {
                                 Objects.requireNonNull(Bender.get(entity)).sendMessage("avatar.abilityCooldown");
                             }
@@ -306,14 +306,10 @@ public abstract class Bender {
                     } else {
                         if (getWorld().isRemote)
                             AvatarChatMessages.MSG_SKATING_BENDING_DISABLED.send(getEntity());
-
-                        //	QueuedAbilityExecutionHandler.queueAbilityExecution(entity, data, ability,
-                        //			raytrace, powerRating, switchPath);
                     }
                 } else {
                     sendMessage("avatar.abilityLocked");
                 }
-                abilityCtx.getAbilityData().removeModifiers(AbilityModifiers.CONFIG_MODIFIER);
             } else {
                 if (entity instanceof EntityPlayer)
                     Ability.syncProperties((EntityPlayer) entity);
@@ -377,6 +373,10 @@ public abstract class Bender {
             if (updateAbilities || entity.ticksExisted % 10000 == 0)
                 data.save(DataCategory.ABILITY_DATA);
         }
+
+        //Periodically clears modifiers to reduce lag
+        if (entity.ticksExisted % 200 == 0)
+            data.clearModifiers();
 
 
         BendingContext ctx = new BendingContext(data, entity, this, new Raytrace.Result());
