@@ -19,8 +19,6 @@ package com.crowsofwar.avatar.util.data;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
-import com.crowsofwar.avatar.bending.bending.AbilityModifier;
-import com.crowsofwar.avatar.bending.bending.AbilityModifiers;
 import com.crowsofwar.avatar.bending.bending.air.Airbending;
 import com.crowsofwar.avatar.bending.bending.earth.Earthbending;
 import com.crowsofwar.avatar.bending.bending.water.Waterbending;
@@ -48,7 +46,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.crowsofwar.avatar.config.ConfigChi.CHI_CONFIG;
-import static com.crowsofwar.avatar.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
 
 /**
@@ -83,49 +80,49 @@ public abstract class Bender {
     }
 
     //Config modifier for power levels
-    //TODO: Infinite scaling????
+    //Have to remove it for now
     public static void adjustConfigModifier(EntityLivingBase bender) {
 
-        for (Ability ability : Abilities.all()) {
-            if (ability.properties != null) {
-                AbilityModifier modifier = AbilityModifiers.CONFIG_MODIFIER;
-                HashMap<String, Number> properties = new HashMap<>();
-                int size = ability.properties.getValues().size();
-                for (int i = 0; i < size; i++) {
-                    String propertyName = ability.properties.getValues().get(i);
-                    if (Ability.propertyEqualsInhibitor(propertyName))
-                        properties.put(propertyName, 1 / SKILLS_CONFIG.abilitySettings.powerLevel);
-                    else properties.put(propertyName, SKILLS_CONFIG.abilitySettings.powerLevel);
-                    //Now for other config values. They stack. Be warned.
-                    /* Inhibitors */
-                    if (propertyName.equals(Ability.CHI_COST))
-                        properties.put(propertyName, SKILLS_CONFIG.abilitySettings.chiMult);
-                    if (propertyName.equals(Ability.COOLDOWN))
-                        properties.put(propertyName, SKILLS_CONFIG.abilitySettings.cooldownMult);
-                    if (propertyName.equals(Ability.EXHAUSTION))
-                        properties.put(propertyName, SKILLS_CONFIG.abilitySettings.exhaustionMult);
-                    if (propertyName.equals(Ability.BURNOUT))
-                        properties.put(propertyName, SKILLS_CONFIG.abilitySettings.burnoutMult);
-                    /* Helpers */
-                    if (propertyName.equals(Ability.BURNOUT_REGEN))
-                        properties.put(propertyName, SKILLS_CONFIG.abilitySettings.burnoutRecoverMult);
-                    if (propertyName.equals(Ability.CHI_HIT))
-                        properties.put(propertyName, SKILLS_CONFIG.abilitySettings.chiHitMult);
-                    if (propertyName.equals(Ability.DAMAGE))
-                        properties.put(propertyName, SKILLS_CONFIG.abilitySettings.damageMult);
-                    if (propertyName.equals(Ability.SPEED))
-                        properties.put(propertyName, SKILLS_CONFIG.abilitySettings.speedMult);
-                }
-                modifier.addProperties(properties);
-                BendingData data = BendingData.getFromEntity(bender);
-                if (data != null) {
-                    //Clear modifiers
-                    data.getAbilityData(ability).clearModifier();
-                    //Add modifiers
-                    data.getAbilityData(ability).addModifiers(modifier);
-                }
-            }
-        }
+//        for (Ability ability : Abilities.all()) {
+//            if (ability.properties != null) {
+//                AbilityModifier modifier = AbilityModifiers.CONFIG_MODIFIER;
+//                HashMap<String, Number> properties = new HashMap<>();
+//                int size = ability.properties.getValues().size();
+//                for (int i = 0; i < size; i++) {
+//                    String propertyName = ability.properties.getValues().get(i);
+//                    if (Ability.propertyEqualsInhibitor(propertyName))
+//                        properties.put(propertyName, 1 / SKILLS_CONFIG.abilitySettings.powerLevel);
+//                    else properties.put(propertyName, SKILLS_CONFIG.abilitySettings.powerLevel);
+//                    //Now for other config values. They stack. Be warned.
+//                    /* Inhibitors */
+//                    if (propertyName.equals(Ability.CHI_COST))
+//                        properties.put(propertyName, SKILLS_CONFIG.abilitySettings.chiMult);
+//                    if (propertyName.equals(Ability.COOLDOWN))
+//                        properties.put(propertyName, SKILLS_CONFIG.abilitySettings.cooldownMult);
+//                    if (propertyName.equals(Ability.EXHAUSTION))
+//                        properties.put(propertyName, SKILLS_CONFIG.abilitySettings.exhaustionMult);
+//                    if (propertyName.equals(Ability.BURNOUT))
+//                        properties.put(propertyName, SKILLS_CONFIG.abilitySettings.burnoutMult);
+//                    /* Helpers */
+//                    if (propertyName.equals(Ability.BURNOUT_REGEN))
+//                        properties.put(propertyName, SKILLS_CONFIG.abilitySettings.burnoutRecoverMult);
+//                    if (propertyName.equals(Ability.CHI_HIT))
+//                        properties.put(propertyName, SKILLS_CONFIG.abilitySettings.chiHitMult);
+//                    if (propertyName.equals(Ability.DAMAGE))
+//                        properties.put(propertyName, SKILLS_CONFIG.abilitySettings.damageMult);
+//                    if (propertyName.equals(Ability.SPEED))
+//                        properties.put(propertyName, SKILLS_CONFIG.abilitySettings.speedMult);
+//                }
+//                modifier.addProperties(properties);
+//                BendingData data = BendingData.getFromEntity(bender);
+//                if (data != null) {
+//                    //Clear modifiers
+//                    data.getAbilityData(ability).clearModifier();
+//                    //Add modifiers
+//                    data.getAbilityData(ability).addModifiers(modifier);
+//                }
+//            }
+//        }
     }
 
     /**
@@ -276,8 +273,6 @@ public abstract class Bender {
             if (ability.properties != null) {
                 if (canUseAbility(ability) && !MinecraftForge.EVENT_BUS.post(new AbilityUseEvent(entity, ability, level + 1, path))) {
                     if (data.getMiscData().getCanUseAbilities()) {
-                        //Ensures the config modifier is properly applied
-                        adjustConfigModifier(entity);
                         if (getData().chi().getAvailableChi() >= ability.getChiCost(abilityCtx) && aD.getAbilityCooldown() == 0 || entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
                             aD.setPowerRating(calcPowerRating(ability.getBendingId()));
                             //This lets the ability disable burnout regeneration

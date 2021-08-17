@@ -145,7 +145,7 @@ dependencies {
     
     // Other Stuff
     shadow "org.yaml:snakeyaml:1.23"
-    shadow "org.joml:joml:1.9.25"
+    shadow "org.joml:joml:1.10.1"
 }
 
 minecraft {

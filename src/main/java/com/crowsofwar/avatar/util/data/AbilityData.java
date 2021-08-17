@@ -66,6 +66,7 @@ public class AbilityData {
     //This is the most small brain solution ever, but we're rewriting later so who really cares
     private int useNumber;
     private SourceInfo sourceInfo;
+    //TODO: Move this to the ability class (like properties). It'll massively reduce lag.
     private List<AbilityModifier> modifiers;
     /**
      * Current burnout amount of the ability.
@@ -207,8 +208,8 @@ public class AbilityData {
     public Number modify(String property, Number val) {
         //Returns the property's base value/1 by default
         float baseVal = val.floatValue();
-        for (AbilityModifier modifier : getModifiers())
-            baseVal *= modifier.getProperty(property).floatValue();
+//        for (AbilityModifier modifier : getModifiers())
+//            baseVal *= modifier.getProperty(property).floatValue();
         return baseVal;
     }
 

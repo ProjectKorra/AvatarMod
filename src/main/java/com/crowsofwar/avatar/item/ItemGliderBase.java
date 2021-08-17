@@ -148,10 +148,10 @@ public class ItemGliderBase extends ItemSword implements IGlider, AvatarItem {
         else {
             if (entityIn.ticksExisted % 100 == 0)
                 if (entityIn instanceof EntityLivingBase) {
-                    BendingData data = BendingData.getFromEntity((EntityLivingBase) entityIn);
-                    if (data != null)
-                        data.removeModifiersFromAbilities(Abilities.all().stream().filter(ability ->
-                                ability.getBendingId().equals(Airbending.ID)).collect(Collectors.toList()), getAbilityModifier());
+//                    BendingData data = BendingData.getFromEntity((EntityLivingBase) entityIn);
+//                    if (data != null)
+//                        data.removeModifiersFromAbilities(Abilities.all().stream().filter(ability ->
+//                                ability.getBendingId().equals(Airbending.ID)).collect(Collectors.toList()), getAbilityModifier());
                 }
         }
         if (entityIn instanceof EntityLivingBase) {
@@ -215,16 +215,16 @@ public class ItemGliderBase extends ItemSword implements IGlider, AvatarItem {
                 List<Ability> abilities = Abilities.all().stream().filter(ability -> ability.getBendingId().equals(Airbending.ID))
                         .collect(Collectors.toList());
                //TODO: Optimise this system
-                // data.removeModifiersFromAbilities(abilities, base.getAbilityModifier());
-                if (abilities.contains(event.getAbility()))
-                    data.applyModifiersToAbilities(abilities, base.getAbilityModifier());
+//                // data.removeModifiersFromAbilities(abilities, base.getAbilityModifier());
+//                if (abilities.contains(event.getAbility()))
+//                    data.applyModifiersToAbilities(abilities, base.getAbilityModifier());
             }
             else if (entity.getHeldItemOffhand().getItem() instanceof ItemGliderBase) {
                 base = (ItemGliderBase) entity.getHeldItemOffhand().getItem();
                 List<Ability> abilities = Abilities.all().stream().filter(ability -> ability.getBendingId().equals(Airbending.ID))
                         .collect(Collectors.toList());
-                if (abilities.contains(event.getAbility()))
-                    data.applyModifiersToAbilities(abilities, base.getAbilityModifier());
+//                if (abilities.contains(event.getAbility()))
+//                    data.applyModifiersToAbilities(abilities, base.getAbilityModifier());
             }
         }
     }

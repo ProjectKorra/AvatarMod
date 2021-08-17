@@ -102,7 +102,8 @@ public class AvatarPlayerTick {
             //Syncs the properties if they're not loaded
             List<Ability> initialisedAbilities = Abilities.all().stream().filter(ability -> !ability.arePropertiesInitialised())
                     .collect(Collectors.toList());
-            if (!initialisedAbilities.isEmpty() && !(event.getEntity() instanceof EntityPlayer))
+
+            if (!initialisedAbilities.isEmpty())
                 Ability.syncEntityProperties();
 
             if (event.getEntity() instanceof EntityPlayer)
@@ -112,8 +113,6 @@ public class AvatarPlayerTick {
                 EntityLivingBase bender = (EntityLivingBase) event.getEntity();
                 if (Bender.isBenderSupported(bender)) {
                     BendingData data = BendingData.getFromEntity(bender);
-                    //Applies a config modifier
-                    Bender.adjustConfigModifier(bender);
                     if (data != null && !data.hasElements()) {
                         List<BendingStyle> elements = BendingStyles.all().stream()
                                 .filter(bendingStyle -> bendingStyle.isParentBending() && bendingStyle.canEntityUse())

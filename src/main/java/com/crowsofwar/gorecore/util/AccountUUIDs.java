@@ -39,186 +39,184 @@ import java.util.regex.Pattern;
  * are the UUIDs on Mojang, and entity UUIDs are the UUIDs gotten from
  * Entity#getUniqueID().
  * </p>
- * 
+ *
  * @author CrowsOfWar
  * @author Mahtaran
  */
 public final class AccountUUIDs {
-	/**
-	 * Don't try to understand this.
-	 * Ok, so actually it works like this: select first 8 characters, then 4, 4, 4 and finally 12. This is the UUID format.
-	 */
-	private static final Pattern DASHLESS_PATTERN = Pattern.compile("^([A-Fa-f0-9]{8})([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})([A-Fa-f0-9]{12})$");
-	
-	/**
-	 * A cache of usernames not in Forge's UsernameCache
-	 */
-	private static final Map<String, UUID> localCache = Maps.newHashMap();
-	/**
-	 * <p>
-	 * Finds the player in the world whose account has the given UUID.
-	 * </p>
-	 * 
-	 * <p>
-	 * This is different from <code>world.func_152378_a(playerID)</code> in that
-	 * the world's method uses the player's entity ID, while this method uses
-	 * the player's account ID.
-	 * </p>
-	 * 
-	 * @param playerID
-	 *            The UUID of the player to find
-	 * @param world
-	 *            The world to look for the player in
-	 * @return The player with that UUID
-	 */
-	public static EntityPlayer findEntityFromUUID(World world, UUID playerID) {
-		for (int i = 0; i < world.playerEntities.size(); i++) {
-			UUID accountId = getId(world.playerEntities.get(i).getName());
-			if (accountId != null && accountId.equals(playerID)) {
-				return world.playerEntities.get(i);
-			}
-		}
-		return null;
-	}
-	
-	/**
-	 * <p>
-	 * Gets the UUID of the player with the given username. If it exists in the
-	 * cache, the UUID will be obtained via the cache; otherwise, a HTTP request
-	 * will be made to obtain the UUID.
-	 * </p>
-	 * 
-	 * @param username
-	 *            The username to get the UUID for
-	 * @return The UUID result of the getting
-	 */
-	public static UUID getId(String username) {
-		Map<UUID, String> cache = UsernameCache.getMap();
-		if (!cache.containsValue(username)) {
-			if (localCache.containsKey(username)) return localCache.get(username);
-			return requestId(username);
-		}
-		for (Map.Entry<UUID, String> entry : UsernameCache.getMap().entrySet()) {
-			if (entry.getValue().equalsIgnoreCase(username)) {
-				return entry.getKey();
-			}
-    		}
-		return null;
-	}
-	
-	/**
-	 * Sends a request to Mojang's API and get the player's UUID. Returns null
-	 * if any error occurred.
-	 */
-	private static UUID requestId(String username) {
-		try {
-			String url = "https://api.mojang.com/users/profiles/minecraft/" + username;
-			
-			URL obj = new URL(url);
-			HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
-			
-			connection.setRequestMethod("GET");
-			connection.setRequestProperty("User-Agent", "Mozilla/5.0");
-			
-			int responseCode = connection.getResponseCode();
-			if (responseCode == 204) {
-				GoreCore.LOGGER.warn("Attempted to get a UUID for player " + username
-						+ ", but that account is not registered");
-				return null;
-			}
-			
-			if (responseCode != 200) {
-				GoreCore.LOGGER.warn("Attempted to get a UUID for player " + username
-						+ ", but the response code was unexpected (" + responseCode + ")");
-				return null;
-			}
-			
-			ByteArrayOutputStream result = new ByteArrayOutputStream();
-			byte[] buffer = new byte[1024];
-			int length;
-			InputStream inputStream = connection.getInputStream();
-			while ((length = inputStream.read(buffer)) != -1) {
-				result.write(buffer, 0, length);
-			}
-			UUID uuid = UUID.fromString(addDashes(Objects.requireNonNull(JsonUtils.fromString(result.toString(), "id")).getAsString()));
-			localCache.put(username, uuid);
-			return uuid;
-		} catch (Exception e) {
-			GoreCore.LOGGER.error("Unexpected error getting UUID for " + username, e);
-			return null;
-		}
-	}
-	
-	/**
-	 * Lookup the username based on the account ID. Returns null on errors.
-	 * Warning: is cached
-	 */
-	public static String getUsername(UUID id) {
-		if (UsernameCache.containsUUID(id)) return UsernameCache.getLastKnownUsername(id);
-		else if (localCache.containsValue(id)) {
-			for (Map.Entry<String, UUID> entry : localCache.entrySet()) {
-				if (entry.getValue().equals(id)) {
-					return entry.getKey();
-				}
-    			}
-		} else {
-			try {
-				String idString = id.toString().replaceAll("-", "");
-				String url = "https://api.mojang.com/user/profiles/" + idString + "/names";
-				
-				URL obj = new URL(url);
-				HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
-				
-				connection.setRequestMethod("GET");
-				connection.setRequestProperty("User-Agent", "Mozilla/5.0");
-				
-				int responseCode = connection.getResponseCode();
-				if (responseCode == 204) {
-					GoreCore.LOGGER.warn("Attempted to get a username for player " + id
-							+ ", but that account is not registered");
-					return null;
-				}
-				
-				if (responseCode != 200) {
-					GoreCore.LOGGER.warn("Attempted to get a username for player " + id
-							+ ", but the response code was unexpected (" + responseCode + ")");
-					return null;
-				}
-				
-				ByteArrayOutputStream result = new ByteArrayOutputStream();
-				byte[] buffer = new byte[1024];
-				int length;
-				InputStream inputStream = connection.getInputStream();
-				while ((length = inputStream.read(buffer)) != -1) {
-					result.write(buffer, 0, length);
-				}
-				String username = JsonUtils.fromString(result.toString(), "name").getAsString();
-				localCache.put(username, id);
-				return username;
-			} catch (Exception e) {
-				GoreCore.LOGGER.error("Unexpected error getting username for " + id, e);
-				return null;
-			}
-		}
-		return null;
-	}
-	
-	/**
-	 * Add dashes to a UUID. Method from SquirrelID
-	 *
-	 * <p>If dashes already exist, the same UUID will be returned.</p>
-	 *
-	 * @param uuid the UUID
-	 * @return a UUID with dashes
-	 * @throws IllegalArgumentException thrown if the given input is not actually an UUID
-	 * @author sk89q
-	 */
-	public static String addDashes(String uuid) {
-		uuid = uuid.replace("-", ""); // Remove dashes
-		Matcher matcher = DASHLESS_PATTERN.matcher(uuid);
-		if (!matcher.matches()) {
-			throw new IllegalArgumentException("Invalid UUID format");
-		}
-		return matcher.replaceAll("$1-$2-$3-$4-$5");
-	}
+    /**
+     * Don't try to understand this.
+     * Ok, so actually it works like this: select first 8 characters, then 4, 4, 4 and finally 12. This is the UUID format.
+     */
+    private static final Pattern DASHLESS_PATTERN = Pattern.compile("^([A-Fa-f0-9]{8})([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})([A-Fa-f0-9]{4})([A-Fa-f0-9]{12})$");
+
+    /**
+     * A cache of usernames not in Forge's UsernameCache
+     */
+    private static final Map<String, UUID> localCache = Maps.newHashMap();
+
+    /**
+     * <p>
+     * Finds the player in the world whose account has the given UUID.
+     * </p>
+     *
+     * <p>
+     * This is different from <code>world.func_152378_a(playerID)</code> in that
+     * the world's method uses the player's entity ID, while this method uses
+     * the player's account ID.
+     * </p>
+     *
+     * @param playerID The UUID of the player to find
+     * @param world    The world to look for the player in
+     * @return The player with that UUID
+     */
+    public static EntityPlayer findEntityFromUUID(World world, UUID playerID) {
+        for (int i = 0; i < world.playerEntities.size(); i++) {
+            UUID accountId = getId(world.playerEntities.get(i).getName());
+            if (accountId != null && accountId.equals(playerID)) {
+                return world.playerEntities.get(i);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * <p>
+     * Gets the UUID of the player with the given username. If it exists in the
+     * cache, the UUID will be obtained via the cache; otherwise, a HTTP request
+     * will be made to obtain the UUID.
+     * </p>
+     *
+     * @param username The username to get the UUID for
+     * @return The UUID result of the getting
+     */
+    public static UUID getId(String username) {
+        Map<UUID, String> cache = UsernameCache.getMap();
+        if (!cache.containsValue(username)) {
+            if (localCache.containsKey(username)) return localCache.get(username);
+            return requestId(username);
+        }
+        for (Map.Entry<UUID, String> entry : UsernameCache.getMap().entrySet()) {
+            if (entry.getValue().equalsIgnoreCase(username)) {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Sends a request to Mojang's API and get the player's UUID. Returns null
+     * if any error occurred.
+     */
+    private static UUID requestId(String username) {
+        try {
+            String url = "https://api.mojang.com/users/profiles/minecraft/" + username;
+
+            URL obj = new URL(url);
+            HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
+
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("User-Agent", "Mozilla/5.0");
+
+            int responseCode = connection.getResponseCode();
+            if (responseCode == 204) {
+                GoreCore.LOGGER.warn("Attempted to get a UUID for player " + username
+                        + ", but that account is not registered");
+                return null;
+            }
+
+            if (responseCode != 200) {
+                GoreCore.LOGGER.warn("Attempted to get a UUID for player " + username
+                        + ", but the response code was unexpected (" + responseCode + ")");
+                return null;
+            }
+
+            ByteArrayOutputStream result = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1024];
+            int length;
+            InputStream inputStream = connection.getInputStream();
+            while ((length = inputStream.read(buffer)) != -1) {
+                result.write(buffer, 0, length);
+            }
+            UUID uuid = UUID.fromString(addDashes(Objects.requireNonNull(JsonUtils.fromString(result.toString(), "id")).getAsString()));
+            localCache.put(username, uuid);
+            return uuid;
+        } catch (Exception e) {
+            GoreCore.LOGGER.error("Unexpected error getting UUID for " + username, e);
+            return null;
+        }
+    }
+
+    /**
+     * Lookup the username based on the account ID. Returns null on errors.
+     * Warning: is cached
+     */
+    public static String getUsername(UUID id) {
+        if (UsernameCache.containsUUID(id)) return UsernameCache.getLastKnownUsername(id);
+        else if (localCache.containsValue(id)) {
+            for (Map.Entry<String, UUID> entry : localCache.entrySet()) {
+                if (entry.getValue().equals(id)) {
+                    return entry.getKey();
+                }
+            }
+        } else {
+            try {
+                String idString = id.toString().replaceAll("-", "");
+                String url = "https://api.mojang.com/user/profiles/" + idString + "/names";
+
+                URL obj = new URL(url);
+                HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
+
+                connection.setRequestMethod("GET");
+                connection.setRequestProperty("User-Agent", "Mozilla/5.0");
+
+                int responseCode = connection.getResponseCode();
+                if (responseCode == 204) {
+                    GoreCore.LOGGER.warn("Attempted to get a username for player " + id
+                            + ", but that account is not registered");
+                    return null;
+                }
+
+                if (responseCode != 200) {
+                    GoreCore.LOGGER.warn("Attempted to get a username for player " + id
+                            + ", but the response code was unexpected (" + responseCode + ")");
+                    return null;
+                }
+
+                ByteArrayOutputStream result = new ByteArrayOutputStream();
+                byte[] buffer = new byte[1024];
+                int length;
+                InputStream inputStream = connection.getInputStream();
+                while ((length = inputStream.read(buffer)) != -1) {
+                    result.write(buffer, 0, length);
+                }
+                String username = JsonUtils.fromString(result.toString(), "name").getAsString();
+                localCache.put(username, id);
+                return username;
+            } catch (Exception e) {
+                GoreCore.LOGGER.error("Unexpected error getting username for " + id, e);
+                return null;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Add dashes to a UUID. Method from SquirrelID
+     *
+     * <p>If dashes already exist, the same UUID will be returned.</p>
+     *
+     * @param uuid the UUID
+     * @return a UUID with dashes
+     * @throws IllegalArgumentException thrown if the given input is not actually an UUID
+     * @author sk89q
+     */
+    public static String addDashes(String uuid) {
+        uuid = uuid.replace("-", ""); // Remove dashes
+        Matcher matcher = DASHLESS_PATTERN.matcher(uuid);
+        if (!matcher.matches()) {
+            throw new IllegalArgumentException("Invalid UUID format");
+        }
+        return matcher.replaceAll("$1-$2-$3-$4-$5");
+    }
 }
