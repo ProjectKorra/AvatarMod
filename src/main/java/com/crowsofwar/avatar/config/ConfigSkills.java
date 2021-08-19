@@ -110,7 +110,7 @@ public class ConfigSkills {
 		public float speedMult  = 1;
 
 		@Load
-		public float chiMult = 0.875F;
+		public float chiMult = 0.675F;
 
 		@Load
 		public float chiHitMult = 1.5F;

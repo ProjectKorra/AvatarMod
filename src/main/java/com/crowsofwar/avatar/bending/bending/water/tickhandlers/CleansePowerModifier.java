@@ -56,12 +56,12 @@ public class CleansePowerModifier extends BuffPowerModifier {
 //                                (1 / (radius / 10F)), entity, world, false, AvatarEntityUtils.getMiddleOfEntity(entity),
 //                                ParticleBuilder.SwirlMotionType.OUT, false, true);
                     ParticleBuilder.create(ParticleBuilder.Type.FLASH).spawnEntity(entity)
-                            .time(38 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(AvatarUtils.getRandomNumberInRange(0, 50),
+                            .time(34 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(AvatarUtils.getRandomNumberInRange(0, 50),
                             180 + AvatarUtils.getRandomNumberInRange(0, 70), 235 + AvatarUtils.getRandomNumberInRange(0, 20),
-                            (int) (5)).scale(radius * world.rand.nextFloat())
+                            (int) (5)).scale(radius * world.rand.nextFloat() / 1.5F)
                             //The .max and .min functions ensure it doesn't infinite loop if the radius is too small
                             .glow(AvatarUtils.getRandomNumberInRange(1, 100) > 15 - radius).swirl(rings, particles, (float) Math.sqrt(radius),
-                            particles / 18F * (radius), rings / 2F, (radius / 3F), entity, world, true, AvatarEntityUtils.getMiddleOfEntity(entity),
+                            particles / 14F * (radius), rings / 2F, (radius / 3F), entity, world, true, AvatarEntityUtils.getMiddleOfEntity(entity),
                             ParticleBuilder.SwirlMotionType.OUT, false, true);
             }
         }

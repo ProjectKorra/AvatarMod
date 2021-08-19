@@ -126,7 +126,7 @@ public class PlayerBender extends Bender {
             boolean result = getData().chi().consumeChi(amount);
 
             if (!result) {
-                sendMessage("avatar.nochi");
+                sendMessage("avatar.noChi");
 
                 // Send out of chi analytic
                 AvatarAnalytics.INSTANCE.pushEvent(AnalyticEvents.onOutOfChi());

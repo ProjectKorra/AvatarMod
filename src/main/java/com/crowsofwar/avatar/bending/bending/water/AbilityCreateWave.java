@@ -97,85 +97,84 @@ public class AbilityCreateWave extends Ability {
         Vector look = Vector.getLookRectangular(entity).times(0.25);
         Vector pos = Vector.getEntityPos(entity);
         if (bender.consumeChi(getChiCost(ctx)) && abilityWave != null) {
-            if (ctx.consumeWater(getProperty(WATER_AMOUNT, ctx).intValue())) {
-                //Entity damage values and such go here
-                float damage = getProperty(DAMAGE, ctx).floatValue();
-                float speed = getProperty(SPEED, ctx).floatValue() * 2;
-                int lifetime = getProperty(LIFETIME, ctx).intValue();
-                float push = getProperty(KNOCKBACK, ctx).floatValue() / 2;
-                float size = getProperty(SIZE, ctx).floatValue();
+            //Entity damage values and such go here
+            float damage = getProperty(DAMAGE, ctx).floatValue();
+            float speed = getProperty(SPEED, ctx).floatValue() * 2;
+            int lifetime = getProperty(LIFETIME, ctx).intValue();
+            float push = getProperty(KNOCKBACK, ctx).floatValue() / 2;
+            float size = getProperty(SIZE, ctx).floatValue();
 
-                damage = powerModify(damage, abilityData);
-                speed = powerModify(speed, abilityData);
-                lifetime = (int) powerModify(lifetime, abilityData);
-                push = powerModify(push, abilityData);
-                size = powerModify(size, abilityData);
+            damage = powerModify(damage, abilityData);
+            speed = powerModify(speed, abilityData);
+            lifetime = (int) powerModify(lifetime, abilityData);
+            push = powerModify(push, abilityData);
+            size = powerModify(size, abilityData);
 
-                //Logic for spawning the wave
-                Vector firstPos = pos.plus(look).minusY(1);
-                Vector secondPos = firstPos.minusY(1);
-                BlockPos pos1 = firstPos.toBlockPos();
-                BlockPos pos2 = secondPos.toBlockPos();
-                boolean firstBendable;
-                boolean secondBendable;
+            //Logic for spawning the wave
+            Vector firstPos = pos.plus(look).minusY(1);
+            Vector secondPos = firstPos.minusY(1);
+            BlockPos pos1 = firstPos.toBlockPos();
+            BlockPos pos2 = secondPos.toBlockPos();
+            boolean firstBendable;
+            boolean secondBendable;
 
-                //Either the wave can go on land or there's a compatible block to use
-                firstBendable = Waterbending.isBendable(abilityWave, world.getBlockState(pos1),
-                        entity);
-                firstBendable |= getBooleanProperty(LAND, ctx) && world.getBlockState(pos1).isFullBlock() &&
-                        world.getBlockState(pos1).getBlock() != Blocks.AIR;
-                secondBendable = Waterbending.isBendable(abilityWave, world.getBlockState(pos2),
-                        entity);
-                secondBendable |= getBooleanProperty(LAND, ctx) && world.getBlockState(pos2).isFullBlock() &&
-                        world.getBlockState(pos1).getBlock() != Blocks.AIR;
+            //Either the wave can go on land or there's a compatible block to use
+            firstBendable = Waterbending.isBendable(abilityWave, world.getBlockState(pos1),
+                    entity);
+            firstBendable |= getBooleanProperty(LAND, ctx) && world.getBlockState(pos1).isFullBlock() &&
+                    world.getBlockState(pos1).getBlock() != Blocks.AIR;
+            secondBendable = Waterbending.isBendable(abilityWave, world.getBlockState(pos2),
+                    entity);
+            secondBendable |= getBooleanProperty(LAND, ctx) && world.getBlockState(pos2).isFullBlock() &&
+                    world.getBlockState(pos1).getBlock() != Blocks.AIR;
 
-                EntityWave wave = new EntityWave(world);
-                wave.setOwner(entity);
-                wave.setRunOnLand(getBooleanProperty(LAND, ctx));
-                wave.setRideable(getBooleanProperty(RIDEABLE, ctx));
-                wave.setDamage(damage);
-                wave.setDistance(lifetime * speed / 10);
-                wave.setAbility(this);
-                wave.setPush(push);
-                wave.setLifeTime(lifetime);
-                wave.setTier(getCurrentTier(ctx));
-                wave.setEntitySize(size, size * 1.75F);
-                wave.setXp(getProperty(XP_HIT).floatValue());
-                wave.rotationPitch = entity.rotationPitch;
-                wave.rotationYaw = entity.rotationYaw;
-                wave.setVelocity(look.x() * speed / 5, 0, look.z() * speed / 5);
-                wave.setGrows(getBooleanProperty(GROW, ctx));
-                wave.setPulls(getBooleanProperty(PULLS, ctx));
-                wave.setBehaviour(new WaveBehaviour());
-                wave.setEntitySize(size * 0.5F, size * 2F);
+            EntityWave wave = new EntityWave(world);
+            wave.setOwner(entity);
+            wave.setRunOnLand(getBooleanProperty(LAND, ctx));
+            wave.setRideable(getBooleanProperty(RIDEABLE, ctx));
+            wave.setDamage(damage);
+            wave.setDistance(lifetime * speed / 10);
+            wave.setAbility(this);
+            wave.setPush(push);
+            wave.setLifeTime(lifetime);
+            wave.setTier(getCurrentTier(ctx));
+            wave.setEntitySize(size, size * 1.75F);
+            wave.setXp(getProperty(XP_HIT).floatValue());
+            wave.rotationPitch = entity.rotationPitch;
+            wave.rotationYaw = entity.rotationYaw;
+            wave.setVelocity(look.x() * speed / 5, 0, look.z() * speed / 5);
+            wave.setGrows(getBooleanProperty(GROW, ctx));
+            wave.setPulls(getBooleanProperty(PULLS, ctx));
+            wave.setBehaviour(new WaveBehaviour());
+            wave.setEntitySize(size * 0.5F, size * 2F);
 
 
-                //TODO: Fix positioning so that particles are consistent
-                if (getBooleanProperty(RIDEABLE, ctx)) {
-                    //Add a status control here
-                }
+            //TODO: Fix positioning so that particles are consistent
+            if (getBooleanProperty(RIDEABLE, ctx)) {
+                //Add a status control here
+            }
 
-                //Block at feet is bendable
-                if (firstBendable) {
-                    //Pos is the source block, we want it to be above the source block
-                    wave.setPosition(firstPos.plusY(1));
-                }
-                //Block below feet is bendable
-                else if (secondBendable) {
-                    //Same thing here. Above source block.
-                    wave.setPosition(secondPos.plusY(1));
-                }
-                //If the blocks beneath the player's feet aren't bendable
-                else {
-                    firstPos = Waterbending.getClosestWaterbendableBlock(entity,
-                            abilityWave, ctx);
+            //Block at feet is bendable
+            if (firstBendable) {
+                //Pos is the source block, we want it to be above the source block
+                wave.setPosition(firstPos.plusY(1));
+            }
+            //Block below feet is bendable
+            else if (secondBendable) {
+                //Same thing here. Above source block.
+                wave.setPosition(secondPos.plusY(1));
+            }
+            //If the blocks beneath the player's feet aren't bendable
+            else {
+                firstPos = Waterbending.getClosestWaterbendableBlock(entity,
+                        abilityWave, ctx);
 
-                    if (firstPos != null) {
-                        pos1 = firstPos.toBlockPos();
-                        BlockPos wavePos = pos1;
-                        Block waveBlock = world.getBlockState(wavePos).getBlock();
-                        Block belowBlock = world.getBlockState(wavePos.down()).getBlock();
-                        //Ensures the wave spawns right on top of the water; also limits the number of tries.
+                if (firstPos != null) {
+                    pos1 = firstPos.toBlockPos();
+                    BlockPos wavePos = pos1;
+                    Block waveBlock = world.getBlockState(wavePos).getBlock();
+                    Block belowBlock = world.getBlockState(wavePos.down()).getBlock();
+                    //Ensures the wave spawns right on top of the water; also limits the number of tries.
 //                        int i = 0;
 //                        while (Waterbending.isBendable(abilityWave, world.getBlockState(wavePos),
 //                                entity) && waveBlock != Blocks.AIR && i < getProperty(SOURCE_RANGE, ctx).intValue()) {
@@ -189,25 +188,27 @@ public class AbilityCreateWave extends Ability {
 //                            belowBlock = world.getBlockState(wavePos.down()).getBlock();
 //                            i++;
 //                        }
-                        firstBendable = Waterbending.isBendable(abilityWave, world.getBlockState(wavePos),
-                                entity);
-                        if (firstBendable) {
-                            wave.setPosition(wavePos.up());
-                            //Corrects the position of the wave
-                        }
-                    } else
-                        bender.sendMessage("avatar.waterSourceFail");
+                    firstBendable = Waterbending.isBendable(abilityWave, world.getBlockState(wavePos),
+                            entity);
+                    if (firstBendable) {
+                        wave.setPosition(wavePos.up());
+                        //Corrects the position of the wave
+                    }
+                } else
+                    bender.sendMessage("avatar.waterSourceFail");
 
-                }
+            }
 
-
+            //Consumes water at the end
+            if (ctx.consumeWater(getProperty(WATER_AMOUNT, ctx).intValue())) {
+                //It's working?? Why isn't it spawning?
                 //At 1.5 it adjusts the height of the wave
                 float adjustment = 0;
                 if (size * 10 % 10 == 5)
                     adjustment = 0.5F;
                 //0.1F is for normal ground level (water is slightly shorter)
                 wave.setPosition(wave.posX, Math.round(wave.posY + adjustment) + 0.1F, wave.posZ);
-                if (!world.isRemote && (firstBendable || secondBendable)) {
+                if (!world.isRemote) {
                     world.spawnEntity(wave);
                 }
             } else bender.sendMessage("avatar.waterSourceFail");

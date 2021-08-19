@@ -123,22 +123,89 @@ public class AbilityContext extends BendingContext {
     @Override
     public boolean consumeWater(int amount) {
         if (getAbilityData().getAbility() != null) {
+            EntityLivingBase entity = getBenderEntity();
+            World world = getWorld();
+            Vector look = Vector.getLookRectangular(entity).times(0.25);
+            Vector startPos = Vector.getEntityPos(entity);
+            Vector firstPos = startPos.plus(look).minusY(1);
+            Vector secondPos = firstPos.minusY(1);
+            BlockPos pos1 = firstPos.toBlockPos();
+            BlockPos pos2 = secondPos.toBlockPos();
+            boolean firstBendable;
+            boolean secondBendable;
+
+            //Either the wave can go on land or there's a compatible block to use
+            firstBendable = Waterbending.isBendable(getAbilityData().getAbility(), world.getBlockState(pos1),
+                    entity);
+            secondBendable = Waterbending.isBendable(getAbilityData().getAbility(), world.getBlockState(pos2),
+                    entity);
             Vector pos = Waterbending.getClosestWaterbendableBlock(getBenderEntity(), getAbilityData().getAbility(),
                     this);
+
+            if (firstBendable) {
+                Block block = world.getBlockState(pos1).getBlock();
+                if (STATS_CONFIG.plantBendableBlocks.contains(world.getBlockState(pos1).getBlock())) {
+                    if (amount > 0) {
+                        world.setBlockToAir(pos1);
+                    }
+                    return true;
+                }
+                if (block == Blocks.WATER || block == Blocks.FLOWING_WATER) {
+                    if (amount > 2) {
+                        world.setBlockToAir(pos1);
+                    }
+                    return true;
+                }
+                if (STATS_CONFIG.waterBendableBlocks.contains(world.getBlockState(pos1).getBlock())) {
+                    if (amount > 1) {
+                        world.setBlockToAir(pos1);
+                    }
+                    return true;
+                }
+            }
+            if (secondBendable) {
+                Block block = world.getBlockState(pos2).getBlock();
+                if (STATS_CONFIG.plantBendableBlocks.contains(world.getBlockState(pos2).getBlock())) {
+                    if (amount > 0) {
+                        world.setBlockToAir(pos2);
+                    }
+                    return true;
+                }
+                if (block == Blocks.WATER || block == Blocks.FLOWING_WATER) {
+                    if (amount > 2) {
+                        world.setBlockToAir(pos2);
+                    }
+                    return true;
+                }
+                if (STATS_CONFIG.waterBendableBlocks.contains(world.getBlockState(pos2).getBlock())) {
+                    if (amount > 1) {
+                        world.setBlockToAir(pos2);
+                    }
+                    return true;
+                }
+            }
+            //Consumes water
             if (pos != null) {
                 BlockPos blockPos = pos.toBlockPos();
-                World world = getWorld();
-                EntityLivingBase entity = getBenderEntity();
                 Block block = world.getBlockState(blockPos).getBlock();
-                if (STATS_CONFIG.plantBendableBlocks.contains(world.getBlockState(blockPos).getBlock()))
-                    if (amount > 0)
+                if (STATS_CONFIG.plantBendableBlocks.contains(world.getBlockState(blockPos).getBlock())) {
+                    if (amount > 0) {
                         world.setBlockToAir(blockPos);
-                if (block == Blocks.WATER || block == Blocks.FLOWING_WATER)
-                    if (amount > 2)
+                    }
+                    return true;
+                }
+                if (block == Blocks.WATER || block == Blocks.FLOWING_WATER) {
+                    if (amount > 2) {
                         world.setBlockToAir(blockPos);
-                if (STATS_CONFIG.waterBendableBlocks.contains(world.getBlockState(blockPos).getBlock()))
-                    if (amount > 1)
+                    }
+                    return true;
+                }
+                if (STATS_CONFIG.waterBendableBlocks.contains(world.getBlockState(blockPos).getBlock())) {
+                    if (amount > 1) {
                         world.setBlockToAir(blockPos);
+                    }
+                    return true;
+                }
             }
         }
         return super.consumeWater(amount);

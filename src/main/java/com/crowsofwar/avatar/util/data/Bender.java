@@ -273,11 +273,12 @@ public abstract class Bender {
                 Ability.syncProperties((EntityPlayer) entity);
 
             if (ability.properties != null) {
+                Bender.adjustConfigModifier(entity);
+                //Save data
                 if (canUseAbility(ability) && !MinecraftForge.EVENT_BUS.post(new AbilityUseEvent(entity, ability, level + 1, path))) {
                     if (data.getMiscData().getCanUseAbilities()) {
                         if (getData().chi().getAvailableChi() >= ability.getChiCost(abilityCtx) || isCreative) {
                             if (aD.getAbilityCooldown() == 0 || isCreative) {
-                                Bender.adjustConfigModifier(entity);
                                 aD.setPowerRating(calcPowerRating(ability.getBendingId()));
                                 //This lets the ability disable burnout regeneration
                                 aD.setRegenBurnout(true);
