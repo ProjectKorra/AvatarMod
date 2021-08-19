@@ -3,6 +3,7 @@
     "xpOnHit": 2,
     "level1": {
       "tier": 2,
+      "parentTier": 4,
       "chiCost": 3.0,
       "cooldown": 80,
       "exhaustion": 2.0,
@@ -35,6 +36,7 @@
     },
     "level3": {
       "tier": 3,
+      "parentTier": 5,
       "chiCost": 3.5,
       "cooldown": 70,
       "exhaustion": 3.0,
@@ -50,6 +52,7 @@
     },
     "level4_1": {
       "tier": 4,
+      "parentTier": 6,
       "chiCost": 3.75,
       "cooldown": 100,
       "exhaustion": 3.5,

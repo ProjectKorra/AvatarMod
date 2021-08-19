@@ -100,10 +100,10 @@ public class AbilityFrostClaws extends Ability {
             claws.setOwner(entity);
             claws.setDamage(damage);
             claws.setPiercing(true);
-            claws.setEntitySize(size * 2F, size * 0.5F);
+            claws.setEntitySize(size * 2.5F, size);
             claws.setAbility(this);
-            claws.setExpandedHeight(size);
-            claws.setExpandedWidth(size);
+            claws.setExpandedHeight(size * 2);
+            claws.setExpandedWidth(size * 2);
             claws.setLifeTime(lifetime);
             claws.setPerformanceAmount(performance);
             claws.setPush(knockback);
