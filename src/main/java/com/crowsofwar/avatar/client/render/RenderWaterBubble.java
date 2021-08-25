@@ -17,7 +17,6 @@
 
 package com.crowsofwar.avatar.client.render;
 
-import com.crowsofwar.avatar.client.TestModel;
 import com.crowsofwar.avatar.entity.EntityWaterBubble;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -49,8 +48,8 @@ public class RenderWaterBubble extends Render<EntityWaterBubble> {
 						 float partialTicks) {
 		Minecraft.getMinecraft().getTextureManager().bindTexture(water);
 		GL11.glPushMatrix();
-		GL11.glTranslated(x, y, z);
-		TestModel.test.render();
+//		GL11.glTranslated(x, y, z);
+	//	TestModel.test.render();
 		GL11.glPopMatrix();
 		float ticks = bubble.ticksExisted + partialTicks;
 		float colorEnhancement = 1.2f;
@@ -64,9 +63,9 @@ public class RenderWaterBubble extends Render<EntityWaterBubble> {
 		Matrix4f mat = new Matrix4f();
 		mat = mat.translate((float) x, (float) y + 0.4F, (float) z);
 
-		mat = mat.rotate(ticks / 20 * 0.2F * bubble.getDegreesPerSecond(), 1, 0, 0);
-		mat = mat.rotate(ticks / 20 * bubble.getDegreesPerSecond(), 0, 1, 0);
-		mat = mat.rotate(ticks / 20 * -0.4F * bubble.getDegreesPerSecond(), 0, 0, 1);
+//		mat = mat.rotate(ticks / 20 * 0.2F * bubble.getDegreesPerSecond(), 1, 0, 0);
+//		mat = mat.rotate(ticks / 20 * bubble.getDegreesPerSecond(), 0, 1, 0);
+//		mat = mat.rotate(ticks / 20 * -0.4F * bubble.getDegreesPerSecond(), 0, 0, 1);
 
 
 		// @formatter:off
@@ -82,9 +81,9 @@ public class RenderWaterBubble extends Render<EntityWaterBubble> {
 				rtb = new Vector4f(0.5f * size, 0.5f * size, 0.5f * size, 1).mul(mat);
 
 
-		float t1 = ticks * (float) Math.PI / 10f;
-		float t2 = t1 + (float) Math.PI / 2f;
-		float amt = 0.05f;
+		float t1 = ticks * (float) Math.PI / 20F;
+		float t2 = t1 + (float) Math.PI / 2F;
+		float amt = 0.1f;
 
 		lbf.add(cos(t1) * amt, sin(t2) * amt, cos(t2) * amt, 0);
 		rbf.add(sin(t1) * amt, cos(t2) * amt, sin(t2) * amt, 0);

@@ -134,7 +134,7 @@ public class AvatarMod {
         /*    			Water	  			*/
 //        Abilities.register(new AbilityWaterArc());
         Abilities.register(new AbilityCreateWave());
-//        Abilities.register(new AbilityWaterBubble());
+        Abilities.register(new AbilityWaterBubble());
         Abilities.register(new AbilityWaterSkate());
         Abilities.register(new AbilityWaterBlast());
         Abilities.register(new AbilityCleanse());
@@ -368,7 +368,8 @@ public class AvatarMod {
         registerEntity(EntityWallSegment.class, "WallSegment", 128, 3, true);
         registerEntity(EntityFireball.class, "Fireball", 128, 1000, true);
         registerEntity(EntityAirblade.class, "Airblade", 128, 1000, true);
-        registerEntity(EntityAirBubble.class, "AirBubble", 256, 1000, false);
+        //This is higher so that going too far doesn't crash your game/destroy air bubble
+        registerEntity(EntityAirBubble.class, "AirBubble", 512, 1000, false);
         registerEntity(EntityFirebender.class, "Firebender", 0xB0171F, 0xFFFF00);
         registerEntity(EntityAirbender.class, "Airbender", 0xffffff, 0xDDA0DD);
         registerEntity(EntitySkyBison.class, "SkyBison", 0xffffff, 0x8B5A00);

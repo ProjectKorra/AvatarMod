@@ -863,6 +863,7 @@ public abstract class AvatarEntity extends Entity {
             default:
                 return pass == 0;
             case "firebending":
+            case "waterbending":
             case "airbending":
                 return pass == 1;
         }

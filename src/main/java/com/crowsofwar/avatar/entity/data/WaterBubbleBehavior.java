@@ -17,11 +17,10 @@
 
 package com.crowsofwar.avatar.entity.data;
 
+import com.crowsofwar.avatar.entity.EntityWaterBubble;
 import com.crowsofwar.avatar.util.data.AvatarWorldData;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
-import com.crowsofwar.avatar.entity.EntityWaterBubble;
-import com.crowsofwar.avatar.util.Raytrace;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -36,136 +35,135 @@ import net.minecraft.network.datasync.DataSerializers;
  */
 public abstract class WaterBubbleBehavior extends Behavior<EntityWaterBubble> {
 
-	public static final DataSerializer<WaterBubbleBehavior> DATA_SERIALIZER = new BehaviorSerializer<>();
+    public static final DataSerializer<WaterBubbleBehavior> DATA_SERIALIZER = new BehaviorSerializer<>();
 
-	protected WaterBubbleBehavior() {
-	}
+    protected WaterBubbleBehavior() {
+    }
 
-	public static void register() {
-		DataSerializers.registerSerializer(DATA_SERIALIZER);
-		registerBehavior(Drop.class);
-		registerBehavior(PlayerControlled.class);
-		registerBehavior(Lobbed.class);
-		//When you use the water bubble like a bucket
-	}
+    public static void register() {
+        DataSerializers.registerSerializer(DATA_SERIALIZER);
+        registerBehavior(Drop.class);
+        registerBehavior(PlayerControlled.class);
+        registerBehavior(Lobbed.class);
+        //When you use the water bubble like a bucket
+    }
 
-	public static class Drop extends WaterBubbleBehavior {
+    public static class Drop extends WaterBubbleBehavior {
 
-		@Override
-		public Behavior onUpdate(EntityWaterBubble entity) {
-			entity.addVelocity(Vector.DOWN.times(0.981));
-			if (entity.collided) {
-				entity.setDead();
-			}
-			return this;
-		}
+        @Override
+        public Behavior onUpdate(EntityWaterBubble entity) {
+            entity.addVelocity(Vector.DOWN.times(0.981));
+            if (entity.collided) {
+                entity.setDead();
+            }
+            return this;
+        }
 
-		@Override
-		public void fromBytes(PacketBuffer buf) {
-		}
+        @Override
+        public void fromBytes(PacketBuffer buf) {
+        }
 
-		@Override
-		public void toBytes(PacketBuffer buf) {
-		}
+        @Override
+        public void toBytes(PacketBuffer buf) {
+        }
 
-		@Override
-		public void load(NBTTagCompound nbt) {
-		}
+        @Override
+        public void load(NBTTagCompound nbt) {
+        }
 
-		@Override
-		public void save(NBTTagCompound nbt) {
-		}
+        @Override
+        public void save(NBTTagCompound nbt) {
+        }
 
-	}
+    }
 
-	public static class PlayerControlled extends WaterBubbleBehavior {
+    public static class PlayerControlled extends WaterBubbleBehavior {
 
-		@Override
-		public Behavior onUpdate(EntityWaterBubble entity) {
-			EntityLivingBase owner = entity.getOwner();
+        @Override
+        public Behavior onUpdate(EntityWaterBubble entity) {
+            EntityLivingBase owner = entity.getOwner();
 
-			if (owner == null) return this;
+            if (owner == null) return this;
 
-			BendingData data = Bender.get(owner).getData();
+            BendingData data = Bender.get(owner).getData();
 
-			Vector target;
-			Raytrace.Result raytrace = Raytrace.getTargetBlock(owner, 3, false);
-			if (raytrace.hitSomething()) {
-				target = raytrace.getPosPrecise().plus(0, .2, 0);
-			} else {
-				double yaw = Math.toRadians(owner.rotationYaw);
-				double pitch = Math.toRadians(owner.rotationPitch);
-				Vector forward = Vector.toRectangular(yaw, pitch);
-				Vector eye = Vector.getEyePos(owner);
-				target = forward.times(3).plus(eye);
-			}
+            Vector target;
+//			Raytrace.Result raytrace = Raytrace.getTargetBlock(owner, 3, false);
+//			if (raytrace.hitSomething()) {
+//				target = raytrace.getPosPrecise().plus(0, .2, 0);
+//			} else {
+            Vector forward = Vector.getLookRectangular(owner);
+            Vector eye = Vector.getEyePos(owner);
+            target = forward.times(2).plus(eye);
+//			}
 
-			Vector motion = target.minus(Vector.getEntityPos(entity)).times(3);
-			entity.setVelocity(motion);
+            Vector motion = target.minus(Vector.getEntityPos(entity)).times(0.5);
+            if (!entity.world.isRemote)
+                entity.setVelocity(motion);
 
-			return this;
-		}
+            return this;
+        }
 
-		@Override
-		public void fromBytes(PacketBuffer buf) {
-		}
+        @Override
+        public void fromBytes(PacketBuffer buf) {
+        }
 
-		@Override
-		public void toBytes(PacketBuffer buf) {
-		}
+        @Override
+        public void toBytes(PacketBuffer buf) {
+        }
 
-		@Override
-		public void load(NBTTagCompound nbt) {
-		}
+        @Override
+        public void load(NBTTagCompound nbt) {
+        }
 
-		@Override
-		public void save(NBTTagCompound nbt) {
-		}
+        @Override
+        public void save(NBTTagCompound nbt) {
+        }
 
-	}
+    }
 
-	public static class Lobbed extends WaterBubbleBehavior {
-		//For when you use the water bubble like a bucket
-		@Override
-		public Behavior onUpdate(EntityWaterBubble entity) {
-			entity.addVelocity(Vector.DOWN.times(0.8));
-			if (entity.getOwner() == null) return this;
-			if (entity.collided) {
+    public static class Lobbed extends WaterBubbleBehavior {
+        //For when you use the water bubble like a bucket
+        @Override
+        public Behavior onUpdate(EntityWaterBubble entity) {
+            entity.addVelocity(Vector.DOWN.times(0.8));
+            if (entity.getOwner() == null) return this;
+            if (entity.collided) {
 
-				IBlockState state = Blocks.FLOWING_WATER.getDefaultState();
+                IBlockState state = Blocks.FLOWING_WATER.getDefaultState();
 
-				if (!entity.world.isRemote) {
+                if (!entity.world.isRemote) {
 
-					entity.world.setBlockState(entity.getPosition(), state, 3);
-					entity.setDead();
+                    entity.world.setBlockState(entity.getPosition(), state, 3);
+                    entity.setDead();
 
-					if (!entity.isSourceBlock()) {
-						AvatarWorldData wd = AvatarWorldData.getDataFromWorld(entity.world);
-						wd.addTemporaryWaterLocation(entity.getPosition());
-					}
+                    if (!entity.isSourceBlock()) {
+                        AvatarWorldData wd = AvatarWorldData.getDataFromWorld(entity.world);
+                        wd.addTemporaryWaterLocation(entity.getPosition());
+                    }
 
-				}
+                }
 
-			}
-			return this;
-		}
+            }
+            return this;
+        }
 
-		@Override
-		public void fromBytes(PacketBuffer buf) {
-		}
+        @Override
+        public void fromBytes(PacketBuffer buf) {
+        }
 
-		@Override
-		public void toBytes(PacketBuffer buf) {
-		}
+        @Override
+        public void toBytes(PacketBuffer buf) {
+        }
 
-		@Override
-		public void load(NBTTagCompound nbt) {
-		}
+        @Override
+        public void load(NBTTagCompound nbt) {
+        }
 
-		@Override
-		public void save(NBTTagCompound nbt) {
-		}
+        @Override
+        public void save(NBTTagCompound nbt) {
+        }
 
-	}
+    }
 
 }

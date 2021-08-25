@@ -44,6 +44,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.Random;
+import java.util.UUID;
 
 /**
  * @author CrowsOfWar
@@ -134,6 +135,7 @@ public class EntityWaterBubble extends EntityOffensive implements IShieldEntity 
 			this.setDead();
 		}
 
+		//TODO: Remove this
 		WaterBubbleBehavior currentBehavior = getBehavior();
 		WaterBubbleBehavior nextBehavior = (WaterBubbleBehavior) currentBehavior.onUpdate(this);
 		if (currentBehavior != nextBehavior) setBehavior(nextBehavior);
@@ -171,9 +173,7 @@ public class EntityWaterBubble extends EntityOffensive implements IShieldEntity 
 				}
 			}
 		}**/
-		if (this.getOwner() == null) {
-			this.setDead();
-		}
+
 
 		//particles!
 		if (world.isRemote && getOwner() != null) {
@@ -286,7 +286,17 @@ public class EntityWaterBubble extends EntityOffensive implements IShieldEntity 
 	}
 
 	@Override
+	public UUID getElement() {
+		return Waterbending.ID;
+	}
+
+	@Override
+	public boolean canBePushed() {
+		return false;
+	}
+
+	@Override
 	public boolean shouldRenderInPass(int pass) {
-		return pass == 1;
+		return super.shouldRenderInPass(pass);
 	}
 }
