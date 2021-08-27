@@ -1,7 +1,9 @@
 package com.crowsofwar.avatar.util.data;
 
+import com.crowsofwar.avatar.bending.bending.custom.dark.tickhandlers.ChargeOblivionBeam;
 import com.crowsofwar.avatar.bending.bending.custom.dark.tickhandlers.CorruptHandler;
 import com.crowsofwar.avatar.bending.bending.custom.dark.tickhandlers.DeathDescentHandler;
+import com.crowsofwar.avatar.bending.bending.custom.dark.tickhandlers.OblivionBeamHandler;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.tickhandlers.DemonWingsHandler;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.tickhandlers.DemonicAuraHandler;
 import com.crowsofwar.avatar.bending.bending.custom.ki.tickhandlers.KaioKenHandler;
@@ -73,7 +75,8 @@ public class TickHandlerController {
 	public static TickHandler ICE_LANCE_HANDLER = new IceLanceHandler(37);
 	public static TickHandler FROST_CLAW_MAIN_HAND_HANDLER = new FrostClawHandler(38, EnumHand.MAIN_HAND);
 	public static TickHandler FROST_CLAW_OFF_HAND_HANDLER = new FrostClawHandler(39, EnumHand.OFF_HAND);
-
+	public static TickHandler OBLIVION_BEAM_HANDLER = new OblivionBeamHandler(40);
+	public static TickHandler OBLIVION_BEAM_CHARGER = new ChargeOblivionBeam(41);
 
 
 
