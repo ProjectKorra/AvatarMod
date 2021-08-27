@@ -184,6 +184,29 @@ public class OblivionBeamHandler extends TickHandler {
 
                 //Particles at the beginning of the beam
                 //TODO: Big sphere of particles flowing forwards
+
+                if (entity.ticksExisted % 4 == 0 || data.getTickHandlerDuration(this) == 1) {
+                    double x1, y1, z1;
+                    for (double theta = 0; theta <= 180; theta += 1) {
+                        double dphi = (52 - size * 6) / Math.sin(Math.toRadians(theta));
+                        for (double phi = 0; phi < 360; phi += dphi) {
+                            double rphi = Math.toRadians(phi);
+                            double rtheta = Math.toRadians(theta);
+
+                            //Making it spin increases the sphere size
+                            x1 = size * 1.5F * Math.cos(rphi) * Math.sin(rtheta);
+                            y1 = size * 1.5F * Math.sin(rphi) * Math.sin(rtheta);
+                            z1 = size * 1.5F * Math.cos(rtheta);
+
+                            ParticleBuilder.create(ParticleBuilder.Type.FLASH).vel(look.x() * 0.0125 + world.rand.nextGaussian() / 160,
+                                    look.z() * 0.0125 + world.rand.nextGaussian() / 160, look.z() * 0.0125 + world.rand.nextGaussian() / 160).
+                                    scale(size * 0.5F)
+                                    .time(8).pos(start.toMinecraft().add(look.times(0.01).toMinecraft().add(x1, y1 - 0.025, z1))).spin(0.1, world.rand.nextGaussian() / 40)
+                                    .clr(0.05F, 0.025F, 0.1F, 0.5F).glow(true).spawn(world);
+
+                        }
+                    }
+                }
             }
 
             if (ctx.getData().getTickHandlerDuration(this) % 4 == 0)
