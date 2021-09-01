@@ -41,7 +41,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static com.crowsofwar.avatar.client.controls.AvatarControl.CONTROL_LEFT_CLICK_DOWN;
+import static com.crowsofwar.avatar.client.controls.AvatarControl.CONTROL_LEFT_CLICK;
 import static com.crowsofwar.avatar.util.data.StatusControl.CrosshairPosition.LEFT_OF_CROSSHAIR;
 
 /**
@@ -50,7 +50,7 @@ import static com.crowsofwar.avatar.util.data.StatusControl.CrosshairPosition.LE
 public class StatCtrlThrowFireball extends StatusControl {
 
     public StatCtrlThrowFireball() {
-        super(10, CONTROL_LEFT_CLICK_DOWN, LEFT_OF_CROSSHAIR);
+        super(10, CONTROL_LEFT_CLICK, LEFT_OF_CROSSHAIR);
     }
 
     @Override
