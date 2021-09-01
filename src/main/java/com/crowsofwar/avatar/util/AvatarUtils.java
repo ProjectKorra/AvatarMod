@@ -375,7 +375,7 @@ public class AvatarUtils {
 
         for (int angle = 0; angle < maxAngle; angle++) {
             double x = radius * cos(angle);
-            double y = angle / (maxAngle / vortexLength);
+            double y = angle / (float) maxAngle * vortexLength;
             double z = radius * sin(angle);
             Vec3d pos = new Vec3d(x, y, z);
             if (randomVel)
@@ -391,7 +391,6 @@ public class AvatarUtils {
                     ParticleBuilder.create(particle).pos(pos.x + position.x + direction.x, pos.y + position.y + direction.y,
                             pos.z + position.z + direction.z).vel(particleSpeed).time(maxAge).glow(glow).clr(r, g, b, a).scale(scale).spawn(world);
                 }
-            } else {
             }
         }
     }

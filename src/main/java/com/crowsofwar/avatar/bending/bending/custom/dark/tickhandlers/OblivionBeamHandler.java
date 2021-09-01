@@ -167,13 +167,16 @@ public class OblivionBeamHandler extends TickHandler {
                 //Beam from the player's chest
                 ParticleBuilder.create(ParticleBuilder.Type.BEAM).pos(start.toMinecraft())
                         .target(start.plus(look.times(distance)).toMinecraft()).scale(size * 5F).time(1)
-                        .clr(47 + AvatarUtils.getRandomNumberInRange(0, 10),
+                        .clr(7 + AvatarUtils.getRandomNumberInRange(0, 10),
                                 11 + AvatarUtils.getRandomNumberInRange(0, 10),
-                                75 + AvatarUtils.getRandomNumberInRange(0, 10)).collide(true).spawn(world);
+                                40 + AvatarUtils.getRandomNumberInRange(0, 10), 5).collide(true).spawn(world);
                 //Flash and ice particles
-                AvatarUtils.spawnDirectionalHelix(world, entity, look.toMinecraft(), particles * 10, distance, size * 0.75,
+                AvatarUtils.spawnDirectionalHelix(world, entity, look.toMinecraft(), particles * 4, distance, size * 0.75,
                         ParticleBuilder.Type.FLASH, start.toMinecraft(), look.toMinecraft(),
-                        true, 8, true, 0.05F, 0.025F, 0.1F, 1F, size * 0.5F);
+                        true, 8, true, 0.05F, 0.025F, 0.1F, 1F, size * 0.75F);
+                AvatarUtils.spawnDirectionalHelix(world, entity, look.toMinecraft(), particles * 2, distance, size * 0.75,
+                        ParticleBuilder.Type.FLASH, start.toMinecraft(), look.toMinecraft(),
+                        true, 8, false, 0.05F, 0.025F, 0.1F, 0.5F, size * 0.75F);
 
                 //Particles at the end of the beam
 //                ParticleBuilder.create(ParticleBuilder.Type.SNOW).pos(start.plus(look.times(distance)).toMinecraft())
@@ -188,7 +191,7 @@ public class OblivionBeamHandler extends TickHandler {
                 if (entity.ticksExisted % 4 == 0 || data.getTickHandlerDuration(this) == 1) {
                     double x1, y1, z1;
                     for (double theta = 0; theta <= 180; theta += 1) {
-                        double dphi = (52 - size * 6) / Math.sin(Math.toRadians(theta));
+                        double dphi = (56 - size * 6) / Math.sin(Math.toRadians(theta));
                         for (double phi = 0; phi < 360; phi += dphi) {
                             double rphi = Math.toRadians(phi);
                             double rtheta = Math.toRadians(theta);
@@ -198,11 +201,16 @@ public class OblivionBeamHandler extends TickHandler {
                             y1 = size * 1.5F * Math.sin(rphi) * Math.sin(rtheta);
                             z1 = size * 1.5F * Math.cos(rtheta);
 
-                            ParticleBuilder.create(ParticleBuilder.Type.FLASH).vel(look.x() * 0.0125 + world.rand.nextGaussian() / 160,
-                                    look.z() * 0.0125 + world.rand.nextGaussian() / 160, look.z() * 0.0125 + world.rand.nextGaussian() / 160).
-                                    scale(size * 0.5F)
-                                    .time(8).pos(start.toMinecraft().add(look.times(0.01).toMinecraft().add(x1, y1 - 0.025, z1))).spin(0.1, world.rand.nextGaussian() / 40)
-                                    .clr(0.05F, 0.025F, 0.1F, 0.5F).glow(true).spawn(world);
+                            ParticleBuilder.create(ParticleBuilder.Type.FLASH).vel(look.x() * 0.0125 + world.rand.nextGaussian() / 80,
+                                    look.z() * 0.0125 + world.rand.nextGaussian() / 80, look.z() * 0.0125 + world.rand.nextGaussian() / 80).
+                                    scale(size * 0.65F)
+                                    .time(8).pos(start.toMinecraft().add(look.times(0.025).toMinecraft().add(x1, y1 - 0.025, z1))).spin(0.1, world.rand.nextGaussian() / 20)
+                                    .clr(0.05F, 0.025F, 0.1F, 0.85F).glow(true).spawn(world);
+                            ParticleBuilder.create(ParticleBuilder.Type.FLASH).vel(look.x() * 0.0125 + world.rand.nextGaussian() / 80,
+                                    look.z() * 0.0125 + world.rand.nextGaussian() / 80, look.z() * 0.0125 + world.rand.nextGaussian() / 80).
+                                    scale(size * 0.65F)
+                                    .time(8).pos(start.toMinecraft().add(look.times(0.025).toMinecraft().add(x1, y1 - 0.025, z1))).spin(0.1, world.rand.nextGaussian() / 20)
+                                    .clr(0.05F, 0.025F, 0.1F, 0.85F).glow(false).spawn(world);
 
                         }
                     }

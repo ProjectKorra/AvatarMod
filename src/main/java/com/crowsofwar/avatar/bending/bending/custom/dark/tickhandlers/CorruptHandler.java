@@ -2,6 +2,7 @@ package com.crowsofwar.avatar.bending.bending.custom.dark.tickhandlers;
 
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
+import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.custom.dark.AbilityCorrupt;
 import com.crowsofwar.avatar.bending.bending.custom.dark.Darkbending;
 import com.crowsofwar.avatar.bending.bending.custom.light.Lightbending;
@@ -62,7 +63,13 @@ public class CorruptHandler extends TickHandler {
             pos = entity.onGround ? pos.add(0, entity.getEyeHeight() / 1.5, 0) : pos.add(0, entity.getEyeHeight() / 2, 0);
             ParticleBuilder.create(ParticleBuilder.Type.FLASH).time(25 + AvatarUtils.getRandomNumberInRange(1, 2)).
                     clr(r, g, b, 155).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(5, 40))
-                    .element(new Darkbending()).scale(scale).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 50).swirl((int) (corruptDuration / 20 * scale),
+                    .element(BendingStyles.get(Darkbending.ID)).scale(scale).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 50).swirl((int) (corruptDuration / 20 * scale),
+                    (int) (scale * Math.PI), scale * 1.25F, scale / 2, corruptDuration * 20, (0.75F / scale),
+                    entity, world, true, pos,
+                    ParticleBuilder.SwirlMotionType.OUT, false, true);
+            ParticleBuilder.create(ParticleBuilder.Type.FLASH).time(25 + AvatarUtils.getRandomNumberInRange(1, 2)).
+                    clr(r, g, b, 155).fade(rRandom / 10, gRandom / 10, bRandom / 10, AvatarUtils.getRandomNumberInRange(5, 40))
+                    .element(BendingStyles.get(Darkbending.ID)).scale(scale).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 85).swirl((int) (corruptDuration / 20 * scale),
                     (int) (scale * Math.PI), scale * 1.25F, scale / 2, corruptDuration * 20, (0.75F / scale),
                     entity, world, true, pos,
                     ParticleBuilder.SwirlMotionType.OUT, false, true);
