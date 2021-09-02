@@ -1213,6 +1213,11 @@ public final class ParticleBuilder {
          */
         public static final ResourceLocation SCORCH = new ResourceLocation(AvatarInfo.MOD_ID, "scorch");
         /**
+         * Scorch mark.<p></p><b>Defaults:</b><br>Lifetime: 100-140 ticks<br>Colour: black<br>Fade: gold
+         */
+        public static final ResourceLocation DIVINE_SCORCH = new ResourceLocation(AvatarInfo.MOD_ID, "divine_scorch");
+
+        /**
          * Snowflake particle.<p></p><b>Defaults:</b><br>Lifetime: 40-50 ticks<br>Velocity: (0, -0.02, 0)
          */
         public static final ResourceLocation SNOW = new ResourceLocation(AvatarInfo.MOD_ID, "snow");

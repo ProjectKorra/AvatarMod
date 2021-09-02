@@ -53,6 +53,7 @@ public class AvatarDamageSource {
 	public static final DamageSource SAND = new DamageSource("avatar_Sand");
 	public static final DamageSource ICE = new DamageSource("avatar_Ice");
 	public static final DamageSource DARK = new DamageSource("avatar_Dark");
+	public static final DamageSource LIGHT = new DamageSource("avatar_Light");
 	/**
 	 * Returns whether the given damage was inflicted using an Avatar damage source.
 	 */

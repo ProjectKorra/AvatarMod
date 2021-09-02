@@ -395,6 +395,31 @@ public class AvatarUtils {
         }
     }
 
+    public static void spawnHelix(World world, Entity entity, Vec3d direction, int maxAngle, double vortexLength, double radius, ResourceLocation particle, Vec3d position,
+                                             Vec3d particleSpeed, boolean randomVel, int maxAge, boolean glow, float r, float g, float b, float a, float scale) {
+        if (!world.isRemote) return;
+
+        for (int angle = 0; angle < maxAngle; angle++) {
+            double x = radius * cos(angle);
+            double y = angle / (float) maxAngle * vortexLength;
+            double z = radius * sin(angle);
+            Vec3d pos = new Vec3d(x, y, z);
+            if (randomVel)
+                particleSpeed = new Vec3d(world.rand.nextGaussian() / 20,
+                        world.rand.nextDouble() / 20, world.rand.nextGaussian() / 20);
+            if (entity != null && direction != null) {
+                //Don't rotate
+                if (r == -1 && g == -1 && b == -1) {
+                    ParticleBuilder.create(particle).pos(pos.x + position.x + direction.x, pos.y + position.y + direction.y,
+                            pos.z + position.z + direction.z).vel(particleSpeed).time(maxAge).glow(glow).scale(scale).spawn(world);
+                } else {
+                    ParticleBuilder.create(particle).pos(pos.x + position.x + direction.x, pos.y + position.y + direction.y,
+                            pos.z + position.z + direction.z).vel(particleSpeed).time(maxAge).glow(glow).clr(r, g, b, a).scale(scale).spawn(world);
+                }
+            }
+        }
+    }
+
     /**
      * Solves the issue where players on singleplayer/LAN will sometimes not
      * have velocity or position changed.

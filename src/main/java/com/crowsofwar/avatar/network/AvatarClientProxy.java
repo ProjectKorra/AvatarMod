@@ -124,6 +124,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
         ParticleAvatar.registerParticle(Type.SUMMON, ParticleSummon::new);
         ParticleAvatar.registerParticle(Type.VINE, ParticleVine::new);
         ParticleAvatar.registerParticle(Type.CUBE, ParticleCube::new);
+        ParticleAvatar.registerParticle(Type.DIVINE_SCORCH, ParticleDivineScorch::new);
 
         ParticleBehaviour.registerBehaviours();
     }
@@ -198,6 +199,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
         registerEntityRenderingHandler(EntityAvatarLightning.class, RenderAvatarLightning::new);
         registerEntityRenderingHandler(EntityIceLance.class, RenderNothing::new);
         registerEntityRenderingHandler(EntityIceClaws.class, RenderNothing::new);
+        registerEntityRenderingHandler(EntityBuff.class, RenderNothing::new);
         //registerEntityRenderingHandler(EntityPlayer.class, RenderSlipstreamInvisibility::new);
 
         // Renderers dependent on CodeChickenLib.

@@ -35,6 +35,7 @@ import com.crowsofwar.avatar.bending.bending.custom.demonic.Demonbending;
 import com.crowsofwar.avatar.bending.bending.custom.ki.AbilityKaioKen;
 import com.crowsofwar.avatar.bending.bending.custom.ki.AbilityKiFlight;
 import com.crowsofwar.avatar.bending.bending.custom.ki.Kibending;
+import com.crowsofwar.avatar.bending.bending.custom.light.AbilityDivineJudgement;
 import com.crowsofwar.avatar.bending.bending.custom.light.AbilityHeavenlyFlight;
 import com.crowsofwar.avatar.bending.bending.custom.light.AbilityPurify;
 import com.crowsofwar.avatar.bending.bending.custom.light.Lightbending;
@@ -192,6 +193,7 @@ public class AvatarMod {
         /*              Light               */
         Abilities.register(new AbilityPurify());
         Abilities.register(new AbilityHeavenlyFlight());
+        Abilities.register(new AbilityDivineJudgement());
 
         /*              Demon               */
         Abilities.register(new AbilityDemonicAura());
@@ -438,6 +440,7 @@ public class AvatarMod {
         registerEntity(EntityLightCylinder.class, "LightCylinder", 128, 1000, true);
         registerEntity(EntityIceLance.class, "IceLance", 128, 1000, true);
         registerEntity(EntityIceClaws.class,  "IceClaws", 128, 1000, true);
+        registerEntity(EntityBuff.class, "Buff", 128, 1000, false);
         EntityRegistry.addSpawn(EntityOtterPenguin.class, 10, 3, 6, EnumCreatureType.CREATURE, //
                 COLD_BEACH, ICE_PLAINS, ICE_MOUNTAINS, MUTATED_ICE_FLATS);
         EntityRegistry.addSpawn(EntityOstrichHorse.class, 5, 1, 3, EnumCreatureType.CREATURE, //
