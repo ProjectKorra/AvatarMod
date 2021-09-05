@@ -1,6 +1,5 @@
 package com.crowsofwar.avatar.entity;
 
-import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.util.damageutils.DamageUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -9,7 +8,6 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
 import java.util.List;
