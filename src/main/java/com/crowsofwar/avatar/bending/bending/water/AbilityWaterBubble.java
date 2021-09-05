@@ -72,11 +72,11 @@ public class AbilityWaterBubble extends Ability {
 				if (bender.consumeChi(STATS_CONFIG.chiWaterBubble)) {
 
 					EntityWaterBubble existing = AvatarEntity.lookupEntity(world, EntityWaterBubble.class, //
-							bub -> bub.getBehavior() instanceof WaterBubbleBehavior.PlayerControlled
+							bub -> bub.getBehaviour() instanceof WaterBubbleBehavior.PlayerControlled
 									&& bub.getOwner() == entity);
 
 					if (existing != null) {
-						existing.setBehavior(new WaterBubbleBehavior.Drop());
+						existing.setBehaviour(new WaterBubbleBehavior.Drop());
 						// prevent bubble from removing status control
 						existing.setOwner(null);
 					}
@@ -86,16 +86,18 @@ public class AbilityWaterBubble extends Ability {
 					EntityWaterBubble bubble = new EntityWaterBubble(world);
 					assert pos != null;
 					bubble.setPosition(pos.x(), pos.y(), pos.z());
-					bubble.setBehavior(new WaterBubbleBehavior.PlayerControlled());
-					bubble.setOwner(entity);
-					bubble.setSourceBlock(ctx.getLevel() >= 2);
-					bubble.setAbility(this);
 
 					// Workaround to fix issue where water bubble gets destroyed quickly after creation
 					// This is because the water bubble is destroyed once it's inside water, and after being created,
 					// the water quickly surrounds and destroys it
 					// This will allow the bubble to travel out of the way of the water before it gets destroyed
+
 					bubble.setVelocity(Vector.UP);
+
+					bubble.setBehaviour(new WaterBubbleBehavior.PlayerControlled());
+					bubble.setOwner(entity);
+					bubble.setSourceBlock(ctx.getLevel() >= 2);
+					bubble.setAbility(this);
 
 					if (!world.isRemote)
 						world.spawnEntity(bubble);

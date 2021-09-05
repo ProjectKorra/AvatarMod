@@ -48,7 +48,7 @@ public class StatCtrlLobBubble extends StatusControl {
 		double powerRating = ctx.getBender().calcPowerRating(Waterbending.ID);
 
 		EntityWaterBubble bubble = AvatarEntity.lookupEntity(ctx.getWorld(), EntityWaterBubble.class, //
-				bub -> bub.getBehavior() instanceof WaterBubbleBehavior.PlayerControlled
+				bub -> bub.getBehaviour() instanceof WaterBubbleBehavior.PlayerControlled
 						&& bub.getOwner() == ctx.getBenderEntity());
 
 		if (bubble != null) {
@@ -60,7 +60,7 @@ public class StatCtrlLobBubble extends StatusControl {
 			}
 			speed += powerRating / 30f;
 
-			bubble.setBehavior(new WaterBubbleBehavior.Lobbed());
+			bubble.setBehaviour(new WaterBubbleBehavior.Lobbed());
 			bubble.addVelocity(bubble.velocity().dividedBy(-1));
 			bubble.addVelocity(Vector.getLookRectangular(ctx.getBenderEntity()).times(speed));
 		}

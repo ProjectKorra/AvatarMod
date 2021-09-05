@@ -17,6 +17,7 @@
 
 package com.crowsofwar.avatar.entity.data;
 
+import com.crowsofwar.avatar.entity.EntityOffensive;
 import com.crowsofwar.avatar.entity.EntityWaterBubble;
 import com.crowsofwar.avatar.util.data.AvatarWorldData;
 import com.crowsofwar.avatar.util.data.Bender;
@@ -33,15 +34,12 @@ import net.minecraft.network.datasync.DataSerializers;
 /**
  * @author CrowsOfWar
  */
-public abstract class WaterBubbleBehavior extends Behavior<EntityWaterBubble> {
-
-    public static final DataSerializer<WaterBubbleBehavior> DATA_SERIALIZER = new BehaviorSerializer<>();
+public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
 
     protected WaterBubbleBehavior() {
     }
 
     public static void register() {
-        DataSerializers.registerSerializer(DATA_SERIALIZER);
         registerBehavior(Drop.class);
         registerBehavior(PlayerControlled.class);
         registerBehavior(Lobbed.class);
@@ -51,7 +49,7 @@ public abstract class WaterBubbleBehavior extends Behavior<EntityWaterBubble> {
     public static class Drop extends WaterBubbleBehavior {
 
         @Override
-        public Behavior onUpdate(EntityWaterBubble entity) {
+        public Behavior onUpdate(EntityOffensive entity) {
             entity.addVelocity(Vector.DOWN.times(0.981));
             if (entity.collided) {
                 entity.setDead();
@@ -80,7 +78,7 @@ public abstract class WaterBubbleBehavior extends Behavior<EntityWaterBubble> {
     public static class PlayerControlled extends WaterBubbleBehavior {
 
         @Override
-        public Behavior onUpdate(EntityWaterBubble entity) {
+        public OffensiveBehaviour onUpdate(EntityOffensive entity) {
             EntityLivingBase owner = entity.getOwner();
 
             if (owner == null) return this;
@@ -97,10 +95,11 @@ public abstract class WaterBubbleBehavior extends Behavior<EntityWaterBubble> {
             target = forward.times(2).plus(eye);
 //			}
 
-            Vector motion = target.minus(Vector.getEntityPos(entity)).times(0.5);
+            Vector motion = target.minus(Vector.getEntityPos(entity));
             if (!entity.world.isRemote)
                 entity.setVelocity(motion);
 
+//            System.out.println(entity.world.isRemote);
             return this;
         }
 
@@ -125,10 +124,10 @@ public abstract class WaterBubbleBehavior extends Behavior<EntityWaterBubble> {
     public static class Lobbed extends WaterBubbleBehavior {
         //For when you use the water bubble like a bucket
         @Override
-        public Behavior onUpdate(EntityWaterBubble entity) {
+        public Behavior onUpdate(EntityOffensive entity) {
             entity.addVelocity(Vector.DOWN.times(0.8));
             if (entity.getOwner() == null) return this;
-            if (entity.collided) {
+            if (entity.collided && entity instanceof EntityWaterBubble) {
 
                 IBlockState state = Blocks.FLOWING_WATER.getDefaultState();
 
@@ -137,7 +136,7 @@ public abstract class WaterBubbleBehavior extends Behavior<EntityWaterBubble> {
                     entity.world.setBlockState(entity.getPosition(), state, 3);
                     entity.setDead();
 
-                    if (!entity.isSourceBlock()) {
+                    if (!((EntityWaterBubble) entity).isSourceBlock()) {
                         AvatarWorldData wd = AvatarWorldData.getDataFromWorld(entity.world);
                         wd.addTemporaryWaterLocation(entity.getPosition());
                     }

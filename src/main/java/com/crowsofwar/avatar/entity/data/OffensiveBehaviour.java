@@ -54,6 +54,7 @@ public abstract class OffensiveBehaviour extends Behavior<EntityOffensive> {
         registerBehavior(Redirect.class);
         registerBehavior(AbilityFireRedirect.AbsorbBehaviour.class);
         registerBehavior(AbilityCreateWave.WaveBehaviour.class);
+        WaterBubbleBehavior.register();
     }
 
     public static class Idle extends OffensiveBehaviour {

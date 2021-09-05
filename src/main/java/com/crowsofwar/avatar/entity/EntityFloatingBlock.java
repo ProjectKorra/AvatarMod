@@ -282,10 +282,10 @@ public class EntityFloatingBlock extends EntityOffensive {
     }
 
     public boolean placeBlock() {
-        if (!STATS_CONFIG.preventEarthGriefing) {
+        if (!STATS_CONFIG.preventEarthGriefing && shouldTurnSolid()) {
             Vec3d middle = AvatarEntityUtils.getBottomMiddleOfEntity(this);
             BlockPos pos = new BlockPos(middle.x, middle.y, middle.z);
-            BlockPos pos2 = new BlockPos(middle.x, middle.y, middle.z).down();
+            BlockPos pos2 = pos.down();
             //Using getPosition sometimes results in weird stuff
             return world.setBlockState(pos, getBlockState()) || world.setBlockState(pos2, getBlockState());
         }
