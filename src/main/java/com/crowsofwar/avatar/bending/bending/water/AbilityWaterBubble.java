@@ -41,7 +41,8 @@ import static com.crowsofwar.avatar.util.data.StatusControlController.LOB_BUBBLE
 import static java.lang.Math.toRadians;
 
 /**
- * @author CrowsOfWar
+ * @author CrowsOfWar, FavouriteDragon
+ * 
  */
 public class AbilityWaterBubble extends Ability {
 
@@ -71,15 +72,15 @@ public class AbilityWaterBubble extends Ability {
 
 				if (bender.consumeChi(STATS_CONFIG.chiWaterBubble)) {
 
-					EntityWaterBubble existing = AvatarEntity.lookupEntity(world, EntityWaterBubble.class, //
-							bub -> bub.getBehaviour() instanceof WaterBubbleBehavior.PlayerControlled
-									&& bub.getOwner() == entity);
-
-					if (existing != null) {
-						existing.setBehaviour(new WaterBubbleBehavior.Drop());
-						// prevent bubble from removing status control
-						existing.setOwner(null);
-					}
+//					EntityWaterBubble existing = AvatarEntity.lookupEntity(world, EntityWaterBubble.class, //
+//							bub -> bub.getBehaviour() instanceof WaterBubbleBehavior.PlayerControlled
+//									&& bub.getOwner() == entity);
+//
+//					if (existing != null) {
+//						existing.setBehaviour(new WaterBubbleBehavior.Drop());
+//						// prevent bubble from removing status control
+//						existing.setOwner(null);
+//					}
 
 					Vector pos = ctx.getLookPos();
 
@@ -98,6 +99,9 @@ public class AbilityWaterBubble extends Ability {
 					bubble.setOwner(entity);
 					bubble.setSourceBlock(ctx.getLevel() >= 2);
 					bubble.setAbility(this);
+					bubble.setEntitySize(1, 1);
+					bubble.setTier(getCurrentTier(ctx));
+					bubble.setLifeTime(100);
 
 					if (!world.isRemote)
 						world.spawnEntity(bubble);

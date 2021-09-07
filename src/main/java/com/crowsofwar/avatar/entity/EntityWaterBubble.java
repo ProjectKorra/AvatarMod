@@ -265,7 +265,7 @@ public class EntityWaterBubble extends EntityOffensive implements IShieldEntity 
 
     @Override
     public EntityLivingBase getController() {
-        return getBehaviour() instanceof WaterBubbleBehavior.PlayerControlled ? getOwner() : null;
+        return getOwner();//getBehaviour() instanceof WaterBubbleBehavior.PlayerControlled ? getOwner() : null;
     }
 
     @Override

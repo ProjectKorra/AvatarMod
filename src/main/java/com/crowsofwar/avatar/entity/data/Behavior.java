@@ -61,7 +61,6 @@ public abstract class Behavior<E extends Entity> {
 	public static void registerBehaviours() {
 		FloatingBlockBehavior.register();
 		WaterArcBehavior.register();
-		WaterBubbleBehavior.register();
 		WallBehavior.register();
 		EarthspikesBehavior.register();
 		FireballBehavior.register();

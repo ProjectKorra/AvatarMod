@@ -98,6 +98,7 @@ public class EarthSpikeHandler extends TickHandler {
                 earthspike.setDamage(damage);
                 earthspike.setPosition(pos.up());
                 earthspike.setTier(tier);
+                earthspike.setElement(Earthbending.ID);
                 earthspike.setVelocity(Vec3d.ZERO);
                 earthspike.setLifeTime((int) (size * 30));
                 earthspike.setAbility(ability);
@@ -254,6 +255,7 @@ public class EarthSpikeHandler extends TickHandler {
                                     earthspike.setLifeTime((int) (size * 30));
                                     earthspike.setAbility(ability);
                                     earthspike.setPush(knockback);
+                                    earthspike.setElement(Earthbending.ID);
                                     earthspike.setDamageSource("avatar_Earth_earthSpike");
                                     earthspike.setXp(xp);
                                     if (!world.isRemote)
