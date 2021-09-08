@@ -42,7 +42,7 @@ import static java.lang.Math.toRadians;
 
 /**
  * @author CrowsOfWar, FavouriteDragon
- * 
+ *
  */
 public class AbilityWaterBubble extends Ability {
 
