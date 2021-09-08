@@ -69,7 +69,7 @@ public class FlashParticleBatchRenderer {
             for (ParticleFlash particle = queue.poll(); particle != null; particle = queue.poll()) {
                 int glow = particle.glow ? 1 : 0;
                 //Size time: 2^14 * 1.5
-                if (particles[glow].size() > 24576)
+                if (particles[glow].size() > 16384)
                     particles[glow].removeFirst();
                 particles[glow].add(particle);
             }

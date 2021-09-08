@@ -62,14 +62,14 @@ public class DemonicAuraHandler extends TickHandler {
             Vec3d pos = AvatarEntityUtils.getBottomMiddleOfEntity(entity);
             pos = entity.onGround ? pos.add(0, entity.getEyeHeight(), 0) : pos.add(0, entity.getEyeHeight() / 2, 0);
             ParticleBuilder.create(ParticleBuilder.Type.FLASH).time(25 + AvatarUtils.getRandomNumberInRange(1, 2)).
-                    clr(r, g, b, 255).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(20, 40))
+                    clr(r, g, b, 255).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(40, 70))
                     .element(BendingStyles.get(Demonbending.ID)).scale(scale).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 15).swirl((int) (demonicAuraDuration / 20 * scale),
                     (int) (scale * Math.PI), scale, scale / 2, demonicAuraDuration * 20, (0.75F / scale),
                     entity, world, true, pos,
                     ParticleBuilder.SwirlMotionType.OUT, true, true);
             ParticleBuilder.create(ParticleBuilder.Type.FLASH).time(25 + AvatarUtils.getRandomNumberInRange(1, 2)).
-                    clr(r, g, b, 255).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(20, 40))
-                    .element(BendingStyles.get(Demonbending.ID)).scale(scale).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 60).swirl((int) (demonicAuraDuration / 20 * scale),
+                    clr(r, g, b, 255).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(50, 80))
+                    .element(BendingStyles.get(Demonbending.ID)).scale(scale).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 50).swirl((int) (demonicAuraDuration / 20 * scale),
                     (int) (scale * Math.PI), scale, scale / 2, demonicAuraDuration * 20, (0.75F / scale),
                     entity, world, true, pos,
                     ParticleBuilder.SwirlMotionType.OUT, true, true);

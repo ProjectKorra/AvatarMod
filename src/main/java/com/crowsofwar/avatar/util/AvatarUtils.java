@@ -386,10 +386,10 @@ public class AvatarUtils {
                 pos = rotateAroundAxisY(pos, entity.rotationYaw);
                 if (r == -1 && g == -1 && b == -1) {
                     ParticleBuilder.create(particle).pos(pos.x + position.x + direction.x, pos.y + position.y + direction.y,
-                            pos.z + position.z + direction.z).vel(particleSpeed).time(maxAge).glow(glow).scale(scale).spawn(world);
+                            pos.z + position.z + direction.z).vel(particleSpeed).time(maxAge).glow(glow).spawnEntity(entity).scale(scale).spawn(world);
                 } else {
                     ParticleBuilder.create(particle).pos(pos.x + position.x + direction.x, pos.y + position.y + direction.y,
-                            pos.z + position.z + direction.z).vel(particleSpeed).time(maxAge).glow(glow).clr(r, g, b, a).scale(scale).spawn(world);
+                            pos.z + position.z + direction.z).vel(particleSpeed).time(maxAge).spawnEntity(entity).glow(glow).clr(r, g, b, a).scale(scale).spawn(world);
                 }
             }
         }

@@ -929,16 +929,16 @@ public final class ParticleBuilder {
         colourShiftInterval[3] = aSI;
 
         float[] colourShiftRange = new float[4];
-        colourShiftInterval[0] = rSR;
-        colourShiftInterval[1] = gSR;
-        colourShiftInterval[2] = bSR;
-        colourShiftInterval[3] = aSR;
+        colourShiftRange[0] = rSR;
+        colourShiftRange[1] = gSR;
+        colourShiftRange[2] = bSR;
+        colourShiftRange[3] = aSR;
 
         // Anything with an if statement here allows default values to be set in particle constructors
         if (!Double.isNaN(vx) && !Double.isNaN(vy) && !Double.isNaN(vz)) particle.setVelocity(vx, vy, vz);
         if (r >= 0 && g >= 0 && b >= 0) particle.setRBGColorF(r, g, b);
-        if (a >= 0) particle.setAlphaF(a);
-        if (fr >= 0 && fg >= 0 && fb >= 0) particle.setFadeColour(fr, fg, fb);
+        if (a >= 0) particle.setAlphaF(glow ? a * 2 : a);
+       // if (fr >= 0 && fg >= 0 && fb >= 0) particle.setFadeColour(fr, fg, fb);
 
         for (int i = 0; i < 4; i++) {
             if (colourShiftInterval[i] < 0 || colourShiftRange[i] < 0) {
@@ -1034,7 +1034,7 @@ public final class ParticleBuilder {
         // Anything with an if statement here allows default values to be set in particle constructors
         if (!Double.isNaN(vx) && !Double.isNaN(vy) && !Double.isNaN(vz)) particle.setVelocity(vx, vy, vz);
         if (r >= 0 && g >= 0 && b >= 0) particle.setRBGColorF(r, g, b);
-        if (a >= 0) particle.setAlphaF(a);
+        if (a >= 0) particle.setAlphaF(glow ? a * 2 : a);
         if (fr >= 0 && fg >= 0 && fb >= 0) particle.setFadeColour(fr, fg, fb);
 
         for (int i = 0; i < 4; i++) {

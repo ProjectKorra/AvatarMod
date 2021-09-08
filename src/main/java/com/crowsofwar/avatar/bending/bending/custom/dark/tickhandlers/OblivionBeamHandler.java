@@ -205,12 +205,12 @@ public class OblivionBeamHandler extends TickHandler {
                                     look.z() * 0.0125 + world.rand.nextGaussian() / 80, look.z() * 0.0125 + world.rand.nextGaussian() / 80).
                                     scale(size * 0.65F)
                                     .time(8).pos(start.toMinecraft().add(look.times(0.025).toMinecraft().add(x1, y1 - 0.025, z1))).spin(0.1, world.rand.nextGaussian() / 20)
-                                    .clr(0.05F, 0.025F, 0.1F, 0.85F).glow(true).spawn(world);
+                                    .clr(0.05F, 0.025F, 0.1F, 0.85F).glow(true).spawnEntity(entity).spawn(world);
                             ParticleBuilder.create(ParticleBuilder.Type.FLASH).vel(look.x() * 0.0125 + world.rand.nextGaussian() / 80,
                                     look.z() * 0.0125 + world.rand.nextGaussian() / 80, look.z() * 0.0125 + world.rand.nextGaussian() / 80).
                                     scale(size * 0.65F)
                                     .time(8).pos(start.toMinecraft().add(look.times(0.025).toMinecraft().add(x1, y1 - 0.025, z1))).spin(0.1, world.rand.nextGaussian() / 20)
-                                    .clr(0.05F, 0.025F, 0.1F, 0.85F).glow(false).spawn(world);
+                                    .clr(0.05F, 0.025F, 0.1F, 0.85F).glow(false).spawnEntity(entity).spawn(world);
 
                         }
                     }
