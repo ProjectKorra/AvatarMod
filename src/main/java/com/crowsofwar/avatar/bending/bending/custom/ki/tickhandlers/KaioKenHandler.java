@@ -59,7 +59,7 @@ public class KaioKenHandler extends TickHandler {
             pos = entity.onGround ? pos.add(0, entity.getEyeHeight(), 0) : pos.add(0, entity.getEyeHeight() / 2, 0);
             ParticleBuilder.create(ParticleBuilder.Type.FLASH).time(25 + AvatarUtils.getRandomNumberInRange(1, 2)).
                     clr(r, g, b, 10).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(10, 40))
-                    .element(BendingStyles.get(Kibending.ID)).scale(scale).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 5).swirl((int) (kaioKenDuration / 20 * scale),
+                    .element(BendingStyles.get(Kibending.ID)).scale(scale).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 35).swirl((int) (kaioKenDuration / 20 * scale),
                     (int) (scale * Math.PI), scale, scale / 2, kaioKenDuration * 20, (0.75F / scale),
                     entity, world, true, pos,
                     ParticleBuilder.SwirlMotionType.OUT, false, true);

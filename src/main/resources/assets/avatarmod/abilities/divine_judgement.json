@@ -16,7 +16,7 @@
       "chiOnHit": 0.9,
       "damage": 8,
       "effectRadius": 6,
-      "effectDuration": 120,
+      "effectDuration": 140,
       "effectStrength": 1
     },
     "level2": {

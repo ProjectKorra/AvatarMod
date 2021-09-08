@@ -121,9 +121,11 @@ public class AvatarPlayerData extends PlayerData {
                 }
             }
             //For target point; leaving in in-case something breaks
-            double range = Math.sqrt(rangeSq) + 0.01;// +0.01 "just in case"
+            double range = Math.sqrt(rangeSq) + 0.05;// +0.05 "just in case"
 
 
+            //Note: not using the target point results in some bugs where other players can't see your abilities.
+            //Send packets to everyone! Probably a forge bug.
             TargetPoint point = new TargetPoint(player.dimension, player.posX, player.posY, player.posZ,
                     range);
             //Again ignore the warnings. Why does this happen??
@@ -134,9 +136,9 @@ public class AvatarPlayerData extends PlayerData {
                     AvatarMod.network.sendToAll(packet);
                 }
             }
-            //Target points are dumb
-            //Player may be null, ignore warning
-            //Pls I got crashes because it wasn't an entity, how is that even possible
+//            //Target points are dumb
+//            //Player may be null, ignore warning
+//            //Pls I got crashes because it wasn't an entity, how is that even possible
             else if (player != null && player instanceof EntityPlayerMP) {
                 try {
                     AvatarMod.network.sendTo(packet, (EntityPlayerMP) player);
