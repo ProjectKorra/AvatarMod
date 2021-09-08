@@ -57,11 +57,8 @@ public class AbilityDivineJudgement extends Ability {
             AvatarUtils.spawnHelix(world, entity, new Vec3d(0, -1, 0),
                     (int) (200 * Math.PI * 4), 200, radius / 1.5F, ParticleBuilder.Type.FLASH, targetPos,
                     Vec3d.ZERO, true, beamTime, true, 1.0F, 1.0F, 0.3F, 0.5F, radius / 2);
-            ParticleBuilder.create(ParticleBuilder.Type.BEAM).pos(targetPos.add(0, 200, 0)).target(targetPos).scale(radius * 6).clr(1.0F, 1.0F, 0.3F)
-                    .fade(1F, 1F, 1F).time(beamTime).spawn(world);
-
             ParticleBuilder.create(ParticleBuilder.Type.DIVINE_SCORCH).pos(targetPos.add(0, 0.1, 0))
-                    .time(120).scale(radius * 2).face(EnumFacing.UP).spawn(world);
+                    .time(lifetime).scale(radius * 2).face(EnumFacing.UP).spawn(world);
 
         }
         //Damage

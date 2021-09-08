@@ -1,5 +1,6 @@
 package com.crowsofwar.avatar.entity;
 
+import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.util.damageutils.DamageUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -8,6 +9,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -34,12 +36,12 @@ public class EntityBuff extends AvatarEntity {
         dataManager.set(SYNC_LIFETIME, lifetime);
     }
 
-    public void setRadius(float radius) {
-        dataManager.set(SYNC_RADIUS, radius);
-    }
-
     public float getRadius() {
         return dataManager.get(SYNC_RADIUS);
+    }
+
+    public void setRadius(float radius) {
+        dataManager.set(SYNC_RADIUS, radius);
     }
 
     @Override
@@ -109,6 +111,18 @@ public class EntityBuff extends AvatarEntity {
                     }
                 }
             }
+        }
+
+        if (world.isRemote && getOwner() != null) {
+            Vec3d startPos = getPositionVector().add(0, 200, 0);
+            if (ticksExisted < 20)
+                ParticleBuilder.create(ParticleBuilder.Type.BEAM).clr(1.0F, 1.0F, 0.8F)
+                        .time(20).pos(startPos).scale(getRadius() / 15 * ticksExisted * 3).target(startPos.subtract(0,
+                        ticksExisted * 10, 0)).spawnEntity(getOwner()).spawn(world);
+            else if (ticksExisted == 20)
+                ParticleBuilder.create(ParticleBuilder.Type.BEAM).clr(1.0F, 1.0F, 0.8F)
+                        .time(getLifetime() - 20).pos(startPos).scale(getRadius() * 4).target(startPos.subtract(0,
+                        200, 0)).spawnEntity(getOwner()).spawn(world);
         }
     }
 }
