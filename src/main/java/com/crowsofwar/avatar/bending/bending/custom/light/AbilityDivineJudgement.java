@@ -1,10 +1,8 @@
 package com.crowsofwar.avatar.bending.bending.custom.light;
 
 import com.crowsofwar.avatar.bending.bending.Ability;
-import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.entity.EntityBuff;
-import com.crowsofwar.avatar.util.AvatarParticleUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.util.damageutils.DamageUtils;
@@ -19,7 +17,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.List;
-import java.util.UUID;
 
 public class AbilityDivineJudgement extends Ability {
 
@@ -52,15 +49,16 @@ public class AbilityDivineJudgement extends Ability {
         float xp = getProperty(XP_HIT, ctx).floatValue();
         float push = getProperty(KNOCKBACK, ctx).floatValue();
         int lifetime = getProperty(EFFECT_DURATION, ctx).intValue();
+        int beamTime = getProperty(LIFETIME, ctx).intValue();
 
 
         //Spawn particles
         if (world.isRemote) {
             AvatarUtils.spawnHelix(world, entity, new Vec3d(0, -1, 0),
                     (int) (200 * Math.PI * 4), 200, radius / 1.5F, ParticleBuilder.Type.FLASH, targetPos,
-                    Vec3d.ZERO, true, 20, true, 1.0F, 1.0F, 0.3F, 0.5F, radius / 2);
+                    Vec3d.ZERO, true, beamTime, true, 1.0F, 1.0F, 0.3F, 0.5F, radius / 2);
             ParticleBuilder.create(ParticleBuilder.Type.BEAM).pos(targetPos.add(0, 200, 0)).target(targetPos).scale(radius * 6).clr(1.0F, 1.0F, 0.3F)
-                    .fade(1F, 1F, 1F).time(10).spawn(world);
+                    .fade(1F, 1F, 1F).time(beamTime).spawn(world);
 
             ParticleBuilder.create(ParticleBuilder.Type.DIVINE_SCORCH).pos(targetPos.add(0, 0.1, 0))
                     .time(120).scale(radius * 2).face(EnumFacing.UP).spawn(world);

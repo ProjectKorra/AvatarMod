@@ -92,7 +92,7 @@ public class CorruptHandler extends TickHandler {
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(location.plus(Vector.getEntityPos(entity)).toMinecraft()).time(4 + AvatarUtils.getRandomNumberInRange(1, 4)).
                         vel(world.rand.nextGaussian() / 40, world.rand.nextDouble() / 2, world.rand.nextGaussian() / 40)
                         .clr(r, g, b, 150).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(50, 140))
-                        .element(new Lightbending()).scale(scale).glow(true).spawn(world);
+                        .element(BendingStyles.get(Darkbending.ID)).scale(scale).glow(true).spawn(world);
             }
         }
         return false;//duration >= corruptDuration;

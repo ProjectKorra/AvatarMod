@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.bending.bending.custom.ki.tickhandlers;
 
 import com.crowsofwar.avatar.bending.bending.Abilities;
+import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.custom.ki.AbilityKiFlight;
 import com.crowsofwar.avatar.bending.bending.custom.ki.Kibending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
@@ -67,12 +68,12 @@ public class KiFlightHandler extends TickHandler {
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).clr(r, g, b, 215 + AvatarUtils.getRandomNumberInRange(0, 40))
                         .fade(rRandom, gRandom, bRandom, 160 + AvatarUtils.getRandomNumberInRange(0, 40))
                         .pos(pos.toMinecraft()).vel(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20)
-                        .scale(size).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(new Kibending()).collide(true)
+                        .scale(size).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(BendingStyles.get(Kibending.ID)).collide(true)
                         .ability(fly).spawnEntity(target).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 25).spawn(world);
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).clr(r, g * 4, b, 215 + AvatarUtils.getRandomNumberInRange(0, 40))
                         .fade(rRandom, gRandom * 4, bRandom, 160 + AvatarUtils.getRandomNumberInRange(0, 40))
                         .pos(pos.toMinecraft()).vel(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20)
-                        .scale(size).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(new Kibending()).collide(true)
+                        .scale(size).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(BendingStyles.get(Kibending.ID)).collide(true)
                         .ability(fly).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 25).spawnEntity(target).spawn(world);
             }
         }
@@ -240,11 +241,11 @@ public class KiFlightHandler extends TickHandler {
 
                             int time = 10;
                             time = Math.max(time, (entity.getLifeTime() - ((EntityShockwave) entity).getParticleWaves()) * 2);
-                            ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Kibending()).vel(speed.toMinecraft())
+                            ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(BendingStyles.get(Kibending.ID)).vel(speed.toMinecraft())
                                     .spawnEntity(owner).collide(true).collideParticles(true).clr(rgb[0], rgb[1], rgb[2], 180 + AvatarUtils.getRandomNumberInRange(0, 40)).
                                     fade(rRandom, gRandom, bRandom, 160 + AvatarUtils.getRandomNumberInRange(0, 40)).pos(x2, y2, z2).
                                     scale(entity.getAvgSize() * 2).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 25).time(time + AvatarUtils.getRandomNumberInRange(0, 2)).spawn(world);
-                            ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Kibending()).vel(speed.toMinecraft())
+                            ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(BendingStyles.get(Kibending.ID)).vel(speed.toMinecraft())
                                     .spawnEntity(owner).collide(true).collideParticles(true).clr(rgb[0], rgb[1] * 8, rgb[2] * 4, 180 + AvatarUtils.getRandomNumberInRange(0, 40)).
                                     fade(rRandom, gRandom * 2, bRandom, 160 + AvatarUtils.getRandomNumberInRange(0, 40)).pos(x2, y2, z2).
                                     scale(entity.getAvgSize() * 2).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 25).time(time + AvatarUtils.getRandomNumberInRange(0, 2)).spawn(world);

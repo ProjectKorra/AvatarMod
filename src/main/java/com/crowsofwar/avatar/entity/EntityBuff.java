@@ -104,6 +104,8 @@ public class EntityBuff extends AvatarEntity {
                     if (!DamageUtils.canDamage(getOwner(), toBuff)) {
                         toBuff.addPotionEffect(new PotionEffect(MobEffects.SPEED,
                                 120, 1));
+                        toBuff.addPotionEffect(new PotionEffect(MobEffects.STRENGTH,
+                                120, 1));
                     }
                 }
             }

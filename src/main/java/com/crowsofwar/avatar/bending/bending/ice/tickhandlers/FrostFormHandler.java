@@ -2,6 +2,8 @@ package com.crowsofwar.avatar.bending.bending.ice.tickhandlers;
 
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
+import com.crowsofwar.avatar.bending.bending.BendingStyles;
+import com.crowsofwar.avatar.bending.bending.custom.light.Lightbending;
 import com.crowsofwar.avatar.bending.bending.ice.AbilityFrostForm;
 import com.crowsofwar.avatar.bending.bending.ice.Icebending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
@@ -57,7 +59,7 @@ public class FrostFormHandler extends TickHandler {
             pos = entity.onGround ? pos.add(0, entity.getEyeHeight(), 0) : pos.add(0, entity.getEyeHeight() / 2, 0);
             ParticleBuilder.create(ParticleBuilder.Type.FLASH).time(25 + AvatarUtils.getRandomNumberInRange(1, 2)).
                     clr(r, g, b, 150).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(5, 10))
-                    .element(new Icebending()).scale(scale).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 65).swirl((int) (corruptDuration / 20 * scale),
+                    .element(BendingStyles.get(Icebending.ID)).scale(scale).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 65).swirl((int) (corruptDuration / 20 * scale),
                     (int) (scale * Math.PI), scale, scale / 2, corruptDuration * 20, (0.75F / scale),
                     entity, world, true, pos,
                     ParticleBuilder.SwirlMotionType.OUT, false, true);
@@ -80,7 +82,7 @@ public class FrostFormHandler extends TickHandler {
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(location.plus(Vector.getEntityPos(entity)).toMinecraft()).time(4 + AvatarUtils.getRandomNumberInRange(1, 4)).
                         vel(world.rand.nextGaussian() / 40, world.rand.nextDouble() / 2, world.rand.nextGaussian() / 40)
                         .clr(r, g, b, 150).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(50, 140))
-                        .element(new Icebending()).scale(scale).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 25).spawn(world);
+                        .element(BendingStyles.get(Icebending.ID)).scale(scale).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 25).spawn(world);
             }
         }
         return false;//duration >= corruptDuration;

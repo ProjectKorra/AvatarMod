@@ -25,6 +25,7 @@ import org.lwjgl.opengl.GL20;
 
 import java.util.ArrayDeque;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Queue;
 
 import static com.crowsofwar.avatar.config.ConfigClient.CLIENT_CONFIG;
@@ -121,7 +122,7 @@ public class FlashParticleBatchRenderer {
 
     @SubscribeEvent
     public static void renderLast(RenderWorldLastEvent event) {
-        renderParticles(Minecraft.getMinecraft().getRenderViewEntity(), event.getPartialTicks());
+        renderParticles(Objects.requireNonNull(Minecraft.getMinecraft().getRenderViewEntity()), event.getPartialTicks());
     }
 
     @SubscribeEvent

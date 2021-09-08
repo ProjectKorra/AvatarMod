@@ -2,8 +2,10 @@ package com.crowsofwar.avatar.bending.bending.custom.demonic.tickhandlers;
 
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
+import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.custom.dark.Darkbending;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.AbilityDemonicAura;
+import com.crowsofwar.avatar.bending.bending.custom.demonic.Demonbending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
@@ -61,7 +63,7 @@ public class DemonicAuraHandler extends TickHandler {
             pos = entity.onGround ? pos.add(0, entity.getEyeHeight(), 0) : pos.add(0, entity.getEyeHeight() / 2, 0);
             ParticleBuilder.create(ParticleBuilder.Type.FLASH).time(25 + AvatarUtils.getRandomNumberInRange(1, 2)).
                     clr(r, g, b, 255).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(10, 40))
-                    .element(new Darkbending()).scale(scale).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 15).swirl((int) (demonicAuraDuration / 20 * scale),
+                    .element(BendingStyles.get(Demonbending.ID)).scale(scale).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 15).swirl((int) (demonicAuraDuration / 20 * scale),
                     (int) (scale * Math.PI), scale, scale / 2, demonicAuraDuration * 20, (0.75F / scale),
                     entity, world, true, pos,
                     ParticleBuilder.SwirlMotionType.OUT, true, true);
@@ -84,7 +86,7 @@ public class DemonicAuraHandler extends TickHandler {
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(location.plus(Vector.getEntityPos(entity)).toMinecraft()).time(4 + AvatarUtils.getRandomNumberInRange(1, 4)).
                         vel(world.rand.nextGaussian() / 40, world.rand.nextDouble() / 2, world.rand.nextGaussian() / 40)
                         .clr(r, g, b, 150).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(50, 140))
-                        .element(new Darkbending()).scale(scale).glow(true).spawn(world);
+                        .element(BendingStyles.get(Demonbending.ID)).scale(scale).glow(true).spawn(world);
             }
         }
         //Want this to be indefinite

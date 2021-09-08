@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.bending.bending.custom.dark.tickhandlers;
 
 import com.crowsofwar.avatar.bending.bending.Abilities;
+import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.custom.dark.AbilityDeathDescent;
 import com.crowsofwar.avatar.bending.bending.custom.dark.Darkbending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
@@ -8,7 +9,6 @@ import com.crowsofwar.avatar.entity.EntityOffensive;
 import com.crowsofwar.avatar.entity.EntityShockwave;
 import com.crowsofwar.avatar.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.entity.mob.EntityBender;
-import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
@@ -67,12 +67,12 @@ public class DeathDescentHandler extends TickHandler {
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).clr(r, g, b, 215 + AvatarUtils.getRandomNumberInRange(0, 40))
                         .fade(rRandom, gRandom, bRandom, 160 + AvatarUtils.getRandomNumberInRange(0, 40))
                         .pos(pos.toMinecraft()).vel(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20)
-                        .scale(size).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(new Darkbending()).collide(true)
+                        .scale(size).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(BendingStyles.get(Darkbending.ID)).collide(true)
                         .ability(jump).spawnEntity(target).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 50).spawn(world);
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).clr(r, g * 4, b, 215 + AvatarUtils.getRandomNumberInRange(0, 40))
                         .fade(rRandom, gRandom * 4, bRandom, 160 + AvatarUtils.getRandomNumberInRange(0, 40))
                         .pos(pos.toMinecraft()).vel(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20)
-                        .scale(size).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(new Darkbending()).collide(true)
+                        .scale(size).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).element(BendingStyles.get(Darkbending.ID)).collide(true)
                         .ability(jump).spawnEntity(target).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 50).spawn(world);
             }
         }
@@ -244,12 +244,12 @@ public class DeathDescentHandler extends TickHandler {
 
                             int time = 10;
                             time = Math.max(time, (entity.getLifeTime() - ((EntityShockwave) entity).getParticleWaves()) * 2);
-                            ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Darkbending()).vel(speed.toMinecraft())
+                            ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(BendingStyles.get(Darkbending.ID)).vel(speed.toMinecraft())
                                     .spawnEntity(owner).collide(true).collideParticles(true).clr(rgb[0], rgb[1], rgb[2], 180 + AvatarUtils.getRandomNumberInRange(0, 40)).
                                     fade(rRandom, gRandom, bRandom, 160 + AvatarUtils.getRandomNumberInRange(0, 40)).pos(x2, y2, z2).
                                     scale(entity.getAvgSize() * 2).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 50)
                                     .time(time + AvatarUtils.getRandomNumberInRange(0, 2)).spawn(world);
-                            ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(new Darkbending()).vel(speed.toMinecraft())
+                            ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(BendingStyles.get(Darkbending.ID)).vel(speed.toMinecraft())
                                     .spawnEntity(owner).collide(true).collideParticles(true).clr(rgb[0], rgb[1] * 8, rgb[2] * 4, 180 + AvatarUtils.getRandomNumberInRange(0, 40)).
                                     fade(rRandom, gRandom * 2, bRandom, 160 + AvatarUtils.getRandomNumberInRange(0, 40)).pos(x2, y2, z2).
                                     scale(entity.getAvgSize() * 2).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 50)

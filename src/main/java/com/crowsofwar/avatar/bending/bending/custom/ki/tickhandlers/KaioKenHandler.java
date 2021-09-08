@@ -2,6 +2,7 @@ package com.crowsofwar.avatar.bending.bending.custom.ki.tickhandlers;
 
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
+import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.custom.ki.AbilityKaioKen;
 import com.crowsofwar.avatar.bending.bending.custom.ki.Kibending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
@@ -58,7 +59,7 @@ public class KaioKenHandler extends TickHandler {
             pos = entity.onGround ? pos.add(0, entity.getEyeHeight(), 0) : pos.add(0, entity.getEyeHeight() / 2, 0);
             ParticleBuilder.create(ParticleBuilder.Type.FLASH).time(25 + AvatarUtils.getRandomNumberInRange(1, 2)).
                     clr(r, g, b, 10).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(10, 40))
-                    .element(new Kibending()).scale(scale).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 5).swirl((int) (kaioKenDuration / 20 * scale),
+                    .element(BendingStyles.get(Kibending.ID)).scale(scale).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 5).swirl((int) (kaioKenDuration / 20 * scale),
                     (int) (scale * Math.PI), scale, scale / 2, kaioKenDuration * 20, (0.75F / scale),
                     entity, world, true, pos,
                     ParticleBuilder.SwirlMotionType.OUT, false, true);
@@ -81,7 +82,7 @@ public class KaioKenHandler extends TickHandler {
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(location.plus(Vector.getEntityPos(entity)).toMinecraft()).time(4 + AvatarUtils.getRandomNumberInRange(1, 4)).
                         vel(world.rand.nextGaussian() / 40, world.rand.nextDouble() / 2, world.rand.nextGaussian() / 40)
                         .clr(r, g, b, 150).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(50, 140))
-                        .element(new Kibending()).scale(scale).glow(true).spawn(world);
+                        .element(BendingStyles.get(Kibending.ID)).scale(scale).glow(true).spawn(world);
             }
         }
         return false;// duration >= kaioKenDuration;
