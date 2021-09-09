@@ -121,7 +121,7 @@ public class AvatarPlayerData extends PlayerData {
                 }
             }
             //For target point; leaving in in-case something breaks
-            double range = Math.sqrt(rangeSq) + 0.05;// +0.05 "just in case"
+            double range = Math.sqrt(rangeSq) + 1;// +1 "just in case"
 
 
             //Note: not using the target point results in some bugs where other players can't see your abilities.
@@ -139,13 +139,13 @@ public class AvatarPlayerData extends PlayerData {
 //            //Target points are dumb
 //            //Player may be null, ignore warning
 //            //Pls I got crashes because it wasn't an entity, how is that even possible
-            else if (player != null && player instanceof EntityPlayerMP) {
-                try {
-                    AvatarMod.network.sendTo(packet, (EntityPlayerMP) player);
-                } catch (RuntimeException e) {
-                    AvatarMod.network.sendToAll(packet);
-                }
-            }
+//            else if (player != null && player instanceof EntityPlayerMP) {
+//                try {
+//                    AvatarMod.network.sendTo(packet, (EntityPlayerMP) player);
+//                } catch (RuntimeException e) {
+//                    AvatarMod.network.sendToAll(packet);
+//                }
+//            }
             //Last resort
             //This might lag servers. Woops.
             else AvatarMod.network.sendToAll(packet);
