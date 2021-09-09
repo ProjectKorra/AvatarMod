@@ -43,11 +43,21 @@ import static java.lang.Math.toRadians;
 /**
  * @author CrowsOfWar, FavouriteDragon
  *
+ * Flow Control!
+ *
+ * Creates a multi-use bubble of water. Right click to shield, left click to throw.
+ * Shift to circle it around you. Can be used as a water source for other moves.
+ *
+ * Level 3: Take the water bubble from any water source around you.
+ * Level 4 Path 1: Holding shift charges it up and makes it spin incredibly fast. Left click to throw it,
+ * making a massive water explosion.
+ * Level 4 Path 2: Significantly increased health; while holding shift, right click to make
+ * an encompassing shield around you.
  */
-public class AbilityWaterBubble extends Ability {
+public class AbilityFlowControl extends Ability {
 
-	public AbilityWaterBubble() {
-		super(Waterbending.ID, "water_bubble");
+	public AbilityFlowControl() {
+		super(Waterbending.ID, "flow_control");
 		requireRaytrace(-1, false);
 	}
 

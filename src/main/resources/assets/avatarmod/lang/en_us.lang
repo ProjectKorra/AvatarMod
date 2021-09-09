@@ -285,8 +285,8 @@ avatar.ability.fire_redirect.lvl3=Redirect tier increased! Significant radius bo
 avatar.ability.fire_redirect.lvl4_1=§c§l§oDancing Dragon ;; Redirect tier increased again! You can now redirect flamethrower, and you can absorb fires by pressing shift!
 avatar.ability.fire_redirect.lvl4_2=§c§l§oSplitting Star ;; Destroy tier increased again! Range for splitting also significantly increased!
 
-avatar.ability.water_bubble=§9§lWater §9§lBubble
-avatar.ability.water_bubble.desc=Suspend and transport a bubble of water. Can be used like a long-range bucket, or an offensive projectile. Chargeable, hold right click to make a shield.
+avatar.ability.flow_control=§9§lFlow §9§lControl
+avatar.ability.flow_control.desc=Suspend and transport a bubble of water. Can be used like a long-range bucket, or an offensive projectile. Chargeable, hold right click to make a shield.
 avatar.ability.water_bubble.lvl1=Create an extremely versatile bubble of water! You can use other water moves from it.
 avatar.ability.water_bubble.lvl2=Able to draw from snow and ice, range of creation increased. General stats increased.
 avatar.ability.water_bubble.lvl3=Can create a permament water source when lobbed; shield capabilities considerably increased, water can be drawn from plants.
