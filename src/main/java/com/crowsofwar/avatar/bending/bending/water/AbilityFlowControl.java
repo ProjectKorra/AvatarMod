@@ -21,6 +21,7 @@ import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.entity.EntityWaterBubble;
 import com.crowsofwar.avatar.entity.data.WaterBubbleBehavior;
 import com.crowsofwar.avatar.util.Raytrace;
+import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
@@ -68,7 +69,7 @@ public class AbilityFlowControl extends Ability {
     @Override
     public void init() {
         super.init();
-        addProperties(EXPLOSION_SIZE, EXPLOSION_DAMAGE, EFFECT_RADIUS, MAX_HEALTH);
+        addProperties(SOURCE_ANGLES, SOURCE_RANGE, EXPLOSION_SIZE, EXPLOSION_DAMAGE, EFFECT_RADIUS, MAX_HEALTH);
         addBooleanProperties(RING, INFINITE_WATER);
     }
 
@@ -83,10 +84,31 @@ public class AbilityFlowControl extends Ability {
         Bender bender = ctx.getBender();
         BendingData data = ctx.getData();
         World world = ctx.getWorld();
+        AbilityData abilityData = ctx.getAbilityData();
 
         if (ctx.consumeWater(getProperty(WATER_AMOUNT, ctx).intValue())) {
+            int lifeTime = getProperty(LIFETIME, ctx).intValue();
+            float damage = getProperty(DAMAGE, ctx).floatValue();
+            float xp = getProperty(XP_HIT, ctx).floatValue();
+            int waterLevel = getProperty(WATER_LEVEL, ctx).intValue();
+            float size = getProperty(SIZE, ctx).floatValue();
+            float chiHit = getProperty(CHI_HIT, ctx).floatValue();
 
+            lifeTime = (int) powerModify(lifeTime, abilityData);
+            damage = powerModify(damage, abilityData);
+            size = powerModify(size, abilityData);
+
+            EntityWaterBubble bubble = new EntityWaterBubble(world);
+            bubble.setLifeTime(lifeTime);
+            bubble.setDamage(damage);
+            bubble.setTier(getCurrentTier(ctx));
+            bubble.setOwner(entity);
+            bubble.setEntitySize(size);
+            bubble.setHealth(waterLevel);
+            bubble.setXp(xp);
+            bubble.setChiHit(chiHit);
         }
+        super.execute(ctx);
 
     }
 

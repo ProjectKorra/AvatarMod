@@ -4,6 +4,7 @@ import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.entity.mob.EntityBender;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
+import com.crowsofwar.avatar.util.event.AbilityUseEvent;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
@@ -43,5 +44,13 @@ public class WaterPassives {
 				}
 			}
 		}
+	}
+
+
+	//For adding the status control to put back water into the water pouch
+	@SubscribeEvent
+	public static void pouchControl(AbilityUseEvent event) {
+		//TODO: Actually finish the status control so I can add it
+
 	}
 }
