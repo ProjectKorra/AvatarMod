@@ -252,8 +252,8 @@ public abstract class Ability {
         }
         BendingData data = BendingData.getFromEntity(player);
         if (data != null) {
+            //Makes sure to clear the massive config modifier just in case
             data.removeModifiersFromAll(AbilityModifiers.CONFIG_MODIFIER);
-            Bender.adjustConfigModifier(player);
         }
     }
 
