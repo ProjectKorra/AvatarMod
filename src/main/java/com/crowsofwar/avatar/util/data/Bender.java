@@ -117,7 +117,6 @@ public abstract class Bender {
                 modifier.addProperties(properties);
                 BendingData data = BendingData.getFromEntity(bender);
                 if (data != null) {
-                    data.clearModifiers();
                     //Add modifiers
                     data.getAbilityData(ability).addModifiers(modifier);
                 }
@@ -273,10 +272,10 @@ public abstract class Bender {
                 Ability.syncProperties((EntityPlayer) entity);
 
             if (ability.properties != null) {
-                Bender.adjustConfigModifier(entity);
                 //Save data
                 if (canUseAbility(ability) && !MinecraftForge.EVENT_BUS.post(new AbilityUseEvent(entity, ability, level + 1, path))) {
                     if (data.getMiscData().getCanUseAbilities()) {
+                        Bender.adjustConfigModifier(entity);
                         if (getData().chi().getAvailableChi() >= ability.getChiCost(abilityCtx) || isCreative) {
                             if (aD.getAbilityCooldown() == 0 || isCreative) {
                                 aD.setPowerRating(calcPowerRating(ability.getBendingId()));

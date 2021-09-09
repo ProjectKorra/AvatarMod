@@ -91,13 +91,13 @@ public abstract class Ability {
             COLOUR_B = "colourB",
             POTION_EFFECTS = "potionEffects",
             PIERCING = "piercing",
-            //In degrees
-            CONE_WIDTH = "coneWidth",
+    //In degrees
+    CONE_WIDTH = "coneWidth",
             BURST_RANGE = "burstRange",
             BURST_RADIUS = "burstRadius",
             PULL_ENEMIES = "pullsEnemies",
     //Should probably organise these lol
-            BLINDNESS_LEVEL = "blindnessLevel",
+    BLINDNESS_LEVEL = "blindnessLevel",
             BLINDNESS_DURATION = "blindnessDuration",
             WEAKNESS_LEVEL = "weaknessLevel",
             WEAKNESS_DURATION = "weaknessDuration",
@@ -127,7 +127,7 @@ public abstract class Ability {
     public static final String
             //Amount is the amount consumed
             WATER_AMOUNT = "waterAmount",
-    //Level is the HP of it (applies to source abilities such as water bubble)
+            //Level is the HP of it (applies to source abilities such as water bubble)
             WATER_LEVEL = "waterLevel",
             SOURCE_RANGE = "sourceRange",
             SOURCE_ANGLES = "sourceAngles",
@@ -212,13 +212,13 @@ public abstract class Ability {
      */
     public AbilityProperties properties;
     /**
-     * A reference to the global properties for this ability, so they are only loaded once.
-     */
-    private AbilityProperties globalProperties;
-    /**
      * The modifiers associated with this ability.
      */
     public AbilityModifiers modifiers;
+    /**
+     * A reference to the global properties for this ability, so they are only loaded once.
+     */
+    private AbilityProperties globalProperties;
     private Raytrace.Info raytrace;
 
 
@@ -230,17 +230,6 @@ public abstract class Ability {
         this.type = bendingType;
         this.name = name;
         this.raytrace = new Raytrace.Info();
-    }
-
-    public void setPropertiesClient(AbilityProperties properties) {
-        if (FMLCommonHandler.instance().getEffectiveSide() != Side.CLIENT) {
-           AvatarLog.warn("Ability#setPropertiesClient called from the server side!");
-        }
-
-        if (!this.arePropertiesInitialised()) {
-            this.properties = properties;
-        }
-
     }
 
     /**
@@ -298,10 +287,6 @@ public abstract class Ability {
         }
     }
 
-    // ============================================ Event handlers ==============================================
-
-    // Not ideal but it solves the reloading of ability properties without breaking encapsulation
-
     @SubscribeEvent
     public static void onClientDisconnectEvent(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
         // Why does the world UNLOAD event happen during world LOADING? How does that even work?!
@@ -313,10 +298,25 @@ public abstract class Ability {
         }
     }
 
+    // ============================================ Event handlers ==============================================
+
+    // Not ideal but it solves the reloading of ability properties without breaking encapsulation
+
     public static boolean propertyEqualsInhibitor(String property) {
         return property.equals(CHI_COST) || property.equals(EXHAUSTION) || property.equals(COOLDOWN)
                 || property.equals(BURNOUT) || property.equals(BURNOUT_HIT) || property.equals(CHI_PER_SECOND)
                 || property.equals(CHI_PERCENT) || property.equals(EXHAUSTION_HIT);
+    }
+
+    public void setPropertiesClient(AbilityProperties properties) {
+        if (FMLCommonHandler.instance().getEffectiveSide() != Side.CLIENT) {
+            AvatarLog.warn("Ability#setPropertiesClient called from the server side!");
+        }
+
+        if (!this.arePropertiesInitialised()) {
+            this.properties = properties;
+        }
+
     }
 
     /**

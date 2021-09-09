@@ -134,7 +134,7 @@ public class AvatarMod {
         /*    			Water	  			*/
 //        Abilities.register(new AbilityWaterArc());
         Abilities.register(new AbilityCreateWave());
-        Abilities.register(new AbilityFlowControl());
+    //    Abilities.register(new AbilityFlowControl());
         Abilities.register(new AbilityWaterSkate());
         Abilities.register(new AbilityWaterBlast());
         Abilities.register(new AbilityCleanse());
