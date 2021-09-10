@@ -20,13 +20,11 @@ package com.crowsofwar.avatar.util.data;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.network.packets.PacketCPlayerData;
 import com.crowsofwar.gorecore.data.*;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.fml.common.network.FMLOutboundHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
 import java.util.*;
@@ -129,13 +127,13 @@ public class AvatarPlayerData extends PlayerData {
             TargetPoint point = new TargetPoint(player.dimension, player.posX, player.posY, player.posZ,
                     range);
             //Again ignore the warnings. Why does this happen??
-            if (point != null) {
-                try {
-                    AvatarMod.network.sendToAllAround(packet, point);
-                } catch (RuntimeException e) {
-                    AvatarMod.network.sendToAll(packet);
-                }
-            }
+//            if (point != null) {
+//                try {
+//                    AvatarMod.network.sendToAllAround(packet, point);
+//                } catch (RuntimeException e) {
+//                    AvatarMod.network.sendToAll(packet);
+//                }
+//            }
 //            //Target points are dumb
 //            //Player may be null, ignore warning
 //            //Pls I got crashes because it wasn't an entity, how is that even possible
@@ -147,8 +145,8 @@ public class AvatarPlayerData extends PlayerData {
 //                }
 //            }
             //Last resort
-            //This might lag servers. Woops.
-            else AvatarMod.network.sendToAll(packet);
+            //Other methods make particles not work on lan. Great.
+            AvatarMod.network.sendToAll(packet);
 
             changed.clear();
 

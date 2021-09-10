@@ -27,6 +27,7 @@ import com.crowsofwar.avatar.entity.EntityLightningArc;
 import com.crowsofwar.avatar.entity.mob.EntityBender;
 import com.crowsofwar.avatar.network.AvatarChatMessages;
 import com.crowsofwar.avatar.network.packets.PacketCPowerRating;
+import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.Raytrace;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
@@ -453,6 +454,11 @@ public abstract class Bender {
         if (entity instanceof EntityPlayer && !world.isRemote && entity.ticksExisted % 10 == 0) {
             syncPowerRating();
         }
+
+        //Staggers out the update per entity, while also making it infrequent.
+        //Ensures LAN doesn't screw over particle spawning.
+        if (entity.ticksExisted % 1000 + AvatarUtils.getRandomNumberInRange(1, 200) == 0)
+            data.saveAll();
 
     }
 
