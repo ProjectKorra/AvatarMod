@@ -478,6 +478,7 @@ public abstract class Bender {
                         int newDuration = data.getTickHandlerDuration(handler) + 1;
                         data.setTickHandlerDuration(handler, newDuration);
                     }
+                    data.save(DataCategory.TICK_HANDLERS);
                 }
             }
         }
