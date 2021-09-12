@@ -127,26 +127,15 @@ public class AvatarPlayerData extends PlayerData {
             TargetPoint point = new TargetPoint(player.dimension, player.posX, player.posY, player.posZ,
                     range);
             //Again ignore the warnings. Why does this happen??
-//            if (point != null) {
-//                try {
-//                    AvatarMod.network.sendToAllAround(packet, point);
-//                } catch (RuntimeException e) {
-//                    AvatarMod.network.sendToAll(packet);
-//                }
-//            }
-//            //Target points are dumb
-//            //Player may be null, ignore warning
-//            //Pls I got crashes because it wasn't an entity, how is that even possible
-//            else if (player != null && player instanceof EntityPlayerMP) {
-//                try {
-//                    AvatarMod.network.sendTo(packet, (EntityPlayerMP) player);
-//                } catch (RuntimeException e) {
-//                    AvatarMod.network.sendToAll(packet);
-//                }
-//            }
+            if (point != null) {
+                try {
+                    AvatarMod.network.sendToAllAround(packet, point);
+                } catch (RuntimeException e) {
+                    AvatarMod.network.sendToAll(packet);
+                }
+            }
             //Last resort
-            //Other methods make particles not work on lan. Great.
-            AvatarMod.network.sendToAll(packet);
+            else AvatarMod.network.sendToAll(packet);
 
             changed.clear();
 

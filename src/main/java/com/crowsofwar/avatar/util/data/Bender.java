@@ -272,6 +272,8 @@ public abstract class Bender {
                 Ability.syncProperties((EntityPlayer) entity);
 
             if (ability.properties != null) {
+                //Save data to sync clients for particles
+                data.save(DataCategory.ABILITY_DATA);
                 if (canUseAbility(ability) && !MinecraftForge.EVENT_BUS.post(new AbilityUseEvent(entity, ability, level + 1, path))) {
                     if (data.getMiscData().getCanUseAbilities()) {
                       //TODO: Fix client-server cooldown desync
@@ -416,6 +418,8 @@ public abstract class Bender {
         if (tickHandlers != null) {
             for (TickHandler handler : tickHandlers) {
                 if (handler != null) {
+                    //Makes sure packets are sent
+                    data.save(DataCategory.TICK_HANDLERS);
                     if (handler.tick(ctx)) {
                         // Can use this since the list is a COPY of the
                         // underlying list
