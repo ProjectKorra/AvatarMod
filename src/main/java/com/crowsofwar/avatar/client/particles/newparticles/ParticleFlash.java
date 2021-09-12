@@ -6,7 +6,6 @@ import com.crowsofwar.avatar.client.particles.newparticles.renderlayers.RenderLa
 import com.crowsofwar.avatar.client.particles.newparticles.renderlayers.RenderLayerFlashParticle;
 import com.crowsofwar.avatar.client.particles.newparticles.renderlayers.RenderLayerFlashParticleGlow;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -101,7 +100,7 @@ public class ParticleFlash extends ParticleAvatar /*implements IGlowingEntity*/ 
 
     @Override
     public int getBrightnessForRender(float partialTicks) {
-        return super.getBrightnessForRender(partialTicks);
+        return 15728880;
     }
 
 
