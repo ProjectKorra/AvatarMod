@@ -308,13 +308,13 @@ public abstract class Bender {
                     entity, powerRating, switchPath);
             aD.setSwitchPath(switchPath);
 
-
             //Tries to make sure they're loaded
             if (entity instanceof EntityPlayer && ability.properties == null)
                 Ability.syncProperties((EntityPlayer) entity);
 
             if (ability.properties != null) {
                 //Save data
+                data.save(DataCategory.ABILITY_DATA);
                 if (canUseAbility(ability) && !MinecraftForge.EVENT_BUS.post(new AbilityUseEvent(entity, ability, level + 1, path))) {
                     if (data.getMiscData().getCanUseAbilities()) {
                         //Apply the modifier right before chi and other properties are checked

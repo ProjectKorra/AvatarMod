@@ -120,7 +120,7 @@ public class AvatarPlayerData extends PlayerData {
             //For target point; leaving in in-case something breaks
             double range = Math.sqrt(rangeSq) + 0.01;// +0.01 "just in case"
 
-            //Target points are dumb
+            //Use target points or particles won't be synced
             //Player may be null, ignore warning
             if (player instanceof EntityPlayerMP) {
                 //Try statements ftw
