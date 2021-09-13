@@ -25,6 +25,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 import java.util.*;
 
@@ -121,15 +122,13 @@ public class AvatarPlayerData extends PlayerData {
             double range = Math.sqrt(rangeSq) + 0.01;// +0.01 "just in case"
 
             //Use target points or particles won't be synced
-            //Player may be null, ignore warning
-            if (player instanceof EntityPlayerMP) {
-                //Try statements ftw
-                try {
-                    AvatarMod.network.sendTo(packet, (EntityPlayerMP) player);
-                } catch (RuntimeException exception) {
-                    //This error shouldn't ever happen but forge is not the best
-                    AvatarMod.network.sendToAll(packet);
-                }
+            NetworkRegistry.TargetPoint point = new NetworkRegistry.TargetPoint(player.dimension,
+                    player.posX, player.posY, player.posZ, range);
+            try {
+                AvatarMod.network.sendToAllAround(packet, point);
+            }
+            catch (RuntimeException e) {
+                AvatarMod.network.sendToAll(packet);
             }
 
             changed.clear();

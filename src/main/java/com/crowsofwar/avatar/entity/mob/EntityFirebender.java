@@ -17,7 +17,6 @@
 package com.crowsofwar.avatar.entity.mob;
 
 import com.crowsofwar.avatar.bending.bending.Abilities;
-import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import com.crowsofwar.avatar.bending.bending.fire.Firebending;
 import com.crowsofwar.avatar.item.scroll.Scrolls;
 import com.crowsofwar.avatar.util.AvatarUtils;
@@ -25,7 +24,6 @@ import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.gorecore.format.FormattedMessage;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.scoreboard.ScorePlayerTeam;
@@ -65,7 +63,6 @@ public class EntityFirebender extends EntityHumanBender {
     public void applyAbilityLevels(int level) {
         boolean flameStrikePath = world.rand.nextBoolean();
         boolean flamethrowerPath = world.rand.nextBoolean();
-        //	boolean infernoPunchPath = world.rand.nextBoolean();
         boolean fireBlastPath = world.rand.nextBoolean();
         boolean fireballPath = world.rand.nextBoolean();
         boolean flameGlidePath = world.rand.nextBoolean();
@@ -142,12 +139,12 @@ public class EntityFirebender extends EntityHumanBender {
 
     @Override
     protected void addBendingTasks() {
-        this.tasks.addTask(2, Objects.requireNonNull(Abilities.getAi("flamethrower", this, getBender())));
-        this.tasks.addTask(2, Objects.requireNonNull(Abilities.getAi("fireball", this, getBender())));
-        this.tasks.addTask(1, Objects.requireNonNull(Abilities.getAi("fire_shot", this, getBender())));
-        this.tasks.addTask(2, Objects.requireNonNull(Abilities.getAi("flame_strike", this, getBender())));
-		this.tasks.addTask(2, Objects.requireNonNull(Abilities.getAi("flame_glide", this, getBender())));
-        this.tasks.addTask(4, new EntityAIAttackMelee(this, 1.4, true));
+        this.tasks.addTask(0, Objects.requireNonNull(Abilities.getAi("flamethrower", this, getBender())));
+//        this.tasks.addTask(2, Objects.requireNonNull(Abilities.getAi("fireball", this, getBender())));
+//        this.tasks.addTask(1, Objects.requireNonNull(Abilities.getAi("fire_shot", this, getBender())));
+//        this.tasks.addTask(2, Objects.requireNonNull(Abilities.getAi("flame_strike", this, getBender())));
+//		this.tasks.addTask(2, Objects.requireNonNull(Abilities.getAi("flame_glide", this, getBender())));
+//        this.tasks.addTask(4, new EntityAIAttackMelee(this, 1.4, true));
     }
 
     @Override

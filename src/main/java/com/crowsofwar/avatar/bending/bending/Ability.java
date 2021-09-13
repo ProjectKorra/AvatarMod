@@ -127,8 +127,8 @@ public abstract class Ability {
     public static final String
             //Amount is the amount consumed
             WATER_AMOUNT = "waterAmount",
-            //Level is the HP of it (applies to source abilities such as water bubble)
-            WATER_LEVEL = "waterLevel",
+    //Level is the HP of it (applies to source abilities such as water bubble)
+    WATER_LEVEL = "waterLevel",
             SOURCE_RANGE = "sourceRange",
             SOURCE_ANGLES = "sourceAngles",
             PLANT_BEND = "plantbend";
@@ -264,7 +264,8 @@ public abstract class Ability {
         }
         // On the server side, send a packet to the player to synchronise their spell properties
         List<Ability> abilities = Abilities.all();
-        AvatarMod.network.sendToAll(new PacketCSyncAbilityProperties(abilities.stream().map(a -> a.properties).toArray(AbilityProperties[]::new)));
+        if (AvatarMod.network != null)
+            AvatarMod.network.sendToAll(new PacketCSyncAbilityProperties(abilities.stream().map(a -> a.properties).toArray(AbilityProperties[]::new)));
         //Prevents NPCS from yeeting
     }
 

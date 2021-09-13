@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.entity.mob;
 
+import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.air.Airbending;
@@ -104,6 +105,7 @@ public abstract class EntityBender extends EntityCreature implements IEntityAddi
 		super.onUpdate();
 		bender.onUpdate();
 	}
+
 
 	public abstract void applyAbilityLevels(int level);
 

@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.bending.bending.fire.tickhandlers;
 
+import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.fire.AbilityFlamethrower;
@@ -24,8 +25,6 @@ import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.entity.EntityFlames;
 import com.crowsofwar.avatar.entity.EntityOffensive;
 import com.crowsofwar.avatar.entity.data.OffensiveBehaviour;
-import com.crowsofwar.avatar.entity.mob.EntityBender;
-import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.damageutils.AvatarDamageSource;
 import com.crowsofwar.avatar.util.data.AbilityData;
@@ -40,18 +39,14 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import java.util.Random;
 import java.util.UUID;
 
 import static com.crowsofwar.avatar.bending.bending.Ability.*;
@@ -73,6 +68,15 @@ public class FlamethrowerUpdateTick extends TickHandler {
         super(id);
     }
 
+    @Override
+    public void onAdded(BendingContext ctx) {
+        super.onAdded(ctx);
+    }
+
+    @Override
+    public void onRemoved(BendingContext ctx) {
+        super.onRemoved(ctx);
+    }
 
     @Override
     public boolean tick(BendingContext ctx) {
@@ -177,9 +181,11 @@ public class FlamethrowerUpdateTick extends TickHandler {
                         world.spawnEntity(flames);
                 }
 
+                if (world.isRemote)
+                    AvatarLog.info("Client Side!");
 
                 //Particle code.
-                if (world.isRemote && (flamethrower.getCurrentTier(abilityData) < 4 || !isRaining)) {
+                if (world.isRemote && (flamethrower.getCurrentTier(abilityData) >= 4 || !isRaining)) {
                     speedMult /= 29.5F;
                     for (int i = 0; i < flamesPerSecond; i++) {
                         int rRandom = fadeR < 100 ? AvatarUtils.getRandomNumberInRange(1, fadeR * 2) : AvatarUtils.getRandomNumberInRange(fadeR / 2,

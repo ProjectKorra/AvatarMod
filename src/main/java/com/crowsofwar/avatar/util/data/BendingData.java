@@ -636,7 +636,8 @@ public class BendingData {
     public void writeToNbt(NBTTagCompound writeTo) {
 
         // @formatter:off
-
+        //Same order in, same order out
+        writeTo.setInteger("SaveVersion", CURRENT_SAVE_VERSION);
         if (activeBending != null) {
             writeTo.setString("activeBending", activeBending.toString());
         }
@@ -675,7 +676,7 @@ public class BendingData {
 
         writeTo.setDouble("BattlePerformance", getPerformance().getScore());
 
-        writeTo.setInteger("SaveVersion", CURRENT_SAVE_VERSION);
+
 
         // @formatter:on
 
@@ -729,9 +730,8 @@ public class BendingData {
         chi().readFromNBT(readFrom);
 
         AvatarUtils.readList(tickHandlers, //
-                nbt -> {
-                    return TickHandlerController.fromId(nbt.getInteger("Id"));
-                }, readFrom, "TickHandlers");
+                nbt -> TickHandlerController.fromId(nbt.getInteger("Id")),
+                readFrom, "TickHandlers");
 
         for (TickHandler tickHandler : tickHandlers) {
             tickHandlerDuration.putIfAbsent(tickHandler, 0);

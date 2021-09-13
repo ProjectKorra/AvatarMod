@@ -237,6 +237,8 @@ public abstract class EntityHumanBender extends EntityBender implements IMerchan
 
     @Override
     public void applyModifiers(int level) {
+        //Should be applied through an event every time an ability is used
+
         //BendingData.getFromEntity(this).applyModifiersToAll(new AbilityModifier());
     }
 

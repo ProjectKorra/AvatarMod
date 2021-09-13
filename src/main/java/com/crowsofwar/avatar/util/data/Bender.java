@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.util.data;
 
+import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
@@ -464,12 +465,17 @@ public abstract class Bender {
 
         }
 
-        //Why is this not always executed client+server-side?
+        //Further investigation needed: data is wiped clean for npcs; this list is null
         // Tick the TickHandlers
         List<TickHandler> tickHandlers = data.getAllTickHandlers();
         if (tickHandlers != null) {
             for (TickHandler handler : tickHandlers) {
+                //For some reason the list is empty?
+                if (!(entity instanceof EntityPlayer)) {
+                    AvatarLog.info("Client Side? " + world.isRemote + ", " + getEntity().getName());
+                }
                 if (handler != null) {
+                    //Only ticking serverside here for npcs for some reason
                     if (handler.tick(ctx)) {
                         // Can use this since the list is a COPY of the
                         // underlying list
