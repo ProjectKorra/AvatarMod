@@ -16,14 +16,13 @@
 */
 package com.crowsofwar.avatar.entity.mob;
 
-import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.air.Airbending;
+import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BenderEntityComponent;
 import com.crowsofwar.avatar.util.data.BendingData;
-import com.crowsofwar.avatar.util.AvatarUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.IEntityLivingData;
@@ -36,7 +35,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
 import javax.annotation.Nullable;
-
 import java.util.UUID;
 
 import static com.crowsofwar.avatar.config.ConfigMobs.MOBS_CONFIG;
@@ -46,106 +44,107 @@ import static com.crowsofwar.avatar.config.ConfigMobs.MOBS_CONFIG;
  */
 public abstract class EntityBender extends EntityCreature implements IEntityAdditionalSpawnData {
 
-	private Bender bender;
-	private static final DataParameter<Integer> SYNC_LEVEL = EntityDataManager
-			.createKey(EntityBender.class, DataSerializers.VARINT);
+    private static final DataParameter<Integer> SYNC_LEVEL = EntityDataManager
+            .createKey(EntityBender.class, DataSerializers.VARINT);
+    private Bender bender;
 
-	/**
-	 * @param world
-	 */
-	public EntityBender(World world) {
-		super(world);
-	}
+    /**
+     * @param world
+     */
+    public EntityBender(World world) {
+        super(world);
+    }
 
-	protected Bender initBender() {
-		return new BenderEntityComponent(this);
-	}
+    protected Bender initBender() {
+        return new BenderEntityComponent(this);
+    }
 
-	public int getLevel() {
-		return dataManager.get(SYNC_LEVEL);
-	}
+    public int getLevel() {
+        return dataManager.get(SYNC_LEVEL);
+    }
 
-	public void setLevel(int level) {
-		dataManager.set(SYNC_LEVEL, level);
-	}
+    public void setLevel(int level) {
+        dataManager.set(SYNC_LEVEL, level);
+    }
 
-	@Override
-	protected void entityInit() {
-		super.entityInit();
-		// Initialize the bender here (instead of constructor) so the bender will be ready for
-		// initEntityAI - Constructor is called AFTER initEntityAI
-		bender = initBender();
-		dataManager.register(SYNC_LEVEL, 1);
-		getData().addBending(BendingStyles.get(getElement()));
-	}
+    @Override
+    protected void entityInit() {
+        super.entityInit();
+        // Initialize the bender here (instead of constructor) so the bender will be ready for
+        // initEntityAI - Constructor is called AFTER initEntityAI
+        bender = initBender();
+        dataManager.register(SYNC_LEVEL, 1);
+        getData().addBending(BendingStyles.get(getElement()));
+    }
 
-	@Override
-	protected void applyEntityAttributes() {
-		super.applyEntityAttributes();
-		applyAbilityLevels(getLevel());
-		getData().addBending(BendingStyles.get(getElement()));
-	}
+    @Override
+    protected void applyEntityAttributes() {
+        super.applyEntityAttributes();
+        applyAbilityLevels(getLevel());
+        getData().addBending(BendingStyles.get(getElement()));
+    }
 
-	@Override
-	public void readEntityFromNBT(NBTTagCompound nbt) {
-		super.readEntityFromNBT(nbt);
-		setLevel(nbt.getInteger("Level"));
-		bender.getData().readFromNbt(nbt);
-	}
+    @Override
+    public void readEntityFromNBT(NBTTagCompound nbt) {
+        super.readEntityFromNBT(nbt);
+        setLevel(nbt.getInteger("Level"));
+        bender.getData().readFromNbt(nbt);
+    }
 
-	@Override
-	public void writeEntityToNBT(NBTTagCompound nbt) {
-		super.writeEntityToNBT(nbt);
-		nbt.setInteger("Level", getLevel());
-		bender.getData().writeToNbt(nbt);
-	}
+    @Override
+    public void writeEntityToNBT(NBTTagCompound nbt) {
+        super.writeEntityToNBT(nbt);
+        nbt.setInteger("Level", getLevel());
+        bender.getData().writeToNbt(nbt);
+    }
 
-	@Override
-	public void onUpdate() {
-		super.onUpdate();
-		bender.onUpdate();
-	}
-
-
-	public abstract void applyAbilityLevels(int level);
-
-	public abstract void applyModifiers(int level);
-
-	public Bender getBender() {
-		return bender;
-	}
-
-	public BendingData getData() {
-		return bender.getData();
-	}
-
-	//Used for changing stuff like the size of an air bubble or something. Usually called right
-	//before an entity is spawned
-	public void modifyAbilities(Ability ability) {
-
-	}
+    @Override
+    public void onUpdate() {
+        super.onUpdate();
+        //For some reason, AI is only added server-side.
+        bender.onUpdate();
+    }
 
 
-	public UUID getElement() {
-		return Airbending.ID;
-	}
+    public abstract void applyAbilityLevels(int level);
 
-	@Nullable
-	@Override
-	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata) {
-		setLevel(AvatarUtils.getRandomNumberInRange(1, MOBS_CONFIG.benderSettings.maxLevel));
-		applyAbilityLevels(getLevel());
-		getData().addBending(BendingStyles.get(getElement()));
-		return super.onInitialSpawn(difficulty, livingdata);
-	}
+    public abstract void applyModifiers(int level);
 
-	@Override
-	public void writeSpawnData(ByteBuf buffer) {
-		buffer.writeInt(getLevel());
-	}
+    public Bender getBender() {
+        return bender;
+    }
 
-	@Override
-	public void readSpawnData(ByteBuf additionalData) {
-		setLevel(additionalData.readInt());
-	}
+    public BendingData getData() {
+        return bender.getData();
+    }
+
+    //Used for changing stuff like the size of an air bubble or something. Usually called right
+    //before an entity is spawned
+    public void modifyAbilities(Ability ability) {
+
+    }
+
+
+    public UUID getElement() {
+        return Airbending.ID;
+    }
+
+    @Nullable
+    @Override
+    public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata) {
+        setLevel(AvatarUtils.getRandomNumberInRange(1, MOBS_CONFIG.benderSettings.maxLevel));
+        applyAbilityLevels(getLevel());
+        getData().addBending(BendingStyles.get(getElement()));
+        return super.onInitialSpawn(difficulty, livingdata);
+    }
+
+    @Override
+    public void writeSpawnData(ByteBuf buffer) {
+        buffer.writeInt(getLevel());
+    }
+
+    @Override
+    public void readSpawnData(ByteBuf additionalData) {
+        setLevel(additionalData.readInt());
+    }
 }

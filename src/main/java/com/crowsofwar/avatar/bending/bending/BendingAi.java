@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.bending.bending;
 
+import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.util.Raytrace;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
@@ -70,6 +71,7 @@ public abstract class BendingAi extends EntityAIBase {
     public void startExecuting() {
         timeExecuting = 0;
         startExec();
+        AvatarLog.info("Client Side: " + entity.world.isRemote);
     }
 
     @Override
@@ -88,11 +90,9 @@ public abstract class BendingAi extends EntityAIBase {
                 || abilityType == OFFENSIVE)) {
             if (entity.getAttackTarget() == null)
                 return false;
-
             lookAtAttackTarget();
             if (shouldExecAbility())
                 execAbility();
-
             for (StatusControl sc : getStatusControls()) {
                 if (shouldExecStatCtrl(sc))
                     execStatusControl(sc);
@@ -103,6 +103,7 @@ public abstract class BendingAi extends EntityAIBase {
             if (shouldExecAbility())
                 execAbility();
             if (timeExecuting >= getWaitDuration()) {
+                //Move in the right direction
                 lookAtTarget(entity.getPositionVector().add(rand.nextGaussian() / 2, entity.getEyeHeight() + rand.nextGaussian() / 2,
                         rand.nextGaussian() / 2));
                 for (StatusControl sc : getStatusControls()) {
@@ -139,7 +140,7 @@ public abstract class BendingAi extends EntityAIBase {
         EntityLivingBase target = entity.getAttackTarget();
         boolean targetInRange = target == null ||
                 entity.getDistanceSq(target) < getMaxTargetRange() * getMaxTargetRange() &&
-                entity.getDistanceSq(target) > getMinTargetRange() * getMinTargetRange();
+                        entity.getDistanceSq(target) > getMinTargetRange() * getMinTargetRange();
         return targetInRange && shouldExec();
     }
 
@@ -170,7 +171,7 @@ public abstract class BendingAi extends EntityAIBase {
     }
 
     public AbilityType[] getAbilityTypes() {
-        return new AbilityType[] {
+        return new AbilityType[]{
                 PROJECTILE
         };
     }

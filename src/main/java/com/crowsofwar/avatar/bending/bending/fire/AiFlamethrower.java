@@ -16,6 +16,7 @@
 */
 package com.crowsofwar.avatar.bending.bending.fire;
 
+import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingAi;
 import com.crowsofwar.avatar.util.Raytrace;
@@ -95,5 +96,7 @@ public class AiFlamethrower extends BendingAi {
     public void cleanUp() {
         super.cleanUp();
         bender.getData().removeTickHandler(FLAMETHROWER, new BendingContext(bender.getData(), entity, new Raytrace.Result()));
+        bender.getData().removeStatusControl(START_FLAMETHROW);
+        bender.getData().removeStatusControl(STOP_FLAMETHROW);
     }
 }

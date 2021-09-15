@@ -470,10 +470,11 @@ public abstract class Bender {
         List<TickHandler> tickHandlers = data.getAllTickHandlers();
         if (tickHandlers != null) {
             for (TickHandler handler : tickHandlers) {
-                //For some reason the list is empty?
-                if (!(entity instanceof EntityPlayer)) {
-                    AvatarLog.info("Client Side? " + world.isRemote + ", " + getEntity().getName());
-                }
+                //For some reason the list is empty? only client-side.
+//                if (!(entity instanceof EntityPlayer)) {
+//                    AvatarLog.info("Client Side? " + world.isRemote + ", " + getEntity().getName());
+//                    AvatarLog.info("List Size: " + tickHandlers.size());
+//                }
                 if (handler != null) {
                     //Only ticking serverside here for npcs for some reason
                     if (handler.tick(ctx)) {
