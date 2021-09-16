@@ -29,6 +29,7 @@ import com.crowsofwar.avatar.bending.bending.custom.dark.AbilityCorrupt;
 import com.crowsofwar.avatar.bending.bending.custom.dark.AbilityDeathDescent;
 import com.crowsofwar.avatar.bending.bending.custom.dark.AbilityOblivionBeam;
 import com.crowsofwar.avatar.bending.bending.custom.dark.Darkbending;
+import com.crowsofwar.avatar.bending.bending.custom.demonic.AbilityChaosLash;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.AbilityDemonWings;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.AbilityDemonicAura;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.Demonbending;
@@ -198,6 +199,7 @@ public class AvatarMod {
         /*              Demon               */
         Abilities.register(new AbilityDemonicAura());
         Abilities.register(new AbilityDemonWings());
+        Abilities.register(new AbilityChaosLash());
 
 
     }
