@@ -17,7 +17,6 @@
 
 package com.crowsofwar.avatar.bending.bending.fire.statctrls;
 
-import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.bending.bending.fire.Firebending;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.StatusControl;
