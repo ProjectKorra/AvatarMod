@@ -311,5 +311,5 @@ task release(dependsOn: ["cleanBuild", "publish"]) {
 }
 
 runClient {
-    args = ['--username', 'sea001@yahoo.com', '--password', 'D1v1n8Drag0n08']
+    args = ['--username', 'Dev']
 }
