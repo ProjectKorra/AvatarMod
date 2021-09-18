@@ -55,15 +55,15 @@ public class AbilityChaosLash extends Ability {
 
         float damage = getProperty(DAMAGE, ctx).floatValue();
         float size = getProperty(SIZE, ctx).floatValue();
-        int lifetime = (int) (getProperty(LIFETIME, ctx).intValue() / 1.25);
-        float speed = getProperty(SPEED, ctx).floatValue() / 12;
+        int lifetime = (int) (getProperty(LIFETIME, ctx).intValue() * 1.5);
+        float speed = getProperty(SPEED, ctx).floatValue() / 14;
         float push = getProperty(KNOCKBACK, ctx).floatValue();
         float xp = getProperty(XP_HIT, ctx).floatValue();
         int performance = getProperty(PERFORMANCE, ctx).intValue();
         int fireTime = getProperty(FIRE_TIME, ctx).intValue();
 
         Vec3d look = entity.getLookVec().scale(speed);
-        Vec3d startPos = entity.getPositionVector().add(entity.getLookVec().scale(0.05).add(0, entity.getEyeHeight() / 2, 0));
+        Vec3d startPos = entity.getPositionVector().add(entity.getLookVec().scale(0.05).add(0, entity.getEyeHeight() - 0.5, 0));
         EntityFlames whip = new EntityFlames(world);
         whip.setOwner(entity);
         whip.setDamageSource("avatar_Demonic_chaosLash");
@@ -77,7 +77,7 @@ public class AbilityChaosLash extends Ability {
         whip.setBehaviour(new WhipBehaviour());
         whip.setPerformanceAmount(performance);
         whip.setLifeTime(lifetime);
-        whip.setEntitySize(size / 2);
+        whip.setEntitySize(size);
         whip.setElement(Demonbending.ID);
         whip.setVelocity(look);
         whip.setPosition(startPos);
@@ -95,19 +95,19 @@ public class AbilityChaosLash extends Ability {
             World world = entity.world;
             EntityLivingBase owner = entity.getOwner();
             if (owner != null) {
-                entity.motionX *= 1.95;
-                entity.motionY *= 1.95;
-                entity.motionZ *= 1.95;
+                entity.motionX *= 1.25;
+                entity.motionY *= 1.25;
+                entity.motionZ *= 1.25;
                 if (world.isRemote) {
                     int rings = (int) (entity.getAvgSize() * 2) + 4;
                     float size = 0.5F * entity.getAvgSize() * (1 / entity.getAvgSize() + 0.5F);
                     int particles = (int) (Math.min((int) (entity.getAvgSize() * Math.PI), 2) + (entity.velocity().magnitude() / 20));
                     Vec3d centre = AvatarEntityUtils.getMiddleOfEntity(entity);
                     ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(BendingStyles.get(Airbending.ID)).collide(true)
-                            .clr(77, 13, 13, 90).time(12).glow(true)
+                            .clr(77, 13, 13, 190).time(12).glow(true)
                             .scale(size * 0.75F).spawnEntity(entity).swirl(rings, particles, entity.getAvgSize() * 0.75F,
                             size / 3F, (float) (entity.velocity().sqrMagnitude() / 10 * entity.getAvgSize()), (-0.75F / size), entity,
-                            world, true, centre, ParticleBuilder.SwirlMotionType.IN,
+                            world, false, centre, ParticleBuilder.SwirlMotionType.IN,
                             false, true);
                     int max = (int) (entity.getAvgSize() * 4);
                     for (int h = 0; h < max; h++) {
@@ -124,19 +124,19 @@ public class AbilityChaosLash extends Ability {
                         double spawnZ = pos.z;
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x,
                                 world.rand.nextGaussian() / 80 + velocity.y, world.rand.nextGaussian() / 80 + velocity.z)
-                                .time(4 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(77, 13, 13, 120).spawnEntity(entity).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 35)
-                                .scale(entity.getAvgSize()).element(BendingStyles.get(Demonbending.ID)).collide(true).collideParticles(true).spawn(world);
+                                .time(4 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(77, 13, 13, 120).spawnEntity(entity).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 15)
+                                .scale(entity.getAvgSize() / 2).element(BendingStyles.get(Demonbending.ID)).collide(true).collideParticles(true).spawn(world);
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x,
                                 world.rand.nextGaussian() / 80 + velocity.y, world.rand.nextGaussian() / 80 + velocity.z)
-                                .time(16 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(77, 13, 13, 220).spawnEntity(entity).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 35)
-                                .scale(entity.getAvgSize()).element(BendingStyles.get(Demonbending.ID)).collide(true).collideParticles(true).spawn(world);
+                                .time(16 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(77, 13, 13, 220).spawnEntity(entity).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 15)
+                                .scale(entity.getAvgSize() / 2).element(BendingStyles.get(Demonbending.ID)).collide(true).collideParticles(true).spawn(world);
 
                     }
                     //Rope of lightning that does a big crack when the entity dies
                     if (entity.ticksExisted >= entity.getLifeTime() - 1) {
                         ParticleBuilder.create(ParticleBuilder.Type.LIGHTNING)
-                                .pos(Vector.getEntityPos(owner).toMinecraft().add(owner.getLookVec().scale(0.05).add(0, entity.getEyeHeight() / 2, 0)))
-                                .target(AvatarEntityUtils.getMiddleOfEntity(entity)).time(10).scale(entity.getAvgSize() * 5)
+                                .pos(Vector.getEntityPos(owner).toMinecraft().add(owner.getLookVec().scale(0.05).add(0, entity.getEyeHeight(), 0)))
+                                .target(AvatarEntityUtils.getMiddleOfEntity(entity)).time(10).scale(entity.getAvgSize() * 2)
                                 .spawnEntity(owner).clr(77, 13, 13).spawn(world);
                         for (double i = 0; i < entity.width; i += 0.025) {
                             ParticleBuilder.create(ParticleBuilder.Type.FLASH)
@@ -147,16 +147,16 @@ public class AbilityChaosLash extends Ability {
                                     .spawn(world);
                         }
                     } else ParticleBuilder.create(ParticleBuilder.Type.LIGHTNING)
-                            .pos(Vector.getEntityPos(owner).toMinecraft().add(owner.getLookVec().scale(0.05)).add(0, entity.getEyeHeight() / 2, 0))
-                            .target(AvatarEntityUtils.getMiddleOfEntity(entity)).time(1).scale(entity.getAvgSize() * 5 *
+                            .pos(Vector.getEntityPos(owner).toMinecraft().add(owner.getLookVec().scale(0.05)).add(0, entity.getEyeHeight(), 0))
+                            .target(AvatarEntityUtils.getMiddleOfEntity(entity)).time(1).scale(entity.getAvgSize() * 2 *
                                     entity.ticksExisted / entity.getLifeTime()).clr(77, 13, 13).spawnEntity(owner).spawn(world);
                     if (entity.onCollideWithSolid()) {
                         for (double i = 0; i < entity.width * 2; i += 0.025) {
                             ParticleBuilder.create(ParticleBuilder.Type.FLASH)
-                                    .scale(entity.getAvgSize() * 2).clr(77, 13, 13).glow(world.rand.nextBoolean())
+                                    .scale(entity.getAvgSize() / 2).clr(77, 13, 13).glow(world.rand.nextBoolean())
                                     .collide(true).spawnEntity(entity).element(BendingStyles.get(Demonbending.ID))
-                                    .time(16).vel(world.rand.nextGaussian() / 5, world.rand.nextGaussian() / 5,
-                                    world.rand.nextGaussian() / 5).pos(AvatarEntityUtils.getMiddleOfEntity(entity))
+                                    .time(16).vel(world.rand.nextGaussian() / 25, world.rand.nextGaussian() / 25,
+                                    world.rand.nextGaussian() / 25).pos(AvatarEntityUtils.getMiddleOfEntity(entity))
                                     .spawn(world);
                         }
                     }
