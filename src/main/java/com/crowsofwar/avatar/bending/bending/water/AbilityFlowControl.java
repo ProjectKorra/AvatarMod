@@ -19,10 +19,8 @@ package com.crowsofwar.avatar.bending.bending.water;
 
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.entity.EntityWaterBubble;
-import com.crowsofwar.avatar.entity.data.WaterBubbleBehavior;
 import com.crowsofwar.avatar.util.Raytrace;
 import com.crowsofwar.avatar.util.data.AbilityData;
-import com.crowsofwar.avatar.util.data.AbilityData.AbilityTreePath;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
@@ -35,9 +33,7 @@ import net.minecraft.world.World;
 
 import java.util.function.BiPredicate;
 
-import static com.crowsofwar.avatar.config.ConfigSkills.SKILLS_CONFIG;
 import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.avatar.util.data.StatusControlController.LOB_BUBBLE;
 import static java.lang.Math.toRadians;
 
 /**
@@ -93,6 +89,7 @@ public class AbilityFlowControl extends Ability {
             int waterLevel = getProperty(WATER_LEVEL, ctx).intValue();
             float size = getProperty(SIZE, ctx).floatValue();
             float chiHit = getProperty(CHI_HIT, ctx).floatValue();
+            int performance = getProperty(PERFORMANCE, ctx).intValue();
 
             lifeTime = (int) powerModify(lifeTime, abilityData);
             damage = powerModify(damage, abilityData);

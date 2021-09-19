@@ -17,7 +17,9 @@
       "chiOnHit": 0.9,
       "damage": 3,
       "explosionSize": 1,
-      "explosionDamage": 1
+      "explosionDamage": 1,
+      "ring": false,
+      "infiniteWater": false
     },
     "level2": {
       "tier": 3,

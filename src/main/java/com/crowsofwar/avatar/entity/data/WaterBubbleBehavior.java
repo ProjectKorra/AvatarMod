@@ -28,8 +28,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.datasync.DataSerializer;
-import net.minecraft.network.datasync.DataSerializers;
 
 /**
  * @author CrowsOfWar
@@ -49,7 +47,7 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
     public static class Drop extends WaterBubbleBehavior {
 
         @Override
-        public Behavior onUpdate(EntityOffensive entity) {
+        public OffensiveBehaviour onUpdate(EntityOffensive entity) {
             entity.addVelocity(Vector.DOWN.times(0.981));
             if (entity.collided) {
                 entity.setDead();
@@ -124,7 +122,7 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
     public static class Lobbed extends WaterBubbleBehavior {
         //For when you use the water bubble like a bucket
         @Override
-        public Behavior onUpdate(EntityOffensive entity) {
+        public OffensiveBehaviour onUpdate(EntityOffensive entity) {
             entity.addVelocity(Vector.DOWN.times(0.8));
             if (entity.getOwner() == null) return this;
             if (entity.collided && entity instanceof EntityWaterBubble) {
