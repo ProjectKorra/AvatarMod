@@ -15,7 +15,7 @@
   along with AvatarMod. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.crowsofwar.avatar.network;
+package com.crowsofwar.avatar.client;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
@@ -41,6 +41,8 @@ import com.crowsofwar.avatar.client.render.iceprison.RenderIcePrison;
 import com.crowsofwar.avatar.client.renderer.LayerGlider;
 import com.crowsofwar.avatar.entity.*;
 import com.crowsofwar.avatar.entity.mob.*;
+import com.crowsofwar.avatar.network.AvatarCommonProxy;
+import com.crowsofwar.avatar.network.IPacketHandler;
 import com.crowsofwar.avatar.network.packets.PacketSRequestData;
 import com.crowsofwar.avatar.network.packets.PacketSSendViewStatus;
 import com.crowsofwar.avatar.util.data.AvatarPlayerData;
@@ -200,6 +202,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
         registerEntityRenderingHandler(EntityIceLance.class, RenderNothing::new);
         registerEntityRenderingHandler(EntityIceClaws.class, RenderNothing::new);
         registerEntityRenderingHandler(EntityBuff.class, RenderNothing::new);
+        registerEntityRenderingHandler(EntityShadeBall.class, RenderShadeBall::new);
         //registerEntityRenderingHandler(EntityPlayer.class, RenderSlipstreamInvisibility::new);
 
         // Renderers dependent on CodeChickenLib.

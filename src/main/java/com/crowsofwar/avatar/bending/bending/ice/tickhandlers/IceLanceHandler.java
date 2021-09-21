@@ -59,8 +59,7 @@ public class IceLanceHandler extends TickHandler {
         //4 stages, max charge of 4.
 
 
-        if (abilityData == null)
-            Thread.dumpStack();
+
         if (abilityData != null && iceLance != null) {
 
             float powerMod = (float) abilityData.getDamageMult();

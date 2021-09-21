@@ -25,10 +25,7 @@ import com.crowsofwar.avatar.bending.bending.air.*;
 import com.crowsofwar.avatar.bending.bending.combustion.AbilityExplosion;
 import com.crowsofwar.avatar.bending.bending.combustion.AbilityExplosivePillar;
 import com.crowsofwar.avatar.bending.bending.combustion.Combustionbending;
-import com.crowsofwar.avatar.bending.bending.custom.dark.AbilityCorrupt;
-import com.crowsofwar.avatar.bending.bending.custom.dark.AbilityDeathDescent;
-import com.crowsofwar.avatar.bending.bending.custom.dark.AbilityOblivionBeam;
-import com.crowsofwar.avatar.bending.bending.custom.dark.Darkbending;
+import com.crowsofwar.avatar.bending.bending.custom.dark.*;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.AbilityChaosLash;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.AbilityDemonWings;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.AbilityDemonicAura;
@@ -111,7 +108,7 @@ import static net.minecraftforge.fml.common.registry.EntityRegistry.registerEgg;
 
 public class AvatarMod {
 
-    @SidedProxy(serverSide = "com.crowsofwar.avatar.network.AvatarServerProxy", clientSide = "com.crowsofwar.avatar.network.AvatarClientProxy")
+    @SidedProxy(serverSide = "com.crowsofwar.avatar.network.AvatarServerProxy", clientSide = "com.crowsofwar.avatar.client.AvatarClientProxy")
     public static AvatarCommonProxy proxy;
 
     @Instance(value = AvatarInfo.MOD_ID)
@@ -186,6 +183,7 @@ public class AvatarMod {
         Abilities.register(new AbilityCorrupt());
         Abilities.register(new AbilityDeathDescent());
         Abilities.register(new AbilityOblivionBeam());
+        Abilities.register(new AbilityShadeBurst());
 
         /*              Ki                  */
         Abilities.register(new AbilityKaioKen());
@@ -443,6 +441,7 @@ public class AvatarMod {
         registerEntity(EntityIceLance.class, "IceLance", 128, 1000, true);
         registerEntity(EntityIceClaws.class,  "IceClaws", 128, 1000, true);
         registerEntity(EntityBuff.class, "Buff", 128, 1000, false);
+        registerEntity(EntityShadeBall.class, "ShadeBurst", 128, 1000, true);
         EntityRegistry.addSpawn(EntityOtterPenguin.class, 10, 3, 6, EnumCreatureType.CREATURE, //
                 COLD_BEACH, ICE_PLAINS, ICE_MOUNTAINS, MUTATED_ICE_FLATS);
         EntityRegistry.addSpawn(EntityOstrichHorse.class, 5, 1, 3, EnumCreatureType.CREATURE, //

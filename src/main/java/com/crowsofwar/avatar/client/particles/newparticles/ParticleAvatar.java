@@ -12,7 +12,7 @@ import com.crowsofwar.avatar.client.particles.newparticles.behaviour.ParticleAva
 import com.crowsofwar.avatar.client.particles.newparticles.renderlayers.ParticleBatchRenderer;
 import com.crowsofwar.avatar.client.particles.newparticles.renderlayers.RenderLayer;
 import com.crowsofwar.avatar.entity.*;
-import com.crowsofwar.avatar.network.AvatarClientProxy;
+import com.crowsofwar.avatar.client.AvatarClientProxy;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.data.AbilityData;

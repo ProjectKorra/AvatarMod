@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.util.data;
 import com.crowsofwar.avatar.bending.bending.air.statctrls.*;
 import com.crowsofwar.avatar.bending.bending.custom.dark.statctrls.StatCtrlDeathDescent;
 import com.crowsofwar.avatar.bending.bending.custom.dark.statctrls.StatCtrlSetOblivionBeam;
+import com.crowsofwar.avatar.bending.bending.custom.dark.statctrls.StatCtrlShadeBurst;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.statctrls.StatCtrlDemonWings;
 import com.crowsofwar.avatar.bending.bending.custom.ki.statctrls.StatCtrlKiFlight;
 import com.crowsofwar.avatar.bending.bending.custom.light.statctrls.StatCtrlHeavenlyFlight;
@@ -80,7 +81,9 @@ public class StatusControlController {
 			CHARGE_ICE_LANE = new StatCtrlSetIceLanceCharging(true),
 			RELEASE_ICE_LANCE = new StatCtrlSetIceLanceCharging(false),
 			START_OBLIVION_BEAM = new StatCtrlSetOblivionBeam(true),
-			STOP_OBLIVION_BEAM = new StatCtrlSetOblivionBeam(false);
+			STOP_OBLIVION_BEAM = new StatCtrlSetOblivionBeam(false),
+			CHARGE_SHADE_BURST = new StatCtrlShadeBurst(true),
+			SHOOT_SHADE_BURST = new StatCtrlShadeBurst(false);
 	// @formatter:on
 
 	public static StatusControl lookup(int id) {
