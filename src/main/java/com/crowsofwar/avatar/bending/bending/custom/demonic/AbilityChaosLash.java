@@ -9,13 +9,18 @@ import com.crowsofwar.avatar.entity.EntityOffensive;
 import com.crowsofwar.avatar.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
+import com.crowsofwar.avatar.util.damageutils.DamageUtils;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.MobEffects;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+
+import java.util.List;
 
 //Instantaneous Whip.
 //Just use EntityFlames and make it demonic + custom particle behaviour
@@ -95,6 +100,15 @@ public class AbilityChaosLash extends Ability {
             World world = entity.world;
             EntityLivingBase owner = entity.getOwner();
             if (owner != null) {
+                List<EntityLivingBase> targets = world.getEntitiesWithinAABB(EntityLivingBase.class, entity.getExpandedHitbox());
+
+                if (!targets.isEmpty()) {
+                    for (EntityLivingBase target : targets) {
+                        if (DamageUtils.canDamage(entity, target)) {
+                            target.addPotionEffect(new PotionEffect(MobEffects.WITHER, 10));
+                        }
+                    }
+                }
                 entity.motionX *= 1.25;
                 entity.motionY *= 1.25;
                 entity.motionZ *= 1.25;
