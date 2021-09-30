@@ -13,25 +13,30 @@ import com.crowsofwar.avatar.entity.data.Behavior;
 import com.crowsofwar.avatar.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
+import com.crowsofwar.avatar.util.damageutils.DamageUtils;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.TickHandler;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -147,8 +152,9 @@ public class HolyProtectionHandler extends TickHandler {
                 buff.setOwner(entity);
                 buff.setPosition(AvatarEntityUtils.getBottomMiddleOfEntity(entity));
                 buff.setVelocity(Vec3d.ZERO);
-                buff.setAbility(Abilities.get("holy_protection"));
+                buff.setAbility(Objects.requireNonNull(Abilities.get("holy_protection")));
                 buff.setElement(Lightbending.ID);
+                buff.setRadius(radius);
                 //Set behaviour
 
                 int particleController = abilityData.getLevel() > 0 ? 48 - (6 * Math.max(abilityData.getLevel(), 0)) : 48;
@@ -265,31 +271,48 @@ public class HolyProtectionHandler extends TickHandler {
         }
     }
 
-    public static class HolyProtectionBuffBehaviour extends Behavior<EntityBuff> {
-
-        @Override
-        public Behavior onUpdate(EntityBuff entity) {
-            return null;
-        }
-
-        @Override
-        public void fromBytes(PacketBuffer buf) {
-
-        }
-
-        @Override
-        public void toBytes(PacketBuffer buf) {
-
-        }
-
-        @Override
-        public void load(NBTTagCompound nbt) {
-
-        }
-
-        @Override
-        public void save(NBTTagCompound nbt) {
-
-        }
-    }
+    //To lazy to do behaviour crap rn
+//    public static class HolyProtectionBuffBehaviour extends Behavior<EntityBuff> {
+//
+//        @Override
+//        public Behavior onUpdate(EntityBuff entity) {
+//            if (entity.getOwner() != null) {
+//                List<EntityLivingBase> targets = entity.world.getEntitiesWithinAABB(EntityLivingBase.class,
+//                        entity.getEntityBoundingBox().grow(entity.getRadius()));
+//                if (!targets.isEmpty()) {
+//                    for (EntityLivingBase target : targets) {
+//                        if (!DamageUtils.canDamage(entity.getOwner(), target)) {
+//                            target.addPotionEffect(new PotionEffect(MobEffects.SPEED,
+//                                    2, 120));
+//                            target.addPotionEffect(new PotionEffect(MobEffects.GLOWING,
+//                                    2, 120));
+//                            target.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE,
+//                                    0, 120));
+//                        }
+//                    }
+//                }
+//            }
+//            return this;
+//        }
+//
+//        @Override
+//        public void fromBytes(PacketBuffer buf) {
+//
+//        }
+//
+//        @Override
+//        public void toBytes(PacketBuffer buf) {
+//
+//        }
+//
+//        @Override
+//        public void load(NBTTagCompound nbt) {
+//
+//        }
+//
+//        @Override
+//        public void save(NBTTagCompound nbt) {
+//
+//        }
+//    }
 }

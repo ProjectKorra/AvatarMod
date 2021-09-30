@@ -1,5 +1,6 @@
 package com.crowsofwar.avatar.entity;
 
+import com.crowsofwar.avatar.bending.bending.custom.light.AbilityHolyProtection;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.util.damageutils.DamageUtils;
 import net.minecraft.entity.Entity;
@@ -108,6 +109,24 @@ public class EntityBuff extends AvatarEntity {
 //                                120, 1));
                         toBuff.addPotionEffect(new PotionEffect(MobEffects.STRENGTH,
                                 120, 1));
+                    }
+                }
+            }
+        }
+        if (getAbility() instanceof AbilityHolyProtection) {
+            if (getOwner() != null) {
+                List<EntityLivingBase> targets = world.getEntitiesWithinAABB(EntityLivingBase.class,
+                        getEntityBoundingBox().grow(getRadius()));
+                if (!targets.isEmpty()) {
+                    for (EntityLivingBase target : targets) {
+                        if (!DamageUtils.canDamage(getOwner(), target)) {
+                            target.addPotionEffect(new PotionEffect(MobEffects.SPEED,
+                                    2, 120));
+                            target.addPotionEffect(new PotionEffect(MobEffects.GLOWING,
+                                    2, 120));
+                            target.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE,
+                                    0, 120));
+                        }
                     }
                 }
             }

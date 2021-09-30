@@ -7,8 +7,7 @@ import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 
-import static com.crowsofwar.avatar.util.data.StatusControlController.CHARGE_AIR_BURST;
-import static com.crowsofwar.avatar.util.data.StatusControlController.RELEASE_AIR_BURST;
+import static com.crowsofwar.avatar.util.data.StatusControlController.*;
 
 public class AbilityHolyProtection extends Ability {
     public static final String
@@ -34,14 +33,14 @@ public class AbilityHolyProtection extends Ability {
 
         //The charge status control adds the release status control, but the release status control doesn't activate until the right click button is released.
 
-        boolean hasAirCharge = data.hasStatusControl(RELEASE_AIR_BURST);
+        boolean hasAirCharge = data.hasStatusControl(RELEASE_HOLY_PROTECTION);
 
 
         if (bender.consumeChi(getChiCost(ctx) / 4) && !hasAirCharge) {
-            data.addStatusControl(CHARGE_AIR_BURST);
+            data.addStatusControl(CHARGE_HOLY_PROTECTION);
         } else if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
             if (!hasAirCharge) {
-                data.addStatusControl(CHARGE_AIR_BURST);
+                data.addStatusControl(CHARGE_HOLY_PROTECTION);
             }
         }
         super.execute(ctx);
