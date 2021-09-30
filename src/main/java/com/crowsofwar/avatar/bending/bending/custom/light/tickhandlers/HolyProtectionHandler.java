@@ -2,48 +2,41 @@ package com.crowsofwar.avatar.bending.bending.custom.light.tickhandlers;
 
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.BendingStyles;
-import com.crowsofwar.avatar.bending.bending.air.Airbending;
 import com.crowsofwar.avatar.bending.bending.custom.light.AbilityHolyProtection;
 import com.crowsofwar.avatar.bending.bending.custom.light.Lightbending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.entity.EntityBuff;
 import com.crowsofwar.avatar.entity.EntityOffensive;
 import com.crowsofwar.avatar.entity.EntityShockwave;
-import com.crowsofwar.avatar.entity.data.Behavior;
 import com.crowsofwar.avatar.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
-import com.crowsofwar.avatar.util.damageutils.DamageUtils;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.TickHandler;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
 import static com.crowsofwar.avatar.bending.bending.Ability.*;
 import static com.crowsofwar.avatar.bending.bending.air.AbilityAirBurst.BLAST_LEVEL;
 import static com.crowsofwar.avatar.bending.bending.air.AbilityAirBurst.SLOW_MULT;
-import static com.crowsofwar.avatar.util.data.StatusControlController.*;
+import static com.crowsofwar.avatar.util.data.StatusControlController.RELEASE_HOLY_PROTECTION;
 
 public class HolyProtectionHandler extends TickHandler {
     public static final UUID HOLY_PROTECTION_MOVEMENT_MODIFIER_ID = UUID.randomUUID();
@@ -93,10 +86,11 @@ public class HolyProtectionHandler extends TickHandler {
             }
 
             //Makes sure the charge is never 0.
-            charge = Math.max((int) (3 * (duration / durationToFire)) + 1, 1);
-            charge = Math.min(charge, 4);
+//            charge = Math.max((int) (3 * (duration / durationToFire)) + 1, 1);
+//            charge = Math.min(charge, 4);
             //We don't want the charge going over 4.
 
+            charge = 4;
             durationToFire *= (2 - powerMod);
             durationToFire -= xpMod * 10;
             damage *= powerMod * xpMod;
@@ -130,8 +124,8 @@ public class HolyProtectionHandler extends TickHandler {
                 int rings = (int) (Math.sqrt(radius) * 6);
                 //Rings around the player (not around your finger; the police want you)
                 // C u l t u r e
-                ParticleBuilder.create(ParticleBuilder.Type.FLASH).clr(0.975F, 0.975F, 0.275F, 0.05F).
-                        scale(size).time(14 + AvatarUtils.getRandomNumberInRange(0, 4)).element(BendingStyles.get(Airbending.ID))
+                ParticleBuilder.create(ParticleBuilder.Type.FLASH).clr(0.975F, 0.975F, 0.275F, 0.2F).glow(true)
+                        .scale(size).time(14 + AvatarUtils.getRandomNumberInRange(0, 4)).element(BendingStyles.get(Lightbending.ID))
                         .swirl(rings, particles, (float) inverseRadius, size / 1.5F, radius * 40,
                                 (1F / size) * abilityData.getXpModifier() * charge, entity, world, false, pos,
                                 ParticleBuilder.SwirlMotionType.IN, true, true);
@@ -145,7 +139,7 @@ public class HolyProtectionHandler extends TickHandler {
             }
 
 
-            if (!data.hasStatusControl(RELEASE_HOLY_PROTECTION) && bender.consumeChi(holyProtection.getChiCost(abilityData))) {
+            if (!data.hasStatusControl(RELEASE_HOLY_PROTECTION)) {
 
                 EntityBuff buff = new EntityBuff(world);
                 buff.setLifetime(120);
@@ -163,11 +157,11 @@ public class HolyProtectionHandler extends TickHandler {
                 shockwave.setPosition(AvatarEntityUtils.getBottomMiddleOfEntity(entity));
                 shockwave.setRenderNormal(false);
                 shockwave.setElement(Lightbending.ID);
-                shockwave.setParticleSpeed(speed);
+                shockwave.setParticleSpeed(speed / 2);
                 shockwave.setDamageSource("avatar_Light_sphere_shockwave");
                 shockwave.setKnockbackMult(new Vec3d(knockBack, knockBack / 2, knockBack));
                 shockwave.setDamage(damage);
-                shockwave.setParticleAmount(1);
+                shockwave.setParticleAmount(2);
                 shockwave.setRange(radius);
                 shockwave.setSphere(true);
                 shockwave.setTier(holyProtection.getCurrentTier(abilityData));
@@ -195,7 +189,7 @@ public class HolyProtectionHandler extends TickHandler {
 
                 return true;
             }
-            return !data.hasStatusControl(RELEASE_AIR_BURST) || shouldRemove && !data.hasStatusControl(SHOOT_AIR_BURST);
+            return !data.hasStatusControl(RELEASE_HOLY_PROTECTION);
         } else {
             return true;
         }
@@ -231,18 +225,19 @@ public class HolyProtectionHandler extends TickHandler {
         public OffensiveBehaviour onUpdate(EntityOffensive entity) {
             if (entity instanceof EntityShockwave && entity.getOwner() != null) {
                 World world = entity.world;
-                if (world.isRemote) {
+                if (world.isRemote && entity.ticksExisted <= 2) {
                     float maxRadius = (float) ((EntityShockwave) entity).getRange();
                     int rings = (int) (maxRadius * 4 + 6);
-                    float size = (float) (Math.sqrt(maxRadius) * 0.5F);
+                    float size = (float) (Math.sqrt(maxRadius));
                     int particles = (int) (Math.sqrt(maxRadius) / 1.5F * Math.PI);
                     Vec3d centre = AvatarEntityUtils.getBottomMiddleOfEntity(entity);
-                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size)
-                            .time(12).collide(true)
-                            .element(BendingStyles.get(entity.getElement())).clr(0.95F, 0.95F, 0.275F, 0.030F).spawnEntity(entity.getOwner())
-                            .swirl(rings, particles, maxRadius * 0.675F, 0.35F + maxRadius / 20, maxRadius * 40, (-2 / size),
-                                    entity.getOwner(), world, true, centre, ParticleBuilder.SwirlMotionType.OUT,
-                                    false, true);
+                    for (int i = 0; i < 100 * particles; i++)
+                        ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size)
+                                .time(16).collide(true).glow(true).scale(size)
+                                .element(BendingStyles.get(entity.getElement())).clr(0.95F, 0.95F, 0.3F, 0.075F).spawnEntity(entity.getOwner())
+                                .pos(centre).vel(world.rand.nextGaussian() * entity.getParticleSpeed(),
+                                world.rand.nextGaussian() * entity.getParticleSpeed(), world.rand.nextGaussian() * entity.getParticleSpeed())
+                                .spawn(world);
 
 
                 }

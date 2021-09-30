@@ -15,7 +15,7 @@
       "knockback": 2,
       "chiOnHit": 1.5,
       "damage": 6,
-      "chargeTime": 10,
+      "chargeTime": 30,
       "effectRadius": 3,
       "effectDamage": 4,
       "blastLevel": 4,

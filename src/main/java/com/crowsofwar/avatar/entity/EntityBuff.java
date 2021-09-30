@@ -121,11 +121,11 @@ public class EntityBuff extends AvatarEntity {
                     for (EntityLivingBase target : targets) {
                         if (!DamageUtils.canDamage(getOwner(), target)) {
                             target.addPotionEffect(new PotionEffect(MobEffects.SPEED,
-                                    2, 120));
+                                    120, 2));
                             target.addPotionEffect(new PotionEffect(MobEffects.GLOWING,
-                                    2, 120));
+                                    120, 2));
                             target.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE,
-                                    0, 120));
+                                    120, 0));
                         }
                     }
                 }

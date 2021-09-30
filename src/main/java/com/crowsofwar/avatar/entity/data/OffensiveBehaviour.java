@@ -12,6 +12,7 @@ import com.crowsofwar.avatar.bending.bending.custom.demonic.AbilityChaosLash;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.tickhandlers.DemonWingsHandler;
 import com.crowsofwar.avatar.bending.bending.custom.ki.tickhandlers.KiFlightHandler;
 import com.crowsofwar.avatar.bending.bending.custom.light.tickhandlers.HeavenlyFlightHandler;
+import com.crowsofwar.avatar.bending.bending.custom.light.tickhandlers.HolyProtectionHandler;
 import com.crowsofwar.avatar.bending.bending.earth.AbilityRavine;
 import com.crowsofwar.avatar.bending.bending.earth.tickhandlers.EarthSpikeHandler;
 import com.crowsofwar.avatar.bending.bending.fire.AbilityFireRedirect;
@@ -72,6 +73,7 @@ public abstract class OffensiveBehaviour extends Behavior<EntityOffensive> {
         registerBehavior(AbilityFrostClaws.IceClawBehaviour.class);
         registerBehavior(AbilityChaosLash.WhipBehaviour.class);
         registerBehavior(ShadeBurstHandler.ShadeBurstBehaviour.class);
+        registerBehavior(HolyProtectionHandler.HolyProtectionShockwave.class);
     }
 
     public static class Idle extends OffensiveBehaviour {
