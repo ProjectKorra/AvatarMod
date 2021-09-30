@@ -6,6 +6,7 @@ import com.crowsofwar.avatar.bending.bending.custom.demonic.tickhandlers.Demonic
 import com.crowsofwar.avatar.bending.bending.custom.ki.tickhandlers.KaioKenHandler;
 import com.crowsofwar.avatar.bending.bending.custom.ki.tickhandlers.KiFlightHandler;
 import com.crowsofwar.avatar.bending.bending.custom.light.tickhandlers.HeavenlyFlightHandler;
+import com.crowsofwar.avatar.bending.bending.custom.light.tickhandlers.HolyProtectionHandler;
 import com.crowsofwar.avatar.bending.bending.custom.light.tickhandlers.PurifyHandler;
 import com.crowsofwar.avatar.bending.bending.earth.tickhandlers.EarthSpikeHandler;
 import com.crowsofwar.avatar.bending.bending.ice.tickhandlers.*;
@@ -75,6 +76,7 @@ public class TickHandlerController {
 	public static TickHandler OBLIVION_BEAM_HANDLER = new OblivionBeamHandler(40);
 	public static TickHandler OBLIVION_BEAM_CHARGER = new ChargeOblivionBeam(41);
 	public static TickHandler SHADE_BURST_CHARGE = new ShadeBurstHandler(42);
+	public static TickHandler HOLY_PROTECTION_HANDLER = new HolyProtectionHandler(43);
 
 
 

@@ -6,6 +6,7 @@ import com.crowsofwar.avatar.bending.bending.custom.dark.statctrls.StatCtrlSetOb
 import com.crowsofwar.avatar.bending.bending.custom.dark.statctrls.StatCtrlShadeBurst;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.statctrls.StatCtrlDemonWings;
 import com.crowsofwar.avatar.bending.bending.custom.ki.statctrls.StatCtrlKiFlight;
+import com.crowsofwar.avatar.bending.bending.custom.light.StatCtrlSetHolyProtection;
 import com.crowsofwar.avatar.bending.bending.custom.light.statctrls.StatCtrlHeavenlyFlight;
 import com.crowsofwar.avatar.bending.bending.earth.statctrls.*;
 import com.crowsofwar.avatar.bending.bending.fire.statctrls.*;
@@ -83,7 +84,9 @@ public class StatusControlController {
 			START_OBLIVION_BEAM = new StatCtrlSetOblivionBeam(true),
 			STOP_OBLIVION_BEAM = new StatCtrlSetOblivionBeam(false),
 			CHARGE_SHADE_BURST = new StatCtrlShadeBurst(true),
-			SHOOT_SHADE_BURST = new StatCtrlShadeBurst(false);
+			SHOOT_SHADE_BURST = new StatCtrlShadeBurst(false),
+			CHARGE_HOLY_PROTECTION = new StatCtrlSetHolyProtection(true),
+			RELEASE_HOLY_PROTECTION = new StatCtrlSetHolyProtection(false);
 	// @formatter:on
 
 	public static StatusControl lookup(int id) {
