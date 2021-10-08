@@ -1,7 +1,12 @@
 package com.crowsofwar.avatar.entity;
 
+import com.crowsofwar.avatar.bending.bending.BendingStyles;
+import com.crowsofwar.avatar.bending.bending.custom.demonic.AbilityInfernalField;
+import com.crowsofwar.avatar.bending.bending.custom.light.AbilityDivineJudgement;
 import com.crowsofwar.avatar.bending.bending.custom.light.AbilityHolyProtection;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
+import com.crowsofwar.avatar.util.AvatarEntityUtils;
+import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.damageutils.DamageUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -129,10 +134,61 @@ public class EntityBuff extends AvatarEntity {
                         }
                     }
                 }
+
+                if (world.isRemote) {
+                    Vec3d centre = AvatarEntityUtils.getBottomMiddleOfEntity(getOwner()).add(0, getRadius() / 2, 0);
+                    float size = 0.75F * getRadius() * (1 / getRadius());
+                    int rings = (int) (getRadius() * 8);
+                    int particles = (int) (getRadius() * 2 * Math.PI);
+
+                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size).time(12 + AvatarUtils.getRandomNumberInRange(0, 4))
+                            .element(BendingStyles.get(getElement())).clr(0.95F, 0.95F, 0.275F, 0.075F).spawnEntity(this).glow(true)
+                            .swirl(rings, particles, getRadius(), size * 5, getRadius() * 10, (-1 / size),
+                                    this, world, false, centre, ParticleBuilder.SwirlMotionType.OUT, false, true);
+
+                }
             }
         }
 
-        if (world.isRemote && getOwner() != null) {
+        if (getAbility() instanceof AbilityInfernalField && getOwner() != null) {
+            if (getOwner() != null) {
+                List<EntityLivingBase> targets = world.getEntitiesWithinAABB(EntityLivingBase.class,
+                        getEntityBoundingBox().grow(getRadius()));
+                if (!targets.isEmpty()) {
+                    for (EntityLivingBase target : targets) {
+                        if (DamageUtils.canDamage(getOwner(), target)) {
+                            target.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS,
+                                    120, 2));
+                            target.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS,
+                                    120, 2));
+                            target.addPotionEffect(new PotionEffect(MobEffects.WITHER,
+                                    120, 0));
+                        }
+                    }
+                }
+
+                if (world.isRemote) {
+                    if (ticksExisted % 2 == 0) {
+                        Vec3d centre = AvatarEntityUtils.getMiddleOfEntity(this);
+                        float size = 0.65F * getRadius() * (1 / getRadius());
+                        int rings = (int) (getRadius() * 5);
+                        int particles = (int) (getRadius() * Math.PI);
+
+                        ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size).time(12 + AvatarUtils.getRandomNumberInRange(0, 4))
+                                .element(BendingStyles.get(getElement())).clr(120 / 255F, 20 / 255F, 20 / 255F, 0.075F).spawnEntity(this).glow(true)
+                                .swirl(rings, particles, getRadius(), size * 20, getRadius() * 10, (-1 / size),
+                                        this, world, false, centre, ParticleBuilder.SwirlMotionType.OUT, false, true);
+                        ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size).time(12 + AvatarUtils.getRandomNumberInRange(0, 4))
+                                .element(BendingStyles.get(getElement())).clr(10 / 255F, 10 / 255F, 10 / 255F, 0.075F).spawnEntity(this).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 60)
+                                .swirl(rings, particles, getRadius(), size * 20, getRadius() * 10, (-1 / size),
+                                        this, world, false, centre, ParticleBuilder.SwirlMotionType.OUT, false, true);
+
+                    }
+                }
+            }
+        }
+
+        if (world.isRemote && getOwner() != null && getAbility() instanceof AbilityDivineJudgement) {
             Vec3d startPos = getPositionVector().add(0, 200, 0);
             if (ticksExisted < 20)
                 ParticleBuilder.create(ParticleBuilder.Type.BEAM).clr(1.0F, 1.0F, 0.8F)

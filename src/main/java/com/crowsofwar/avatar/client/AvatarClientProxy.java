@@ -203,6 +203,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
         registerEntityRenderingHandler(EntityIceClaws.class, RenderNothing::new);
         registerEntityRenderingHandler(EntityBuff.class, RenderNothing::new);
         registerEntityRenderingHandler(EntityShadeBall.class, RenderShadeBall::new);
+        registerEntityRenderingHandler(EntityInfernalBall.class, RenderInfernalBall::new);
         //registerEntityRenderingHandler(EntityPlayer.class, RenderSlipstreamInvisibility::new);
 
         // Renderers dependent on CodeChickenLib.

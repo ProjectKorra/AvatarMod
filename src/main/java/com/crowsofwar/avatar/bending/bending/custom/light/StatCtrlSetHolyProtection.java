@@ -50,7 +50,7 @@ public class StatCtrlSetHolyProtection extends StatusControl {
         BendingData data = ctx.getData();
         EntityLivingBase bender = ctx.getBenderEntity();
 
-        if (data.hasBendingId(Airbending.ID)) {
+        if (data.hasBendingId(Lightbending.ID)) {
             if (setting) {
                 data.addStatusControl(RELEASE_HOLY_PROTECTION);
                 data.addTickHandler(HOLY_PROTECTION_HANDLER, ctx);

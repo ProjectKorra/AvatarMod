@@ -26,10 +26,7 @@ import com.crowsofwar.avatar.bending.bending.combustion.AbilityExplosion;
 import com.crowsofwar.avatar.bending.bending.combustion.AbilityExplosivePillar;
 import com.crowsofwar.avatar.bending.bending.combustion.Combustionbending;
 import com.crowsofwar.avatar.bending.bending.custom.dark.*;
-import com.crowsofwar.avatar.bending.bending.custom.demonic.AbilityChaosLash;
-import com.crowsofwar.avatar.bending.bending.custom.demonic.AbilityDemonWings;
-import com.crowsofwar.avatar.bending.bending.custom.demonic.AbilityDemonicAura;
-import com.crowsofwar.avatar.bending.bending.custom.demonic.Demonbending;
+import com.crowsofwar.avatar.bending.bending.custom.demonic.*;
 import com.crowsofwar.avatar.bending.bending.custom.ki.AbilityKaioKen;
 import com.crowsofwar.avatar.bending.bending.custom.ki.AbilityKiFlight;
 import com.crowsofwar.avatar.bending.bending.custom.ki.Kibending;
@@ -196,6 +193,7 @@ public class AvatarMod {
         Abilities.register(new AbilityDemonicAura());
         Abilities.register(new AbilityDemonWings());
         Abilities.register(new AbilityChaosLash());
+        Abilities.register(new AbilityInfernalField());
 
 
     }
@@ -440,6 +438,7 @@ public class AvatarMod {
         registerEntity(EntityIceClaws.class,  "IceClaws", 128, 1000, true);
         registerEntity(EntityBuff.class, "Buff", 128, 1000, false);
         registerEntity(EntityShadeBall.class, "ShadeBurst", 128, 1000, true);
+        registerEntity(EntityInfernalBall.class, "InfernalBall", 128, 1000, true);
         EntityRegistry.addSpawn(EntityOtterPenguin.class, 10, 3, 6, EnumCreatureType.CREATURE, //
                 COLD_BEACH, ICE_PLAINS, ICE_MOUNTAINS, MUTATED_ICE_FLATS);
         EntityRegistry.addSpawn(EntityOstrichHorse.class, 5, 1, 3, EnumCreatureType.CREATURE, //

@@ -34,8 +34,8 @@ import java.util.Objects;
 import java.util.UUID;
 
 import static com.crowsofwar.avatar.bending.bending.Ability.*;
-import static com.crowsofwar.avatar.bending.bending.air.AbilityAirBurst.BLAST_LEVEL;
-import static com.crowsofwar.avatar.bending.bending.air.AbilityAirBurst.SLOW_MULT;
+import static com.crowsofwar.avatar.bending.bending.custom.light.AbilityHolyProtection.BLAST_LEVEL;
+import static com.crowsofwar.avatar.bending.bending.custom.light.AbilityHolyProtection.SLOW_MULT;
 import static com.crowsofwar.avatar.util.data.StatusControlController.RELEASE_HOLY_PROTECTION;
 
 public class HolyProtectionHandler extends TickHandler {
@@ -124,11 +124,22 @@ public class HolyProtectionHandler extends TickHandler {
                 int rings = (int) (Math.sqrt(radius) * 6);
                 //Rings around the player (not around your finger; the police want you)
                 // C u l t u r e
-                ParticleBuilder.create(ParticleBuilder.Type.FLASH).clr(0.975F, 0.975F, 0.275F, 0.2F).glow(true)
-                        .scale(size).time(14 + AvatarUtils.getRandomNumberInRange(0, 4)).element(BendingStyles.get(Lightbending.ID))
+                ParticleBuilder.create(ParticleBuilder.Type.FLASH).clr(0.975F, 0.975F, 0.275F, 0.1F).glow(true)
+                        .scale(size * 0.75F).time(14 + AvatarUtils.getRandomNumberInRange(0, 4)).element(BendingStyles.get(Lightbending.ID))
                         .swirl(rings, particles, (float) inverseRadius, size / 1.5F, radius * 40,
                                 (1F / size) * abilityData.getXpModifier() * charge, entity, world, false, pos,
                                 ParticleBuilder.SwirlMotionType.IN, true, true);
+
+                Vec3d centre = AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(0, inverseRadius / 2, 0);
+                size = (float) (0.75F * inverseRadius);
+                rings = (int) (inverseRadius * 8);
+                particles = (int) (inverseRadius * 2 * Math.PI);
+
+                ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size).time(12 + AvatarUtils.getRandomNumberInRange(0, 4))
+                        .element(BendingStyles.get(Lightbending.ID)).clr(0.95F, 0.95F, 0.275F, 0.075F).spawnEntity(entity).glow(true)
+                        .swirl(rings, particles, (float) inverseRadius, size * 5, (float) (inverseRadius * 10F), (-1 / size),
+                                entity, world, false, centre, ParticleBuilder.SwirlMotionType.OUT, false, true);
+
             }
             world.playSound(null, new BlockPos(entity), SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.PLAYERS, 0.25F * charge, 0.8F + world.rand.nextFloat() / 10);
 
@@ -219,6 +230,8 @@ public class HolyProtectionHandler extends TickHandler {
 
     }
 
+
+    //TODO: Add code in EntityBuff for a swirl shield (like air bubble)
     public static class HolyProtectionShockwave extends OffensiveBehaviour {
 
         @Override

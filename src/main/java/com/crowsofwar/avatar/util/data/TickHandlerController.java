@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.util.data;
 import com.crowsofwar.avatar.bending.bending.custom.dark.tickhandlers.*;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.tickhandlers.DemonWingsHandler;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.tickhandlers.DemonicAuraHandler;
+import com.crowsofwar.avatar.bending.bending.custom.demonic.tickhandlers.InfernalFieldHandler;
 import com.crowsofwar.avatar.bending.bending.custom.ki.tickhandlers.KaioKenHandler;
 import com.crowsofwar.avatar.bending.bending.custom.ki.tickhandlers.KiFlightHandler;
 import com.crowsofwar.avatar.bending.bending.custom.light.tickhandlers.HeavenlyFlightHandler;
@@ -77,6 +78,7 @@ public class TickHandlerController {
 	public static TickHandler OBLIVION_BEAM_CHARGER = new ChargeOblivionBeam(41);
 	public static TickHandler SHADE_BURST_CHARGE = new ShadeBurstHandler(42);
 	public static TickHandler HOLY_PROTECTION_HANDLER = new HolyProtectionHandler(43);
+	public static TickHandler INFERNAL_FIELD_HANDLER = new InfernalFieldHandler(44);
 
 
 
