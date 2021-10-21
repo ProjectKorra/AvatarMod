@@ -259,8 +259,8 @@ public class InfernalFieldHandler extends TickHandler {
                 if (world.isRemote && entity.getOwner() != null) {
                     Vec3d centre = AvatarEntityUtils.getMiddleOfEntity(entity);
                     float size = 0.75F * entity.getAvgSize() * (1 / entity.getAvgSize());
-                    int rings = (int) (entity.getAvgSize() * 8);
-                    int particles = (int) (entity.getAvgSize() * 2 * Math.PI);
+                    int rings = (int) (entity.getAvgSize() * 4);
+                    int particles = (int) (entity.getAvgSize() * Math.PI);
 
                     ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size).time(8 + AvatarUtils.getRandomNumberInRange(0, 4))
                             .element(BendingStyles.get(entity.getElement())).clr(120, 40, 40).spawnEntity(entity).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 30)

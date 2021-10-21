@@ -178,6 +178,7 @@ public class AvatarMod {
         Abilities.register(new AbilityDeathDescent());
         Abilities.register(new AbilityOblivionBeam());
         Abilities.register(new AbilityShadeBurst());
+        Abilities.register(new AbilityWorldEnd());
 
         /*              Ki                  */
         Abilities.register(new AbilityKaioKen());

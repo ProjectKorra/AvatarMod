@@ -219,7 +219,7 @@ public class EntityInfernalBall extends EntityOffensive {
             buff.setElement(getElement());
             buff.setOwner(getOwner());
             buff.setTier(getTier());
-            buff.setRadius(getAvgSize() * 6F);
+            buff.setRadius(getAvgSize() * 3F);
             buff.setLifetime(140);
             buff.setAbility(getAbility());
             if (!world.isRemote)
