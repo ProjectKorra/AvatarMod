@@ -187,6 +187,9 @@ public class AbilityContext extends BendingContext {
     //so there's less redundancy + positions being calculated.
     @Override
     public boolean consumeWater(int amount, BlockPos targetPos, IBlockState blockState) {
+        if (isBendable(amount, getWorld(), targetPos, Waterbending.isBendable(getAbilityData().getAbility(), blockState,
+                getBenderEntity())))
+            return true;
         return super.consumeWater(amount, targetPos, blockState);
     }
 }
