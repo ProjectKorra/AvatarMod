@@ -25,6 +25,7 @@ import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
@@ -120,6 +121,9 @@ public class AbilityContext extends BendingContext {
         return getAbilityData().getDamageMult();
     }
 
+
+    //Ok I actually need to redo this now. Need some way for abilities to hook into it.
+    //Ok ok. I need to be able to pass a position.
     @Override
     public boolean consumeWater(int amount) {
         if (getAbilityData().getAbility() != null) {
@@ -131,6 +135,7 @@ public class AbilityContext extends BendingContext {
             Vector secondPos = firstPos.minusY(1);
             BlockPos pos1 = firstPos.toBlockPos();
             BlockPos pos2 = secondPos.toBlockPos();
+            //Checks 2 different places to ensure there's a block that's found.
             boolean firstBendable;
             boolean secondBendable;
 
@@ -142,72 +147,46 @@ public class AbilityContext extends BendingContext {
             Vector pos = Waterbending.getClosestWaterbendableBlock(getBenderEntity(), getAbilityData().getAbility(),
                     this);
 
-            if (firstBendable) {
-                Block block = world.getBlockState(pos1).getBlock();
-                if (STATS_CONFIG.plantBendableBlocks.contains(world.getBlockState(pos1).getBlock())) {
-                    if (amount > 0) {
-                        world.setBlockToAir(pos1);
-                    }
-                    return true;
-                }
-                if (block == Blocks.WATER || block == Blocks.FLOWING_WATER) {
-                    if (amount > 2) {
-                        world.setBlockToAir(pos1);
-                    }
-                    return true;
-                }
-                if (STATS_CONFIG.waterBendableBlocks.contains(world.getBlockState(pos1).getBlock())) {
-                    if (amount > 1) {
-                        world.setBlockToAir(pos1);
-                    }
-                    return true;
-                }
-            }
-            if (secondBendable) {
-                Block block = world.getBlockState(pos2).getBlock();
-                if (STATS_CONFIG.plantBendableBlocks.contains(world.getBlockState(pos2).getBlock())) {
-                    if (amount > 0) {
-                        world.setBlockToAir(pos2);
-                    }
-                    return true;
-                }
-                if (block == Blocks.WATER || block == Blocks.FLOWING_WATER) {
-                    if (amount > 2) {
-                        world.setBlockToAir(pos2);
-                    }
-                    return true;
-                }
-                if (STATS_CONFIG.waterBendableBlocks.contains(world.getBlockState(pos2).getBlock())) {
-                    if (amount > 1) {
-                        world.setBlockToAir(pos2);
-                    }
-                    return true;
-                }
-            }
+            if (isBendable(amount, world, pos1, firstBendable)) return true;
+            if (isBendable(amount, world, pos2, secondBendable)) return true;
             //Consumes water
             if (pos != null) {
-                BlockPos blockPos = pos.toBlockPos();
-                Block block = world.getBlockState(blockPos).getBlock();
-                if (STATS_CONFIG.plantBendableBlocks.contains(world.getBlockState(blockPos).getBlock())) {
-                    if (amount > 0) {
-                        world.setBlockToAir(blockPos);
-                    }
-                    return true;
-                }
-                if (block == Blocks.WATER || block == Blocks.FLOWING_WATER) {
-                    if (amount > 2) {
-                        world.setBlockToAir(blockPos);
-                    }
-                    return true;
-                }
-                if (STATS_CONFIG.waterBendableBlocks.contains(world.getBlockState(blockPos).getBlock())) {
-                    if (amount > 1) {
-                        world.setBlockToAir(blockPos);
-                    }
-                    return true;
-                }
+                return consumeWater(amount, pos.toBlockPos(), world.getBlockState(pos.toBlockPos()));
             }
         }
         return super.consumeWater(amount);
+    }
+
+    private boolean isBendable(int amount, World world, BlockPos pos1, boolean bendable) {
+        if (bendable) {
+            Block block = world.getBlockState(pos1).getBlock();
+            if (STATS_CONFIG.plantBendableBlocks.contains(world.getBlockState(pos1).getBlock())) {
+                if (amount > 0) {
+                    world.setBlockToAir(pos1);
+                }
+                return true;
+            }
+            if (block == Blocks.WATER || block == Blocks.FLOWING_WATER) {
+                if (amount > 2) {
+                    world.setBlockToAir(pos1);
+                }
+                return true;
+            }
+            if (STATS_CONFIG.waterBendableBlocks.contains(world.getBlockState(pos1).getBlock())) {
+                if (amount > 1) {
+                    world.setBlockToAir(pos1);
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    //Same as the other one but it actually lets you pass a blockstate and pos,
+    //so there's less redundancy + positions being calculated.
+    @Override
+    public boolean consumeWater(int amount, BlockPos targetPos, IBlockState blockState) {
+        return super.consumeWater(amount, targetPos, blockState);
     }
 }

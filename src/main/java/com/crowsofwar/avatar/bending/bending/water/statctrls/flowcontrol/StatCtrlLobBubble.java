@@ -15,7 +15,7 @@
   along with AvatarMod. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.crowsofwar.avatar.bending.bending.water.statctrls.waterbubble;
+package com.crowsofwar.avatar.bending.bending.water.statctrls.flowcontrol;
 
 import com.crowsofwar.avatar.bending.bending.water.Waterbending;
 import com.crowsofwar.avatar.util.data.AbilityData;

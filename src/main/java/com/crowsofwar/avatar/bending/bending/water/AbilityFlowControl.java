@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.bending.bending.water;
 
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.entity.EntityWaterBubble;
+import com.crowsofwar.avatar.entity.data.WaterBubbleBehavior;
 import com.crowsofwar.avatar.util.Raytrace;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
@@ -104,46 +105,21 @@ public class AbilityFlowControl extends Ability {
             bubble.setHealth(waterLevel);
             bubble.setXp(xp);
             bubble.setChiHit(chiHit);
+            bubble.setBehaviour(new WaterBubbleBehavior.PlayerControlled());
+            bubble.setPerformanceAmount(performance);
+            bubble.setAbility(this);
+
+            //Only want to spawn it server side
+            if (!world.isRemote)
+                world.spawnEntity(bubble);
+
+            //Add all status controls except for throw.
+            //Replace lob w/ throw while holding shift.
         }
         super.execute(ctx);
 
     }
 
-
-    private Vector getClosestWaterbendableBlock(EntityLivingBase entity, int level) {
-        World world = entity.world;
-
-        Vector eye = Vector.getEyePos(entity);
-
-        double rangeMult = 0.6;
-        if (level >= 1) {
-            rangeMult = 1;
-        }
-
-        double range = STATS_CONFIG.waterBubbleSearchRadius * rangeMult;
-        for (int i = 0; i < STATS_CONFIG.waterBubbleAngles; i++) {
-            for (int j = 0; j < STATS_CONFIG.waterBubbleAngles; j++) {
-
-                double yaw = entity.rotationYaw + i * 360.0 / STATS_CONFIG.waterBubbleAngles;
-                double pitch = entity.rotationPitch + j * 360.0 / STATS_CONFIG.waterBubbleAngles;
-
-                BiPredicate<BlockPos, IBlockState> isWater = (pos, state) -> (STATS_CONFIG.waterBendableBlocks.contains(state.getBlock())
-                        || STATS_CONFIG.plantBendableBlocks.contains(state.getBlock())) && state.getBlock() != Blocks.AIR;
-
-
-                Vector angle = Vector.toRectangular(toRadians(yaw), toRadians(pitch));
-                Raytrace.Result result = Raytrace.predicateRaytrace(world, eye, angle, range, isWater);
-                if (result.hitSomething()) {
-                    return result.getPosPrecise();
-                }
-
-            }
-
-        }
-
-        return null;
-
-    }
 
     @Override
     public boolean isChargeable() {

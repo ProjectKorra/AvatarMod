@@ -34,6 +34,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -170,9 +171,49 @@ public class BendingContext {
      * requireRaytrace, because otherwise no raytrace will be performed, and then this won't be able
      * to detect if the player is looking at water.
      */
-    //TODO: Update for property files
     public boolean consumeWater(int amount) {
 
+        if (consumedWater())
+            return true;
+
+        World world = bender.getWorld();
+
+        VectorI targetPos = getLookPosI();
+        if (targetPos != null) {
+            Block lookAt = world.getBlockState(targetPos.toBlockPos()).getBlock();
+            //Will need to adjust for passives
+            if (lookAt == Blocks.WATER || lookAt == Blocks.FLOWING_WATER) {
+
+                if (amount >= 3) {
+                    world.setBlockToAir(targetPos.toBlockPos());
+                }
+                return true;
+
+            }
+
+            if (lookAt == Blocks.CAULDRON) {
+                IBlockState ibs = world.getBlockState(targetPos.toBlockPos());
+                int waterLevel = ibs.getValue(BlockCauldron.LEVEL);
+                if (waterLevel > 0) {
+                    world.setBlockState(targetPos.toBlockPos(),
+                            ibs.withProperty(BlockCauldron.LEVEL, waterLevel - 1));
+                    return true;
+                }
+            }
+        }
+
+        return bender.consumeWaterLevel(amount);
+
+    }
+
+
+    /**
+     * This serves as a wrapper function for shared/generic cases between both types of consuming water.
+     * So, being in creative, it's raining, e.t.c.
+     *
+     * @return Whether or not default causes have been met.
+     */
+    public boolean consumedWater() {
         World world = bender.getWorld();
 
         if (world.isRainingAt(bender.getEntity().getPosition())) {
@@ -194,26 +235,40 @@ public class BendingContext {
             return true;
         }
 
+        return false;
+    }
 
-        VectorI targetPos = getLookPosI();
-        if (targetPos != null) {
-            Block lookAt = world.getBlockState(targetPos.toBlockPos()).getBlock();
+    /**
+     * The same as the other method, except it takes a block.
+     *
+     * @param amount     Amount of water to consume.
+     * @param targetPos BlockPos of the BlockState.
+     * @param blockState BlockState to check.
+     * @return Whether or not the passed blockstate has enough water.
+     */
+    public boolean consumeWater(int amount, BlockPos targetPos, IBlockState blockState) {
+
+        World world = bender.getWorld();
+
+        if (consumedWater())
+            return true;
+
+        if (blockState != null) {
+            Block block = blockState.getBlock();
             //Will need to adjust for passives
-            if (lookAt == Blocks.WATER || lookAt == Blocks.FLOWING_WATER) {
-
+            if (block == Blocks.WATER || block == Blocks.FLOWING_WATER) {
                 if (amount >= 3) {
-                    world.setBlockToAir(targetPos.toBlockPos());
+                    world.setBlockToAir(targetPos);
                 }
                 return true;
 
             }
 
-            if (lookAt == Blocks.CAULDRON) {
-                IBlockState ibs = world.getBlockState(targetPos.toBlockPos());
-                int waterLevel = ibs.getValue(BlockCauldron.LEVEL);
+            if (block == Blocks.CAULDRON) {
+                int waterLevel = blockState.getValue(BlockCauldron.LEVEL);
                 if (waterLevel > 0) {
-                    world.setBlockState(targetPos.toBlockPos(),
-                            ibs.withProperty(BlockCauldron.LEVEL, waterLevel - 1));
+                    world.setBlockState(targetPos,
+                            blockState.withProperty(BlockCauldron.LEVEL, waterLevel - 1));
                     return true;
                 }
             }
