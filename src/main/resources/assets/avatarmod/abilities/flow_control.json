@@ -11,15 +11,20 @@
       "burnOutRecoverTick": 0.14,
       "performanceAmount": 12,
       "lifeTime": 20,
-      "size": 1,
+      "size": 0.75,
       "speed": 5,
       "knockback": 0.75,
       "chiOnHit": 0.9,
       "damage": 3,
       "explosionSize": 1,
       "explosionDamage": 1,
+      "waterLevel": 3,
+      "waterAmount": 3,
+      "sourceRange": 2,
+      "sourceAngles": 45,
       "ring": false,
-      "infiniteWater": false
+      "infiniteWater": false,
+      "plantbend": false
     },
     "level2": {
       "tier": 3,
@@ -30,12 +35,12 @@
       "burnOutRecoverTick": 0.18,
       "performanceAmount": 15,
       "lifeTime": 25,
-      "size": 1.25,
+      "size": 1,
       "speed": 7,
       "knockback": 1,
       "chiOnHit": 1.1,
-      "damage": 4
-
+      "damage": 4,
+      "sourceRange": 3
     },
     "level3": {
       "tier": 4,
@@ -46,11 +51,12 @@
       "burnOutRecoverTick": 0.2,
       "performanceAmount": 20,
       "lifeTime": 30,
-      "size": 1.5,
+      "size": 1.125,
       "speed": 10,
       "knockback": 2,
       "chiOnHit": 1.25,
-      "damage": 5
+      "damage": 5,
+      "sourceRange": 5
     },
     "level4_1": {
       "tier": 5,
@@ -61,14 +67,15 @@
       "burnOutRecoverTick": 0.3,
       "performanceAmount": 25,
       "lifeTime": 35,
-      "size": 1,
+      "size": 1.25,
       "speed": 15,
       "knockback": 4,
       "chiOnHit": 1.875,
-      "damage": 7,
-      "chargeTime": 50,
+      "damage": 9,
+      "chargeTime": 70,
       "explosionSize": 3,
-      "explosionDamage": 4
+      "explosionDamage": 4,
+      "sourceRange": 4
     },
     "level4_2": {
       "tier": 5,
@@ -84,13 +91,9 @@
       "knockback": 3,
       "chiOnHit": 1.9,
       "damage": 8.75,
-      "chargeTime": 140,
-      "maxSize": 2.0,
-      "maxBurnout": 60,
-      "maxExhaustion": 7.0,
-      "maxDamage": 15,
       "explosionSize": 0,
       "explosionDamage": 0,
+      "sourceRange": 6,
       "ring": true,
       "infiniteWater": true
     }

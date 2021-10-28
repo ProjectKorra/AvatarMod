@@ -244,12 +244,7 @@ public abstract class FloatingBlockBehavior extends OffensiveBehaviour {
             //S P I N
             if (!blocks.isEmpty() && blocks.size() > 1) {
                 angle *= 5;
-                angle += ((360 / blocks.size()) * index);
-                double radians = Math.toRadians(angle);
-                double x = 2.5 * Math.cos(radians);
-                double z = 2.5 * Math.sin(radians);
-                Vec3d pos = new Vec3d(x, 0, z);
-                pos = pos.add(owner.posX, owner.getEntityBoundingBox().minY + 1.5, owner.posZ);
+                Vec3d pos = AvatarEntityUtils.circularMotion(owner, angle, index, blocks.size());
                 motion = pos.subtract(AvatarEntityUtils.getBottomMiddleOfEntity(entity)).scale(.5);
             }
 

@@ -17,10 +17,9 @@
 
 package com.crowsofwar.avatar.entity.data;
 
-import com.crowsofwar.avatar.bending.bending.fire.AbilityFireball;
 import com.crowsofwar.avatar.entity.EntityFireball;
-import com.crowsofwar.avatar.entity.EntityFloatingBlock;
 import com.crowsofwar.avatar.entity.EntityOffensive;
+import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.StatusControlController;
 import com.crowsofwar.gorecore.util.Vector;
@@ -83,10 +82,10 @@ public abstract class FireballBehavior extends OffensiveBehaviour {
 
             if (owner == null || !(entity instanceof EntityFireball)) return this;
 
-            Vector forward = Vector.getLookRectangular(owner);
-            Vector eye = Vector.getEyePos(owner);
-            Vector target = forward.times(2.5).plus(eye);
-            Vec3d motion = target.minus(Vector.getEntityPos(entity)).times(0.5).toMinecraft();
+            Vec3d pos = Vector.getEntityPos(owner).toMinecraft();
+            Vec3d look = owner.getLookVec().scale(2.5).add(0, owner.getEyeHeight() / 2, 0);
+            Vec3d dragPos = pos.add(look);
+
             int angle = (int) entity.world.getWorldTime();
 
             List<EntityFireball> fireballs = entity.world.getEntitiesWithinAABB(EntityFireball.class,
@@ -100,16 +99,10 @@ public abstract class FireballBehavior extends OffensiveBehaviour {
             //S P I N
             if (!fireballs.isEmpty() && fireballs.size() > 1) {
                 angle *= 10;
-                angle += ((360 / fireballs.size()) * index);
-                double radians = Math.toRadians(angle);
-                double x = 2.5 * Math.cos(radians);
-                double z = 2.5 * Math.sin(radians);
-                Vec3d pos = new Vec3d(x, 0, z);
-                pos = pos.add(owner.posX, owner.getEntityBoundingBox().minY + 1.5, owner.posZ);
-                motion = pos.subtract(entity.getPositionVector()).scale(.5);
+                dragPos = AvatarEntityUtils.circularMotion(owner, angle, index, fireballs.size());
             }
 
-            entity.setVelocity(motion);
+            AvatarEntityUtils.dragEntityTowardsPoint(entity, dragPos, 0.20);
 
             BendingData data = BendingData.getFromEntity(owner);
             if (data != null)
@@ -118,6 +111,7 @@ public abstract class FireballBehavior extends OffensiveBehaviour {
 
             return this;
         }
+
 
         @Override
         public void fromBytes(PacketBuffer buf) {

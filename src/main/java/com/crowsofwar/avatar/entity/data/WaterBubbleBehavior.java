@@ -19,15 +19,15 @@ package com.crowsofwar.avatar.entity.data;
 
 import com.crowsofwar.avatar.entity.EntityOffensive;
 import com.crowsofwar.avatar.entity.EntityWaterBubble;
+import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.data.AvatarWorldData;
-import com.crowsofwar.avatar.util.data.Bender;
-import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.math.Vec3d;
 
 /**
  * @author CrowsOfWar
@@ -81,23 +81,9 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
 
             if (owner == null) return this;
 
-            BendingData data = Bender.get(owner).getData();
-
-            Vector target;
-//			Raytrace.Result raytrace = Raytrace.getTargetBlock(owner, 3, false);
-//			if (raytrace.hitSomething()) {
-//				target = raytrace.getPosPrecise().plus(0, .2, 0);
-//			} else {
-            Vector forward = Vector.getLookRectangular(owner);
-            Vector eye = Vector.getEyePos(owner);
-            target = forward.times(2).plus(eye);
-//			}
-
-            Vector motion = target.minus(Vector.getEntityPos(entity));
-            if (!entity.world.isRemote)
-                entity.setVelocity(motion);
-
-//            System.out.println(entity.world.isRemote);
+            Vec3d pos = Vector.getEntityPos(owner).toMinecraft();
+            Vec3d look = owner.getLookVec().scale(2.5).add(0, owner.getEyeHeight() / 2, 0);
+            AvatarEntityUtils.dragEntityTowardsPoint(entity, pos.add(look), 0.125);
             return this;
         }
 

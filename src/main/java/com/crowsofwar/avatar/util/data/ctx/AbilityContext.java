@@ -17,6 +17,7 @@
 package com.crowsofwar.avatar.util.data.ctx;
 
 import com.crowsofwar.avatar.bending.bending.Ability;
+import com.crowsofwar.avatar.bending.bending.SourceInfo;
 import com.crowsofwar.avatar.bending.bending.water.Waterbending;
 import com.crowsofwar.avatar.util.Raytrace.Result;
 import com.crowsofwar.avatar.util.data.AbilityData;
@@ -147,9 +148,17 @@ public class AbilityContext extends BendingContext {
             Vector pos = Waterbending.getClosestWaterbendableBlock(getBenderEntity(), getAbilityData().getAbility(),
                     this);
 
-            if (isBendable(amount, world, pos1, firstBendable)) return true;
-            if (isBendable(amount, world, pos2, secondBendable)) return true;
-            //Consumes water
+            //Setting the source info allows the ability to access the source later
+            if (isBendable(amount, world, pos1, firstBendable)) {
+                getAbilityData().setSourceInfo(new SourceInfo(world.getBlockState(pos1), world,
+                        pos1));
+                return true;
+            }
+            if (isBendable(amount, world, pos2, secondBendable)) {
+                getAbilityData().setSourceInfo(new SourceInfo(world.getBlockState(pos2), world,
+                        pos2));
+                return true;
+            }//Consumes water
             if (pos != null) {
                 return consumeWater(amount, pos.toBlockPos(), world.getBlockState(pos.toBlockPos()));
             }

@@ -25,6 +25,7 @@ import com.crowsofwar.avatar.bending.bending.fire.Firebending;
 import com.crowsofwar.avatar.bending.bending.ice.Icebending;
 import com.crowsofwar.avatar.bending.bending.lightning.Lightningbending;
 import com.crowsofwar.avatar.bending.bending.sand.Sandbending;
+import com.crowsofwar.avatar.bending.bending.water.Waterbending;
 import com.crowsofwar.avatar.config.AbilityProperties;
 import com.crowsofwar.avatar.entity.mob.EntityBender;
 import com.crowsofwar.avatar.entity.mob.EntityHumanBender;
@@ -127,8 +128,8 @@ public abstract class Ability {
     public static final String
             //Amount is the amount consumed
             WATER_AMOUNT = "waterAmount",
-    //Level is the HP of it (applies to source abilities such as water bubble)
-    WATER_LEVEL = "waterLevel",
+            //Level is the HP of it (applies to source abilities such as water bubble)
+            WATER_LEVEL = "waterLevel",
             SOURCE_RANGE = "sourceRange",
             SOURCE_ANGLES = "sourceAngles",
             PLANT_BEND = "plantbend";
@@ -344,6 +345,11 @@ public abstract class Ability {
 
         if (getBendingId() == Firebending.ID && isOffensive())
             addProperties(FIRE_TIME);
+
+        if (getBendingId() == Waterbending.ID && isOffensive()) {
+            addProperties(SOURCE_ANGLES, SOURCE_RANGE, WATER_AMOUNT);
+            addBooleanProperties(PLANT_BEND);
+        }
 
         //Brute force due to initialisation order
         if (getBendingId() == Lightningbending.ID ||

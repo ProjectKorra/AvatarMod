@@ -24,6 +24,13 @@ public class SourceInfo {
 
     }
 
+    public SourceInfo(IBlockState state, World world, BlockPos pos) {
+        this.state = state;
+        this.world = world;
+        this.time = -1;
+        this.pos = pos;
+    }
+
     public SourceInfo(IBlockState state, World world, int time, BlockPos pos) {
         this.state = state;
         this.world = world;

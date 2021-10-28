@@ -20,22 +20,13 @@ package com.crowsofwar.avatar.bending.bending.water;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.entity.EntityWaterBubble;
 import com.crowsofwar.avatar.entity.data.WaterBubbleBehavior;
-import com.crowsofwar.avatar.util.Raytrace;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
-import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
-import java.util.function.BiPredicate;
-
-import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
-import static java.lang.Math.toRadians;
 
 /**
  * @author CrowsOfWar, FavouriteDragon
@@ -66,7 +57,7 @@ public class AbilityFlowControl extends Ability {
     @Override
     public void init() {
         super.init();
-        addProperties(SOURCE_ANGLES, SOURCE_RANGE, EXPLOSION_SIZE, EXPLOSION_DAMAGE, EFFECT_RADIUS, MAX_HEALTH);
+        addProperties(WATER_LEVEL, EXPLOSION_SIZE, EXPLOSION_DAMAGE, EFFECT_RADIUS, MAX_HEALTH);
         addBooleanProperties(RING, INFINITE_WATER);
     }
 
@@ -92,6 +83,8 @@ public class AbilityFlowControl extends Ability {
             float chiHit = getProperty(CHI_HIT, ctx).floatValue();
             int performance = getProperty(PERFORMANCE, ctx).intValue();
 
+            BlockPos spawnPos = abilityData.getSourceInfo().getBlockPos();
+
             lifeTime = (int) powerModify(lifeTime, abilityData);
             damage = powerModify(damage, abilityData);
             size = powerModify(size, abilityData);
@@ -108,6 +101,7 @@ public class AbilityFlowControl extends Ability {
             bubble.setBehaviour(new WaterBubbleBehavior.PlayerControlled());
             bubble.setPerformanceAmount(performance);
             bubble.setAbility(this);
+            bubble.setPosition(spawnPos.getX(), spawnPos.getY() + 0.5, spawnPos.getZ());
 
             //Only want to spawn it server side
             if (!world.isRemote)
