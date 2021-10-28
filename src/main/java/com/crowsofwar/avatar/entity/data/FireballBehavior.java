@@ -105,9 +105,13 @@ public abstract class FireballBehavior extends OffensiveBehaviour {
             AvatarEntityUtils.dragEntityTowardsPoint(entity, dragPos, 0.20);
 
             BendingData data = BendingData.getFromEntity(owner);
-            if (data != null)
-                if (!data.hasStatusControl(StatusControlController.THROW_FIREBALL))
-                    data.addStatusControl(StatusControlController.THROW_FIREBALL);
+
+            //Readds the status control while also giving enough space so all fireballs
+            //aren't fired simultaneously.
+            if (owner.ticksExisted % 4 == 0)
+                if (data != null)
+                    if (!data.hasStatusControl(StatusControlController.THROW_FIREBALL))
+                        data.addStatusControl(StatusControlController.THROW_FIREBALL);
 
             return this;
         }

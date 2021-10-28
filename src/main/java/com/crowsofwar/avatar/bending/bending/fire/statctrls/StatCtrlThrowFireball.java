@@ -41,7 +41,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static com.crowsofwar.avatar.client.controls.AvatarControl.CONTROL_LEFT_CLICK;
+import static com.crowsofwar.avatar.client.controls.AvatarControl.*;
 import static com.crowsofwar.avatar.util.data.StatusControl.CrosshairPosition.LEFT_OF_CROSSHAIR;
 
 /**
