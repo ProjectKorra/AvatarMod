@@ -189,6 +189,7 @@ public class AvatarMod {
         Abilities.register(new AbilityHeavenlyFlight());
         Abilities.register(new AbilityDivineJudgement());
         Abilities.register(new AbilityHolyProtection());
+        Abilities.register(new AbilityDivineBeginning());
 
         /*              Demon               */
         Abilities.register(new AbilityDemonicAura());
