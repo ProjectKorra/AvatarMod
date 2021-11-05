@@ -1,4 +1,4 @@
-package com.crowsofwar.avatar.bending.bending.water.statctrls;
+package com.crowsofwar.avatar.bending.bending.water.statctrls.flowcontrol;
 
 import com.crowsofwar.avatar.client.controls.AvatarControl;
 import com.crowsofwar.avatar.util.data.StatusControl;

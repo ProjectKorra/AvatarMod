@@ -23,6 +23,7 @@ import com.crowsofwar.avatar.entity.data.WaterBubbleBehavior;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
+import com.crowsofwar.avatar.util.data.StatusControlController;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.math.BlockPos;
@@ -109,6 +110,7 @@ public class AbilityFlowControl extends Ability {
 
             //Add all status controls except for throw.
             //Replace lob w/ throw while holding shift.
+            data.addStatusControl(StatusControlController.LOB_BUBBLE);
         }
         super.execute(ctx);
 
