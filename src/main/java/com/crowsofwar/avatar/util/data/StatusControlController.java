@@ -9,6 +9,7 @@ import com.crowsofwar.avatar.bending.bending.custom.demonic.statctrls.StatCtrlIn
 import com.crowsofwar.avatar.bending.bending.custom.ki.statctrls.StatCtrlKiFlight;
 import com.crowsofwar.avatar.bending.bending.custom.light.StatCtrlSetHolyProtection;
 import com.crowsofwar.avatar.bending.bending.custom.light.statctrls.StatCtrlHeavenlyFlight;
+import com.crowsofwar.avatar.bending.bending.custom.light.statctrls.StatCtrlSetDivineBeginning;
 import com.crowsofwar.avatar.bending.bending.earth.statctrls.*;
 import com.crowsofwar.avatar.bending.bending.fire.statctrls.*;
 import com.crowsofwar.avatar.bending.bending.ice.StatCtrlShieldShatter;
@@ -89,7 +90,9 @@ public class StatusControlController {
 			CHARGE_HOLY_PROTECTION = new StatCtrlSetHolyProtection(true),
 			RELEASE_HOLY_PROTECTION = new StatCtrlSetHolyProtection(false),
 			CHARGE_INFERNAL_FIELD = new StatCtrlInfernalField(true),
-			RELEASE_INFERNAL_FIELD = new StatCtrlSetHolyProtection(false);
+			RELEASE_INFERNAL_FIELD = new StatCtrlSetHolyProtection(false),
+			CHARGE_DIVINE_BEGINNING = new StatCtrlSetDivineBeginning(true),
+			RELEASE_DIVINE_BEGINNING = new StatCtrlSetDivineBeginning(false);
 	// @formatter:on
 
 	public static StatusControl lookup(int id) {

@@ -355,8 +355,9 @@ public class AvatarUtils {
     public static void spawnDirectionalHelix(World world, EntityLivingBase entity, Vector direction, int maxAngle, double vortexLength, double radius, EnumParticleTypes particle, Vector position,
                                              double particleSpeed) {
         for (int angle = 0; angle < maxAngle; angle++) {
+            //need to make these radians first
             double x = radius * cos(angle);
-            double y = angle / (maxAngle / vortexLength);
+            double y = angle / maxAngle * vortexLength;
             double z = radius * sin(angle);
             Vector pos = new Vector(x, y, z);
             if (entity != null) {

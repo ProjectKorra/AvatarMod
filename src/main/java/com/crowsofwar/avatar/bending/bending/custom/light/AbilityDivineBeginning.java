@@ -7,58 +7,40 @@ import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 
-import static com.crowsofwar.avatar.util.data.StatusControlController.CHARGE_HOLY_PROTECTION;
-import static com.crowsofwar.avatar.util.data.StatusControlController.RELEASE_HOLY_PROTECTION;
+import java.util.UUID;
+
+import static com.crowsofwar.avatar.util.data.StatusControlController.*;
 
 /**
- * Summons pillars of light from the sky.
+ * Creates orbs of light around you which converge to create a beam.
  */
 public class AbilityDivineBeginning extends Ability {
 
-    public static final String
-            BLAST_LEVEL = "blastLevel",
-            SLOW_MULT = "slowMult";
-
+    /**
+     * NOTE: DO NOT CREATE A NEW INSTANCE OF AN ABILITY FOR GETTING PROPERTIES, IT'LL JUST RETURN NULL.
+     * INSTEAD, call {@code Abilities.get(String name)} and use that.
+     *
+     */
     public AbilityDivineBeginning() {
         super(Lightbending.ID, "divine_beginning");
     }
 
     @Override
+    public void execute(AbilityContext ctx) {
+        BendingData data = ctx.getData();
+        data.addStatusControl(CHARGE_DIVINE_BEGINNING);
+        ctx.getAbilityData().setRegenBurnout(false);
+    }
+
+    @Override
     public void init() {
         super.init();
-        addProperties(BLAST_LEVEL, EFFECT_RADIUS, EFFECT_DAMAGE, SLOW_MULT);
-        addBooleanProperties(POTION_EFFECTS);
+        addProperties(R, G, B, FADE_R, FADE_G, FADE_B, CHARGE_TIME);
     }
 
     @Override
-    public void execute(AbilityContext ctx) {
-        Bender bender = ctx.getBender();
-        EntityLivingBase entity = ctx.getBenderEntity();
-        BendingData data = ctx.getData();
-
-        //The charge status control adds the release status control, but the release status control doesn't activate until the right click button is released.
-
-        boolean hasAirCharge = data.hasStatusControl(RELEASE_HOLY_PROTECTION);
-
-
-        if (bender.consumeChi(getChiCost(ctx) / 4) && !hasAirCharge) {
-            data.addStatusControl(CHARGE_HOLY_PROTECTION);
-        } else if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
-            if (!hasAirCharge) {
-                data.addStatusControl(CHARGE_HOLY_PROTECTION);
-            }
-        }
-        super.execute(ctx);
-    }
-
-    @Override
-    public boolean isChargeable() {
-        return true;
-    }
-
-    @Override
-    public boolean isProjectile() {
-        return true;
+    public int getBaseTier() {
+        return 2;
     }
 
     @Override
