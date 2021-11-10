@@ -113,7 +113,7 @@ public class HolyProtectionHandler extends TickHandler {
 
 
             applyMovementModifier(entity, MathHelper.clamp(movementMultiplier, 0.1f, 1));
-            double inverseRadius = (durationToFire - duration) / 10;
+            double inverseRadius = Math.max((durationToFire - duration) / 10, 0.125F);
 
             if (world.isRemote && duration <= durationToFire) {
                 Vec3d pos = AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(0, entity.getEyeHeight() / 2, 0);

@@ -177,6 +177,56 @@ public class DivineBeginningHandler extends TickHandler {
             int particles = (int) (distance / lifetime * 90);
             //Particle code.
             if (world.isRemote) {
+                float radius = 1.5F;
+                for (int i = 0; i < 360; i += 60) {
+                    //We only want 6 orbs
+                    //Create the points
+                    double angle = Math.toRadians(i);
+                    double x = radius * Math.cos(angle);
+                    double y = 0;
+                    double z = radius * Math.sin(angle);
+                    Vector pos = new Vector(x, y, z);
+                    pos = Vector.rotateAroundAxisX(pos, entity.rotationPitch + 90);
+                    pos = Vector.rotateAroundAxisY(pos, entity.rotationYaw);
+                    pos = pos.plus(Vector.getEyePos(entity).minusY(0.45));
+
+
+                    //With pos as our new vector, we make spheres.
+                    if (entity.ticksExisted % 6 == 0 || data.getTickHandlerDuration(this) == 1) {
+                        double x1, y1, z1;
+                        for (double theta = 0; theta <= 180; theta += 1) {
+                            double dphi = (90) / Math.sin(Math.toRadians(theta));
+                            for (double phi = 0; phi < 360; phi += dphi) {
+                                double rphi = Math.toRadians(phi);
+                                double rtheta = Math.toRadians(theta);
+
+                                //Making it spin increases the sphere size
+                                x1 = radius / 4 * Math.cos(rphi) * Math.sin(rtheta);
+                                y1 = radius / 4 * Math.sin(rphi) * Math.sin(rtheta);
+                                z1 = radius / 4 * Math.cos(rtheta);
+
+                                ParticleBuilder.create(ParticleBuilder.Type.FLASH).vel(look.x() * 0.0125 + world.rand.nextGaussian() / 80,
+                                                look.z() * 0.0125 + world.rand.nextGaussian() / 80, look.z() * 0.0125 + world.rand.nextGaussian() / 80).
+                                        scale(radius / 4 * 0.85F)
+                                        .time(12).pos(pos.toMinecraft().add(look.times(0.75).toMinecraft().add(x1, y1 - 0.025, z1))).spin(0.1, world.rand.nextGaussian() / 20)
+                                        .clr(1F, 1F, 0.3F, 0.025F).glow(true).spawnEntity(entity).spawn(world);
+                            }
+                        }
+                    }
+
+                    Vector targetPos = look.times(3).plus(Vector.getEyePos(entity).minusY(0.45));
+                    //Beam trail of particles
+                    Vector vel = targetPos.minus(pos);
+                    //Makes sure the beam doesn't appear before the sphere
+                    for (int h = 0; h < 6; h++) {
+                        ParticleBuilder.create(ParticleBuilder.Type.FLASH).vel(vel.x() * 0.125,
+                                        vel.y() * 0.125, vel.z() * 0.125).
+                                scale(size * 1.5F)
+                                .time(12).pos(pos.toMinecraft())
+                                .clr(1F, 1F, 0.3F, 0.085F).glow(true).spawnEntity(entity).spawn(world);
+
+                    }
+                }
                 //Bruh coloured lighting disables the beam
                 //Beam from the player's chest
 //                ParticleBuilder.create(ParticleBuilder.Type.BEAM).pos(start.toMinecraft())
@@ -185,34 +235,10 @@ public class DivineBeginningHandler extends TickHandler {
 //                                11 + AvatarUtils.getRandomNumberInRange(0, 10),
 //                                40 + AvatarUtils.getRandomNumberInRange(0, 10), 5).collide(true).spawn(world);
                 //Flash particles
-                AvatarUtils.spawnDirectionalHelix(world, entity, look.toMinecraft(), particles * 4, distance, size * 0.75,
+                AvatarUtils.spawnDirectionalHelix(world, entity, look.toMinecraft(), particles, distance, size * 0.75,
                         ParticleBuilder.Type.FLASH, start.toMinecraft(), look.toMinecraft(),
-                        true, 8, true, 1.0F, 1.0F, 0.3F, 0.65F, size * 0.75F);
+                        true, 12, true, 1.0F, 1.0F, 0.3F, 0.015F, size * 0.95F);
 
-                //Particles at the beginning of the beam
-                //TODO: Big sphere of particles flowing forwards
-
-                if (entity.ticksExisted % 4 == 0 || data.getTickHandlerDuration(this) == 1) {
-                    double x1, y1, z1;
-                    for (double theta = 0; theta <= 180; theta += 1) {
-                        double dphi = (56 - size * 6) / Math.sin(Math.toRadians(theta));
-                        for (double phi = 0; phi < 360; phi += dphi) {
-                            double rphi = Math.toRadians(phi);
-                            double rtheta = Math.toRadians(theta);
-
-                            //Making it spin increases the sphere size
-                            x1 = size * Math.cos(rphi) * Math.sin(rtheta);
-                            y1 = size * Math.sin(rphi) * Math.sin(rtheta);
-                            z1 = size * Math.cos(rtheta);
-
-                            ParticleBuilder.create(ParticleBuilder.Type.FLASH).vel(world.rand.nextGaussian() / 80,
-                                            world.rand.nextGaussian() / 80, world.rand.nextGaussian() / 80).
-                                    scale(size * 0.75F)
-                                    .time(8).pos(start.toMinecraft().add(look.times(0.75).toMinecraft().add(x1, y1 - 0.025, z1))).spin(0.1, world.rand.nextGaussian() / 20)
-                                    .clr(1F, 1F, 0.3F, 0.025F).glow(true).spawnEntity(entity).spawn(world);
-                        }
-                    }
-                }
             }
 
             if (ctx.getData().getTickHandlerDuration(this) % 4 == 0)

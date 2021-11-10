@@ -22,7 +22,7 @@
       "fadeR": 250,
       "fadeG": 240,
       "fadeB": 80,
-      "chargeTime": 35
+      "chargeTime": 60
     },
     "level2": {
       "tier": 2,

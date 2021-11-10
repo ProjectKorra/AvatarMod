@@ -60,7 +60,7 @@ public class AbilityChaosLash extends Ability {
 
         float damage = getProperty(DAMAGE, ctx).floatValue();
         float size = getProperty(SIZE, ctx).floatValue();
-        int lifetime = (int) (getProperty(LIFETIME, ctx).intValue() * 1.5);
+        int lifetime = (int) (getProperty(LIFETIME, ctx).intValue() * 2.25);
         float speed = getProperty(SPEED, ctx).floatValue() / 14;
         float push = getProperty(KNOCKBACK, ctx).floatValue();
         float xp = getProperty(XP_HIT, ctx).floatValue();

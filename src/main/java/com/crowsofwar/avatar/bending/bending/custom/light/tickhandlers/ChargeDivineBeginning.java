@@ -17,10 +17,8 @@
 package com.crowsofwar.avatar.bending.bending.custom.light.tickhandlers;
 
 import com.crowsofwar.avatar.bending.bending.Abilities;
-import com.crowsofwar.avatar.bending.bending.custom.dark.AbilityOblivionBeam;
 import com.crowsofwar.avatar.bending.bending.custom.light.AbilityDivineBeginning;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
-import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.data.*;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
 import com.crowsofwar.gorecore.util.Vector;
@@ -57,10 +55,11 @@ public class ChargeDivineBeginning extends TickHandler {
         World world = ctx.getWorld();
         AbilityData abilityData = data.getAbilityData("divine_beginning");
         AbilityDivineBeginning divineBeginning = (AbilityDivineBeginning) Abilities.get("divine_beginning");
-        int chargeDuration = data.getTickHandlerDuration(this);
         if (divineBeginning == null)
             return false;
 
+        int chargeDuration = data.getTickHandlerDuration(this);
+        int maxDuration = divineBeginning.getProperty(CHARGE_TIME, abilityData).intValue();
         float requiredChi = divineBeginning.getProperty(CHI_COST, abilityData).floatValue() / 20F;
         double powerFactor = 2 - abilityData.getDamageMult();
         //Inverts what happens as you want chi to decrease when you're more powerful
@@ -83,11 +82,13 @@ public class ChargeDivineBeginning extends TickHandler {
                 Vector pos = new Vector(x, y, z);
                 pos = Vector.rotateAroundAxisX(pos, entity.rotationPitch + 90);
                 pos = Vector.rotateAroundAxisY(pos, entity.rotationYaw);
-                pos = pos.plus(Vector.getEyePos(entity));
+                pos = pos.plus(Vector.getEyePos(entity).minusY(0.45));
 
 
                 //With pos as our new vector, we make spheres.
-                if (entity.ticksExisted % 6 == 0 || data.getTickHandlerDuration(this) == 1) {
+                if ((entity.ticksExisted % 6 == 0 || data.getTickHandlerDuration(this) == 1)
+                        &&     //Makes each sphere appear sequentially
+                        chargeDuration >= (maxDuration - 1) / 6 * (i / 60)) {
                     double x1, y1, z1;
                     for (double theta = 0; theta <= 180; theta += 1) {
                         double dphi = (76) / Math.sin(Math.toRadians(theta));
@@ -109,16 +110,19 @@ public class ChargeDivineBeginning extends TickHandler {
                     }
                 }
 
-                Vector targetPos = look.times(3).plus(Vector.getEyePos(entity));
+                Vector targetPos = look.times(3).plus(Vector.getEyePos(entity).minusY(0.45));
                 //Beam trail of particles
                 Vector vel = targetPos.minus(pos);
-                for (int h = 0; h < 6; h++) {
-                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).vel(vel.x() * 0.125,
-                                    vel.z() * 0.125, vel.z() * 0.125).
-                            scale(size * 1.5F)
-                            .time(12).pos(pos.toMinecraft())
-                            .clr(1F, 1F, 0.3F, 0.85F).glow(true).spawnEntity(entity).spawn(world);
+                //Makes sure the beam doesn't appear before the sphere
+                if (chargeDuration >= (maxDuration - 1) / 6 * (i / 60)) {
+                    for (int h = 0; h < 6; h++) {
+                        ParticleBuilder.create(ParticleBuilder.Type.FLASH).vel(vel.x() * 0.125,
+                                        vel.y() * 0.125, vel.z() * 0.125).
+                                scale(size * 1.5F)
+                                .time(8).pos(pos.toMinecraft())
+                                .clr(1F, 1F, 0.3F, 0.85F).glow(true).spawnEntity(entity).spawn(world);
 
+                    }
                 }
             }
         }
@@ -130,7 +134,7 @@ public class ChargeDivineBeginning extends TickHandler {
 
         entity.world.playSound(null, new BlockPos(entity), SoundEvents.BLOCK_FIRE_EXTINGUISH, entity.getSoundCategory(),
                 0.6F, 0.8F + world.rand.nextFloat() / 10);
-        return chargeDuration >= divineBeginning.getProperty(CHARGE_TIME, abilityData).intValue();
+        return chargeDuration > maxDuration;
     }
 
 
