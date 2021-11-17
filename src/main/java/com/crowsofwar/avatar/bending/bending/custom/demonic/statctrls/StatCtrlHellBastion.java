@@ -118,7 +118,7 @@ public class StatCtrlHellBastion extends StatusControl {
                 int particles = (int) (entity.getAvgSize() * Math.PI);
 
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size).time(8 + AvatarUtils.getRandomNumberInRange(0, 4))
-                        .element(BendingStyles.get(entity.getElement())).clr(120, 40, 40).spawnEntity(entity).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 30)
+                        .element(BendingStyles.get(entity.getElement())).clr(255, 40, 40).spawnEntity(entity).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 30)
                         .swirl(rings, particles, entity.getAvgSize() * 1.1F, size * 15, entity.getAvgSize() * 10, (-1 / size),
                                 entity, world, false, centre, ParticleBuilder.SwirlMotionType.OUT, false, true);
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size).time(8 + AvatarUtils.getRandomNumberInRange(0, 4))

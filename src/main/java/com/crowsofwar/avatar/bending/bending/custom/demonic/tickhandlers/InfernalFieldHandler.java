@@ -165,7 +165,7 @@ public class InfernalFieldHandler extends TickHandler {
 
             if (world.isRemote) {
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).glow(true).element(BendingStyles.get(Darkbending.ID))
-                        .clr(120, 40, 40).scale(0.25F).time(32).spawnEntity(entity).swirl((int) (radius * 2), (int) (radius),
+                        .clr(255, 40, 40).scale(0.25F).time(32).spawnEntity(entity).swirl((int) (radius * 2), (int) (radius),
                         radius, (float) (0.25 / radius),
                         60, 1 / radius, entity, world, false, rightSide, ParticleBuilder.SwirlMotionType.IN, false,
                         true);
@@ -263,7 +263,7 @@ public class InfernalFieldHandler extends TickHandler {
                     int particles = (int) (entity.getAvgSize() * Math.PI);
 
                     ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size).time(8 + AvatarUtils.getRandomNumberInRange(0, 4))
-                            .element(BendingStyles.get(entity.getElement())).clr(120, 40, 40).spawnEntity(entity).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 30)
+                            .element(BendingStyles.get(entity.getElement())).clr(255, 40, 40).spawnEntity(entity).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 30)
                             .swirl(rings, particles, entity.getAvgSize() * 1.1F, size * 15, entity.getAvgSize() * 10, (-1 / size),
                                     entity, world, false, centre, ParticleBuilder.SwirlMotionType.OUT, false, true);
                     ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size).time(8 + AvatarUtils.getRandomNumberInRange(0, 4))

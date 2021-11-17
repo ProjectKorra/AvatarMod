@@ -245,15 +245,15 @@ public class EntityInfernalBall extends EntityOffensive {
             int rings = (int) (getAvgSize() * 6);
             int particles = (int) (getAvgSize() * Math.PI * 2);
 
-            ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size).time(18 + AvatarUtils.getRandomNumberInRange(0, 4)).glow(true)
+            ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size).time(36 + AvatarUtils.getRandomNumberInRange(0, 4)).glow(true)
                     .element(BendingStyles.get(getElement())).
                     clr(120, 40, 40).spawnEntity(this).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 30)
-                    .swirl(rings, particles, getAvgSize() * 1.1F, size * 10, getAvgSize() * 10, -10, this,
+                    .swirl(rings, particles, getAvgSize() * 1.1F, size * 10, getAvgSize() * 10, -15, this,
                             world, false, centre, ParticleBuilder.SwirlMotionType.OUT, false, true);
-            ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size).time(16 + AvatarUtils.getRandomNumberInRange(0, 4))
+            ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size).time(36 + AvatarUtils.getRandomNumberInRange(0, 4))
                     .element(BendingStyles.get(getElement())).
                     clr(10, 10, 10, 0.1F).spawnEntity(this).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 60)
-                    .swirl(rings, particles, getAvgSize() * 1.1F, size * 10, getAvgSize() * 10, -10, this,
+                    .swirl(rings, particles, getAvgSize() * 1.1F, size * 10, getAvgSize() * 10, -15, this,
                             world, false, centre, ParticleBuilder.SwirlMotionType.OUT, false, true);
 
         }

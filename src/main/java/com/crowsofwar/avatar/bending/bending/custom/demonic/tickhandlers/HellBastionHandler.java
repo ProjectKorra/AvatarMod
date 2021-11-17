@@ -128,16 +128,30 @@ public class HellBastionHandler extends TickHandler {
 
 
                 Vec3d centre = AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(0, radius / 2, 0);
-                size = radius;
+                size = radius / 5F;
                 rings = (int) (radius * 10);
                 particles = (int) (radius * Math.PI);
 
 
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size).time(12 + AvatarUtils.getRandomNumberInRange(0, 4))
                         .element(BendingStyles.get(Demonbending.ID)).clr(1F, 0.05F, 0.05F, 0.10F).spawnEntity(entity).glow(world.rand.nextBoolean())
-                        .swirl(rings, particles, radius, size * 20, radius * 20F, 4 * (-1 / size),
-                                entity, world, false, centre, ParticleBuilder.SwirlMotionType.OUT, false, true);
+                        .swirl(rings, particles, radius / 2, size * 20, radius * 20F, 4 * (-1 / size),
+                                entity, world, true, centre, ParticleBuilder.SwirlMotionType.OUT, false, true);
 
+
+                pos = entity.onGround ? pos.add(0, entity.getEyeHeight(), 0) : pos.add(0, entity.getEyeHeight() / 2, 0);
+                ParticleBuilder.create(ParticleBuilder.Type.FLASH).time(25 + AvatarUtils.getRandomNumberInRange(1, 2)).
+                        clr(255, 20, 20, 255).fade(50, 0, 0, AvatarUtils.getRandomNumberInRange(40, 70))
+                        .element(BendingStyles.get(Demonbending.ID)).scale(size).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 15).swirl((int) (radius / 20 * size),
+                                (int) (size * Math.PI), size, size / 2, radius * 20, (0.75F / size),
+                                entity, world, true, pos,
+                                ParticleBuilder.SwirlMotionType.OUT, true, true);
+                ParticleBuilder.create(ParticleBuilder.Type.FLASH).time(25 + AvatarUtils.getRandomNumberInRange(1, 2)).
+                        clr(255, 20, 20, 255).fade(50, 0, 0,  AvatarUtils.getRandomNumberInRange(50, 80))
+                        .element(BendingStyles.get(Demonbending.ID)).scale(size).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 50).swirl((int) (radius / 20 * size),
+                                (int) (size * Math.PI), size, size / 2, radius * 20, (0.75F / size),
+                                entity, world, true, pos,
+                                ParticleBuilder.SwirlMotionType.OUT, true, true);
             }
 
             //Misc effects
@@ -266,7 +280,7 @@ public class HellBastionHandler extends TickHandler {
                 int particles = (int) (entity.getAvgSize() * Math.PI);
 
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size).time(8 + AvatarUtils.getRandomNumberInRange(0, 4)).glow(true)
-                        .element(BendingStyles.get(entity.getElement())).clr(120, 40, 40).spawnEntity(entity).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 30)
+                        .element(BendingStyles.get(entity.getElement())).clr(255, 40, 40).spawnEntity(entity).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 30)
                         .swirl(rings, particles, entity.getAvgSize() * 1.1F, size * 15, entity.getAvgSize() * 10, (-1 / size),
                                 entity, world, false, centre, ParticleBuilder.SwirlMotionType.OUT, false, true);
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size).time(8 + AvatarUtils.getRandomNumberInRange(0, 4))
