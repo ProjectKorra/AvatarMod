@@ -5,9 +5,10 @@ import com.crowsofwar.avatar.bending.bending.custom.dark.statctrls.StatCtrlDeath
 import com.crowsofwar.avatar.bending.bending.custom.dark.statctrls.StatCtrlSetOblivionBeam;
 import com.crowsofwar.avatar.bending.bending.custom.dark.statctrls.StatCtrlShadeBurst;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.statctrls.StatCtrlDemonWings;
+import com.crowsofwar.avatar.bending.bending.custom.demonic.statctrls.StatCtrlHellBastion;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.statctrls.StatCtrlInfernalField;
 import com.crowsofwar.avatar.bending.bending.custom.ki.statctrls.StatCtrlKiFlight;
-import com.crowsofwar.avatar.bending.bending.custom.light.StatCtrlSetHolyProtection;
+import com.crowsofwar.avatar.bending.bending.custom.light.statctrls.StatCtrlSetHolyProtection;
 import com.crowsofwar.avatar.bending.bending.custom.light.statctrls.StatCtrlHeavenlyFlight;
 import com.crowsofwar.avatar.bending.bending.custom.light.statctrls.StatCtrlSetDivineBeginning;
 import com.crowsofwar.avatar.bending.bending.earth.statctrls.*;
@@ -20,7 +21,6 @@ import com.crowsofwar.avatar.bending.bending.lightning.StatCtrlThrowLightningSpe
 import com.crowsofwar.avatar.bending.bending.sand.StatCtrlSandstormRedirect;
 import com.crowsofwar.avatar.bending.bending.water.statctrls.*;
 import com.crowsofwar.avatar.bending.bending.water.statctrls.waterarc.StatCtrlThrowWater;
-import com.crowsofwar.avatar.bending.bending.water.statctrls.waterblast.StatCtrlBurstWaterBlast;
 import com.crowsofwar.avatar.bending.bending.water.statctrls.waterblast.StatCtrlChargeWaterBlast;
 import com.crowsofwar.avatar.bending.bending.water.statctrls.waterbubble.StatCtrlLobBubble;
 import com.crowsofwar.avatar.bending.bending.water.statctrls.waterskate.StatCtrlSkateJump;
@@ -92,7 +92,9 @@ public class StatusControlController {
 			CHARGE_INFERNAL_FIELD = new StatCtrlInfernalField(true),
 			RELEASE_INFERNAL_FIELD = new StatCtrlSetHolyProtection(false),
 			CHARGE_DIVINE_BEGINNING = new StatCtrlSetDivineBeginning(true),
-			RELEASE_DIVINE_BEGINNING = new StatCtrlSetDivineBeginning(false);
+			RELEASE_DIVINE_BEGINNING = new StatCtrlSetDivineBeginning(false),
+			CHARGE_HELL_BASTION = new StatCtrlHellBastion(true),
+			RELEASE_HELL_BASTION = new StatCtrlHellBastion(false);
 	// @formatter:on
 
 	public static StatusControl lookup(int id) {

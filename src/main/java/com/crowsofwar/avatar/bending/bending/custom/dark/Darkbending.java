@@ -51,7 +51,7 @@ public class Darkbending extends BendingStyle {
 
     @Override
     public String getName() {
-        return "darkbending";
+        return "voidbending";
     }
 
     @Override

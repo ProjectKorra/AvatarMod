@@ -118,7 +118,8 @@ public abstract class EntityBender extends EntityCreature implements IEntityAddi
 	}
 
 	//Used for changing stuff like the size of an air bubble or something. Usually called right
-	//before an entity is spawned
+	//before an entity is spawned.
+	//TODO: Update this to allow fro modifiers
 	public void modifyAbilities(Ability ability) {
 
 	}

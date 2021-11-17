@@ -17,9 +17,14 @@
 
 package com.crowsofwar.avatar.entity;
 
+import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.custom.dark.Darkbending;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.Demonbending;
+import com.crowsofwar.avatar.bending.bending.custom.demonic.statctrls.StatCtrlHellBastion;
+import com.crowsofwar.avatar.bending.bending.custom.demonic.tickhandlers.HellBastionHandler;
+import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
+import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
@@ -203,13 +208,14 @@ public class EntityInfernalBall extends EntityOffensive {
 
     @Override
     public boolean shouldExplode() {
-        return false;
+        return getBehaviour() instanceof HellBastionHandler.HellBombBehaviour;
     }
 
     @Override
     public boolean shouldDissipate() {
-        return true;
+        return !(getBehaviour() instanceof StatCtrlHellBastion.InfernalPlayerControlled) && !shouldExplode();
     }
+
 
     @Override
     public void setDead() {
@@ -231,21 +237,44 @@ public class EntityInfernalBall extends EntityOffensive {
     }
 
     @Override
-    public void spawnDissipateParticles(World world, Vec3d pos) {
+    public void spawnExplosionParticles(World world, Vec3d pos) {
         if (world.isRemote && getOwner() != null) {
-            for (int i = 0; i < 8; i++) {
-                Vec3d mid = AvatarEntityUtils.getMiddleOfEntity(this);
-                double spawnX = mid.x + world.rand.nextGaussian() / 10;
-                double spawnY = mid.y + world.rand.nextGaussian() / 10;
-                double spawnZ = mid.z + world.rand.nextGaussian() / 10;
-//                ParticleBuilder.create(ParticleBuilder.Type.ICE).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20,
-//                        world.rand.nextGaussian() / 20).time(4).clr(0.95F, 0.95F, 0.95F, 0.25F).spawnEntity(getOwner())
-//                        .scale(getAvgSize()).element(BendingStyles.get(getElement())).collide(true).spawn(world);
-//                ParticleBuilder.create(ParticleBuilder.Type.SNOW).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20,
-//                        world.rand.nextGaussian() / 20).time(12).clr(0.95F, 0.95F, 0.95F, 0.5F).spawnEntity(getOwner())
-//                        .scale(getAvgSize() * 1.5F).element(BendingStyles.get(getElement())).collide(true).spawn(world);
-            }
+
+            Vec3d centre = AvatarEntityUtils.getMiddleOfEntity(this);
+            float size = Math.min(0.5F * getAvgSize(), 4F);
+            int rings = (int) (getAvgSize() * 6);
+            int particles = (int) (getAvgSize() * Math.PI * 2);
+
+            ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size).time(18 + AvatarUtils.getRandomNumberInRange(0, 4)).glow(true)
+                    .element(BendingStyles.get(getElement())).
+                    clr(120, 40, 40).spawnEntity(this).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 30)
+                    .swirl(rings, particles, getAvgSize() * 1.1F, size * 10, getAvgSize() * 10, -10, this,
+                            world, false, centre, ParticleBuilder.SwirlMotionType.OUT, false, true);
+            ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size).time(16 + AvatarUtils.getRandomNumberInRange(0, 4))
+                    .element(BendingStyles.get(getElement())).
+                    clr(10, 10, 10, 0.1F).spawnEntity(this).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 60)
+                    .swirl(rings, particles, getAvgSize() * 1.1F, size * 10, getAvgSize() * 10, -10, this,
+                            world, false, centre, ParticleBuilder.SwirlMotionType.OUT, false, true);
+
         }
+    }
+
+    @Override
+    public void spawnDissipateParticles(World world, Vec3d pos) {
+//        if (world.isRemote && getOwner() != null) {
+//
+//            float maxRadius = getAvgSize() * 3;
+//            int rings = (int) (maxRadius * 4 + 6);
+//            float size = (float) (Math.sqrt(maxRadius) * 0.5F);
+//            int particles = (int) (Math.sqrt(maxRadius) / 1.5F * Math.PI);
+//            Vec3d centre = AvatarEntityUtils.getBottomMiddleOfEntity(this);
+//            ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size)
+//                    .time(16).collide(true)
+//                    .element(BendingStyles.get(getElement())).clr(0.05F, 0.025F, 0.025F, 0.030F).spawnEntity(getOwner()).glow(true)
+//                    .swirl(rings, particles, maxRadius * 0.675F, 0.35F + maxRadius / 20, maxRadius * 40, (-2 / size),
+//                            getOwner(), world, true, centre, ParticleBuilder.SwirlMotionType.OUT,
+//                            false, true);
+//        }
     }
 
     @Override

@@ -196,6 +196,7 @@ public class AvatarMod {
         Abilities.register(new AbilityDemonWings());
         Abilities.register(new AbilityChaosLash());
         Abilities.register(new AbilityInfernalField());
+        Abilities.register(new AbilityHellBastion());
 
 
     }
