@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.entity;
 
 import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.custom.dark.Darkbending;
+import com.crowsofwar.avatar.bending.bending.custom.demonic.AbilityInfernalField;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.Demonbending;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.statctrls.StatCtrlHellBastion;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.tickhandlers.HellBastionHandler;
@@ -219,21 +220,21 @@ public class EntityInfernalBall extends EntityOffensive {
 
     @Override
     public void setDead() {
-        if (getOwner() != null) {
-            EntityBuff buff = new EntityBuff(world);
-            buff.setPosition(getPosition().add(0, getHeight(), 0));
-            buff.setElement(getElement());
-            buff.setOwner(getOwner());
-            buff.setTier(getTier());
-            buff.setRadius(getAvgSize() * 3F);
-            buff.setLifetime(140);
-            buff.setAbility(getAbility());
-            if (!world.isRemote)
-                world.spawnEntity(buff);
+        if (getAbility() instanceof AbilityInfernalField) {
+            if (getOwner() != null) {
+                EntityBuff buff = new EntityBuff(world);
+                buff.setPosition(getPosition().add(0, getHeight(), 0));
+                buff.setElement(getElement());
+                buff.setOwner(getOwner());
+                buff.setTier(getTier());
+                buff.setRadius(getAvgSize() * 3F);
+                buff.setLifetime(140);
+                buff.setAbility(getAbility());
+                if (!world.isRemote)
+                    world.spawnEntity(buff);
+            }
         }
         super.setDead();
-//        if (!world.isRemote && this.isDead)
-//            Thread.dumpStack();
     }
 
     @Override
@@ -247,12 +248,12 @@ public class EntityInfernalBall extends EntityOffensive {
 
             ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size).time(36 + AvatarUtils.getRandomNumberInRange(0, 4)).glow(true)
                     .element(BendingStyles.get(getElement())).
-                    clr(120, 40, 40).spawnEntity(this).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 30)
+                    clr(255, 20, 20).spawnEntity(this).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 30)
                     .swirl(rings, particles, getAvgSize() * 1.1F, size * 10, getAvgSize() * 10, -15, this,
                             world, false, centre, ParticleBuilder.SwirlMotionType.OUT, false, true);
             ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size).time(36 + AvatarUtils.getRandomNumberInRange(0, 4))
                     .element(BendingStyles.get(getElement())).
-                    clr(10, 10, 10, 0.1F).spawnEntity(this).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 60)
+                    clr(50, 0, 0, 0.1F).spawnEntity(this).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 60)
                     .swirl(rings, particles, getAvgSize() * 1.1F, size * 10, getAvgSize() * 10, -15, this,
                             world, false, centre, ParticleBuilder.SwirlMotionType.OUT, false, true);
 

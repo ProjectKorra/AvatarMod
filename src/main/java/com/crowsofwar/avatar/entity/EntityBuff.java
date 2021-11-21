@@ -277,11 +277,11 @@ public class EntityBuff extends AvatarEntity {
                         int particles = (int) (getRadius() * Math.PI);
 
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size * 4).time(12 + AvatarUtils.getRandomNumberInRange(0, 4))
-                                .element(BendingStyles.get(getElement())).clr(120 / 255F, 20 / 255F, 20 / 255F, 0.075F).spawnEntity(this).glow(world.rand.nextBoolean())
+                                .element(BendingStyles.get(getElement())).clr(255 / 255F, 20 / 255F, 20 / 255F, 0.075F).spawnEntity(this).glow(world.rand.nextBoolean())
                                 .swirl(rings, particles, getRadius(), size * 25, getRadius() * 10, (-1 / size),
                                         this, world, false, centre, ParticleBuilder.SwirlMotionType.OUT, false, true);
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size * 4).time(12 + AvatarUtils.getRandomNumberInRange(0, 4))
-                                .element(BendingStyles.get(getElement())).clr(10 / 255F, 10 / 255F, 10 / 255F, 0.375F).spawnEntity(this).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 60)
+                                .element(BendingStyles.get(getElement())).clr(50 / 255F, 0 / 255F, 0 / 255F, 0.375F).spawnEntity(this).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 60)
                                 .swirl(rings, particles, getRadius(), size * 25, getRadius() * 10, (-1 / size),
                                         this, world, false, centre, ParticleBuilder.SwirlMotionType.OUT, false, true);
 

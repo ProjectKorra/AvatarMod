@@ -2,7 +2,6 @@ package com.crowsofwar.avatar.bending.bending.custom.demonic.tickhandlers;
 
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.BendingStyles;
-import com.crowsofwar.avatar.bending.bending.air.Airbending;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.AbilityHellBastion;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.Demonbending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
@@ -127,29 +126,34 @@ public class HellBastionHandler extends TickHandler {
                 // C u l t u r e
 
 
-                Vec3d centre = AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(0, radius / 2, 0);
-                size = radius / 5F;
-                rings = (int) (radius * 10);
-                particles = (int) (radius * Math.PI);
+                Vec3d centre = AvatarEntityUtils.getBottomMiddleOfEntity(entity);
+                size = 0.75F;
+                rings = (int) (radius * 2);
+                particles = (int) (radius * Math.PI * 0.85);
+
+                //Wall
+                ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size * 8F).time(16 + AvatarUtils.getRandomNumberInRange(0, 4)).glow(true)
+                        .element(BendingStyles.get(Demonbending.ID)).clr(1F, 20 / 255F, 20 / 255F, 0.07F).spawnEntity(entity)
+                        .swirl(rings, particles, radius, size * 22, radius * 10, (-1 / size),
+                                entity, world, false, centre, ParticleBuilder.SwirlMotionType.OUT, true, true);
+                ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size * 8F).time(16 + AvatarUtils.getRandomNumberInRange(0, 4))
+                        .element(BendingStyles.get(Demonbending.ID)).clr(50 / 255F, 0F, 0F, 0.035F).spawnEntity(entity)
+                        .swirl(rings, particles, radius, size * 22, radius * 10, (-1 / size),
+                                entity, world, false, centre, ParticleBuilder.SwirlMotionType.OUT, true, true);
 
 
-                ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size).time(12 + AvatarUtils.getRandomNumberInRange(0, 4))
-                        .element(BendingStyles.get(Demonbending.ID)).clr(1F, 0.05F, 0.05F, 0.10F).spawnEntity(entity).glow(world.rand.nextBoolean())
-                        .swirl(rings, particles, radius / 2, size * 20, radius * 20F, 4 * (-1 / size),
-                                entity, world, true, centre, ParticleBuilder.SwirlMotionType.OUT, false, true);
-
-
+                //Swirl animation
                 pos = entity.onGround ? pos.add(0, entity.getEyeHeight(), 0) : pos.add(0, entity.getEyeHeight() / 2, 0);
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).time(25 + AvatarUtils.getRandomNumberInRange(1, 2)).
                         clr(255, 20, 20, 255).fade(50, 0, 0, AvatarUtils.getRandomNumberInRange(40, 70))
-                        .element(BendingStyles.get(Demonbending.ID)).scale(size).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 15).swirl((int) (radius / 20 * size),
-                                (int) (size * Math.PI), size, size / 2, radius * 20, (0.75F / size),
+                        .element(BendingStyles.get(Demonbending.ID)).scale(size).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 15).swirl((int) (radius / 2 * size),
+                                (int) (size * Math.PI), size, size / 4, radius * 20, (0.75F / size),
                                 entity, world, true, pos,
                                 ParticleBuilder.SwirlMotionType.OUT, true, true);
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).time(25 + AvatarUtils.getRandomNumberInRange(1, 2)).
-                        clr(255, 20, 20, 255).fade(50, 0, 0,  AvatarUtils.getRandomNumberInRange(50, 80))
-                        .element(BendingStyles.get(Demonbending.ID)).scale(size).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 50).swirl((int) (radius / 20 * size),
-                                (int) (size * Math.PI), size, size / 2, radius * 20, (0.75F / size),
+                        clr(255, 20, 20, 255).fade(50, 0, 0, AvatarUtils.getRandomNumberInRange(50, 80))
+                        .element(BendingStyles.get(Demonbending.ID)).scale(size).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 50).swirl((int) (radius / 2 * size),
+                                (int) (size * Math.PI), size, size / 4, radius * 20, (0.75F / size),
                                 entity, world, true, pos,
                                 ParticleBuilder.SwirlMotionType.OUT, true, true);
             }
