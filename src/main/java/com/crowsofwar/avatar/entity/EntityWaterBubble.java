@@ -17,16 +17,11 @@
 
 package com.crowsofwar.avatar.entity;
 
-import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.fire.Firebending;
 import com.crowsofwar.avatar.bending.bending.lightning.Lightningbending;
 import com.crowsofwar.avatar.bending.bending.water.Waterbending;
-import com.crowsofwar.avatar.util.AvatarEntityUtils;
-import com.crowsofwar.avatar.util.data.AbilityData;
-import com.crowsofwar.avatar.entity.data.Behavior;
 import com.crowsofwar.avatar.entity.data.WaterBubbleBehavior;
-import com.crowsofwar.avatar.client.particle.ParticleBuilder;
-import com.crowsofwar.avatar.util.AvatarUtils;
+import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.BlockFarmland;
 import net.minecraft.block.BlockLiquid;
@@ -39,12 +34,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -56,7 +49,9 @@ public class EntityWaterBubble extends EntityOffensive implements IShieldEntity 
     private static final DataParameter<Float> SYNC_HEALTH = EntityDataManager.createKey(EntityWaterBubble.class, DataSerializers.FLOAT);
     private static final DataParameter<Float> SYNC_DEGREES_PER_SECOND = EntityDataManager.createKey(EntityWaterBubble.class, DataSerializers.FLOAT);
     private static final DataParameter<Float> SYNC_MAX_SIZE = EntityDataManager.createKey(EntityWaterBubble.class, DataSerializers.FLOAT);
-
+    //Using ordinals of the STATE to sync them
+    private static final DataParameter<Integer> SYNC_STATE = EntityDataManager.createKey(EntityWaterBubble.class,
+            DataSerializers.VARINT);
     /**
      * Whether the water bubble will get a water source upon landing. Only
      * set on server-side.
@@ -111,6 +106,15 @@ public class EntityWaterBubble extends EntityOffensive implements IShieldEntity 
         dataManager.set(SYNC_DEGREES_PER_SECOND, degrees);
     }
 
+    //use the ordinal for the state
+    public void setState(State state) {
+        dataManager.set(SYNC_STATE, state.ordinal());
+    }
+
+    public State getState() {
+        return State.values()[dataManager.get(SYNC_STATE)];
+    }
+
     @Override
     protected void entityInit() {
         super.entityInit();
@@ -118,6 +122,7 @@ public class EntityWaterBubble extends EntityOffensive implements IShieldEntity 
         dataManager.register(SYNC_MAX_SIZE, 1.5F);
         dataManager.register(SYNC_HEALTH, 3F);
         dataManager.register(SYNC_DEGREES_PER_SECOND, 5F);
+        dataManager.register(SYNC_STATE, 0);
     }
 
     @Override
@@ -277,5 +282,11 @@ public class EntityWaterBubble extends EntityOffensive implements IShieldEntity 
     @Override
     public boolean shouldRenderInPass(int pass) {
         return super.shouldRenderInPass(pass);
+    }
+
+    public enum State {
+        BUBBLE,
+        SHIELD,
+        RING
     }
 }

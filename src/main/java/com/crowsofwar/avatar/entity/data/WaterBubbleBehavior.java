@@ -95,17 +95,20 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
 
             //particles!
             if (world.isRemote && entity.getOwner() != null && entity instanceof EntityWaterBubble) {
+                //3 main types: BUBBLE, SHIELD, RING
+
+
                 //Colours: 0, 102, 255, 255 in order of r, g, b, a
                 //Particles are * 2 * PI because that's the circumference of a circle and idk.
                 //Use the bottom of the entity cause my method is bad and shifts the centre point up. Dw about it.
-                ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(96, 120, 255, 160)
+                ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(255, 255, 255, 50).glow(true).gravity(true)
                         .time(24).scale(0.5F).spawnEntity(entity).element(BendingStyles.get(Waterbending.ID))
                         .spin(entity.getAvgSize() / 10, world.rand.nextGaussian() / 20)
                         .swirl((int) (entity.getAvgSize() * 12), (int) (entity.getAvgSize() * 4 * Math.PI),
                                 entity.getAvgSize(), entity.getAvgSize() * 5, ((EntityWaterBubble) entity).getDegreesPerSecond()
                                         * entity.getAvgSize(),
                                 (float) (world.rand.nextGaussian() / 4F), entity, world, true, AvatarEntityUtils.getBottomMiddleOfEntity(entity),
-                                ParticleBuilder.SwirlMotionType.OUT, entity.ticksExisted > 30, true);
+                                ParticleBuilder.SwirlMotionType.OUT, false, true);
 
                 //Foam
 //                ParticleBuilder.create(ParticleBuilder.Type.SNOW).clr(255, 255, 255, 50)
