@@ -20,11 +20,15 @@ package com.crowsofwar.avatar.client.render;
 import com.crowsofwar.avatar.entity.EntityWaterBubble;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
+import org.joml.Matrix4f;
+import org.joml.Vector4f;
+
+import static com.crowsofwar.avatar.client.render.RenderUtils.drawQuad;
+import static net.minecraft.util.math.MathHelper.cos;
+import static net.minecraft.util.math.MathHelper.sin;
 
 /**
  * @author CrowsOfWar
@@ -43,49 +47,82 @@ public class RenderWaterBubble extends Render<EntityWaterBubble> {
     public void doRender(EntityWaterBubble bubble, double x, double y, double z, float entityYaw,
                          float partialTicks) {
         super.doRender(bubble, x, y, z, entityYaw, partialTicks);
-        //   Minecraft.getMinecraft().getTextureManager().bindTexture(water);
-        GlStateManager.pushMatrix();
-        GlStateManager.enableBlend();
-        GlStateManager.disableTexture2D();
-       // GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-      //  OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
 
-        GlStateManager.translate(x, y + bubble.height / 1.5, z);
+		if (bubble.getState().equals(EntityWaterBubble.State.BUBBLE)) {
+			Minecraft.getMinecraft().getTextureManager().bindTexture(water);
+			GlStateManager.pushMatrix();
 
-        float latStep = (float) Math.PI / 30;
-        float longStep = (float) Math.PI / 30;
+			GlStateManager.translate(x, y, z);
+			float ticks = bubble.ticksExisted + partialTicks;
+			float colorEnhancement = 1.2f;
+			float size = bubble.getSize();
 
-        float pulse = MathHelper.sin((bubble.ticksExisted + partialTicks) / 10f);
+			Minecraft mc = Minecraft.getMinecraft();
+			mc.renderEngine.bindTexture(water);
+			GlStateManager.enableBlend();
+			GlStateManager.color(colorEnhancement, colorEnhancement, colorEnhancement, 0.6f);
 
-        float r = 0.015F + 0.015F * pulse, g = 0.05F + 0.05f * pulse, b = 0.5F;
+			Matrix4f mat = new Matrix4f();
+			mat = mat.translate((float) x, (float) y + 0.4F, (float) z);
 
-        float radius = bubble.width * 0.70F;
-        float a = 2F;
-
-//        if (bubble.ticksExisted > bubble.getLifeTime() - EXPANSION_TIME) {
-//            radius *= 1 + 0.2f * (bubble.ticksExisted + partialTicks - (bubble.getLifeTime() - EXPANSION_TIME)) / EXPANSION_TIME;
-//            a *= Math.max(0, 1 - (bubble.ticksExisted + partialTicks - (bubble.getLifeTime() - EXPANSION_TIME)) / EXPANSION_TIME);
-//        } else if (bubble.ticksExisted < EXPANSION_TIME) {
-//            radius *= 1 - (EXPANSION_TIME - bubble.ticksExisted - partialTicks) / EXPANSION_TIME;
-//            a *= 1 - (EXPANSION_TIME - bubble.ticksExisted - partialTicks) / EXPANSION_TIME;
-//        }
-
-        // Draw the inside first
-        RenderUtils.drawSphere(radius - 0.1f - 0.025f * pulse, latStep, longStep, true, r, g, b, a);
-   //     RenderUtils.drawSphere(radius - 0.1f - 0.025f * pulse, latStep, longStep, false, 1, 1, 1, a * 0.7F);
-        RenderUtils.drawSphere(radius, latStep, longStep, false, r, g, b, a);
+			mat = mat.rotate(ticks / 20 * 0.2F * bubble.getDegreesPerSecond(), 1, 0, 0);
+			mat = mat.rotate(ticks / 20 * bubble.getDegreesPerSecond(), 0, 1, 0);
+			mat = mat.rotate(ticks / 20 * -0.4F * bubble.getDegreesPerSecond(), 0, 0, 1);
 
 
-        GlStateManager.enableTexture2D();
-        GlStateManager.disableBlend();
+			// @formatter:off
+			Vector4f
+					//You can't mul using the size because that would mul the w component, which would still make the bubble with a size of 1.
+					lbf = new Vector4f(-.5f * size, -.5f * size, -.5f * size, 1).mul(mat),
+					rbf = new Vector4f(0.5f * size, -.5f * size, -.5f * size, 1).mul(mat),
+					ltf = new Vector4f(-.5f * size, 0.5f * size, -.5f * size, 1).mul(mat),
+					rtf = new Vector4f(0.5f * size, 0.5f * size, -.5f * size, 1).mul(mat),
+					lbb = new Vector4f(-.5f * size, -.5f * size, 0.5f * size, 1).mul(mat),
+					rbb = new Vector4f(0.5f * size, -.5f * size, 0.5f * size, 1).mul(mat),
+					ltb = new Vector4f(-.5f * size, 0.5f * size, 0.5f * size, 1).mul(mat),
+					rtb = new Vector4f(0.5f * size, 0.5f * size, 0.5f * size, 1).mul(mat);
 
-        GlStateManager.popMatrix();
+
+			float t1 = ticks * (float) Math.PI / 20F;
+			float t2 = t1 + (float) Math.PI / 2F;
+			float amt = 0.1f;
+
+			lbf.add(cos(t1) * amt, sin(t2) * amt, cos(t2) * amt, 0);
+			rbf.add(sin(t1) * amt, cos(t2) * amt, sin(t2) * amt, 0);
+			lbb.add(sin(t2) * amt, cos(t2) * amt, cos(t2) * amt, 0);
+			rbb.add(cos(t2) * amt, cos(t1) * amt, cos(t1) * amt, 0);
+
+			ltf.add(cos(t2) * amt, cos(t1) * amt, sin(t1) * amt, 0);
+			rtf.add(sin(t2) * amt, sin(t1) * amt, cos(t1) * amt, 0);
+			ltb.add(sin(t1) * amt, sin(t2) * amt, cos(t1) * amt, 0);
+			rtb.add(cos(t1) * amt, cos(t2) * amt, sin(t1) * amt, 0);
+
+			// @formatter:on
+
+
+			float existed = ticks / 4f;
+			int anim = ((int) existed % 16);
+			float v1 = anim / 16f, v2 = v1 + 1f / 16;
+
+			drawQuad(2, ltb, lbb, lbf, ltf, 0, v1, 1, v2); // -x
+			drawQuad(2, rtb, rbb, rbf, rtf, 0, v1, 1, v2); // +x
+			drawQuad(2, rbb, rbf, lbf, lbb, 0, v1, 1, v2); // -y
+			drawQuad(2, rtb, rtf, ltf, ltb, 0, v1, 1, v2); // +y
+			drawQuad(2, rtf, rbf, lbf, ltf, 0, v1, 1, v2); // -z
+			drawQuad(2, rtb, rbb, lbb, ltb, 0, v1, 1, v2); // +z
+
+
+			GlStateManager.color(1, 1, 1, 1);
+			GlStateManager.disableBlend();
+
+			GlStateManager.popMatrix();
+		}
 
     }
 
     @Override
     protected ResourceLocation getEntityTexture(EntityWaterBubble entity) {
-        return null;
+        return water;
     }
 
 }
