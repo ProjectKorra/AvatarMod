@@ -175,7 +175,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
         registerEntityRenderingHandler(EntityFlames.class, RenderNothing::new);
         registerEntityRenderingHandler(EntityWave.class, RenderNothing::new);
         //Gonna use a swirl w/ water cubes for now
-        registerEntityRenderingHandler(EntityWaterBubble.class, RenderNothing::new);
+        registerEntityRenderingHandler(EntityWaterBubble.class, RenderWaterBubble::new);
         registerEntityRenderingHandler(EntityWallSegment.class, RenderWallSegment::new);
         registerEntityRenderingHandler(EntityFireball.class, /*AvatarMod.codeChickenLibCompat && !CLIENT_CONFIG.fireRenderSettings.originalFireball ? RenderNothing::new : **/ RenderFireball::new);
         registerEntityRenderingHandler(EntityAirblade.class, RenderNothing::new);

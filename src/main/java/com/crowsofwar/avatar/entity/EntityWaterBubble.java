@@ -21,6 +21,7 @@ import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.fire.Firebending;
 import com.crowsofwar.avatar.bending.bending.lightning.Lightningbending;
 import com.crowsofwar.avatar.bending.bending.water.Waterbending;
+import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.entity.data.Behavior;
 import com.crowsofwar.avatar.entity.data.WaterBubbleBehavior;
@@ -165,25 +166,20 @@ public class EntityWaterBubble extends EntityOffensive implements IShieldEntity 
 		}**/
 
 
-        //particles!
-        if (world.isRemote && getOwner() != null) {
-            for (double h = 0; h < width; h += 0.5) {
-                Random random = new Random();
-                AxisAlignedBB boundingBox = getEntityBoundingBox();
-                double spawnX = boundingBox.minX + random.nextDouble() * (boundingBox.maxX - boundingBox.minX);
-                double spawnY = boundingBox.minY + random.nextDouble() * (boundingBox.maxY - boundingBox.minY);
-                double spawnZ = boundingBox.minZ + random.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
-                ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
-                        world.rand.nextGaussian() / 60).time(15 + AvatarUtils.getRandomNumberInRange(0, 10)).clr(0, 102, 255, 255)
-                        .scale(getSize()).element(BendingStyles.get(getElement())).spawnEntity(getOwner()).element(new Waterbending())
-                        .spawn(world);
-                ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
-                        world.rand.nextGaussian() / 60).time(15 + AvatarUtils.getRandomNumberInRange(0, 10)).clr(0, 102, 255, 255)
-                        .scale(getSize()).element(BendingStyles.get(getElement())).spawnEntity(getOwner()).element(new Waterbending())
-                        .spawn(world);
-            }
-
-        }
+//        //particles!
+//        if (world.isRemote && getOwner() != null) {
+//            //Colours: 0, 102, 255, 255 in order of r, g, b, a
+//            //Particles are * 2 * PI because that's the circumference of a circle and idk.
+//            //Use the bottom of the entity cause my method is bad and shifts the centre point up. Dw about it.
+//            ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(60, 102, 255, 160)
+//                    .time(14).scale(0.5F).spawnEntity(this).element(BendingStyles.get(Waterbending.ID))
+//                    .swirl((int) (getAvgSize() * 14), (int) (getAvgSize() * 6 * Math.PI),
+//                            getAvgSize(), getAvgSize() * 5, getDegreesPerSecond() * getAvgSize(),
+//                            -0.5F / getAvgSize(), this, world, false, AvatarEntityUtils.getBottomMiddleOfEntity(this),
+//                            ParticleBuilder.SwirlMotionType.OUT, false, true);
+//
+//
+//        }
 
 
     }

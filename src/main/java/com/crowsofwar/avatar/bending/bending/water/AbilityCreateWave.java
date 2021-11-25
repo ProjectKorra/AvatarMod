@@ -86,6 +86,7 @@ public class AbilityCreateWave extends Ability {
         addBooleanProperties(PULLS, GROW, RIDEABLE, PLANT_BEND, LAND);
     }
 
+    //Of course it doesn't work anymore. TODO: Fix.
     @Override
     public void execute(AbilityContext ctx) {
         EntityLivingBase entity = ctx.getBenderEntity();

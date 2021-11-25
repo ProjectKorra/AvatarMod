@@ -17,6 +17,9 @@
 
 package com.crowsofwar.avatar.entity.data;
 
+import com.crowsofwar.avatar.bending.bending.BendingStyles;
+import com.crowsofwar.avatar.bending.bending.water.Waterbending;
+import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.entity.EntityOffensive;
 import com.crowsofwar.avatar.entity.EntityWaterBubble;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
@@ -28,6 +31,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 
 /**
  * @author CrowsOfWar
@@ -78,12 +82,45 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
         @Override
         public OffensiveBehaviour onUpdate(EntityOffensive entity) {
             EntityLivingBase owner = entity.getOwner();
+            World world = entity.world;
 
             if (owner == null) return this;
+
+            entity.rotationPitch = owner.rotationPitch;
+            entity.rotationYaw = owner.rotationYaw;
 
             Vec3d pos = Vector.getEntityPos(owner).toMinecraft();
             Vec3d look = owner.getLookVec().scale(2.5).add(0, owner.getEyeHeight() / 2, 0);
             AvatarEntityUtils.dragEntityTowardsPoint(entity, pos.add(look), 0.125);
+
+            //particles!
+            if (world.isRemote && entity.getOwner() != null && entity instanceof EntityWaterBubble) {
+                //Colours: 0, 102, 255, 255 in order of r, g, b, a
+                //Particles are * 2 * PI because that's the circumference of a circle and idk.
+                //Use the bottom of the entity cause my method is bad and shifts the centre point up. Dw about it.
+                ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(96, 120, 255, 160)
+                        .time(24).scale(0.5F).spawnEntity(entity).element(BendingStyles.get(Waterbending.ID))
+                        .spin(entity.getAvgSize() / 10, world.rand.nextGaussian() / 20)
+                        .swirl((int) (entity.getAvgSize() * 12), (int) (entity.getAvgSize() * 4 * Math.PI),
+                                entity.getAvgSize(), entity.getAvgSize() * 5, ((EntityWaterBubble) entity).getDegreesPerSecond()
+                                        * entity.getAvgSize(),
+                                (float) (world.rand.nextGaussian() / 4F), entity, world, true, AvatarEntityUtils.getBottomMiddleOfEntity(entity),
+                                ParticleBuilder.SwirlMotionType.OUT, entity.ticksExisted > 30, true);
+
+                //Foam
+//                ParticleBuilder.create(ParticleBuilder.Type.SNOW).clr(255, 255, 255, 50)
+//                        .time(12).scale(0.5F).spawnEntity(entity).element(BendingStyles.get(Waterbending.ID))
+//                        .spin(entity.getAvgSize() / 10, world.rand.nextGaussian() / 20)
+//                        .swirl((int) (entity.getAvgSize() * 12), (int) (entity.getAvgSize() * 2 * Math.PI),
+//                                entity.getAvgSize(), entity.getAvgSize() * 5, ((EntityWaterBubble) entity).getDegreesPerSecond()
+//                                        * entity.getAvgSize(),
+//                                (float) (world.rand.nextGaussian()), entity, world, true, AvatarEntityUtils.getMiddleOfEntity(entity),
+//                                ParticleBuilder.SwirlMotionType.OUT, entity.ticksExisted > 3Z0, true);
+
+
+
+
+            }
             return this;
         }
 

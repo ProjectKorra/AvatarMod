@@ -2,6 +2,7 @@ package com.crowsofwar.avatar.bending.bending.water.tickhandlers;
 
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
+import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.water.AbilityWaterBlast;
 import com.crowsofwar.avatar.bending.bending.water.Waterbending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
@@ -133,7 +134,7 @@ public class WaterBurstHandler extends TickHandler {
                     int rings = (int) (length * 2);
                     int particles = (int) length;
                     ParticleBuilder.create(ParticleBuilder.Type.CUBE).spawnEntity(entity).scale(particleSize * 0.625F)
-                            .time(6 + AvatarUtils.getRandomNumberInRange(0, 2)).element(new Waterbending())
+                            .time(6 + AvatarUtils.getRandomNumberInRange(0, 2)).element(BendingStyles.get(Waterbending.ID))
                             .clr(0, 102, 255, 65).swirl(rings, particles, length / 5,
                             size / 4, speed * 20, (-1 / speed), entity, world,
                             false, swirlPos, ParticleBuilder.SwirlMotionType.IN, true, true);

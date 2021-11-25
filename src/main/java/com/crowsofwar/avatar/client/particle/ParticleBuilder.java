@@ -273,6 +273,66 @@ public final class ParticleBuilder {
         reset();
     }
 
+//    /**
+//     * Swirls given particles. Couldn't figure out how to make this dynamic, chose this solution. It works.
+//     *
+//     * @param rings
+//     * @param particles
+//     * @param radius
+//     * @param iterationSize
+//     * @param spinSpeed
+//     * @param velMult
+//     * @param entity
+//     * @param world
+//     * @param shield
+//     * @param pos
+//     * @param type
+//     */
+//    public void swirl(int rings, int particles, float radius, float iterationSize,
+//                      float spinSpeed, float velMult, Entity entity, World world, boolean shield,
+//                      Vec3d pos, SwirlMotionType type, boolean followEntity, boolean randomVel, boolean spin) {
+//        for (int i = 0; i < rings + 1; i++) {
+//            //Drawing from the player to the edge of the radius
+//            for (double j = 0; j < (radius); j += iterationSize) {
+//                //Particles
+//                for (int h = 0; h < particles; h++) {
+//                    double rScale = 0;
+//                    switch (type) {
+//                        case IN:
+//                            rScale = j;
+//                            break;
+//                        case OUT:
+//                            rScale = radius - j;
+//                            break;
+//                    }
+//                    //Flow animation
+//                    double yaw = Math.toRadians(i > 0 ? i * (180F / (rings)) : 0);
+//                    // yaw += Math.toRadians(entity.rotationYaw);
+//                    //For some reason, -90 breaks multiple rings (they stack instead of spreading). However,
+//                    //in order to make a horizontal ring, you need -90.s
+//                    double pitch = Math.toRadians(i > 0 ? 0 : -90);
+//                    Vec3d circlePos = Vector.getOrthogonalVector(Vector.toRectangular(yaw, pitch),
+//                                    //The ternary operator with the radius ensures a shield effect rather than a simple implode effect;
+//                                    //spherical layers stay out/rings stay out rather than imploding with the horizontal axis
+//                                    (entity.ticksExisted % 360) * spinSpeed + h * (360F / particles), shield && i > 0 ? radius : rScale)
+//                            .times(shield && i > 0 ? rScale : 1).toMinecraft().add(pos);
+//                    Vec3d targetPos = Vector.getOrthogonalVector(Vector.toRectangular(yaw, pitch),
+//                                    ((entity.ticksExisted + 1) % 360) * spinSpeed + h * (360F / particles), shield && i > 0 ? radius : rScale)
+//                            .times(shield && i > 0 ? rScale : 1).toMinecraft().add(pos);
+//                    Vec3d vel = Vec3d.ZERO;
+//                    if (randomVel)
+//                        vel = vel.add(new Vec3d(world.rand.nextGaussian() * velMult / 120, world.rand.nextGaussian() * velMult / 120,
+//                                world.rand.nextGaussian() * velMult / 120));
+//                    vel = targetPos.subtract(circlePos).normalize().scale(0.10 * velMult).add(vel);
+//                    if (followEntity)
+//                        vel = vel.add(entity.motionX, entity.motionY, entity.motionZ);
+//                    this.pos(circlePos).vel(vel).spawn(world, false);
+//                }
+//            }
+//        }
+//        reset();
+//    }
+
     /**
      * Vortexes given particles around a given direction axis.
      *
