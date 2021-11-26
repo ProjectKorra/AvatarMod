@@ -52,10 +52,10 @@ public class RenderWaterBubble extends Render<EntityWaterBubble> {
 			Minecraft.getMinecraft().getTextureManager().bindTexture(water);
 			GlStateManager.pushMatrix();
 
-			GlStateManager.translate(x, y, z);
+		//	GlStateManager.translate(x, y, z);
 			float ticks = bubble.ticksExisted + partialTicks;
 			float colorEnhancement = 1.2f;
-			float size = bubble.getSize();
+			float size = bubble.getAvgSize();
 
 			Minecraft mc = Minecraft.getMinecraft();
 			mc.renderEngine.bindTexture(water);
@@ -85,7 +85,7 @@ public class RenderWaterBubble extends Render<EntityWaterBubble> {
 
 			float t1 = ticks * (float) Math.PI / 20F;
 			float t2 = t1 + (float) Math.PI / 2F;
-			float amt = 0.1f;
+			float amt = 0.05f;
 
 			lbf.add(cos(t1) * amt, sin(t2) * amt, cos(t2) * amt, 0);
 			rbf.add(sin(t1) * amt, cos(t2) * amt, sin(t2) * amt, 0);

@@ -103,6 +103,8 @@ public class AbilityFlowControl extends Ability {
             bubble.setPerformanceAmount(performance);
             bubble.setAbility(this);
             bubble.setPosition(spawnPos.getX(), spawnPos.getY() + 0.5, spawnPos.getZ());
+            bubble.setState(EntityWaterBubble.State.BUBBLE);
+            bubble.setDegreesPerSecond(size * 2);
 
             //Only want to spawn it server side
             if (!world.isRemote)

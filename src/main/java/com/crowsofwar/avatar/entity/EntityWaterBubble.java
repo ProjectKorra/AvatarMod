@@ -45,7 +45,6 @@ import java.util.UUID;
  */
 public class EntityWaterBubble extends EntityOffensive implements IShieldEntity {
 
-    private static final DataParameter<Float> SYNC_SIZE = EntityDataManager.createKey(EntityWaterBubble.class, DataSerializers.FLOAT);
     private static final DataParameter<Float> SYNC_HEALTH = EntityDataManager.createKey(EntityWaterBubble.class, DataSerializers.FLOAT);
     private static final DataParameter<Float> SYNC_DEGREES_PER_SECOND = EntityDataManager.createKey(EntityWaterBubble.class, DataSerializers.FLOAT);
     private static final DataParameter<Float> SYNC_MAX_SIZE = EntityDataManager.createKey(EntityWaterBubble.class, DataSerializers.FLOAT);
@@ -62,14 +61,6 @@ public class EntityWaterBubble extends EntityOffensive implements IShieldEntity 
         super(world);
         setSize(.8f, .8f);
         this.putsOutFires = true;
-    }
-
-    public float getSize() {
-        return dataManager.get(SYNC_SIZE);
-    }
-
-    public void setSize(float size) {
-        dataManager.set(SYNC_SIZE, size);
     }
 
     public float getMaxSize() {
@@ -106,19 +97,18 @@ public class EntityWaterBubble extends EntityOffensive implements IShieldEntity 
         dataManager.set(SYNC_DEGREES_PER_SECOND, degrees);
     }
 
+    public State getState() {
+        return State.values()[dataManager.get(SYNC_STATE)];
+    }
+
     //use the ordinal for the state
     public void setState(State state) {
         dataManager.set(SYNC_STATE, state.ordinal());
     }
 
-    public State getState() {
-        return State.values()[dataManager.get(SYNC_STATE)];
-    }
-
     @Override
     protected void entityInit() {
         super.entityInit();
-        dataManager.register(SYNC_SIZE, 1F);
         dataManager.register(SYNC_MAX_SIZE, 1.5F);
         dataManager.register(SYNC_HEALTH, 3F);
         dataManager.register(SYNC_DEGREES_PER_SECOND, 5F);
