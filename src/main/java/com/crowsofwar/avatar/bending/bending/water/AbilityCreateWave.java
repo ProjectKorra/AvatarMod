@@ -143,7 +143,7 @@ public class AbilityCreateWave extends Ability {
             wave.setXp(getProperty(XP_HIT).floatValue());
             wave.rotationPitch = entity.rotationPitch;
             wave.rotationYaw = entity.rotationYaw;
-            wave.setVelocity(look.times(speed / 5).withY(0));
+            wave.setVelocity(look.times(speed).withY(0));
             wave.setGrows(getBooleanProperty(GROW, ctx));
             wave.setPulls(getBooleanProperty(PULLS, ctx));
             wave.setBehaviour(new WaveBehaviour());

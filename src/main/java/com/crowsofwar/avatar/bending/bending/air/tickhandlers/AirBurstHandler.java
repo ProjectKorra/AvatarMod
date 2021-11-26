@@ -175,7 +175,7 @@ public class AirBurstHandler extends TickHandler {
                 shockwave.setTier(burst.getCurrentTier(abilityData));
                 shockwave.setXp(burst.getProperty(XP_HIT, abilityData).floatValue());
                 shockwave.setPerformanceAmount(performanceAmount);
-                shockwave.setParticleSpeed(Math.min(knockBack / shockwaveSpeed * 1.5F, shockwaveSpeed));
+                shockwave.setParticleSpeed(shockwaveSpeed * 2);
                 shockwave.setParticleController(particleController);
                 shockwave.setAbility(Objects.requireNonNull(Abilities.get("air_burst")));
                 shockwave.setSpeed(speed / 2);
@@ -262,15 +262,17 @@ public class AirBurstHandler extends TickHandler {
                 World world = entity.world;
                 if (world.isRemote) {
                     float maxRadius = (float) ((EntityShockwave) entity).getRange();
-                    int rings = (int) (maxRadius * 4 + 6);
+                    int rings = (int) (maxRadius * 2 + 4);
                     float size = (float) (Math.sqrt(maxRadius) * 0.5F);
-                    int particles = (int) (Math.sqrt(maxRadius) / 1.5F * Math.PI);
+                    int particles = (int) (Math.sqrt(maxRadius) * 2 * Math.PI);
                     Vec3d centre = AvatarEntityUtils.getBottomMiddleOfEntity(entity);
                     ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size)
-                            .time(12).collide(true)
-                            .element(BendingStyles.get(entity.getElement())).clr(0.95F, 0.95F, 0.95F, 0.030F).spawnEntity(entity.getOwner())
-                            .swirl(rings, particles, maxRadius * 0.675F, 0.35F + maxRadius / 20, maxRadius * 40, (-2 / size),
-                                    entity.getOwner(), world, true, centre, ParticleBuilder.SwirlMotionType.OUT,
+                            .time(24).collide(true)
+                            .element(BendingStyles.get(entity.getElement())).clr(0.95F, 0.95F, 0.95F, 0.090F).spawnEntity(entity.getOwner())
+                            .swirl(rings, particles, maxRadius * 0.875F, maxRadius / 2, maxRadius * 10,
+                                    //Base value is 6. Spd/2 is applied to the shockwave. Without charging, divide by 2 again.
+                                    (float) ((-2F * ((EntityShockwave) entity).getSpeed() * ((EntityShockwave) entity).getParticleSpeed())),
+                                    entity.getOwner(), world, false, centre, ParticleBuilder.SwirlMotionType.OUT,
                                     false, true);
 
 

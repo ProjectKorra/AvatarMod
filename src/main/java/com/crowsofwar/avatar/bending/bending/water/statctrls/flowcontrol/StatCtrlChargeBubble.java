@@ -19,10 +19,10 @@ public class StatCtrlChargeBubble extends StatusControl {
 		World world = ctx.getWorld();
 		EntityWaterBubble bubble = AvatarEntity.lookupControlledEntity(world, EntityWaterBubble.class, entity);
 		if (bubble != null) {
-			bubble.setSize(bubble.getSize() + 0.01F);
+			bubble.setEntitySize(bubble.getAvgSize() + 0.01F);
 			bubble.setDegreesPerSecond(bubble.getDegreesPerSecond() + 1);
 			bubble.setHealth(bubble.getHealth() + 0.02F);
-			return bubble.getSize() > bubble.getMaxSize();
+			return bubble.getAvgSize() > bubble.getMaxSize();
 		} else return true;
 	}
 }
