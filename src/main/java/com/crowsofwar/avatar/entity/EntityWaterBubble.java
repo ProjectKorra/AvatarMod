@@ -63,6 +63,8 @@ public class EntityWaterBubble extends EntityOffensive implements IShieldEntity 
         this.putsOutFires = true;
     }
 
+    //The method in EntityOffensive is used for growing the water bubble.
+    //The method here is for charging it.
     public float getMaxSize() {
         return dataManager.get(SYNC_MAX_SIZE);
     }

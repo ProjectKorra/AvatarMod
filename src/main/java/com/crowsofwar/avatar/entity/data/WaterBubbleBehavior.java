@@ -45,6 +45,7 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
         registerBehavior(Drop.class);
         registerBehavior(PlayerControlled.class);
         registerBehavior(Lobbed.class);
+        registerBehavior(Appear.class);
         //When you use the water bubble like a bucket
     }
 
@@ -101,14 +102,7 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
                 if (((EntityWaterBubble) entity).getState().equals(EntityWaterBubble.State.BUBBLE)) {
                     //Particles are * 2 * PI because that's the circumference of a circle and idk.
                     //Use the bottom of the entity cause my method is bad and shifts the centre point up. Dw about it.
-                    ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(255, 255, 255, 50).glow(true).gravity(true)
-                            .time(16).scale(0.5F).spawnEntity(entity).element(BendingStyles.get(Waterbending.ID))
-                            .spin(entity.getAvgSize() / 10, world.rand.nextGaussian() / 20)
-                            .swirl((int) (entity.getAvgSize() * 12), (int) (entity.getAvgSize() * 2 * Math.PI),
-                                    entity.getAvgSize() * 0.85F, entity.getAvgSize() * 5, ((EntityWaterBubble) entity).getDegreesPerSecond()
-                                            * entity.getAvgSize(),
-                                    (float) (world.rand.nextGaussian() / 8F), entity, world, true, AvatarEntityUtils.getBottomMiddleOfEntity(entity),
-                                    ParticleBuilder.SwirlMotionType.OUT, false, true);
+                    Appear.bubbleSwirl(entity, world);
 
 
                 }
@@ -134,6 +128,61 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
         public void save(NBTTagCompound nbt) {
         }
 
+    }
+
+    //Used for an appear animation.
+    public static class Appear extends WaterBubbleBehavior {
+
+        @Override
+        public OffensiveBehaviour onUpdate(EntityOffensive entity) {
+
+            if (entity != null && entity.getOwner() != null) {
+                World world = entity.world;
+                if (world.isRemote) {
+                    bubbleSwirl(entity, world);
+                }
+
+                //Grows the entity at an exponential rate
+                float sizeMult = entity.getAvgSize() <= 1 ? 1.125F * entity.getAvgSize() : (float) Math.pow(entity.getAvgSize(), 1.125);
+                entity.setEntitySize(sizeMult * 1.125F);
+                //Grows the entity until it's the correct size
+                if (entity.getHeight() >= entity.getMaxHeight() && entity.getWidth() >=
+                        entity.getMaxWidth())
+                    return new WaterBubbleBehavior.PlayerControlled();
+            } else return null;
+            return this;
+        }
+
+        private static void bubbleSwirl(EntityOffensive entity, World world) {
+            ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(255, 255, 255, 50).glow(true).gravity(true)
+                    .time(16).scale(0.5F).spawnEntity(entity).element(BendingStyles.get(Waterbending.ID))
+                    .spin(entity.getAvgSize() / 10, world.rand.nextGaussian() / 20)
+                    .swirl((int) (entity.getAvgSize() * 12), (int) (entity.getAvgSize() * 2 * Math.PI),
+                            entity.getAvgSize() * 0.85F, entity.getAvgSize() * 5, ((EntityWaterBubble) entity).getDegreesPerSecond()
+                                    * entity.getAvgSize(),
+                            (float) (world.rand.nextGaussian() / 8F), entity, world, true, AvatarEntityUtils.getBottomMiddleOfEntity(entity),
+                            ParticleBuilder.SwirlMotionType.OUT, false, true);
+        }
+
+        @Override
+        public void fromBytes(PacketBuffer buf) {
+
+        }
+
+        @Override
+        public void toBytes(PacketBuffer buf) {
+
+        }
+
+        @Override
+        public void load(NBTTagCompound nbt) {
+
+        }
+
+        @Override
+        public void save(NBTTagCompound nbt) {
+
+        }
     }
 
     public static class Lobbed extends WaterBubbleBehavior {

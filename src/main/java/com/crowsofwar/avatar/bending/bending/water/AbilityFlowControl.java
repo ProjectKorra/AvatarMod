@@ -95,11 +95,13 @@ public class AbilityFlowControl extends Ability {
             bubble.setDamage(damage);
             bubble.setTier(getCurrentTier(ctx));
             bubble.setOwner(entity);
-            bubble.setEntitySize(size);
+            //Grow the bubble with an appear animation
+            bubble.setEntitySize(0.05F);
+            bubble.setMaxEntitySize(size);
             bubble.setHealth(waterLevel);
             bubble.setXp(xp);
             bubble.setChiHit(chiHit);
-            bubble.setBehaviour(new WaterBubbleBehavior.PlayerControlled());
+            bubble.setBehaviour(new WaterBubbleBehavior.Appear());
             bubble.setPerformanceAmount(performance);
             bubble.setAbility(this);
             bubble.setPosition(spawnPos.getX(), spawnPos.getY() + 0.5, spawnPos.getZ());

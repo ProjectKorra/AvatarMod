@@ -159,8 +159,13 @@ public class AbilityContext extends BendingContext {
                         pos2));
                 return true;
             }//Consumes water
+            //Need to set the source block here too
             if (pos != null) {
-                return consumeWater(amount, pos.toBlockPos(), world.getBlockState(pos.toBlockPos()));
+                if (consumeWater(amount, pos.toBlockPos(), world.getBlockState(pos.toBlockPos()))) {
+                    getAbilityData().setSourceInfo(new SourceInfo(world.getBlockState(pos.toBlockPos()),
+                            world, pos.toBlockPos()));
+                    return true;
+                }
             }
         }
         return super.consumeWater(amount);
