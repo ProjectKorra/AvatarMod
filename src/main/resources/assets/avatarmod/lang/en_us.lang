@@ -125,7 +125,7 @@ avatar.canUpgradeAbility=[bold]\[AvatarMod2] Did you know [aqua]you can upgrade 
 avatar.canUpgradeAbility2=\[AvatarMod2] To do so, in the radial menu, just hover over the ability and right click!
 avatar.canUpgradeAbility3=\[AvatarMod2] You'll need a [yellow]Universal or [translate=avatar.${bendingType}] scroll[/yellow] to do so!
 avatar.earthSourceFail=You need to be in range of earthbendable blocks to use that ability!
-avatar.waterSourceFail=Need to look directly at a water source or be nearby one, depending on your ability's level!
+avatar.waterSourceFail=Find a valid water source!
 avatar.onCooldown=This ability is still on cooldown!
 
 avatar.announcement.today=[bold][red]\[AvatarMod Announcement][/red] \[today]:[/bold] ${announcement}

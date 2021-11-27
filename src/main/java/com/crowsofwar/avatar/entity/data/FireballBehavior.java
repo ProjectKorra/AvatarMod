@@ -108,7 +108,7 @@ public abstract class FireballBehavior extends OffensiveBehaviour {
 
             //Readds the status control while also giving enough space so all fireballs
             //aren't fired simultaneously.
-            if (owner.ticksExisted % 2 == 0)
+            if (owner.ticksExisted % 8 == 0)
                 if (data != null)
                     if (!data.hasStatusControl(StatusControlController.THROW_FIREBALL))
                         data.addStatusControl(StatusControlController.THROW_FIREBALL);

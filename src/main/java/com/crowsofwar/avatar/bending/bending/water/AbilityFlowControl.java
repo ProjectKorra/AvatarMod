@@ -18,6 +18,7 @@
 package com.crowsofwar.avatar.bending.bending.water;
 
 import com.crowsofwar.avatar.bending.bending.Ability;
+import com.crowsofwar.avatar.entity.AvatarEntity;
 import com.crowsofwar.avatar.entity.EntityWaterBubble;
 import com.crowsofwar.avatar.entity.data.WaterBubbleBehavior;
 import com.crowsofwar.avatar.util.data.AbilityData;
@@ -90,31 +91,39 @@ public class AbilityFlowControl extends Ability {
             damage = powerModify(damage, abilityData);
             size = powerModify(size, abilityData);
 
-            EntityWaterBubble bubble = new EntityWaterBubble(world);
-            bubble.setLifeTime(lifeTime);
-            bubble.setDamage(damage);
-            bubble.setTier(getCurrentTier(ctx));
-            bubble.setOwner(entity);
-            //Grow the bubble with an appear animation
-            bubble.setEntitySize(0.05F);
-            bubble.setMaxEntitySize(size);
-            bubble.setHealth(waterLevel);
-            bubble.setXp(xp);
-            bubble.setChiHit(chiHit);
-            bubble.setBehaviour(new WaterBubbleBehavior.Appear());
-            bubble.setPerformanceAmount(performance);
-            bubble.setAbility(this);
-            bubble.setPosition(spawnPos.getX(), spawnPos.getY() + 0.5, spawnPos.getZ());
-            bubble.setState(EntityWaterBubble.State.BUBBLE);
-            bubble.setDegreesPerSecond(size * 2);
+            EntityWaterBubble existing = AvatarEntity.lookupControlledEntity(world, EntityWaterBubble.class,
+                    entity);
+            if (existing == null) {
+                EntityWaterBubble bubble = new EntityWaterBubble(world);
+                bubble.setLifeTime(lifeTime);
+                bubble.setDamage(damage);
+                bubble.setTier(getCurrentTier(ctx));
+                bubble.setOwner(entity);
+                //Grow the bubble with an appear animation
+                bubble.setEntitySize(0.05F);
+                bubble.setMaxEntitySize(size);
+                bubble.setHealth(waterLevel);
+                bubble.setXp(xp);
+                bubble.setChiHit(chiHit);
+                bubble.setBehaviour(new WaterBubbleBehavior.Appear());
+                bubble.setPerformanceAmount(performance);
+                bubble.setAbility(this);
+                bubble.setPosition(spawnPos.getX(), spawnPos.getY() + 0.5, spawnPos.getZ());
+                bubble.setState(EntityWaterBubble.State.BUBBLE);
+                bubble.setDegreesPerSecond(size * 2);
 
-            //Only want to spawn it server side
-            if (!world.isRemote)
-                world.spawnEntity(bubble);
+                //Only want to spawn it server side
+                if (!world.isRemote)
+                    world.spawnEntity(bubble);
 
-            //Add all status controls except for throw.
-            //Replace lob w/ throw while holding shift.
-            data.addStatusControl(StatusControlController.LOB_BUBBLE);
+                //Add all status controls except for throw.
+                //Replace lob w/ throw while holding shift.
+                data.addStatusControl(StatusControlController.LOB_BUBBLE);
+                data.addStatusControl(StatusControlController.SHIELD_BUBBLE);
+            }
+        }
+        else {
+            bender.sendMessage("avatar.waterSourceFail");
         }
         super.execute(ctx);
 

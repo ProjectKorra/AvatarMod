@@ -20,8 +20,11 @@ package com.crowsofwar.avatar.entity;
 import com.crowsofwar.avatar.bending.bending.fire.Firebending;
 import com.crowsofwar.avatar.bending.bending.lightning.Lightningbending;
 import com.crowsofwar.avatar.bending.bending.water.Waterbending;
+import com.crowsofwar.avatar.blocks.BlockTemp;
 import com.crowsofwar.avatar.entity.data.WaterBubbleBehavior;
 import com.crowsofwar.avatar.util.data.AbilityData;
+import com.crowsofwar.avatar.util.data.BendingData;
+import com.crowsofwar.avatar.util.data.StatusControlController;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.BlockFarmland;
 import net.minecraft.block.BlockLiquid;
@@ -30,14 +33,17 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.UUID;
 
 /**
@@ -181,10 +187,51 @@ public class EntityWaterBubble extends EntityOffensive implements IShieldEntity 
 
     }
 
+    @Nullable
+    @Override
+    public SoundEvent[] getSounds() {
+        return new SoundEvent[]{
+                SoundEvents.ENTITY_GENERIC_SPLASH
+        };
+    }
+
+    @Override
+    public void Explode() {
+         super.Explode();
+    }
+
+    @Override
+    public void setDead() {
+        cleanup();
+        super.setDead();
+        if (!world.isRemote && this.isDead) {
+            //Thread.dumpStack();
+        }
+    }
+
+    public void cleanup () {
+        if (getOwner() != null) {
+            BendingData data = BendingData.getFromEntity(getOwner());
+            if (data != null) {
+                data.removeStatusControl(StatusControlController.SHIELD_BUBBLE);
+                data.removeStatusControl(StatusControlController.LOB_BUBBLE);
+                data.removeStatusControl(StatusControlController.RESET_SHIELD_BUBBLE);
+                //Swirl
+                //Throw
+            }
+        }
+    }
+
 
     @Override
     public boolean shouldExplode() {
-        return !(getBehaviour() instanceof WaterBubbleBehavior.PlayerControlled);
+        return !(getBehaviour() instanceof WaterBubbleBehavior.PlayerControlled ||
+                getBehaviour() instanceof WaterBubbleBehavior.Appear);
+    }
+
+    @Override
+    public boolean shouldDissipate() {
+        return false;
     }
 
     @Override
@@ -233,18 +280,19 @@ public class EntityWaterBubble extends EntityOffensive implements IShieldEntity 
     }
 
     @Override
+    public boolean onCollideWithSolid() {
+        return super.onCollideWithSolid();
+    }
+
+    @Override
     protected void readEntityFromNBT(NBTTagCompound compound) {
         super.readEntityFromNBT(compound);
-//        setBehaviour((WaterBubbleBehavior) Behavior.lookup(compound.getInteger("Behavior"), this));
-//        getBehaviour().load(compound);
         setSourceBlock(compound.getBoolean("SourceBlock"));
     }
 
     @Override
     protected void writeEntityToNBT(NBTTagCompound compound) {
         super.writeEntityToNBT(compound);
-//        compound.setInteger("Behavior", getBehaviour().getId());
-//        getBehaviour().save(compound);
         compound.setBoolean("SourceBlock", sourceBlock);
     }
 
@@ -258,7 +306,7 @@ public class EntityWaterBubble extends EntityOffensive implements IShieldEntity 
 
     @Override
     public EntityLivingBase getController() {
-        return getOwner();//getBehaviour() instanceof WaterBubbleBehavior.PlayerControlled ? getOwner() : null;
+        return getBehaviour() instanceof WaterBubbleBehavior.PlayerControlled ? getOwner() : null;
     }
 
     @Override

@@ -7,12 +7,15 @@ import com.crowsofwar.avatar.bending.bending.ice.StatCtrlShieldShatter;
 import com.crowsofwar.avatar.bending.bending.lightning.StatCtrlThrowLightningSpear;
 import com.crowsofwar.avatar.bending.bending.sand.StatCtrlSandstormRedirect;
 import com.crowsofwar.avatar.bending.bending.water.statctrls.flowcontrol.StatCtrlChargeBubble;
+import com.crowsofwar.avatar.bending.bending.water.statctrls.flowcontrol.StatCtrlResetBubble;
+import com.crowsofwar.avatar.bending.bending.water.statctrls.flowcontrol.StatCtrlShieldBubble;
 import com.crowsofwar.avatar.bending.bending.water.statctrls.waterarc.StatCtrlThrowWater;
 import com.crowsofwar.avatar.bending.bending.water.statctrls.waterblast.StatCtrlBurstWaterBlast;
 import com.crowsofwar.avatar.bending.bending.water.statctrls.waterblast.StatCtrlChargeWaterBlast;
 import com.crowsofwar.avatar.bending.bending.water.statctrls.flowcontrol.StatCtrlLobBubble;
 import com.crowsofwar.avatar.bending.bending.water.statctrls.waterskate.StatCtrlSkateJump;
 import com.crowsofwar.avatar.bending.bending.water.statctrls.waterskate.StatCtrlSkateStart;
+import com.crowsofwar.avatar.client.controls.AvatarControl;
 import net.minecraft.util.EnumHand;
 
 import java.util.List;
@@ -62,7 +65,10 @@ public class StatusControlController {
 			SPLIT_FIRE = new StatCtrlFireSplit(),
 			EARTH_REDIRECT = new StatCtrlEarthRedirect(),
 			CHARGE_EARTH_SPIKE = new StatCtrlChargeEarthspike(true),
-			RELEASE_EARTH_SPIKE = new StatCtrlChargeEarthspike(false);
+			RELEASE_EARTH_SPIKE = new StatCtrlChargeEarthspike(false),
+			SHIELD_BUBBLE = new StatCtrlShieldBubble(),
+			RESET_SHIELD_BUBBLE = new StatCtrlResetBubble(AvatarControl.CONTROL_RIGHT_CLICK_UP, StatusControl.CrosshairPosition.RIGHT_OF_CROSSHAIR),
+			RESET_SWIRL_BUBBLE = new StatCtrlResetBubble(AvatarControl.CONTROL_SHIFT, StatusControl.CrosshairPosition.BELOW_CROSSHAIR);
 	// @formatter:on
 
 	public static StatusControl lookup(int id) {

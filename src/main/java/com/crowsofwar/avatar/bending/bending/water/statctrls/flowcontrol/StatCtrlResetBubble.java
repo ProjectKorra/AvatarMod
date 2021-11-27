@@ -10,11 +10,10 @@ import com.crowsofwar.avatar.util.data.ctx.BendingContext;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
-public class StatCtrlShieldBubble extends StatusControl {
+public class StatCtrlResetBubble extends StatusControl {
 
-
-    public StatCtrlShieldBubble() {
-        super(19, AvatarControl.CONTROL_RIGHT_CLICK_DOWN, CrosshairPosition.RIGHT_OF_CROSSHAIR);
+    public StatCtrlResetBubble(AvatarControl control, CrosshairPosition position) {
+        super(20, control, position);
     }
 
     @Override
@@ -22,12 +21,16 @@ public class StatCtrlShieldBubble extends StatusControl {
         EntityLivingBase entity = ctx.getBenderEntity();
         World world = ctx.getWorld();
         BendingData data = ctx.getData();
-        EntityWaterBubble bubble = AvatarEntity.lookupControlledEntity(world, EntityWaterBubble.class, entity);
 
+        EntityWaterBubble bubble = AvatarEntity.lookupControlledEntity(world, EntityWaterBubble.class, entity);
         if (bubble != null) {
-            bubble.setState(EntityWaterBubble.State.SHIELD);
-            data.addStatusControl(StatusControlController.RESET_SHIELD_BUBBLE);
+            bubble.setState(EntityWaterBubble.State.BUBBLE);
+            if (data.hasStatusControl(StatusControlController.RESET_SHIELD_BUBBLE))
+                data.addStatusControl(StatusControlController.SHIELD_BUBBLE);
+//        if (data.hasStatusControl(StatusControlController.RESET_SWIRL_BUBBLE))
+//            data.addStatusControl(StatusControl.);
         }
+
 
         return true;
     }

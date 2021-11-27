@@ -28,7 +28,9 @@ import com.crowsofwar.avatar.entity.EntityWaterBubble;
 import com.crowsofwar.avatar.entity.data.WaterBubbleBehavior;
 import com.crowsofwar.gorecore.util.Vector;
 
+import static com.crowsofwar.avatar.client.controls.AvatarControl.CONTROL_LEFT_CLICK;
 import static com.crowsofwar.avatar.client.controls.AvatarControl.CONTROL_RIGHT_CLICK_DOWN;
+import static com.crowsofwar.avatar.util.data.StatusControl.CrosshairPosition.LEFT_OF_CROSSHAIR;
 import static com.crowsofwar.avatar.util.data.StatusControl.CrosshairPosition.RIGHT_OF_CROSSHAIR;
 
 /**
@@ -39,7 +41,7 @@ public class StatCtrlLobBubble extends StatusControl {
 	/**
 	 */
 	public StatCtrlLobBubble() {
-		super(7, CONTROL_RIGHT_CLICK_DOWN, RIGHT_OF_CROSSHAIR);
+		super(7, CONTROL_LEFT_CLICK, LEFT_OF_CROSSHAIR);
 	}
 
 	@Override
