@@ -17,57 +17,55 @@
 
 package com.crowsofwar.avatar.bending.bending.water.statctrls.flowcontrol;
 
-import com.crowsofwar.avatar.bending.bending.water.Waterbending;
-import com.crowsofwar.avatar.util.data.AbilityData;
-import com.crowsofwar.avatar.util.data.AbilityData.AbilityTreePath;
-import com.crowsofwar.avatar.util.data.BendingData;
-import com.crowsofwar.avatar.util.data.StatusControl;
-import com.crowsofwar.avatar.util.data.ctx.BendingContext;
+import com.crowsofwar.avatar.bending.bending.Abilities;
+import com.crowsofwar.avatar.bending.bending.Ability;
+import com.crowsofwar.avatar.bending.bending.water.AbilityFlowControl;
 import com.crowsofwar.avatar.entity.AvatarEntity;
 import com.crowsofwar.avatar.entity.EntityWaterBubble;
 import com.crowsofwar.avatar.entity.data.WaterBubbleBehavior;
+import com.crowsofwar.avatar.util.data.AbilityData;
+import com.crowsofwar.avatar.util.data.StatusControl;
+import com.crowsofwar.avatar.util.data.ctx.BendingContext;
 import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.util.math.MathHelper;
 
 import static com.crowsofwar.avatar.client.controls.AvatarControl.CONTROL_LEFT_CLICK;
-import static com.crowsofwar.avatar.client.controls.AvatarControl.CONTROL_RIGHT_CLICK_DOWN;
 import static com.crowsofwar.avatar.util.data.StatusControl.CrosshairPosition.LEFT_OF_CROSSHAIR;
-import static com.crowsofwar.avatar.util.data.StatusControl.CrosshairPosition.RIGHT_OF_CROSSHAIR;
 
 /**
  * @author CrowsOfWar
  */
 public class StatCtrlLobBubble extends StatusControl {
 
-	/**
-	 */
-	public StatCtrlLobBubble() {
-		super(7, CONTROL_LEFT_CLICK, LEFT_OF_CROSSHAIR);
-	}
+    /**
+     *
+     */
+    public StatCtrlLobBubble() {
+        super(7, CONTROL_LEFT_CLICK, LEFT_OF_CROSSHAIR);
+    }
 
-	@Override
-	public boolean execute(BendingContext ctx) {
-		BendingData data = ctx.getData();
-		double powerRating = ctx.getBender().calcPowerRating(Waterbending.ID);
+    @Override
+    public boolean execute(BendingContext ctx) {
+        AbilityFlowControl control = (AbilityFlowControl) Abilities.get("flow_control");
+        AbilityData abilityData = AbilityData.get(ctx.getBenderEntity(), "flow_control");
 
-		EntityWaterBubble bubble = AvatarEntity.lookupEntity(ctx.getWorld(), EntityWaterBubble.class, //
-				bub -> bub.getBehaviour() instanceof WaterBubbleBehavior.PlayerControlled
-						&& bub.getOwner() == ctx.getBenderEntity());
+        EntityWaterBubble bubble = AvatarEntity.lookupEntity(ctx.getWorld(), EntityWaterBubble.class, //
+                bub -> bub.getBehaviour() instanceof WaterBubbleBehavior.PlayerControlled
+                        && bub.getOwner() == ctx.getBenderEntity());
 
-		if (bubble != null) {
+        if (bubble != null && control != null && abilityData != null) {
 
-			AbilityData adata = data.getAbilityData("water_bubble");
-			double speed = adata.getLevel() >= 1 ? 16 : 10;
-			if (adata.isMasterPath(AbilityTreePath.FIRST)) {
-				speed = 22;
-			}
-			speed += powerRating / 30f;
+            float speed = control.getProperty(Ability.SPEED, abilityData).floatValue() * 2;
+            float speedMod = bubble.getDegreesPerSecond() / 4;
+            speed = control.powerModify(speed, abilityData);
+            speed *= MathHelper.clamp(speedMod, 1, 4);
+            bubble.setBehaviour(new WaterBubbleBehavior.Lobbed());
+            bubble.setVelocity(Vector.getLookRectangular(ctx.getBenderEntity()).times(speed));
 
-			bubble.setBehaviour(new WaterBubbleBehavior.Lobbed());
-			bubble.addVelocity(bubble.velocity().dividedBy(-1));
-			bubble.addVelocity(Vector.getLookRectangular(ctx.getBenderEntity()).times(speed));
-		}
 
-		return true;
-	}
+        }
+
+        return true;
+    }
 
 }

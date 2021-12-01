@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.bending.bending.water.statctrls.flowcontrol;
 import com.crowsofwar.avatar.client.controls.AvatarControl;
 import com.crowsofwar.avatar.entity.AvatarEntity;
 import com.crowsofwar.avatar.entity.EntityWaterBubble;
+import com.crowsofwar.avatar.entity.data.WaterBubbleBehavior;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.StatusControl;
 import com.crowsofwar.avatar.util.data.StatusControlController;
@@ -12,8 +13,12 @@ import net.minecraft.world.World;
 
 public class StatCtrlResetBubble extends StatusControl {
 
-    public StatCtrlResetBubble(AvatarControl control, CrosshairPosition position) {
-        super(20, control, position);
+    //Used for determining what type of reset; nothing else
+    private EntityWaterBubble.State state;
+    public StatCtrlResetBubble(AvatarControl control, CrosshairPosition position, EntityWaterBubble.State state) {
+        //Either shield or swirl. No bubble reset, so I only need a ternary operator here
+        super(state == EntityWaterBubble.State.SHIELD ? 36 : 19, control, position);
+        this.state = state;
     }
 
     @Override
@@ -24,11 +29,12 @@ public class StatCtrlResetBubble extends StatusControl {
 
         EntityWaterBubble bubble = AvatarEntity.lookupControlledEntity(world, EntityWaterBubble.class, entity);
         if (bubble != null) {
-            bubble.setState(EntityWaterBubble.State.BUBBLE);
-            if (data.hasStatusControl(StatusControlController.RESET_SHIELD_BUBBLE))
+            //The behaviour immediately changes the state, so change the stat ctrl first
+            if (state.equals(EntityWaterBubble.State.SHIELD))
                 data.addStatusControl(StatusControlController.SHIELD_BUBBLE);
-//        if (data.hasStatusControl(StatusControlController.RESET_SWIRL_BUBBLE))
-//            data.addStatusControl(StatusControl.);
+           if (state.equals(EntityWaterBubble.State.STREAM))
+               data.addStatusControl(StatusControlController.SWIRL_BUBBLE);
+            bubble.setBehaviour(new WaterBubbleBehavior.Grow());
         }
 
 

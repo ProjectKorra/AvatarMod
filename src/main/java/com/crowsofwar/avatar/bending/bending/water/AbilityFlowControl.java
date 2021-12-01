@@ -36,7 +36,7 @@ import net.minecraft.world.World;
  * Flow Control!
  * <p>
  * Creates a multi-use bubble of water. Right click to shield, left click to lob.
- * Shift to circle it around you. Left click while circling to throw.
+ * Shift to circle it around you. Circling it charges it up
  * Can be used as a water source for other moves.
  * <p>
  * Level 3: Take the water bubble from any water source around you.
@@ -105,7 +105,7 @@ public class AbilityFlowControl extends Ability {
                 bubble.setHealth(waterLevel);
                 bubble.setXp(xp);
                 bubble.setChiHit(chiHit);
-                bubble.setBehaviour(new WaterBubbleBehavior.Appear());
+                bubble.setBehaviour(new WaterBubbleBehavior.Grow());
                 bubble.setPerformanceAmount(performance);
                 bubble.setAbility(this);
                 bubble.setPosition(spawnPos.getX(), spawnPos.getY() + 0.5, spawnPos.getZ());
@@ -120,6 +120,7 @@ public class AbilityFlowControl extends Ability {
                 //Replace lob w/ throw while holding shift.
                 data.addStatusControl(StatusControlController.LOB_BUBBLE);
                 data.addStatusControl(StatusControlController.SHIELD_BUBBLE);
+                data.addStatusControl(StatusControlController.SWIRL_BUBBLE);
             }
         }
         else {

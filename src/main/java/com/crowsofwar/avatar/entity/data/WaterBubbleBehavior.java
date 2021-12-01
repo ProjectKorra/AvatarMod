@@ -48,7 +48,9 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
         registerBehavior(Drop.class);
         registerBehavior(PlayerControlled.class);
         registerBehavior(Lobbed.class);
-        registerBehavior(Appear.class);
+        registerBehavior(Grow.class);
+        registerBehavior(ShieldShrink.class);
+        registerBehavior(StreamShrink.class);
         //When you use the water bubble like a bucket
     }
 
@@ -109,10 +111,39 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
 
 
             Vec3d pos = Vector.getEntityPos(owner).toMinecraft();
+            Vec3d look = owner.getLookVec().scale(2.5).add(0, owner.getEyeHeight() / 2, 0);
 
-            if (((EntityWaterBubble) entity).getState() == EntityWaterBubble.State.RING) {
+            if (((EntityWaterBubble) entity).getState() == EntityWaterBubble.State.STREAM) {
+                AvatarEntityUtils.dragEntityTowardsPoint(entity,
+                        AvatarEntityUtils.circularMotion(pos.add(0, look.y, 0), 10 * (int) entity.world.getWorldTime(),
+                                0, 1), 0.125);
+                //Visuals
+                if (world.isRemote) {
+                    //Because the shield uses a shrunk water bubble for a clean animation
+                    float size = entity.getMaxEntitySize() * 0.75F;
+                    //Overall sphere shape/swirl
+                    ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(255, 255, 255, 50).glow(true).gravity(true)
+                            .time(16).scale(0.5F).spawnEntity(entity).element(BendingStyles.get(Waterbending.ID))
+                            .spin(size / 10, world.rand.nextGaussian() / 20)
+                            .swirl((int) (size * 12), (int) (size * 4 * Math.PI),
+                                    size, size * 5, ((EntityWaterBubble) entity).getDegreesPerSecond()
+                                            * size * 6,
+                                    (float) (world.rand.nextGaussian() / 8F), entity, world, false, AvatarEntityUtils.getBottomMiddleOfEntity(entity),
+                                    ParticleBuilder.SwirlMotionType.OUT, true, true);
+                    ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(255, 255, 255, 90).glow(true).gravity(true)
+                            .time(16).scale(0.5F).spawnEntity(entity).element(BendingStyles.get(Waterbending.ID))
+                            .spin(size / 10, world.rand.nextGaussian() / 20)
+                            .swirl((int) (size * 12), (int) (size * 4 * Math.PI),
+                                    size, size * 3, ((EntityWaterBubble) entity).getDegreesPerSecond()
+                                            * size * 6,
+                                    (float) (world.rand.nextGaussian() / 8F), entity, world, true, AvatarEntityUtils.getBottomMiddleOfEntity(entity),
+                                    ParticleBuilder.SwirlMotionType.OUT, true, true);
+                }
+
+                //Increases the spin speed
+                if (entity.ticksExisted % 6 == 0 && ((EntityWaterBubble) entity).getDegreesPerSecond() < entity.getMaxEntitySize() * 20)
+                    ((EntityWaterBubble) entity).setDegreesPerSecond(((EntityWaterBubble) entity).getDegreesPerSecond() + 1);
             } else {
-                Vec3d look = owner.getLookVec().scale(2.5).add(0, owner.getEyeHeight() / 2, 0);
                 AvatarEntityUtils.dragEntityTowardsPoint(entity, pos.add(look), 0.125);
 
                 //particles!
@@ -125,28 +156,31 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
                         //Use the bottom of the entity cause my method is bad and shifts the centre point up. Dw about it.
                         bubbleSwirl(entity, world);
                     }
+
+                    //Because the shield uses a shrunk water bubble for a clean animation
+                    float size = entity.getMaxEntitySize();
                     if (((EntityWaterBubble) entity).getState().equals(EntityWaterBubble.State.SHIELD)) {
                         //Overall sphere shape/swirl
                         ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(255, 255, 255, 50).glow(true).gravity(true)
                                 .time(16).scale(0.5F).spawnEntity(entity).element(BendingStyles.get(Waterbending.ID))
-                                .spin(entity.getAvgSize() / 10, world.rand.nextGaussian() / 20)
-                                .swirl((int) (entity.getAvgSize() * 12), (int) (entity.getAvgSize() * 4 * Math.PI),
-                                        entity.getAvgSize(), entity.getAvgSize() * 5, ((EntityWaterBubble) entity).getDegreesPerSecond()
-                                                * entity.getAvgSize() * 6,
+                                .spin(size / 10, world.rand.nextGaussian() / 20)
+                                .swirl((int) (size * 12), (int) (size * 4 * Math.PI),
+                                        size, size * 5, ((EntityWaterBubble) entity).getDegreesPerSecond()
+                                                * size * 6,
                                         (float) (world.rand.nextGaussian() / 8F), entity, world, true, AvatarEntityUtils.getBottomMiddleOfEntity(entity),
-                                        ParticleBuilder.SwirlMotionType.OUT, false, true);
+                                        ParticleBuilder.SwirlMotionType.OUT, true, true);
                         //Disc/spin.
                         //Loop for particles spinning around, and for how many particles within.
-                        int max = (int) (entity.getAvgSize() * 12);
+                        int max = (int) (size * 12);
                         for (int h = 0; h < max; h++) {
                             for (int i = 0; i < max; i++) {
                                 pos = Vector.getOrthogonalVector(entity.getLookVec(), (i + 1) * (360F / max) + (entity.ticksExisted % 360) *
-                                        ((EntityWaterBubble) entity).getDegreesPerSecond() * 5, entity.getAvgSize() * (float) ((h + 1) / max) * 1.25F).toMinecraft();
+                                        ((EntityWaterBubble) entity).getDegreesPerSecond() * 5, size * (float) ((h + 1) / max) * 1.25F).toMinecraft();
                                 pos = pos.add(0, -entity.getEyeHeight() / 2, 0);
                                 Vec3d velocity;
                                 Vec3d entityPos = AvatarEntityUtils.getMiddleOfEntity(entity);
 
-                                pos = pos.add(entityPos).add(entity.getLookVec().scale(0.5F * entity.getAvgSize()));
+                                pos = pos.add(entityPos).add(entity.getLookVec().scale(0.5F * size));
                                 velocity = pos.subtract(entityPos).normalize();
                                 velocity = velocity.scale(entity.velocity().sqrMagnitude() / 400000);
                                 double spawnX = pos.x;
@@ -172,6 +206,10 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
                     //Shield, swirl, throw
                     if (!data.hasStatusControl(StatusControlController.RESET_SHIELD_BUBBLE))
                         data.addStatusControl(StatusControlController.SHIELD_BUBBLE);
+                    if (!data.hasStatusControl(StatusControlController.RESET_SWIRL_BUBBLE))
+                        data.addStatusControl(StatusControlController.SWIRL_BUBBLE);
+                    if (((EntityWaterBubble) entity).getState().equals(EntityWaterBubble.State.BUBBLE))
+                        data.addStatusControl(StatusControlController.LOB_BUBBLE);
                 }
             }
             return this;
@@ -195,25 +233,116 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
 
     }
 
-    //Used for an appear animation.
-    public static class Appear extends WaterBubbleBehavior {
+    //Used for a grow animation.
+    public static class Grow extends WaterBubbleBehavior {
 
         @Override
         public OffensiveBehaviour onUpdate(EntityOffensive entity) {
 
-            if (entity != null && entity.getOwner() != null) {
+            if (entity instanceof EntityWaterBubble && entity.getOwner() != null) {
                 World world = entity.world;
                 if (world.isRemote) {
                     bubbleSwirl(entity, world);
                 }
+
+                ((EntityWaterBubble) entity).setState(EntityWaterBubble.State.BUBBLE);
 
                 //Grows the entity at an exponential rate
                 float sizeMult = entity.getAvgSize() <= 1 ? 1.125F * entity.getAvgSize() : (float) Math.pow(entity.getAvgSize(), 1.125);
                 entity.setEntitySize(sizeMult * 1.125F);
                 //Grows the entity until it's the correct size
                 if (entity.getHeight() >= entity.getMaxHeight() && entity.getWidth() >=
-                        entity.getMaxWidth())
+                        entity.getMaxWidth()) {
                     return new WaterBubbleBehavior.PlayerControlled();
+                }
+            } else return null;
+            return this;
+        }
+
+        @Override
+        public void fromBytes(PacketBuffer buf) {
+
+        }
+
+        @Override
+        public void toBytes(PacketBuffer buf) {
+
+        }
+
+        @Override
+        public void load(NBTTagCompound nbt) {
+
+        }
+
+        @Override
+        public void save(NBTTagCompound nbt) {
+
+        }
+    }
+
+    //used for a shrink animation
+    public static class ShieldShrink extends WaterBubbleBehavior {
+
+        @Override
+        public OffensiveBehaviour onUpdate(EntityOffensive entity) {
+            if (entity instanceof EntityWaterBubble && entity.getOwner() != null) {
+                World world = entity.world;
+                if (world.isRemote) {
+                    bubbleSwirl(entity, world);
+                }
+
+                //Grows the entity at an exponential rate
+                float sizeMult = entity.getAvgSize() >= 1 ? entity.getAvgSize() / 1.125F : (float) Math.pow(entity.getAvgSize(), 1.125);
+                entity.setEntitySize(sizeMult / 1.125F);
+                //Grows the entity until it's the correct size
+                if (entity.getHeight() <= 0.1F && entity.getWidth() <= 0.1F) {
+                    ((EntityWaterBubble) entity).setState(EntityWaterBubble.State.SHIELD);
+                    return new WaterBubbleBehavior.PlayerControlled();
+                }
+            } else return null;
+            return this;
+        }
+
+        @Override
+        public void fromBytes(PacketBuffer buf) {
+
+        }
+
+        @Override
+        public void toBytes(PacketBuffer buf) {
+
+        }
+
+        @Override
+        public void load(NBTTagCompound nbt) {
+
+        }
+
+        @Override
+        public void save(NBTTagCompound nbt) {
+
+        }
+    }
+
+    //used for a shrink animation
+    public static class StreamShrink extends WaterBubbleBehavior {
+
+        @Override
+        public OffensiveBehaviour onUpdate(EntityOffensive entity) {
+            if (entity instanceof EntityWaterBubble && entity.getOwner() != null) {
+                World world = entity.world;
+                if (world.isRemote) {
+                    bubbleSwirl(entity, world);
+                }
+
+                //Grows the entity at an exponential rate
+                float sizeMult = entity.getAvgSize() >= 1 ? entity.getAvgSize() / 1.25F : (float) Math.pow(entity.getAvgSize(), 1.25);
+                entity.setEntitySize(sizeMult / 1.25F);
+                //Grows the entity until it's the correct size
+                if (entity.getHeight() <= entity.getMaxEntitySize() / 2 && entity.getWidth() <= entity.getMaxEntitySize() / 2) {
+                    ((EntityWaterBubble) entity).setState(EntityWaterBubble.State.STREAM);
+                    return new WaterBubbleBehavior.PlayerControlled();
+                }
             } else return null;
             return this;
         }
@@ -254,14 +383,15 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
                 if (entity.onCollideWithSolid()) {
                     if (!entity.world.isRemote) {
 
-                        entity.world.setBlockState(entity.getPosition(), state, 3);
-                        entity.setDead();
+                        if (((EntityWaterBubble) entity).getDegreesPerSecond() <= 8) {
+                            entity.world.setBlockState(entity.getPosition(), state, 3);
+                            entity.Explode();
 
-                        if (!((EntityWaterBubble) entity).isSourceBlock()) {
-                            AvatarWorldData wd = AvatarWorldData.getDataFromWorld(entity.world);
-                            wd.addTemporaryWaterLocation(entity.getPosition());
+                            if (!((EntityWaterBubble) entity).isSourceBlock()) {
+                                AvatarWorldData wd = AvatarWorldData.getDataFromWorld(entity.world);
+                                wd.addTemporaryWaterLocation(entity.getPosition());
+                            }
                         }
-
                     }
                 }
 

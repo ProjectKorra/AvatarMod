@@ -178,6 +178,10 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
         return dataManager.get(SYNC_MAX_WIDTH);
     }
 
+    public float getMaxEntitySize() {
+        return (dataManager.get(SYNC_MAX_HEIGHT) + dataManager.get(SYNC_MAX_WIDTH)) / 2;
+    }
+
     public float getAvgSize() {
         if (getHeight() == getWidth()) {
             return getHeight();

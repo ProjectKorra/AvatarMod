@@ -17,11 +17,13 @@
 
 package com.crowsofwar.avatar.entity;
 
+import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.fire.Firebending;
 import com.crowsofwar.avatar.bending.bending.lightning.Lightningbending;
 import com.crowsofwar.avatar.bending.bending.water.Waterbending;
-import com.crowsofwar.avatar.blocks.BlockTemp;
+import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.entity.data.WaterBubbleBehavior;
+import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.StatusControlController;
@@ -67,6 +69,7 @@ public class EntityWaterBubble extends EntityOffensive implements IShieldEntity 
         super(world);
         setSize(.8f, .8f);
         this.putsOutFires = true;
+        this.noClip = false;
     }
 
     //The method in EntityOffensive is used for growing the water bubble.
@@ -216,7 +219,8 @@ public class EntityWaterBubble extends EntityOffensive implements IShieldEntity 
                 data.removeStatusControl(StatusControlController.SHIELD_BUBBLE);
                 data.removeStatusControl(StatusControlController.LOB_BUBBLE);
                 data.removeStatusControl(StatusControlController.RESET_SHIELD_BUBBLE);
-                //Swirl
+                data.removeStatusControl(StatusControlController.SWIRL_BUBBLE);
+                data.removeStatusControl(StatusControlController.RESET_SWIRL_BUBBLE);
                 //Throw
             }
         }
@@ -225,8 +229,8 @@ public class EntityWaterBubble extends EntityOffensive implements IShieldEntity 
 
     @Override
     public boolean shouldExplode() {
-        return !(getBehaviour() instanceof WaterBubbleBehavior.PlayerControlled ||
-                getBehaviour() instanceof WaterBubbleBehavior.Appear);
+        //Add "Thrown" later
+        return getBehaviour() instanceof WaterBubbleBehavior.Lobbed;
     }
 
     @Override
@@ -236,7 +240,15 @@ public class EntityWaterBubble extends EntityOffensive implements IShieldEntity 
 
     @Override
     public void spawnExplosionParticles(World world, Vec3d pos) {
-
+        if (world.isRemote) {
+            ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(255, 255, 255, 80).glow(true).gravity(true)
+                    .time(20).scale(1).spawnEntity(this).element(BendingStyles.get(Waterbending.ID))
+                    .swirl((int) (getAvgSize() * 6), (int) (getAvgSize() * 6 * Math.PI * Math.max(getDegreesPerSecond() / 4, 1)),
+                            getAvgSize(), getAvgSize() * 3, getDegreesPerSecond()
+                                    * getAvgSize() * 2,
+                            Math.max(getDegreesPerSecond() / 4, 1) + 2, this, world, true, AvatarEntityUtils.getMiddleOfEntity(this),
+                            ParticleBuilder.SwirlMotionType.OUT, false, true);
+        }
     }
 
     @Override
@@ -253,8 +265,9 @@ public class EntityWaterBubble extends EntityOffensive implements IShieldEntity 
     public void onCollideWithEntity(Entity entity) {
         if (entity instanceof AvatarEntity) {
             ((AvatarEntity) entity).onMajorWaterContact();
+            //Assume if the entity is a shield it's being player controlled. Probably. Hopefully.
             if (((AvatarEntity) entity).getAbility() != null && ((AvatarEntity) entity).getOwner() != null
-                    && getBehaviour() != null && getBehaviour() instanceof WaterBubbleBehavior.PlayerControlled) {
+                    && getBehaviour() != null && getState() == State.SHIELD) {
                 float damage = AbilityData.get(((AvatarEntity) entity).getOwner(), ((AvatarEntity) entity).getAbility().getName()).getLevel();
                 if (((AvatarEntity) entity).getElement().equals(Firebending.ID)) {
                     damage *= 0.5;
@@ -327,6 +340,6 @@ public class EntityWaterBubble extends EntityOffensive implements IShieldEntity 
     public enum State {
         BUBBLE,
         SHIELD,
-        RING
+        STREAM
     }
 }
