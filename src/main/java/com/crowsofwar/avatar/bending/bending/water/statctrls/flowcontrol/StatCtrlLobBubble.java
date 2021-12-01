@@ -60,6 +60,7 @@ public class StatCtrlLobBubble extends StatusControl {
             speed = control.powerModify(speed, abilityData);
             speed *= MathHelper.clamp(speedMod, 1, 4);
             bubble.setBehaviour(new WaterBubbleBehavior.Lobbed());
+            bubble.setDamage(bubble.getDamage() * Math.max(1, speed / 5));
             bubble.setVelocity(Vector.getLookRectangular(ctx.getBenderEntity()).times(speed));
 
 

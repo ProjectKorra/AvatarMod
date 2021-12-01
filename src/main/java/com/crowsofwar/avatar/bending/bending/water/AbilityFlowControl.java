@@ -59,8 +59,9 @@ public class AbilityFlowControl extends Ability {
     @Override
     public void init() {
         super.init();
-        addProperties(WATER_LEVEL, EXPLOSION_SIZE, EXPLOSION_DAMAGE, EFFECT_RADIUS, MAX_HEALTH);
-        addBooleanProperties(RING, INFINITE_WATER);
+        addProperties(WATER_LEVEL, EXPLOSION_SIZE, EXPLOSION_DAMAGE, EFFECT_RADIUS, MAX_HEALTH, CHARGE_FREQUENCY,
+                CHARGE_AMOUNT);
+        addBooleanProperties(RING, INFINITE_WATER, REFLECT);
     }
 
     @Override

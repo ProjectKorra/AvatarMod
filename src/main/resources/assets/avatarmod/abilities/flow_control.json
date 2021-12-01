@@ -22,9 +22,12 @@
       "waterAmount": 3,
       "sourceRange": 2,
       "sourceAngles": 45,
+      "chargeFrequency": 6,
+      "chargeAmount": 1,
       "ring": false,
       "infiniteWater": false,
-      "plantbend": false
+      "plantbend": false,
+      "reflect": false
     },
     "level2": {
       "tier": 3,
@@ -56,7 +59,8 @@
       "knockback": 2,
       "chiOnHit": 1.25,
       "damage": 5,
-      "sourceRange": 5
+      "sourceRange": 5,
+      "plantbend": true
     },
     "level4_1": {
       "tier": 5,
@@ -75,7 +79,8 @@
       "chargeTime": 70,
       "explosionSize": 3,
       "explosionDamage": 4,
-      "sourceRange": 4
+      "sourceRange": 4,
+      "chargeFrequency": 4
     },
     "level4_2": {
       "tier": 5,
@@ -94,8 +99,10 @@
       "explosionSize": 0,
       "explosionDamage": 0,
       "sourceRange": 6,
+      "chargeFrequency": 10,
       "ring": true,
-      "infiniteWater": true
+      "infiniteWater": true,
+      "reflect": true
     }
   }
 }

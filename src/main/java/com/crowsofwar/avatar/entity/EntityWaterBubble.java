@@ -241,8 +241,8 @@ public class EntityWaterBubble extends EntityOffensive implements IShieldEntity 
     @Override
     public void spawnExplosionParticles(World world, Vec3d pos) {
         if (world.isRemote) {
-            ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(255, 255, 255, 80).glow(true).gravity(true)
-                    .time(20).scale(1).spawnEntity(this).element(BendingStyles.get(Waterbending.ID))
+            ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(255, 255, 255, 80).gravity(true)
+                    .time(20).scale(1).spawnEntity(this).element(BendingStyles.get(Waterbending.ID)).collide(true)
                     .swirl((int) (getAvgSize() * 6), (int) (getAvgSize() * 6 * Math.PI * Math.max(getDegreesPerSecond() / 4, 1)),
                             getAvgSize(), getAvgSize() * 3, getDegreesPerSecond()
                                     * getAvgSize() * 2,

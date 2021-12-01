@@ -98,6 +98,7 @@ public class AbilityCreateWave extends Ability {
         Vector look = Vector.getLookRectangular(entity).times(0.25);
         Vector pos = Vector.getEntityPos(entity);
         if (bender.consumeChi(getChiCost(ctx)) && abilityWave != null) {
+            //Need to fix my logic tbh
             //Entity damage values and such go here
             float damage = getProperty(DAMAGE, ctx).floatValue();
             float speed = getProperty(SPEED, ctx).floatValue() * 2;
@@ -208,7 +209,7 @@ public class AbilityCreateWave extends Ability {
                 if (size * 10 % 10 == 5)
                     adjustment = 0.5F;
                 //0.1F is for normal ground level (water is slightly shorter)
-                wave.setPosition(wave.posX, Math.round(wave.posY + adjustment) + 0.1F, wave.posZ);
+                wave.setPosition(abilityData.getSourceInfo().getBlockPos());
                 if (!world.isRemote) {
                     world.spawnEntity(wave);
                 }

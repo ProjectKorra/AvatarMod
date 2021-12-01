@@ -19,6 +19,8 @@ package com.crowsofwar.avatar.util.data.ctx;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.bending.bending.water.Waterbending;
+import com.crowsofwar.avatar.entity.AvatarEntity;
+import com.crowsofwar.avatar.entity.EntityWaterBubble;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.Raytrace;
@@ -199,6 +201,15 @@ public class BendingContext {
                             ibs.withProperty(BlockCauldron.LEVEL, waterLevel - 1));
                     return true;
                 }
+            }
+        }
+
+        //Allows for water bubbles to count as a source block
+        EntityWaterBubble bubble = AvatarEntity.lookupControlledEntity(world, EntityWaterBubble.class, getBenderEntity());
+        if (bubble != null) {
+            if (bubble.getHealth() >= amount) {
+                bubble.setHealth(bubble.getHealth() - amount);
+                return true;
             }
         }
 

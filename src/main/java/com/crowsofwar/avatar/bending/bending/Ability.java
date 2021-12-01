@@ -107,7 +107,10 @@ public abstract class Ability {
             ABSORPTION_DURATION = "absorptionDuration",
             BLAST_LEVEL = "blastLevel",
             SLOW_MULT = "slowMult",
-            SUCTION_STRENGTH = "suctionStrength";
+            SUCTION_STRENGTH = "suctionStrength",
+            CHARGE_FREQUENCY = "chargeFrequency",
+            CHARGE_AMOUNT = "chargeAmount",
+            REFLECT = "reflect";
     //Airbending stuff
     public static final String
             PUSH_REDSTONE = "pushRedstone",
@@ -128,8 +131,8 @@ public abstract class Ability {
     public static final String
             //Amount is the amount consumed
             WATER_AMOUNT = "waterAmount",
-            //Level is the HP of it (applies to source abilities such as water bubble)
-            WATER_LEVEL = "waterLevel",
+    //Level is the HP of it (applies to source abilities such as water bubble)
+    WATER_LEVEL = "waterLevel",
             SOURCE_RANGE = "sourceRange",
             SOURCE_ANGLES = "sourceAngles",
             PLANT_BEND = "plantbend";

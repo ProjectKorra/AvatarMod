@@ -17,13 +17,17 @@
 
 package com.crowsofwar.avatar.entity.data;
 
+import com.crowsofwar.avatar.bending.bending.Abilities;
+import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingStyles;
+import com.crowsofwar.avatar.bending.bending.water.AbilityFlowControl;
 import com.crowsofwar.avatar.bending.bending.water.Waterbending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.entity.EntityOffensive;
 import com.crowsofwar.avatar.entity.EntityWaterBubble;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
+import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.AvatarWorldData;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.StatusControlController;
@@ -56,7 +60,7 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
 
     //For some reason this works extremely well at high velocities for a beam. Replace water blast with this.
     private static void bubbleSwirl(EntityOffensive entity, World world) {
-        ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(255, 255, 255, 50).glow(true).gravity(true)
+        ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(255, 255, 255, 50).gravity(true)
                 .time(16).scale(0.5F).spawnEntity(entity).element(BendingStyles.get(Waterbending.ID))
                 .spin(entity.getAvgSize() / 10, world.rand.nextGaussian() / 20)
                 .swirl((int) (entity.getAvgSize() * 12), (int) (entity.getAvgSize() * 2 * Math.PI),
@@ -122,7 +126,7 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
                     //Because the shield uses a shrunk water bubble for a clean animation
                     float size = entity.getMaxEntitySize() * 0.75F;
                     //Overall sphere shape/swirl
-                    ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(255, 255, 255, 50).glow(true).gravity(true)
+                    ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(255, 255, 255, 50).gravity(true)
                             .time(16).scale(0.5F).spawnEntity(entity).element(BendingStyles.get(Waterbending.ID))
                             .spin(size / 10, world.rand.nextGaussian() / 20)
                             .swirl((int) (size * 12), (int) (size * 4 * Math.PI),
@@ -130,7 +134,7 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
                                             * size * 6,
                                     (float) (world.rand.nextGaussian() / 8F), entity, world, false, AvatarEntityUtils.getBottomMiddleOfEntity(entity),
                                     ParticleBuilder.SwirlMotionType.OUT, true, true);
-                    ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(255, 255, 255, 90).glow(true).gravity(true)
+                    ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(255, 255, 255, 90).gravity(true)
                             .time(16).scale(0.5F).spawnEntity(entity).element(BendingStyles.get(Waterbending.ID))
                             .spin(size / 10, world.rand.nextGaussian() / 20)
                             .swirl((int) (size * 12), (int) (size * 4 * Math.PI),
@@ -139,10 +143,21 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
                                     (float) (world.rand.nextGaussian() / 8F), entity, world, true, AvatarEntityUtils.getBottomMiddleOfEntity(entity),
                                     ParticleBuilder.SwirlMotionType.OUT, true, true);
                 }
+//
+                AbilityFlowControl control = (AbilityFlowControl) Abilities.get("flow_control");
+                AbilityData abilityData = AbilityData.get(owner, "flow_control");
+                if (control != null && abilityData != null) {
+                    int frequency = control.getProperty(Ability.CHARGE_FREQUENCY, abilityData).intValue();
+                    int amount = control.getProperty(Ability.CHARGE_AMOUNT, abilityData).intValue();
+                    if (entity.ticksExisted % frequency == 0 && ((EntityWaterBubble) entity).getDegreesPerSecond() < entity.getMaxEntitySize() * 15)
+                        ((EntityWaterBubble) entity).setDegreesPerSecond(((EntityWaterBubble) entity).getDegreesPerSecond() + amount);
 
-                //Increases the spin speed
-                if (entity.ticksExisted % 6 == 0 && ((EntityWaterBubble) entity).getDegreesPerSecond() < entity.getMaxEntitySize() * 20)
-                    ((EntityWaterBubble) entity).setDegreesPerSecond(((EntityWaterBubble) entity).getDegreesPerSecond() + 1);
+                } else {
+                    //Increases the spin speed
+                    //Default
+                    if (entity.ticksExisted % 6 == 0 && ((EntityWaterBubble) entity).getDegreesPerSecond() < entity.getMaxEntitySize() * 15)
+                        ((EntityWaterBubble) entity).setDegreesPerSecond(((EntityWaterBubble) entity).getDegreesPerSecond() + 1);
+                }
             } else {
                 AvatarEntityUtils.dragEntityTowardsPoint(entity, pos.add(look), 0.125);
 
@@ -161,7 +176,7 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
                     float size = entity.getMaxEntitySize();
                     if (((EntityWaterBubble) entity).getState().equals(EntityWaterBubble.State.SHIELD)) {
                         //Overall sphere shape/swirl
-                        ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(255, 255, 255, 50).glow(true).gravity(true)
+                        ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(255, 255, 255, 50).gravity(true)
                                 .time(16).scale(0.5F).spawnEntity(entity).element(BendingStyles.get(Waterbending.ID))
                                 .spin(size / 10, world.rand.nextGaussian() / 20)
                                 .swirl((int) (size * 12), (int) (size * 4 * Math.PI),
@@ -186,9 +201,10 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
                                 double spawnX = pos.x;
                                 double spawnY = pos.y;
                                 double spawnZ = pos.z;
+                                //We want at least 1 particle to collide for vfx, so if fire hits it, it looks cool
                                 ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 20 + velocity.x,
                                                 world.rand.nextGaussian() / 20 + velocity.y, world.rand.nextGaussian() / 20 + velocity.z)
-                                        .time(4 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(1F, 1F, 1F, 0.3F).spawnEntity(entity)
+                                        .time(4 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(1F, 1F, 1F, 0.3F).spawnEntity(entity).collide(world.rand.nextBoolean())
                                         .scale(0.75F).element(BendingStyles.get(Waterbending.ID)).spawn(world);
                                 ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 20 + velocity.x,
                                                 world.rand.nextGaussian() / 20 + velocity.y, world.rand.nextGaussian() / 20 + velocity.z)
