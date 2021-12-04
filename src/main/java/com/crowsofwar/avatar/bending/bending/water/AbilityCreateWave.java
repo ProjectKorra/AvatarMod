@@ -32,6 +32,7 @@ import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 import com.crowsofwar.gorecore.util.Vector;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -140,12 +141,14 @@ public class AbilityCreateWave extends Ability {
             if (ctx.consumeWater(getProperty(WATER_AMOUNT, ctx).intValue())) {
                 //It's working?? Why isn't it spawning?
                 //At 1.5 it adjusts the height of the wave
-                float adjustment = 0;
-                if (size * 10 % 10 == 5)
-                    adjustment = 0.5F;
+                float adjustment = 0.5F * size;
                 //0.1F is for normal ground level (water is slightly shorter)
                 //The game hates me :(( so I had to use some hacks to make it spawn correctly
-                wave.setPosition(abilityData.getSourceInfo().getBlockPos().add(0, adjustment + 1, 0));
+                IBlockState state = abilityData.getSourceBlock();
+                if (!Waterbending.isBendable(this, state, entity))
+                    wave.setPosition(abilityData.getSourceInfo().getBlockPos().add(0, adjustment, 0));
+                else
+                    wave.setPosition(abilityData.getSourceInfo().getBlockPos().add(0, adjustment + 1, 0));
                 if (!world.isRemote) {
                     world.spawnEntity(wave);
                 }

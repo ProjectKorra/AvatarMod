@@ -174,14 +174,11 @@ public class AbilityContext extends BendingContext {
                 if (bubble != null) {
                     if (bubble.getHealth() >= amount) {
                         bubble.setHealth(bubble.getHealth() - amount);
-                        if (ability instanceof AbilityCreateWave) {
-                            //Sets the source location to the block in front of the player
-                            getAbilityData().setSourceInfo(new SourceInfo(world.getBlockState(firstPos),
-                                    world, firstPos));
-                        } else
+                        if (!(ability instanceof AbilityCreateWave)) {
                             //Otherwise sets the source location to the location of the entity
                             getAbilityData().setSourceInfo(new SourceInfo(world.getBlockState(bubble.getPosition()),
                                     world, bubble.getPosition()));
+                        }
                         return true;
                     }
                 }

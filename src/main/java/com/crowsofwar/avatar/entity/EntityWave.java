@@ -168,14 +168,14 @@ public class EntityWave extends EntityOffensive {
         //Lowers the wave if there's a step below; also need to check against another boolean
         boolean bendableBlock = Waterbending.isBendable(Objects.requireNonNull(Abilities.get("wave")), world.getBlockState(below),
                 getOwner());
-        bendableBlock |= shouldRunOnLand() && world.getBlockState(below).isFullBlock();
-        if (!bendableBlock && shouldDissipate()) {
+        boolean compatible = shouldRunOnLand() && world.getBlockState(below).isFullBlock();
+        if ((!bendableBlock || !compatible) && shouldDissipate()) {
 
             bendableBlock = Waterbending.isBendable(Objects.requireNonNull(Abilities.get("wave")),
-                    world.getBlockState(below.down()), getOwner()) ||
-                    shouldRunOnLand() && world.getBlockState(below.down()).isFullBlock();
+                    world.getBlockState(below.down()), getOwner());
+            compatible = shouldRunOnLand() && world.getBlockState(below.down()).isFullBlock();
 
-            if (!bendableBlock)
+            if (!bendableBlock && !shouldRunOnLand() || !compatible)
                 Dissipate();
             else {
                 setPosition(position().minusY(1));
