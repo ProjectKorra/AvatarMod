@@ -133,33 +133,32 @@ public class AbilityContext extends BendingContext {
         if (getAbilityData().getAbility() != null) {
             EntityLivingBase entity = getBenderEntity();
             World world = getWorld();
-            Vector look = Vector.getLookRectangular(entity).times(0.25);
+            Vector look = Vector.getLookRectangular(entity).withY(0);
             Vector startPos = Vector.getEntityPos(entity);
-            Vector firstPos = startPos.plus(look).minusY(1);
-            Vector secondPos = firstPos.minusY(1);
-            BlockPos pos1 = firstPos.toBlockPos();
-            BlockPos pos2 = secondPos.toBlockPos();
+            BlockPos firstPos = startPos.plus(look).toBlockPos().down();
+            BlockPos secondPos = firstPos.down();
+
             //Checks 2 different places to ensure there's a block that's found.
             boolean firstBendable;
             boolean secondBendable;
 
             //Either the wave can go on land or there's a compatible block to use
-            firstBendable = Waterbending.isBendable(getAbilityData().getAbility(), world.getBlockState(pos1),
+            firstBendable = Waterbending.isBendable(getAbilityData().getAbility(), world.getBlockState(firstPos),
                     entity);
-            secondBendable = Waterbending.isBendable(getAbilityData().getAbility(), world.getBlockState(pos2),
+            secondBendable = Waterbending.isBendable(getAbilityData().getAbility(), world.getBlockState(secondPos),
                     entity);
             Vector pos = Waterbending.getClosestWaterbendableBlock(getBenderEntity(), getAbilityData().getAbility(),
                     this);
 
             //Setting the source info allows the ability to access the source later
-            if (isBendable(amount, world, pos1, firstBendable)) {
-                getAbilityData().setSourceInfo(new SourceInfo(world.getBlockState(pos1), world,
-                        pos1));
+            if (isBendable(amount, world, firstPos, firstBendable)) {
+                getAbilityData().setSourceInfo(new SourceInfo(world.getBlockState(firstPos), world,
+                        firstPos));
                 return true;
             }
-            if (isBendable(amount, world, pos2, secondBendable)) {
-                getAbilityData().setSourceInfo(new SourceInfo(world.getBlockState(pos2), world,
-                        pos2));
+            if (isBendable(amount, world, secondPos, secondBendable)) {
+                getAbilityData().setSourceInfo(new SourceInfo(world.getBlockState(secondPos), world,
+                        secondPos));
                 return true;
             }//Consumes water
             //Need to set the source block here too
@@ -177,8 +176,8 @@ public class AbilityContext extends BendingContext {
                         bubble.setHealth(bubble.getHealth() - amount);
                         if (ability instanceof AbilityCreateWave) {
                             //Sets the source location to the block in front of the player
-                            getAbilityData().setSourceInfo(new SourceInfo(world.getBlockState(firstPos.toBlockPos()),
-                                    world, firstPos.toBlockPos()));
+                            getAbilityData().setSourceInfo(new SourceInfo(world.getBlockState(firstPos),
+                                    world, firstPos));
                         } else
                             //Otherwise sets the source location to the location of the entity
                             getAbilityData().setSourceInfo(new SourceInfo(world.getBlockState(bubble.getPosition()),

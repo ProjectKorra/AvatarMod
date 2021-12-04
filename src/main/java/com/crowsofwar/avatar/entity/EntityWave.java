@@ -88,21 +88,10 @@ public class EntityWave extends EntityOffensive {
         return true;
     }
 
-    @Override
-    public double getExpandedHitboxWidth() {
-        return 0.5;
-    }
-
-    @Override
-    public double getExpandedHitboxHeight() {
-        return 0.5;
-    }
-
 
     public void setDistance(double dist) {
         maxTravelDistanceSq = dist * dist;
     }
-
 
     public double getSqrDistanceTravelled() {
         return position().sqrDist(initialPosition);
