@@ -4,7 +4,6 @@ import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.water.Waterbending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
-import com.crowsofwar.avatar.util.AvatarParticleUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
@@ -203,14 +202,14 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
 //                    false, getAvgSize() / 2);
             float size = getAvgSize() * 0.75F;
             //Overall sphere shape/swirl
-            ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(255, 255, 255, 50).collideParticles(true).gravity(true)
+            ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(255, 255, 255, 50).gravity(true)
                     .time(16).scale(0.5F).spawnEntity(this).element(BendingStyles.get(Waterbending.ID))
                     .spin(size / 10, world.rand.nextGaussian() / 20)
                     .swirl((int) (size * 12), (int) (size * 4 * Math.PI),
                             size, size * 5, (float) (velocity().magnitude() * size * 6F),
                             (float) (world.rand.nextGaussian() / 8F), this, world, false, AvatarEntityUtils.getBottomMiddleOfEntity(this),
                             ParticleBuilder.SwirlMotionType.OUT, false, true);
-            ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(255, 255, 255, 90).collideParticles(true).gravity(true)
+            ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(255, 255, 255, 90).gravity(true)
                     .time(16).scale(0.5F).spawnEntity(this).element(BendingStyles.get(Waterbending.ID))
                     .spin(size / 10, world.rand.nextGaussian() / 20)
                     .swirl((int) (size * 12), (int) (size * 4 * Math.PI),
@@ -252,7 +251,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
                     pos = pos.add(AvatarUtils.bezierCurve(((points.length - i - 1D / (h + 1)) / points.length), points));
                     ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(pos).spawnEntity(this).vel(world.rand.nextGaussian() / 40 * getAvgSize(),
                             world.rand.nextGaussian() / 40 * getAvgSize(), world.rand.nextGaussian() / 40 * getAvgSize()).scale(getAvgSize()).clr(0, 102, 255, 105)
-                            .time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).collide(true).collideParticles(true).element(new Waterbending()).spawn(world);
+                            .time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).collide(true).element(BendingStyles.get(Waterbending.ID)).spawn(world);
 
                 }
                 //Dripping water particles

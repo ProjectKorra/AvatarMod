@@ -3,7 +3,7 @@
     "xpOnHit": 2,
     "xpOnUse": 2,
     "level1": {
-      "tier": 3,
+      "tier": 1,
       "chiCost": 3.0,
       "cooldown": 70,
       "exhaustion": 2.5,
@@ -30,7 +30,7 @@
       "reflect": false
     },
     "level2": {
-      "tier": 3,
+      "tier": 1,
       "chiCost": 3.25,
       "cooldown": 100,
       "exhaustion": 2.5,
@@ -46,7 +46,7 @@
       "sourceRange": 3
     },
     "level3": {
-      "tier": 4,
+      "tier": 2,
       "chiCost": 3.5,
       "cooldown": 95,
       "exhaustion": 3.0,
@@ -63,7 +63,7 @@
       "plantbend": true
     },
     "level4_1": {
-      "tier": 5,
+      "tier": 3,
       "chiCost": 3.75,
       "cooldown": 80,
       "exhaustion": 3.5,
@@ -83,7 +83,7 @@
       "chargeFrequency": 4
     },
     "level4_2": {
-      "tier": 5,
+      "tier": 3,
       "chiCost": 4.0,
       "cooldown": 90,
       "exhaustion": 4.0,
