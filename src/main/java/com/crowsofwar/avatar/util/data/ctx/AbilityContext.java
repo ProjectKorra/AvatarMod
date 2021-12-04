@@ -18,7 +18,10 @@ package com.crowsofwar.avatar.util.data.ctx;
 
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.SourceInfo;
+import com.crowsofwar.avatar.bending.bending.water.AbilityCreateWave;
 import com.crowsofwar.avatar.bending.bending.water.Waterbending;
+import com.crowsofwar.avatar.entity.AvatarEntity;
+import com.crowsofwar.avatar.entity.EntityWaterBubble;
 import com.crowsofwar.avatar.util.Raytrace.Result;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.AbilityData.AbilityTreePath;
@@ -165,6 +168,23 @@ public class AbilityContext extends BendingContext {
                     getAbilityData().setSourceInfo(new SourceInfo(world.getBlockState(pos.toBlockPos()),
                             world, pos.toBlockPos()));
                     return true;
+                }
+            } else {
+                //Allows for water bubbles to count as a source block
+                EntityWaterBubble bubble = AvatarEntity.lookupControlledEntity(world, EntityWaterBubble.class, getBenderEntity());
+                if (bubble != null) {
+                    if (bubble.getHealth() >= amount) {
+                        bubble.setHealth(bubble.getHealth() - amount);
+                        if (ability instanceof AbilityCreateWave) {
+                            //Sets the source location to the block in front of the player
+                            getAbilityData().setSourceInfo(new SourceInfo(world.getBlockState(firstPos.toBlockPos()),
+                                    world, firstPos.toBlockPos()));
+                        } else
+                            //Otherwise sets the source location to the location of the entity
+                            getAbilityData().setSourceInfo(new SourceInfo(world.getBlockState(bubble.getPosition()),
+                                    world, bubble.getPosition()));
+                        return true;
+                    }
                 }
             }
         }
