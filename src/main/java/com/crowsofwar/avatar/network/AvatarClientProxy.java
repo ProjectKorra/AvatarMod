@@ -38,6 +38,7 @@ import com.crowsofwar.avatar.client.particles.newparticles.behaviour.ParticleBeh
 import com.crowsofwar.avatar.client.particles.oldsystem.*;
 import com.crowsofwar.avatar.client.render.*;
 import com.crowsofwar.avatar.client.render.iceprison.RenderIcePrison;
+import com.crowsofwar.avatar.client.render.lightning.main.ResourceManager;
 import com.crowsofwar.avatar.client.render.lightning.render.GLCompat;
 import com.crowsofwar.avatar.client.renderer.LayerGlider;
 import com.crowsofwar.avatar.entity.*;
@@ -64,6 +65,7 @@ import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
@@ -75,7 +77,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 
 import static com.crowsofwar.avatar.config.ConfigAnalytics.ANALYTICS_CONFIG;
 import static com.crowsofwar.avatar.config.ConfigClient.CLIENT_CONFIG;
@@ -279,6 +280,12 @@ public class AvatarClientProxy implements AvatarCommonProxy {
             pm.registerParticle(AvatarParticles.getParticleFire().getParticleID(), AvatarParticleFlame::new);
         }
 
+    }
+
+    @Override
+    public void postInit(FMLPostInitializationEvent e) {
+        ResourceManager.loadAnimatedModels();
+//        ParticleRenderLayer.register();
     }
 
     @Override

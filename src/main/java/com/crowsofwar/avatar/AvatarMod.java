@@ -484,7 +484,7 @@ public class AvatarMod {
         }
         //Allows for BendingContext shenanigans
         Abilities.all().forEach(Ability::postInit);
-
+        proxy.postInit(e);
     }
 
     @EventHandler

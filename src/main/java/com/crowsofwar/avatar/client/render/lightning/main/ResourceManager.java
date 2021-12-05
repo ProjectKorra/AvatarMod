@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.client.render.lightning.main;
 import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.client.render.lightning.animloader.AnimatedModel;
 import com.crowsofwar.avatar.client.render.lightning.animloader.Animation;
+import com.crowsofwar.avatar.client.render.lightning.animloader.ColladaLoader;
 import com.crowsofwar.avatar.client.render.lightning.handler.HbmShaderManager2;
 import com.crowsofwar.avatar.client.render.lightning.handler.HbmShaderManager2.Shader;
 import com.crowsofwar.avatar.client.render.lightning.render.*;
@@ -56,6 +57,7 @@ public class ResourceManager {
     public static final ResourceLocation noise_2 = new ResourceLocation(AvatarInfo.MOD_ID, "textures/misc/noise_2.png");
     public static final ResourceLocation noise_3 = new ResourceLocation(AvatarInfo.MOD_ID, "textures/misc/fract_noise.png");
 
+    public static ResourceLocation skin = new ResourceLocation(AvatarInfo.MOD_ID, "textures/models/ducc_st_engineer.png");
 
     //ANIMATIONS
     public static AnimatedModel lightning_fp;
@@ -106,6 +108,13 @@ public class ResourceManager {
     });
 
     public static final Vbo test = Vbo.setupTestVbo();
+
+    public static void loadAnimatedModels(){
+
+        lightning_fp = ColladaLoader.load(new ResourceLocation(AvatarInfo.MOD_ID, "models/anim/lightning_fp_anim0.dae"));
+        lightning_fp_anim = ColladaLoader.loadAnim(4160, new ResourceLocation(AvatarInfo.MOD_ID, "models/anim/lightning_fp_anim0.dae"));
+
+    }
 
     public static void init() {
         Minecraft.getMinecraft().getTextureManager().bindTexture(fresnel_ms);

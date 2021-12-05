@@ -10,6 +10,7 @@ import com.crowsofwar.avatar.client.render.lightning.render.TrailRenderer2;
 import com.crowsofwar.avatar.client.render.lightning.handler.LightningGenerator;
 import com.crowsofwar.avatar.client.render.lightning.handler.LightningGenerator.LightningGenInfo;
 import com.crowsofwar.avatar.client.render.lightning.handler.LightningGenerator.LightningNode;
+import net.minecraft.client.renderer.Tessellator;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
@@ -22,7 +23,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public class ParticleLightningStrip extends ParticleAvatar {
+public class ParticleLightningStrip extends ParticleTargeted {
 
     public List<LightningPoint> points = new ArrayList<>();
     public float forkChance = 0.2F;
@@ -133,6 +134,11 @@ public class ParticleLightningStrip extends ParticleAvatar {
                 GL11.glPopMatrix();
             }
         }
+    }
+
+    @Override
+    protected void draw(Tessellator tessellator, double length, float partialTicks) {
+
     }
 
     public static class LightningPoint {

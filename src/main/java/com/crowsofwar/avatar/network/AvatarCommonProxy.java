@@ -32,6 +32,7 @@ import net.minecraft.util.IThreadListener;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 
 import java.util.logging.Level;
 
@@ -72,6 +73,8 @@ public interface AvatarCommonProxy {
      * Called during the FMLInitialization event
      */
     void init();
+
+    void postInit(FMLPostInitializationEvent e);
 
     AvatarGui createClientGui(int id, EntityPlayer player, World world, int x, int y, int z);
 

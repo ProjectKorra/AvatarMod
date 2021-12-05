@@ -55,7 +55,6 @@ import java.util.Random;
 @Mod.EventBusSubscriber(value = Side.CLIENT, modid = AvatarInfo.MOD_ID)
 public class RenderLightningStripHbm {
 
-    public static boolean shouldCustomRender = false;
     public static int ticksActive = -1;
     private static long renderTime;
     public static AnimationWrapper wrapper;
@@ -64,14 +63,17 @@ public class RenderLightningStripHbm {
 
     @SubscribeEvent
     public static void renderHand(RenderHandEvent e) {
-        if(!shouldCustomRender)
+        if(ticksActive < 0)
             return;
         e.setCanceled(true);
+        HbmShaderManager2.createInvMVP();
+        GlStateManager.enableDepth();
+        HbmShaderManager2.postProcess();
     }
 
     @SubscribeEvent
     public static void doDepthRender(CameraSetup e){
-        if(Minecraft.getMinecraft().gameSettings.thirdPersonView != 0 || !shouldCustomRender)
+        if(Minecraft.getMinecraft().gameSettings.thirdPersonView != 0 || ticksActive < 0 || wrapper == null)
             return;
 
         GlStateManager.matrixMode(GL11.GL_PROJECTION);
@@ -100,7 +102,7 @@ public class RenderLightningStripHbm {
 
     @SubscribeEvent
     public static void doHandRendering(RenderWorldLastEvent e) {
-        if(Minecraft.getMinecraft().gameSettings.thirdPersonView != 0 || !shouldCustomRender)
+        if(Minecraft.getMinecraft().gameSettings.thirdPersonView != 0)
             return;
 
         GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
@@ -120,7 +122,8 @@ public class RenderLightningStripHbm {
 			GL11.glRotated(90, 0, 1, 0);
 
 			RenderHelper.enableStandardItemLighting();
-	        ResourceManager.lightning_fp.controller.setAnim(wrapper);
+            Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.skin);
+            ResourceManager.lightning_fp.controller.setAnim(wrapper);
 	        ResourceManager.lightning_fp.renderAnimated(renderTime, (last, first, model, diffN, name) -> {
 	        	if(name.equals("lower")){
 	        		if(ticksActive < 55)
@@ -158,7 +161,6 @@ public class RenderLightningStripHbm {
 			}
 			particles.add(new ParticleLightningHandGlow(Minecraft.getMinecraft().world, 0.156664F, -0.60966F, -0.252432F, 2+rand.nextFloat()*0.5F, 3+rand.nextInt(3)).color(0.8F, 0.9F, 1F, 1F));
 		} else if(Keyboard.isKeyDown(Keyboard.KEY_I)) {
-            shouldCustomRender = true;
 			ticksActive = 0;
 			wrapper = new AnimationWrapper(System.currentTimeMillis(), ResourceManager.lightning_fp_anim).onEnd(new AnimationWrapper.EndResult(AnimationWrapper.EndType.END, null));
 			lightning_strips.clear();
@@ -181,6 +183,5 @@ public class RenderLightningStripHbm {
 			if(!p.isAlive())
 				iter2.remove();
 		}
-        shouldCustomRender = false;
     }
 }
