@@ -156,42 +156,9 @@ public class HbmShaderManager2 {
         if(LightningConfig.bloom){
             bloom();
         }
-        if(LightningConfig.heatDistortion){
-            heatDistortion();
-        }
         GlStateManager.enableDepth();
     }
 
-    private static void heatDistortion(){
-        GL11.glFlush();
-        ResourceManager.heat_distortion_post.use();
-        GlStateManager.setActiveTexture(GLCompat.GL_TEXTURE0+3);
-        GLCompat.activeTexture(GLCompat.GL_TEXTURE0+3);
-        GlStateManager.bindTexture(Minecraft.getMinecraft().getFramebuffer().framebufferTexture);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, Minecraft.getMinecraft().getFramebuffer().framebufferTexture);
-        GLCompat.uniform1i(GLCompat.getUniformLocation(ResourceManager.heat_distortion_post.getShaderId(), "mc_tex"), 3);
-        GlStateManager.setActiveTexture(GLCompat.GL_TEXTURE0);
-        Minecraft.getMinecraft().getFramebuffer().bindFramebuffer(false);
-        renderFboTriangle(distortionBuffer);
-        releaseShader();
-
-        distortionBuffer.bindFramebuffer(true);
-        GlStateManager.clearColor(distortionBuffer.framebufferColor[0], distortionBuffer.framebufferColor[1], distortionBuffer.framebufferColor[2], distortionBuffer.framebufferColor[3]);
-        GlStateManager.clear(GL11.GL_COLOR_BUFFER_BIT);
-        Minecraft.getMinecraft().getFramebuffer().bindFramebuffer(true);
-    }
-
-    public static void distort(float strength, Runnable render){
-        distortionBuffer.bindFramebuffer(false);
-        ResourceManager.heat_distortion_new.use();
-        GLCompat.uniform1f(GLCompat.getUniformLocation(ResourceManager.heat_distortion_new.getShaderId(), "amount"), strength);
-        GlStateManager.enableBlend();
-        GlStateManager.blendFunc(SourceFactor.ONE, DestFactor.ONE);
-        render.run();
-        GlStateManager.disableBlend();
-        releaseShader();
-        Minecraft.getMinecraft().getFramebuffer().bindFramebuffer(false);
-    }
 
     private static void bloom(){
         downsampleBloomData();

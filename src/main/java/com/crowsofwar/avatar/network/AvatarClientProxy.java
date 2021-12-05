@@ -107,11 +107,11 @@ public class AvatarClientProxy implements AvatarCommonProxy {
     @Override
     public void checkGLCaps(){
         GLCompat.error = GLCompat.init();
-//        if(GLCompat.error.isEmpty()){
-//            System.out.println(Level.INFO, "Advanced rendering fully supported");
-//        } else {
-//            System.err.println(Level.WARNING, "Advanced rendering not supported: " + GLCompat.error);
-//        }
+        if(GLCompat.error.isEmpty()){
+            System.out.println("Advanced rendering fully supported");
+        } else {
+            System.out.println("Advanced rendering not supported: " + GLCompat.error);
+        }
     }
 
     /**

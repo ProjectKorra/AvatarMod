@@ -146,7 +146,7 @@ public class RenderLightningStripHbm {
 
     @SubscribeEvent
     public static void worldTick(TickEvent.ClientTickEvent e){
-        if(true || e.phase == Phase.END || Minecraft.getMinecraft().world == null)
+        if(e.phase == Phase.END || Minecraft.getMinecraft().world == null)
             return;
 		Random rand = Minecraft.getMinecraft().world.rand;
 		if(ticksActive >= 0){
@@ -161,6 +161,8 @@ public class RenderLightningStripHbm {
 			lightning_strips.clear();
 			lightning_strips.add(new ParticleLightningStrip(Minecraft.getMinecraft().world, 0, 0, 0));
 			lightning_strips.add(new ParticleLightningStrip(Minecraft.getMinecraft().world, 0, 0, 0));
+            System.out.println("HERE: MADE IT");
+            System.out.println(lightning_strips.size());
 		}
 		Iterator<ParticleLightningStrip> iter = lightning_strips.iterator();
 		while(iter.hasNext()){

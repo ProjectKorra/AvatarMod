@@ -377,7 +377,6 @@ public class AvatarMod {
             while(polaroidID == 4 || polaroidID == 9)
                 polaroidID = rand.nextInt(18) + 1;
         }
-
         if(SharedMonsterAttributes.MAX_HEALTH.clampValue(Integer.MAX_VALUE) <= 2000)
             try{
                 @SuppressWarnings("deprecation")
@@ -387,11 +386,8 @@ public class AvatarMod {
                 modifiersField.setInt(f, f.getModifiers() & ~Modifier.FINAL);
                 f.set(SharedMonsterAttributes.MAX_HEALTH, Integer.MAX_VALUE);
             } catch(Exception ignored){}
-
         proxy.checkGLCaps();
         reloadConfig();
-
-        int i = 0;
     }
 
     @EventHandler

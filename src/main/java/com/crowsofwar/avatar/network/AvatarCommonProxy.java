@@ -115,8 +115,7 @@ public interface AvatarCommonProxy {
      * Looks up keybinding by name
      */
     KeybindingWrapper createKeybindWrapper(String keybindName);
-
-    public void checkGLCaps();
+    
 	/**
 	 * Register the item models so they can be configured to use the correct textures
 	 */
@@ -129,4 +128,6 @@ public interface AvatarCommonProxy {
     World getClientWorld();
 
     IAdvancedGliderCapabilityHandler getClientGliderCapability();
+
+    void checkGLCaps();
 }

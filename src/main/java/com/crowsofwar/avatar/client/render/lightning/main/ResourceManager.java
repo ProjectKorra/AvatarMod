@@ -56,19 +56,11 @@ public class ResourceManager {
     public static final ResourceLocation noise_2 = new ResourceLocation(AvatarInfo.MOD_ID, "textures/misc/noise_2.png");
     public static final ResourceLocation noise_3 = new ResourceLocation(AvatarInfo.MOD_ID, "textures/misc/fract_noise.png");
 
-    public static final ResourceLocation fl_cookie = new ResourceLocation(AvatarInfo.MOD_ID, "textures/misc/fl_cookie.png");
-
 
     //ANIMATIONS
     public static AnimatedModel lightning_fp;
     public static Animation lightning_fp_anim;
 
-    public static Shader test_trail = HbmShaderManager2.loadShader(new ResourceLocation(AvatarInfo.MOD_ID, "shaders/trail"), shader ->{
-        GLCompat.bindAttribLocation(shader, 0, "pos");
-        GLCompat.bindAttribLocation(shader, 1, "tex");
-        GLCompat.bindAttribLocation(shader, 2, "color");
-    });
-    public static Shader blit = HbmShaderManager2.loadShader(new ResourceLocation(AvatarInfo.MOD_ID, "shaders/blit"));
     public static Shader downsample = HbmShaderManager2.loadShader(new ResourceLocation(AvatarInfo.MOD_ID, "shaders/downsample"));
     public static Shader bloom_h = HbmShaderManager2.loadShader(new ResourceLocation(AvatarInfo.MOD_ID, "shaders/bloom_h"));
     public static Shader bloom_v = HbmShaderManager2.loadShader(new ResourceLocation(AvatarInfo.MOD_ID, "shaders/bloom_v"));
@@ -96,35 +88,6 @@ public class ResourceManager {
         shader.uniform2f("windowSize", Minecraft.getMinecraft().displayWidth, Minecraft.getMinecraft().displayHeight);
     });
 
-
-    //The actual shaders used in flashlight rendering, not experimental
-    public static Shader albedo = HbmShaderManager2.loadShader(new ResourceLocation(AvatarInfo.MOD_ID, "shaders/lighting/albedo"));
-    public static Shader flashlight_depth = HbmShaderManager2.loadShader(new ResourceLocation(AvatarInfo.MOD_ID, "shaders/lighting/flashlight_depth"));
-    public static Shader flashlight_post = HbmShaderManager2.loadShader(new ResourceLocation(AvatarInfo.MOD_ID, "shaders/lighting/flashlight_post")).withUniforms(shader -> {
-        shader.uniform2f("windowSize", Minecraft.getMinecraft().displayWidth, Minecraft.getMinecraft().displayHeight);
-    });
-    public static Shader pointlight_post = HbmShaderManager2.loadShader(new ResourceLocation(AvatarInfo.MOD_ID, "shaders/lighting/pointlight_post")).withUniforms(shader -> {
-        shader.uniform2f("windowSize", Minecraft.getMinecraft().displayWidth, Minecraft.getMinecraft().displayHeight);
-    });
-    public static Shader cone_volume = HbmShaderManager2.loadShader(new ResourceLocation(AvatarInfo.MOD_ID, "shaders/lighting/cone_volume")).withUniforms(shader -> {
-        shader.uniform2f("windowSize", Minecraft.getMinecraft().displayWidth, Minecraft.getMinecraft().displayHeight);
-    });
-    public static Shader flashlight_blit = HbmShaderManager2.loadShader(new ResourceLocation(AvatarInfo.MOD_ID, "shaders/lighting/blit"));
-    public static Shader volume_upscale = HbmShaderManager2.loadShader(new ResourceLocation(AvatarInfo.MOD_ID, "shaders/lighting/volume_upscale")).withUniforms(shader -> {
-        shader.uniform2f("windowSize", Minecraft.getMinecraft().displayWidth, Minecraft.getMinecraft().displayHeight);
-    });
-
-    public static Shader heat_distortion_post = HbmShaderManager2.loadShader(new ResourceLocation(AvatarInfo.MOD_ID, "shaders/heat_distortion_post")).withUniforms(shader ->{
-        shader.uniform2f("windowSize", Minecraft.getMinecraft().displayWidth, Minecraft.getMinecraft().displayHeight);
-        GlStateManager.setActiveTexture(GLCompat.GL_TEXTURE0+4);
-        Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.noise_2);
-        shader.uniform1i("noise", 4);
-        GlStateManager.setActiveTexture(GLCompat.GL_TEXTURE0);
-        float time = (System.currentTimeMillis()%10000000)/1000F;
-        shader.uniform1f("time", time);
-    });
-
-    public static Shader heat_distortion_new = HbmShaderManager2.loadShader(new ResourceLocation(AvatarInfo.MOD_ID, "shaders/heat_distortion_new"));
     public static Shader crucible_lightning = HbmShaderManager2.loadShader(new ResourceLocation(AvatarInfo.MOD_ID, "shaders/crucible_lightning"), shader ->{
         GLCompat.bindAttribLocation(shader, 0, "pos");
         GLCompat.bindAttribLocation(shader, 1, "tex");
@@ -135,25 +98,6 @@ public class ResourceManager {
         shader.uniform1i("noise", 4);
         GLCompat.activeTexture(GLCompat.GL_TEXTURE0);
     });
-    public static Shader flash_lmap = HbmShaderManager2.loadShader(new ResourceLocation(AvatarInfo.MOD_ID, "shaders/flash_lmap")).withUniforms(HbmShaderManager2.LIGHTMAP);
-    public static Shader bimpact = HbmShaderManager2.loadShader(new ResourceLocation(AvatarInfo.MOD_ID, "shaders/bimpact"), shader -> {
-        GLCompat.bindAttribLocation(shader, 0, "pos");
-        GLCompat.bindAttribLocation(shader, 1, "vColor");
-        GLCompat.bindAttribLocation(shader, 3, "tex");
-        GLCompat.bindAttribLocation(shader, 4, "lightTex");
-        GLCompat.bindAttribLocation(shader, 5, "projTex");
-    }).withUniforms(HbmShaderManager2.LIGHTMAP, HbmShaderManager2.WINDOW_SIZE);
-    public static Shader blood_dissolve = HbmShaderManager2.loadShader(new ResourceLocation(AvatarInfo.MOD_ID, "shaders/blood/blood")).withUniforms(HbmShaderManager2.LIGHTMAP);
-    public static Shader gravitymap_render = HbmShaderManager2.loadShader(new ResourceLocation(AvatarInfo.MOD_ID, "shaders/blood/gravitymap"));
-    public static Shader blood_flow_update = HbmShaderManager2.loadShader(new ResourceLocation(AvatarInfo.MOD_ID, "shaders/blood/blood_flow_update"));
-
-//    public static Shader gpu_particle_render = HbmShaderManager2.loadShader(new ResourceLocation(AvatarInfo.MOD_ID, "shaders/gpu_particle_render")).withUniforms(HbmShaderManager2.MODELVIEW_MATRIX, HbmShaderManager2.PROJECTION_MATRIX, HbmShaderManager2.INV_PLAYER_ROT_MATRIX, shader -> {
-//        shader.uniform1i("lightmap", 1);
-//        shader.uniform1i("particleData0", 2);
-//        shader.uniform1i("particleData1", 3);
-//        shader.uniform1i("particleData2", 4);
-//        shader.uniform4f("particleTypeTexCoords[0]", ModEventHandlerClient.contrail.getMinU(), ModEventHandlerClient.contrail.getMinV(), ModEventHandlerClient.contrail.getMaxU() - ModEventHandlerClient.contrail.getMinU(), ModEventHandlerClient.contrail.getMaxV() - ModEventHandlerClient.contrail.getMinV());
-//    });
 
     public static Shader gpu_particle_udpate = HbmShaderManager2.loadShader(new ResourceLocation(AvatarInfo.MOD_ID, "shaders/gpu_particle_update")).withUniforms(shader -> {
         shader.uniform1i("particleData0", 2);
