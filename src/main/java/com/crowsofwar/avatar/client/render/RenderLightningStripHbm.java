@@ -10,6 +10,7 @@ import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.client.render.lightning.math.BobMathUtil;
 import com.crowsofwar.avatar.client.render.lightning.render.Tessellator;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraftforge.client.event.RenderHandEvent;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.Project;
@@ -61,16 +62,16 @@ public class RenderLightningStripHbm {
     public static List<ParticleLightningStrip> lightning_strips = new ArrayList<>();
     public static List<Particle> particles = new ArrayList<>();
 
-//    @SubscribeEvent
-//    public static void renderHand(RenderHandEvent e) {
-//        if(true || !shouldCustomRender)
-//            return;
-//        e.setCanceled(true);
-//    }
+    @SubscribeEvent
+    public static void renderHand(RenderHandEvent e) {
+        if(!shouldCustomRender)
+            return;
+        e.setCanceled(true);
+    }
 
     @SubscribeEvent
     public static void doDepthRender(CameraSetup e){
-        if(true || Minecraft.getMinecraft().gameSettings.thirdPersonView != 0 || !shouldCustomRender)
+        if(Minecraft.getMinecraft().gameSettings.thirdPersonView != 0 || !shouldCustomRender)
             return;
 
         GlStateManager.matrixMode(GL11.GL_PROJECTION);
@@ -97,8 +98,9 @@ public class RenderLightningStripHbm {
         GlStateManager.matrixMode(GL11.GL_MODELVIEW);
     }
 
+    @SubscribeEvent
     public static void doHandRendering(RenderWorldLastEvent e) {
-        if(true || Minecraft.getMinecraft().gameSettings.thirdPersonView != 0 || !shouldCustomRender)
+        if(Minecraft.getMinecraft().gameSettings.thirdPersonView != 0 || !shouldCustomRender)
             return;
 
         GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
@@ -135,7 +137,7 @@ public class RenderLightningStripHbm {
 		}
         for(ParticleLightningStrip p : lightning_strips){
         	if(p != null)
-        		p.renderParticle(Tessellator.getInstance().getBuffer(), Minecraft.getMinecraft().getRenderViewEntity(), e.getPartialTicks(), 0, 0, 0, 0, 0);
+        		p.renderParticle(Tessellator.getBuffer(), Minecraft.getMinecraft().getRenderViewEntity(), e.getPartialTicks(), 0, 0, 0, 0, 0);
         }
 
         GL11.glPopMatrix();
@@ -156,6 +158,7 @@ public class RenderLightningStripHbm {
 			}
 			particles.add(new ParticleLightningHandGlow(Minecraft.getMinecraft().world, 0.156664F, -0.60966F, -0.252432F, 2+rand.nextFloat()*0.5F, 3+rand.nextInt(3)).color(0.8F, 0.9F, 1F, 1F));
 		} else if(Keyboard.isKeyDown(Keyboard.KEY_I)) {
+            shouldCustomRender = true;
 			ticksActive = 0;
 			wrapper = new AnimationWrapper(System.currentTimeMillis(), ResourceManager.lightning_fp_anim).onEnd(new AnimationWrapper.EndResult(AnimationWrapper.EndType.END, null));
 			lightning_strips.clear();
@@ -178,5 +181,6 @@ public class RenderLightningStripHbm {
 			if(!p.isAlive())
 				iter2.remove();
 		}
+        shouldCustomRender = false;
     }
 }
