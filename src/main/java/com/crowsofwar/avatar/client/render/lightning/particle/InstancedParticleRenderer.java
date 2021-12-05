@@ -4,7 +4,7 @@ import com.crowsofwar.avatar.AvatarInfo;
 import com.crowsofwar.avatar.client.render.lightning.main.ResourceManager;
 import com.crowsofwar.avatar.client.render.lightning.render.GLCompat;
 import com.crowsofwar.avatar.client.render.lightning.handler.HbmShaderManager2;
-import com.crowsofwar.avatar.client.render.lightning.configs.GeneralConfig;
+import com.crowsofwar.avatar.client.render.lightning.configs.LightningConfig;
 import com.crowsofwar.avatar.client.render.lightning.render.RenderHelper;
 import com.google.common.collect.Queues;
 
@@ -168,7 +168,7 @@ public class InstancedParticleRenderer {
 
     @SubscribeEvent
     public static void renderLast(RenderWorldLastEvent event) {
-        if(GeneralConfig.instancedParticles){
+        if(LightningConfig.instancedParticles){
             partialTicks = event.getPartialTicks();
             renderParticles(Objects.requireNonNull(Minecraft.getMinecraft().getRenderViewEntity()), event.getPartialTicks());
         }
@@ -178,7 +178,7 @@ public class InstancedParticleRenderer {
 
     @SubscribeEvent
     public static void clientTick(ClientTickEvent event) {
-        if(GeneralConfig.instancedParticles && event.phase == Phase.START) {
+        if(LightningConfig.instancedParticles && event.phase == Phase.START) {
             if(init){
                 setup();
                 init = false;

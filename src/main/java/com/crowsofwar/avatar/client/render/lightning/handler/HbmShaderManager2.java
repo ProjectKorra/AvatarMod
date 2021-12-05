@@ -14,7 +14,7 @@ import com.crowsofwar.avatar.client.render.lightning.main.MainRegistry;
 import com.crowsofwar.avatar.client.render.lightning.main.ResourceManager;
 import com.crowsofwar.avatar.client.render.lightning.particle.InstancedParticleRenderer;
 import com.crowsofwar.avatar.client.render.lightning.render.GLCompat;
-import com.crowsofwar.avatar.client.render.lightning.configs.GeneralConfig;
+import com.crowsofwar.avatar.client.render.lightning.configs.LightningConfig;
 import com.crowsofwar.avatar.client.render.lightning.handler.HbmShaderManager2.Shader.Uniform;
 
 import org.apache.commons.io.IOUtils;
@@ -131,7 +131,7 @@ public class HbmShaderManager2 {
     }
 
     public static void blitDepth(){
-        if(!GeneralConfig.depthEffects)
+        if(!LightningConfig.depthEffects)
             return;
         if(height != Minecraft.getMinecraft().displayHeight || width != Minecraft.getMinecraft().displayWidth || depthFrameBuffer == -1){
             GL11.glDeleteTextures(depthTexture);
@@ -160,20 +160,20 @@ public class HbmShaderManager2 {
     }
 
     public static void postProcess(){
-        if(!GeneralConfig.useShaders2)
+        if(!LightningConfig.useShaders2)
             return;
         if(height != Minecraft.getMinecraft().displayHeight || width != Minecraft.getMinecraft().displayWidth){
             height = Minecraft.getMinecraft().displayHeight;
             width = Minecraft.getMinecraft().displayWidth;
-            if(GeneralConfig.bloom)
+            if(LightningConfig.bloom)
                 recreateBloomFBOs();
-            if(GeneralConfig.heatDistortion)
+            if(LightningConfig.heatDistortion)
                 recreateDistortionBuffer();
         }
-        if(GeneralConfig.bloom){
+        if(LightningConfig.bloom){
             bloom();
         }
-        if(GeneralConfig.heatDistortion){
+        if(LightningConfig.heatDistortion){
             heatDistortion();
         }
         GlStateManager.enableDepth();
@@ -395,7 +395,7 @@ public class HbmShaderManager2 {
     }
 
     public static Shader loadShader(ResourceLocation file, Consumer<Integer> attribBinder) {
-        if(!GeneralConfig.useShaders2){
+        if(!LightningConfig.useShaders2){
             return new Shader(0);
         }
         int vertexShader = 0;

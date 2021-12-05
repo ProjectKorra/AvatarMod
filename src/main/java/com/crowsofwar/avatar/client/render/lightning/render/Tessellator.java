@@ -87,6 +87,14 @@ public class Tessellator
         instance.defaultTexture = true;
     }
 
+    public static Tessellator getInstance() {
+        return Tessellator.instance;
+    }
+
+    public static BufferBuilder getBuffer() {
+        return net.minecraft.client.renderer.Tessellator.getInstance().getBuffer();
+    }
+
     /**
      * Draws the data set up in this tessellator and resets the state to prepare for new drawing.
      */

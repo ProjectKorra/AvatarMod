@@ -166,7 +166,7 @@ public class RenderHelper {
         addVertexWithUV(x, y, z, u, v, Tessellator.getInstance());
     }
     public static void addVertex(double x, double y, double z){
-        Tessellator.getInstance().getBuffer().pos(x, y, z).endVertex();
+        Tessellator.getBuffer().pos(x, y, z).endVertex();
     }
 
     public static void addVertexWithUV(double x, double y, double z, double u, double v, Tessellator tes){
@@ -177,7 +177,7 @@ public class RenderHelper {
         startDrawingTexturedQuads(Tessellator.getInstance());
     }
     public static void startDrawingQuads(){
-        Tessellator.getInstance().getBuffer().begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
+        Tessellator.getBuffer().begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
     }
     public static void startDrawingTexturedQuads(Tessellator tes){
         tes.getBuffer().begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
@@ -219,15 +219,15 @@ public class RenderHelper {
     }
 
     public static void startDrawingColored(int i) {
-        Tessellator.getInstance().getBuffer().begin(i, DefaultVertexFormats.POSITION_COLOR);
+        Tessellator.getBuffer().begin(i, DefaultVertexFormats.POSITION_COLOR);
     }
 
     public static void addVertexColor(double x, double y, double z, int red, int green, int blue, int alpha){
-        Tessellator.getInstance().getBuffer().pos(x, y, z).color(red, green, blue, alpha).endVertex();;
+        Tessellator.getBuffer().pos(x, y, z).color(red, green, blue, alpha).endVertex();;
     }
 
     public static void addVertexColor(double x, double y, double z, float red, float green, float blue, float alpha){
-        Tessellator.getInstance().getBuffer().pos(x, y, z).color(red, green, blue, alpha).endVertex();;
+        Tessellator.getBuffer().pos(x, y, z).color(red, green, blue, alpha).endVertex();;
     }
 
     public static void renderAll(IBakedModel boxcar) {
