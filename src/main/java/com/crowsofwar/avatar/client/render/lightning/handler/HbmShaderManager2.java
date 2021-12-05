@@ -14,7 +14,7 @@ import com.crowsofwar.avatar.client.render.lightning.main.MainRegistry;
 import com.crowsofwar.avatar.client.render.lightning.main.ResourceManager;
 import com.crowsofwar.avatar.client.render.lightning.particle.InstancedParticleRenderer;
 import com.crowsofwar.avatar.client.render.lightning.render.GLCompat;
-import com.crowsofwar.avatar.client.render.lightning.config.GeneralConfig;
+import com.crowsofwar.avatar.client.render.lightning.configs.GeneralConfig;
 import com.crowsofwar.avatar.client.render.lightning.handler.HbmShaderManager2.Shader.Uniform;
 
 import org.apache.commons.io.IOUtils;
