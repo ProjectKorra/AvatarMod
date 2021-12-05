@@ -5,12 +5,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.crowsofwar.avatar.AvatarInfo;
-import com.crowsofwar.avatar.client.render.lightning.main.ClientProxy;
-import com.crowsofwar.avatar.client.render.lightning.main.ResourceManager;
 import com.crowsofwar.avatar.client.render.lightning.render.GLCompat;
+import com.crowsofwar.avatar.network.AvatarClientProxy;
+import com.crowsofwar.avatar.network.AvatarClientProxy;
 import org.lwjgl.opengl.GL11;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -98,9 +97,9 @@ public class LensVisibilityHandler {
             GlStateManager.disableCull();
 
             GL11.glPushMatrix();
-            ClientProxy.AUX_GL_BUFFER.put(matrix);
-            ClientProxy.AUX_GL_BUFFER.rewind();
-            GL11.glLoadMatrix(ClientProxy.AUX_GL_BUFFER);
+            AvatarClientProxy.AUX_GL_BUFFER.put(matrix);
+            AvatarClientProxy.AUX_GL_BUFFER.rewind();
+            GL11.glLoadMatrix(AvatarClientProxy.AUX_GL_BUFFER);
             GL11.glScaled(0.05, 0.05, 0.05);
             GlStateManager.disableDepth();
             GLCompat.beginQuery(GLCompat.GL_SAMPLES_PASSED, totalFragmentsQuery);
@@ -131,9 +130,9 @@ public class LensVisibilityHandler {
                 GlStateManager.disableCull();
 
                 GL11.glPushMatrix();
-                ClientProxy.AUX_GL_BUFFER.put(modelviewMatrix);
-                ClientProxy.AUX_GL_BUFFER.rewind();
-                GL11.glLoadMatrix(ClientProxy.AUX_GL_BUFFER);
+                AvatarClientProxy.AUX_GL_BUFFER.put(modelviewMatrix);
+                AvatarClientProxy.AUX_GL_BUFFER.rewind();
+                GL11.glLoadMatrix(AvatarClientProxy.AUX_GL_BUFFER);
                 GL11.glScaled(0.1, 0.1, 0.1);
                 GlStateManager.disableDepth();
                 GLCompat.beginQuery(GLCompat.GL_SAMPLES_PASSED, totalFragmentsQuery);

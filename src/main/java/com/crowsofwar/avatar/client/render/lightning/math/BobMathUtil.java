@@ -8,8 +8,8 @@ import javax.annotation.Nullable;
 import javax.vecmath.Matrix3f;
 import javax.vecmath.Quat4f;
 
-import com.crowsofwar.avatar.client.render.lightning.main.ClientProxy;
-import com.crowsofwar.avatar.client.render.lightning.main.MainRegistry;
+import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.network.AvatarClientProxy;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector4f;
@@ -120,48 +120,13 @@ public class BobMathUtil {
      * @param positions - the list of positions to be returned in world space
      * @return an array of newly transformed vectors
      */
-    @SuppressWarnings("deprecation")
-    @SideOnly(Side.CLIENT)
-    public static Vec3d[] worldFromLocal(Vector4f... positions){
-        Entity renderView = Minecraft.getMinecraft().getRenderViewEntity();
-        float partialTicks = MainRegistry.proxy.partialTicks();
-        GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, ClientProxy.AUX_GL_BUFFER);
-        Matrix4f mv_mat = new Matrix4f();
-        mv_mat.load(ClientProxy.AUX_GL_BUFFER);
-        ClientProxy.AUX_GL_BUFFER.rewind();
-        if(r_viewMat == null){
-            //It says model view matrix, but it's actually just the view matrix because it's grabbed right after setting up the camera.
-            //We can use the inverse of this to remove the view part of the open gl transform and get the model part alone that we need for this method.
-            r_viewMat = ReflectionHelper.findField(ActiveRenderInfo.class, "MODELVIEW", "field_178812_b");
-        }
-        try {
-            FloatBuffer VIEW_MAT = (FloatBuffer) r_viewMat.get(null);
-            VIEW_MAT.rewind();
-            Matrix4f v_mat = new Matrix4f();
-            v_mat.load(VIEW_MAT);
-            VIEW_MAT.rewind();
-            v_mat.invert();
-            Matrix4f.mul(v_mat, mv_mat, mv_mat);
-        } catch(IllegalArgumentException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        Vec3d[] retArr = new Vec3d[positions.length];
-        for(int i = 0; i < positions.length; i ++){
-            Vector4f pos = new Vector4f(positions[i].x, positions[i].y, positions[i].z, positions[i].w);
-            Matrix4f.transform(mv_mat, pos, pos);
-            Vec3d entPos = renderView.getPositionEyes(partialTicks);
-            Vec3d pos2 = new Vec3d(pos.x, pos.y, pos.z);
-            retArr[i] = pos2.add(new Vec3d(entPos.x, entPos.y-renderView.getEyeHeight(), entPos.z));
-        }
-        return retArr;
-    }
 
     @SideOnly(Side.CLIENT)
     public static Vec3d[] viewFromLocal(Vector4f... positions){
-        GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, ClientProxy.AUX_GL_BUFFER);
+        GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, AvatarClientProxy.AUX_GL_BUFFER);
         Matrix4f mv_mat = new Matrix4f();
-        mv_mat.load(ClientProxy.AUX_GL_BUFFER);
-        ClientProxy.AUX_GL_BUFFER.rewind();
+        mv_mat.load(AvatarClientProxy.AUX_GL_BUFFER);
+        AvatarClientProxy.AUX_GL_BUFFER.rewind();
         Vec3d[] retArr = new Vec3d[positions.length];
         for(int i = 0; i < positions.length; i ++){
             Vector4f pos = new Vector4f(positions[i].x, positions[i].y, positions[i].z, positions[i].w);
@@ -174,11 +139,11 @@ public class BobMathUtil {
 
     @SideOnly(Side.CLIENT)
     public static Vec3d[] viewToLocal(Vector4f... positions){
-        GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, ClientProxy.AUX_GL_BUFFER);
+        GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, AvatarClientProxy.AUX_GL_BUFFER);
         Matrix4f mv_mat = new Matrix4f();
-        mv_mat.load(ClientProxy.AUX_GL_BUFFER);
+        mv_mat.load(AvatarClientProxy.AUX_GL_BUFFER);
         mv_mat.invert();
-        ClientProxy.AUX_GL_BUFFER.rewind();
+        AvatarClientProxy.AUX_GL_BUFFER.rewind();
         Vec3d[] retArr = new Vec3d[positions.length];
         for(int i = 0; i < positions.length; i ++){
             Vector4f pos = new Vector4f(positions[i].x, positions[i].y, positions[i].z, positions[i].w);

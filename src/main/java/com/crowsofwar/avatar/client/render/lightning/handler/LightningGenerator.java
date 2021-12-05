@@ -1,4 +1,4 @@
-package com.crowsofwar.avatar.client.render.lightning;
+package com.crowsofwar.avatar.client.render.lightning.handler;
 
 import java.util.ArrayList;
 import java.util.List;

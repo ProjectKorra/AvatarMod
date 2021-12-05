@@ -1,6 +1,6 @@
 package com.crowsofwar.avatar.client.render.lightning.configs;
 
-import com.crowsofwar.avatar.client.render.lightning.main.MainRegistry;
+import com.crowsofwar.avatar.AvatarMod;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 
@@ -37,8 +37,8 @@ public class CommonConfig {
     public static int setDefZero(int value, int def) {
 
         if(value < 0) {
-            MainRegistry.logger.error("Fatal error config: Randomizer value has been below zero, despite bound having to be positive integer!");
-            MainRegistry.logger.error(String.format("Errored value will default back to %d, PLEASE REVIEW CONFIGURATION DESCRIPTION BEFORE MEDDLING WITH VALUES!", def));
+            AvatarMod.logger.error("Fatal error config: Randomizer value has been below zero, despite bound having to be positive integer!");
+            AvatarMod.logger.error(String.format("Errored value will default back to %d, PLEASE REVIEW CONFIGURATION DESCRIPTION BEFORE MEDDLING WITH VALUES!", def));
             return def;
         }
 
@@ -48,8 +48,8 @@ public class CommonConfig {
     public static int setDef(int value, int def) {
 
         if(value <= 0) {
-            MainRegistry.logger.error("Fatal error config: Randomizer value has been set to zero, despite bound having to be positive integer!");
-            MainRegistry.logger.error(String.format("Errored value will default back to %d, PLEASE REVIEW CONFIGURATION DESCRIPTION BEFORE MEDDLING WITH VALUES!", def));
+            AvatarMod.logger.error("Fatal error config: Randomizer value has been set to zero, despite bound having to be positive integer!");
+            AvatarMod.logger.error(String.format("Errored value will default back to %d, PLEASE REVIEW CONFIGURATION DESCRIPTION BEFORE MEDDLING WITH VALUES!", def));
             return def;
         }
 

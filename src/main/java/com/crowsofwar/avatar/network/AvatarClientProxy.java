@@ -52,6 +52,7 @@ import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.particle.ParticleManager;
+import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.IThreadListener;
@@ -68,7 +69,10 @@ import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
 
 import java.lang.reflect.Field;
+import java.nio.FloatBuffer;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.crowsofwar.avatar.config.ConfigAnalytics.ANALYTICS_CONFIG;
@@ -91,6 +95,12 @@ public class AvatarClientProxy implements AvatarCommonProxy {
     private Map<String, KeyBinding> allKeybindings;
 
     //Particles
+
+    // From Drillgon
+    public static final FloatBuffer AUX_GL_BUFFER = GLAllocation.createDirectFloatBuffer(16);
+    public static final FloatBuffer AUX_GL_BUFFER2 = GLAllocation.createDirectFloatBuffer(16);
+    //Drillgon200: Will I ever figure out how to write better code than this?
+    public static final List<Runnable> deferredRenderers = new ArrayList<>();
 
     /**
      * Use {@link ParticleAvatar#registerParticle(ResourceLocation, ParticleAvatar.IAvatarParticleFactory)}, this is internal.

@@ -9,7 +9,7 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import com.crowsofwar.avatar.client.render.lightning.main.MainRegistry;
+import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.render.lightning.math.Transform;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.Level;
@@ -63,7 +63,7 @@ public class ColladaLoader {
         } catch(IOException e) {
             e.printStackTrace();
         }
-        MainRegistry.logger.log(Level.ERROR, "FAILED TO LOAD MODEL: " + file);
+        AvatarMod.logger.log(Level.ERROR, "FAILED TO LOAD MODEL: " + file);
         return null;
     }
 
@@ -321,7 +321,7 @@ public class ColladaLoader {
         } catch(IOException e) {
             e.printStackTrace();
         }
-        MainRegistry.logger.log(Level.ERROR, "FAILED TO LOAD MODEL: " + file);
+        AvatarMod.logger.log(Level.ERROR, "FAILED TO LOAD MODEL: " + file);
         return null;
     }
 

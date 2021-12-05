@@ -9,14 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import com.crowsofwar.avatar.client.render.lightning.main.ClientProxy;
-import com.crowsofwar.avatar.client.render.lightning.main.MainRegistry;
+import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.render.lightning.main.ResourceManager;
 import com.crowsofwar.avatar.client.render.lightning.particle.InstancedParticleRenderer;
 import com.crowsofwar.avatar.client.render.lightning.render.GLCompat;
 import com.crowsofwar.avatar.client.render.lightning.configs.LightningConfig;
 import com.crowsofwar.avatar.client.render.lightning.handler.HbmShaderManager2.Shader.Uniform;
 
+import com.crowsofwar.avatar.network.AvatarClientProxy;
 import org.apache.commons.io.IOUtils;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
@@ -112,22 +112,22 @@ public class HbmShaderManager2 {
 
     public static void createInvMVP(){
         GL11.glPushMatrix();
-        GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, ClientProxy.AUX_GL_BUFFER);
+        GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, AvatarClientProxy.AUX_GL_BUFFER);
         GL11.glPopMatrix();
-        GL11.glGetFloat(GL11.GL_PROJECTION_MATRIX, ClientProxy.AUX_GL_BUFFER2);
+        GL11.glGetFloat(GL11.GL_PROJECTION_MATRIX, AvatarClientProxy.AUX_GL_BUFFER2);
         Matrix4f view = new Matrix4f();
         Matrix4f proj = new Matrix4f();
-        view.load(ClientProxy.AUX_GL_BUFFER);
-        proj.load(ClientProxy.AUX_GL_BUFFER2);
-        ClientProxy.AUX_GL_BUFFER.rewind();
-        ClientProxy.AUX_GL_BUFFER2.rewind();
+        view.load(AvatarClientProxy.AUX_GL_BUFFER);
+        proj.load(AvatarClientProxy.AUX_GL_BUFFER2);
+        AvatarClientProxy.AUX_GL_BUFFER.rewind();
+        AvatarClientProxy.AUX_GL_BUFFER2.rewind();
         view.invert();
         proj.invert();
         Matrix4f.mul(view, proj, view);
-        view.store(ClientProxy.AUX_GL_BUFFER);
-        ClientProxy.AUX_GL_BUFFER.rewind();
-        ClientProxy.AUX_GL_BUFFER.get(inv_ViewProjectionMatrix);
-        ClientProxy.AUX_GL_BUFFER.rewind();
+        view.store(AvatarClientProxy.AUX_GL_BUFFER);
+        AvatarClientProxy.AUX_GL_BUFFER.rewind();
+        AvatarClientProxy.AUX_GL_BUFFER.get(inv_ViewProjectionMatrix);
+        AvatarClientProxy.AUX_GL_BUFFER.rewind();
     }
 
     public static void blitDepth(){
@@ -407,7 +407,7 @@ public class HbmShaderManager2 {
             GLCompat.shaderSource(vertexShader, readFileToBuf(new ResourceLocation(file.getNamespace(), file.getPath() + ".vert")));
             GLCompat.compileShader(vertexShader);
             if(GLCompat.getShaderi(vertexShader, GLCompat.GL_COMPILE_STATUS) == GL11.GL_FALSE) {
-                MainRegistry.logger.error(GLCompat.getShaderInfoLog(vertexShader, GLCompat.GL_INFO_LOG_LENGTH));
+                AvatarMod.logger.error(GLCompat.getShaderInfoLog(vertexShader, GLCompat.GL_INFO_LOG_LENGTH));
                 throw new RuntimeException("Error creating vertex shader: " + file);
             }
 
@@ -415,7 +415,7 @@ public class HbmShaderManager2 {
             GLCompat.shaderSource(fragmentShader, readFileToBuf(new ResourceLocation(file.getNamespace(), file.getPath() + ".frag")));
             GLCompat.compileShader(fragmentShader);
             if(GLCompat.getShaderi(fragmentShader, GLCompat.GL_COMPILE_STATUS) == GL11.GL_FALSE) {
-                MainRegistry.logger.error(GLCompat.getShaderInfoLog(fragmentShader, GLCompat.GL_INFO_LOG_LENGTH));
+                AvatarMod.logger.error(GLCompat.getShaderInfoLog(fragmentShader, GLCompat.GL_INFO_LOG_LENGTH));
                 throw new RuntimeException("Error creating fragment shader: " + file);
             }
 
@@ -425,7 +425,7 @@ public class HbmShaderManager2 {
                 attribBinder.accept(program);
             GLCompat.linkProgram(program);
             if(GLCompat.getProgrami(program, GLCompat.GL_LINK_STATUS) == GL11.GL_FALSE) {
-                MainRegistry.logger.error(GLCompat.getProgramInfoLog(program, GLCompat.GL_INFO_LOG_LENGTH));
+                AvatarMod.logger.error(GLCompat.getProgramInfoLog(program, GLCompat.GL_INFO_LOG_LENGTH));
                 throw new RuntimeException("Error linking shader: " + file);
             }
 

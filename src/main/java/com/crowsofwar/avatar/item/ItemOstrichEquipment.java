@@ -75,7 +75,7 @@ public class ItemOstrichEquipment extends Item implements AvatarItem {
 		 */
 		@Nullable
 		public static String getTierName(int index) {
-			if (!isValidIndex(index)) return null;
+			if (!isValidIndex(index)) return "woven";
 			return values()[index].name().toLowerCase();
 		}
 

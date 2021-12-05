@@ -7,9 +7,9 @@ import com.crowsofwar.avatar.client.render.lightning.handler.HbmShaderManager2;
 import com.crowsofwar.avatar.client.render.lightning.main.ResourceManager;
 import com.crowsofwar.avatar.client.render.lightning.math.BobMathUtil;
 import com.crowsofwar.avatar.client.render.lightning.render.TrailRenderer2;
-import com.crowsofwar.avatar.client.render.lightning.LightningGenerator;
-import com.crowsofwar.avatar.client.render.lightning.LightningGenerator.LightningGenInfo;
-import com.crowsofwar.avatar.client.render.lightning.LightningGenerator.LightningNode;
+import com.crowsofwar.avatar.client.render.lightning.handler.LightningGenerator;
+import com.crowsofwar.avatar.client.render.lightning.handler.LightningGenerator.LightningGenInfo;
+import com.crowsofwar.avatar.client.render.lightning.handler.LightningGenerator.LightningNode;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;

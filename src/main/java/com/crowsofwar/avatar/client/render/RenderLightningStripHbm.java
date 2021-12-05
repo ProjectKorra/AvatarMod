@@ -1,11 +1,16 @@
 package com.crowsofwar.avatar.client.render;
 
+import com.crowsofwar.avatar.client.particles.newparticles.ParticleLightningHandGlow;
 import com.crowsofwar.avatar.client.render.lightning.animloader.AnimationWrapper;
 import com.crowsofwar.avatar.client.render.lightning.handler.HbmShaderManager2;
 import com.crowsofwar.avatar.client.render.lightning.main.ResourceManager;
 import com.crowsofwar.avatar.client.particles.newparticles.ParticleLightningStrip;
 import com.crowsofwar.avatar.AvatarInfo;
 
+import com.crowsofwar.avatar.client.render.lightning.math.BobMathUtil;
+import com.crowsofwar.avatar.client.render.lightning.render.Tessellator;
+import net.minecraft.client.renderer.RenderHelper;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.Project;
 
@@ -20,9 +25,12 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.util.vector.Vector4f;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 /**
  * This is a port of Drillgon200's implementation of HBM's nuclear mod
@@ -76,11 +84,10 @@ public class RenderLightningStripHbm {
         GL11.glTranslated(-0.3, 0, -2.25);
         GL11.glRotated(90, 0, 1, 0);
 
-        //Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.skin);
-        //ResourceManager.lightning_fp.controller.setAnim(wrapper);
+        ResourceManager.lightning_fp.controller.setAnim(wrapper);
         GlStateManager.colorMask(false, false, false, false);
         ResourceManager.maxdepth.use();
-        //ResourceManager.lightning_fp.renderAnimated(renderTime = System.currentTimeMillis());
+        ResourceManager.lightning_fp.renderAnimated(renderTime = System.currentTimeMillis());
         Minecraft.getMinecraft().entityRenderer.itemRenderer.renderItemInFirstPerson((float) e.getRenderPartialTicks());
         HbmShaderManager2.releaseShader();
         GlStateManager.colorMask(true, true, true, true);
@@ -105,13 +112,12 @@ public class RenderLightningStripHbm {
 
         Minecraft.getMinecraft().entityRenderer.itemRenderer.renderItemInFirstPerson(e.getPartialTicks());
 
-		/*if(ticksActive >= 0){
+		if(ticksActive >= 0){
 			GL11.glPushMatrix();
 			GL11.glTranslated(-0.3, 0, -2.25);
 			GL11.glRotated(90, 0, 1, 0);
 
 			RenderHelper.enableStandardItemLighting();
-			Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.skin);
 	        ResourceManager.lightning_fp.controller.setAnim(wrapper);
 	        ResourceManager.lightning_fp.renderAnimated(renderTime, (last, first, model, diffN, name) -> {
 	        	if(name.equals("lower")){
@@ -122,18 +128,15 @@ public class RenderLightningStripHbm {
 	        		for(Particle p : particles){
 	        			p.renderParticle(Tessellator.getInstance().getBuffer(), Minecraft.getMinecraft().getRenderViewEntity(), e.getPartialTicks(), 0, 0, 0, 0, 0);
 	        		}
-
-	        		Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.skin);
-	        	}
+                }
 	        	return false;
 	        });
 	        GL11.glPopMatrix();
 		}
-        Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.turbofan_blades_tex);
         for(ParticleLightningStrip p : lightning_strips){
         	if(p != null)
         		p.renderParticle(Tessellator.getInstance().getBuffer(), Minecraft.getMinecraft().getRenderViewEntity(), e.getPartialTicks(), 0, 0, 0, 0, 0);
-        }*/
+        }
 
         GL11.glPopMatrix();
         GlStateManager.matrixMode(GL11.GL_PROJECTION);
@@ -145,7 +148,7 @@ public class RenderLightningStripHbm {
     public static void worldTick(TickEvent.ClientTickEvent e){
         if(true || e.phase == Phase.END || Minecraft.getMinecraft().world == null)
             return;
-		/*Random rand = Minecraft.getMinecraft().world.rand;
+		Random rand = Minecraft.getMinecraft().world.rand;
 		if(ticksActive >= 0){
 			ticksActive ++;
 			if(ticksActive >= 84){
@@ -154,8 +157,7 @@ public class RenderLightningStripHbm {
 			particles.add(new ParticleLightningHandGlow(Minecraft.getMinecraft().world, 0.156664F, -0.60966F, -0.252432F, 2+rand.nextFloat()*0.5F, 3+rand.nextInt(3)).color(0.8F, 0.9F, 1F, 1F));
 		} else if(Keyboard.isKeyDown(Keyboard.KEY_I)) {
 			ticksActive = 0;
-			PacketDispatcher.wrapper.sendToServer(new AuxButtonPacket(0, 0, 0, 1000, 0));
-			wrapper = new AnimationWrapper(System.currentTimeMillis(), ResourceManager.lightning_fp_anim).onEnd(new EndResult(EndType.END, null));
+			wrapper = new AnimationWrapper(System.currentTimeMillis(), ResourceManager.lightning_fp_anim).onEnd(new AnimationWrapper.EndResult(AnimationWrapper.EndType.END, null));
 			lightning_strips.clear();
 			lightning_strips.add(new ParticleLightningStrip(Minecraft.getMinecraft().world, 0, 0, 0));
 			lightning_strips.add(new ParticleLightningStrip(Minecraft.getMinecraft().world, 0, 0, 0));
@@ -173,7 +175,6 @@ public class RenderLightningStripHbm {
 			p.onUpdate();
 			if(!p.isAlive())
 				iter2.remove();
-		}*/
+		}
     }
-
 }

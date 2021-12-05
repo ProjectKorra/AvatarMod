@@ -1,9 +1,9 @@
 package com.crowsofwar.avatar.client.render.lightning.render;
 
+import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.render.lightning.math.BobMathUtil;
-import com.crowsofwar.avatar.client.render.lightning.main.ClientProxy;
-import com.crowsofwar.avatar.client.render.lightning.main.MainRegistry;
 
+import com.crowsofwar.avatar.network.AvatarClientProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.*;
@@ -392,22 +392,22 @@ public class RenderHelper {
         Matrix4f view = new Matrix4f();
         Matrix4f proj = new Matrix4f();
 
-        ClientProxy.AUX_GL_BUFFER.put(shadowView);
-        ClientProxy.AUX_GL_BUFFER2.put(shadowProjection);
-        ClientProxy.AUX_GL_BUFFER.rewind();
-        ClientProxy.AUX_GL_BUFFER2.rewind();
-        view.load(ClientProxy.AUX_GL_BUFFER);
-        proj.load(ClientProxy.AUX_GL_BUFFER2);
-        ClientProxy.AUX_GL_BUFFER.rewind();
-        ClientProxy.AUX_GL_BUFFER2.rewind();
+        AvatarClientProxy.AUX_GL_BUFFER.put(shadowView);
+        AvatarClientProxy.AUX_GL_BUFFER2.put(shadowProjection);
+        AvatarClientProxy.AUX_GL_BUFFER.rewind();
+        AvatarClientProxy.AUX_GL_BUFFER2.rewind();
+        view.load(AvatarClientProxy.AUX_GL_BUFFER);
+        proj.load(AvatarClientProxy.AUX_GL_BUFFER2);
+        AvatarClientProxy.AUX_GL_BUFFER.rewind();
+        AvatarClientProxy.AUX_GL_BUFFER2.rewind();
         Matrix4f.mul(proj, view, view);
-        view.store(ClientProxy.AUX_GL_BUFFER);
-        ClientProxy.AUX_GL_BUFFER.rewind();
-        GL20.glUniformMatrix4(GL20.glGetUniformLocation(shader, "flashlight_ViewProjectionMatrix"), false, ClientProxy.AUX_GL_BUFFER);
+        view.store(AvatarClientProxy.AUX_GL_BUFFER);
+        AvatarClientProxy.AUX_GL_BUFFER.rewind();
+        GL20.glUniformMatrix4(GL20.glGetUniformLocation(shader, "flashlight_ViewProjectionMatrix"), false, AvatarClientProxy.AUX_GL_BUFFER);
 
-        ClientProxy.AUX_GL_BUFFER.put(inv_ViewProjectionMatrix);
-        ClientProxy.AUX_GL_BUFFER.rewind();
-        GL20.glUniformMatrix4(GL20.glGetUniformLocation(shader, "inv_ViewProjectionMatrix"), false, ClientProxy.AUX_GL_BUFFER);
+        AvatarClientProxy.AUX_GL_BUFFER.put(inv_ViewProjectionMatrix);
+        AvatarClientProxy.AUX_GL_BUFFER.rewind();
+        GL20.glUniformMatrix4(GL20.glGetUniformLocation(shader, "inv_ViewProjectionMatrix"), false, AvatarClientProxy.AUX_GL_BUFFER);
 
     }
 
@@ -456,16 +456,6 @@ public class RenderHelper {
         GlStateManager.colorMask(true, true, true, true);
     }
 
-    public static void resetParticleInterpPos(Entity entityIn, float partialTicks){
-        double entPosX = entityIn.lastTickPosX + (entityIn.posX - entityIn.lastTickPosX)*partialTicks;
-        double entPosY = entityIn.lastTickPosY + (entityIn.posY - entityIn.lastTickPosY)*partialTicks;
-        double entPosZ = entityIn.lastTickPosZ + (entityIn.posZ - entityIn.lastTickPosZ)*partialTicks;
-
-        Particle.interpPosX = entPosX;
-        Particle.interpPosY = entPosY;
-        Particle.interpPosZ = entPosZ;
-    }
-
     public static float[] project(float x, float y, float z){
         GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, MODELVIEW);
         GL11.glGetFloat(GL11.GL_PROJECTION_MATRIX, PROJECTION);
@@ -482,35 +472,6 @@ public class RenderHelper {
 
         Project.gluUnProject(x, y, z, MODELVIEW, PROJECTION, VIEWPORT, POSITION);
         return new float[]{POSITION.get(0), POSITION.get(1), POSITION.get(2)};
-    }
-
-    public static Vec3d unproject_world(float[] inv_mvp, float x, float y, float z){
-        Matrix4f mat = new Matrix4f();
-        ClientProxy.AUX_GL_BUFFER.put(inv_mvp);
-        ClientProxy.AUX_GL_BUFFER.rewind();
-        mat.load(ClientProxy.AUX_GL_BUFFER);
-        ClientProxy.AUX_GL_BUFFER.rewind();
-
-        Vector4f ndcPos = new Vector4f();
-        ndcPos.x = (2F*x)/(Minecraft.getMinecraft().displayWidth) - 1;
-        ndcPos.y = (2F*y)/(Minecraft.getMinecraft().displayHeight) - 1;
-        float near = 0;
-        float far = 1;
-        ndcPos.z = (2*z - near - far)/(far-near);
-        ndcPos.w = 1;
-
-        Matrix4f.transform(mat, ndcPos, ndcPos);
-        float invW = 1F/ndcPos.w;
-        Vector3f worldPos = new Vector3f(ndcPos.x*invW, ndcPos.y*invW, ndcPos.z*invW);
-
-        Entity ent = Minecraft.getMinecraft().getRenderViewEntity();
-        float partialTicks = MainRegistry.proxy.partialTicks();
-        double rPosX = ent.prevPosX + (ent.posX-ent.prevPosX)*partialTicks;
-        double rPosY = ent.prevPosY + (ent.posY-ent.prevPosY)*partialTicks;
-        double rPosZ = ent.prevPosZ + (ent.posZ-ent.prevPosZ)*partialTicks;
-        //Vec3d eyePos = ActiveRenderInfo.getCameraPosition();
-
-        return new Vec3d(worldPos.x + rPosX, worldPos.y + rPosY, worldPos.z + rPosZ);
     }
 
     public static boolean intersects2DBox(float x, float y, float[] box){

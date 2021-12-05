@@ -41,6 +41,7 @@ public class ResourceManager {
     public static final ResourceLocation dust = new ResourceLocation(AvatarInfo.MOD_ID, "textures/models/explosion/dust.png");
 
     //Lightning
+    public static final ResourceLocation fresnel_ms = new ResourceLocation(AvatarInfo.MOD_ID, "textures/models/bfg/fresnel_ms.png");
     public static final ResourceLocation bfg_ring_4 = new ResourceLocation(AvatarInfo.MOD_ID, "textures/models/bfg/ring3_lighter.png");
     public static final ResourceLocation bfg_lightning_1 = new ResourceLocation(AvatarInfo.MOD_ID, "textures/models/bfg/lightning_isolated.png");
     public static final ResourceLocation bfg_lightning_2 = new ResourceLocation(AvatarInfo.MOD_ID, "textures/models/bfg/multi_tester.png");
@@ -230,6 +231,7 @@ public class ResourceManager {
     public static final Vbo test = Vbo.setupTestVbo();
 
     public static void init() {
+        Minecraft.getMinecraft().getTextureManager().bindTexture(fresnel_ms);
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
         Minecraft.getMinecraft().getTextureManager().bindTexture(noise_1);
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
