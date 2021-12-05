@@ -388,6 +388,7 @@ public class AvatarMod {
                 f.set(SharedMonsterAttributes.MAX_HEALTH, Integer.MAX_VALUE);
             } catch(Exception ignored){}
 
+        proxy.checkGLCaps();
         reloadConfig();
 
         int i = 0;

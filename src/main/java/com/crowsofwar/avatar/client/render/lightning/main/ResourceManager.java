@@ -27,10 +27,6 @@ public class ResourceManager {
 
     ////Texture Items
 
-    public static final ResourceLocation hat = new ResourceLocation(AvatarInfo.MOD_ID, "textures/armor/hat.png");
-    public static final ResourceLocation mod_tesla = new ResourceLocation(AvatarInfo.MOD_ID, "textures/armor/mod_tesla.png");
-    //public static final ResourceLocation wings_solstice = new ResourceLocation(AvatarInfo.MOD_ID, "textures/armor/wings_solstice.png");
-
     //Texture Entities
     public static final ResourceLocation white = new ResourceLocation(AvatarInfo.MOD_ID, "textures/misc/white.png");
 
@@ -67,69 +63,6 @@ public class ResourceManager {
     public static AnimatedModel lightning_fp;
     public static Animation lightning_fp_anim;
 
-    //SHADERS
-    public static Shader lit_particles = HbmShaderManager2.loadShader(new ResourceLocation(AvatarInfo.MOD_ID, "shaders/lit_particles"), shader -> {
-        GLCompat.bindAttribLocation(shader, 0, "pos");
-        GLCompat.bindAttribLocation(shader, 1, "offsetPos");
-        GLCompat.bindAttribLocation(shader, 2, "scale");
-        GLCompat.bindAttribLocation(shader, 3, "texData");
-        GLCompat.bindAttribLocation(shader, 4, "color");
-        GLCompat.bindAttribLocation(shader, 5, "lightmap");
-    }).withUniforms(HbmShaderManager2.MODELVIEW_MATRIX, HbmShaderManager2.PROJECTION_MATRIX, HbmShaderManager2.INV_PLAYER_ROT_MATRIX, HbmShaderManager2.LIGHTMAP);
-
-    public static Shader gluon_beam = HbmShaderManager2.loadShader(new ResourceLocation(AvatarInfo.MOD_ID, "shaders/gluon_beam"))
-            .withUniforms(shader -> {
-                GLCompat.activeTexture(GLCompat.GL_TEXTURE0+3);
-                Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.noise_1);
-                shader.uniform1i("noise_1", 3);
-                GLCompat.activeTexture(GLCompat.GL_TEXTURE0+4);
-                Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.noise_2);
-                shader.uniform1i("noise_1", 4);
-                GLCompat.activeTexture(GLCompat.GL_TEXTURE0);
-
-                float time = (System.currentTimeMillis()%10000000)/1000F;
-                shader.uniform1f("time", time);
-            });
-
-    public static Shader gluon_spiral = HbmShaderManager2.loadShader(new ResourceLocation(AvatarInfo.MOD_ID, "shaders/gluon_spiral"))
-            .withUniforms(shader -> {
-                //Well, I accidentally uniformed the same noise sampler twice. That explains why the second noise didn't work.
-                GLCompat.activeTexture(GLCompat.GL_TEXTURE0+3);
-                Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.noise_1);
-                shader.uniform1i("noise_1", 3);
-                GLCompat.activeTexture(GLCompat.GL_TEXTURE0+4);
-                Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.noise_2);
-                shader.uniform1i("noise_1", 4);
-                GLCompat.activeTexture(GLCompat.GL_TEXTURE0);
-
-                float time = (System.currentTimeMillis()%10000000)/1000F;
-                shader.uniform1f("time", time);
-            });
-
-    //Drillgon200: Did I need a shader for this? No, not really, but it's somewhat easier to create a sin wave pattern programmatically than to do it in paint.net.
-    public static Shader tau_ray = HbmShaderManager2.loadShader(new ResourceLocation(AvatarInfo.MOD_ID, "shaders/tau_ray"));
-
-    public static Shader book_circle = HbmShaderManager2.loadShader(new ResourceLocation(AvatarInfo.MOD_ID, "shaders/book/circle"));
-
-    public static Shader normal_fadeout = HbmShaderManager2.loadShader(new ResourceLocation(AvatarInfo.MOD_ID, "shaders/normal_fadeout"));
-
-    public static Shader heat_distortion = HbmShaderManager2.loadShader(new ResourceLocation(AvatarInfo.MOD_ID, "shaders/heat_distortion"))
-            .withUniforms(shader -> {
-                Framebuffer buffer = Minecraft.getMinecraft().getFramebuffer();
-                GLCompat.activeTexture(GLCompat.GL_TEXTURE0+3);
-                GlStateManager.bindTexture(buffer.framebufferTexture);
-                shader.uniform1i("fbo_tex", 3);
-                GLCompat.activeTexture(GLCompat.GL_TEXTURE0+4);
-                Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.noise_2);
-                shader.uniform1i("noise", 4);
-                GLCompat.activeTexture(GLCompat.GL_TEXTURE0);
-
-                float time = (System.currentTimeMillis()%10000000)/1000F;
-                shader.uniform1f("time", time);
-                shader.uniform2f("windowSize", Minecraft.getMinecraft().displayWidth, Minecraft.getMinecraft().displayHeight);
-            });
-
-    public static Shader desaturate = HbmShaderManager2.loadShader(new ResourceLocation(AvatarInfo.MOD_ID, "shaders/desaturate"));
     public static Shader test_trail = HbmShaderManager2.loadShader(new ResourceLocation(AvatarInfo.MOD_ID, "shaders/trail"), shader ->{
         GLCompat.bindAttribLocation(shader, 0, "pos");
         GLCompat.bindAttribLocation(shader, 1, "tex");

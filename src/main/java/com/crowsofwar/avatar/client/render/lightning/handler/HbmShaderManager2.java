@@ -11,7 +11,6 @@ import java.util.function.Consumer;
 
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.render.lightning.main.ResourceManager;
-import com.crowsofwar.avatar.client.render.lightning.particle.InstancedParticleRenderer;
 import com.crowsofwar.avatar.client.render.lightning.render.GLCompat;
 import com.crowsofwar.avatar.client.render.lightning.configs.LightningConfig;
 import com.crowsofwar.avatar.client.render.lightning.handler.HbmShaderManager2.Shader.Uniform;
@@ -23,7 +22,6 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 import org.lwjgl.opengl.GL14;
 import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector3f;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -35,7 +33,6 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.shader.Framebuffer;
-import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 
 //Same as the other class except with less junk (hopefully)
@@ -73,20 +70,6 @@ public class HbmShaderManager2 {
         GL11.glGetFloat(GL11.GL_PROJECTION_MATRIX, AUX_GL_BUFFER);
         AUX_GL_BUFFER.rewind();
         shader.uniformMatrix4("projection", false, AUX_GL_BUFFER);
-    };
-
-    public static final Uniform INV_PLAYER_ROT_MATRIX = shader -> {
-        Entity entityIn = Minecraft.getMinecraft().getRenderViewEntity();
-        //Stupid hack to get partial ticks.
-        float partialTicks = InstancedParticleRenderer.partialTicks;
-        float yaw = entityIn.prevRotationYaw + (entityIn.rotationYaw - entityIn.prevRotationYaw)*partialTicks;
-        float pitch = entityIn.prevRotationPitch + (entityIn.rotationPitch - entityIn.prevRotationPitch)*partialTicks;
-        Matrix4f mat = new Matrix4f();
-        mat.rotate((float) Math.toRadians(-yaw+180), new Vector3f(0, 1, 0));
-        mat.rotate((float) Math.toRadians(-pitch), new Vector3f(1, 0, 0));
-        mat.store(AUX_GL_BUFFER);
-        AUX_GL_BUFFER.rewind();
-        shader.uniformMatrix4("invPlayerRot", false, AUX_GL_BUFFER);
     };
 
     public static final Uniform LIGHTMAP = shader -> {

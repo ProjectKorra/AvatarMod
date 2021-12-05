@@ -38,6 +38,7 @@ import com.crowsofwar.avatar.client.particles.newparticles.behaviour.ParticleBeh
 import com.crowsofwar.avatar.client.particles.oldsystem.*;
 import com.crowsofwar.avatar.client.render.*;
 import com.crowsofwar.avatar.client.render.iceprison.RenderIcePrison;
+import com.crowsofwar.avatar.client.render.lightning.render.GLCompat;
 import com.crowsofwar.avatar.client.renderer.LayerGlider;
 import com.crowsofwar.avatar.entity.*;
 import com.crowsofwar.avatar.entity.mob.*;
@@ -74,6 +75,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 import static com.crowsofwar.avatar.config.ConfigAnalytics.ANALYTICS_CONFIG;
 import static com.crowsofwar.avatar.config.ConfigClient.CLIENT_CONFIG;
@@ -101,6 +103,16 @@ public class AvatarClientProxy implements AvatarCommonProxy {
     public static final FloatBuffer AUX_GL_BUFFER2 = GLAllocation.createDirectFloatBuffer(16);
     //Drillgon200: Will I ever figure out how to write better code than this?
     public static final List<Runnable> deferredRenderers = new ArrayList<>();
+
+    @Override
+    public void checkGLCaps(){
+        GLCompat.error = GLCompat.init();
+//        if(GLCompat.error.isEmpty()){
+//            System.out.println(Level.INFO, "Advanced rendering fully supported");
+//        } else {
+//            System.err.println(Level.WARNING, "Advanced rendering not supported: " + GLCompat.error);
+//        }
+    }
 
     /**
      * Use {@link ParticleAvatar#registerParticle(ResourceLocation, ParticleAvatar.IAvatarParticleFactory)}, this is internal.

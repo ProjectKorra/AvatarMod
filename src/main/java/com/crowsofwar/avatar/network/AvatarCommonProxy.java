@@ -21,6 +21,7 @@ import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.particles.newparticles.ParticleAvatar;
 import com.crowsofwar.avatar.client.controls.IControlsHandler;
 import com.crowsofwar.avatar.client.controls.KeybindingWrapper;
+import com.crowsofwar.avatar.client.render.lightning.render.GLCompat;
 import com.crowsofwar.avatar.util.data.AvatarPlayerData;
 import com.crowsofwar.avatar.client.gui.AvatarGui;
 import com.crowsofwar.avatar.capabilities.IAdvancedGliderCapabilityHandler;
@@ -31,6 +32,8 @@ import net.minecraft.util.IThreadListener;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import java.util.logging.Level;
 
 /**
  * Allows calling of side-specific code by using a common base class and
@@ -113,6 +116,7 @@ public interface AvatarCommonProxy {
      */
     KeybindingWrapper createKeybindWrapper(String keybindName);
 
+    public void checkGLCaps();
 	/**
 	 * Register the item models so they can be configured to use the correct textures
 	 */
