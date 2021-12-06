@@ -36,7 +36,7 @@ public class AbilityDivineJudgement extends Ability {
 
     @Override
     public void execute(AbilityContext ctx) {
-        super.execute(ctx);
+
         //Just summons a beam of light down from the heavens
         World world = ctx.getWorld();
         EntityLivingBase entity = ctx.getBenderEntity();
@@ -102,6 +102,8 @@ public class AbilityDivineJudgement extends Ability {
         buff.setVelocity(Vector.ZERO);
         if (!world.isRemote)
             world.spawnEntity(buff);
+
+        super.execute(ctx);
     }
 
     @Override

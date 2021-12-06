@@ -138,7 +138,7 @@ dependencies {
     // at runtime, use the full JEI jar
     runtime "mezz:jei-1.12.2:4.16.1.302"
     
-    compile "vazkii.patchouli:Patchouli:1.0-19.98"
+//    compile "vazkii.patchouli:Patchouli:1.0-19.98"
     
     if (dependenciesConfig.obfuscated) { } else { }
     
@@ -310,5 +310,5 @@ task release(dependsOn: ["cleanBuild", "publish"]) {
 }
 
 runClient {
-    args = ['--username', 'Dev']
+  
 }
