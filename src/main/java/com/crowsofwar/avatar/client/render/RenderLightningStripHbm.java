@@ -66,14 +66,14 @@ public class RenderLightningStripHbm {
         if(ticksActive < 0)
             return;
         e.setCanceled(true);
-        HbmShaderManager2.createInvMVP();
-        GlStateManager.enableDepth();
+//        HbmShaderManager2.createInvMVP();
+//        GlStateManager.enableDepth();
         HbmShaderManager2.postProcess();
     }
 
     @SubscribeEvent
     public static void doDepthRender(CameraSetup e){
-        if(Minecraft.getMinecraft().gameSettings.thirdPersonView != 0 || ticksActive < 0 || wrapper == null)
+        if(Minecraft.getMinecraft().gameSettings.thirdPersonView != 0 || ticksActive < 0)
             return;
 
         GlStateManager.matrixMode(GL11.GL_PROJECTION);
@@ -114,8 +114,6 @@ public class RenderLightningStripHbm {
         GL11.glLoadIdentity();
         GL11.glPushMatrix();
 
-        Minecraft.getMinecraft().entityRenderer.itemRenderer.renderItemInFirstPerson(e.getPartialTicks());
-
 		if(ticksActive >= 0){
 			GL11.glPushMatrix();
 			GL11.glTranslated(-0.3, 0, -2.25);
@@ -138,6 +136,7 @@ public class RenderLightningStripHbm {
 	        });
 	        GL11.glPopMatrix();
 		}
+        Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.turbofan_blades_tex);
         for(ParticleLightningStrip p : lightning_strips){
         	if(p != null)
         		p.renderParticle(Tessellator.getBuffer(), Minecraft.getMinecraft().getRenderViewEntity(), e.getPartialTicks(), 0, 0, 0, 0, 0);
@@ -167,7 +166,6 @@ public class RenderLightningStripHbm {
 			lightning_strips.add(new ParticleLightningStrip(Minecraft.getMinecraft().world, 0, 0, 0));
 			lightning_strips.add(new ParticleLightningStrip(Minecraft.getMinecraft().world, 0, 0, 0));
             System.out.println("HERE: MADE IT");
-            System.out.println(lightning_strips.size());
 		}
 		Iterator<ParticleLightningStrip> iter = lightning_strips.iterator();
 		while(iter.hasNext()){

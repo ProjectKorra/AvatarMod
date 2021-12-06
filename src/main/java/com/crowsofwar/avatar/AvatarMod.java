@@ -38,6 +38,8 @@ import com.crowsofwar.avatar.bending.bending.water.*;
 import com.crowsofwar.avatar.blocks.AvatarBlocks;
 import com.crowsofwar.avatar.client.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.client.particle.AvatarParticles;
+import com.crowsofwar.avatar.client.render.lightning.main.ModEventHandler;
+import com.crowsofwar.avatar.client.render.lightning.main.PacketDispatcher;
 import com.crowsofwar.avatar.common.triggers.AvatarTriggers;
 import com.crowsofwar.avatar.config.*;
 import com.crowsofwar.avatar.entity.*;
@@ -460,6 +462,9 @@ public class AvatarMod {
 
         proxy.init();
         proxy.registerParticles();
+        PacketDispatcher.registerPackets();
+        MinecraftForge.EVENT_BUS.register(new ModEventHandler());
+
         AvatarTriggers.init();
 
     }

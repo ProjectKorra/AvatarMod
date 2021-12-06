@@ -30,6 +30,7 @@ public class ResourceManager {
 
     //Texture Entities
     public static final ResourceLocation white = new ResourceLocation(AvatarInfo.MOD_ID, "textures/misc/white.png");
+    public static final ResourceLocation turbofan_blades_tex = new ResourceLocation(AvatarInfo.MOD_ID, "textures/models/turbofan_blades.png");
 
     //Blast
     public static final ResourceLocation fireball = new ResourceLocation(AvatarInfo.MOD_ID, "textures/models/explosion/fireball.png");

@@ -28,6 +28,7 @@ import com.crowsofwar.avatar.capabilities.IAdvancedGliderCapabilityHandler;
 import com.crowsofwar.gorecore.data.PlayerDataFetcher;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IThreadListener;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -133,4 +134,8 @@ public interface AvatarCommonProxy {
     IAdvancedGliderCapabilityHandler getClientGliderCapability();
 
     void checkGLCaps();
+
+    void effectNT(NBTTagCompound nbt);
+
+    float partialTicks();
 }

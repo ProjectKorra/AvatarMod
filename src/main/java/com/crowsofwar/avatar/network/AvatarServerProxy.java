@@ -144,6 +144,10 @@ public class AvatarServerProxy implements AvatarCommonProxy {
 	public void postInit(FMLPostInitializationEvent e){
 	}
 
+	public float partialTicks(){
+		return 1;
+	};
+
 	public boolean opengl33(){
 		return true;//Doesn't matter for servers, and this won't print an error message.
 	}

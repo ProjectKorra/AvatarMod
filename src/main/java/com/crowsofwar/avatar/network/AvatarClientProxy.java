@@ -38,7 +38,10 @@ import com.crowsofwar.avatar.client.particles.newparticles.behaviour.ParticleBeh
 import com.crowsofwar.avatar.client.particles.oldsystem.*;
 import com.crowsofwar.avatar.client.render.*;
 import com.crowsofwar.avatar.client.render.iceprison.RenderIcePrison;
+import com.crowsofwar.avatar.client.render.lightning.handler.LightningGenerator;
 import com.crowsofwar.avatar.client.render.lightning.main.ResourceManager;
+import com.crowsofwar.avatar.client.render.lightning.particle.ParticleFakeBrightness;
+import com.crowsofwar.avatar.client.render.lightning.particle.ParticleRenderLayer;
 import com.crowsofwar.avatar.client.render.lightning.render.GLCompat;
 import com.crowsofwar.avatar.client.renderer.LayerGlider;
 import com.crowsofwar.avatar.entity.*;
@@ -57,9 +60,11 @@ import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IThreadListener;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -70,13 +75,11 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 import java.lang.reflect.Field;
 import java.nio.FloatBuffer;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.crowsofwar.avatar.config.ConfigAnalytics.ANALYTICS_CONFIG;
 import static com.crowsofwar.avatar.config.ConfigClient.CLIENT_CONFIG;
@@ -100,6 +103,7 @@ public class AvatarClientProxy implements AvatarCommonProxy {
     //Particles
 
     // From Drillgon
+    public static Field partialTicksPaused;
     public static final FloatBuffer AUX_GL_BUFFER = GLAllocation.createDirectFloatBuffer(16);
     public static final FloatBuffer AUX_GL_BUFFER2 = GLAllocation.createDirectFloatBuffer(16);
     //Drillgon200: Will I ever figure out how to write better code than this?
@@ -285,7 +289,60 @@ public class AvatarClientProxy implements AvatarCommonProxy {
     @Override
     public void postInit(FMLPostInitializationEvent e) {
         ResourceManager.loadAnimatedModels();
-//        ParticleRenderLayer.register();
+        ParticleRenderLayer.register();
+    }
+
+    @Override
+    public void effectNT(NBTTagCompound data) {
+        World world = Minecraft.getMinecraft().world;
+        EntityPlayer player = Minecraft.getMinecraft().player;
+        Random rand = world.rand;
+        String type = data.getString("type");
+        double x = data.getDouble("posX");
+        double y = data.getDouble("posY");
+        double z = data.getDouble("posZ");
+        if ("lightning".equals(type)) {
+            String mode = data.getString("mode");
+            if ("beam".equals(mode)) {
+                double hitX = data.getDouble("hitX");
+                double hitY = data.getDouble("hitY");
+                double hitZ = data.getDouble("hitZ");
+                int hitType = data.getInteger("hitType");
+                double length = new Vec3d(x, y, z).subtract(new Vec3d(hitX, hitY, hitZ)).length();
+                //Left/right, up/down, forward/backward
+                LightningGenerator.LightningGenInfo i = new LightningGenerator.LightningGenInfo();
+                i.forkChance = 0;
+                i.randAmount = 1F;
+                i.randAmountSubdivMultiplier = 0.2F;
+                i.subdivMult = 2;
+                i.subdivisions = Math.max((int) (length * 0.1), 1);
+                i.subdivRecurse = 2;
+                Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleLightningFade(player.world, x, y, z, hitX, hitY, hitZ, 0.075F, i));
+                if (hitType == 0 || hitType == 1) {
+                    Vec3d normal = new Vec3d(data.getDouble("normX"), data.getDouble("normY"), data.getDouble("normZ")).scale(0.25F);
+                    for (int j = 0; j < 3; j++) {
+                        ParticleFakeBrightness b = new ParticleFakeBrightness(player.world, hitX + normal.x + (rand.nextFloat() - 0.5F) * 0.1F, hitY + normal.y + (rand.nextFloat() - 0.5F) * 0.1F, hitZ + normal.z + (rand.nextFloat() - 0.5F) * 0.1F, 60, 15)
+                                .color(0.4F, 0.8F, 1, 2);
+                        b.fadeInKoeff = 10;
+                        Minecraft.getMinecraft().effectRenderer.addEffect(b);
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public float partialTicks() {
+        try {
+            if(partialTicksPaused == null){
+                partialTicksPaused = ReflectionHelper.findField(Minecraft.class, "renderPartialTicksPaused", "field_193996_ah");
+            }
+            boolean paused = Minecraft.getMinecraft().isGamePaused();
+            return paused ? partialTicksPaused.getFloat(Minecraft.getMinecraft()) : Minecraft.getMinecraft().getRenderPartialTicks();
+        } catch(Exception x){
+            x.printStackTrace();
+        }
+        return Minecraft.getMinecraft().getRenderPartialTicks();
     }
 
     @Override

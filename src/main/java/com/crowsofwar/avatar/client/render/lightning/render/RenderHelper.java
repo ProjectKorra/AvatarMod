@@ -214,6 +214,16 @@ public class RenderHelper {
         col[2] = blue;
     }
 
+    public static void resetParticleInterpPos(Entity entityIn, float partialTicks){
+        double entPosX = entityIn.lastTickPosX + (entityIn.posX - entityIn.lastTickPosX)*partialTicks;
+        double entPosY = entityIn.lastTickPosY + (entityIn.posY - entityIn.lastTickPosY)*partialTicks;
+        double entPosZ = entityIn.lastTickPosZ + (entityIn.posZ - entityIn.lastTickPosZ)*partialTicks;
+
+        Particle.interpPosX = entPosX;
+        Particle.interpPosY = entPosY;
+        Particle.interpPosZ = entPosZ;
+    }
+
     public static void resetColor(){
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
     }
