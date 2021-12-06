@@ -121,6 +121,7 @@ public class AirBurstHandler extends TickHandler {
             //gets smaller
             suction -= (float) duration / 400;
 
+
             if (world.isRemote && duration <= durationToFire) {
                 Vec3d pos = AvatarEntityUtils.getBottomMiddleOfEntity(entity).add(0, entity.getEyeHeight() / 2, 0);
                 //Size starts small gets big

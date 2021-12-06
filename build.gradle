@@ -100,16 +100,8 @@ repositories {
     }
 
     maven {
-        name = "DragonForge"
-        url = "https://raw.github.com/dragon-forge/maven/master"
-    }
-
-    maven {
-        url = "https://gitlab.com/DragonForge/colored-lux"
-    }
-
-    maven {
-        url = "https://github.com/dragon-forge/HammerLib/"
+        name = "Zeitheron Maven"
+        url = "https://maven.zeith.org"
     }
     
     //Patchouli guidebook
@@ -139,8 +131,7 @@ dependencies {
     
     //provided "elucent.albedo:albedo:1.1.0-3"
 //    provided "codechicken:CodeChickenLib:1.12.2-3.2.2.353:universal"
-    compile "tk.zeitheron:hammerlib-1.12.2:2.0.6.31:deobf"
-    compile "tk.zeitheron:coloredlux-1.12.2:12.6.29:deobf"
+    deobfCompile "org.zeith.ColoredLux:ColoredLux-1.12.2:12.6.29"
     
     // compile against the JEI API but do not include it at runtime
     provided "mezz:jei-1.12.2:4.16.1.302:api"
@@ -319,5 +310,5 @@ task release(dependsOn: ["cleanBuild", "publish"]) {
 }
 
 runClient {
-
+  
 }
