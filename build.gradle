@@ -98,7 +98,7 @@ repositories {
         name = "ModMaven"
         url = "https://modmaven.k-4u.nl"
     }
-    
+
     maven {
         name = "DragonForge"
         url = "https://raw.github.com/dragon-forge/maven/master"
@@ -130,7 +130,7 @@ dependencies {
     // Forge Mods
     
     //provided "elucent.albedo:albedo:1.1.0-3"
-    provided "codechicken:CodeChickenLib:1.12.2-3.2.2.353:universal"
+//    provided "codechicken:CodeChickenLib:1.12.2-3.2.2.353:universal"
     compile "tk.zeitheron:hammerlib-1.12.2:2.0.6.26:deobf"
     compile "tk.zeitheron:coloredlux-1.12.2:12.4.20:deobf"
     
@@ -139,7 +139,7 @@ dependencies {
     // at runtime, use the full JEI jar
     runtime "mezz:jei-1.12.2:4.16.1.302"
     
-    compile "vazkii.patchouli:Patchouli:1.0-19.98"
+ //   compile "vazkii.patchouli:Patchouli:1.0-19.98"
     
     if (dependenciesConfig.obfuscated) { } else { }
     
@@ -311,5 +311,5 @@ task release(dependsOn: ["cleanBuild", "publish"]) {
 }
 
 runClient {
-    args = ['--username', 'Dev']
+
 }
