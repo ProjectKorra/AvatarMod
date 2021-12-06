@@ -169,80 +169,80 @@ public class ParticleLightningStrip extends ParticleTargeted {
 
     @Override
     protected void draw(Tessellator tessellator, double length, float partialTicks) {
-        GlStateManager.disableLighting();
-        GlStateManager.enableBlend();
-        GlStateManager.disableTexture2D();
-        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
-
-        // The direction of the arc drawn by the tessellator is always along the z axis and is rotated to the
-        // correct orientation, that way there isn't a ton of trigonometry and the code is way neater.
-
-        boolean freeEnd = this.target == null;
-
-        int numberOfSegments = (int) Math.round(length / MAX_SEGMENT_LENGTH); // Number of segments
-
-        for (int layer = 0; layer < 3; layer++) {
-
-            double px = 0, py = 0, pz = 0;
-            // Creates a random from the arc's seed field + the number of ticks it has existed/the update period.
-            // By using a seed, we can ensure the vertex positions and forks are identical a) for each layer, even
-            // though they are rendered sequentially, and b) across many frames (and ticks, if updateTime > 1).
-            random.setSeed(this.seed + this.particleAge / UPDATE_PERIOD);
-
-            // numberOfSegments-1 because the last segment is handled separately.
-            for (int i = 0; i < numberOfSegments - 1; i++) {
-
-                double px2 = (random.nextDouble() * 2 - 1) * VERTEX_JITTER * particleScale;
-                double py2 = (random.nextDouble() * 2 - 1) * VERTEX_JITTER * particleScale;
-                double pz2 = pz + length / (double) numberOfSegments; // For now they are all the same length
-
-                drawSegment(tessellator, layer, px, py, pz, px2, py2, pz2, THICKNESS * particleScale);
-
-                // Forks
-                if (random.nextFloat() < FORK_CHANCE) {
-
-                    double px3 = px, py3 = py, pz3 = pz;
-
-                    for (int j = 0; j < random.nextInt(MAX_FORK_SEGMENTS - 1) + 1; j++) {
-                        // Forks set their centreline to the x/y coordinates of the vertex they originate from
-                        double px4 = px3 + (random.nextDouble() * 2 - 1) * VERTEX_JITTER * particleScale;
-                        double py4 = py3 + (random.nextDouble() * 2 - 1) * VERTEX_JITTER * particleScale;
-                        double pz4 = pz3 + MIN_SEGMENT_LENGTH + random.nextDouble() * (MAX_SEGMENT_LENGTH - MIN_SEGMENT_LENGTH);
-
-                        drawSegment(tessellator, layer, px3, py3, pz3, px4, py4, pz4, THICKNESS * 0.8f * particleScale);
-
-                        // Forks of forks
-                        if (random.nextFloat() < FORK_CHANCE) {
-
-                            double px5 = px3 + (random.nextDouble() * 2 - 1) * VERTEX_JITTER * particleScale;
-                            double py5 = py3 + (random.nextDouble() * 2 - 1) * VERTEX_JITTER * particleScale;
-                            double pz5 = pz3 + MIN_SEGMENT_LENGTH + random.nextDouble() * (MAX_SEGMENT_LENGTH - MIN_SEGMENT_LENGTH);
-
-                            drawSegment(tessellator, layer, px3, py3, pz3, px5, py5, pz5, THICKNESS * 0.6f * particleScale);
-                        }
-
-                        px3 = px4;
-                        py3 = py4;
-                        pz3 = pz4;
-                    }
-                }
-
-                px = px2;
-                py = py2;
-                pz = pz2;
-            }
-
-            // Last segment has a specific end position and cannot fork.
-            double px2 = freeEnd ? (random.nextDouble() * 2 - 1) * VERTEX_JITTER * particleScale : 0;
-            double py2 = freeEnd ? (random.nextDouble() * 2 - 1) * VERTEX_JITTER * particleScale : 0;
-            drawSegment(tessellator, layer, px, py, pz, px2, py2, length, THICKNESS * particleScale);
-
-        }
-
-        GlStateManager.enableTexture2D();
-        GlStateManager.enableLighting();
-        GlStateManager.disableBlend();
+//        GlStateManager.disableLighting();
+//        GlStateManager.enableBlend();
+//        GlStateManager.disableTexture2D();
+//        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
+//        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
+//
+//        // The direction of the arc drawn by the tessellator is always along the z axis and is rotated to the
+//        // correct orientation, that way there isn't a ton of trigonometry and the code is way neater.
+//
+//        boolean freeEnd = this.target == null;
+//
+//        int numberOfSegments = (int) Math.round(length / MAX_SEGMENT_LENGTH); // Number of segments
+//
+//        for (int layer = 0; layer < 3; layer++) {
+//
+//            double px = 0, py = 0, pz = 0;
+//            // Creates a random from the arc's seed field + the number of ticks it has existed/the update period.
+//            // By using a seed, we can ensure the vertex positions and forks are identical a) for each layer, even
+//            // though they are rendered sequentially, and b) across many frames (and ticks, if updateTime > 1).
+//            random.setSeed(this.seed + this.particleAge / UPDATE_PERIOD);
+//
+//            // numberOfSegments-1 because the last segment is handled separately.
+//            for (int i = 0; i < numberOfSegments - 1; i++) {
+//
+//                double px2 = (random.nextDouble() * 2 - 1) * VERTEX_JITTER * particleScale;
+//                double py2 = (random.nextDouble() * 2 - 1) * VERTEX_JITTER * particleScale;
+//                double pz2 = pz + length / (double) numberOfSegments; // For now they are all the same length
+//
+//                drawSegment(tessellator, layer, px, py, pz, px2, py2, pz2, THICKNESS * particleScale);
+//
+//                // Forks
+//                if (random.nextFloat() < FORK_CHANCE) {
+//
+//                    double px3 = px, py3 = py, pz3 = pz;
+//
+//                    for (int j = 0; j < random.nextInt(MAX_FORK_SEGMENTS - 1) + 1; j++) {
+//                        // Forks set their centreline to the x/y coordinates of the vertex they originate from
+//                        double px4 = px3 + (random.nextDouble() * 2 - 1) * VERTEX_JITTER * particleScale;
+//                        double py4 = py3 + (random.nextDouble() * 2 - 1) * VERTEX_JITTER * particleScale;
+//                        double pz4 = pz3 + MIN_SEGMENT_LENGTH + random.nextDouble() * (MAX_SEGMENT_LENGTH - MIN_SEGMENT_LENGTH);
+//
+//                        drawSegment(tessellator, layer, px3, py3, pz3, px4, py4, pz4, THICKNESS * 0.8f * particleScale);
+//
+//                        // Forks of forks
+//                        if (random.nextFloat() < FORK_CHANCE) {
+//
+//                            double px5 = px3 + (random.nextDouble() * 2 - 1) * VERTEX_JITTER * particleScale;
+//                            double py5 = py3 + (random.nextDouble() * 2 - 1) * VERTEX_JITTER * particleScale;
+//                            double pz5 = pz3 + MIN_SEGMENT_LENGTH + random.nextDouble() * (MAX_SEGMENT_LENGTH - MIN_SEGMENT_LENGTH);
+//
+//                            drawSegment(tessellator, layer, px3, py3, pz3, px5, py5, pz5, THICKNESS * 0.6f * particleScale);
+//                        }
+//
+//                        px3 = px4;
+//                        py3 = py4;
+//                        pz3 = pz4;
+//                    }
+//                }
+//
+//                px = px2;
+//                py = py2;
+//                pz = pz2;
+//            }
+//
+//            // Last segment has a specific end position and cannot fork.
+//            double px2 = freeEnd ? (random.nextDouble() * 2 - 1) * VERTEX_JITTER * particleScale : 0;
+//            double py2 = freeEnd ? (random.nextDouble() * 2 - 1) * VERTEX_JITTER * particleScale : 0;
+//            drawSegment(tessellator, layer, px, py, pz, px2, py2, length, THICKNESS * particleScale);
+//
+//        }
+//
+//        GlStateManager.enableTexture2D();
+//        GlStateManager.enableLighting();
+//        GlStateManager.disableBlend();
     }
 
     private void drawSegment(Tessellator tessellator, int layer, double x1, double y1, double z1, double x2, double y2, double z2, float thickness) {

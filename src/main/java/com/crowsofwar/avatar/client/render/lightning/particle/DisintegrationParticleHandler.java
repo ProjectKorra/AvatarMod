@@ -257,10 +257,11 @@ public class DisintegrationParticleHandler {
 			return trailCount;
 		GL11.glPushMatrix();
 		doTransforms(render, scale);
-		if(render.childModels != null)
-			for(ModelRenderer renderer : render.childModels) {
+		if(render.childModels != null) {
+			for (ModelRenderer renderer : render.childModels) {
 				trailCount = spawnLightningParticles(world, ent, x, y, z, scale, renderer, tex, hitPos, trailCount);
 			}
+		}
 		for(ModelBox cube : render.cubeList) {
 			GL11.glPushMatrix();
 			float cubeMidX = (cube.posX1 + (cube.posX2-cube.posX1)*0.5F)*scale;

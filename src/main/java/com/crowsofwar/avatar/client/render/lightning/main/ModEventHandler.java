@@ -11,12 +11,14 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
+import org.lwjgl.input.Keyboard;
 
 import java.util.Random;
 
 public class ModEventHandler {
 
     public static Random rand = new Random();
+	int c = 0; // Cali's brute force for lightning
 
 //    @SubscribeEvent
 //    public void soundRegistering(RegistryEvent.Register<SoundEvent> evt) {
@@ -32,10 +34,12 @@ public class ModEventHandler {
 
         if(!player.world.isRemote && event.phase == TickEvent.Phase.START) {
 			NBTTagCompound perDat = player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG);
-			int lightning = perDat.getInteger("lightningCharge");
-			System.out.println("HERE: " + lightning);
+//			int lightning = perDat.getInteger("lightningCharge");
+			if(Keyboard.isKeyDown(Keyboard.KEY_I))
+				c = 1;
+			int lightning = c;
 			if(lightning > 0){
-				lightning ++;
+				lightning++; c++;
 				if(lightning == 60){
 					RayTraceResult r = Library.rayTraceIncludeEntities(player, 100, 1);
 					if(r != null && r.typeOfHit != RayTraceResult.Type.MISS){
@@ -96,7 +100,6 @@ public class ModEventHandler {
 						tag2.setInteger("count", 60+player.world.rand.nextInt(20));
 						tag2.setFloat("randomVelocity", 0.4F);
 						PacketDispatcher.wrapper.sendToAllTracking(new AuxParticlePacketNT(tag2, r.hitVec.x, r.hitVec.y, r.hitVec.z), new NetworkRegistry.TargetPoint(player.world.provider.getDimension(), player.posX, player.posY, player.posZ, 0));
-
 						Vec3d ssgChainPos = new Vec3d(-0.18, -0.1, 0.35);
 						ssgChainPos = ssgChainPos.rotatePitch((float) Math.toRadians(-player.rotationPitch));
 						ssgChainPos = ssgChainPos.rotateYaw((float) Math.toRadians(-player.rotationYaw));
@@ -121,7 +124,7 @@ public class ModEventHandler {
 					}
 				}
 				if(lightning == 84){
-					lightning = 0;
+					lightning = 0; c = 0;
 				}
 			}
 			perDat.setInteger("lightningCharge", lightning);

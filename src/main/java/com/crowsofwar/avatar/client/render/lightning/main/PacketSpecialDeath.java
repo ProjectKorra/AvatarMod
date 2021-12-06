@@ -1,34 +1,21 @@
 package com.crowsofwar.avatar.client.render.lightning.main;
 
-import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.render.lightning.math.Vec3;
 import com.crowsofwar.avatar.client.render.lightning.particle.DisintegrationParticleHandler;
-import com.crowsofwar.avatar.client.render.lightning.particle.ParticleSlicedMob;
-import com.crowsofwar.avatar.network.AvatarClientProxy;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.apache.commons.lang3.tuple.Pair;
-import org.lwjgl.util.vector.Matrix4f;
 
 import java.lang.reflect.Method;
-import java.util.List;
-import java.util.Random;
 
 public class PacketSpecialDeath implements IMessage {
 
@@ -80,30 +67,9 @@ public class PacketSpecialDeath implements IMessage {
 			Minecraft.getMinecraft().addScheduledTask(() -> {
 				Entity ent = Minecraft.getMinecraft().world.getEntityByID(m.entId);
 				if(ent instanceof EntityLivingBase){
-					switch(m.effectId){
-						case 0:
-							ent.setDead();
-							ModEventHandlerClient.specialDeathEffectEntities.add((EntityLivingBase) ent);
-							break;
-						case 1:
-							((EntityLivingBase) ent).hurtTime = 2;
-							try {
-								if(rGetHurtSound == null)
-									rGetHurtSound = ReflectionHelper.findMethod(EntityLivingBase.class, "getHurtSound", "func_184601_bQ", DamageSource.class);
-							} catch(Exception e) {
-								e.printStackTrace();
-							}
-							break;
-						case 2:
-							ent.setDead();
-							ModEventHandlerClient.specialDeathEffectEntities.add((EntityLivingBase) ent);
-							DisintegrationParticleHandler.spawnLightningDisintegrateParticles(ent, new Vec3(m.auxData[0], m.auxData[1], m.auxData[2]));
-							break;
-						case 3:
-							break;
-						case 4:
-							break;
-					}
+					ent.setDead();
+					ModEventHandlerClient.specialDeathEffectEntities.add((EntityLivingBase) ent);
+					DisintegrationParticleHandler.spawnLightningDisintegrateParticles(ent, new Vec3(m.auxData[0], m.auxData[1], m.auxData[2]));
 				}
 			});
 			return null;

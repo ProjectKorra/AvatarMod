@@ -135,6 +135,7 @@ public interface AvatarCommonProxy {
 
     void checkGLCaps();
 
+    // TODO - Should be deleted
     void effectNT(NBTTagCompound nbt);
 
     float partialTicks();

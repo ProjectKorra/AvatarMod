@@ -1,6 +1,5 @@
 package com.crowsofwar.avatar.client.render.lightning.main;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
 

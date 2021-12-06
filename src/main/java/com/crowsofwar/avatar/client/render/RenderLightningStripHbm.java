@@ -66,8 +66,6 @@ public class RenderLightningStripHbm {
         if(ticksActive < 0)
             return;
         e.setCanceled(true);
-//        HbmShaderManager2.createInvMVP();
-//        GlStateManager.enableDepth();
         HbmShaderManager2.postProcess();
     }
 
@@ -91,7 +89,6 @@ public class RenderLightningStripHbm {
         GlStateManager.colorMask(false, false, false, false);
         ResourceManager.maxdepth.use();
         ResourceManager.lightning_fp.renderAnimated(renderTime = System.currentTimeMillis());
-        Minecraft.getMinecraft().entityRenderer.itemRenderer.renderItemInFirstPerson((float) e.getRenderPartialTicks());
         HbmShaderManager2.releaseShader();
         GlStateManager.colorMask(true, true, true, true);
         GL11.glPopMatrix();
@@ -165,7 +162,6 @@ public class RenderLightningStripHbm {
 			lightning_strips.clear();
 			lightning_strips.add(new ParticleLightningStrip(Minecraft.getMinecraft().world, 0, 0, 0));
 			lightning_strips.add(new ParticleLightningStrip(Minecraft.getMinecraft().world, 0, 0, 0));
-            System.out.println("HERE: MADE IT");
 		}
 		Iterator<ParticleLightningStrip> iter = lightning_strips.iterator();
 		while(iter.hasNext()){

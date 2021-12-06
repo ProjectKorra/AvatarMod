@@ -14,8 +14,9 @@ public class PacketDispatcher {
 	public static void registerPackets(){
 		int i = 0;
 		wrapper.registerMessage(AuxParticlePacketNT.Handler.class, AuxParticlePacketNT.class, i++, Side.CLIENT);
-
 		wrapper.registerMessage(AuxButtonPacket.Handler.class, AuxButtonPacket.class, i++, Side.SERVER);
+		wrapper.registerMessage(PacketSpecialDeath.Handler.class, PacketSpecialDeath.class, i++, Side.CLIENT);
+
 	}
 
 	public static void sendTo(IMessage message, EntityPlayerMP player){
