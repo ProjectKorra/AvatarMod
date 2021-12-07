@@ -32,6 +32,9 @@ import net.minecraftforge.fml.relauncher.Side;
  *
  * @see AvatarControl
  */
+
+//TODO: Make a client-side equivalent and call it as well instead of directly executing the ability
+	//Allows for other players to see ability vfx
 public class PacketSUseAbility extends AvatarPacket<PacketSUseAbility> {
 
 	private Ability ability;

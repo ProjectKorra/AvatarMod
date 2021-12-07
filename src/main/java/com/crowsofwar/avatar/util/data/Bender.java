@@ -76,7 +76,7 @@ public abstract class Bender {
     }
 
     public static boolean isBenderSupported(EntityLivingBase entity) {
-        return (entity == null || (entity instanceof EntityPlayer && !(entity instanceof FakePlayer)) || entity instanceof EntityBender)
+        return ((entity instanceof EntityPlayer && !(entity instanceof FakePlayer)) || entity instanceof EntityBender)
                 && (Bender.get(entity) != null && Bender.get(entity).getInfo().getId() != null);
     }
 
