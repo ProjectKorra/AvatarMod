@@ -94,7 +94,8 @@ public class AvatarPlayerTick {
         if (event.player instanceof EntityPlayerMP) {
             Ability.syncProperties(event.player);
         }
-        Bender.adjustConfigModifier(event.player);
+        if (event.player != null)
+            Bender.adjustConfigModifier(event.player);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
@@ -103,7 +104,8 @@ public class AvatarPlayerTick {
             //Syncs the properties if they're not loaded
             List<Ability> initialisedAbilities = Abilities.all().stream().filter(ability -> !ability.arePropertiesInitialised())
                     .collect(Collectors.toList());
-            if (!initialisedAbilities.isEmpty() && !(event.getEntity() instanceof EntityPlayer))
+            if (!initialisedAbilities.isEmpty() && !(event.getEntity() instanceof EntityPlayer)
+                    && event.getEntity() != null)
                 Ability.syncEntityProperties();
 
             if (event.getEntity() instanceof EntityPlayer)

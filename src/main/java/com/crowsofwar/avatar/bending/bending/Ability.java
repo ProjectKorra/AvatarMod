@@ -94,8 +94,8 @@ public abstract class Ability {
             R = "R",
             G = "G",
             B = "B",
-            //For melee abilities
-            MAX_COMBO = "maxCombo";
+    //For melee abilities
+    MAX_COMBO = "maxCombo";
     //Airbending stuff
     public static final String
             PUSH_REDSTONE = "pushRedstone",
@@ -116,8 +116,8 @@ public abstract class Ability {
     public static final String
             //Amount is the amount consumed
             WATER_AMOUNT = "waterAmount",
-            //Level is the HP of it (applies to source abilities such as water bubble)
-            WATER_LEVEL = "waterLevel",
+    //Level is the HP of it (applies to source abilities such as water bubble)
+    WATER_LEVEL = "waterLevel",
             SOURCE_RANGE = "sourceRange",
             SOURCE_ANGLES = "sourceAngles",
             PLANT_BEND = "plantbend";
@@ -214,17 +214,6 @@ public abstract class Ability {
         this.raytrace = new Raytrace.Info();
     }
 
-    public void setPropertiesClient(AbilityProperties properties) {
-        if (FMLCommonHandler.instance().getEffectiveSide() != Side.CLIENT) {
-           AvatarLog.warn("Ability#setPropertiesClient called from the server side!");
-        }
-
-        if (!this.arePropertiesInitialised()) {
-            this.properties = properties;
-        }
-
-    }
-
     /**
      * Called from the event handler when a player logs in.
      */
@@ -235,13 +224,7 @@ public abstract class Ability {
             clearProperties();
         } else {
             AbilityProperties.loadWorldSpecificAbilityProperties(player.world);
-            for (Ability ability : Abilities.all()) {
-                if (!ability.arePropertiesInitialised()) ability.setProperties(ability.globalProperties);
-            }
-            // On the server side, send a packet to the player to synchronise their spell properties
-            List<Ability> abilities = Abilities.all();
-            AvatarMod.network.sendToAll(new PacketCSyncAbilityProperties(abilities.stream().map(a -> a.properties).toArray(AbilityProperties[]::new)));
-
+            syncEntityProperties();
         }
         BendingData data = BendingData.getFromEntity(player);
         if (data != null) {
@@ -257,7 +240,8 @@ public abstract class Ability {
         }
         // On the server side, send a packet to the player to synchronise their spell properties
         List<Ability> abilities = Abilities.all();
-        AvatarMod.network.sendToAll(new PacketCSyncAbilityProperties(abilities.stream().map(a -> a.properties).toArray(AbilityProperties[]::new)));
+        if (AvatarMod.network != null)
+            AvatarMod.network.sendToAll(new PacketCSyncAbilityProperties(abilities.stream().map(a -> a.properties).toArray(AbilityProperties[]::new)));
 
         //Prevents NPCS from yeeting
     }
@@ -281,10 +265,6 @@ public abstract class Ability {
         }
     }
 
-    // ============================================ Event handlers ==============================================
-
-    // Not ideal but it solves the reloading of ability properties without breaking encapsulation
-
     @SubscribeEvent
     public static void onClientDisconnectEvent(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
         // Why does the world UNLOAD event happen during world LOADING? How does that even work?!
@@ -296,10 +276,25 @@ public abstract class Ability {
         }
     }
 
+    // ============================================ Event handlers ==============================================
+
+    // Not ideal but it solves the reloading of ability properties without breaking encapsulation
+
     public static boolean propertyEqualsInhibitor(String property) {
         return property.equals(CHI_COST) || property.equals(EXHAUSTION) || property.equals(COOLDOWN)
                 || property.equals(BURNOUT) || property.equals(BURNOUT_HIT) || property.equals(CHI_PER_SECOND)
                 || property.equals(CHI_PERCENT) || property.equals(EXHAUSTION_HIT);
+    }
+
+    public void setPropertiesClient(AbilityProperties properties) {
+        if (FMLCommonHandler.instance().getEffectiveSide() != Side.CLIENT) {
+            AvatarLog.warn("Ability#setPropertiesClient called from the server side!");
+        }
+
+        if (!this.arePropertiesInitialised()) {
+            this.properties = properties;
+        }
+
     }
 
     /**
@@ -741,7 +736,7 @@ public abstract class Ability {
             if (this.globalProperties == null)
                 this.globalProperties = properties;
         } else {
-         //   AvatarLog.info("A mod attempted to set an ability's properties, but they were already initialised.");
+            //   AvatarLog.info("A mod attempted to set an ability's properties, but they were already initialised.");
             //   Thread.dumpStack();
         }
     }
