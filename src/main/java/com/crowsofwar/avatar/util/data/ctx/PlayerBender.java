@@ -153,10 +153,9 @@ public class PlayerBender extends Bender {
 		//Flips the original logic to ensure abilities are executed client-side for everyone
 		if (!getWorld().isRemote) {
 			super.executeAbility(ability, raytrace, switchPath);
-			AvatarMod.network.sendToAll(new PacketCUseAbility(ability, raytrace, switchPath));
+			AvatarMod.network.sendToAll(new PacketCUseAbility(ability, raytrace, switchPath, getEntity()));
 		} else {
 			super.executeAbility(ability, raytrace, switchPath);
-
 		}
 	}
 

@@ -27,7 +27,6 @@ import com.crowsofwar.avatar.entity.EntityLightningArc;
 import com.crowsofwar.avatar.entity.mob.EntityBender;
 import com.crowsofwar.avatar.network.AvatarChatMessages;
 import com.crowsofwar.avatar.network.packets.PacketCPowerRating;
-import com.crowsofwar.avatar.network.packets.PacketCUseAbility;
 import com.crowsofwar.avatar.network.packets.PacketSUseAbility;
 import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.Raytrace;
@@ -246,7 +245,7 @@ public abstract class Bender {
         //Manually execute it client side:
         executeAbility(ability, raytrace, switchPath);
         //Server side
-        AvatarMod.network.sendToServer(new PacketSUseAbility(ability, raytrace, switchPath));
+        AvatarMod.network.sendToServer(new PacketSUseAbility(ability, raytrace, switchPath, getEntity()));
     }
 
     //Same method but with a raytrace
@@ -254,8 +253,9 @@ public abstract class Bender {
         //Manually execute it client side:
         executeAbility(ability, raytrace, switchPath);
         //Server side
-        AvatarMod.network.sendToServer(new PacketSUseAbility(ability, raytrace, switchPath));
+        AvatarMod.network.sendToServer(new PacketSUseAbility(ability, raytrace, switchPath, getEntity()));
     }
+
     /**
      * Same as regular {@link #executeAbility(Ability, boolean)}, but allows a provided raytrace, instead
      * of performing another on the fly.
@@ -296,11 +296,11 @@ public abstract class Bender {
                 data.save(DataCategory.ABILITY_DATA);
                 if (canUseAbility(ability) && !MinecraftForge.EVENT_BUS.post(new AbilityUseEvent(entity, ability, level + 1, path))) {
                     if (data.getMiscData().getCanUseAbilities()) {
-                      //TODO: Fix client-server cooldown desync
+                        //TODO: Fix client-server cooldown desync
                         if (getData().chi().getAvailableChi() >= ability.getChiCost(abilityCtx) && aD.getAbilityCooldown() == 0 || entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
                             aD.setPowerRating(calcPowerRating(ability.getBendingId()));
                             //This lets the ability disable burnout regeneration
-                          //  adjustConfigModifier(entity);
+                            //  adjustConfigModifier(entity);
                             aD.setRegenBurnout(true);
                             ability.execute(abilityCtx);
                             if (entity instanceof EntityPlayer)
