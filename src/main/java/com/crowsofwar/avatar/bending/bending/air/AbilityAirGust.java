@@ -112,7 +112,6 @@ public class AbilityAirGust extends Ability {
             if (!world.isRemote)
                 world.spawnEntity(gust);
 
-            entity.swingArm(EnumHand.MAIN_HAND);
 
             if (world.isRemote) {
                 for (double angle = 0; angle < 360; angle += Math.max((int) (size * 15), 15)) {
@@ -132,10 +131,11 @@ public class AbilityAirGust extends Ability {
                             world.rand.nextGaussian() / 80 + velocity.y(), world.rand.nextGaussian() / 80 + velocity.z())
                             .time(10 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(0.95F, 0.95F, 0.95F, 0.05F).spawnEntity(entity)
                             .scale(size * (1 / size)).element(BendingStyles.get(Airbending.ID)).collide(true).spawn(world);
+                    entity.swingArm(world.rand.nextBoolean() ? EnumHand.MAIN_HAND : EnumHand.OFF_HAND);
                 }
             }
 
-            entity.swingArm(world.rand.nextBoolean() ? EnumHand.MAIN_HAND : EnumHand.OFF_HAND);
+
             ctx.getAbilityData().setRegenBurnout(true);
             entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_FIREWORK_LAUNCH, entity.getSoundCategory(), 1.0F + Math.max(ctx.getLevel(), 0) / 2F, 0.9F + world.rand.nextFloat() / 10);
             super.execute(ctx);
