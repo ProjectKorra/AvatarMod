@@ -20,7 +20,8 @@ public class AbilityOblivionBeam extends Ability {
         BendingData data = ctx.getData();
         Bender bender = ctx.getBender();
         if (bender.consumeChi(getChiCost(ctx) / 4)) {
-            data.addStatusControl(START_OBLIVION_BEAM);
+            if (!ctx.getWorld().isRemote)
+                data.addStatusControl(START_OBLIVION_BEAM);
             ctx.getAbilityData().setRegenBurnout(false);
         }
     }
@@ -40,6 +41,7 @@ public class AbilityOblivionBeam extends Ability {
     public boolean isOffensive() {
         return true;
     }
+
     @Override
     public int getCooldown(AbilityContext ctx) {
         return 0;

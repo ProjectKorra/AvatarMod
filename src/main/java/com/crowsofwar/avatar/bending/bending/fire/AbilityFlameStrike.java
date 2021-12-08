@@ -18,6 +18,7 @@
 package com.crowsofwar.avatar.bending.bending.fire;
 
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingAi;
 import com.crowsofwar.avatar.entity.EntityLightOrb;
@@ -41,6 +42,8 @@ import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+
+import java.util.Objects;
 
 import static com.crowsofwar.avatar.config.ConfigClient.CLIENT_CONFIG;
 import static com.crowsofwar.avatar.util.data.StatusControlController.FLAME_STRIKE_MAIN;
@@ -109,7 +112,7 @@ public class AbilityFlameStrike extends Ability {
 
                 EntityLightOrb orb = new EntityLightOrb(world);
                 orb.setOwner(entity);
-                orb.setAbility(new AbilityFlameStrike());
+                orb.setAbility(Objects.requireNonNull(Abilities.get("flame_strike")));
                 orb.setPosition(rightSide);
                 orb.setOrbSize(orbSize);
                 orb.setInitialSize(orbSize);

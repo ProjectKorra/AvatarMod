@@ -44,7 +44,7 @@ public class AbilityShadeBurst extends Ability {
         boolean hasShadowCharge = data.hasStatusControl(SHOOT_SHADE_BURST);
 
 
-        if (!hasShadowCharge) {
+        if (!hasShadowCharge && !ctx.getWorld().isRemote) {
             data.addStatusControl(CHARGE_SHADE_BURST);
         }
         super.execute(ctx);

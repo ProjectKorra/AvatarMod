@@ -33,6 +33,7 @@ import com.crowsofwar.avatar.util.analytics.AvatarAnalytics;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
+import com.crowsofwar.avatar.util.data.ctx.PlayerBender;
 import com.crowsofwar.avatar.util.helper.GliderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
@@ -118,11 +119,6 @@ public class PacketHandlerClient implements IPacketHandler {
             if (bender != null) {
 
                 bender.executeAbility(packet.getAbility(), packet.getRaytrace(), packet.getSwitchpath());
-
-                // Send analytics
-                String abilityName = packet.getAbility().getName();
-                String level = AbilityData.get(source, abilityName).getLevelDesc();
-                AvatarAnalytics.INSTANCE.pushEvent(getAbilityExecutionEvent(abilityName, level));
             }
 
         }

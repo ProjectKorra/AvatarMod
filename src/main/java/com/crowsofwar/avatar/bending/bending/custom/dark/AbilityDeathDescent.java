@@ -46,7 +46,7 @@ public class AbilityDeathDescent extends Ability {
         Bender bender = ctx.getBender();
         AbilityData abilityData = ctx.getAbilityData();
 
-        if (!data.hasTickHandler(DEATH_DESCENT_HANDLER)) {
+        if (!data.hasTickHandler(DEATH_DESCENT_HANDLER) && !ctx.getWorld().isRemote) {
             if (!data.hasStatusControl(DEATH_DESCENT) && bender.consumeChi(getChiCost(abilityData) / 8)) {
                 data.addStatusControl(DEATH_DESCENT);
                 if (data.hasTickHandler(DEATH_DESCENT_HANDLER)) {
