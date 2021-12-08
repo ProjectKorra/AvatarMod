@@ -19,19 +19,19 @@ package com.crowsofwar.avatar.client;
 
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.client.gui.AvatarUiRenderer;
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import com.crowsofwar.avatar.client.controls.AvatarControl;
 import com.crowsofwar.avatar.client.controls.IControlsHandler;
+import com.crowsofwar.avatar.client.gui.AvatarUiRenderer;
+import com.crowsofwar.avatar.network.packets.*;
+import com.crowsofwar.avatar.util.Raytrace;
+import com.crowsofwar.avatar.util.Raytrace.Result;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.StatusControl;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
-import com.crowsofwar.avatar.network.packets.*;
-import com.crowsofwar.avatar.util.Raytrace;
-import com.crowsofwar.avatar.util.Raytrace.Result;
 import com.crowsofwar.gorecore.format.FormattedMessageProcessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
@@ -50,9 +50,9 @@ import org.lwjgl.input.Mouse;
 
 import java.util.*;
 
-import static com.crowsofwar.avatar.network.AvatarChatMessages.MSG_DONT_HAVE_BENDING;
-import static com.crowsofwar.avatar.config.ConfigClient.CLIENT_CONFIG;
 import static com.crowsofwar.avatar.client.controls.AvatarControl.*;
+import static com.crowsofwar.avatar.config.ConfigClient.CLIENT_CONFIG;
+import static com.crowsofwar.avatar.network.AvatarChatMessages.MSG_DONT_HAVE_BENDING;
 
 /**
  * Large class that manages input on the client-side. After input is received,
@@ -273,9 +273,14 @@ public class ClientInput implements IControlsHandler {
                         if (!conflict && mc.inGameHasFocus && mc.currentScreen == null && down && !wasAbilityDown[i]) {
                             Raytrace.Result raytrace = Raytrace.getTargetBlock(mc.player, ability.getRaytrace());
                             if (data.hasBendingId(ability.getBendingId()) && player.isCreative() || data.canUse(ability)) {
-                                //Client side
-                                Bender.get(player).executeAbility(ability, raytrace, isSwitchPathKeyDown);
-                                //Automatically done server-side
+//
+                                //Sends packets for both the client and the server
+                                Bender.get(player).handleExecution(ability, raytrace, isSwitchPathKeyDown);
+//                                //Client side
+//                                AvatarMod.network.sendToAll(new PacketCUseAbility(ability, raytrace, isSwitchPathKeyDown));
+//                                //Server side
+//                                AvatarMod.network.sendToServer(new PacketSUseAbility(ability, raytrace, isSwitchPathKeyDown));
+
                             }
                         }
                         wasAbilityDown[i] = down;

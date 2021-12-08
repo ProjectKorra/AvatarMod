@@ -235,7 +235,7 @@ public class RadialMenu extends Gui {
                         if (segments[i].isMouseHover(mouseX, mouseY, resolution)) {
                             boolean isSwitchPathKeyDown = AvatarControl.KEY_SWITCH.isDown();
 
-                            bender.executeAbility(controls[i], isSwitchPathKeyDown);
+                            bender.handleExecution(controls[i], isSwitchPathKeyDown);
                             AvatarUiRenderer.fade(segments[i]);
                             playClickSound(0.8f);
                             break;
@@ -255,7 +255,7 @@ public class RadialMenu extends Gui {
                         if (controls[i] != null) {
                             boolean isSwitchPathKeyDown = AvatarControl.KEY_SWITCH.isDown();
 
-                            bender.executeAbility(controls[i], isSwitchPathKeyDown);
+                            bender.handleExecution(controls[i], isSwitchPathKeyDown);
                             AvatarUiRenderer.fade(segments[i]);
                             playClickSound(0.8f);
                             //Breaks the loop
