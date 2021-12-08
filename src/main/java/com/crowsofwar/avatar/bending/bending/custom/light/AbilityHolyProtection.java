@@ -36,11 +36,13 @@ public class AbilityHolyProtection extends Ability {
         boolean hasAirCharge = data.hasStatusControl(RELEASE_HOLY_PROTECTION);
 
 
-        if (bender.consumeChi(getChiCost(ctx) / 4) && !hasAirCharge) {
-            data.addStatusControl(CHARGE_HOLY_PROTECTION);
-        } else if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
-            if (!hasAirCharge) {
+        if (!ctx.getWorld().isRemote) {
+            if (bender.consumeChi(getChiCost(ctx) / 4) && !hasAirCharge) {
                 data.addStatusControl(CHARGE_HOLY_PROTECTION);
+            } else if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
+                if (!hasAirCharge) {
+                    data.addStatusControl(CHARGE_HOLY_PROTECTION);
+                }
             }
         }
         super.execute(ctx);

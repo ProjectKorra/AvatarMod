@@ -44,7 +44,7 @@ public class AbilityKiFlight extends Ability {
         Bender bender = ctx.getBender();
         AbilityData abilityData = ctx.getAbilityData();
 
-        if (!data.hasTickHandler(KI_FLIGHT_HANDlER)) {
+        if (!data.hasTickHandler(KI_FLIGHT_HANDlER) && !ctx.getWorld().isRemote) {
             if (!data.hasStatusControl(KI_FLIGHT) && bender.consumeChi(getChiCost(abilityData) / 8)) {
 
                 data.addStatusControl(KI_FLIGHT);

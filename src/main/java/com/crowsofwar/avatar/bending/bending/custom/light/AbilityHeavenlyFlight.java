@@ -46,7 +46,7 @@ public class AbilityHeavenlyFlight extends Ability {
         Bender bender = ctx.getBender();
         AbilityData abilityData = ctx.getAbilityData();
 
-        if (!data.hasTickHandler(HEAVENLY_FLIGHT_HANDLER)) {
+        if (!data.hasTickHandler(HEAVENLY_FLIGHT_HANDLER) && !ctx.getWorld().isRemote) {
             if (!data.hasStatusControl(HEAVENLY_FLIGHT) && bender.consumeChi(getChiCost(abilityData) / 8)) {
                 data.addStatusControl(HEAVENLY_FLIGHT);
                 if (data.hasTickHandler(HEAVENLY_FLIGHT_HANDLER)) {

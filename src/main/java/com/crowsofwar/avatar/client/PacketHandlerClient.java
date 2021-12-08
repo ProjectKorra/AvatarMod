@@ -21,7 +21,6 @@ import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.bending.bending.Abilities;
-import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.client.gui.AvatarUiRenderer;
 import com.crowsofwar.avatar.client.gui.skills.SkillsGui;
 import com.crowsofwar.avatar.network.IPacketHandler;
@@ -29,11 +28,8 @@ import com.crowsofwar.avatar.network.packets.*;
 import com.crowsofwar.avatar.network.packets.glider.PacketCClientGliding;
 import com.crowsofwar.avatar.network.packets.glider.PacketCSyncGliderDataToClient;
 import com.crowsofwar.avatar.network.packets.glider.PacketCUpdateClientTarget;
-import com.crowsofwar.avatar.util.analytics.AvatarAnalytics;
-import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
-import com.crowsofwar.avatar.util.data.ctx.PlayerBender;
 import com.crowsofwar.avatar.util.helper.GliderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
@@ -50,9 +46,6 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
-
-import static com.crowsofwar.avatar.network.AvatarChatMessages.*;
-import static com.crowsofwar.avatar.util.analytics.AnalyticEvents.getAbilityExecutionEvent;
 
 /**
  * Handles packets addressed to the client. Packets like this have a C in their
@@ -112,12 +105,11 @@ public class PacketHandlerClient implements IPacketHandler {
 
         //Can't use the message ctx since the player is only available server side
         EntityPlayer player = mc.player;
-        EntityLivingBase source = packet.getBender();
+        EntityLivingBase source = player.world.getPlayerEntityByUUID(packet.getBender());
         //Ensures it doesn't execute twice for the player who executed the ability initially
         if (source != player) {
-            Bender bender = Bender.get(player);
+            Bender bender = Bender.get(source);
             if (bender != null) {
-
                 bender.executeAbility(packet.getAbility(), packet.getRaytrace(), packet.getSwitchpath());
             }
 
