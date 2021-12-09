@@ -153,8 +153,11 @@ public abstract class BendingAi extends EntityAIBase {
      * Executes the ability's main code (the part used for players)
      */
     protected void execAbility() {
-        if (Objects.requireNonNull(AbilityData.get(entity, ability.getName())).getAbilityCooldown() <= 0)
+        if (Objects.requireNonNull(AbilityData.get(entity, ability.getName())).getAbilityCooldown() <= 0) {
             bender.executeAbility(ability, false);
+            //For observing players
+            bender.handleExecution(ability, false);
+        }
     }
 
     /**

@@ -30,6 +30,9 @@ import com.crowsofwar.avatar.entity.EntityLightningArc;
 import com.crowsofwar.avatar.entity.mob.EntityBender;
 import com.crowsofwar.avatar.network.AvatarChatMessages;
 import com.crowsofwar.avatar.network.packets.PacketCPowerRating;
+import com.crowsofwar.avatar.network.packets.PacketCUseAbility;
+import com.crowsofwar.avatar.network.packets.PacketSUseAbility;
+import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.Raytrace;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
@@ -277,6 +280,24 @@ public abstract class Bender {
 
     }
 
+    //These methods are wrapper methods, and they use packets to ensure players see everything.
+    //AI and mobs execute their own abilities while sending out packets.
+    public void handleExecution(Ability ability, boolean switchPath) {
+        Raytrace.Result raytrace = Raytrace.getTargetBlock(getEntity(),
+                ability.getRaytrace());
+        //Client side
+        AvatarMod.network.sendToAll(new PacketCUseAbility(ability, raytrace, switchPath));
+        //Server side
+        AvatarMod.network.sendToServer(new PacketSUseAbility(ability, raytrace, switchPath));
+    }
+
+    //Same method but with a raytrace
+    public void handleExecution(Ability ability, Raytrace.Result raytrace, boolean switchPath) {
+        //Client side
+        AvatarMod.network.sendToAll(new PacketCUseAbility(ability, raytrace, switchPath));
+        //Server side
+        AvatarMod.network.sendToServer(new PacketSUseAbility(ability, raytrace, switchPath));
+    }
     /**
      * Same as regular {@link #executeAbility(Ability, boolean)}, but allows a provided raytrace, instead
      * of performing another on the fly.

@@ -243,6 +243,7 @@ public class AvatarMod {
         registerPacket(PacketCClientGliding.class, Side.CLIENT);
         registerPacket(PacketCUpdateClientTarget.class, Side.CLIENT);
         registerPacket(PacketCSyncAbilityProperties.class, Side.CLIENT);
+        registerPacket(PacketCUseAbility.class, Side.CLIENT);
 
         NetworkRegistry.INSTANCE.registerGuiHandler(this, new AvatarGuiHandler());
 

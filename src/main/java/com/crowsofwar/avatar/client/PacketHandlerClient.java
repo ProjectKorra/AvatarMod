@@ -20,6 +20,10 @@ package com.crowsofwar.avatar.client;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.bending.bending.BendingStyles;
+import com.crowsofwar.avatar.util.analytics.AvatarAnalytics;
+import com.crowsofwar.avatar.util.data.AbilityData;
+import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.helper.GliderHelper;
 import com.crowsofwar.avatar.client.gui.AvatarUiRenderer;
 import com.crowsofwar.avatar.client.gui.skills.SkillsGui;
@@ -45,6 +49,9 @@ import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 
+import static com.crowsofwar.avatar.network.AvatarChatMessages.*;
+import static com.crowsofwar.avatar.util.analytics.AnalyticEvents.getAbilityExecutionEvent;
+
 /**
  * Handles packets addressed to the client. Packets like this have a C in their
  * name.
@@ -60,6 +67,9 @@ public class PacketHandlerClient implements IPacketHandler {
 
     @Override
     public IMessage onPacketReceived(IMessage packet, MessageContext ctx) {
+
+        if (packet instanceof PacketCUseAbility)
+            return handleKeypress((PacketCUseAbility) packet, ctx);
 
         if (packet instanceof PacketCParticles)
             return handlePacketParticles((PacketCParticles) packet, ctx, ((PacketCParticles) packet).getVelIsMagnitude());
@@ -93,6 +103,42 @@ public class PacketHandlerClient implements IPacketHandler {
     @Override
     public Side getSide() {
         return Side.CLIENT;
+    }
+
+    //Client side equivalent of the server method
+    private IMessage handleKeypress(PacketCUseAbility packet, MessageContext ctx) {
+
+        //Can't use the message ctx since the player is only available server side
+        EntityPlayer player = Minecraft.getMinecraft().player;
+        Bender bender = Bender.get(player);
+        if (bender != null) {
+
+            bender.executeAbility(packet.getAbility(), packet.getRaytrace(), packet.getSwitchpath());
+
+            // Send analytics
+            String abilityName = packet.getAbility().getName();
+            String level = AbilityData.get(player, abilityName).getLevelDesc();
+            AvatarAnalytics.INSTANCE.pushEvent(getAbilityExecutionEvent(abilityName, level));
+
+            // If player just got to 100% XP so they can upgrade, send them a message
+            AbilityData abilityData = AbilityData.get(player, abilityName);
+            boolean notLevel4 = abilityData.getLevel() < 3;
+            if (abilityData.getXp() == 100 && abilityData.getLastXp() < 100 && notLevel4) {
+
+                UUID bendingId = packet.getAbility().getBendingId();
+
+                MSG_CAN_UPGRADE_ABILITY.send(player, abilityName, abilityData.getLevel() + 2);
+                MSG_CAN_UPGRADE_ABILITY_2.send(player);
+                MSG_CAN_UPGRADE_ABILITY_3.send(player, BendingStyles.getName(bendingId));
+
+                // Prevent this message from appearing again by updating lastXp to show current Xp
+                abilityData.resetLastXp();
+
+            }
+
+        }
+
+        return null;
     }
 
     private IMessage handlePacketParticles(PacketCParticles packet, MessageContext ctx, boolean velIsMagnitude) {
