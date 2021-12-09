@@ -285,16 +285,12 @@ public abstract class Bender {
     public void handleExecution(Ability ability, boolean switchPath) {
         Raytrace.Result raytrace = Raytrace.getTargetBlock(getEntity(),
                 ability.getRaytrace());
-        //Client side
-        AvatarMod.network.sendToAll(new PacketCUseAbility(ability, raytrace, switchPath));
         //Server side
         AvatarMod.network.sendToServer(new PacketSUseAbility(ability, raytrace, switchPath));
     }
 
     //Same method but with a raytrace
     public void handleExecution(Ability ability, Raytrace.Result raytrace, boolean switchPath) {
-        //Client side
-        AvatarMod.network.sendToAll(new PacketCUseAbility(ability, raytrace, switchPath));
         //Server side
         AvatarMod.network.sendToServer(new PacketSUseAbility(ability, raytrace, switchPath));
     }
