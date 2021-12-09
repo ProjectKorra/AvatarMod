@@ -76,14 +76,14 @@ public class AvatarPlayerTick {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
-        if (Bender.isBenderSupported(event.player)) {
+        if (Bender.isBenderSupported(event.player) && event.player instanceof EntityPlayerMP) {
             Ability.syncProperties(event.player);
         }
     }
 
     @SubscribeEvent
     public static void onPlayerDeath(LivingDeathEvent event) {
-        if (event.getEntityLiving() instanceof EntityPlayer && Bender.isBenderSupported(event.getEntityLiving())) {
+        if (event.getEntityLiving() instanceof EntityPlayerMP && Bender.isBenderSupported(event.getEntityLiving())) {
             Ability.syncProperties((EntityPlayer) event.getEntityLiving());
         }
     }
@@ -93,27 +93,8 @@ public class AvatarPlayerTick {
         // When a player logs in, they are sent the glyph data, server settings and spell properties.
         if (event.player instanceof EntityPlayerMP) {
             Ability.syncProperties(event.player);
-        }
-        if (event.player != null)
-            Bender.adjustConfigModifier(event.player);
-    }
-
-    @SubscribeEvent(priority = EventPriority.HIGH)
-    public static void worldJoinEvent(EntityJoinWorldEvent event) {
-        if (event.getEntity() instanceof EntityLivingBase && Bender.isBenderSupported((EntityLivingBase) event.getEntity())) {
-            //Syncs the properties if they're not loaded
-            List<Ability> initialisedAbilities = Abilities.all().stream().filter(ability -> !ability.arePropertiesInitialised())
-                    .collect(Collectors.toList());
-            if (!initialisedAbilities.isEmpty() && !(event.getEntity() instanceof EntityPlayer)
-                    && event.getEntity() != null)
-                Ability.syncEntityProperties();
-
-            if (event.getEntity() instanceof EntityPlayer)
-                Ability.syncProperties((EntityPlayer) event.getEntity());
-
-
-            if (SKILLS_CONFIG.startWithRandomBending && !event.getWorld().isRemote) {
-                EntityLivingBase bender = (EntityLivingBase) event.getEntity();
+            if (SKILLS_CONFIG.startWithRandomBending && !event.player.world.isRemote) {
+                EntityLivingBase bender = event.player;
                 if (Bender.isBenderSupported(bender)) {
                     BendingData data = BendingData.getFromEntity(bender);
                     //Applies a config modifier
@@ -139,6 +120,8 @@ public class AvatarPlayerTick {
                 }
             }
         }
+        if (event.player != null)
+            Bender.adjustConfigModifier(event.player);
     }
 
     //Prevents keybinds from letting you use abilities you haven't learned
