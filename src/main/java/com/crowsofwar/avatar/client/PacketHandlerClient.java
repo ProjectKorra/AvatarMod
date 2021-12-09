@@ -107,9 +107,12 @@ public class PacketHandlerClient implements IPacketHandler {
         EntityPlayer player = mc.player;
         EntityLivingBase source = player.world.getPlayerEntityByUUID(packet.getBender());
         //Ensures it doesn't execute twice for the player who executed the ability initially
-        if (source != player) {
+        if (source != player && source != null) {
+            //Sets the world and sends packets to *ensure* visuals are seen by others
             Bender bender = Bender.get(source);
+            player.setWorld(source.world);
             if (bender != null) {
+                bender.getData().saveAll();
                 bender.executeAbility(packet.getAbility(), packet.getRaytrace(), packet.getSwitchpath());
             }
 
