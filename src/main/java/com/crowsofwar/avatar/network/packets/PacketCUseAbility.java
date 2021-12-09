@@ -11,6 +11,8 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.fml.relauncher.Side;
 
+import java.util.UUID;
+
 //Client equivalent of the network packet. Ensures all players witness abilities executed twice.
 public class PacketCUseAbility extends AvatarPacket<PacketCUseAbility> {
 
@@ -18,12 +20,12 @@ public class PacketCUseAbility extends AvatarPacket<PacketCUseAbility> {
     private Raytrace.Result raytrace;
     private boolean switchPath;
     //The original source of the ability.
-    private EntityLivingBase bender;
+    private UUID bender;
 
     public PacketCUseAbility() {
     }
 
-    public PacketCUseAbility(Ability ability, Raytrace.Result raytrace, boolean switchPath, EntityLivingBase bender) {
+    public PacketCUseAbility(Ability ability, Raytrace.Result raytrace, boolean switchPath, UUID bender) {
         this.ability = ability;
         this.raytrace = raytrace;
         this.switchPath = switchPath;
@@ -38,6 +40,7 @@ public class PacketCUseAbility extends AvatarPacket<PacketCUseAbility> {
         }
         raytrace = Raytrace.Result.fromBytes(buf);
         switchPath = buf.readBoolean();
+        bender = GoreCoreByteBufUtil.readUUID(buf);
     }
 
     @Override
@@ -45,6 +48,7 @@ public class PacketCUseAbility extends AvatarPacket<PacketCUseAbility> {
         GoreCoreByteBufUtil.writeString(buf, ability.getName());
         raytrace.toBytes(buf);
         buf.writeBoolean(switchPath);
+        GoreCoreByteBufUtil.writeUUID(buf, bender);
     }
 
     @Override
@@ -64,7 +68,7 @@ public class PacketCUseAbility extends AvatarPacket<PacketCUseAbility> {
         return raytrace;
     }
 
-    public EntityLivingBase getBender() {
+    public UUID getBender() {
         return bender;
     }
 

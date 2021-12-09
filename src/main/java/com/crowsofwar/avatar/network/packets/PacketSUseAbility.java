@@ -28,6 +28,8 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.fml.relauncher.Side;
 
+import java.util.UUID;
+
 /**
  * Packet which tells the server that the client pressed a control. The control
  * is given to the player's active bending controller.
@@ -43,12 +45,12 @@ public class PacketSUseAbility extends AvatarPacket<PacketSUseAbility> {
 	private Raytrace.Result raytrace;
 	private boolean switchPath;
 	//Source bender of this
-	private EntityLivingBase bender;
+	private UUID bender;
 
 	public PacketSUseAbility() {
 	}
 
-	public PacketSUseAbility(Ability ability, Raytrace.Result raytrace, boolean switchPath, EntityLivingBase bender) {
+	public PacketSUseAbility(Ability ability, Raytrace.Result raytrace, boolean switchPath, UUID bender) {
 		this.ability = ability;
 		this.raytrace = raytrace;
 		this.switchPath = switchPath;
@@ -63,6 +65,7 @@ public class PacketSUseAbility extends AvatarPacket<PacketSUseAbility> {
 		}
 		raytrace = Raytrace.Result.fromBytes(buf);
 		switchPath = buf.readBoolean();
+		bender = GoreCoreByteBufUtil.readUUID(buf);
 	}
 
 	@Override
@@ -70,6 +73,7 @@ public class PacketSUseAbility extends AvatarPacket<PacketSUseAbility> {
 		GoreCoreByteBufUtil.writeString(buf, ability.getName());
 		raytrace.toBytes(buf);
 		buf.writeBoolean(switchPath);
+		GoreCoreByteBufUtil.writeUUID(buf, bender);
 	}
 
 	@Override
@@ -89,7 +93,7 @@ public class PacketSUseAbility extends AvatarPacket<PacketSUseAbility> {
 		return raytrace;
 	}
 
-	public EntityLivingBase getBender() {
+	public UUID getBender() {
 		return bender;
 	}
 

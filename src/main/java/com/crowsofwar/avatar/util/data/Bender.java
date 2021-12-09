@@ -287,7 +287,8 @@ public abstract class Bender {
         //Manually execute it client side:
         executeAbility(ability, raytrace, switchPath);
         //Server side
-        AvatarMod.network.sendToServer(new PacketSUseAbility(ability, raytrace, switchPath, getEntity()));
+        if (getEntity() instanceof EntityPlayer)
+            AvatarMod.network.sendToServer(new PacketSUseAbility(ability, raytrace, switchPath, getEntity().getPersistentID()));
     }
 
     //Same method but with a raytrace
@@ -295,7 +296,8 @@ public abstract class Bender {
         //Manually execute it client side:
         executeAbility(ability, raytrace, switchPath);
         //Server side
-        AvatarMod.network.sendToServer(new PacketSUseAbility(ability, raytrace, switchPath, getEntity()));
+        if (getEntity() instanceof EntityPlayer)
+            AvatarMod.network.sendToServer(new PacketSUseAbility(ability, raytrace, switchPath, getEntity().getPersistentID()));
     }
 
     /**
@@ -319,6 +321,9 @@ public abstract class Bender {
         BendingData data = getData();
         EntityLivingBase entity = getEntity();
         AbilityData aD = AbilityData.get(getEntity(), ability.getName());
+
+        //Save data to sync clients for particles
+        data.save(DataCategory.ABILITY_DATA);
 
         if (aD != null) {
             int level = aD.getLevel();
@@ -389,6 +394,8 @@ public abstract class Bender {
         // On client-side, players will send a packet to the server, while other entities will do
         // nothing. Particles will be spawned. Remember to check what side you're on when executing abilities!
 
+        //Save data to sync clients for particles
+        data.save(DataCategory.ABILITY_DATA);
     }
 
     /**
