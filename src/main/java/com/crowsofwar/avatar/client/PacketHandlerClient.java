@@ -28,6 +28,7 @@ import com.crowsofwar.avatar.network.packets.*;
 import com.crowsofwar.avatar.network.packets.glider.PacketCClientGliding;
 import com.crowsofwar.avatar.network.packets.glider.PacketCSyncGliderDataToClient;
 import com.crowsofwar.avatar.network.packets.glider.PacketCUpdateClientTarget;
+import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.helper.GliderHelper;
@@ -114,11 +115,6 @@ public class PacketHandlerClient implements IPacketHandler {
             if (bender != null) {
                 bender.getData().saveAll();
                 bender.executeAbility(packet.getAbility(), packet.getRaytrace(), packet.getSwitchpath());
-
-                // Send analytics
-                String abilityName = packet.getAbility().getName();
-                String level = AbilityData.get(source, abilityName).getLevelDesc();
-                AvatarAnalytics.INSTANCE.pushEvent(getAbilityExecutionEvent(abilityName, level));
             }
 
         }
