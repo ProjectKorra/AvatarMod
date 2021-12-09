@@ -15,7 +15,7 @@
       "speed": 5,
       "knockback": 0.75,
       "chiOnHit": 0.9,
-      "damage": 3,
+      "damage": 2,
       "explosionSize": 1,
       "explosionDamage": 1,
       "waterLevel": 3,
@@ -24,10 +24,10 @@
       "sourceAngles": 45,
       "chargeFrequency": 6,
       "chargeAmount": 1,
-      "ring": false,
+      "sphere": false,
       "infiniteWater": false,
       "plantbend": false,
-      "reflect": false
+      "burstShield": false
     },
     "level2": {
       "tier": 1,
@@ -42,7 +42,7 @@
       "speed": 7,
       "knockback": 1,
       "chiOnHit": 1.1,
-      "damage": 4,
+      "damage": 3,
       "sourceRange": 3
     },
     "level3": {
@@ -75,12 +75,13 @@
       "speed": 15,
       "knockback": 4,
       "chiOnHit": 1.875,
-      "damage": 9,
+      "damage": 7,
       "chargeTime": 70,
       "explosionSize": 3,
       "explosionDamage": 4,
       "sourceRange": 4,
-      "chargeFrequency": 4
+      "chargeFrequency": 4,
+      "burstShield": true
     },
     "level4_2": {
       "tier": 3,
@@ -95,14 +96,14 @@
       "speed": 6,
       "knockback": 3,
       "chiOnHit": 1.9,
-      "damage": 8.75,
-      "explosionSize": 0,
-      "explosionDamage": 0,
+      "damage": 5,
+      "explosionSize": 2,
+      "explosionDamage": 1,
       "sourceRange": 6,
       "chargeFrequency": 10,
-      "ring": true,
+      "sphere": true,
       "infiniteWater": true,
-      "reflect": true
+      "burstShield": false
     }
   }
 }

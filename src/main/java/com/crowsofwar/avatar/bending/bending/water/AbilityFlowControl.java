@@ -38,18 +38,25 @@ import net.minecraft.world.World;
  * Creates a multi-use bubble of water. Right click to shield, left click to lob.
  * Shift to circle it around you. Circling it charges it up
  * Can be used as a water source for other moves.
+ * Has 3 "forms". Base, Wave, and Arc.
+ * Wave form is unlocked by unlocking the ability Wave. It lets you expand the ring as a shockwave, or push your shield.
+ * Arc form is unlocked by unlocking water arc/water stream.
+ * Upgrades primarily focus on these forms rather than the base one.
  * <p>
+ * Level 1: When in Wave form, you can right click while swirling for a water shockwave, or left click while shielding to push out the shield.
+ * While in Arc form, you can left click while swirling to shoot mini water arcs from it (damage based on Water Arc).
  * Level 3: Take the water bubble from any water source around you.
- * Level 4 Path 1: Holding shift charges it up and makes it spin incredibly fast. Left click to throw it,
- * making a massive water explosion.
- * Level 4 Path 2: Significantly increased health; while holding shift, right click to make
- * an encompassing shield around you.
+ * Level 4 Path 1: Arcing Monsoon ;; Heightened offensive power. Water explosion is bigger, for both the base orb
+ * and the ring. Additionally, left clicking while having the shield results in a cone burst rather than pushing things away.
+ * Level 4 Path 2: Cresting Serenity ;; Significantly increased health; while holding shift, right click to make
+ * an encompassing shield around you. Your shield is significantly bigger.
  */
 public class AbilityFlowControl extends Ability {
 
     public static final String
-            RING = "ring",
-            INFINITE_WATER = "infiniteWater";
+            SPHERE = "sphere",
+            INFINITE_WATER = "infiniteWater",
+            BURST_SHIELD = "burstShield";
 
     public AbilityFlowControl() {
         super(Waterbending.ID, "flow_control");
@@ -61,7 +68,7 @@ public class AbilityFlowControl extends Ability {
         super.init();
         addProperties(WATER_LEVEL, EXPLOSION_SIZE, EXPLOSION_DAMAGE, EFFECT_RADIUS, MAX_HEALTH, CHARGE_FREQUENCY,
                 CHARGE_AMOUNT);
-        addBooleanProperties(RING, INFINITE_WATER, REFLECT);
+        addBooleanProperties(SPHERE, INFINITE_WATER, BURST_SHIELD);
     }
 
     @Override

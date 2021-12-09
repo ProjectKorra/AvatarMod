@@ -4,9 +4,10 @@ import com.crowsofwar.avatar.client.controls.AvatarControl;
 import com.crowsofwar.avatar.util.data.StatusControl;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
 
-public class StatCtrlPushRing extends StatusControl {
+//For shooting mini water arcs from the swirl
+public class StatCtrlShootRing extends StatusControl {
 
-    public StatCtrlPushRing(int texture, AvatarControl subscribeTo, CrosshairPosition position) {
+    public StatCtrlShootRing(int texture, AvatarControl subscribeTo, CrosshairPosition position) {
         super(texture, subscribeTo, position);
     }
 
