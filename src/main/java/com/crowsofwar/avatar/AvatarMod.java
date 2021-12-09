@@ -247,7 +247,7 @@ public class AvatarMod {
 
         NetworkRegistry.INSTANCE.registerGuiHandler(this, new AvatarGuiHandler());
 
-        FMLCommonHandler.instance().bus().register(new AvatarPlayerTick());
+       // FMLCommonHandler.instance().bus().register(new AvatarPlayerTick());
 
         AvatarDataSerializers.register();
 
