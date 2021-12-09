@@ -6,6 +6,9 @@ import com.crowsofwar.avatar.network.PacketRedirector;
 import com.crowsofwar.avatar.util.Raytrace;
 import com.crowsofwar.gorecore.util.GoreCoreByteBufUtil;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.fml.relauncher.Side;
 
 //Client equivalent of the network packet. Ensures all players witness abilities executed twice.
@@ -14,14 +17,17 @@ public class PacketCUseAbility extends AvatarPacket<PacketCUseAbility> {
     private Ability ability;
     private Raytrace.Result raytrace;
     private boolean switchPath;
+    //The original source of the ability.
+    private EntityLivingBase bender;
 
     public PacketCUseAbility() {
     }
 
-    public PacketCUseAbility(Ability ability, Raytrace.Result raytrace, boolean switchPath) {
+    public PacketCUseAbility(Ability ability, Raytrace.Result raytrace, boolean switchPath, EntityLivingBase bender) {
         this.ability = ability;
         this.raytrace = raytrace;
         this.switchPath = switchPath;
+        this.bender = bender;
     }
 
     @Override
@@ -56,6 +62,10 @@ public class PacketCUseAbility extends AvatarPacket<PacketCUseAbility> {
 
     public Raytrace.Result getRaytrace() {
         return raytrace;
+    }
+
+    public EntityLivingBase getBender() {
+        return bender;
     }
 
     @Override

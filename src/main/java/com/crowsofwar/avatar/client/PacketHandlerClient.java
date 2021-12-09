@@ -20,21 +20,22 @@ package com.crowsofwar.avatar.client;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.AvatarMod;
+import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.BendingStyles;
-import com.crowsofwar.avatar.util.analytics.AvatarAnalytics;
-import com.crowsofwar.avatar.util.data.AbilityData;
-import com.crowsofwar.avatar.util.data.Bender;
-import com.crowsofwar.avatar.util.helper.GliderHelper;
 import com.crowsofwar.avatar.client.gui.AvatarUiRenderer;
 import com.crowsofwar.avatar.client.gui.skills.SkillsGui;
-import com.crowsofwar.avatar.bending.bending.Abilities;
-import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.network.IPacketHandler;
 import com.crowsofwar.avatar.network.packets.*;
 import com.crowsofwar.avatar.network.packets.glider.PacketCClientGliding;
 import com.crowsofwar.avatar.network.packets.glider.PacketCSyncGliderDataToClient;
 import com.crowsofwar.avatar.network.packets.glider.PacketCUpdateClientTarget;
+import com.crowsofwar.avatar.util.analytics.AvatarAnalytics;
+import com.crowsofwar.avatar.util.data.AbilityData;
+import com.crowsofwar.avatar.util.data.Bender;
+import com.crowsofwar.avatar.util.data.BendingData;
+import com.crowsofwar.avatar.util.helper.GliderHelper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumParticleTypes;
@@ -109,31 +110,19 @@ public class PacketHandlerClient implements IPacketHandler {
     private IMessage handleKeypress(PacketCUseAbility packet, MessageContext ctx) {
 
         //Can't use the message ctx since the player is only available server side
-        EntityPlayer player = Minecraft.getMinecraft().player;
-        Bender bender = Bender.get(player);
-        if (bender != null) {
+        EntityPlayer player = mc.player;
+        EntityLivingBase source = packet.getBender();
+        //Ensures it doesn't execute twice for the player who executed the ability initially
+        if (source != player) {
+            Bender bender = Bender.get(player);
+            if (bender != null) {
 
-            bender.executeAbility(packet.getAbility(), packet.getRaytrace(), packet.getSwitchpath());
+                bender.executeAbility(packet.getAbility(), packet.getRaytrace(), packet.getSwitchpath());
 
-            // Send analytics
-            String abilityName = packet.getAbility().getName();
-            String level = AbilityData.get(player, abilityName).getLevelDesc();
-            AvatarAnalytics.INSTANCE.pushEvent(getAbilityExecutionEvent(abilityName, level));
-
-            // If player just got to 100% XP so they can upgrade, send them a message
-            AbilityData abilityData = AbilityData.get(player, abilityName);
-            boolean notLevel4 = abilityData.getLevel() < 3;
-            if (abilityData.getXp() == 100 && abilityData.getLastXp() < 100 && notLevel4) {
-
-                UUID bendingId = packet.getAbility().getBendingId();
-
-                MSG_CAN_UPGRADE_ABILITY.send(player, abilityName, abilityData.getLevel() + 2);
-                MSG_CAN_UPGRADE_ABILITY_2.send(player);
-                MSG_CAN_UPGRADE_ABILITY_3.send(player, BendingStyles.getName(bendingId));
-
-                // Prevent this message from appearing again by updating lastXp to show current Xp
-                abilityData.resetLastXp();
-
+                // Send analytics
+                String abilityName = packet.getAbility().getName();
+                String level = AbilityData.get(source, abilityName).getLevelDesc();
+                AvatarAnalytics.INSTANCE.pushEvent(getAbilityExecutionEvent(abilityName, level));
             }
 
         }
@@ -233,12 +222,11 @@ public class PacketHandlerClient implements IPacketHandler {
                     Abilities.all().get(i).setProperties(packet.properties[i]);
                 }
             });
+        } else {
+            for (int i = 0; i < packet.properties.length; i++) {
+                Abilities.all().get(i).setPropertiesClient(packet.properties[i]);
+            }
         }
-        else {
-			for (int i = 0; i < packet.properties.length; i++) {
-				Abilities.all().get(i).setPropertiesClient(packet.properties[i]);
-			}
-		}
 
         return null;
     }

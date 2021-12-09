@@ -24,6 +24,8 @@ import com.crowsofwar.avatar.network.PacketRedirector;
 import com.crowsofwar.avatar.util.Raytrace;
 import com.crowsofwar.gorecore.util.GoreCoreByteBufUtil;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.fml.relauncher.Side;
 
 /**
@@ -40,14 +42,17 @@ public class PacketSUseAbility extends AvatarPacket<PacketSUseAbility> {
 	private Ability ability;
 	private Raytrace.Result raytrace;
 	private boolean switchPath;
+	//Source bender of this
+	private EntityLivingBase bender;
 
 	public PacketSUseAbility() {
 	}
 
-	public PacketSUseAbility(Ability ability, Raytrace.Result raytrace, boolean switchPath) {
+	public PacketSUseAbility(Ability ability, Raytrace.Result raytrace, boolean switchPath, EntityLivingBase bender) {
 		this.ability = ability;
 		this.raytrace = raytrace;
 		this.switchPath = switchPath;
+		this.bender = bender;
 	}
 
 	@Override
@@ -82,6 +87,10 @@ public class PacketSUseAbility extends AvatarPacket<PacketSUseAbility> {
 
 	public Raytrace.Result getRaytrace() {
 		return raytrace;
+	}
+
+	public EntityLivingBase getBender() {
+		return bender;
 	}
 
 	@Override
