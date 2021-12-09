@@ -310,5 +310,4 @@ task release(dependsOn: ["cleanBuild", "publish"]) {
 }
 
 runClient {
-    
 }
