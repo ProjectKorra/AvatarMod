@@ -19,6 +19,8 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.Objects;
+
 import static com.crowsofwar.avatar.bending.bending.air.AbilitySlipstream.INVIS_CHANCE;
 
 @Mod.EventBusSubscriber(modid = AvatarInfo.MOD_ID)
@@ -29,7 +31,7 @@ public class SlipstreamPowerModifier extends BuffPowerModifier {
     public double get(BendingContext ctx) {
 
         BendingData data = ctx.getData();
-        AbilityData abilityData = data.getAbilityData(new AbilitySlipstream());
+        AbilityData abilityData = data.getAbilityData(Objects.requireNonNull(Abilities.get("slipstream")));
         AbilitySlipstream ability = (AbilitySlipstream) Abilities.get("slipstream");
 
         double modifier = 0;
