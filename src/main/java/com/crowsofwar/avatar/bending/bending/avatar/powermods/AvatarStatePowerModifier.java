@@ -51,7 +51,7 @@ public class AvatarStatePowerModifier extends PowerRatingModifier {
             if (world.isRemote) {
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).vel(world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60,
                                 world.rand.nextGaussian() / 60).time(12).clr(AvatarUtils.getRandomNumberInRange(0, 255) / 255F,
-                                AvatarUtils.getRandomNumberInRange(0, 255) / 255F, AvatarUtils.getRandomNumberInRange(0, 255) / 255F, 0.005F + size / 200)
+                                AvatarUtils.getRandomNumberInRange(0, 255) / 255F, AvatarUtils.getRandomNumberInRange(0, 255) / 255F, 0.01F + size / 200)
                         .scale(size).element(BendingStyles.get(Avatarbending.ID)).glow(true)
                         .swirl((int) (size), (int) (size * Math.PI), size, 1F, (int) size * 40,
                                 1F, entity, world, false, AvatarEntityUtils.getMiddleOfEntity(entity),

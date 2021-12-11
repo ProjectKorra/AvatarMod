@@ -61,8 +61,11 @@ public class AbilityAvatarState extends Ability {
 
             AvatarStatePowerModifier modifier = new AvatarStatePowerModifier();
             modifier.setTicks(duration * 8);
-            for (BendingStyle style : BendingStyles.all())
-                Objects.requireNonNull(data.getPowerRatingManager(style)).addModifier(modifier, ctx);
+            for (BendingStyle style : BendingStyles.all()) {
+                //Why do I need this
+                if (style != null)
+                    Objects.requireNonNull(data.getPowerRatingManager(style)).addModifier(modifier, ctx);
+            }
             abilityData.addXp(xp);
         }
         abilityData.setRegenBurnout(true);
