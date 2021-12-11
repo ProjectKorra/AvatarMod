@@ -30,6 +30,8 @@ avatar.icebending=§3§lIcebending
 avatar.icebending.demonym=§3§lIcebender
 avatar.sandbending=§6§lSandbending
 avatar.sandbending.demonym=§6§lSandbender
+avatar.avatarbending=Elementmastery
+avatar.avatarbending.demonym=Avatar
 
 item.avatarmod:basic_glider.name=§lAcolyte Glider
 item.avatarmod:master_glider.name=§l§nMaster Glider
@@ -476,6 +478,13 @@ avatar.ability.explosive_pillar.lvl4_1=§8§l§oEXPLOSION §8§l§oMACHINE §8§
 avatar.ability.explosive_pillar.lvl4_2=§8§l§oBOOOOOM ;; Ridiculously big explosion that travels far, but doesn't occur frequently. Devastating.
 
 
+avatar.ability.avatar_state=Avatar State
+avatar.ability.avatar_state.desc=Enter the Avatar State and assume the power of Raava! Boost all bending and gain immense status effects.
+avatar.ability.avatar_state.lvl1=Generate immense power!
+avatar.ability.avatar_state.lvl2=Generate immenser powerer!
+avatar.ability.avatar_state.lvl3=Generate immensed powered!
+avatar.ability.avatar_state.lvl4_1=Aang Style ;; Extremely powerful, but high chi cost and cooldown!
+avatar.ability.avatar_state.lvl4_2=Korra Style ;; Weaker, but much more easy to use!
 
 avatar.ability.undefined=???
 

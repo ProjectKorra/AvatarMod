@@ -1,0 +1,64 @@
+{
+  "custom_properties": {
+    "xpOnUse": 2,
+    "level1": {
+      "tier": 1,
+      "chiCost": 4.0,
+      "cooldown": 200,
+      "exhaustion": 2.0,
+      "burnOut": 35.0,
+      "burnOutRecoverTick": 0.13,
+      "performanceAmount": 20,
+      "duration": 100,
+      "powerrating": 50,
+      "effectLevel": 0
+    },
+    "level2": {
+      "tier": 1,
+      "chiCost": 4.25,
+      "cooldown": 220,
+      "exhaustion": 4.5,
+      "burnOut": 40.0,
+      "burnOutRecoverTick": 0.13,
+      "performanceAmount": 100,
+      "duration": 120,
+      "powerrating": 100
+    },
+    "level3": {
+      "tier": 2,
+      "chiCost": 4.5,
+      "cooldown": 240,
+      "exhaustion": 5.0,
+      "burnOut": 45.0,
+      "burnOutRecoverTick": 0.14,
+      "performanceAmount": 30,
+      "duration": 140,
+      "powerrating": 150,
+      "effectLevel": 1
+    },
+    "level4_1": {
+      "tier": 3,
+      "chiCost": 8,
+      "cooldown": 300,
+      "exhaustion": 6.0,
+      "burnOut": 85.0,
+      "burnOutRecoverTick": 0.18,
+      "performanceAmount": 40,
+      "duration": 200,
+      "powerrating": 350,
+      "effectLevel": 3
+    },
+    "level4_2": {
+      "tier": 3,
+      "chiCost": 4.5,
+      "cooldown": 200,
+      "exhaustion": 5.5,
+      "burnOut": 45.0,
+      "burnOutRecoverTick": 0.15,
+      "performanceAmount": 35,
+      "duration": 160,
+      "powerrating": 175,
+      "effectLevel": 1
+    }
+  }
+}
