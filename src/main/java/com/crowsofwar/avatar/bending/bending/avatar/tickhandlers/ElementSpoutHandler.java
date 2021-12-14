@@ -3,6 +3,7 @@ package com.crowsofwar.avatar.bending.bending.avatar.tickhandlers;
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.avatar.AbilityElementSpout;
+import com.crowsofwar.avatar.bending.bending.fire.Firebending;
 import com.crowsofwar.avatar.bending.bending.water.Waterbending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.entity.mob.EntityBender;
@@ -58,8 +59,7 @@ public class ElementSpoutHandler extends TickHandler {
                     IBlockState state = world.getBlockState(entity.getPosition().down(height));
                     block = state.getBlock();
                     //Ensures you hit a solid block
-                    if ((!state.isFullBlock() || !state.isFullCube()) && state != Blocks.WATER.getDefaultState()
-                            && state != Blocks.FLOWING_WATER.getDefaultState())
+                    if ((!state.isFullBlock() || !state.isFullCube()) && !isLiquid(block))
                         block = Blocks.AIR;
                     height++;
                 }
@@ -126,19 +126,30 @@ public class ElementSpoutHandler extends TickHandler {
                                 0.05F, effectSize, ParticleBuilder.Type.CUBE, new Vec3d(0.05, 0.05, 0.05), new Vec3d(entity.motionX,
                                         entity.motionY, entity.motionZ), true, 255, 255, 255, 80, 14, BendingStyles.get(Waterbending.ID),
                                 false, 0.5F);
-                    } else
+                    } else if (block == Blocks.FIRE || block == Blocks.LAVA || block == Blocks.FLOWING_LAVA) {
+                        if (entity.ticksExisted % 2 == 0)
+                            AvatarParticleUtils.spawnSpinningVortex(world, entity, entity.getPositionVector().add(0, -height, 0), 5, 360 * height, height,
+                                    0.05F, effectSize, ParticleBuilder.Type.FLASH, new Vec3d(0.05, 0.05, 0.05), new Vec3d(entity.motionX,
+                                            entity.motionY, entity.motionZ), true, 255, 80 + AvatarUtils.getRandomNumberInRange(0, 40), 10 + AvatarUtils.getRandomNumberInRange(0, 40), 80, 14, BendingStyles.get(Firebending.ID),
+                                    false, 0.5F);
+                    } else {
                         //Use block crack particles
-                        //Todo: iteration size to reduce lag
                         if (entity.ticksExisted % 2 == 0)
                             AvatarParticleUtils.spawnSpinningVortex(world, 4, height * 540, height, 0.01,
                                     effectSize, EnumParticleTypes.BLOCK_CRACK, entity.getPositionVector().add(0, -height, 0),
                                     new Vec3d(world.rand.nextGaussian() / 10, world.rand.nextGaussian() / 10, world.rand.nextGaussian() / 10), new Vec3d(entity.motionX, entity.motionY, entity.motionZ),
                                     Block.getStateId(block.getBlockState().getBaseState()));
+                    }
                 }
             }
         }
         //If you're touching a block, it removes the tickhandler
         return world.collidesWithAnyBlock(entity.getEntityBoundingBox().grow(0.025)) && data.getTickHandlerDuration(this) > 30;
+    }
+
+    private boolean isLiquid(Block block) {
+        return block == Blocks.WATER || block == Blocks.FLOWING_WATER || block == Blocks.FIRE
+                || block == Blocks.LAVA || block == Blocks.FLOWING_LAVA;
     }
 
 

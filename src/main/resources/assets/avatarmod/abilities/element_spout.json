@@ -35,7 +35,7 @@
       "performanceAmount": 20,
       "effectRadius": 2,
       "maxHeight": 9,
-      "slowMult": 1
+      "speed": 1
     },
     "level4_1": {
       "tier": 3,
@@ -46,7 +46,7 @@
       "burnOutRecoverTick": 0.4,
       "performanceAmount": 25,
       "effectRadius": 3,
-      "slowMult": 0.85
+      "speed": 0.85
     },
     "level4_2": {
       "tier": 3,
@@ -57,7 +57,7 @@
       "burnOutRecoverTick": 0.4,
       "performanceAmount": 27,
       "effectRadius": 1.5,
-      "slowMult": 1.75
+      "speed": 1.5
     }
   }
 }

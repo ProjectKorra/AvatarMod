@@ -486,6 +486,14 @@ avatar.ability.avatar_state.lvl3=Generate immensed powered!
 avatar.ability.avatar_state.lvl4_1=Aang Style ;; Extremely powerful, but high chi cost and cooldown!
 avatar.ability.avatar_state.lvl4_2=Korra Style ;; Weaker, but much more easy to use!
 
+avatar.ability.element_spout=Element Spout
+avatar.ability.element_spout.desc=Use the power of the element beneath your feet to give you temporary levitation!
+avatar.ability.element_spout.lvl1=Fly upon a tornado of power!
+avatar.ability.element_spout.lvl2=Increased max float height!
+avatar.ability.element_spout.lvl3=Increased tornado size and height!
+avatar.ability.element_spout.lvl4_1=Thundering Power ;; Massive spout size, reduced chi cost!
+avatar.ability.element_spout.lvl4_2=Warp Speed ;; Smaller spout, higher speed!
+
 avatar.ability.undefined=???
 
 avatar.ui.level0=Level I
