@@ -31,6 +31,7 @@ import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -184,6 +185,12 @@ public class AbilityContext extends BendingContext {
                 }
             }
         }
+
+        //Gets the block in front of the player
+        BlockPos pos = getBenderEntity().getPosition().add(0, getBenderEntity().getEyeHeight(), 0);
+        pos = pos.add(Vector.getLookRectangular(getBenderEntity()).toBlockPos());
+        if (consumedWater() && getBenderEntity() instanceof EntityPlayer && ((EntityPlayer) getBenderEntity()).isCreative())
+            getAbilityData().setSourceInfo(new SourceInfo(getWorld().getBlockState(pos), getWorld(), pos));
         return super.consumeWater(amount);
     }
 
