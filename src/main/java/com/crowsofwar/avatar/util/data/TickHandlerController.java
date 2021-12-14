@@ -1,5 +1,6 @@
 package com.crowsofwar.avatar.util.data;
 
+import com.crowsofwar.avatar.bending.bending.avatar.tickhandlers.ElementSpoutHandler;
 import com.crowsofwar.avatar.bending.bending.earth.tickhandlers.EarthSpikeHandler;
 import com.crowsofwar.avatar.client.gui.RenderElementHandler;
 import com.crowsofwar.avatar.bending.bending.air.tickhandlers.*;
@@ -50,6 +51,7 @@ public class TickHandlerController {
 	public static TickHandler RELEASE_EARTHSPIKE = new EarthSpikeHandler(24);
 	public static TickHandler SHOOT_AIRBURST = new ShootAirBurstHandler(25);
 	public static TickHandler WATER_BURST = new WaterBurstHandler(26);
+	public static TickHandler ELEMENT_SPOUT_HANDLER = new ElementSpoutHandler(27);
 
 
 

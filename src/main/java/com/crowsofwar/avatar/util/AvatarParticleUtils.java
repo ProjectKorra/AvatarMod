@@ -137,18 +137,18 @@ public class AvatarParticleUtils {
         }
     }
 
-    public static void spawnSpinningDirectionalVortex(World world, Entity entity, Vec3d position, int maxAngle, double vortexLength,
+    public static void spawnSpinningDirectionalVortex(World world, Entity entity, Vec3d position, int angleIteration, int maxAngle, double vortexLength,
                                                       double minRadius, double radiusScale, ResourceLocation particleType,
                                                       Vec3d particleSpeed, Vec3d entitySpeed, boolean randomVel,
                                                       int r, int g, int b, int a, int maxAge, BendingStyle element,
                                                       boolean collide, float particleSize) {
         if (world.isRemote) {
-            for (int angle = 0; angle < maxAngle; angle++) {
+            for (int angle = 0; angle < maxAngle; angle += angleIteration) {
                 double angle2 = world.rand.nextDouble() * Math.PI * 2;
                 double radius = minRadius + ((float) angle / maxAngle) * radiusScale;
-                double x = radius * cos(angle);
+                double x = radius * cos(Math.toRadians(angle));
                 double y = ((float) angle / maxAngle) * vortexLength;
-                double z = radius * sin(angle);
+                double z = radius * sin(Math.toRadians(angle));
                 double speed = world.rand.nextDouble() * 2 + 1;
                 double omega = Math.signum(speed * ((Math.PI * 2) / 20 - speed / (20 * radius)));
                 angle2 += omega;
@@ -164,6 +164,37 @@ public class AvatarParticleUtils {
                             : pVel;
                     pos = rotateAroundAxisX(pos, entity.rotationPitch + 90);
                     pos = rotateAroundAxisY(pos, entity.rotationYaw);
+                    pos = pos.add(position);
+                    ParticleBuilder.create(particleType).spawnEntity(entity)
+                            .element(element).collide(collide).clr(r, g, b, a)
+                            .scale(particleSize).time(maxAge).pos(pos)
+                            .vel(pVel.add(entitySpeed)).spawn(world);
+
+                }
+            }
+        }
+    }
+
+    public static void spawnSpinningVortex(World world, Entity entity, Vec3d position, int angleIteration, int maxAngle, double vortexLength,
+                                                      double minRadius, double radiusScale, ResourceLocation particleType,
+                                                      Vec3d particleSpeed, Vec3d entitySpeed, boolean randomVel,
+                                                      int r, int g, int b, int a, int maxAge, BendingStyle element,
+                                                      boolean collide, float particleSize) {
+        if (world.isRemote) {
+            for (int angle = 0; angle < maxAngle; angle += angleIteration) {
+                double angle2 = world.rand.nextDouble() * Math.PI * 2;
+                double radius = minRadius + ((float) angle / maxAngle) * radiusScale;
+                double x = radius * cos(Math.toRadians(angle));
+                double y = ((float) angle / maxAngle) * vortexLength;
+                double z = radius * sin(Math.toRadians(angle));
+                double speed = world.rand.nextDouble() * 2 + 1;
+                double omega = Math.signum(speed * ((Math.PI * 2) / 20 - speed / (20 * radius)));
+                angle2 += omega;
+                Vec3d pos = new Vec3d(x, y, z);
+                if (entity != null) {
+                    //Creates a motion vector then rotates the motion and position vector
+                    //around the appropriate direction axis (axes?).
+                    Vec3d pVel = new Vec3d(particleSpeed.x * radius * omega * cos(angle2), particleSpeed.y, particleSpeed.z * radius * omega * sin(angle2));
                     pos = pos.add(position);
                     ParticleBuilder.create(particleType).spawnEntity(entity)
                             .element(element).collide(collide).clr(r, g, b, a)
@@ -191,19 +222,20 @@ public class AvatarParticleUtils {
      *                      particles move with the entity that's directly spawning it.
      */
 
-    public static void spawnSpinningVortex(World world, int maxAngle, double vortexHeight, double minRadius, double radiusScale, EnumParticleTypes particle, Vec3d position,
-                                           Vec3d particleSpeed, Vec3d entitySpeed) {
-        for (int angle = 0; angle < maxAngle; angle++) {
+    public static void spawnSpinningVortex(World world, int angleIteration, int maxAngle, double vortexHeight, double minRadius, double radiusScale, EnumParticleTypes particle, Vec3d position,
+                                           Vec3d particleSpeed, Vec3d entitySpeed, int... parameters) {
+        for (int angle = 0; angle < maxAngle; angle += angleIteration) {
             double angle2 = world.rand.nextDouble() * Math.PI * 2;
-            double radius = minRadius + (angle / radiusScale);
-            double x = radius * cos(angle);
-            double y = angle / (maxAngle / vortexHeight);
-            double z = radius * sin(angle);
+            double radius = minRadius + ((float) angle / maxAngle) * radiusScale;
+            double x = radius * cos(Math.toRadians(angle));
+            double y = (float) angle / maxAngle * vortexHeight;
+            double z = radius * sin(Math.toRadians(angle));
             double speed = world.rand.nextDouble() * 2 + 1;
             double omega = Math.signum(speed * ((Math.PI * 2) / 20 - speed / (20 * radius)));
             angle2 += omega;
             world.spawnParticle(particle, false, x + position.x, y + position.y, z + position.z,
-                    (particleSpeed.x * radius * omega * cos(angle2)) + entitySpeed.x, particleSpeed.y + entitySpeed.y, (particleSpeed.z * radius * omega * sin(angle2)) + entitySpeed.z);
+                    (particleSpeed.x * radius * omega * cos(angle2)) + entitySpeed.x, particleSpeed.y + entitySpeed.y, (particleSpeed.z * radius * omega * sin(angle2)) + entitySpeed.z,
+                    parameters);
 
         }
     }

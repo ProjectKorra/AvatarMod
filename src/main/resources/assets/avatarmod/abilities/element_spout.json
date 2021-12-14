@@ -1,0 +1,63 @@
+{
+  "custom_properties": {
+    "xpOnUse": 2,
+    "xpOnHit": 2,
+    "level1": {
+      "tier": 1,
+      "chiCost": 3.0,
+      "cooldown": 40,
+      "exhaustion": 2.0,
+      "burnOut": 10.0,
+      "burnOutRecoverTick": 0.18,
+      "effectRadius": 1.5,
+      "maxHeight": 5,
+      "speed": 0.5
+    },
+    "level2": {
+      "tier": 1,
+      "chiCost": 3.25,
+      "cooldown": 50,
+      "exhaustion": 2.5,
+      "burnOut": 15.0,
+      "burnOutRecoverTick": 0.22,
+      "performanceAmount": 15,
+      "effectRadius": 1.75,
+      "maxHeight": 7,
+      "speed": 0.75
+    },
+    "level3": {
+      "tier": 2,
+      "chiCost": 3.5,
+      "cooldown": 60,
+      "exhaustion": 3.0,
+      "burnOut": 20.0,
+      "burnOutRecoverTick": 0.25,
+      "performanceAmount": 20,
+      "effectRadius": 2,
+      "maxHeight": 9,
+      "slowMult": 1
+    },
+    "level4_1": {
+      "tier": 3,
+      "chiCost": 3.0,
+      "cooldown": 50,
+      "exhaustion": 3.5,
+      "burnOut": 27.0,
+      "burnOutRecoverTick": 0.4,
+      "performanceAmount": 25,
+      "effectRadius": 3,
+      "slowMult": 0.85
+    },
+    "level4_2": {
+      "tier": 3,
+      "chiCost": 5.0,
+      "cooldown": 45,
+      "exhaustion": 4.0,
+      "burnOut": 30.0,
+      "burnOutRecoverTick": 0.4,
+      "performanceAmount": 27,
+      "effectRadius": 1.5,
+      "slowMult": 1.75
+    }
+  }
+}

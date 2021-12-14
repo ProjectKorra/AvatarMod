@@ -310,5 +310,5 @@ task release(dependsOn: ["cleanBuild", "publish"]) {
 }
 
 runClient {
-   
+   args = ['--username', 'Dev']
 }
