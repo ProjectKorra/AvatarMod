@@ -105,10 +105,17 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
                 //Since the player is pushing it out, we change the distance to its maximum
                 distance = flow.getProperty(property, abilityData).floatValue();
                 distance = flow.powerModify(distance, abilityData);
-                if (bubble.getSwirlRadius() > distance)
-                    bubble.setSwirlRadius(bubble.getSwirlRadius() - 0.025F);
-                else if (bubble.getSwirlRadius() < distance)
-                    bubble.setSwirlRadius(bubble.getSwirlRadius() + 0.5F);
+                if (bubble.getState().equals(EntityWaterBubble.State.STREAM)) {
+                    if (bubble.getSwirlRadius() > distance)
+                        bubble.setSwirlRadius(bubble.getSwirlRadius() - 0.025F);
+                    else if (bubble.getSwirlRadius() < distance)
+                        bubble.setSwirlRadius(bubble.getSwirlRadius() + 0.5F);
+                } else {
+                    if (bubble.getDistance() > distance)
+                        bubble.setSwirlRadius(bubble.getDistance() - 0.025F);
+                    else if (bubble.getDistance() < distance)
+                        bubble.setSwirlRadius(bubble.getDistance() + 0.5F);
+                }
                 //While it's being pushed out, it does damage
                 bubble.setPiercing(true);
             }
@@ -117,10 +124,18 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
                 //Ensures it doesn't hit things unless it's being pushed out
                 bubble.setPiercing(false);
                 //Shrinks it back down
-                if (bubble.getSwirlRadius() > distance)
-                    bubble.setSwirlRadius(bubble.getSwirlRadius() - 0.05F);
-                else if (bubble.getSwirlRadius() < distance)
-                    bubble.setSwirlRadius(bubble.getSwirlRadius() + 0.05F);
+                if (bubble.getState().equals(EntityWaterBubble.State.STREAM)) {
+                    if (bubble.getSwirlRadius() > distance)
+                        bubble.setSwirlRadius(bubble.getSwirlRadius() - 0.05F);
+                    else if (bubble.getSwirlRadius() < distance)
+                        bubble.setSwirlRadius(bubble.getSwirlRadius() + 0.05F);
+                } else {
+                    if (bubble.getDistance() > distance)
+                        bubble.setDistance(bubble.getDistance() - 0.05F);
+                    else if (bubble.getDistance() < distance)
+                        bubble.setDistance(bubble.getDistance() + 0.05F);
+
+                }
             }
         }
 
@@ -165,8 +180,8 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
                 //Applies to the y vec; the x and z are applied within the method through radius
                 look = look.scale(bubble.getSwirlRadius());
                 AvatarEntityUtils.dragEntityTowardsPoint(bubble,
-                        AvatarEntityUtils.circularMotion(pos.add(0, look.y, 0), (int) (bubble.getDegreesPerSecond() * (int) bubble.world.getWorldTime()
-                                * bubble.getSwirlRadius()),
+                        AvatarEntityUtils.circularMotion(pos.add(0, look.y, 0), (int) (bubble.world.getWorldTime()
+                                        * Math.max(((EntityWaterBubble) entity).getDegreesPerSecond(), 3)),
                                 0, 1, bubble.getSwirlRadius()), 0.125);
                 //Visuals
                 if (world.isRemote) {
@@ -180,7 +195,7 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
                                     size, size * 5, bubble.getDegreesPerSecond()
                                             * size * 6,
                                     (float) (world.rand.nextGaussian() / 8F), bubble, world, false, AvatarEntityUtils.getBottomMiddleOfEntity(bubble),
-                                    ParticleBuilder.SwirlMotionType.OUT, true, true);
+                                    ParticleBuilder.SwirlMotionType.OUT, false, true);
                     ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(255, 255, 255, 90).gravity(true)
                             .time(16).scale(0.5F).spawnEntity(bubble).element(BendingStyles.get(Waterbending.ID))
                             .spin(size / 10, world.rand.nextGaussian() / 20)
@@ -188,7 +203,7 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
                                     size, size * 3, bubble.getDegreesPerSecond()
                                             * size * 6,
                                     (float) (world.rand.nextGaussian() / 8F), bubble, world, true, AvatarEntityUtils.getBottomMiddleOfEntity(bubble),
-                                    ParticleBuilder.SwirlMotionType.OUT, true, true);
+                                    ParticleBuilder.SwirlMotionType.OUT, false, true);
                     ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(255, 255, 255, 45).gravity(true)
                             .time(16).scale(0.5F).spawnEntity(bubble).element(BendingStyles.get(Waterbending.ID))
                             .spin(size / 10, world.rand.nextGaussian() / 20)
@@ -217,11 +232,12 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
                 }
                 //While in bubble form, try to make sure it's relatively accurate
                 else {
+                    entity.setEntitySize(entity.getMaxEntitySize());
                     //Moves it to its correct pos
-                    if (bubble.getSwirlRadius() > distance)
-                        bubble.setSwirlRadius(bubble.getSwirlRadius() - 0.025F);
-                    else if (bubble.getSwirlRadius() < distance)
-                        bubble.setSwirlRadius(bubble.getSwirlRadius() + 0.025F);
+                    if (bubble.getDistance() > distance)
+                        bubble.setSwirlRadius(bubble.getDistance() - 0.025F);
+                    else if (bubble.getDistance() < distance)
+                        bubble.setDistance(bubble.getDistance() + 0.025F);
                 }
                 //particles!
                 if (world.isRemote && bubble.getOwner() != null) {
@@ -344,6 +360,8 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
                 //Grows the entity until it's the correct size
                 if (entity.getHeight() >= entity.getMaxHeight() && entity.getWidth() >=
                         entity.getMaxWidth()) {
+                    //Ensures it doesn't go too overboard when growing
+                    entity.setEntitySize(entity.getMaxEntitySize());
                     return new WaterBubbleBehavior.PlayerControlled();
                 }
             } else return null;
