@@ -120,20 +120,20 @@ public class AvatarEntityUtils {
             }
     }
 
-    public static Vec3d circularMotion(EntityLivingBase owner, int angle, int index, int size) {
+    public static Vec3d circularMotion(EntityLivingBase owner, int angle, int index, int size, float radius) {
         angle += ((360 / size) * index);
         double radians = Math.toRadians(angle);
-        double x = 2.5 * Math.cos(radians);
-        double z = 2.5 * Math.sin(radians);
+        double x = radius * Math.cos(radians);
+        double z = radius * Math.sin(radians);
         Vec3d circlePos = new Vec3d(x, 0, z);
         return circlePos.add(owner.posX, owner.getEntityBoundingBox().minY + 1.5, owner.posZ);
     }
 
-    public static Vec3d circularMotion(Vec3d startPos, int angle, int index, int size) {
+    public static Vec3d circularMotion(Vec3d startPos, int angle, int index, int size, float radius) {
         angle += ((360 / size) * index);
         double radians = Math.toRadians(angle);
-        double x = 2.5 * Math.cos(radians);
-        double z = 2.5 * Math.sin(radians);
+        double x = radius * Math.cos(radians);
+        double z = radius * Math.sin(radians);
         Vec3d circlePos = new Vec3d(x, 0, z);
         return circlePos.add(startPos);
     }

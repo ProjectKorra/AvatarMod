@@ -29,6 +29,7 @@ public class StatCtrlShieldBubble extends StatusControl {
             bubble.setBehaviour(new WaterBubbleBehavior.ShieldShrink());
             //bubble.setExpandedHitBox()
             data.addStatusControl(StatusControlController.RESET_SHIELD_BUBBLE);
+            data.addStatusControl(StatusControlController.PUSH_SHIELD_BUBBLE);
         }
 
         return true;

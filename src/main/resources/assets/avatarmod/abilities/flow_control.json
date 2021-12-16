@@ -24,10 +24,14 @@
       "sourceAngles": 45,
       "chargeFrequency": 6,
       "chargeAmount": 1,
+      "effectRadius": 1.5,
+      "range": 1.5,
+      "maxRadius": 4,
+      "maxRange": 4,
       "sphere": false,
       "infiniteWater": false,
       "plantbend": false,
-      "burstShield": false
+      "burst": false
     },
     "level2": {
       "tier": 1,
@@ -43,7 +47,11 @@
       "knockback": 1,
       "chiOnHit": 1.1,
       "damage": 3,
-      "sourceRange": 3
+      "sourceRange": 3,
+      "effectRadius": 2,
+      "range": 1.75,
+      "maxRadius": 4.5,
+      "maxRange": 4.5
     },
     "level3": {
       "tier": 2,
@@ -60,6 +68,10 @@
       "chiOnHit": 1.25,
       "damage": 5,
       "sourceRange": 5,
+      "effectRadius": 2.5,
+      "range": 2,
+      "maxRadius": 5,
+      "maxRange": 5,
       "plantbend": true
     },
     "level4_1": {
@@ -81,7 +93,11 @@
       "explosionDamage": 4,
       "sourceRange": 4,
       "chargeFrequency": 4,
-      "burstShield": true
+      "effectRadius": 2.5,
+      "range": 2,
+      "maxRadius": 6,
+      "maxRange": 6,
+      "burst": true
     },
     "level4_2": {
       "tier": 3,
@@ -101,9 +117,13 @@
       "explosionDamage": 1,
       "sourceRange": 6,
       "chargeFrequency": 10,
+      "effectRadius": 3.5,
+      "range": 3,
+      "maxRadius": 4.5,
+      "maxRange": 4.5,
       "sphere": true,
       "infiniteWater": true,
-      "burstShield": false
+      "burst": false
     }
   }
 }

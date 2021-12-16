@@ -244,7 +244,7 @@ public abstract class FloatingBlockBehavior extends OffensiveBehaviour {
             //S P I N
             if (!blocks.isEmpty() && blocks.size() > 1) {
                 angle *= 5;
-                Vec3d pos = AvatarEntityUtils.circularMotion(owner, angle, index, blocks.size());
+                Vec3d pos = AvatarEntityUtils.circularMotion(owner, angle, index, blocks.size(), 2.5F);
                 motion = pos.subtract(AvatarEntityUtils.getBottomMiddleOfEntity(entity)).scale(.5);
             }
 

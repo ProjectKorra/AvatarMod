@@ -67,7 +67,11 @@ public class StatusControlController {
 			SHIELD_BUBBLE = new StatCtrlShieldBubble(),
 			RESET_SHIELD_BUBBLE = new StatCtrlResetBubble(AvatarControl.CONTROL_RIGHT_CLICK_UP, StatusControl.CrosshairPosition.RIGHT_OF_CROSSHAIR, EntityWaterBubble.State.SHIELD),
 			RESET_SWIRL_BUBBLE = new StatCtrlResetBubble(AvatarControl.CONTROL_SHIFT, StatusControl.CrosshairPosition.BELOW_CROSSHAIR, EntityWaterBubble.State.STREAM),
-			SWIRL_BUBBLE = new StatCtrlSwirlBubble();
+			SWIRL_BUBBLE = new StatCtrlSwirlBubble(),
+			PUSH_SWIRL_BUBBLE = new StatCtrlPushRing(true),
+			RELEASE_SWIRL_BUBBLE = new StatCtrlPushRing(false),
+			PUSH_SHIELD_BUBBLE = new StatCtrlPushShield(true),
+			RELEASE_SHIELD_BUBBLE = new StatCtrlPushShield(false);
 	// @formatter:on
 
 	public static StatusControl lookup(int id) {

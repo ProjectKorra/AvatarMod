@@ -59,6 +59,12 @@ public class EntityWaterBubble extends EntityOffensive implements IShieldEntity 
     //Using ordinals of the STATE to sync them
     private static final DataParameter<Integer> SYNC_STATE = EntityDataManager.createKey(EntityWaterBubble.class,
             DataSerializers.VARINT);
+    //Used for determining the distance for the swirl
+    public static final DataParameter<Float> SYNC_STREAM_RADIUS = EntityDataManager.createKey(EntityWaterBubble.class,
+            DataSerializers.FLOAT);
+    //For the shield/default bubble
+    public static final DataParameter<Float> SYNC_DISTANCE = EntityDataManager.createKey(EntityWaterBubble.class,
+            DataSerializers.FLOAT);
     /**
      * Whether the water bubble will get a water source upon landing. Only
      * set on server-side.
@@ -100,6 +106,12 @@ public class EntityWaterBubble extends EntityOffensive implements IShieldEntity 
 
     }
 
+    @Override
+    public void setDamage(float damage) {
+        //Bakes health proportions affecting damage into the entity, removing the need for calculations elsewhere
+        super.setDamage(getHealth() / getMaxHealth() * damage);
+    }
+
     public float getDegreesPerSecond() {
         return dataManager.get(SYNC_DEGREES_PER_SECOND);
     }
@@ -117,6 +129,23 @@ public class EntityWaterBubble extends EntityOffensive implements IShieldEntity 
         dataManager.set(SYNC_STATE, state.ordinal());
     }
 
+    //Used for determining the distance of the shield *and* the distance of the swirl.
+    public void setSwirlRadius(float radius) {
+        dataManager.set(SYNC_STREAM_RADIUS, radius);
+    }
+
+    public float getSwirlRadius() {
+        return dataManager.get(SYNC_STREAM_RADIUS);
+    }
+
+    public void setDistance(float dist) {
+        dataManager.set(SYNC_DISTANCE, dist);
+    }
+
+    public float getDistance() {
+        return dataManager.get(SYNC_DISTANCE);
+    }
+
     @Override
     protected void entityInit() {
         super.entityInit();
@@ -124,6 +153,8 @@ public class EntityWaterBubble extends EntityOffensive implements IShieldEntity 
         dataManager.register(SYNC_HEALTH, 3F);
         dataManager.register(SYNC_DEGREES_PER_SECOND, 5F);
         dataManager.register(SYNC_STATE, 0);
+        dataManager.register(SYNC_STREAM_RADIUS, 2.5F);
+        dataManager.register(SYNC_DISTANCE, 2F);
     }
 
     @Override
@@ -160,32 +191,6 @@ public class EntityWaterBubble extends EntityOffensive implements IShieldEntity 
                 }
             }
         }
-		/*
-		if (!world.isRemote && inWaterSource) {
-			setDead();
-			if (getOwner() != null) {
-				BendingData data = Objects.requireNonNull(Bender.get(getOwner())).getData();
-				if (data != null) {
-					data.removeStatusControl(StatusControlController.LOB_BUBBLE);
-				}
-			}
-		}**/
-
-
-//        //particles!
-//        if (world.isRemote && getOwner() != null) {
-//            //Colours: 0, 102, 255, 255 in order of r, g, b, a
-//            //Particles are * 2 * PI because that's the circumference of a circle and idk.
-//            //Use the bottom of the entity cause my method is bad and shifts the centre point up. Dw about it.
-//            ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(60, 102, 255, 160)
-//                    .time(14).scale(0.5F).spawnEntity(this).element(BendingStyles.get(Waterbending.ID))
-//                    .swirl((int) (getAvgSize() * 14), (int) (getAvgSize() * 6 * Math.PI),
-//                            getAvgSize(), getAvgSize() * 5, getDegreesPerSecond() * getAvgSize(),
-//                            -0.5F / getAvgSize(), this, world, false, AvatarEntityUtils.getBottomMiddleOfEntity(this),
-//                            ParticleBuilder.SwirlMotionType.OUT, false, true);
-//
-//
-//        }
 
 
     }
@@ -216,12 +221,19 @@ public class EntityWaterBubble extends EntityOffensive implements IShieldEntity 
         if (getOwner() != null) {
             BendingData data = BendingData.getFromEntity(getOwner());
             if (data != null) {
+                //Base move
                 data.removeStatusControl(StatusControlController.SHIELD_BUBBLE);
                 data.removeStatusControl(StatusControlController.LOB_BUBBLE);
                 data.removeStatusControl(StatusControlController.RESET_SHIELD_BUBBLE);
                 data.removeStatusControl(StatusControlController.SWIRL_BUBBLE);
                 data.removeStatusControl(StatusControlController.RESET_SWIRL_BUBBLE);
-                //Throw
+                //Added from wave
+                data.removeStatusControl(StatusControlController.PUSH_SWIRL_BUBBLE);
+                data.removeStatusControl(StatusControlController.RESET_SWIRL_BUBBLE);
+                data.removeStatusControl(StatusControlController.PUSH_SHIELD_BUBBLE);
+                data.removeStatusControl(StatusControlController.RESET_SHIELD_BUBBLE);
+                //Added from water arc
+
             }
         }
     }

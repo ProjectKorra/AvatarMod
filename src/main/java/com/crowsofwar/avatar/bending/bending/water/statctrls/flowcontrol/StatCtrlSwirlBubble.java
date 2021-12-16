@@ -29,6 +29,7 @@ public class StatCtrlSwirlBubble extends StatusControl {
             data.removeStatusControl(StatusControlController.LOB_BUBBLE);
             //bubble.set
             data.addStatusControl(StatusControlController.RESET_SWIRL_BUBBLE);
+            data.addStatusControl(StatusControlController.PUSH_SWIRL_BUBBLE);
         }
         return true;
     }
