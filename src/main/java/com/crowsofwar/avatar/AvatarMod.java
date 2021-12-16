@@ -28,6 +28,7 @@ import com.crowsofwar.avatar.bending.bending.combustion.Combustionbending;
 import com.crowsofwar.avatar.bending.bending.custom.dark.*;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.*;
 import com.crowsofwar.avatar.bending.bending.custom.ki.AbilityKaioKen;
+import com.crowsofwar.avatar.bending.bending.custom.ki.AbilityKiBlast;
 import com.crowsofwar.avatar.bending.bending.custom.ki.AbilityKiFlight;
 import com.crowsofwar.avatar.bending.bending.custom.ki.Kibending;
 import com.crowsofwar.avatar.bending.bending.custom.light.*;
@@ -183,6 +184,7 @@ public class AvatarMod {
         /*              Ki                  */
         Abilities.register(new AbilityKaioKen());
         Abilities.register(new AbilityKiFlight());
+        Abilities.register(new AbilityKiBlast());
 
         /*              Light               */
         Abilities.register(new AbilityPurify());
