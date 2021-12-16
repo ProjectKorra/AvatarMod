@@ -129,6 +129,8 @@ public class AbilityFlowControl extends Ability {
                 bubble.setDegreesPerSecond(size * 2);
                 bubble.setSwirlRadius(swirlRadius);
                 bubble.setDistance(distance);
+                bubble.setDamageSource("avatar_Water");
+                bubble.setPiercing(false);
 
                 //Only want to spawn it server side
                 if (!world.isRemote)

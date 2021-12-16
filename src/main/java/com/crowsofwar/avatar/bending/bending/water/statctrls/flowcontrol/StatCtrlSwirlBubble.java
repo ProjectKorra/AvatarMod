@@ -27,6 +27,7 @@ public class StatCtrlSwirlBubble extends StatusControl {
         if (bubble != null) {
             bubble.setBehaviour(new WaterBubbleBehavior.StreamShrink());
             data.removeStatusControl(StatusControlController.LOB_BUBBLE);
+            data.removeStatusControl(StatusControlController.SHIELD_BUBBLE);
             //bubble.set
             data.addStatusControl(StatusControlController.RESET_SWIRL_BUBBLE);
             data.addStatusControl(StatusControlController.PUSH_SWIRL_BUBBLE);

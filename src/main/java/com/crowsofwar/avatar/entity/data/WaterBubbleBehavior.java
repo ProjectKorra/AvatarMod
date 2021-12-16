@@ -100,7 +100,7 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
     public static class PlayerControlled extends WaterBubbleBehavior {
 
         private void handleDistanceAdjustment(BendingData data, AbilityFlowControl flow, StatusControl control, String property,
-                                            AbilityData abilityData, float distance, EntityWaterBubble bubble) {
+                                              AbilityData abilityData, float distance, EntityWaterBubble bubble) {
             if (data.hasStatusControl(control)) {
                 //Since the player is pushing it out, we change the distance to its maximum
                 distance = flow.getProperty(property, abilityData).floatValue();
@@ -108,10 +108,14 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
                 if (bubble.getSwirlRadius() > distance)
                     bubble.setSwirlRadius(bubble.getSwirlRadius() - 0.025F);
                 else if (bubble.getSwirlRadius() < distance)
-                    bubble.setSwirlRadius(bubble.getSwirlRadius() + 0.1F);
+                    bubble.setSwirlRadius(bubble.getSwirlRadius() + 0.5F);
+                //While it's being pushed out, it does damage
+                bubble.setPiercing(true);
             }
             //Shrinks it otherwise
             else {
+                //Ensures it doesn't hit things unless it's being pushed out
+                bubble.setPiercing(false);
                 //Shrinks it back down
                 if (bubble.getSwirlRadius() > distance)
                     bubble.setSwirlRadius(bubble.getSwirlRadius() - 0.05F);
@@ -119,6 +123,7 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
                     bubble.setSwirlRadius(bubble.getSwirlRadius() + 0.05F);
             }
         }
+
         @Override
         public OffensiveBehaviour onUpdate(EntityOffensive entity) {
             //TODO: Move redundant code to a method
@@ -160,7 +165,8 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
                 //Applies to the y vec; the x and z are applied within the method through radius
                 look = look.scale(bubble.getSwirlRadius());
                 AvatarEntityUtils.dragEntityTowardsPoint(bubble,
-                        AvatarEntityUtils.circularMotion(pos.add(0, look.y, 0), 10 * (int) bubble.world.getWorldTime(),
+                        AvatarEntityUtils.circularMotion(pos.add(0, look.y, 0), (int) (bubble.getDegreesPerSecond() * (int) bubble.world.getWorldTime()
+                                * bubble.getSwirlRadius()),
                                 0, 1, bubble.getSwirlRadius()), 0.125);
                 //Visuals
                 if (world.isRemote) {
@@ -183,6 +189,14 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
                                             * size * 6,
                                     (float) (world.rand.nextGaussian() / 8F), bubble, world, true, AvatarEntityUtils.getBottomMiddleOfEntity(bubble),
                                     ParticleBuilder.SwirlMotionType.OUT, true, true);
+                    ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(255, 255, 255, 45).gravity(true)
+                            .time(16).scale(0.5F).spawnEntity(bubble).element(BendingStyles.get(Waterbending.ID))
+                            .spin(size / 10, world.rand.nextGaussian() / 20)
+                            .swirl((int) (size * 12), (int) (size * 4 * Math.PI),
+                                    size, size * 3, bubble.getDegreesPerSecond()
+                                            * size * 6,
+                                    (float) (world.rand.nextGaussian() / 8F), bubble, world, true, AvatarEntityUtils.getBottomMiddleOfEntity(bubble),
+                                    ParticleBuilder.SwirlMotionType.OUT, false, true);
                 }
 
 
@@ -196,7 +210,7 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
                 look = look.scale(bubble.getDistance());
                 AvatarEntityUtils.dragEntityTowardsPoint(bubble, pos.add(look), 0.125);
 
-                if (bubble.getState().equals(EntityWaterBubble.State.BUBBLE)) {
+                if (bubble.getState().equals(EntityWaterBubble.State.SHIELD)) {
                     //Optimisation bb
                     handleDistanceAdjustment(data, control, StatusControlController.RELEASE_SHIELD_BUBBLE,
                             Ability.MAX_RANGE, abilityData, distance, bubble);
@@ -267,10 +281,14 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
 
             if (bubble.ticksExisted % 4 == 0) {
                 //Shield, swirl, throw, and other misc logic.
-                if (!data.hasStatusControl(StatusControlController.RESET_SHIELD_BUBBLE))
-                    data.addStatusControl(StatusControlController.SHIELD_BUBBLE);
-                if (!data.hasStatusControl(StatusControlController.RESET_SWIRL_BUBBLE))
-                    data.addStatusControl(StatusControlController.SWIRL_BUBBLE);
+                //no shielding when swirling
+                if (!bubble.getState().equals(EntityWaterBubble.State.STREAM))
+                    if (!data.hasStatusControl(StatusControlController.RESET_SHIELD_BUBBLE))
+                        data.addStatusControl(StatusControlController.SHIELD_BUBBLE);
+                //no swirling shen shielding
+                if (!bubble.getState().equals(EntityWaterBubble.State.SHIELD))
+                    if (!data.hasStatusControl(StatusControlController.RESET_SWIRL_BUBBLE))
+                        data.addStatusControl(StatusControlController.SWIRL_BUBBLE);
 
                 //State based
                 if (bubble.getState().equals(EntityWaterBubble.State.BUBBLE))
