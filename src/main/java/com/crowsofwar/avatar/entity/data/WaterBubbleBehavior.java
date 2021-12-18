@@ -20,6 +20,7 @@ package com.crowsofwar.avatar.entity.data;
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingStyles;
+import com.crowsofwar.avatar.bending.bending.water.AbilityCreateWave;
 import com.crowsofwar.avatar.bending.bending.water.AbilityFlowControl;
 import com.crowsofwar.avatar.bending.bending.water.Waterbending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
@@ -31,6 +32,7 @@ import com.crowsofwar.avatar.util.data.*;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
@@ -309,12 +311,19 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
                 //State based
                 if (bubble.getState().equals(EntityWaterBubble.State.BUBBLE))
                     data.addStatusControl(StatusControlController.LOB_BUBBLE);
-                if (bubble.getState().equals(EntityWaterBubble.State.STREAM))
-                    if (!data.hasStatusControl(StatusControlController.RELEASE_SWIRL_BUBBLE))
-                        data.addStatusControl(StatusControlController.PUSH_SWIRL_BUBBLE);
-                if (bubble.getState().equals(EntityWaterBubble.State.SHIELD))
-                    if (!data.hasStatusControl(StatusControlController.RELEASE_SHIELD_BUBBLE))
-                        data.addStatusControl(StatusControlController.PUSH_SHIELD_BUBBLE);
+                //Stuff based on wave
+                AbilityCreateWave wave = (AbilityCreateWave) Abilities.get("wave");
+                if (wave != null && (data.canUse(wave) || owner instanceof EntityPlayer && ((EntityPlayer) owner).isCreative())) {
+                    if (bubble.getState().equals(EntityWaterBubble.State.STREAM))
+                        if (!data.hasStatusControl(StatusControlController.RELEASE_SWIRL_BUBBLE))
+                            data.addStatusControl(StatusControlController.PUSH_SWIRL_BUBBLE);
+                    if (bubble.getState().equals(EntityWaterBubble.State.SHIELD))
+                        if (!data.hasStatusControl(StatusControlController.RELEASE_SHIELD_BUBBLE))
+                            data.addStatusControl(StatusControlController.PUSH_SHIELD_BUBBLE);
+                }
+
+                //Stuff based on water arc
+
             }
             return this;
         }
