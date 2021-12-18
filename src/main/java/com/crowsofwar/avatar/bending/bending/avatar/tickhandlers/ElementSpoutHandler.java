@@ -45,6 +45,7 @@ public class ElementSpoutHandler extends TickHandler {
         AbilityData abilityData = data.getAbilityData("element_spout");
         AbilityElementSpout spout = (AbilityElementSpout) Abilities.get("element_spout");
 
+        //TODO: add damage
         if (bender != null && spout != null) {
             if (bender.consumeChi(spout.getChiCost(abilityData) / 20)) {
                 float effectSize = spout.getProperty(EFFECT_RADIUS, abilityData).floatValue();
@@ -77,7 +78,7 @@ public class ElementSpoutHandler extends TickHandler {
                 }
 
                 double posY = entity.onGround ? entity.getEntityBoundingBox().minY + 0.25 : entity.getEntityBoundingBox().minY;
-                entity.setPosition(entity.posX, posY, entity.posZ);
+                //entity.setPosition(entity.posX, posY, entity.posZ);
                 Vector currentVelocity = new Vector(entity.motionX, entity.motionY, entity.motionZ);
                 Vector targetVelocity = toRectangular(toRadians(entity.rotationYaw), 0).times(targetSpeed);
 
@@ -102,17 +103,17 @@ public class ElementSpoutHandler extends TickHandler {
                 else
                     entity.motionY += entity.getLookVec().scale(speed / 2.5).y * 2;
                 entity.motionY *= 0.5;
-
-                if (height > spout.getProperty(MAX_HEIGHT, abilityData).intValue())
+//
+                if (height > spout.getProperty(MAX_HEIGHT, abilityData).intValue()) {
                     entity.motionY -= 0.05;
-
-                entity.motionZ = newVelocity.z();
+                }
+//
+               entity.motionZ = newVelocity.z();
 
 
                 if (!entity.onGround)
                     entity.isAirBorne = true;
 
-                AvatarUtils.afterVelocityAdded(entity);
                 if (entity instanceof EntityBender || entity instanceof EntityPlayer && !((EntityPlayer) entity).isCreative())
                     abilityData.addBurnout(spout.getBurnOut(abilityData) / 20);
                 if (entity instanceof EntityPlayer)
@@ -122,20 +123,21 @@ public class ElementSpoutHandler extends TickHandler {
                     //Vortex time??
                     if (block == Blocks.FLOWING_WATER || block == Blocks.WATER) {
                         //Use the cube particles
-                        AvatarParticleUtils.spawnSpinningVortex(world, entity, entity.getPositionVector().add(0, -height, 0), 5, 360 * height, height,
-                                0.05F, effectSize, ParticleBuilder.Type.CUBE, new Vec3d(0.05, 0.05, 0.05), new Vec3d(entity.motionX,
-                                        entity.motionY, entity.motionZ), true, 255, 255, 255, 80, 14, BendingStyles.get(Waterbending.ID),
-                                false, 0.5F);
+                        if (entity.ticksExisted % 3 == 0)
+                            AvatarParticleUtils.spawnSpinningVortex(world, entity, entity.getPositionVector().add(0, -height, 0), 8, 360 * height, height,
+                                    0.05F, effectSize, ParticleBuilder.Type.CUBE, new Vec3d(0.05, 0.05, 0.05), new Vec3d(entity.motionX,
+                                            entity.motionY, entity.motionZ), true, 255, 255, 255, 80, 14, BendingStyles.get(Waterbending.ID),
+                                    false, 0.5F);
                     } else if (block == Blocks.FIRE || block == Blocks.LAVA || block == Blocks.FLOWING_LAVA) {
                         if (entity.ticksExisted % 2 == 0)
-                            AvatarParticleUtils.spawnSpinningVortex(world, entity, entity.getPositionVector().add(0, -height, 0), 5, 360 * height, height,
+                            AvatarParticleUtils.spawnSpinningVortex(world, entity, entity.getPositionVector().add(0, -height, 0), 8, 360 * height, height,
                                     0.05F, effectSize, ParticleBuilder.Type.FLASH, new Vec3d(0.05, 0.05, 0.05), new Vec3d(entity.motionX,
                                             entity.motionY, entity.motionZ), true, 255, 80 + AvatarUtils.getRandomNumberInRange(0, 40), 10 + AvatarUtils.getRandomNumberInRange(0, 40), 80, 14, BendingStyles.get(Firebending.ID),
                                     false, 0.5F);
                     } else {
                         //Use block crack particles
-                        if (entity.ticksExisted % 2 == 0)
-                            AvatarParticleUtils.spawnSpinningVortex(world, 4, height * 540, height, 0.01,
+                        if (entity.ticksExisted % 4 == 0)
+                            AvatarParticleUtils.spawnSpinningVortex(world, 8, height * 540, height, 0.01,
                                     effectSize, EnumParticleTypes.BLOCK_CRACK, entity.getPositionVector().add(0, -height, 0),
                                     new Vec3d(world.rand.nextGaussian() / 10, world.rand.nextGaussian() / 10, world.rand.nextGaussian() / 10), new Vec3d(entity.motionX, entity.motionY, entity.motionZ),
                                     Block.getStateId(block.getBlockState().getBaseState()));

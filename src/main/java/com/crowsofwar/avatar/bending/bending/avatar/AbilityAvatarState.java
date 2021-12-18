@@ -13,6 +13,7 @@ import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class AbilityAvatarState extends Ability {
 
@@ -63,7 +64,7 @@ public class AbilityAvatarState extends Ability {
             modifier.setTicks(duration * 8);
             for (BendingStyle style : BendingStyles.all()) {
                 //Why do I need this
-                if (style != null)
+                if (style != null && data.getPowerRatingManager(style) != null && data.hasBendingId(style.getId()))
                     Objects.requireNonNull(data.getPowerRatingManager(style)).addModifier(modifier, ctx);
             }
             abilityData.addXp(xp);

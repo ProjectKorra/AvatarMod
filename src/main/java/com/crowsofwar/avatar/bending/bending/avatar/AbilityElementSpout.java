@@ -1,6 +1,8 @@
 package com.crowsofwar.avatar.bending.bending.avatar;
 
 import com.crowsofwar.avatar.bending.bending.Ability;
+import com.crowsofwar.avatar.util.AvatarEntityUtils;
+import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.TickHandlerController;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
@@ -37,6 +39,10 @@ public class AbilityElementSpout extends Ability {
             EntityPlayer player = (EntityPlayer) entity;
             if (!hasSpout) {
                 player.capabilities.isFlying = true;
+                if (entity.onGround) {
+                    entity.motionY = 200;
+                    AvatarUtils.afterVelocityAdded(entity);
+                }
                 //Add the tick handler
                 data.addTickHandler(TickHandlerController.ELEMENT_SPOUT_HANDLER, ctx);
             }
