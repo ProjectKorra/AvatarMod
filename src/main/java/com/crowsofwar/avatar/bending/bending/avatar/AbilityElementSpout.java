@@ -23,7 +23,7 @@ public class AbilityElementSpout extends Ability {
     @Override
     public void init() {
         super.init();
-        addProperties(MAX_HEIGHT, EFFECT_RADIUS, SPEED);
+        addProperties(MAX_HEIGHT, EFFECT_RADIUS, SPEED, DAMAGE, KNOCKBACK);
     }
 
     @Override

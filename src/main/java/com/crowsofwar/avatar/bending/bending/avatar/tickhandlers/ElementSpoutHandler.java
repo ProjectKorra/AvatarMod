@@ -9,20 +9,26 @@ import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.entity.mob.EntityBender;
 import com.crowsofwar.avatar.util.AvatarParticleUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
+import com.crowsofwar.avatar.util.damageutils.AvatarDamageSource;
+import com.crowsofwar.avatar.util.damageutils.DamageUtils;
 import com.crowsofwar.avatar.util.data.*;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import static com.crowsofwar.avatar.bending.bending.Ability.EFFECT_RADIUS;
-import static com.crowsofwar.avatar.bending.bending.Ability.SPEED;
+import java.util.List;
+
+import static com.crowsofwar.avatar.bending.bending.Ability.*;
 import static com.crowsofwar.avatar.bending.bending.avatar.AbilityElementSpout.MAX_HEIGHT;
 import static com.crowsofwar.gorecore.util.Vector.toRectangular;
 import static java.lang.StrictMath.toRadians;
@@ -108,7 +114,7 @@ public class ElementSpoutHandler extends TickHandler {
                     entity.motionY -= 0.05;
                 }
 //
-               entity.motionZ = newVelocity.z();
+                entity.motionZ = newVelocity.z();
 
 
                 if (!entity.onGround)
@@ -119,28 +125,62 @@ public class ElementSpoutHandler extends TickHandler {
                 if (entity instanceof EntityPlayer)
                     ((EntityPlayer) entity).addExhaustion(spout.getExhaustion(abilityData) / 20);
 
-                if (world.isRemote) {
-                    //Vortex time??
-                    if (block == Blocks.FLOWING_WATER || block == Blocks.WATER) {
-                        //Use the cube particles
+
+                DamageSource source;
+                float damage = spout.getProperty(DAMAGE, abilityData).floatValue();
+                damage = spout.powerModify(damage, abilityData);
+                float knockback = spout.getProperty(KNOCKBACK, abilityData).floatValue();
+
+                //Visuals
+                //Vortex time??
+                //Client side check is changed due to damage source manipulation
+                if (block == Blocks.FLOWING_WATER || block == Blocks.WATER) {
+                    //Use the cube particles
+                    if (world.isRemote)
                         if (entity.ticksExisted % 3 == 0)
                             AvatarParticleUtils.spawnSpinningVortex(world, entity, entity.getPositionVector().add(0, -height, 0), 8, 360 * height, height,
                                     0.05F, effectSize, ParticleBuilder.Type.CUBE, new Vec3d(0.05, 0.05, 0.05), new Vec3d(entity.motionX,
                                             entity.motionY, entity.motionZ), true, 255, 255, 255, 80, 14, BendingStyles.get(Waterbending.ID),
                                     false, 0.5F);
-                    } else if (block == Blocks.FIRE || block == Blocks.LAVA || block == Blocks.FLOWING_LAVA) {
+                    source = AvatarDamageSource.WATER;
+                } else if (block == Blocks.FIRE || block == Blocks.LAVA || block == Blocks.FLOWING_LAVA) {
+                    if (world.isRemote)
                         if (entity.ticksExisted % 2 == 0)
                             AvatarParticleUtils.spawnSpinningVortex(world, entity, entity.getPositionVector().add(0, -height, 0), 8, 360 * height, height,
                                     0.05F, effectSize, ParticleBuilder.Type.FLASH, new Vec3d(0.05, 0.05, 0.05), new Vec3d(entity.motionX,
                                             entity.motionY, entity.motionZ), true, 255, 80 + AvatarUtils.getRandomNumberInRange(0, 40), 10 + AvatarUtils.getRandomNumberInRange(0, 40), 80, 14, BendingStyles.get(Firebending.ID),
                                     false, 0.5F);
-                    } else {
+                    source = AvatarDamageSource.FIRE;
+                } else {
+                    if (world.isRemote)
                         //Use block crack particles
                         if (entity.ticksExisted % 4 == 0)
                             AvatarParticleUtils.spawnSpinningVortex(world, 8, height * 540, height, 0.01,
                                     effectSize, EnumParticleTypes.BLOCK_CRACK, entity.getPositionVector().add(0, -height, 0),
                                     new Vec3d(world.rand.nextGaussian() / 10, world.rand.nextGaussian() / 10, world.rand.nextGaussian() / 10), new Vec3d(entity.motionX, entity.motionY, entity.motionZ),
                                     Block.getStateId(block.getBlockState().getBaseState()));
+                    source = AvatarDamageSource.EARTH;
+                }
+
+                //Damage
+                if (!world.isRemote) {
+                    AxisAlignedBB box = new AxisAlignedBB(entity.posX + effectSize, entity.posY + 2, entity.posZ + effectSize,
+                            entity.posX - effectSize, entity.posY - height, entity.posZ - effectSize);
+                    List<Entity> targets = world.getEntitiesWithinAABB(Entity.class, box);
+                    if (!targets.isEmpty()) {
+                        for (Entity hit : targets) {
+                            if (DamageUtils.isDamageable(entity, hit)) {
+                                hit.attackEntityFrom(source, damage);
+                                DamageUtils.attackEntity(entity, hit, source, damage, 10,
+                                        spout, spout.getProperty(XP_USE).floatValue());
+                                Vector vel = Vector.getEntityPos(hit).minus(Vector.getEntityPos(entity)).times(knockback).withY(0.15);
+                                hit.motionX = vel.x();
+                                hit.motionY = vel.y();
+                                hit.motionZ = vel.z();
+                                AvatarUtils.afterVelocityAdded(hit);
+                                hit.isAirBorne = true;
+                            }
+                        }
                     }
                 }
             }

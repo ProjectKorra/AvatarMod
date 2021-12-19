@@ -11,7 +11,9 @@
       "burnOutRecoverTick": 0.18,
       "effectRadius": 1.5,
       "maxHeight": 12,
-      "speed": 0.75
+      "speed": 0.75,
+      "damage": 6,
+      "knockback": 1
     },
     "level2": {
       "tier": 1,
@@ -23,7 +25,9 @@
       "performanceAmount": 15,
       "effectRadius": 1.75,
       "maxHeight": 14,
-      "speed": 2
+      "speed": 2,
+      "damage": 8,
+      "knockback": 2
     },
     "level3": {
       "tier": 2,
@@ -35,7 +39,9 @@
       "performanceAmount": 20,
       "effectRadius": 2,
       "maxHeight": 16,
-      "speed": 1.25
+      "speed": 1.25,
+      "damage": 10,
+      "knockback": 3
     },
     "level4_1": {
       "tier": 3,
@@ -46,7 +52,9 @@
       "burnOutRecoverTick": 0.4,
       "performanceAmount": 25,
       "effectRadius": 3,
-      "speed": 1.125
+      "speed": 1.125,
+      "damage": 9,
+      "knockback": 1.5
     },
     "level4_2": {
       "tier": 3,
@@ -57,7 +65,9 @@
       "burnOutRecoverTick": 0.4,
       "performanceAmount": 27,
       "effectRadius": 1.5,
-      "speed": 2
+      "speed": 2,
+      "damage": 13,
+      "knockback": 4
     }
   }
 }
