@@ -36,8 +36,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+
+import java.util.Objects;
 
 /**
  * @author CrowsOfWar
@@ -54,6 +57,7 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
         registerBehavior(Grow.class);
         registerBehavior(ShieldShrink.class);
         registerBehavior(StreamShrink.class);
+        registerBehavior(Explode.class);
         //When you use the water bubble like a bucket
     }
 
@@ -256,8 +260,8 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
                     float size = bubble.getMaxEntitySize();
                     if (bubble.getState().equals(EntityWaterBubble.State.SHIELD)) {
                         //Overall sphere shape/swirl
-                        ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(255, 255, 255, 50).gravity(true)
-                                .time(16).scale(0.5F).spawnEntity(bubble).element(BendingStyles.get(Waterbending.ID))
+                        ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(255, 255, 255, 40).gravity(true)
+                                .time(12).scale(0.5F).spawnEntity(bubble).element(BendingStyles.get(Waterbending.ID))
                                 .spin(size / 10, world.rand.nextGaussian() / 20)
                                 .swirl((int) (size * 12), (int) (size * 4 * Math.PI),
                                         size, size * 5, bubble.getDegreesPerSecond()
@@ -266,7 +270,7 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
                                         ParticleBuilder.SwirlMotionType.OUT, true, true);
                         //Disc/spin.
                         //Loop for particles spinning around, and for how many particles within.
-                        int max = (int) (size * 12);
+                        int max = (int) (size * 4);
                         for (int h = 0; h < max; h++) {
                             for (int i = 0; i < max; i++) {
                                 pos = Vector.getOrthogonalVector(bubble.getLookVec(), (i + 1) * (360F / max) + (bubble.ticksExisted % 360) *
@@ -284,11 +288,11 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
                                 //We want at least 1 particle to collide for vfx, so if fire hits it, it looks cool
                                 ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 20 + velocity.x,
                                                 world.rand.nextGaussian() / 20 + velocity.y, world.rand.nextGaussian() / 20 + velocity.z)
-                                        .time(4 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(1F, 1F, 1F, 0.3F).spawnEntity(bubble).collide(world.rand.nextBoolean())
+                                        .time(4 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(1F, 1F, 1F, 0.15F).spawnEntity(bubble).collide(AvatarUtils.getRandomNumberInRange(1, 100) < 15)
                                         .scale(0.75F).element(BendingStyles.get(Waterbending.ID)).spawn(world);
                                 ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 20 + velocity.x,
                                                 world.rand.nextGaussian() / 20 + velocity.y, world.rand.nextGaussian() / 20 + velocity.z)
-                                        .time(16 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(1F, 1F, 1F, 0.3F).spawnEntity(bubble)
+                                        .time(12 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(1F, 1F, 1F, 0.15F).spawnEntity(bubble)
                                         .scale(0.75F).element(BendingStyles.get(Waterbending.ID)).spawn(world);
 
                             }
@@ -344,6 +348,97 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
         public void save(NBTTagCompound nbt) {
         }
 
+    }
+
+    //By extending PlayerControlled we ensure intangibility on the water bubble
+    public static class Explode extends PlayerControlled {
+        int ticks = 0;
+
+        @Override
+        public OffensiveBehaviour onUpdate(EntityOffensive entity) {
+            World world = entity.world;
+            EntityLivingBase owner = entity.getOwner();
+            AbilityFlowControl control = (AbilityFlowControl) Abilities.get("flow_control");
+
+            if (!(entity instanceof EntityWaterBubble) || control == null || owner == null)
+                return this;
+
+            AbilityData abilityData = AbilityData.get(owner, "flow_control");
+
+            if (abilityData == null)
+                return this;
+
+            EntityWaterBubble bubble = (EntityWaterBubble) entity;
+
+            //Since ring code is handled first, we use the radius
+            float range = control.getProperty(Ability.MAX_RADIUS, abilityData).floatValue();
+            float damage = control.getProperty(Ability.EXPLOSION_DAMAGE, abilityData).floatValue();
+            float push = control.getProperty(Ability.SPEED, abilityData).floatValue();
+            range = control.powerModify(range, abilityData);
+            damage = control.powerModify(damage, abilityData);
+            push = control.powerModify(push, abilityData);
+
+            //We don't want to call super because we want completely different functionality
+            /* Ring Burst */
+
+
+            /* Cone Burst */
+            //Changes values for the shield burst here
+            range = control.getProperty(Ability.MAX_RANGE, abilityData).floatValue();
+            range = control.powerModify(range, abilityData);
+            //Vfx (shrinking sphere into cone blast)
+            if (world.isRemote) {
+                //Because the shield uses a shrunk water bubble for a clean animation
+                //Also, the animation should take about 5 ticks (quarter of a second)
+                float size = bubble.getMaxEntitySize() * (1F / ticks);
+                if (bubble.getState().equals(EntityWaterBubble.State.SHIELD)) {
+                    //Overall sphere shape/swirl
+                    //Animation only exists for 5 ticks
+                    if (ticks < 10)
+                        ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(255, 255, 255, 120).gravity(true)
+                                .time(20).scale(0.5F).spawnEntity(bubble).element(BendingStyles.get(Waterbending.ID))
+                                .spin(size / 10, world.rand.nextGaussian() / 20)
+                                .swirl((int) (size * 12), (int) (size * 4 * Math.PI),
+                                        size, size * 5, bubble.getDegreesPerSecond()
+                                                * size * 6,
+                                        (float) (world.rand.nextGaussian() / 8F), bubble, world, true, AvatarEntityUtils.getBottomMiddleOfEntity(bubble),
+                                        ParticleBuilder.SwirlMotionType.OUT, true, true);
+
+                    else {
+                        //Now time for the burst animation
+                        //10 particles per 1 unit of size
+                        for (double i = 0; i < bubble.getMaxEntitySize(); i += 0.15) {
+                            //First, get the middle of the bubble
+                            Vec3d centrePos = AvatarEntityUtils.getMiddleOfEntity(bubble);
+                            //Get randomised points within the bubble
+                            double xRand = centrePos.x + world.rand.nextGaussian() / 10 * entity.getMaxEntitySize();
+                            double yRand = centrePos.y + world.rand.nextGaussian() / 10 * entity.getMaxEntitySize();
+                            double zRand = centrePos.z + world.rand.nextGaussian() / 10 * entity.getMaxEntitySize();
+
+                            //Now do the same thing with velocity
+                            Vec3d look = bubble.getLookVec().scale(push / 14);
+                            ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(255, 255, 255, 110).collide(true).collideParticles(true)
+                                    .pos(xRand, yRand, zRand).time(20).spawnEntity(bubble).vel(look.add(world.rand.nextGaussian() / 10,
+                                            world.rand.nextGaussian() / 10, world.rand.nextGaussian() / 10)).element(BendingStyles.get(Waterbending.ID))
+                                    .scale(1F).spawn(world);
+                        }
+                    }
+                }
+            }
+            if (ticks == 10)
+                entity.world.playSound(null, new BlockPos(entity), Objects.requireNonNull(entity.getSounds())[0],
+                        entity.getSoundCategory(), entity.getMaxEntitySize(), 0.5F + world.rand.nextFloat());
+            //Damage (attack using the water bubble)
+            if (!world.isRemote) {
+
+            }
+
+            //Extra couple ticks for the cone burst animation
+            if (ticks < 30)
+                ticks++;
+            else bubble.Dissipate();
+            return this;
+        }
     }
 
 
