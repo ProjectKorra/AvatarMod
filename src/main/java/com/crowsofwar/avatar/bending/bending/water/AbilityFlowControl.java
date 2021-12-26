@@ -117,6 +117,7 @@ public class AbilityFlowControl extends Ability {
                 //Grow the bubble with an appear animation
                 bubble.setEntitySize(0.05F);
                 bubble.setMaxEntitySize(size);
+                bubble.setMaxSize(size);
                 bubble.setMaxHealth(waterLevel);
                 bubble.setHealth(waterLevel);
                 bubble.setXp(xp);

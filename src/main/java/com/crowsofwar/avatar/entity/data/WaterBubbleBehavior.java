@@ -28,9 +28,12 @@ import com.crowsofwar.avatar.entity.EntityOffensive;
 import com.crowsofwar.avatar.entity.EntityWaterBubble;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
+import com.crowsofwar.avatar.util.Raytrace;
+import com.crowsofwar.avatar.util.damageutils.DamageUtils;
 import com.crowsofwar.avatar.util.data.*;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -40,6 +43,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -378,7 +382,7 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
             damage = control.powerModify(damage, abilityData);
             push = control.powerModify(push, abilityData);
 
-            //We don't want to call super because we want completely different functionality
+            //We don't want to call super because we want completely different functionality from PlayerControlled
             /* Ring Burst */
 
 
@@ -390,13 +394,13 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
             if (world.isRemote) {
                 //Because the shield uses a shrunk water bubble for a clean animation
                 //Also, the animation should take about 5 ticks (quarter of a second)
-                float size = bubble.getMaxEntitySize() * (1F / ticks);
+                float size = bubble.getMaxSize() * (1F / (ticks + 1));
                 if (bubble.getState().equals(EntityWaterBubble.State.SHIELD)) {
                     //Overall sphere shape/swirl
                     //Animation only exists for 5 ticks
                     if (ticks < 10)
-                        ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(255, 255, 255, 120).gravity(true)
-                                .time(20).scale(0.5F).spawnEntity(bubble).element(BendingStyles.get(Waterbending.ID))
+                        ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(255, 255, 255, 120)
+                                .time(40).scale(0.5F).spawnEntity(bubble).element(BendingStyles.get(Waterbending.ID))
                                 .spin(size / 10, world.rand.nextGaussian() / 20)
                                 .swirl((int) (size * 12), (int) (size * 4 * Math.PI),
                                         size, size * 5, bubble.getDegreesPerSecond()
@@ -407,18 +411,18 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
                     else {
                         //Now time for the burst animation
                         //10 particles per 1 unit of size
-                        for (double i = 0; i < bubble.getMaxEntitySize(); i += 0.15) {
+                        for (double i = 0; i < bubble.getMaxEntitySize(); i += 0.075) {
                             //First, get the middle of the bubble
                             Vec3d centrePos = AvatarEntityUtils.getMiddleOfEntity(bubble);
                             //Get randomised points within the bubble
-                            double xRand = centrePos.x + world.rand.nextGaussian() / 10 * entity.getMaxEntitySize();
-                            double yRand = centrePos.y + world.rand.nextGaussian() / 10 * entity.getMaxEntitySize();
-                            double zRand = centrePos.z + world.rand.nextGaussian() / 10 * entity.getMaxEntitySize();
+                            double xRand = centrePos.x + world.rand.nextGaussian() / 5 * entity.getMaxEntitySize();
+                            double yRand = centrePos.y + world.rand.nextGaussian() / 5 * entity.getMaxEntitySize();
+                            double zRand = centrePos.z + world.rand.nextGaussian() / 5 * entity.getMaxEntitySize();
 
                             //Now do the same thing with velocity
-                            Vec3d look = bubble.getLookVec().scale(push / 14);
+                            Vec3d look = bubble.getLookVec().scale(push / 40);
                             ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(255, 255, 255, 110).collide(true).collideParticles(true)
-                                    .pos(xRand, yRand, zRand).time(20).spawnEntity(bubble).vel(look.add(world.rand.nextGaussian() / 10,
+                                    .pos(xRand, yRand, zRand).time(40).spawnEntity(bubble).vel(look.add(world.rand.nextGaussian() / 10,
                                             world.rand.nextGaussian() / 10, world.rand.nextGaussian() / 10)).element(BendingStyles.get(Waterbending.ID))
                                     .scale(1F).spawn(world);
                         }
@@ -429,12 +433,24 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
                 entity.world.playSound(null, new BlockPos(entity), Objects.requireNonNull(entity.getSounds())[0],
                         entity.getSoundCategory(), entity.getMaxEntitySize(), 0.5F + world.rand.nextFloat());
             //Damage (attack using the water bubble)
-            if (!world.isRemote) {
+            //Gives time for the damage to sync with the vfx
+            if (!world.isRemote && ticks > 14) {
+                List<Entity> targets = Raytrace.entityRaytrace(world, AvatarEntityUtils.getMiddleOfEntity(bubble),
+                        bubble.getLookVec(), range, bubble.getMaxSize() * 1.5F, entity1 -> DamageUtils.isDamageable(bubble, entity1));
 
+
+                if (!targets.isEmpty()) {
+                    for (Entity hit : targets) {
+                        //Extra check to be sure
+                        if (DamageUtils.isDamageable(bubble, hit)) {
+                            bubble.attackEntity(bubble, hit, true, bubble.getLookVec().scale(push / 10).add(0, 0.15, 0));
+                        }
+                    }
+                }
             }
 
             //Extra couple ticks for the cone burst animation
-            if (ticks < 30)
+            if (ticks < 27)
                 ticks++;
             else bubble.Dissipate();
             return this;
