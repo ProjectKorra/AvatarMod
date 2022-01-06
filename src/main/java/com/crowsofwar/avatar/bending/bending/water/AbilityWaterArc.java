@@ -46,6 +46,10 @@ import static java.lang.Math.toRadians;
 
 /**
  * @author CrowsOfWar
+ *
+ * Creates a water arc. Wow. Amazing.
+ * Press shift to 'bind' it to you, allowing you to use it as a whip.
+ * Middle click to change from flow control to water arc.w
  */
 public class AbilityWaterArc extends Ability {
 
@@ -55,147 +59,21 @@ public class AbilityWaterArc extends Ability {
     }
 
     @Override
+    public void init() {
+        super.init();
+       addProperties(WATER_LEVEL, EXPLOSION_SIZE, EXPLOSION_DAMAGE, EFFECT_RADIUS, MAX_HEALTH, CHARGE_FREQUENCY,
+                CHARGE_AMOUNT, EFFECT_RADIUS, RANGE);
+    }
+
+    @Override
     public void execute(AbilityContext ctx) {
         World world = ctx.getWorld();
         Bender bender = ctx.getBender();
         EntityLivingBase entity = ctx.getBenderEntity();
         BendingData data = ctx.getData();
 
-        Vector targetPos = getClosestWaterbendableBlock(entity, ctx.getLevel() * 2);
-
-
-        if (targetPos != null || ctx.consumeWater(1) || (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative())) {
-
-            if (targetPos == null) {
-                targetPos = Vector.getEyePos(entity).plus(getLookRectangular(entity).times(2.5));
-            }
-            if (targetPos != null && (entity instanceof EntityPlayer && !((EntityPlayer) entity).isCreative())) {
-                world.setBlockToAir(targetPos.toBlockPos());
-            }
-
-
-            float damageMult = 1F;
-            float gravity = 8;
-            float size = 0.5F;
-            //The water arc number in the combo.
-
-            if (ctx.getLevel() == 1) {
-                damageMult = 1.25F;
-                gravity = 7.5F;
-                size = 0.65F;
-            }
-            if (ctx.getLevel() == 2) {
-                damageMult = 1.5F;
-                gravity = 7;
-                size = 0.8F;
-            }
-            if (ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
-                damageMult = 3F;
-                gravity = 3;
-                size = 0.4F;
-            }
-            if (ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-                gravity = 9.81F;
-                size = 0.5F;
-            }
-
-            if (bender.consumeChi(STATS_CONFIG.chiWaterArc)) {
-
-                removeExisting(ctx);
-
-                EntityWaterArc water = new EntityWaterArc(world);
-                water.setOwner(entity);
-                assert targetPos != null;
-                water.setPosition(targetPos.x() + 0.5, targetPos.y() - 0.5, targetPos.z() + 0.5);
-                water.setDamageMult(damageMult);
-                water.setEntitySize(size);
-                water.setDamage(damageMult * STATS_CONFIG.waterArcSettings.damage);
-                water.setXp(SKILLS_CONFIG.waterHit);
-                water.setTier(getCurrentTier(ctx));
-                water.setLifeTime(30);
-                water.setBehavior(new WaterArcBehavior.PlayerControlled());
-                water.isSpear(ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND));
-                water.setGravity(gravity);
-                water.setAbility(this);
-                if (!world.isRemote)
-                    world.spawnEntity(water);
-                ctx.getData().addStatusControl(THROW_WATER);
-
-
-            }
-        }
     }
 
-	/*private Vector getClosestWaterBlock(EntityLivingBase entity, int level) {
-		World world = entity.world;
-
-		Vector eye = Vector.getEyePos(entity);
-
-		double rangeMult = 0.6;
-		if (level >= 1) {
-			rangeMult = 1;
-		}
-
-		double range = STATS_CONFIG.waterArcSearchRadius * rangeMult;
-		for (int i = 0; i < STATS_CONFIG.waterArcAngles; i++) {
-			for (int j = 0; j < STATS_CONFIG.waterArcAngles; j++) {
-
-				double yaw = entity.rotationYaw + i * 360.0 / STATS_CONFIG.waterArcAngles;
-				double pitch = entity.rotationPitch + j * 360.0 / STATS_CONFIG.waterArcAngles;
-
-				BiPredicate<BlockPos, IBlockState> isWater = (pos, state) -> state.getBlock() == Blocks.WATER
-						|| state.getBlock() == Blocks.FLOWING_WATER || state.getBlock() == Blocks.ICE || state.getBlock() == Blocks.SNOW_LAYER
-						|| state.getBlock() == Blocks.SNOW;
-
-				Vector angle = Vector.toRectangular(toRadians(yaw), toRadians(pitch));
-				Raytrace.Result result = Raytrace.predicateRaytrace(world, eye, angle, range, isWater);
-				if (result.hitSomething()) {
-					return result.getPosPrecise();
-				}
-
-			}
-
-		}
-
-		return null;
-
-	}**/
-
-    //For bending snow and ice; is a separate method so that when passives are active it's easy to differentiate
-    //For some reason this doesn't work; will use alternate method for now
-    private Vector getClosestWaterbendableBlock(EntityLivingBase entity, int level) {
-        World world = entity.world;
-
-        Vector eye = Vector.getEyePos(entity);
-
-        double rangeMult = 0.6;
-        if (level >= 1) {
-            rangeMult = 1;
-        }
-
-        double range = STATS_CONFIG.waterArcSearchRadius * rangeMult;
-        for (int i = 0; i < STATS_CONFIG.waterArcAngles; i++) {
-            for (int j = 0; j < STATS_CONFIG.waterArcAngles; j++) {
-
-                double yaw = entity.rotationYaw + i * 360.0 / STATS_CONFIG.waterArcAngles;
-                double pitch = entity.rotationPitch + j * 360.0 / STATS_CONFIG.waterArcAngles;
-
-                BiPredicate<BlockPos, IBlockState> isWater = (pos, state) -> (STATS_CONFIG.waterBendableBlocks.contains(state.getBlock())
-                        || STATS_CONFIG.plantBendableBlocks.contains(state.getBlock())) && state.getBlock() != Blocks.AIR;
-
-                Vector angle = Vector.toRectangular(toRadians(yaw), toRadians(pitch));
-                Raytrace.Result result = Raytrace.predicateRaytrace(world, eye, angle, range, isWater);
-                if (result.hitSomething()) {
-                    return result.getPosPrecise();
-                }
-
-            }
-
-        }
-
-        return null;
-
-    }
 
     /**
      * Kills already existing water arc if there is one

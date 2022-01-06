@@ -51,7 +51,7 @@ import java.util.UUID;
 /**
  * @author CrowsOfWar
  */
-public class EntityWaterBubble extends EntityOffensive implements IShieldEntity {
+public class EntityWaterBubble extends EntityArc<EntityWaterBubble.WaterControlPoint> implements IShieldEntity {
 
     //Used for determining the distance for the swirl
     public static final DataParameter<Float> SYNC_STREAM_RADIUS = EntityDataManager.createKey(EntityWaterBubble.class,
@@ -64,6 +64,9 @@ public class EntityWaterBubble extends EntityOffensive implements IShieldEntity 
     private static final DataParameter<Float> SYNC_MAX_SIZE = EntityDataManager.createKey(EntityWaterBubble.class, DataSerializers.FLOAT);
     //Using ordinals of the STATE to sync them
     private static final DataParameter<Integer> SYNC_STATE = EntityDataManager.createKey(EntityWaterBubble.class,
+            DataSerializers.VARINT);
+    //GOTTA SYNC THE DEFAULT STATE TOO CAUSE WATER ARC
+    private static final DataParameter<Integer> SYNC_DEFAULT_STATE = EntityDataManager.createKey(EntityWaterBubble.class,
             DataSerializers.VARINT);
     /**
      * Whether the water bubble will get a water source upon landing. Only
@@ -136,6 +139,14 @@ public class EntityWaterBubble extends EntityOffensive implements IShieldEntity 
         dataManager.set(SYNC_STATE, state.ordinal());
     }
 
+    public State getDefaultState() {
+        return State.values()[dataManager.get(SYNC_DEFAULT_STATE)];
+    }
+
+    public void setDefaultState(State state) {
+        dataManager.set(SYNC_DEFAULT_STATE, state.ordinal());
+    }
+
     public float getSwirlRadius() {
         return dataManager.get(SYNC_STREAM_RADIUS);
     }
@@ -159,9 +170,10 @@ public class EntityWaterBubble extends EntityOffensive implements IShieldEntity 
         dataManager.register(SYNC_MAX_SIZE, 1.5F);
         dataManager.register(SYNC_HEALTH, 3F);
         dataManager.register(SYNC_DEGREES_PER_SECOND, 5F);
-        dataManager.register(SYNC_STATE, 0);
         dataManager.register(SYNC_STREAM_RADIUS, 2.5F);
         dataManager.register(SYNC_DISTANCE, 2F);
+        dataManager.register(SYNC_STATE, State.BUBBLE.ordinal());
+        dataManager.register(SYNC_DEFAULT_STATE, State.BUBBLE.ordinal());
     }
 
     @Override
@@ -365,8 +377,40 @@ public class EntityWaterBubble extends EntityOffensive implements IShieldEntity 
     }
 
     public enum State {
+        //Default
         BUBBLE,
+        //Shield
         SHIELD,
-        STREAM
+        //Stream around the player
+        STREAM,
+        //Water Arc
+        ARC
+    }
+
+    @Override
+    protected double getControlPointTeleportDistanceSq() {
+        return getControlPointMaxDistanceSq() * getAmountOfControlPoints();
+    }
+
+    @Override
+    protected double getControlPointMaxDistanceSq() {
+        return 0.725F;
+    }
+
+    @Override
+    public int getAmountOfControlPoints() {
+        return (int) (getMaxSize() * 5);
+    }
+
+    @Override
+    protected WaterControlPoint createControlPoint(float size, int index) {
+        return new WaterControlPoint(this, size, posX, posY, posZ);
+    }
+
+    public static class WaterControlPoint extends ControlPoint {
+
+        public WaterControlPoint(EntityArc arc, float size, double x, double y, double z) {
+            super(arc, size, x, y, z);
+        }
     }
 }

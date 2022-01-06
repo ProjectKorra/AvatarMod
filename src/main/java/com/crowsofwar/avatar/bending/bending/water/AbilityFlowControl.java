@@ -127,6 +127,7 @@ public class AbilityFlowControl extends Ability {
                 bubble.setAbility(this);
                 bubble.setPosition(spawnPos.getX(), spawnPos.getY() + 0.5, spawnPos.getZ());
                 bubble.setState(EntityWaterBubble.State.BUBBLE);
+                bubble.setDefaultState(EntityWaterBubble.State.BUBBLE);
                 bubble.setDegreesPerSecond(size * 2);
                 bubble.setSwirlRadius(swirlRadius);
                 bubble.setDistance(distance);
@@ -142,6 +143,7 @@ public class AbilityFlowControl extends Ability {
                 data.addStatusControl(StatusControlController.LOB_BUBBLE);
                 data.addStatusControl(StatusControlController.SHIELD_BUBBLE);
                 data.addStatusControl(StatusControlController.SWIRL_BUBBLE);
+                data.addStatusControl(StatusControlController.MODIFY_WATER);
             }
         }
         else {

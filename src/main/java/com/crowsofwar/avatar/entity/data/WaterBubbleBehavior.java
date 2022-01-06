@@ -302,6 +302,43 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
                             }
                         }
                     }
+
+                    //Water arc time woo
+                    //lots of code
+                    if (bubble.getState() == EntityWaterBubble.State.ARC) {
+                        Vec3d[] points = new Vec3d[bubble.getAmountOfControlPoints()];
+                        for (int i = 0; i < points.length; i++)
+                            points[i] = bubble.getControlPoint(i).position().toMinecraft();
+                        //Particles! Let's do this.
+                        //First, we need a bezier curve. Joy.
+                        //0 is the leader/front one
+                        for (int i = 0; i < bubble.getAmountOfControlPoints(); i++) {
+                            Vec3d pos1 = bubble.getControlPoint(points.length - i - 1).position().minusY(bubble.getHeight() / 2).toMinecraft();
+                            Vec3d pos2 = i < points.length - 1 ? bubble.getControlPoint(Math.max(points.length - i - 2, 0)).position().minusY(bubble.getHeight() / 2).toMinecraft() : Vec3d.ZERO;
+
+                            for (int j = 0; j < 1; j++) {
+                                for (int h = 0; h < 6; h++) {
+                                    pos1 = pos1.add(AvatarUtils.bezierCurve((((points.length - i) / (h + 1F)) / points.length), points));
+
+                                    //Flow animation
+                                    pos2 = pos2.add(AvatarUtils.bezierCurve((Math.min(points.length - i + 1, points.length) / (h + 1F) / points.length), points));
+                                    Vec3d circlePos = Vector.getOrthogonalVector(bubble.getLookVec(), (bubble.ticksExisted % 360) * 20 + h * 60, size / 3F).toMinecraft().add(pos1);
+                                    Vec3d targetPos = i < points.length - 1 ? Vector.getOrthogonalVector(bubble.getLookVec(),
+                                            (bubble.ticksExisted % 360) * 20 + h * 60 + 20, size / 3F).toMinecraft().add(pos2)
+                                            : Vec3d.ZERO;
+                                    Vec3d vel = new Vec3d(world.rand.nextGaussian() / 120, world.rand.nextGaussian() / 120, world.rand.nextGaussian() / 120);
+
+                                    if (targetPos != circlePos)
+                                        vel = targetPos == Vec3d.ZERO ? vel : targetPos.subtract(circlePos).normalize().scale(-0.05).add(vel);
+                                    ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(circlePos).spawnEntity(bubble).vel(vel)
+                                            .clr(0, 102, 255, 85).scale(size).target(targetPos == Vec3d.ZERO ? pos1 : targetPos)
+                                            .time(18 + AvatarUtils.getRandomNumberInRange(0, 4)).element(BendingStyles.get(Waterbending.ID)).spawn(world);
+                                }
+
+                            }
+//
+                        }
+                    }
                 }
             }
 
@@ -319,6 +356,8 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
                 //State based
                 if (bubble.getState().equals(EntityWaterBubble.State.BUBBLE))
                     data.addStatusControl(StatusControlController.LOB_BUBBLE);
+
+                data.addStatusControl(StatusControlController.MODIFY_WATER);
                 //Stuff based on wave
                 AbilityCreateWave wave = (AbilityCreateWave) Abilities.get("wave");
                 if (wave != null && (data.canUse(wave) || owner instanceof EntityPlayer && ((EntityPlayer) owner).isCreative())) {
@@ -472,7 +511,7 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
                     bubbleSwirl(entity, world);
                 }
 
-                ((EntityWaterBubble) entity).setState(EntityWaterBubble.State.BUBBLE);
+                ((EntityWaterBubble) entity).setState(((EntityWaterBubble) entity).getDefaultState());
 
                 //Grows the entity at an exponential rate
                 float sizeMult = entity.getAvgSize() <= 1 ? 1.125F * entity.getAvgSize() : (float) Math.pow(entity.getAvgSize(), 1.125);
