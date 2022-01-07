@@ -5,7 +5,9 @@ import com.crowsofwar.avatar.bending.bending.custom.demonic.tickhandlers.DemonWi
 import com.crowsofwar.avatar.bending.bending.custom.demonic.tickhandlers.DemonicAuraHandler;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.tickhandlers.HellBastionHandler;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.tickhandlers.InfernalFieldHandler;
+import com.crowsofwar.avatar.bending.bending.custom.ki.tickhandlers.ChargeKamehameha;
 import com.crowsofwar.avatar.bending.bending.custom.ki.tickhandlers.KaioKenHandler;
+import com.crowsofwar.avatar.bending.bending.custom.ki.tickhandlers.KamehamehaHandler;
 import com.crowsofwar.avatar.bending.bending.custom.ki.tickhandlers.KiFlightHandler;
 import com.crowsofwar.avatar.bending.bending.custom.light.tickhandlers.*;
 import com.crowsofwar.avatar.bending.bending.earth.tickhandlers.EarthSpikeHandler;
@@ -81,6 +83,8 @@ public class TickHandlerController {
 	public static TickHandler DIVINE_BEGINNING_CHARGER = new ChargeDivineBeginning(45);
 	public static TickHandler DIVINE_BEGINNING_HANDLER = new DivineBeginningHandler(46);
 	public static TickHandler HELL_BASTION_HANDLER = new HellBastionHandler(47);
+	public static TickHandler CHARGE_KAMEHAMEHA = new ChargeKamehameha(48);
+	public static TickHandler KAMEHAMEHA_HANDLER = new KamehamehaHandler(49);
 
 
 

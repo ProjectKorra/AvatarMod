@@ -27,10 +27,7 @@ import com.crowsofwar.avatar.bending.bending.combustion.AbilityExplosivePillar;
 import com.crowsofwar.avatar.bending.bending.combustion.Combustionbending;
 import com.crowsofwar.avatar.bending.bending.custom.dark.*;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.*;
-import com.crowsofwar.avatar.bending.bending.custom.ki.AbilityKaioKen;
-import com.crowsofwar.avatar.bending.bending.custom.ki.AbilityKiBlast;
-import com.crowsofwar.avatar.bending.bending.custom.ki.AbilityKiFlight;
-import com.crowsofwar.avatar.bending.bending.custom.ki.Kibending;
+import com.crowsofwar.avatar.bending.bending.custom.ki.*;
 import com.crowsofwar.avatar.bending.bending.custom.light.*;
 import com.crowsofwar.avatar.bending.bending.earth.*;
 import com.crowsofwar.avatar.bending.bending.fire.*;
@@ -62,7 +59,6 @@ import com.crowsofwar.avatar.network.packets.glider.PacketSServerGliding;
 import com.crowsofwar.avatar.registry.AvatarItems;
 import com.crowsofwar.avatar.registry.CapabilityRegistry;
 import com.crowsofwar.avatar.util.AvatarDataSerializers;
-import com.crowsofwar.avatar.util.AvatarPlayerTick;
 import com.crowsofwar.avatar.util.HumanBenderSpawner;
 import com.crowsofwar.avatar.util.analytics.AvatarAnalytics;
 import com.crowsofwar.avatar.util.command.AvatarCommand;
@@ -74,7 +70,6 @@ import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -185,6 +180,8 @@ public class AvatarMod {
         Abilities.register(new AbilityKaioKen());
         Abilities.register(new AbilityKiFlight());
         Abilities.register(new AbilityKiBlast());
+        Abilities.register(new AbilityKamehameha());
+
 
         /*              Light               */
         Abilities.register(new AbilityPurify());
