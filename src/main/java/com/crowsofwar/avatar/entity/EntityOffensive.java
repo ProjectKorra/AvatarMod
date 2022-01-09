@@ -186,6 +186,11 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
         return (dataManager.get(SYNC_MAX_HEIGHT) + dataManager.get(SYNC_MAX_WIDTH)) / 2;
     }
 
+    public void setMaxEntitySize(float size) {
+        dataManager.set(SYNC_MAX_HEIGHT, size);
+        dataManager.set(SYNC_MAX_WIDTH, size);
+    }
+
     public float getAvgSize() {
         if (getHeight() == getWidth()) {
             return getHeight();
@@ -205,11 +210,6 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
     public void setMaxEntitySize(float height, float width) {
         dataManager.set(SYNC_MAX_HEIGHT, height);
         dataManager.set(SYNC_MAX_WIDTH, width);
-    }
-
-    public void setMaxEntitySize(float size) {
-        dataManager.set(SYNC_MAX_HEIGHT, size);
-        dataManager.set(SYNC_MAX_WIDTH, size);
     }
 
     public float getDamage() {
@@ -406,6 +406,10 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 
         if (shouldDissipate() || shouldExplode())
             ticksMoving++;
+
+        //Resets the counter
+        if (!shouldExplode() && !shouldDissipate())
+            ticksMoving = 0;
 
         if (ticksMoving >= getLifeTime() && (shouldDissipate() || shouldExplode()) && getLifeTime() > 0) {
             if (shouldDissipate())
@@ -744,6 +748,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
     public void setExpandedWidth(double width) {
         dataManager.set(SYNC_EXPANDED_WIDTH, (float) width);
     }
+
     @Override
     public double getExpandedHitboxWidth() {
         return dataManager.get(SYNC_EXPANDED_WIDTH);

@@ -1016,7 +1016,11 @@ public final class ParticleBuilder {
      */
     public void spawn(World world) {
 
-        if (!building) throw new IllegalStateException("Not building yet!");
+        if (!building) {
+            AvatarLog.warn("Not building yet!");
+            reset();
+          //  throw new IllegalStateException("Not building yet!");
+        }
 
         if (y < 0 && entity == null)
             AvatarLog.warn(AvatarLog.WarningType.INVALID_CODE, "Spawning particle below y = 0 - are you sure the position/entity "

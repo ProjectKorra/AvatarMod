@@ -46,6 +46,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import javax.xml.crypto.Data;
 import java.util.UUID;
 
 /**
@@ -67,6 +68,8 @@ public class EntityWaterBubble extends EntityArc<EntityWaterBubble.WaterControlP
             DataSerializers.VARINT);
     //GOTTA SYNC THE DEFAULT STATE TOO CAUSE WATER ARC
     private static final DataParameter<Integer> SYNC_DEFAULT_STATE = EntityDataManager.createKey(EntityWaterBubble.class,
+            DataSerializers.VARINT);
+    private static final DataParameter<Integer> SYNC_WATER_HITS = EntityDataManager.createKey(EntityWaterBubble.class,
             DataSerializers.VARINT);
     /**
      * Whether the water bubble will get a water source upon landing. Only
@@ -110,16 +113,16 @@ public class EntityWaterBubble extends EntityArc<EntityWaterBubble.WaterControlP
     }
 
     @Override
-    public void setDamage(float damage) {
-        //TODO: implement percentage health into damage (health / max health)
-        super.setDamage(damage);
-    }
-
-    @Override
     public float getDamage() {
         if (isPiercing())
             return super.getDamage() / 2;
         return super.getDamage();
+    }
+
+    @Override
+    public void setDamage(float damage) {
+        //TODO: implement percentage health into damage (health / max health)
+        super.setDamage(damage);
     }
 
     public float getDegreesPerSecond() {
@@ -164,6 +167,14 @@ public class EntityWaterBubble extends EntityArc<EntityWaterBubble.WaterControlP
         dataManager.set(SYNC_DISTANCE, dist);
     }
 
+    public int getHitsLeft() {
+        return dataManager.get(SYNC_WATER_HITS);
+    }
+
+    public void setHits(int hits) {
+        dataManager.set(SYNC_WATER_HITS, hits);
+    }
+
     @Override
     protected void entityInit() {
         super.entityInit();
@@ -174,6 +185,7 @@ public class EntityWaterBubble extends EntityArc<EntityWaterBubble.WaterControlP
         dataManager.register(SYNC_DISTANCE, 2F);
         dataManager.register(SYNC_STATE, State.BUBBLE.ordinal());
         dataManager.register(SYNC_DEFAULT_STATE, State.BUBBLE.ordinal());
+        dataManager.register(SYNC_WATER_HITS, 0);
     }
 
     @Override
@@ -181,7 +193,7 @@ public class EntityWaterBubble extends EntityArc<EntityWaterBubble.WaterControlP
         super.onUpdate();
 
         if (getBehaviour() != null && getBehaviour() instanceof WaterBubbleBehavior.Lobbed) {
-            setVelocity(velocity().times(0.9));
+            setVelocity(velocity().times(0.975));
         }
         if (getHealth() == 0) {
             this.setDead();
@@ -252,6 +264,7 @@ public class EntityWaterBubble extends EntityArc<EntityWaterBubble.WaterControlP
                 data.removeStatusControl(StatusControlController.PUSH_SHIELD_BUBBLE);
                 data.removeStatusControl(StatusControlController.RESET_SHIELD_BUBBLE);
                 //Added from water arc
+                data.removeStatusControl(StatusControlController.MODIFY_WATER);
 
             }
         }
@@ -268,6 +281,58 @@ public class EntityWaterBubble extends EntityArc<EntityWaterBubble.WaterControlP
         return getBehaviour() instanceof WaterBubbleBehavior.Lobbed;
     }
 
+
+    @Override
+    public int getFireTime() {
+        return 0;
+    }
+
+    @Override
+    protected void updateCpBehavior() {
+        //Copied from the super class & adjusted:
+        if (getHitsLeft() <= 0)
+            super.updateCpBehavior();
+        else if (getOwner() != null) {
+            getLeader().setPosition(position().plusY(height / 2));
+            getLeader().setVelocity(velocity());
+
+            // Move control points to follow leader
+
+            //Iterates for every point up to the last
+            for (int i = 1; i < points.size() - 1; i++) {
+
+                ControlPoint leader = points.get(i - 1);
+                ControlPoint p = points.get(i);
+                Vector leadPos = leader.position();
+                double sqrDist = p.position().sqrDist(leadPos);
+
+                if (sqrDist > getControlPointTeleportDistanceSq() && getControlPointTeleportDistanceSq() != -1) {
+
+                    Vector toFollowerDir = p.position().minus(leader.position()).normalize();
+
+                    double idealDist = Math.sqrt(getControlPointTeleportDistanceSq());
+                    if (idealDist > 1) idealDist -= 1; // Make sure there is some room
+
+                    Vector revisedOffset = leader.position().plus(toFollowerDir.times(idealDist));
+                    p.setPosition(revisedOffset);
+                    leader.setPosition(revisedOffset);
+                    p.setVelocity(Vector.ZERO);
+
+                } else if (sqrDist > getControlPointMaxDistanceSq() && getControlPointMaxDistanceSq() != -1) {
+
+                    Vector diff = leader.position().minus(p.position());
+                    diff = diff.normalize().times(getVelocityMultiplier());
+                    p.setVelocity(p.velocity().plus(diff));
+
+                }
+            }
+
+            Vec3d pos = Vector.getEntityPos(getOwner()).toMinecraft().add(0, getOwner().getEyeHeight() / 2, 0);
+            Vec3d look = getOwner().getLookVec();
+            ControlPoint point = getControlPoint(getAmountOfControlPoints() - 1);
+            point.setPosition(Vector.fromVec3d(pos.add(look.scale(2))));
+        }
+    }
 
     @Override
     public boolean shouldDissipate() {
@@ -298,10 +363,22 @@ public class EntityWaterBubble extends EntityArc<EntityWaterBubble.WaterControlP
     }
 
     @Override
+    public boolean isPiercing() {
+        return super.isPiercing() || getHitsLeft() > 0;
+    }
+
+
+    @Override
     public void onCollideWithEntity(Entity entity) {
+
 
         if (isPiercing() || shouldExplode())
             super.onCollideWithEntity(entity);
+
+        if (getHitsLeft() > 0) {
+            setHits(getHitsLeft() - 1);
+            setBehaviour(new WaterBubbleBehavior.PlayerControlled());
+        }
         if (entity instanceof AvatarEntity) {
             ((AvatarEntity) entity).onMajorWaterContact();
             //Assume if the entity is a shield it's being player controlled. Probably. Hopefully.
@@ -333,6 +410,9 @@ public class EntityWaterBubble extends EntityArc<EntityWaterBubble.WaterControlP
 
     @Override
     public boolean onCollideWithSolid() {
+        if (super.onCollideWithSolid() && !(getBehaviour() instanceof WaterBubbleBehavior.PlayerControlled) && getHitsLeft() > 0) {
+            setBehaviour(new WaterBubbleBehavior.PlayerControlled());
+        }
         return super.onCollideWithSolid();
     }
 
@@ -376,6 +456,26 @@ public class EntityWaterBubble extends EntityArc<EntityWaterBubble.WaterControlP
         return super.shouldRenderInPass(pass);
     }
 
+    @Override
+    protected double getControlPointTeleportDistanceSq() {
+        return getControlPointMaxDistanceSq() * getAmountOfControlPoints();
+    }
+
+    @Override
+    protected double getControlPointMaxDistanceSq() {
+        return 0.5F * getMaxSize();
+    }
+
+    @Override
+    public int getAmountOfControlPoints() {
+        return 7;
+    }
+
+    @Override
+    protected WaterControlPoint createControlPoint(float size, int index) {
+        return new WaterControlPoint(this, size, posX, posY, posZ);
+    }
+
     public enum State {
         //Default
         BUBBLE,
@@ -385,26 +485,6 @@ public class EntityWaterBubble extends EntityArc<EntityWaterBubble.WaterControlP
         STREAM,
         //Water Arc
         ARC
-    }
-
-    @Override
-    protected double getControlPointTeleportDistanceSq() {
-        return getControlPointMaxDistanceSq() * getAmountOfControlPoints();
-    }
-
-    @Override
-    protected double getControlPointMaxDistanceSq() {
-        return 0.725F;
-    }
-
-    @Override
-    public int getAmountOfControlPoints() {
-        return (int) (getMaxSize() * 5);
-    }
-
-    @Override
-    protected WaterControlPoint createControlPoint(float size, int index) {
-        return new WaterControlPoint(this, size, posX, posY, posZ);
     }
 
     public static class WaterControlPoint extends ControlPoint {

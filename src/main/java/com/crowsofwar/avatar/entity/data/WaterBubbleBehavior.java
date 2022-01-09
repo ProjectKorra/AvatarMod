@@ -233,7 +233,7 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
             } else {
                 //Shield and normal
                 look = look.scale(bubble.getDistance());
-                AvatarEntityUtils.dragEntityTowardsPoint(bubble, pos.add(look), 0.125);
+                AvatarEntityUtils.dragEntityTowardsPoint(bubble, pos.add(look), 0.25);
 
                 if (bubble.getState().equals(EntityWaterBubble.State.SHIELD)) {
                     //Optimisation bb
@@ -305,44 +305,11 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
 
                     //Water arc time woo
                     //lots of code
-                    if (bubble.getState() == EntityWaterBubble.State.ARC) {
-                        Vec3d[] points = new Vec3d[bubble.getAmountOfControlPoints()];
-                        for (int i = 0; i < points.length; i++)
-                            points[i] = bubble.getControlPoint(i).position().toMinecraft();
-                        //Particles! Let's do this.
-                        //First, we need a bezier curve. Joy.
-                        //0 is the leader/front one
-                        for (int i = 0; i < bubble.getAmountOfControlPoints(); i++) {
-                            Vec3d pos1 = bubble.getControlPoint(points.length - i - 1).position().minusY(bubble.getHeight() / 2).toMinecraft();
-                            Vec3d pos2 = i < points.length - 1 ? bubble.getControlPoint(Math.max(points.length - i - 2, 0)).position().minusY(bubble.getHeight() / 2).toMinecraft() : Vec3d.ZERO;
-
-                            for (int j = 0; j < 1; j++) {
-                                for (int h = 0; h < 6; h++) {
-                                    pos1 = pos1.add(AvatarUtils.bezierCurve((((points.length - i) / (h + 1F)) / points.length), points));
-
-                                    //Flow animation
-                                    pos2 = pos2.add(AvatarUtils.bezierCurve((Math.min(points.length - i + 1, points.length) / (h + 1F) / points.length), points));
-                                    Vec3d circlePos = Vector.getOrthogonalVector(bubble.getLookVec(), (bubble.ticksExisted % 360) * 20 + h * 60, size / 3F).toMinecraft().add(pos1);
-                                    Vec3d targetPos = i < points.length - 1 ? Vector.getOrthogonalVector(bubble.getLookVec(),
-                                            (bubble.ticksExisted % 360) * 20 + h * 60 + 20, size / 3F).toMinecraft().add(pos2)
-                                            : Vec3d.ZERO;
-                                    Vec3d vel = new Vec3d(world.rand.nextGaussian() / 120, world.rand.nextGaussian() / 120, world.rand.nextGaussian() / 120);
-
-                                    if (targetPos != circlePos)
-                                        vel = targetPos == Vec3d.ZERO ? vel : targetPos.subtract(circlePos).normalize().scale(-0.05).add(vel);
-                                    ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(circlePos).spawnEntity(bubble).vel(vel)
-                                            .clr(0, 102, 255, 85).scale(size).target(targetPos == Vec3d.ZERO ? pos1 : targetPos)
-                                            .time(18 + AvatarUtils.getRandomNumberInRange(0, 4)).element(BendingStyles.get(Waterbending.ID)).spawn(world);
-                                }
-
-                            }
-//
-                        }
-                    }
+                    Lobbed.waterArc(world, bubble, size);
                 }
             }
 
-            if (bubble.ticksExisted % 4 == 0) {
+            if (bubble.ticksExisted % 6 == 0) {
                 //Shield, swirl, throw, and other misc logic.
                 //no shielding when swirling
                 if (!bubble.getState().equals(EntityWaterBubble.State.STREAM))
@@ -354,7 +321,7 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
                         data.addStatusControl(StatusControlController.SWIRL_BUBBLE);
 
                 //State based
-                if (bubble.getState().equals(EntityWaterBubble.State.BUBBLE))
+                if (bubble.getState().equals(EntityWaterBubble.State.BUBBLE) || bubble.getState().equals(EntityWaterBubble.State.ARC))
                     data.addStatusControl(StatusControlController.LOB_BUBBLE);
 
                 data.addStatusControl(StatusControlController.MODIFY_WATER);
@@ -637,27 +604,75 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
     }
 
     public static class Lobbed extends WaterBubbleBehavior {
+        private static void waterArc(World world, EntityWaterBubble bubble, float size) {
+            if (bubble.getState() == EntityWaterBubble.State.ARC) {
+                Vec3d[] points = new Vec3d[bubble.getAmountOfControlPoints()];
+                for (int i = 0; i < points.length; i++)
+                    //Ensures it doesn't cause any array errors
+                    points[i] = bubble.getControlPoint(Math.min(i, points.length - 1)).position().toMinecraft();
+                //Particles! Let's do this.
+                //First, we need a bezier curve. Joy.
+                //0 is the leader/front one
+                for (int i = 0; i < bubble.getAmountOfControlPoints(); i++) {
+                    Vec3d pos1 = bubble.getControlPoint(points.length - i - 1).position().minusY(bubble.getHeight() / 2).toMinecraft();
+                    Vec3d pos2 = i < points.length - 1 ? bubble.getControlPoint(Math.max(points.length - i - 2, 0)).position().minusY(bubble.getHeight() / 2).toMinecraft() : Vec3d.ZERO;
+
+                    for (int j = 0; j < 1; j++) {
+                        for (int h = 0; h < 5; h++) {
+                            pos1 = pos1.add(AvatarUtils.bezierCurve((((points.length - i) / (h + 1F)) / points.length), points));
+
+                            //Flow animation
+                            pos2 = pos2.add(AvatarUtils.bezierCurve((Math.min(points.length - i + 1, points.length) / (h + 1F) / points.length), points));
+                            Vec3d circlePos = Vector.getOrthogonalVector(bubble.getLookVec(), (bubble.ticksExisted % 360) * 20 + h * 60, size / 2F).toMinecraft().add(pos1);
+                            Vec3d targetPos = i < points.length - 1 ? Vector.getOrthogonalVector(bubble.getLookVec(),
+                                    (bubble.ticksExisted % 360) * 20 + h * 72 + 20, size / 2F).toMinecraft().add(pos2)
+                                    : Vec3d.ZERO;
+                            Vec3d vel = new Vec3d(world.rand.nextGaussian() / 120, world.rand.nextGaussian() / 120, world.rand.nextGaussian() / 120);
+
+                            if (targetPos != circlePos)
+                                vel = targetPos == Vec3d.ZERO ? vel : targetPos.subtract(circlePos).normalize().scale(-0.05).add(vel);
+                            ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(circlePos).spawnEntity(bubble).vel(vel)
+                                    .clr(0, 102, 255, 85).scale(size).target(targetPos == Vec3d.ZERO ? pos1 : targetPos)
+                                    .time(18 + AvatarUtils.getRandomNumberInRange(0, 4)).element(BendingStyles.get(Waterbending.ID)).spawn(world);
+                        }
+
+                    }
+//
+                }
+            }
+        }
+
         //For when you use the water bubble like a bucket
         @Override
         public OffensiveBehaviour onUpdate(EntityOffensive entity) {
-            entity.addVelocity(Vector.DOWN.times(0.8));
             if (entity.getOwner() == null) return this;
             if (entity instanceof EntityWaterBubble) {
+                //Visuals:
+                World world = entity.world;
+                EntityWaterBubble bubble = (EntityWaterBubble) entity;
+                float size = bubble.getMaxEntitySize();
+                if (bubble.getDefaultState() == EntityWaterBubble.State.BUBBLE)
+                    entity.addVelocity(Vector.DOWN.times(0.6));
+                if (bubble.getDefaultState() == EntityWaterBubble.State.ARC) {
+                    waterArc(world, bubble, size);
+                    entity.addVelocity(Vector.DOWN.times(0.2));
+                }
 
                 IBlockState state = Blocks.FLOWING_WATER.getDefaultState();
 
                 ((EntityWaterBubble) entity).cleanup();
 
-                if (entity.onCollideWithSolid()) {
+                if (entity.onCollideWithSolid() && bubble.getDefaultState() == EntityWaterBubble.State.BUBBLE) {
                     if (!entity.world.isRemote) {
 
-                        if (((EntityWaterBubble) entity).getDegreesPerSecond() <= 8) {
-                            entity.world.setBlockState(entity.getPosition(), state, 3);
-                            entity.Explode();
+                        if (bubble.getDegreesPerSecond() <= 8) {
+                            //Exploding it kills it, and we want its position before it dies
+                            world.setBlockState(entity.getPosition(), state, 3);
+                            bubble.Explode();
 
-                            if (!((EntityWaterBubble) entity).isSourceBlock()) {
-                                AvatarWorldData wd = AvatarWorldData.getDataFromWorld(entity.world);
-                                wd.addTemporaryWaterLocation(entity.getPosition());
+                            if (!bubble.isSourceBlock()) {
+                                AvatarWorldData wd = AvatarWorldData.getDataFromWorld(world);
+                                wd.addTemporaryWaterLocation(bubble.getPosition());
                             }
                         }
                     }

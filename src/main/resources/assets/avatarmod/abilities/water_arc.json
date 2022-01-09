@@ -10,7 +10,7 @@
       "burnOutRecoverTick": 0.14,
       "performanceAmount": 12,
       "lifeTime": 60,
-      "size": 0.675,
+      "size": 0.35,
       "speed": 5,
       "knockback": 0.75,
       "chiOnHit": 0.9,
@@ -24,7 +24,9 @@
       "chargeFrequency": 5,
       "chargeAmount": 1,
       "effectRadius": 1.5,
-      "range": 1.5
+      "range": 2.25,
+      "waterHits": 0,
+      "plantbend": false
     },
     "level2": {
       "tier": 1,
@@ -35,14 +37,14 @@
       "burnOutRecoverTick": 0.18,
       "performanceAmount": 15,
       "lifeTime": 70,
-      "size": 0.875,
+      "size": 0.5,
       "speed": 7,
       "knockback": 1,
       "chiOnHit": 1.1,
       "damage": 3,
       "sourceRange": 3,
       "effectRadius": 2,
-      "range": 1.75
+      "range": 2.25
     },
     "level3": {
       "tier": 2,
@@ -53,14 +55,15 @@
       "burnOutRecoverTick": 0.2,
       "performanceAmount": 20,
       "lifeTime": 80,
-      "size": 1.125,
+      "size": 0.675,
       "speed": 10,
       "knockback": 2,
       "chiOnHit": 1.25,
       "damage": 5,
       "sourceRange": 5,
       "effectRadius": 2.5,
-      "range": 2
+      "range": 2.5,
+      "plantbend": true
     },
     "level4_1": {
       "tier": 3,
@@ -71,39 +74,41 @@
       "burnOutRecoverTick": 0.3,
       "performanceAmount": 25,
       "lifeTime": 60,
-      "size": 1.25,
-      "speed": 15,
+      "size": 0.75,
+      "speed": 8,
       "knockback": 4,
       "chiOnHit": 1.875,
-      "damage": 7,
+      "damage": 5,
       "chargeTime": 70,
-      "explosionSize": 3,
-      "explosionDamage": 4,
+      "explosionSize": 1,
+      "explosionDamage": 2,
       "sourceRange": 4,
       "chargeFrequency": 4,
       "effectRadius": 2.5,
-      "range": 2
+      "range": 2.25,
+      "waterHits": 3
     },
     "level4_2": {
       "tier": 3,
       "chiCost": 4.0,
-      "cooldown": 90,
+      "cooldown": 20,
       "exhaustion": 4.0,
       "burnOut": 33.0,
       "burnOutRecoverTick": 0.35,
       "performanceAmount": 30,
       "lifeTime": 80,
-      "size": 1.75,
-      "speed": 6,
+      "size": 0.875,
+      "speed": 12,
       "knockback": 3,
       "chiOnHit": 1.9,
-      "damage": 5,
-      "explosionSize": 2,
-      "explosionDamage": 1,
+      "damage": 6,
+      "explosionSize": 3,
+      "explosionDamage": 4,
       "sourceRange": 6,
       "chargeFrequency": 10,
       "effectRadius": 3.5,
-      "range": 3
+      "range": 2.5,
+      "waterHits": 0
     }
   }
 }
