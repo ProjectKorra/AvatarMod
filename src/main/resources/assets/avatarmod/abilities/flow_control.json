@@ -97,6 +97,7 @@
       "range": 2,
       "maxRadius": 6,
       "maxRange": 6,
+      "waterLevel": 8,
       "burst": true
     },
     "level4_2": {

@@ -23,6 +23,7 @@ import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.air.Airbending;
+import com.crowsofwar.avatar.bending.bending.water.Waterbending;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.event.AbilityUnlockEvent;
@@ -113,6 +114,12 @@ public class AvatarPlayerTick {
                             Ability ability = Objects.requireNonNull(style.getAllAbilities().get(0));
                             if (!MinecraftForge.EVENT_BUS.post(new AbilityUnlockEvent(bender, ability)))
                                 data.getAbilityData(ability).unlockAbility();
+                            //Unlocks water arc too
+                            if (style instanceof Waterbending) {
+                                Ability arc = Objects.requireNonNull(style.getAllAbilities().get(1));
+                                if (!MinecraftForge.EVENT_BUS.post(new AbilityUnlockEvent(bender, arc)))
+                                    data.getAbilityData(arc).unlockAbility();
+                            }
                         }
                     }
                 }
