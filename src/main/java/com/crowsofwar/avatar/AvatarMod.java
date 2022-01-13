@@ -181,6 +181,7 @@ public class AvatarMod {
         Abilities.register(new AbilityKiFlight());
         Abilities.register(new AbilityKiBlast());
         Abilities.register(new AbilityKamehameha());
+        Abilities.register(new AbilitySpiritBomb());
 
 
         /*              Light               */
@@ -442,6 +443,7 @@ public class AvatarMod {
         registerEntity(EntityBuff.class, "Buff", 128, 1000, false);
         registerEntity(EntityShadeBall.class, "ShadeBurst", 128, 1000, true);
         registerEntity(EntityInfernalBall.class, "InfernalBall", 128, 1000, true);
+        registerEntity(EntityKiBall.class, "SpiritBomb", 128, 1000, true);
         EntityRegistry.addSpawn(EntityOtterPenguin.class, 10, 3, 6, EnumCreatureType.CREATURE, //
                 COLD_BEACH, ICE_PLAINS, ICE_MOUNTAINS, MUTATED_ICE_FLATS);
         EntityRegistry.addSpawn(EntityOstrichHorse.class, 5, 1, 3, EnumCreatureType.CREATURE, //

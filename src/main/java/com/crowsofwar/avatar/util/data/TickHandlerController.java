@@ -5,10 +5,7 @@ import com.crowsofwar.avatar.bending.bending.custom.demonic.tickhandlers.DemonWi
 import com.crowsofwar.avatar.bending.bending.custom.demonic.tickhandlers.DemonicAuraHandler;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.tickhandlers.HellBastionHandler;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.tickhandlers.InfernalFieldHandler;
-import com.crowsofwar.avatar.bending.bending.custom.ki.tickhandlers.ChargeKamehameha;
-import com.crowsofwar.avatar.bending.bending.custom.ki.tickhandlers.KaioKenHandler;
-import com.crowsofwar.avatar.bending.bending.custom.ki.tickhandlers.KamehamehaHandler;
-import com.crowsofwar.avatar.bending.bending.custom.ki.tickhandlers.KiFlightHandler;
+import com.crowsofwar.avatar.bending.bending.custom.ki.tickhandlers.*;
 import com.crowsofwar.avatar.bending.bending.custom.light.tickhandlers.*;
 import com.crowsofwar.avatar.bending.bending.earth.tickhandlers.EarthSpikeHandler;
 import com.crowsofwar.avatar.bending.bending.ice.tickhandlers.*;
@@ -23,6 +20,7 @@ import com.crowsofwar.avatar.bending.bending.water.tickhandlers.*;
 import com.crowsofwar.avatar.entity.mob.BisonSummonHandler;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.util.EnumHand;
+import sun.security.provider.ConfigFile;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -85,6 +83,7 @@ public class TickHandlerController {
 	public static TickHandler HELL_BASTION_HANDLER = new HellBastionHandler(47);
 	public static TickHandler CHARGE_KAMEHAMEHA = new ChargeKamehameha(48);
 	public static TickHandler KAMEHAMEHA_HANDLER = new KamehamehaHandler(49);
+	public static TickHandler SPIRIT_BOMB_HANDLER = new SpiritBombHandler(50);
 
 
 

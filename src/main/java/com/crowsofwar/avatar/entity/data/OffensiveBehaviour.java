@@ -14,7 +14,9 @@ import com.crowsofwar.avatar.bending.bending.custom.demonic.tickhandlers.DemonWi
 import com.crowsofwar.avatar.bending.bending.custom.demonic.tickhandlers.HellBastionHandler;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.tickhandlers.InfernalFieldHandler;
 import com.crowsofwar.avatar.bending.bending.custom.ki.AbilityKiBlast;
+import com.crowsofwar.avatar.bending.bending.custom.ki.statctrls.StatCtrlSpiritBomb;
 import com.crowsofwar.avatar.bending.bending.custom.ki.tickhandlers.KiFlightHandler;
+import com.crowsofwar.avatar.bending.bending.custom.ki.tickhandlers.SpiritBombHandler;
 import com.crowsofwar.avatar.bending.bending.custom.light.tickhandlers.HeavenlyFlightHandler;
 import com.crowsofwar.avatar.bending.bending.custom.light.tickhandlers.HolyProtectionHandler;
 import com.crowsofwar.avatar.bending.bending.earth.AbilityRavine;
@@ -82,6 +84,8 @@ public abstract class OffensiveBehaviour extends Behavior<EntityOffensive> {
         registerBehavior(StatCtrlHellBastion.InfernalPlayerControlled.class);
         registerBehavior(HellBastionHandler.HellBombBehaviour.class);
         registerBehavior(AbilityKiBlast.KiBlastBehaviour.class);
+        registerBehavior(StatCtrlSpiritBomb.KiPlayerControlled.class);
+        registerBehavior(SpiritBombHandler.SpiritBombBehaviour.class);
     }
 
     public static class Idle extends OffensiveBehaviour {

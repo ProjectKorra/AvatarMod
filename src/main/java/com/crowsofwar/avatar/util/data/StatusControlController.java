@@ -9,6 +9,7 @@ import com.crowsofwar.avatar.bending.bending.custom.demonic.statctrls.StatCtrlHe
 import com.crowsofwar.avatar.bending.bending.custom.demonic.statctrls.StatCtrlInfernalField;
 import com.crowsofwar.avatar.bending.bending.custom.ki.statctrls.StatCtrlKiFlight;
 import com.crowsofwar.avatar.bending.bending.custom.ki.statctrls.StatCtrlSetKamehameha;
+import com.crowsofwar.avatar.bending.bending.custom.ki.statctrls.StatCtrlSpiritBomb;
 import com.crowsofwar.avatar.bending.bending.custom.light.statctrls.StatCtrlSetHolyProtection;
 import com.crowsofwar.avatar.bending.bending.custom.light.statctrls.StatCtrlHeavenlyFlight;
 import com.crowsofwar.avatar.bending.bending.custom.light.statctrls.StatCtrlSetDivineBeginning;
@@ -97,7 +98,9 @@ public class StatusControlController {
 			CHARGE_HELL_BASTION = new StatCtrlHellBastion(true),
 			RELEASE_HELL_BASTION = new StatCtrlHellBastion(false),
 			CHARGE_KAMEHAMEHA = new StatCtrlSetKamehameha(true),
-			RELEASE_KAMEHAMEHA = new StatCtrlSetKamehameha(false);
+			RELEASE_KAMEHAMEHA = new StatCtrlSetKamehameha(false),
+			CHARGE_SPIRIT_BOMB = new StatCtrlSpiritBomb(true),
+			RELEASE_SPIRIT_BOMB = new StatCtrlSpiritBomb(false);
 	// @formatter:on
 
 	public static StatusControl lookup(int id) {
