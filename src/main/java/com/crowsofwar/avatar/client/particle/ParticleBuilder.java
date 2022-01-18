@@ -441,7 +441,9 @@ public final class ParticleBuilder {
      * @throws IllegalStateException if the particle builder is not yet building.
      */
     public ParticleBuilder pos(double x, double y, double z) {
-        if (!building) throw new IllegalStateException("Not building yet!");
+        if (!building) {
+            throw new IllegalStateException("Not building yet!");
+        }
         this.x = x;
         this.y = y;
         this.z = z;
