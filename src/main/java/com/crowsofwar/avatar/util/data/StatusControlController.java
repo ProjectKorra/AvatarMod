@@ -1,6 +1,7 @@
 package com.crowsofwar.avatar.util.data;
 
 import com.crowsofwar.avatar.bending.bending.air.statctrls.*;
+import com.crowsofwar.avatar.bending.bending.combustion.statctrls.StatCtrlRocketBoost;
 import com.crowsofwar.avatar.bending.bending.custom.dark.statctrls.StatCtrlDeathDescent;
 import com.crowsofwar.avatar.bending.bending.custom.dark.statctrls.StatCtrlSetOblivionBeam;
 import com.crowsofwar.avatar.bending.bending.custom.dark.statctrls.StatCtrlShadeBurst;
@@ -100,7 +101,8 @@ public class StatusControlController {
 			CHARGE_KAMEHAMEHA = new StatCtrlSetKamehameha(true),
 			RELEASE_KAMEHAMEHA = new StatCtrlSetKamehameha(false),
 			CHARGE_SPIRIT_BOMB = new StatCtrlSpiritBomb(true),
-			RELEASE_SPIRIT_BOMB = new StatCtrlSpiritBomb(false);
+			RELEASE_SPIRIT_BOMB = new StatCtrlSpiritBomb(false),
+			ROCKET_BOOST = new StatCtrlRocketBoost();
 	// @formatter:on
 
 	public static StatusControl lookup(int id) {

@@ -22,9 +22,7 @@ import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.AbilityModifiers;
 import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.air.*;
-import com.crowsofwar.avatar.bending.bending.combustion.AbilityExplosion;
-import com.crowsofwar.avatar.bending.bending.combustion.AbilityExplosivePillar;
-import com.crowsofwar.avatar.bending.bending.combustion.Combustionbending;
+import com.crowsofwar.avatar.bending.bending.combustion.*;
 import com.crowsofwar.avatar.bending.bending.custom.dark.*;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.*;
 import com.crowsofwar.avatar.bending.bending.custom.ki.*;
@@ -166,6 +164,8 @@ public class AvatarMod {
         /*    			Combustion	  		*/
         Abilities.register(new AbilityExplosion());
         Abilities.register(new AbilityExplosivePillar());
+        Abilities.register(new AbilityRocketBoost());
+        Abilities.register(new AbilityCombustionAura());
 
         /*              CUSTOM              */
 
@@ -293,7 +293,7 @@ public class AvatarMod {
 
         NetworkRegistry.INSTANCE.registerGuiHandler(this, new AvatarGuiHandler());
 
-       // FMLCommonHandler.instance().bus().register(new AvatarPlayerTick());
+        // FMLCommonHandler.instance().bus().register(new AvatarPlayerTick());
 
         AvatarDataSerializers.register();
 
@@ -439,7 +439,7 @@ public class AvatarMod {
         registerEntity(EntityLightOrb.class, "LightOrb", 128, 1000, true);
         registerEntity(EntityLightCylinder.class, "LightCylinder", 128, 1000, true);
         registerEntity(EntityIceLance.class, "IceLance", 128, 1000, true);
-        registerEntity(EntityIceClaws.class,  "IceClaws", 128, 1000, true);
+        registerEntity(EntityIceClaws.class, "IceClaws", 128, 1000, true);
         registerEntity(EntityBuff.class, "Buff", 128, 1000, false);
         registerEntity(EntityShadeBall.class, "ShadeBurst", 128, 1000, true);
         registerEntity(EntityInfernalBall.class, "InfernalBall", 128, 1000, true);
@@ -456,7 +456,7 @@ public class AvatarMod {
         ConfigMobs.load();
 
         //has to be done after config loads to ensure the correct value is used
-        if(MOBS_CONFIG.bisonSettings.airBisonSpawnNaturally) {
+        if (MOBS_CONFIG.bisonSettings.airBisonSpawnNaturally) {
             EntityRegistry.addSpawn(EntitySkyBison.class, 5, 1, 3, EnumCreatureType.CREATURE, //
                     SAVANNA_PLATEAU, EXTREME_HILLS, BIRCH_FOREST_HILLS, TAIGA_HILLS, ICE_MOUNTAINS, REDWOOD_TAIGA_HILLS, MUTATED_EXTREME_HILLS,
                     MUTATED_EXTREME_HILLS_WITH_TREES, EXTREME_HILLS_WITH_TREES, EXTREME_HILLS_EDGE);
