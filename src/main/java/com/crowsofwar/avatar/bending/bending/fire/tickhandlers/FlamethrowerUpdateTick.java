@@ -181,9 +181,6 @@ public class FlamethrowerUpdateTick extends TickHandler {
                         world.spawnEntity(flames);
                 }
 
-                if (world.isRemote)
-                    AvatarLog.info("Client Side!");
-
                 //Particle code.
                 if (world.isRemote && (flamethrower.getCurrentTier(abilityData) >= 4 || !isRaining)) {
                     speedMult /= 29.5F;

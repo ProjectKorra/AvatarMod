@@ -46,7 +46,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-import javax.xml.crypto.Data;
 import java.util.UUID;
 
 /**
@@ -371,7 +370,6 @@ public class EntityWaterBubble extends EntityArc<EntityWaterBubble.WaterControlP
     @Override
     public void onCollideWithEntity(Entity entity) {
 
-
         if (isPiercing() || shouldExplode())
             super.onCollideWithEntity(entity);
 
@@ -379,6 +377,7 @@ public class EntityWaterBubble extends EntityArc<EntityWaterBubble.WaterControlP
             setHits(getHitsLeft() - 1);
             setBehaviour(new WaterBubbleBehavior.PlayerControlled());
         }
+
         if (entity instanceof AvatarEntity) {
             ((AvatarEntity) entity).onMajorWaterContact();
             //Assume if the entity is a shield it's being player controlled. Probably. Hopefully.
