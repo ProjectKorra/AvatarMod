@@ -123,7 +123,7 @@ dependencies {
     //compile "curse.maven:coloredlux-347912:3493508"
     
     // JEI 4.16.1.302
-    runtime "curse.maven:jei-238222:3043174"
+   // runtime "curse.maven:jei-238222:3043174"
 
     // BetterQuesting API 3.5.320
     //provided "curse.maven:betterquesting-238856:2858945"
