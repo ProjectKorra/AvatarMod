@@ -100,7 +100,9 @@ public class AbilityRavine extends Ability {
                     ravine.setAbility(this);
                     ravine.setElement(Earthbending.ID);
                     ravine.setLifeTime(lifetime);
-                    ravine.setEntitySize(size);
+                    ravine.setEntitySize(.05F);
+                    ravine.setExpandedHeight(size / 2);
+                    ravine.setExpandedWidth(size / 2);
                     ravine.setBehaviour(new RavineBehaviour());
                     ravine.setXp(getProperty(XP_HIT, ctx).floatValue());
                     ravine.setDistance(speed);
@@ -131,7 +133,7 @@ public class AbilityRavine extends Ability {
         @Override
         public OffensiveBehaviour onUpdate(EntityOffensive entity) {
             if (entity instanceof EntityRavine) {
-                int frequency = 2 - (int) Math.min(entity.velocity().magnitude() / 20, 1);
+                int frequency = 3 - (int) Math.min(entity.velocity().magnitude() / 40, 2);
                 if (entity.ticksExisted % frequency == 0) {
                     ((EntityRavine) entity).spawnEntity();
                 }
