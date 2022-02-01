@@ -83,6 +83,7 @@ public class EntityWaterBubble extends EntityArc<EntityWaterBubble.WaterControlP
         this.noClip = false;
     }
 
+
     //The method in EntityOffensive is used for growing the water bubble.
     //The method here is for charging it.
     public float getMaxSize() {

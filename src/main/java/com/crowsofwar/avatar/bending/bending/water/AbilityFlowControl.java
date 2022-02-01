@@ -68,7 +68,7 @@ public class AbilityFlowControl extends Ability {
     @Override
     public void init() {
         super.init();
-        addProperties(WATER_LEVEL, EXPLOSION_SIZE, EXPLOSION_DAMAGE, EFFECT_RADIUS, MAX_HEALTH, CHARGE_FREQUENCY,
+        addProperties(WATER_LEVEL, EXPLOSION_SIZE, EXPLOSION_DAMAGE, EFFECT_RADIUS, CHARGE_FREQUENCY,
                 CHARGE_AMOUNT, EFFECT_RADIUS, RANGE, MAX_RADIUS, MAX_RANGE);
         addBooleanProperties(SPHERE, INFINITE_WATER, BURST);
     }
@@ -151,12 +151,6 @@ public class AbilityFlowControl extends Ability {
         }
         super.execute(ctx);
 
-    }
-
-
-    @Override
-    public boolean isChargeable() {
-        return true;
     }
 
     @Override

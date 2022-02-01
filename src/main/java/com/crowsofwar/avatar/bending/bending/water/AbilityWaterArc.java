@@ -48,9 +48,8 @@ public class AbilityWaterArc extends Ability {
     @Override
     public void init() {
         super.init();
-       addProperties(WATER_LEVEL, EXPLOSION_SIZE, EXPLOSION_DAMAGE, EFFECT_RADIUS, MAX_HEALTH, CHARGE_FREQUENCY,
-                CHARGE_AMOUNT, EFFECT_RADIUS, RANGE, SOURCE_RANGE, SOURCE_ANGLES, WATER_HITS);
-       addBooleanProperties(PLANT_BEND);
+       addProperties(WATER_LEVEL, EXPLOSION_SIZE, EXPLOSION_DAMAGE, EFFECT_RADIUS, CHARGE_FREQUENCY,
+                CHARGE_AMOUNT, EFFECT_RADIUS, RANGE, WATER_HITS);
     }
 
 
@@ -128,12 +127,6 @@ public class AbilityWaterArc extends Ability {
         }
         super.execute(ctx);
 
-    }
-
-
-    @Override
-    public boolean isChargeable() {
-        return true;
     }
 
     @Override

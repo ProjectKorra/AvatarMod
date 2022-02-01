@@ -80,8 +80,7 @@ public class AbilityCreateWave extends Ability {
     @Override
     public void init() {
         super.init();
-        addProperties(SOURCE_ANGLES, SOURCE_RANGE, WATER_AMOUNT);
-        addBooleanProperties(PULLS, GROW, RIDEABLE, PLANT_BEND, LAND);
+        addBooleanProperties(PULLS, GROW, RIDEABLE, LAND);
     }
 
     //Of course it doesn't work anymore. TODO: Fix.

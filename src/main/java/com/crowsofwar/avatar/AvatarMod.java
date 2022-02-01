@@ -155,7 +155,7 @@ public class AvatarMod {
         Abilities.register(new AbilityLightningSpear());
         Abilities.register(new AbilityLightningArc());
         Abilities.register(new AbilityLightningRedirect());
-        Abilities.register(new AbilityLightningRaze());
+  //      Abilities.register(new AbilityLightningRaze());
         /*    			Combustion	  		*/
         Abilities.register(new AbilityExplosion());
         Abilities.register(new AbilityExplosivePillar());

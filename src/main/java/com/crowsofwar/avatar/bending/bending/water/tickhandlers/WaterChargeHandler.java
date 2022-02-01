@@ -48,7 +48,6 @@ public class WaterChargeHandler extends TickHandler {
             float speed = blast.getProperty(Ability.SPEED, abilityData).floatValue() * 2;
             int maxDuration = blast.getProperty(Ability.CHARGE_TIME, abilityData).intValue();
             int duration = data.getTickHandlerDuration(this);
-            double radius = ((float) maxDuration - duration) / 10F;
             float damage = blast.getProperty(Ability.DAMAGE, abilityData).floatValue();
             float movementMultiplier = 0.6f - 0.7f * MathHelper.sqrt(duration / 40f);
             float size = blast.getProperty(Ability.SIZE, abilityData).floatValue();
@@ -59,8 +58,10 @@ public class WaterChargeHandler extends TickHandler {
             int charge;
 
 
-            maxDuration *= (2 - powerMod);
+            maxDuration *= (0.75 / powerMod) + 0.25;
             maxDuration -= xpMod * 10;
+            //Ensures the max duration isn't 0
+            maxDuration = Math.max(maxDuration, 1);
             damage = blast.powerModify(damage, abilityData);
             lifetime = blast.powerModify(lifetime, abilityData);
             speed = blast.powerModify(speed, abilityData);
