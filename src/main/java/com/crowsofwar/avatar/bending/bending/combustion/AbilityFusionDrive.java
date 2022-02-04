@@ -1,6 +1,8 @@
 package com.crowsofwar.avatar.bending.bending.combustion;
 
 import com.crowsofwar.avatar.bending.bending.Ability;
+import com.crowsofwar.avatar.util.data.TickHandlerController;
+import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 
 public class AbilityFusionDrive extends Ability {
 
@@ -19,7 +21,14 @@ public class AbilityFusionDrive extends Ability {
     }
 
     @Override
-    public boolean isProjectile() {
-        return true;
+    public void init() {
+        super.init();
+        addProperties(FIRE_TIME);
+    }
+
+    @Override
+    public void execute(AbilityContext ctx) {
+        super.execute(ctx);
+        ctx.getData().addTickHandler(TickHandlerController.FUSION_DRIVE_HANDLER, ctx);
     }
 }
