@@ -102,7 +102,7 @@ public class FusionDriveHandler extends TickHandler {
                                         look.y * mult + world.rand.nextGaussian() * accuracyMult,
                                         look.z * mult + world.rand.nextGaussian() * accuracyMult)
                                 .element(BendingStyles.get(Firebending.ID)).ability(drive).spawnEntity(entity)
-                                .clr(255, 20 + AvatarUtils.getRandomNumberInRange(0, 60), 10, AvatarUtils.getRandomNumberInRange(60, 80)).collide(true).collideParticles(true)
+                                .clr(255, 20 + AvatarUtils.getRandomNumberInRange(0, 60), 10, AvatarUtils.getRandomNumberInRange(60, 80)).collide(world.rand.nextBoolean()).collideParticles(world.rand.nextBoolean())
                                 .scale(size * AvatarUtils.getRandomNumberInRange(1, 3) / 2).time(18 + AvatarUtils.getRandomNumberInRange(1, 5)).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 70)
                                 .spawn(world);
                     }
