@@ -116,10 +116,10 @@ public class FusionDriveHandler extends TickHandler {
                             if (DamageUtils.canDamage(entity, target)) {
                                 DamageUtils.attackEntity(entity, target, AvatarDamageSource.COMBUSTION,
                                         damage, 20, drive, 1);
-                                Vec3d vel = look.scale(knockback);
-                                target.motionX += vel.x;
-                                target.motionY += vel.y + 0.15;
-                                target.motionZ += vel.z;
+                                Vec3d vel = look.scale(knockback * 4);
+                                target.motionX = vel.x;
+                                target.motionY = vel.y + 0.15;
+                                target.motionZ = vel.z;
                                 target.isAirBorne = true;
                             }
                         }

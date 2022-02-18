@@ -128,11 +128,11 @@ public class AbilityKiBlast extends Ability {
                     ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x(),
                                     world.rand.nextGaussian() / 80 + velocity.y(), world.rand.nextGaussian() / 80 + velocity.z()).glow(true)
                             .time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(0.05F, 0.95F, 0.95F, 0.05F).spawnEntity(entity)
-                            .scale(size * (1 / size)).element(BendingStyles.get(Airbending.ID)).collide(true).spawn(world);
+                            .scale(size * (1 / size)).element(BendingStyles.get(Airbending.ID)).collide(world.rand.nextBoolean()).spawn(world);
                     ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x(),
                                     world.rand.nextGaussian() / 80 + velocity.y(), world.rand.nextGaussian() / 80 + velocity.z()).glow(true)
                             .time(10 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(0.95F, 0.95F, 0.95F, 0.05F).spawnEntity(entity)
-                            .scale(size * (1 / size)).element(BendingStyles.get(Airbending.ID)).collide(true).spawn(world);
+                            .scale(size * (1 / size)).element(BendingStyles.get(Airbending.ID)).collide(world.rand.nextBoolean()).spawn(world);
                     entity.swingArm(world.rand.nextBoolean() ? EnumHand.MAIN_HAND : EnumHand.OFF_HAND);
                 }
             }
@@ -165,7 +165,7 @@ public class AbilityKiBlast extends Ability {
                     float size = 0.75F * entity.getAvgSize() * (1 / entity.getAvgSize() + 0.5F);
                     int particles = (int) (Math.min((int) (entity.getAvgSize() * Math.PI), 2) + (entity.velocity().magnitude() / 20));
                     Vec3d centre = AvatarEntityUtils.getMiddleOfEntity(entity);
-                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(BendingStyles.get(Airbending.ID)).collide(true)
+                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(BendingStyles.get(Airbending.ID)).collide(AvatarUtils.getRandomNumberInRange(1, 100) > 90)
                             .clr(0.95F, 0.95F, 0.95F, 0.035F).time(12)
                             .scale(size * 0.75F).spawnEntity(entity).swirl(rings, particles, entity.getAvgSize() * 0.75F,
                                     size / 3F, (float) (entity.velocity().sqrMagnitude() / 10 * entity.getAvgSize()), (-0.75F / size), entity,
@@ -187,11 +187,11 @@ public class AbilityKiBlast extends Ability {
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x,
                                         world.rand.nextGaussian() / 80 + velocity.y, world.rand.nextGaussian() / 80 + velocity.z).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 35)
                                 .time(4 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(0.01F, 0.95F, 0.95F, 0.2F).spawnEntity(entity)
-                                .scale(1.25F * entity.getAvgSize() * (1 / entity.getAvgSize())).element(BendingStyles.get(Airbending.ID)).collide(true).collideParticles(true).spawn(world);
+                                .scale(1.25F * entity.getAvgSize() * (1 / entity.getAvgSize())).element(BendingStyles.get(Airbending.ID)).collide(world.rand.nextBoolean()).collideParticles(world.rand.nextBoolean()).spawn(world);
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x,
                                         world.rand.nextGaussian() / 80 + velocity.y, world.rand.nextGaussian() / 80 + velocity.z).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 35)
                                 .time(16 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(0.01F, 1F, 1F, 0.1F).spawnEntity(entity)
-                                .scale(1.25F * entity.getAvgSize() * (1 / entity.getAvgSize())).element(BendingStyles.get(Airbending.ID)).collide(true).collideParticles(true).spawn(world);
+                                .scale(1.25F * entity.getAvgSize() * (1 / entity.getAvgSize())).element(BendingStyles.get(Airbending.ID)).spawn(world);
 
                     }
                 }
