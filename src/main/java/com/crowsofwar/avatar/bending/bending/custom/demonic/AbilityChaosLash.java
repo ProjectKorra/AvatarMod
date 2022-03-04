@@ -117,7 +117,7 @@ public class AbilityChaosLash extends Ability {
                     float size = 0.5F * entity.getAvgSize() * (1 / entity.getAvgSize() + 0.5F);
                     int particles = (int) (Math.min((int) (entity.getAvgSize() * Math.PI), 2) + (entity.velocity().magnitude() / 20));
                     Vec3d centre = AvatarEntityUtils.getMiddleOfEntity(entity);
-                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(BendingStyles.get(Airbending.ID)).collide(true)
+                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(BendingStyles.get(Demonbending.ID)).collide(AvatarUtils.getRandomNumberInRange(1, 100) > 80)
                             .clr(255, 13, 13, 190).time(12).glow(true)
                             .scale(size * 0.75F).spawnEntity(entity).swirl(rings, particles, entity.getAvgSize() * 0.75F,
                             size / 3F, (float) (entity.velocity().sqrMagnitude() / 10 * entity.getAvgSize()), (-0.75F / size), entity,
@@ -139,11 +139,11 @@ public class AbilityChaosLash extends Ability {
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x,
                                 world.rand.nextGaussian() / 80 + velocity.y, world.rand.nextGaussian() / 80 + velocity.z)
                                 .time(4 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(255, 13, 13, 120).spawnEntity(entity).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 15)
-                                .scale(entity.getAvgSize() / 2).element(BendingStyles.get(Demonbending.ID)).collide(true).collideParticles(true).spawn(world);
+                                .scale(entity.getAvgSize() / 2).element(BendingStyles.get(Demonbending.ID)).collide(AvatarUtils.getRandomNumberInRange(1, 100) > 80).collideParticles(AvatarUtils.getRandomNumberInRange(1, 100) > 80).spawn(world);
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x,
                                 world.rand.nextGaussian() / 80 + velocity.y, world.rand.nextGaussian() / 80 + velocity.z)
                                 .time(16 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(50, 0, 0, 120).spawnEntity(entity).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 15)
-                                .scale(entity.getAvgSize() / 2).element(BendingStyles.get(Demonbending.ID)).collide(true).collideParticles(true).spawn(world);
+                                .scale(entity.getAvgSize() / 2).element(BendingStyles.get(Demonbending.ID)).collide(AvatarUtils.getRandomNumberInRange(1, 100) > 80).collideParticles(AvatarUtils.getRandomNumberInRange(1, 100) > 80).spawn(world);
 
                     }
                     //Rope of lightning that does a big crack when the entity dies
@@ -168,7 +168,7 @@ public class AbilityChaosLash extends Ability {
                         for (double i = 0; i < entity.width * 2; i += 0.025) {
                             ParticleBuilder.create(ParticleBuilder.Type.FLASH)
                                     .scale(entity.getAvgSize() / 2).clr(255, 13, 13).glow(true)
-                                    .collide(true).spawnEntity(entity).element(BendingStyles.get(Demonbending.ID))
+                                    .collide(AvatarUtils.getRandomNumberInRange(1, 100) > 80).spawnEntity(entity).element(BendingStyles.get(Demonbending.ID))
                                     .time(16).vel(world.rand.nextGaussian() / 10, world.rand.nextGaussian() / 10,
                                     world.rand.nextGaussian() / 10).pos(AvatarEntityUtils.getMiddleOfEntity(entity))
                                     .spawn(world);

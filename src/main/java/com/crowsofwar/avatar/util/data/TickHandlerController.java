@@ -9,6 +9,8 @@ import com.crowsofwar.avatar.bending.bending.custom.demonic.tickhandlers.DemonWi
 import com.crowsofwar.avatar.bending.bending.custom.demonic.tickhandlers.DemonicAuraHandler;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.tickhandlers.HellBastionHandler;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.tickhandlers.InfernalFieldHandler;
+import com.crowsofwar.avatar.bending.bending.custom.hyper.tickhandlers.ChargeHyperBeam;
+import com.crowsofwar.avatar.bending.bending.custom.hyper.tickhandlers.HyperBeamHandler;
 import com.crowsofwar.avatar.bending.bending.custom.ki.tickhandlers.*;
 import com.crowsofwar.avatar.bending.bending.custom.light.tickhandlers.*;
 import com.crowsofwar.avatar.bending.bending.earth.tickhandlers.EarthSpikeHandler;
@@ -92,6 +94,8 @@ public class TickHandlerController {
 	public static TickHandler COMBUSTION_AURA_HANDLER = new CombustionAuraHandler(52);
 	public static TickHandler FUSION_DRIVE_HANDLER = new FusionDriveHandler(53);
 	public static TickHandler MEGATON_DIVE_HANDLER = new MegatonDiveHandler(54);
+	public static TickHandler HYPER_BEAM_HANDLER = new HyperBeamHandler(55);
+	public static TickHandler CHARGE_HYPER_BEAM = new ChargeHyperBeam(56);
 
 
 

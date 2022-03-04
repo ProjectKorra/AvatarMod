@@ -25,6 +25,9 @@ import com.crowsofwar.avatar.bending.bending.air.*;
 import com.crowsofwar.avatar.bending.bending.combustion.*;
 import com.crowsofwar.avatar.bending.bending.custom.dark.*;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.*;
+import com.crowsofwar.avatar.bending.bending.custom.hyper.AbilityHyperBeam;
+import com.crowsofwar.avatar.bending.bending.custom.hyper.AbilityHyperBlast;
+import com.crowsofwar.avatar.bending.bending.custom.hyper.Hyperbending;
 import com.crowsofwar.avatar.bending.bending.custom.ki.*;
 import com.crowsofwar.avatar.bending.bending.custom.light.*;
 import com.crowsofwar.avatar.bending.bending.earth.*;
@@ -201,6 +204,11 @@ public class AvatarMod {
         Abilities.register(new AbilityHellBastion());
 
 
+        /*              Hyper               */
+        Abilities.register(new AbilityHyperBlast());
+        Abilities.register(new AbilityHyperBeam());
+
+
     }
 
     private static void registerBendingStyles() {
@@ -219,6 +227,7 @@ public class AvatarMod {
         BendingStyles.register(new Kibending());
         BendingStyles.register(new Lightbending());
         BendingStyles.register(new Demonbending());
+        BendingStyles.register(new Hyperbending());
 
     }
 

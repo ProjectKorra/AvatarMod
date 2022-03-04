@@ -13,6 +13,7 @@ import com.crowsofwar.avatar.bending.bending.custom.demonic.statctrls.StatCtrlHe
 import com.crowsofwar.avatar.bending.bending.custom.demonic.tickhandlers.DemonWingsHandler;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.tickhandlers.HellBastionHandler;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.tickhandlers.InfernalFieldHandler;
+import com.crowsofwar.avatar.bending.bending.custom.hyper.AbilityHyperBlast;
 import com.crowsofwar.avatar.bending.bending.custom.ki.AbilityKiBlast;
 import com.crowsofwar.avatar.bending.bending.custom.ki.statctrls.StatCtrlSpiritBomb;
 import com.crowsofwar.avatar.bending.bending.custom.ki.tickhandlers.KiFlightHandler;
@@ -86,6 +87,7 @@ public abstract class OffensiveBehaviour extends Behavior<EntityOffensive> {
         registerBehavior(AbilityKiBlast.KiBlastBehaviour.class);
         registerBehavior(StatCtrlSpiritBomb.KiPlayerControlled.class);
         registerBehavior(SpiritBombHandler.SpiritBombBehaviour.class);
+        registerBehavior(AbilityHyperBlast.HyperBlastBehaviour.class);
     }
 
     public static class Idle extends OffensiveBehaviour {

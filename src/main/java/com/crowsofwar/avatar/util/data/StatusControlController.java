@@ -8,6 +8,7 @@ import com.crowsofwar.avatar.bending.bending.custom.dark.statctrls.StatCtrlShade
 import com.crowsofwar.avatar.bending.bending.custom.demonic.statctrls.StatCtrlDemonWings;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.statctrls.StatCtrlHellBastion;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.statctrls.StatCtrlInfernalField;
+import com.crowsofwar.avatar.bending.bending.custom.hyper.statctrls.StatCtrlSetHyperBeam;
 import com.crowsofwar.avatar.bending.bending.custom.ki.statctrls.StatCtrlKiFlight;
 import com.crowsofwar.avatar.bending.bending.custom.ki.statctrls.StatCtrlSetKamehameha;
 import com.crowsofwar.avatar.bending.bending.custom.ki.statctrls.StatCtrlSpiritBomb;
@@ -102,7 +103,9 @@ public class StatusControlController {
 			RELEASE_KAMEHAMEHA = new StatCtrlSetKamehameha(false),
 			CHARGE_SPIRIT_BOMB = new StatCtrlSpiritBomb(true),
 			RELEASE_SPIRIT_BOMB = new StatCtrlSpiritBomb(false),
-			ROCKET_BOOST = new StatCtrlRocketBoost();
+			ROCKET_BOOST = new StatCtrlRocketBoost(),
+			CHARGE_HYPER_BEAM = new StatCtrlSetHyperBeam(true),
+			SHOOT_HYPER_BEAM = new StatCtrlSetHyperBeam(false);
 	// @formatter:on
 
 	public static StatusControl lookup(int id) {

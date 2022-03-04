@@ -9,6 +9,7 @@ import com.crowsofwar.avatar.entity.EntityOffensive;
 import com.crowsofwar.avatar.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarParticleUtils;
+import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.PlayerViewRegistry;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
@@ -167,11 +168,11 @@ public class IceLanceHandler extends TickHandler {
                     particleSpeed = entity.getLookVec().scale(speed);
                 AvatarParticleUtils.spawnSpinningDirectionalVortex(world, entity, dir.scale(radius * distMult), maxAngle,
                         radius * 2, 0.01, radius / 4, ParticleBuilder.Type.SNOW,
-                        rightSide, particleSpeed, Vec3d.ZERO, false, 190, 235, 255, 180, true,
+                        rightSide, particleSpeed, Vec3d.ZERO, false, 190, 235, 255, 180, AvatarUtils.getRandomNumberInRange(1, 100) > 80,
                         6, radius / 2, true, -90);
                 AvatarParticleUtils.spawnSpinningDirectionalVortex(world, entity, dir.scale(radius * distMult), maxAngle,
                         radius * 2, 0.01, radius / 4, ParticleBuilder.Type.FLASH,
-                        rightSide, particleSpeed, Vec3d.ZERO, true, 130, 235, 255, 40, true,
+                        rightSide, particleSpeed, Vec3d.ZERO, true, 130, 235, 255, 40, AvatarUtils.getRandomNumberInRange(1, 100) > 80,
                         10, radius / 4, true, -90);
 
             }
@@ -272,7 +273,7 @@ public class IceLanceHandler extends TickHandler {
                         AvatarParticleUtils.spawnSpinningDirectionalVortex(world, entity, entity.getLookVec().scale(entity.height),
                                 (int) (entity.width * 15),
                                 entity.width, 0.01, entity.height, ParticleBuilder.Type.FLASH,
-                                AvatarEntityUtils.getMiddleOfEntity(entity), Vec3d.ZERO, Vec3d.ZERO, true, 140, 235, 255, 30, world.rand.nextBoolean(),
+                                AvatarEntityUtils.getMiddleOfEntity(entity), Vec3d.ZERO, Vec3d.ZERO, true, 140, 235, 255, 30, AvatarUtils.getRandomNumberInRange(1, 100) > 80,
                                 12, entity.height, true, -90);
 
                         //misc snow particles

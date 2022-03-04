@@ -5,6 +5,7 @@ import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.combustion.AbilityMegatonDive;
 import com.crowsofwar.avatar.bending.bending.fire.Firebending;
+import com.crowsofwar.avatar.blocks.BlockTemp;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
@@ -119,24 +120,23 @@ public class MegatonDiveHandler extends TickHandler {
                         }
                     }
                 }
-            }
-            else if (entity.onGround && duration > lifetime + 5 && abilityData.getUseNumber() < 1) {
+            } else if (entity.onGround && duration > lifetime + 5 && abilityData.getUseNumber() < 2) {
                 if (world.isRemote) {
                     world.playSound(entity.posX, entity.posY, entity.posZ,
                             SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.PLAYERS, 1.0F, 1.0F, false);
-                    explosion(entity, dive, world, size * 1.5F, rings, particles);
                     explosion(entity, dive, world, size * 1.5F, rings, particles / 2);
+                    explosion(entity, dive, world, size * 1.5F, rings, particles / 4);
                 }
-                if (!world.isRemote) {
-                    int radius = dive.getProperty(Ability.SIZE, abilityData).intValue();
-                    for (int x = -(radius / 2); x < radius / 2; x++) {
-                        for (int z = -(radius / 2); z < radius / 2; z++) {
-                            BlockPos pos = entity.getPosition();
-                            pos = pos.add(x, 0, z);
-                            if (Blocks.FIRE.canPlaceBlockAt(world, pos))
-                                world.setBlockState(pos, Blocks.FIRE.getDefaultState());
+                int radius = dive.getProperty(Ability.SIZE, abilityData).intValue();
+                for (int x = -(radius / 2); x < radius / 2; x++) {
+                    for (int z = -(radius / 2); z < radius / 2; z++) {
+                        BlockPos pos = entity.getPosition();
+                        pos = pos.add(x, 0, z);
+                        int blockTime = 20 + 20 * Math.max(Math.abs(x), Math.abs(z));
 
-                        }
+                        if (Blocks.FIRE.canPlaceBlockAt(world, pos) && !world.getBlockState(pos).isFullBlock())
+                            BlockTemp.createTempBlock(world, pos, blockTime, Blocks.FIRE.getDefaultState());
+
                     }
                     AxisAlignedBB targetBox = entity.getEntityBoundingBox().grow(dive.getProperty(Ability.SIZE,
                             abilityData).floatValue());
@@ -157,7 +157,7 @@ public class MegatonDiveHandler extends TickHandler {
                 abilityData.setUseNumber(abilityData.getUseNumber() + 1);
             }
         }
-        return abilityData.getUseNumber() > 0;
+        return abilityData.getUseNumber() > 1;
 
     }
 
@@ -170,9 +170,10 @@ public class MegatonDiveHandler extends TickHandler {
 
     private void explosion(EntityLivingBase entity, AbilityMegatonDive dive, World world, float size, int rings, int particles) {
         ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(BendingStyles.get(Firebending.ID)).ability(dive).spawnEntity(entity)
-                .clr(255, 20 + AvatarUtils.getRandomNumberInRange(0, 60), 10, AvatarUtils.getRandomNumberInRange(60, 80)).collide(world.rand.nextBoolean()).collideParticles(world.rand.nextBoolean())
-                .scale(size  * AvatarUtils.getRandomNumberInRange(1, 3) / 2).time(18 + AvatarUtils.getRandomNumberInRange(1, 2)).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 70)
-                .swirl(rings, particles, size * 6, 0.5F, 80, 2 * size, entity,
+                .clr(255, 20 + AvatarUtils.getRandomNumberInRange(0, 60), 10, AvatarUtils.getRandomNumberInRange(60, 80)).collide(AvatarUtils.getRandomNumberInRange(1, 100) > 80)
+                .collideParticles(AvatarUtils.getRandomNumberInRange(1, 100) > 700)
+                .scale(size * AvatarUtils.getRandomNumberInRange(1, 3) / 2).time(18 + AvatarUtils.getRandomNumberInRange(1, 2)).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 70)
+                .swirl(rings, particles, size * 6, 0.75F, 80, 2 * size, entity,
                         world, false, AvatarEntityUtils.getMiddleOfEntity(entity), ParticleBuilder.SwirlMotionType.OUT,
                         false, true);
     }

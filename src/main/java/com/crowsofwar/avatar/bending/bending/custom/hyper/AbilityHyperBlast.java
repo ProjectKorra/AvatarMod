@@ -15,7 +15,7 @@
   along with AvatarMod. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.crowsofwar.avatar.bending.bending.custom.ki;
+package com.crowsofwar.avatar.bending.bending.custom.hyper;
 
 import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingStyles;
@@ -42,7 +42,7 @@ import net.minecraft.world.World;
 /**
  * @author CrowsOfWar
  */
-public class AbilityKiBlast extends Ability {
+public class AbilityHyperBlast extends Ability {
 
     public static final String
             PIERCES_ENEMIES = "piercesEnemies",
@@ -50,8 +50,12 @@ public class AbilityKiBlast extends Ability {
             SLOW_PROJECTILES = "slowProjectiles";
 
 
-    public AbilityKiBlast() {
-        super(Kibending.ID, "ki_blast");
+    public AbilityHyperBlast() {
+        super(Hyperbending.ID, "hyper_blast");
+    }
+
+    private static float getClrRand() {
+        return AvatarUtils.getRandomNumberInRange(1, 255) / 255F;
     }
 
     @Override
@@ -109,7 +113,7 @@ public class AbilityKiBlast extends Ability {
             gust.setTier(getCurrentTier(ctx));
             gust.setChiHit(getProperty(CHI_HIT, ctx).floatValue());
             gust.setXp(getProperty(XP_HIT, ctx).floatValue());
-            gust.setBehaviour(new KiBlastBehaviour());
+            gust.setBehaviour(new HyperBlastBehaviour());
             gust.setDamageSource("avatar_Ki");
             if (!world.isRemote)
                 world.spawnEntity(gust);
@@ -127,12 +131,12 @@ public class AbilityKiBlast extends Ability {
                     double spawnZ = position.z();
                     ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x(),
                                     world.rand.nextGaussian() / 80 + velocity.y(), world.rand.nextGaussian() / 80 + velocity.z()).glow(true)
-                            .time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(0.05F, 0.95F, 0.95F, 0.05F).spawnEntity(entity)
-                            .scale(size * (1 / size)).element(BendingStyles.get(Airbending.ID)).collide(world.rand.nextBoolean()).spawn(world);
+                            .time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(0.95F, 0.95F, 0.95F, 0.05F).spawnEntity(entity)
+                            .scale(size * (1 / size)).element(BendingStyles.get(Hyperbending.ID)).collide(world.rand.nextBoolean()).spawn(world);
                     ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x(),
                                     world.rand.nextGaussian() / 80 + velocity.y(), world.rand.nextGaussian() / 80 + velocity.z()).glow(true)
                             .time(10 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(0.95F, 0.95F, 0.95F, 0.05F).spawnEntity(entity)
-                            .scale(size * (1 / size)).element(BendingStyles.get(Airbending.ID)).collide(world.rand.nextBoolean()).spawn(world);
+                            .scale(size * (1 / size)).element(BendingStyles.get(Hyperbending.ID)).collide(world.rand.nextBoolean()).spawn(world);
                     entity.swingArm(world.rand.nextBoolean() ? EnumHand.MAIN_HAND : EnumHand.OFF_HAND);
                 }
             }
@@ -154,7 +158,7 @@ public class AbilityKiBlast extends Ability {
         return true;
     }
 
-    public static class KiBlastBehaviour extends OffensiveBehaviour {
+    public static class HyperBlastBehaviour extends OffensiveBehaviour {
 
         @Override
         public Behavior<EntityOffensive> onUpdate(EntityOffensive entity) {
@@ -186,12 +190,12 @@ public class AbilityKiBlast extends Ability {
                         double spawnZ = pos.z;
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x,
                                         world.rand.nextGaussian() / 80 + velocity.y, world.rand.nextGaussian() / 80 + velocity.z).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 35)
-                                .time(4 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(0.01F, 0.95F, 0.95F, 0.2F).spawnEntity(entity)
+                                .time(4 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(getClrRand(), getClrRand(), getClrRand(), 0.2F).spawnEntity(entity)
                                 .scale(1.25F * entity.getAvgSize() * (1 / entity.getAvgSize())).element(BendingStyles.get(Airbending.ID)).collide(AvatarUtils.getRandomNumberInRange(1, 100) > 70)
                                 .collideParticles(AvatarUtils.getRandomNumberInRange(1, 100) > 70).spawn(world);
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x,
                                         world.rand.nextGaussian() / 80 + velocity.y, world.rand.nextGaussian() / 80 + velocity.z).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 35)
-                                .time(16 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(0.01F, 1F, 1F, 0.1F).spawnEntity(entity)
+                                .time(16 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(getClrRand(), getClrRand(), getClrRand(), 0.1F).spawnEntity(entity)
                                 .scale(1.25F * entity.getAvgSize() * (1 / entity.getAvgSize())).element(BendingStyles.get(Airbending.ID)).spawn(world);
 
                     }
