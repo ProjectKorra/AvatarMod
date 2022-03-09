@@ -19,6 +19,8 @@ package com.crowsofwar.avatar.bending.bending.custom.hyper.tickhandlers;
 import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.BendingStyles;
+import com.crowsofwar.avatar.bending.bending.custom.hyper.AbilityHyperBeam;
+import com.crowsofwar.avatar.bending.bending.custom.hyper.Hyperbending;
 import com.crowsofwar.avatar.bending.bending.custom.ki.AbilityKamehameha;
 import com.crowsofwar.avatar.bending.bending.fire.Firebending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
@@ -53,8 +55,7 @@ import java.util.UUID;
 
 import static com.crowsofwar.avatar.bending.bending.Ability.*;
 import static com.crowsofwar.avatar.bending.bending.fire.AbilityFlamethrower.RANDOMNESS;
-import static com.crowsofwar.avatar.util.data.StatusControlController.RELEASE_KAMEHAMEHA;
-import static com.crowsofwar.avatar.util.data.StatusControlController.STOP_OBLIVION_BEAM;
+import static com.crowsofwar.avatar.util.data.StatusControlController.SHOOT_HYPER_BEAM;
 import static com.crowsofwar.gorecore.util.Vector.getEyePos;
 import static java.lang.Math.toRadians;
 
@@ -76,17 +77,17 @@ public class HyperBeamHandler extends TickHandler {
         EntityLivingBase entity = ctx.getBenderEntity();
         Bender bender = ctx.getBender();
         World world = ctx.getWorld();
-        AbilityData abilityData = data.getAbilityData("kamehameha");
-        AbilityKamehameha kamehameha = (AbilityKamehameha) Abilities.get("kamehameha");
-        if (kamehameha == null)
+        AbilityData abilityData = data.getAbilityData("hyper_beam");
+        AbilityHyperBeam hyperBeam = (AbilityHyperBeam) Abilities.get("hyper_beam");
+        if (hyperBeam == null)
             return false;
 
-        float requiredChi = kamehameha.getProperty(CHI_COST, abilityData).floatValue() / 20F;
+        float requiredChi = hyperBeam.getProperty(CHI_COST, abilityData).floatValue() / 20F;
         double powerFactor = 2 - abilityData.getDamageMult();
         //Inverts what happens as you want chi to decrease when you're more powerful
         requiredChi *= powerFactor;
 
-        if (bender.consumeChi(requiredChi) && data.hasStatusControl(RELEASE_KAMEHAMEHA)) {
+        if (bender.consumeChi(requiredChi) && data.hasStatusControl(SHOOT_HYPER_BEAM)) {
 
             Vector eye = getEyePos(entity);
 //            boolean isRaining = world.isRaining() && world.canSeeSky(entity.getPosition()) && world.getBiome(entity.getPosition()).canRain();
@@ -96,30 +97,22 @@ public class HyperBeamHandler extends TickHandler {
 //                    || world.getBlockState(entity.getPosition().up()).getBlock() == Blocks.FLOWING_WATER;
 
 
-            double speedMult = kamehameha.getProperty(SPEED, abilityData).floatValue() * 3;
-            double randomness = kamehameha.getProperty(RANDOMNESS, abilityData).doubleValue();
-            float size = kamehameha.getProperty(SIZE, abilityData).floatValue();
-            float damage = kamehameha.getProperty(DAMAGE, abilityData).floatValue();
-            float performanceAmount = kamehameha.getProperty(PERFORMANCE, abilityData).floatValue();
-            float xp = kamehameha.getProperty(XP_HIT, abilityData).floatValue();
-            int lifetime = kamehameha.getProperty(LIFETIME, abilityData).intValue();
-            float knockback = kamehameha.getProperty(KNOCKBACK, abilityData).floatValue();
+            double speedMult = hyperBeam.getProperty(SPEED, abilityData).floatValue() * 3;
+            double randomness = hyperBeam.getProperty(RANDOMNESS, abilityData).doubleValue();
+            float size = hyperBeam.getProperty(SIZE, abilityData).floatValue();
+            float damage = hyperBeam.getProperty(DAMAGE, abilityData).floatValue();
+            float performanceAmount = hyperBeam.getProperty(PERFORMANCE, abilityData).floatValue();
+            float xp = hyperBeam.getProperty(XP_HIT, abilityData).floatValue();
+            int lifetime = hyperBeam.getProperty(LIFETIME, abilityData).intValue();
+            float knockback = hyperBeam.getProperty(KNOCKBACK, abilityData).floatValue();
 
-            //RGB values for being kewl
-            int r, g, b, fadeR, fadeG, fadeB;
-            r = kamehameha.getProperty(R, abilityData).intValue();
-            g = kamehameha.getProperty(G, abilityData).intValue();
-            b = kamehameha.getProperty(B, abilityData).intValue();
-            fadeR = kamehameha.getProperty(FADE_R, abilityData).intValue();
-            fadeG = kamehameha.getProperty(FADE_G, abilityData).intValue();
-            fadeB = kamehameha.getProperty(FADE_B, abilityData).intValue();
 
 
             // Affect stats by power rating
             size *= abilityData.getDamageMult() * abilityData.getXpModifier();
             damage *= abilityData.getDamageMult() * abilityData.getXpModifier();
             speedMult *= abilityData.getDamageMult() * abilityData.getXpModifier();
-            randomness -= bender.calcPowerRating(Firebending.ID) / 100;
+            randomness -= bender.calcPowerRating(Hyperbending.ID) / 100;
             randomness *= (0.5 / abilityData.getPowerRatingMult()) * abilityData.getXpModifier();
             randomness = randomness < 0 ? 0 : randomness;
             lifetime *= abilityData.getDamageMult() * abilityData.getXpModifier();
@@ -189,7 +182,7 @@ public class HyperBeamHandler extends TickHandler {
                     if (!world.isRemote) {
                         DamageUtils.attackEntity(entity, hit,
                                 AvatarDamageSource.ENERGY, damage, (int) performanceAmount,
-                                kamehameha, xp);
+                                hyperBeam, xp);
                         Vector vel = look.times(speedMult / 80 * knockback);
                         hit.addVelocity(vel.x(), vel.y(), vel.z());
                         AvatarUtils.afterVelocityAdded(hit);
@@ -208,16 +201,13 @@ public class HyperBeamHandler extends TickHandler {
                 //Beam from the player's chest
                 ParticleBuilder.create(ParticleBuilder.Type.BEAM).pos(start.toMinecraft())
                         .target(start.plus(look.times(distance)).toMinecraft()).scale(size * 8F).time(3)
-                        .clr(17 + AvatarUtils.getRandomNumberInRange(0, 10),
-                                211 + AvatarUtils.getRandomNumberInRange(0, 10),
-                                240 + AvatarUtils.getRandomNumberInRange(0, 10), 5).spawn(world);
-                //Flash and ice particles
+                        .clr(getClrRand(), getClrRand(), getClrRand(), 5 / 255F).spawn(world);
                 AvatarUtils.spawnDirectionalHelix(world, entity, look.toMinecraft(), particles * 4, distance, size * 0.75,
                         ParticleBuilder.Type.FLASH, start.toMinecraft(), look.toMinecraft(),
-                        true, 8, true, 0.05F, 0.95F, 1F, 0.7F, size * 0.75F);
+                        true, 8, true, getClrRand(), getClrRand(), getClrRand(), 0.8F, size * 0.75F);
                 AvatarUtils.spawnDirectionalHelix(world, entity, look.toMinecraft(), particles * 2, distance, size * 0.75,
                         ParticleBuilder.Type.FLASH, start.toMinecraft(), look.toMinecraft(),
-                        true, 8, false, 0.5F, 1F, 1F, 0.15F, size * 0.75F);
+                        true, 8, true, getClrRand(), getClrRand(), getClrRand(), 0.15F, size * 0.75F);
 
 
                 //Particles at the beginning of the beam
@@ -240,12 +230,12 @@ public class HyperBeamHandler extends TickHandler {
                                             look.z() * 0.0125 + world.rand.nextGaussian() / 80, look.z() * 0.0125 + world.rand.nextGaussian() / 80).
                                     scale(size * 0.65F).element(BendingStyles.get(Firebending.ID))
                                     .time(8).pos(start.toMinecraft().add(look.times(0.05).toMinecraft().add(x1, y1 - 0.025, z1))).spin(0.1, world.rand.nextGaussian() / 20)
-                                    .clr(0.05F, 0.95F, 1F, 0.85F).glow(true).spawnEntity(entity).spawn(world);
+                                    .clr(getClrRand(), getClrRand(), getClrRand(), 0.85F).glow(true).spawnEntity(entity).spawn(world);
                             ParticleBuilder.create(ParticleBuilder.Type.FLASH).vel(look.x() * 0.0125 + world.rand.nextGaussian() / 80,
                                             look.z() * 0.0125 + world.rand.nextGaussian() / 80, look.z() * 0.0125 + world.rand.nextGaussian() / 80).
                                     scale(size * 0.65F)
                                     .time(8).pos(start.toMinecraft().add(look.times(0.05).toMinecraft().add(x1, y1 - 0.025, z1))).spin(0.1, world.rand.nextGaussian() / 20)
-                                    .clr(0.5F, 0.95F, 1F, 0.15F).glow(false).spawnEntity(entity).spawn(world);
+                                    .clr(getClrRand(), getClrRand(), getClrRand(), 0.15F).glow(true).spawnEntity(entity).spawn(world);
 
                         }
                     }
@@ -265,23 +255,21 @@ public class HyperBeamHandler extends TickHandler {
 
 
         } else {
-            if (!data.hasStatusControl(STOP_OBLIVION_BEAM)) {
-                // not enough chi
-                //makes sure the tick handler is removed
-
-            }
 
             return true;
         }
-        return !data.hasStatusControl(RELEASE_KAMEHAMEHA);
+        return !data.hasStatusControl(SHOOT_HYPER_BEAM);
     }
 
+    private float getClrRand() {
+        return AvatarUtils.getRandomNumberInRange(1, 255) / 255F;
+    }
 
     @Override
     public void onRemoved(BendingContext ctx) {
         super.onRemoved(ctx);
         EntityLivingBase entity = ctx.getBenderEntity();
-        AbilityData abilityData = ctx.getData().getAbilityData("oblivion_beam");
+        AbilityData abilityData = ctx.getData().getAbilityData("hyper_beam");
         if (entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(HYPER_BEAM_MOVEMENT_MOD_ID) != null)
             entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(HYPER_BEAM_MOVEMENT_MOD_ID);
         abilityData.setRegenBurnout(true);
@@ -294,7 +282,7 @@ public class HyperBeamHandler extends TickHandler {
 
         moveSpeed.removeModifier(HYPER_BEAM_MOVEMENT_MOD_ID);
 
-        moveSpeed.applyModifier(new AttributeModifier(HYPER_BEAM_MOVEMENT_MOD_ID, "Ice Raze Movement Modifier", multiplier - 1, 1));
+        moveSpeed.applyModifier(new AttributeModifier(HYPER_BEAM_MOVEMENT_MOD_ID, "Hyper Beam Movement Modifier", multiplier - 1, 1));
 
     }
 

@@ -16,7 +16,6 @@ import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.TickHandler;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
@@ -99,8 +98,8 @@ public class MegatonDiveHandler extends TickHandler {
                 if (world.isRemote) {
                     world.playSound(entity.posX, entity.posY, entity.posZ,
                             SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.PLAYERS, 0.5F, 1.0F, false);
-                    explosion(entity, dive, world, size, rings, particles);
-                    explosion(entity, dive, world, size, rings, particles);
+                    explosion(entity, dive, world, size * 0.75F, rings, particles, -2);
+                    explosion(entity, dive, world, size * 0.75F, rings, particles, -world.rand.nextFloat() * 2);
                 }
                 //Explode
                 if (!world.isRemote) {
@@ -124,8 +123,8 @@ public class MegatonDiveHandler extends TickHandler {
                 if (world.isRemote) {
                     world.playSound(entity.posX, entity.posY, entity.posZ,
                             SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.PLAYERS, 1.0F, 1.0F, false);
-                    explosion(entity, dive, world, size * 1.5F, rings, particles / 2);
-                    explosion(entity, dive, world, size * 1.5F, rings, particles / 4);
+                    explosion(entity, dive, world, size * 1.5F, rings, particles, -2);
+                    explosion(entity, dive, world, size * 4F, rings, particles, -6);
                 }
                 int radius = dive.getProperty(Ability.SIZE, abilityData).intValue();
                 for (int x = -(radius / 2); x < radius / 2; x++) {
@@ -168,12 +167,12 @@ public class MegatonDiveHandler extends TickHandler {
 
     }
 
-    private void explosion(EntityLivingBase entity, AbilityMegatonDive dive, World world, float size, int rings, int particles) {
+    private void explosion(EntityLivingBase entity, AbilityMegatonDive dive, World world, float size, int rings, int particles, float velMult) {
         ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(BendingStyles.get(Firebending.ID)).ability(dive).spawnEntity(entity)
                 .clr(255, 20 + AvatarUtils.getRandomNumberInRange(0, 60), 10, AvatarUtils.getRandomNumberInRange(60, 80)).collide(AvatarUtils.getRandomNumberInRange(1, 100) > 80)
                 .collideParticles(AvatarUtils.getRandomNumberInRange(1, 100) > 700)
-                .scale(size * AvatarUtils.getRandomNumberInRange(1, 3) / 2).time(18 + AvatarUtils.getRandomNumberInRange(1, 2)).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 70)
-                .swirl(rings, particles, size * 6, 0.75F, 80, 2 * size, entity,
+                .scale(size * AvatarUtils.getRandomNumberInRange(1, 3) / 2).time(24 + AvatarUtils.getRandomNumberInRange(1, 2)).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 70)
+                .swirl(rings, particles, size * 6, 0.75F, 80, 2 * size * velMult, entity,
                         world, false, AvatarEntityUtils.getMiddleOfEntity(entity), ParticleBuilder.SwirlMotionType.OUT,
                         false, true);
     }
