@@ -59,7 +59,7 @@ public class HyperFormHandler extends TickHandler {
             Vec3d pos = AvatarEntityUtils.getBottomMiddleOfEntity(entity);
             pos = entity.onGround ? pos.add(0, entity.getEyeHeight(), 0) : pos.add(0, entity.getEyeHeight() / 2, 0);
             ParticleBuilder.create(ParticleBuilder.Type.FLASH).time(25 + AvatarUtils.getRandomNumberInRange(1, 2)).
-                    clr(r, g, b, 10).fade(getClrRand(), getClrRand(), getClrRand(), AvatarUtils.getRandomNumberInRange(10, 30))
+                    clr(r, g, b, 10).fade(getClrRand(), getClrRand(), getClrRand(), AvatarUtils.getRandomNumberInRange(10, 20))
                     .element(BendingStyles.get(Hyperbending.ID)).scale(scale).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 10).swirl((int) (kaioKenDuration / 20 * scale),
                             (int) (scale * Math.PI), scale, scale / 2, kaioKenDuration * 20, (0.75F / scale),
                             entity, world, true, pos,
@@ -82,7 +82,7 @@ public class HyperFormHandler extends TickHandler {
                 //Temporary solution to colour fading: randomising the colour between crimson and orangey-yellow for each particle.
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(location.plus(Vector.getEntityPos(entity)).toMinecraft()).time(4 + AvatarUtils.getRandomNumberInRange(1, 4)).
                         vel(world.rand.nextGaussian() / 40, world.rand.nextDouble() / 2, world.rand.nextGaussian() / 40)
-                        .clr(r, g, b, 150).fade(getClrRand(), getClrRand(), getClrRand(), AvatarUtils.getRandomNumberInRange(40, 80))
+                        .clr(r, g, b, 150).fade(getClrRand(), getClrRand(), getClrRand(), AvatarUtils.getRandomNumberInRange(20, 40))
                         .element(BendingStyles.get(Kibending.ID)).scale(scale).glow(true).spawn(world);
             }
         }
