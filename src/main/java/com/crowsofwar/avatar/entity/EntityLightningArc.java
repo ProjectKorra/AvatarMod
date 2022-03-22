@@ -1,11 +1,10 @@
 package com.crowsofwar.avatar.entity;
 
 import com.crowsofwar.avatar.bending.bending.BattlePerformanceScore;
-import com.crowsofwar.avatar.bending.bending.lightning.AbilityLightningArc;
-import com.crowsofwar.avatar.bending.bending.lightning.Lightningbending;
-import com.crowsofwar.avatar.client.particle.AvatarParticles;
+import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.entity.data.LightningFloodFill;
 import com.crowsofwar.avatar.util.AvatarDataSerializers;
+import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.Raytrace;
 import com.crowsofwar.avatar.util.damageutils.AvatarDamageSource;
@@ -23,6 +22,8 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 import org.joml.Matrix4d;
@@ -105,30 +106,6 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
         this.setsFires = true;
     }
 
-    //Use a particle explosion instead of a shockwave
-    private void LightningBurst(double x, double y, double z) {
-        EntityShockwave wave = new EntityShockwave(world);
-        wave.setAbility(getAbility());
-        wave.setOwner(getOwner());
-        wave.setParticleSpeed((getSizeMultiplier() / 4) / 5);
-        wave.setParticle(AvatarParticles.getParticleElectricity());
-        wave.setSpeed(0.5F + getSizeMultiplier() / 10);
-        wave.setDamageSource("avatar_Lightning_shockwave");
-        wave.setPosition(x, y + 0.3, z);
-        wave.setParticleSpeed(0.05F);
-        wave.setParticleAmount(1);
-        wave.setParticleWaves(1);
-        wave.setDamage(getDamage() / 2);
-        wave.setRange(6 + getSizeMultiplier() * 2);
-        wave.setRange(getSizeMultiplier());
-        wave.setFire(3 + AbilityData.get(getOwner(), getAbility().getName()).getLevel() + 1);
-        wave.setParticleController(54 - (getSizeMultiplier() * 7));
-        wave.setSphere(true);
-        wave.setElement(Lightningbending.ID);
-        wave.setPerformanceAmount(10);
-        wave.setKnockbackHeight(0.02);
-        world.spawnEntity(wave);
-    }
 
     @Override
     protected void entityInit() {
@@ -219,6 +196,11 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
     }
 
     @Override
+    public boolean isPiercing() {
+        return true;
+    }
+
+    @Override
     protected void updateCpBehavior() {
         if (getOwner() != null) {
             for (LightningControlPoint controlPoint : getControlPoints()) {
@@ -226,31 +208,6 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
                         (ticksExisted));
             }
         }
-    }
-
-    @Override
-    public void onCollideWithEntity(Entity entity) {
-        if (getAbility() instanceof AbilityLightningArc && !world.isRemote && getOwner() != null) {
-            AbilityData aD = AbilityData.get(getOwner(), "lightning_arc");
-            if (aD.isMasterPath(AbilityData.AbilityTreePath.SECOND) && entity instanceof EntityLivingBase) {
-                world.playSound(null, getPosition(), SoundEvents.ENTITY_LIGHTNING_THUNDER,
-                        SoundCategory.PLAYERS, 1, 1);
-                damageEntity(((EntityLivingBase) entity), 1);
-                LightningBurst(this.posX, this.posY, this.posZ);
-                //Don't use the position of the entity, as that makes them fall through the world
-                entity.noClip = false;
-                this.setDead();
-            }
-        }
-        if (stuckTo == null && entity instanceof EntityLivingBase) {
-            stuckTo = (EntityLivingBase) entity;
-
-        }
-    }
-
-    @Override
-    public boolean canCollideWith(Entity entity) {
-        return entity != getOwner();
     }
 
     /**
@@ -271,6 +228,32 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
             }
 
         }
+    }
+
+    @Override
+    public void spawnExplosionParticles(World world, Vec3d pos) {
+        if (world.isRemote && getOwner() != null) {
+            ParticleBuilder.create(ParticleBuilder.Type.SPARK).spawnEntity(getOwner()).scale(getSizeMultiplier() / 2).
+            time(AvatarUtils.getRandomNumberInRange(16, 18)).swirl((int) (getAmountOfControlPoints() * getSizeMultiplier()),
+                            getAmountOfControlPoints() / 2, getSizeMultiplier() * 1.5F,0.15F,
+                            (float) (velocity().magnitude() * 20), -3.5F * getSizeMultiplier(), this, world, false,
+                            AvatarEntityUtils.getMiddleOfEntity(this), ParticleBuilder.SwirlMotionType.OUT, false,
+                            true);
+        }
+    }
+
+    @Nullable
+    @Override
+    public SoundEvent[] getSounds() {
+        return new SoundEvent[] {
+                SoundEvents.ENTITY_LIGHTNING_IMPACT,
+                SoundEvents.ENTITY_LIGHTNING_THUNDER
+        };
+    }
+
+    @Override
+    public void spawnPiercingParticles(World world, Vec3d pos) {
+        spawnExplosionParticles(world, pos);
     }
 
     private void handleWaterElectrocution(EntityLivingBase entity) {
@@ -331,14 +314,6 @@ public class EntityLightningArc extends EntityArc<EntityLightningArc.LightningCo
         } else {
             return AvatarDamageSource.causeLightningDamage(target, getOwner());
         }
-    }
-
-    @Override
-    public boolean onCollideWithSolid() {
-        setDead();
-        this.motionX = this.motionY = this.motionZ = 0;
-        LightningBurst(posX, posY, posZ);
-        return false;
     }
 
     @Override
