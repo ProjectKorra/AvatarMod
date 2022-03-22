@@ -21,8 +21,6 @@ import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.custom.hyper.AbilityHyperImplosion;
 import com.crowsofwar.avatar.bending.bending.custom.hyper.Hyperbending;
-import com.crowsofwar.avatar.bending.bending.custom.ki.AbilitySpiritBomb;
-import com.crowsofwar.avatar.bending.bending.custom.ki.Kibending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.entity.EntityKiBall;
 import com.crowsofwar.avatar.entity.EntityOffensive;
@@ -45,8 +43,8 @@ import static com.crowsofwar.avatar.bending.bending.custom.ki.tickhandlers.Spiri
 import static com.crowsofwar.avatar.client.controls.AvatarControl.CONTROL_RIGHT_CLICK_DOWN;
 import static com.crowsofwar.avatar.client.controls.AvatarControl.CONTROL_RIGHT_CLICK_UP;
 import static com.crowsofwar.avatar.util.data.StatusControl.CrosshairPosition.RIGHT_OF_CROSSHAIR;
-import static com.crowsofwar.avatar.util.data.StatusControlController.RELEASE_SPIRIT_BOMB;
-import static com.crowsofwar.avatar.util.data.TickHandlerController.SPIRIT_BOMB_HANDLER;
+import static com.crowsofwar.avatar.util.data.StatusControlController.RELEASE_HYPER_IMPLOSION;
+import static com.crowsofwar.avatar.util.data.TickHandlerController.HYPER_IMPLOSION_HANDLER;
 
 /**
  * @author CrowsOfWar
@@ -80,15 +78,15 @@ public class StatCtrlHyperImplosion extends StatusControl {
                 ball.setOwner(bender);
                 ball.setElement(Hyperbending.ID);
                 ball.setPosition(Vector.getEyePos(bender).plusY(10));
-                ball.setBehaviour(new KiPlayerControlled());
+                ball.setBehaviour(new HyperImplosionControlled());
                 ball.setVelocity(Vector.ZERO);
                 ball.setLifeTime(250);
                 //Other attributes set later
                 if (!world.isRemote)
                     world.spawnEntity(ball);
 
-                data.addStatusControl(RELEASE_SPIRIT_BOMB);
-                data.addTickHandler(SPIRIT_BOMB_HANDLER, ctx);
+                data.addStatusControl(RELEASE_HYPER_IMPLOSION);
+                data.addTickHandler(HYPER_IMPLOSION_HANDLER, ctx);
             } else {
                 if (bender.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(SPIRIT_BOMB_MOVEMENT_MOD_ID) != null)
                     bender.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(SPIRIT_BOMB_MOVEMENT_MOD_ID);
@@ -99,7 +97,7 @@ public class StatCtrlHyperImplosion extends StatusControl {
     }
 
     //Player controlled behaviour for the ball
-    public static class KiPlayerControlled extends OffensiveBehaviour {
+    public static class HyperImplosionControlled extends OffensiveBehaviour {
 
         @Override
         public OffensiveBehaviour onUpdate(EntityOffensive entity) {

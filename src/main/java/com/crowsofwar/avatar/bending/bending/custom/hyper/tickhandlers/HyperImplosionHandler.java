@@ -2,6 +2,7 @@ package com.crowsofwar.avatar.bending.bending.custom.hyper.tickhandlers;
 
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.BendingStyles;
+import com.crowsofwar.avatar.bending.bending.custom.hyper.AbilityHyperImplosion;
 import com.crowsofwar.avatar.bending.bending.custom.ki.AbilitySpiritBomb;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.entity.AvatarEntity;
@@ -36,7 +37,7 @@ import static com.crowsofwar.avatar.bending.bending.custom.demonic.AbilityHellBa
 import static com.crowsofwar.avatar.util.data.StatusControlController.RELEASE_SPIRIT_BOMB;
 
 public class HyperImplosionHandler extends TickHandler {
-    public static final UUID SPIRIT_BOMB_MOVEMENT_MOD_ID = UUID.randomUUID();
+    public static final UUID HYPER_IMPLOSION_MOVEMENT_MOD_ID = UUID.randomUUID();
 
     public HyperImplosionHandler(int id) {
         super(id);
@@ -48,44 +49,30 @@ public class HyperImplosionHandler extends TickHandler {
         EntityLivingBase entity = ctx.getBenderEntity();
         BendingData data = ctx.getData();
         Bender bender = ctx.getBender();
-        AbilityData abilityData = ctx.getData().getAbilityData("spirit_bomb");
-        AbilitySpiritBomb spiritBomb = (AbilitySpiritBomb) Abilities.get("spirit_bomb");
+        AbilityData abilityData = ctx.getData().getAbilityData("hyper_implosion");
+        AbilityHyperImplosion hyperImplosion = (AbilityHyperImplosion) Abilities.get("hyper_implosion");
 
         float charge;
         //4 stages, max charge of 4.
 
-        if (abilityData != null && spiritBomb != null) {
+        if (abilityData != null && hyperImplosion != null) {
 
 
             float powerMod = (float) abilityData.getDamageMult();
             float xpMod = abilityData.getXpModifier();
 
             int duration = data.getTickHandlerDuration(this);
-            float damage = spiritBomb.getProperty(EFFECT_DAMAGE, abilityData).floatValue();
-            float slowMult = spiritBomb.getProperty(SLOW_MULT, abilityData).floatValue();
+            float damage = hyperImplosion.getProperty(EFFECT_DAMAGE, abilityData).floatValue();
+            float slowMult = hyperImplosion.getProperty(SLOW_MULT, abilityData).floatValue();
 
 
-            float knockBack = spiritBomb.getProperty(KNOCKBACK, abilityData).floatValue() / 4;
-            float radius = spiritBomb.getProperty(EFFECT_RADIUS, abilityData).floatValue();
-            float speed = spiritBomb.getProperty(SPEED, abilityData).floatValue() / 5;
-            float maxEntitySize = spiritBomb.getProperty(SIZE, abilityData).floatValue();
-            int performanceAmount = spiritBomb.getProperty(PERFORMANCE, abilityData).intValue();
+            float knockBack = hyperImplosion.getProperty(KNOCKBACK, abilityData).floatValue() / 4;
+            float radius = hyperImplosion.getProperty(EFFECT_RADIUS, abilityData).floatValue();
+            float speed = hyperImplosion.getProperty(SPEED, abilityData).floatValue() / 5;
+            float maxEntitySize = hyperImplosion.getProperty(SIZE, abilityData).floatValue();
+            int performanceAmount = hyperImplosion.getProperty(PERFORMANCE, abilityData).intValue();
             float shockwaveSpeed;
 
-            float exhaustion, burnout;
-            int cooldown;
-            exhaustion = spiritBomb.getExhaustion(abilityData);
-            burnout = spiritBomb.getBurnOut(abilityData);
-            cooldown = spiritBomb.getCooldown(abilityData);
-
-            if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
-                exhaustion = burnout = cooldown = 0;
-            }
-
-            //Makes sure the charge is never 0.
-//            charge = Math.max((int) (3 * (duration / durationToFire)) + 1, 1);
-//            charge = Math.min(charge, 4);
-            //We don't want the charge going over 4.
 
             charge = 4;
             maxEntitySize *= powerMod * xpMod;
@@ -120,7 +107,7 @@ public class HyperImplosionHandler extends TickHandler {
             if (ball != null) {
                 ball.setDamage(ball.getDamage() + damage);
                 ball.setEntitySize(ball.getAvgSize() < maxEntitySize ? ball.getAvgSize() + 0.1F : maxEntitySize);
-                ball.setTier(spiritBomb.getCurrentTier(abilityData));
+                ball.setTier(hyperImplosion.getCurrentTier(abilityData));
                 ball.setChiHit(3);
                 ball.setXp(3);
                 ball.setPerformanceAmount(performanceAmount);
@@ -134,7 +121,7 @@ public class HyperImplosionHandler extends TickHandler {
                     ball.setExplosionDamage(damage);
                     ball.setExplosionSize(radius * 3);
                 }
-                entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(SPIRIT_BOMB_MOVEMENT_MOD_ID);
+                entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(HYPER_IMPLOSION_MOVEMENT_MOD_ID);
 
                 world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE,
                         SoundCategory.BLOCKS, 1, 0.5F);
@@ -153,9 +140,9 @@ public class HyperImplosionHandler extends TickHandler {
         IAttributeInstance moveSpeed = entity.getEntityAttribute(SharedMonsterAttributes
                 .MOVEMENT_SPEED);
 
-        moveSpeed.removeModifier(SPIRIT_BOMB_MOVEMENT_MOD_ID);
+        moveSpeed.removeModifier(HYPER_IMPLOSION_MOVEMENT_MOD_ID);
 
-        moveSpeed.applyModifier(new AttributeModifier(SPIRIT_BOMB_MOVEMENT_MOD_ID,
+        moveSpeed.applyModifier(new AttributeModifier(HYPER_IMPLOSION_MOVEMENT_MOD_ID,
                 "Spirit Bomb charge modifier", multiplier - 1, 1));
 
     }
@@ -166,8 +153,8 @@ public class HyperImplosionHandler extends TickHandler {
         AbilityData abilityData = AbilityData.get(ctx.getBenderEntity(), "spirit_bomb");
         if (abilityData != null)
             abilityData.setRegenBurnout(true);
-        if (ctx.getBenderEntity().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(SPIRIT_BOMB_MOVEMENT_MOD_ID) != null)
-            ctx.getBenderEntity().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(SPIRIT_BOMB_MOVEMENT_MOD_ID);
+        if (ctx.getBenderEntity().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(HYPER_IMPLOSION_MOVEMENT_MOD_ID) != null)
+            ctx.getBenderEntity().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(HYPER_IMPLOSION_MOVEMENT_MOD_ID);
 
     }
 
