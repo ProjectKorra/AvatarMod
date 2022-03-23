@@ -19,9 +19,9 @@ package com.crowsofwar.avatar.entity;
 
 import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.custom.dark.Darkbending;
+import com.crowsofwar.avatar.bending.bending.custom.hyper.statctrls.StatCtrlHyperImplosion;
+import com.crowsofwar.avatar.bending.bending.custom.hyper.tickhandlers.HyperImplosionHandler;
 import com.crowsofwar.avatar.bending.bending.custom.ki.Kibending;
-import com.crowsofwar.avatar.bending.bending.custom.ki.statctrls.StatCtrlSpiritBomb;
-import com.crowsofwar.avatar.bending.bending.custom.ki.tickhandlers.SpiritBombHandler;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
@@ -208,20 +208,23 @@ public class EntityHyperBall extends EntityOffensive {
 
     @Override
     public boolean shouldExplode() {
-        return getBehaviour() instanceof SpiritBombHandler.SpiritBombBehaviour;
+        return getBehaviour() instanceof HyperImplosionHandler.HyperImplosionBehaviour;
     }
 
     @Override
     public boolean shouldDissipate() {
-        return !(getBehaviour() instanceof StatCtrlSpiritBomb.KiPlayerControlled) && !shouldExplode();
+        return !(getBehaviour() instanceof StatCtrlHyperImplosion.HyperImplosionControlled) && !shouldExplode();
     }
-
 
 
     @Override
     public void setDead() {
 
         super.setDead();
+    }
+
+    private int getClrRand() {
+        return AvatarUtils.getRandomNumberInRange(1, 255);
     }
 
     @Override
@@ -235,12 +238,12 @@ public class EntityHyperBall extends EntityOffensive {
 
             ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size).time(36 + AvatarUtils.getRandomNumberInRange(0, 4)).glow(true)
                     .element(BendingStyles.get(getElement())).
-                    clr(0, 255, 255).spawnEntity(this).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 30)
+                    clr(getClrRand(), getClrRand(), getClrRand()).spawnEntity(this).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 30)
                     .swirl(rings, particles, getAvgSize() * 1.1F, size * 10, getAvgSize() * 10, -15, this,
                             world, false, centre, ParticleBuilder.SwirlMotionType.OUT, false, true);
             ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size).time(36 + AvatarUtils.getRandomNumberInRange(0, 4))
                     .element(BendingStyles.get(getElement())).
-                    clr(20, 240, 255, 0.1F).spawnEntity(this).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 60)
+                    clr(getClrRand(), getClrRand(), getClrRand(), getClrRand()).spawnEntity(this).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 60)
                     .swirl(rings, particles, getAvgSize() * 1.1F, size * 10, getAvgSize() * 10, -15, this,
                             world, false, centre, ParticleBuilder.SwirlMotionType.OUT, false, true);
 

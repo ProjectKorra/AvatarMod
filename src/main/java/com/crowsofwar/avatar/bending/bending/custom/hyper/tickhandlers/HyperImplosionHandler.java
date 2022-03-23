@@ -3,10 +3,9 @@ package com.crowsofwar.avatar.bending.bending.custom.hyper.tickhandlers;
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.custom.hyper.AbilityHyperImplosion;
-import com.crowsofwar.avatar.bending.bending.custom.ki.AbilitySpiritBomb;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.entity.AvatarEntity;
-import com.crowsofwar.avatar.entity.EntityKiBall;
+import com.crowsofwar.avatar.entity.EntityHyperBall;
 import com.crowsofwar.avatar.entity.EntityOffensive;
 import com.crowsofwar.avatar.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
@@ -20,7 +19,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
@@ -34,6 +32,7 @@ import java.util.UUID;
 
 import static com.crowsofwar.avatar.bending.bending.Ability.*;
 import static com.crowsofwar.avatar.bending.bending.custom.demonic.AbilityHellBastion.SLOW_MULT;
+import static com.crowsofwar.avatar.util.data.StatusControlController.RELEASE_HYPER_IMPLOSION;
 import static com.crowsofwar.avatar.util.data.StatusControlController.RELEASE_SPIRIT_BOMB;
 
 public class HyperImplosionHandler extends TickHandler {
@@ -41,6 +40,10 @@ public class HyperImplosionHandler extends TickHandler {
 
     public HyperImplosionHandler(int id) {
         super(id);
+    }
+
+    private static int getClrRand() {
+        return AvatarUtils.getRandomNumberInRange(1, 255);
     }
 
     @Override
@@ -103,7 +106,7 @@ public class HyperImplosionHandler extends TickHandler {
                 world.playSound(null, new BlockPos(entity), SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.PLAYERS, 0.25F * charge, 0.4F + world.rand.nextFloat() / 10);
 
             //Charging the ball
-            EntityKiBall ball = AvatarEntity.lookupEntity(world, EntityKiBall.class, entityKiBall -> entityKiBall.getOwner() == entity);
+            EntityHyperBall ball = AvatarEntity.lookupEntity(world, EntityHyperBall.class, entityHyperBall -> entityHyperBall.getOwner() == entity);
             if (ball != null) {
                 ball.setDamage(ball.getDamage() + damage);
                 ball.setEntitySize(ball.getAvgSize() < maxEntitySize ? ball.getAvgSize() + 0.1F : maxEntitySize);
@@ -113,11 +116,11 @@ public class HyperImplosionHandler extends TickHandler {
                 ball.setPerformanceAmount(performanceAmount);
             }
             //Dropping the ball
-            if (!data.hasStatusControl(RELEASE_SPIRIT_BOMB)) {
+            if (!data.hasStatusControl(RELEASE_HYPER_IMPLOSION)) {
 
                 //Behaviour to drop it
                 if (ball != null) {
-                    ball.setBehaviour(new SpiritBombBehaviour());
+                    ball.setBehaviour(new HyperImplosionBehaviour());
                     ball.setExplosionDamage(damage);
                     ball.setExplosionSize(radius * 3);
                 }
@@ -128,12 +131,11 @@ public class HyperImplosionHandler extends TickHandler {
 
                 return true;
             }
-            return !data.hasStatusControl(RELEASE_SPIRIT_BOMB);
+            return !data.hasStatusControl(RELEASE_HYPER_IMPLOSION);
         } else {
             return true;
         }
     }
-
 
     private void applyMovementModifier(EntityLivingBase entity, float multiplier) {
 
@@ -143,14 +145,14 @@ public class HyperImplosionHandler extends TickHandler {
         moveSpeed.removeModifier(HYPER_IMPLOSION_MOVEMENT_MOD_ID);
 
         moveSpeed.applyModifier(new AttributeModifier(HYPER_IMPLOSION_MOVEMENT_MOD_ID,
-                "Spirit Bomb charge modifier", multiplier - 1, 1));
+                "Hyper Implosion charge modifier", multiplier - 1, 1));
 
     }
 
     @Override
     public void onRemoved(BendingContext ctx) {
         super.onRemoved(ctx);
-        AbilityData abilityData = AbilityData.get(ctx.getBenderEntity(), "spirit_bomb");
+        AbilityData abilityData = AbilityData.get(ctx.getBenderEntity(), "hyper_implosion");
         if (abilityData != null)
             abilityData.setRegenBurnout(true);
         if (ctx.getBenderEntity().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(HYPER_IMPLOSION_MOVEMENT_MOD_ID) != null)
@@ -158,7 +160,7 @@ public class HyperImplosionHandler extends TickHandler {
 
     }
 
-    public static class SpiritBombBehaviour extends OffensiveBehaviour {
+    public static class HyperImplosionBehaviour extends OffensiveBehaviour {
 
         @Override
         public OffensiveBehaviour onUpdate(EntityOffensive entity) {
@@ -177,11 +179,12 @@ public class HyperImplosionHandler extends TickHandler {
                     int particles = (int) (entity.getAvgSize() * Math.PI);
 
                     ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size).time(8 + AvatarUtils.getRandomNumberInRange(0, 4)).glow(true)
-                            .element(BendingStyles.get(entity.getElement())).clr(40, 240, 255).spawnEntity(entity).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 30)
+                            .element(BendingStyles.get(entity.getElement())).clr(getClrRand(), getClrRand(), getClrRand(),
+                                    getClrRand()).spawnEntity(entity).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 20)
                             .swirl(rings, particles, entity.getAvgSize() * 1.1F, size * 15, entity.getAvgSize() * 10, (-1 / size),
                                     entity, world, false, centre, ParticleBuilder.SwirlMotionType.OUT, false, true);
                     ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size).time(8 + AvatarUtils.getRandomNumberInRange(0, 4))
-                            .element(BendingStyles.get(entity.getElement())).clr(255, 255, 255).spawnEntity(entity).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 60)
+                            .element(BendingStyles.get(entity.getElement())).clr(getClrRand(), getClrRand(), getClrRand()).spawnEntity(entity).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 60)
                             .swirl(rings, particles, entity.getAvgSize() * 1.1F, size * 15, entity.getAvgSize() * 10, (-1 / size),
                                     entity, world, false, centre, ParticleBuilder.SwirlMotionType.OUT, false, true);
                 }

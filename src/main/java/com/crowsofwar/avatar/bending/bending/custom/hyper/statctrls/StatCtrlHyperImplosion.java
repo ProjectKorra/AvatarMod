@@ -22,6 +22,7 @@ import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.custom.hyper.AbilityHyperImplosion;
 import com.crowsofwar.avatar.bending.bending.custom.hyper.Hyperbending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
+import com.crowsofwar.avatar.entity.EntityHyperBall;
 import com.crowsofwar.avatar.entity.EntityKiBall;
 import com.crowsofwar.avatar.entity.EntityOffensive;
 import com.crowsofwar.avatar.entity.data.OffensiveBehaviour;
@@ -73,7 +74,7 @@ public class StatCtrlHyperImplosion extends StatusControl {
                 //Adds the entity here so the player can charge it in the tickhandler.
                 //Really basic attributes are set here, overriden later in the tickhandler.
 
-                EntityKiBall ball = new EntityKiBall(world);
+                EntityHyperBall ball = new EntityHyperBall(world);
                 ball.setAbility(implosion);
                 ball.setOwner(bender);
                 ball.setElement(Hyperbending.ID);
@@ -104,7 +105,7 @@ public class StatCtrlHyperImplosion extends StatusControl {
             EntityLivingBase owner = entity.getOwner();
             World world = entity.world;
 
-            if (owner == null || !(entity instanceof EntityKiBall)) return this;
+            if (owner == null || !(entity instanceof EntityHyperBall)) return this;
 
             Vector eye = Vector.getEyePos(owner).plusY(10);
             Vec3d motion = eye.minus(Vector.getEntityPos(entity)).times(0.5).toMinecraft();
@@ -118,11 +119,11 @@ public class StatCtrlHyperImplosion extends StatusControl {
                 int particles = (int) (entity.getAvgSize() * Math.PI);
 
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size).time(8 + AvatarUtils.getRandomNumberInRange(0, 4))
-                        .element(BendingStyles.get(entity.getElement())).clr(20, 240, 255).spawnEntity(entity).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 15)
+                        .element(BendingStyles.get(entity.getElement())).clr(getClrRand(), getClrRand(), getClrRand(), getClrRand()).spawnEntity(entity).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 15)
                         .swirl(rings, particles, entity.getAvgSize() * 1.1F, size * 15, entity.getAvgSize() * 10, (-1 / size),
                                 entity, world, false, centre, ParticleBuilder.SwirlMotionType.OUT, false, true);
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size).time(8 + AvatarUtils.getRandomNumberInRange(0, 4))
-                        .element(BendingStyles.get(entity.getElement())).clr(255, 255, 255).spawnEntity(entity).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 75)
+                        .element(BendingStyles.get(entity.getElement())).clr(getClrRand(), getClrRand(), getClrRand()).spawnEntity(entity).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 50)
                         .swirl(rings, particles, entity.getAvgSize() * 1.1F, size * 15, entity.getAvgSize() * 10, (-1 / size),
                                 entity, world, false, centre, ParticleBuilder.SwirlMotionType.OUT, false, true);
 
@@ -151,6 +152,10 @@ public class StatCtrlHyperImplosion extends StatusControl {
         public void save(NBTTagCompound nbt) {
 
         }
+    }
+
+    private static int getClrRand() {
+        return AvatarUtils.getRandomNumberInRange(1, 255);
     }
 
 }

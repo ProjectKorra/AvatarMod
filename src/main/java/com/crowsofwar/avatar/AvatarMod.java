@@ -25,10 +25,7 @@ import com.crowsofwar.avatar.bending.bending.air.*;
 import com.crowsofwar.avatar.bending.bending.combustion.*;
 import com.crowsofwar.avatar.bending.bending.custom.dark.*;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.*;
-import com.crowsofwar.avatar.bending.bending.custom.hyper.AbilityHyperBeam;
-import com.crowsofwar.avatar.bending.bending.custom.hyper.AbilityHyperBlast;
-import com.crowsofwar.avatar.bending.bending.custom.hyper.AbilityHyperForm;
-import com.crowsofwar.avatar.bending.bending.custom.hyper.Hyperbending;
+import com.crowsofwar.avatar.bending.bending.custom.hyper.*;
 import com.crowsofwar.avatar.bending.bending.custom.ki.*;
 import com.crowsofwar.avatar.bending.bending.custom.light.*;
 import com.crowsofwar.avatar.bending.bending.earth.*;
@@ -209,6 +206,7 @@ public class AvatarMod {
         Abilities.register(new AbilityHyperBlast());
         Abilities.register(new AbilityHyperBeam());
         Abilities.register(new AbilityHyperForm());
+        Abilities.register(new AbilityHyperImplosion());
 
 
     }
@@ -457,6 +455,7 @@ public class AvatarMod {
         registerEntity(EntityShadeBall.class, "ShadeBurst", 128, 1000, true);
         registerEntity(EntityInfernalBall.class, "InfernalBall", 128, 1000, true);
         registerEntity(EntityKiBall.class, "SpiritBomb", 128, 1000, true);
+        registerEntity(EntityHyperBall.class, "HyperBomb", 128, 1000, true);
         EntityRegistry.addSpawn(EntityOtterPenguin.class, 10, 3, 6, EnumCreatureType.CREATURE, //
                 COLD_BEACH, ICE_PLAINS, ICE_MOUNTAINS, MUTATED_ICE_FLATS);
         EntityRegistry.addSpawn(EntityOstrichHorse.class, 5, 1, 3, EnumCreatureType.CREATURE, //
