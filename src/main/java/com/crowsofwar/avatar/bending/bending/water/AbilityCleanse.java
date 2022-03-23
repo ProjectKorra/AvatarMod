@@ -54,6 +54,7 @@ public class AbilityCleanse extends Ability {
                 SATURATION_DURATION, SATURATION_LEVEL, RADIUS, REGEN_DURATION, REGEN_LEVEL,
                 INSTANT_HEALTH_LEVEL, SOURCE_RANGE, SOURCE_ANGLES, HIGHEST_LEVEL_CLEANSED, WATER_LEVEL,
                 ABSORPTION_DURATION, ABSORPTION_LEVEL);
+        addBooleanProperties(PLANT_BEND);
     }
 
     @Override
