@@ -207,6 +207,7 @@ public class AvatarMod {
         Abilities.register(new AbilityHyperBeam());
         Abilities.register(new AbilityHyperForm());
         Abilities.register(new AbilityHyperImplosion());
+        Abilities.register(new AbilityHyperAdvent());
 
 
     }

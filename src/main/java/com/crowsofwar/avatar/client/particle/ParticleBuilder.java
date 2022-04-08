@@ -10,6 +10,7 @@ import com.crowsofwar.avatar.client.particles.newparticles.ParticleAvatar;
 import com.crowsofwar.avatar.client.particles.newparticles.behaviour.ParticleAvatarBehaviour;
 import com.crowsofwar.avatar.client.particles.newparticles.renderlayers.ParticleBatchRenderer;
 import com.crowsofwar.avatar.util.AvatarParticleUtils;
+import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -262,6 +263,59 @@ public final class ParticleBuilder {
                     vel = targetPos.subtract(circlePos).normalize().scale(0.10 * velMult).add(vel);
                     if (followEntity)
                         vel = vel.add(entity.motionX, entity.motionY, entity.motionZ);
+                    try {
+                        this.pos(circlePos).vel(vel).spawn(world, false);
+                    } catch (IllegalStateException ignored) {
+                        ignored.printStackTrace();
+                    }
+                }
+            }
+        }
+        reset();
+    }
+
+    public void swirl(int rings, int particles, float radius, float iterationSize,
+                      float spinSpeed, float velMult, Entity entity, World world, boolean shield,
+                      Vec3d pos, SwirlMotionType type, boolean followEntity, boolean randomVel,
+                      boolean randomClr) {
+        for (int i = 0; i < rings + 1; i++) {
+            //Drawing from the player to the edge of the radius
+            for (double j = 0; j < (radius); j += iterationSize) {
+                //Particles
+                for (int h = 0; h < particles; h++) {
+                    double rScale = 0;
+                    switch (type) {
+                        case IN:
+                            rScale = j;
+                            break;
+                        case OUT:
+                            rScale = radius - j;
+                            break;
+                    }
+                    //Flow animation
+                    double yaw = Math.toRadians(i > 0 ? i * (180F / (rings)) : 0);
+                    // yaw += Math.toRadians(entity.rotationYaw);
+                    //For some reason, -90 breaks multiple rings (they stack instead of spreading). However,
+                    //in order to make a horizontal ring, you need -90.s
+                    double pitch = Math.toRadians(i > 0 ? 0 : -90);
+                    Vec3d circlePos = Vector.getOrthogonalVector(Vector.toRectangular(yaw, pitch),
+                                    //The ternary operator with the radius ensures a shield effect rather than a simple implode effect;
+                                    //spherical layers stay out/rings stay out rather than imploding with the horizontal axis
+                                    (entity.ticksExisted % 360) * spinSpeed + h * (360F / particles), shield && i > 0 ? radius : rScale)
+                            .times(shield && i > 0 ? rScale : 1).toMinecraft().add(pos);
+                    Vec3d targetPos = Vector.getOrthogonalVector(Vector.toRectangular(yaw, pitch),
+                                    ((entity.ticksExisted + 1) % 360) * spinSpeed + h * (360F / particles), shield && i > 0 ? radius : rScale)
+                            .times(shield && i > 0 ? rScale : 1).toMinecraft().add(pos);
+                    Vec3d vel = Vec3d.ZERO;
+                    if (randomVel)
+                        vel = vel.add(new Vec3d(world.rand.nextGaussian() * velMult / 120, world.rand.nextGaussian() * velMult / 120,
+                                world.rand.nextGaussian() * velMult / 120));
+                    vel = targetPos.subtract(circlePos).normalize().scale(0.10 * velMult).add(vel);
+                    if (followEntity)
+                        vel = vel.add(entity.motionX, entity.motionY, entity.motionZ);
+                    if (randomClr)
+                        this.clr(AvatarUtils.getRandomNumberInRange(1, 255), AvatarUtils.getRandomNumberInRange(1, 255),
+                                AvatarUtils.getRandomNumberInRange(1, 255), AvatarUtils.getRandomNumberInRange(1, 255));
                     try {
                         this.pos(circlePos).vel(vel).spawn(world, false);
                     } catch (IllegalStateException ignored) {

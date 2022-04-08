@@ -9,10 +9,8 @@ import com.crowsofwar.avatar.bending.bending.custom.demonic.tickhandlers.DemonWi
 import com.crowsofwar.avatar.bending.bending.custom.demonic.tickhandlers.DemonicAuraHandler;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.tickhandlers.HellBastionHandler;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.tickhandlers.InfernalFieldHandler;
-import com.crowsofwar.avatar.bending.bending.custom.hyper.tickhandlers.ChargeHyperBeam;
-import com.crowsofwar.avatar.bending.bending.custom.hyper.tickhandlers.HyperBeamHandler;
-import com.crowsofwar.avatar.bending.bending.custom.hyper.tickhandlers.HyperFormHandler;
-import com.crowsofwar.avatar.bending.bending.custom.hyper.tickhandlers.HyperImplosionHandler;
+import com.crowsofwar.avatar.bending.bending.custom.hyper.tickhandlers.AdventExplosionHandler;
+import com.crowsofwar.avatar.bending.bending.custom.hyper.tickhandlers.*;
 import com.crowsofwar.avatar.bending.bending.custom.ki.tickhandlers.*;
 import com.crowsofwar.avatar.bending.bending.custom.light.tickhandlers.*;
 import com.crowsofwar.avatar.bending.bending.earth.tickhandlers.EarthSpikeHandler;
@@ -28,7 +26,6 @@ import com.crowsofwar.avatar.bending.bending.water.tickhandlers.*;
 import com.crowsofwar.avatar.entity.mob.BisonSummonHandler;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.util.EnumHand;
-import sun.security.provider.ConfigFile;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -100,6 +97,9 @@ public class TickHandlerController {
 	public static TickHandler CHARGE_HYPER_BEAM = new ChargeHyperBeam(56);
 	public static TickHandler HYPER_FORM_HANDLER = new HyperFormHandler(57);
 	public static TickHandler HYPER_IMPLOSION_HANDLER = new HyperImplosionHandler(58);
+	public static TickHandler HYPER_ADVENT_CHARGER = new AdventChargeHandler(59);
+	public static TickHandler HYPER_ADVENT_RAIN = new AdventRainHandler(60);
+	public static TickHandler HYPER_ADVENT_EXPLOSION = new AdventExplosionHandler(61);
 
 
 

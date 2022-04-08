@@ -170,7 +170,7 @@ public class MegatonDiveHandler extends TickHandler {
     private void explosion(EntityLivingBase entity, AbilityMegatonDive dive, World world, float size, int rings, int particles, float velMult) {
         ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(BendingStyles.get(Firebending.ID)).ability(dive).spawnEntity(entity)
                 .clr(255, 20 + AvatarUtils.getRandomNumberInRange(0, 60), 10, AvatarUtils.getRandomNumberInRange(60, 80)).collide(AvatarUtils.getRandomNumberInRange(1, 100) > 80)
-                .collideParticles(AvatarUtils.getRandomNumberInRange(1, 100) > 700)
+                .collideParticles(AvatarUtils.getRandomNumberInRange(1, 100) > 95)
                 .scale(size * AvatarUtils.getRandomNumberInRange(1, 3) / 2).time(24 + AvatarUtils.getRandomNumberInRange(1, 2)).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 70)
                 .swirl(rings, particles, size * 6, 0.75F, 80, 2 * size * velMult, entity,
                         world, false, AvatarEntityUtils.getMiddleOfEntity(entity), ParticleBuilder.SwirlMotionType.OUT,

@@ -8,6 +8,7 @@ import com.crowsofwar.avatar.bending.bending.custom.dark.statctrls.StatCtrlShade
 import com.crowsofwar.avatar.bending.bending.custom.demonic.statctrls.StatCtrlDemonWings;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.statctrls.StatCtrlHellBastion;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.statctrls.StatCtrlInfernalField;
+import com.crowsofwar.avatar.bending.bending.custom.hyper.statctrls.StatCtrlHyperAdvent;
 import com.crowsofwar.avatar.bending.bending.custom.hyper.statctrls.StatCtrlHyperImplosion;
 import com.crowsofwar.avatar.bending.bending.custom.hyper.statctrls.StatCtrlSetHyperBeam;
 import com.crowsofwar.avatar.bending.bending.custom.ki.statctrls.StatCtrlKiFlight;
@@ -108,7 +109,9 @@ public class StatusControlController {
 			CHARGE_HYPER_BEAM = new StatCtrlSetHyperBeam(true),
 			SHOOT_HYPER_BEAM = new StatCtrlSetHyperBeam(false),
 			CHARGE_HYPER_IMPLOSION = new StatCtrlHyperImplosion(true),
-			RELEASE_HYPER_IMPLOSION = new StatCtrlHyperImplosion(false);
+			RELEASE_HYPER_IMPLOSION = new StatCtrlHyperImplosion(false),
+			CHARGE_HYPER_ADVENT = new StatCtrlHyperAdvent(true),
+			RELEASE_HYPER_ADVENT = new StatCtrlHyperAdvent(false);
 	// @formatter:on
 
 	public static StatusControl lookup(int id) {

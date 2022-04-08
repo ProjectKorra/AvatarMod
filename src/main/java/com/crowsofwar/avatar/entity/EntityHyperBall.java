@@ -20,6 +20,7 @@ package com.crowsofwar.avatar.entity;
 import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.custom.dark.Darkbending;
 import com.crowsofwar.avatar.bending.bending.custom.hyper.statctrls.StatCtrlHyperImplosion;
+import com.crowsofwar.avatar.bending.bending.custom.hyper.tickhandlers.AdventRainHandler;
 import com.crowsofwar.avatar.bending.bending.custom.hyper.tickhandlers.HyperImplosionHandler;
 import com.crowsofwar.avatar.bending.bending.custom.ki.Kibending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
@@ -208,7 +209,8 @@ public class EntityHyperBall extends EntityOffensive {
 
     @Override
     public boolean shouldExplode() {
-        return getBehaviour() instanceof HyperImplosionHandler.HyperImplosionBehaviour;
+        return getBehaviour() instanceof HyperImplosionHandler.HyperImplosionBehaviour
+                || getBehaviour() instanceof AdventRainHandler.AdventBehaviour;
     }
 
     @Override
@@ -240,12 +242,12 @@ public class EntityHyperBall extends EntityOffensive {
                     .element(BendingStyles.get(getElement())).
                     clr(getClrRand(), getClrRand(), getClrRand()).spawnEntity(this).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 30)
                     .swirl(rings, particles, getAvgSize() * 1.1F, size * 10, getAvgSize() * 10, -15, this,
-                            world, false, centre, ParticleBuilder.SwirlMotionType.OUT, false, true);
+                            world, false, centre, ParticleBuilder.SwirlMotionType.OUT, false, true, true);
             ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size).time(36 + AvatarUtils.getRandomNumberInRange(0, 4))
                     .element(BendingStyles.get(getElement())).
                     clr(getClrRand(), getClrRand(), getClrRand(), getClrRand()).spawnEntity(this).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 60)
                     .swirl(rings, particles, getAvgSize() * 1.1F, size * 10, getAvgSize() * 10, -15, this,
-                            world, false, centre, ParticleBuilder.SwirlMotionType.OUT, false, true);
+                            world, false, centre, ParticleBuilder.SwirlMotionType.OUT, false, true, true);
 
         }
     }

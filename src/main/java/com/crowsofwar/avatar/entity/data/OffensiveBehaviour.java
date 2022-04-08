@@ -15,6 +15,7 @@ import com.crowsofwar.avatar.bending.bending.custom.demonic.tickhandlers.HellBas
 import com.crowsofwar.avatar.bending.bending.custom.demonic.tickhandlers.InfernalFieldHandler;
 import com.crowsofwar.avatar.bending.bending.custom.hyper.AbilityHyperBlast;
 import com.crowsofwar.avatar.bending.bending.custom.hyper.statctrls.StatCtrlHyperImplosion;
+import com.crowsofwar.avatar.bending.bending.custom.hyper.tickhandlers.AdventRainHandler;
 import com.crowsofwar.avatar.bending.bending.custom.hyper.tickhandlers.HyperImplosionHandler;
 import com.crowsofwar.avatar.bending.bending.custom.ki.AbilityKiBlast;
 import com.crowsofwar.avatar.bending.bending.custom.ki.statctrls.StatCtrlSpiritBomb;
@@ -92,6 +93,7 @@ public abstract class OffensiveBehaviour extends Behavior<EntityOffensive> {
         registerBehavior(AbilityHyperBlast.HyperBlastBehaviour.class);
         registerBehavior(StatCtrlHyperImplosion.HyperImplosionControlled.class);
         registerBehavior(HyperImplosionHandler.HyperImplosionBehaviour.class);
+        registerBehavior(AdventRainHandler.AdventBehaviour.class);
     }
 
     public static class Idle extends OffensiveBehaviour {
