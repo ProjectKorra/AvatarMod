@@ -78,7 +78,7 @@ public class AdventRainHandler extends TickHandler {
 
         }
 
-        if (entity.ticksExisted % (9 + (AvatarUtils.getRandomNumberInRange(1, 10))) == 0) {
+        if (entity.ticksExisted % (5 + (AvatarUtils.getRandomNumberInRange(1, 5))) == 0) {
             //Radius gets smaller as time goes on
             Vec3d look = entity.getLookVec().scale((radius - (chargeDuration / (float) maxCharge) * radius));
             EntityHyperBall ball = new EntityHyperBall(world);
@@ -87,11 +87,12 @@ public class AdventRainHandler extends TickHandler {
             ball.setElement(Hyperbending.ID);
             ball.setPosition(Vector.getEyePos(entity));
             ball.setBehaviour(new AdventBehaviour());
-            ball.setVelocity(look.x * world.rand.nextGaussian(), look.y * world.rand.nextDouble(),
+            ball.setVelocity(look.x * world.rand.nextGaussian(),  world.rand.nextDouble(),
                     look.z * world.rand.nextGaussian());
             ball.setLifeTime(120);
             ball.setDamage(advent.getProperty(DAMAGE, abilityData).floatValue() / 2);
             ball.setTier(7);
+            ball.setEntitySize(advent.getProperty(RADIUS, abilityData).floatValue() / 8);
             //Other attributes set later
             if (!world.isRemote)
                 world.spawnEntity(ball);
@@ -117,7 +118,7 @@ public class AdventRainHandler extends TickHandler {
 
         @Override
         public OffensiveBehaviour onUpdate(EntityOffensive entity) {
-            entity.addVelocity(0, -9.82 / 20, 0);
+            entity.addVelocity(0, -9.82 / 400, 0);
             if (entity.onCollideWithSolid())
                 entity.Explode();
 

@@ -34,8 +34,8 @@ public class RenderHyperBall extends Render<EntityHyperBall> {
         GlStateManager.translate(x, y + entity.height / 1.5, z);
 
 
-        float latStep = (float) Math.PI / 10;
-        float longStep = (float) Math.PI / 10;
+        float latStep = (float) Math.PI / 20;
+        float longStep = (float) Math.PI / 20;
 
         float pulse = MathHelper.sin((entity.ticksExisted + partialTicks) / 10f);
 
