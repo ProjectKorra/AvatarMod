@@ -635,8 +635,7 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
                                 ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(circlePos).spawnEntity(bubble).vel(vel)
                                         .clr(0, 102, 255, 85).scale(size).target(targetPos == Vec3d.ZERO ? pos1 : targetPos)
                                         .time(18 + AvatarUtils.getRandomNumberInRange(0, 4)).element(BendingStyles.get(Waterbending.ID)).spawn(world);
-                            }
-                            catch (IllegalStateException e) {
+                            } catch (IllegalStateException e) {
                                 //Just in case some weird particle shenanigans are going on
                             }
                         }
@@ -659,7 +658,8 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
                 if (bubble.getDefaultState() == EntityWaterBubble.State.BUBBLE)
                     entity.addVelocity(Vector.DOWN.times(0.6));
                 if (bubble.getDefaultState() == EntityWaterBubble.State.ARC) {
-                    waterArc(world, bubble, size);
+                    if (world.isRemote)
+                        waterArc(world, bubble, size);
                     entity.addVelocity(Vector.DOWN.times(0.2));
                 }
 
