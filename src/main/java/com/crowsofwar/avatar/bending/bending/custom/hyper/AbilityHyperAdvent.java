@@ -33,7 +33,7 @@ public class AbilityHyperAdvent extends Ability {
         //The charge status control adds the release status control, but the release status control doesn't activate until the right click button is released.
 
         boolean hasHyperCharge = data.hasStatusControl(RELEASE_HYPER_ADVENT);
-
+        ctx.getAbilityData().setUseNumber(0);
 
         if (bender.consumeChi(getChiCost(ctx) / 4) && !hasHyperCharge) {
             data.addStatusControl(CHARGE_HYPER_ADVENT);

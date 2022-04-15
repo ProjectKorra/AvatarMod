@@ -117,5 +117,6 @@ public class AdventExplosionHandler extends TickHandler {
         if (entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(ADVENT_MOVE_MOD_ID) != null)
             entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(ADVENT_MOVE_MOD_ID);
         ctx.getData().removeStatusControl(StatusControlController.RELEASE_HYPER_ADVENT);
+        ctx.getData().getAbilityData("hyper_advent").setUseNumber(0);
     }
 }

@@ -54,7 +54,7 @@ public class AdventChargeHandler extends TickHandler {
             applyMovementModifier(entity, movementModifier);
 
         //Makes sure the charge is never 0.
-        charge = Math.max((3 * (chargeDuration / maxCharge)) + 1, 1);
+        charge = Math.max((3 * (chargeDuration / (float) maxCharge)) + 1, 1);
         charge = Math.min(charge, 4);
         //We don't want the charge going over 4.
 
@@ -87,16 +87,17 @@ public class AdventChargeHandler extends TickHandler {
 
             //Particles going up:
             int angle = entity.ticksExisted % 360;
-            for (int i = 0; i < 6; i++) {
-                double radians = Math.toRadians(angle + i * 60);
-                double x = Math.cos(radians) * radius * (chargeDuration / (float) maxCharge);
-                double y = chargeDuration / (float) maxCharge * radius * 12;
-                double z = Math.sin(radians) * radius * (chargeDuration / (float) maxCharge);;
-                ParticleBuilder.create(ParticleBuilder.Type.FLASH)
-                        .spawnEntity(entity).pos(pos.add(x, y, z)).clr(getClrRand(), getClrRand(), getClrRand())
-                        .glow(true).time(20).scale(0.5F).vel(world.rand.nextGaussian() / 60,
-                                world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60).spawn(world);
-
+            for (int h = 0; h < (radius * 6)+ 2; h++) {
+                for (int i = 0; i < 2 * charge; i++) {
+                    double radians = Math.toRadians(angle + i * 60);
+                    double x = Math.cos(radians) * radius * (chargeDuration / (float) maxCharge);
+                    double y = radius * 12 * (h + 1) / (radius * 6 + 2F);
+                    double z = Math.sin(radians) * radius * (chargeDuration / (float) maxCharge);
+                    ParticleBuilder.create(ParticleBuilder.Type.FLASH)
+                            .spawnEntity(entity).pos(pos.add(x, y, z)).clr(getClrRand(), getClrRand(), getClrRand())
+                            .glow(true).time(20).scale(0.15F * charge).vel(world.rand.nextGaussian() / 60,
+                                    world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60).spawn(world);
+                }
             }
 
         }
@@ -127,5 +128,6 @@ public class AdventChargeHandler extends TickHandler {
         if (data.hasStatusControl(StatusControlController.RELEASE_HYPER_ADVENT)) {
             data.addTickHandler(TickHandlerController.HYPER_ADVENT_RAIN, ctx);
         }
+        else data.addTickHandler(TickHandlerController.HYPER_ADVENT_EXPLOSION, ctx);
     }
 }

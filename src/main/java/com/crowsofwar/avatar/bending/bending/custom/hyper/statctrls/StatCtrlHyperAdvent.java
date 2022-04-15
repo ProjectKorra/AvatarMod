@@ -36,8 +36,7 @@ public class StatCtrlHyperAdvent extends StatusControl {
                     bender.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(ADVENT_MOVE_MOD_ID);
                 data.removeTickHandler(HYPER_ADVENT_CHARGER, ctx);
                 data.removeTickHandler(HYPER_ADVENT_RAIN, ctx);
-                data.removeTickHandler(HYPER_ADVENT_EXPLOSION, ctx);
-            }
+             }
         }
 
         return true;

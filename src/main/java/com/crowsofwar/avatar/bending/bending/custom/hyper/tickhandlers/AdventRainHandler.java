@@ -75,21 +75,35 @@ public class AdventRainHandler extends TickHandler {
                             60, 1 / radius, entity, world, false, pos, ParticleBuilder.SwirlMotionType.IN, false,
                             true);
 
+            //Particles going up:
+            int angle = entity.ticksExisted % 360;
+            for (int h = 0; h < (radius * 6)+ 2; h++) {
+                for (int i = 0; i < 6; i++) {
+                    double radians = Math.toRadians(angle + i * 60);
+                    double x = Math.cos(radians) * radius * (chargeDuration / (float) maxCharge);
+                    double y = radius * 12 * (h + 1) / (radius * 6 + 2F);
+                    double z = Math.sin(radians) * radius * (chargeDuration / (float) maxCharge);
+                    ParticleBuilder.create(ParticleBuilder.Type.FLASH)
+                            .spawnEntity(entity).pos(pos.add(x, y, z)).clr(getClrRand(), getClrRand(), getClrRand())
+                            .glow(true).time(20).scale(0.65F).vel(world.rand.nextGaussian() / 60,
+                                    world.rand.nextGaussian() / 60, world.rand.nextGaussian() / 60).spawn(world);
+                }
+            }
 
         }
 
-        if (entity.ticksExisted % (5 + (AvatarUtils.getRandomNumberInRange(1, 5))) == 0) {
+        if (entity.ticksExisted % 5 == 0) {
             //Radius gets smaller as time goes on
             Vec3d look = entity.getLookVec().scale((radius - (chargeDuration / (float) maxCharge) * radius));
             EntityHyperBall ball = new EntityHyperBall(world);
             ball.setAbility(advent);
             ball.setOwner(entity);
             ball.setElement(Hyperbending.ID);
-            ball.setPosition(Vector.getEyePos(entity));
+            ball.setPosition(Vector.getEyePos(entity).plusY(10));
             ball.setBehaviour(new AdventBehaviour());
             ball.setVelocity(look.x * world.rand.nextGaussian(),  world.rand.nextDouble(),
                     look.z * world.rand.nextGaussian());
-            ball.setLifeTime(120);
+            ball.setLifeTime(140);
             ball.setDamage(advent.getProperty(DAMAGE, abilityData).floatValue() / 2);
             ball.setTier(7);
             ball.setEntitySize(advent.getProperty(RADIUS, abilityData).floatValue() / 8);
@@ -109,9 +123,8 @@ public class AdventRainHandler extends TickHandler {
     public void onRemoved(BendingContext ctx) {
         super.onRemoved(ctx);
         BendingData data = ctx.getData();
-        if (data.hasStatusControl(StatusControlController.RELEASE_HYPER_ADVENT)) {
-            data.addTickHandler(TickHandlerController.HYPER_ADVENT_EXPLOSION, ctx);
-        }
+        data.addTickHandler(TickHandlerController.HYPER_ADVENT_EXPLOSION, ctx);
+
     }
 
     public static class AdventBehaviour extends OffensiveBehaviour {
