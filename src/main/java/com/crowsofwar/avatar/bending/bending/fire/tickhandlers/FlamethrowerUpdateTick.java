@@ -16,7 +16,6 @@
 */
 package com.crowsofwar.avatar.bending.bending.fire.tickhandlers;
 
-import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.fire.AbilityFlamethrower;
@@ -193,16 +192,16 @@ public class FlamethrowerUpdateTick extends TickHandler {
                                 fadeB * 2);
 
                         if (CLIENT_CONFIG.fireRenderSettings.solidFlamethrowerParticles) {
-                            ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start.toMinecraft()).scale(size * 0.75F).time(lifetime - AvatarUtils.getRandomNumberInRange(0, 2)).collide(true).vel(look.times(speedMult / 1.25).toMinecraft()).
+                            ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(start.toMinecraft()).scale(size * 0.75F).time(lifetime - AvatarUtils.getRandomNumberInRange(0, 2)).collide(world.rand.nextBoolean()).vel(look.times(speedMult / 1.25).toMinecraft()).
                                     ability(flamethrower).collide(true).spawnEntity(entity).spawn(world);
                         }
 
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start.toMinecraft()).time(lifetime + AvatarUtils.getRandomNumberInRange(4, 8)).vel(look.times(speedMult).toMinecraft()).
-                                clr(r, g, b, 180).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(40, 100)).collide(true).collideParticles(true)
+                                clr(r, g, b, 180).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(40, 100)).collide(world.rand.nextBoolean())
                                 .spawnEntity(entity).scale(size * 1.5F).element(BendingStyles.get(Firebending.ID))
                                 .ability(flamethrower).spawn(world);
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start.toMinecraft()).time(lifetime + AvatarUtils.getRandomNumberInRange(4, 8)).vel(look.times(speedMult).toMinecraft()).
-                                clr(r, g + 15, b, 180).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(40, 100)).collide(true).collideParticles(true)
+                                clr(r, g + 15, b, 180).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(40, 100)).collide(world.rand.nextBoolean()).collideParticles(world.rand.nextBoolean())
                                 .spawnEntity(entity).scale(size * 1.5F).element(BendingStyles.get(Firebending.ID))
                                 .ability(flamethrower).spawn(world);
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(start.toMinecraft()).time(lifetime + AvatarUtils.getRandomNumberInRange(4, 8)).vel(look.times(speedMult).toMinecraft()).
@@ -225,7 +224,7 @@ public class FlamethrowerUpdateTick extends TickHandler {
                 if (world.isRemote) {
                     //Fix lag
                     for (int i = 0; i < 30; i++)
-                        ParticleBuilder.create(ParticleBuilder.Type.SNOW).collide(true).time(12 + AvatarUtils.getRandomNumberInRange(0, 3)).vel(world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40)
+                        ParticleBuilder.create(ParticleBuilder.Type.SNOW).collide(world.rand.nextBoolean()).time(12 + AvatarUtils.getRandomNumberInRange(0, 3)).vel(world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40, world.rand.nextGaussian() / 40)
                                 .scale(0.125F + flamethrower.getProperty(SIZE, abilityData).floatValue() / 2).pos(getEyePos(entity).plus(Vector.getLookRectangular(entity)).toMinecraft()).clr(1F, 1F, 1F, 0.85F).spawn(world);
 
                 }

@@ -154,7 +154,7 @@ public class AbilityFireShot extends Ability {
                                 world.rand.nextGaussian() / 80 + velocity.y(), world.rand.nextGaussian() / 80 + velocity.z())
                                 .time(12 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(1F, (40 + AvatarUtils.getRandomNumberInRange(0, 60)) / 255F,
                                 10 / 255F, 0.75F).spawnEntity(entity)
-                                .scale(size / 2F).element(BendingStyles.get(Firebending.ID)).collide(true).collideParticles(true).ability(this).spawn(world);
+                                .scale(size / 2F).element(BendingStyles.get(Firebending.ID)).collide(world.rand.nextBoolean()).collideParticles(true).ability(this).spawn(world);
                     }
                 }
             } else {
@@ -244,7 +244,7 @@ public class AbilityFireShot extends Ability {
                         int bRandom = fade[2] < 100 ? AvatarUtils.getRandomNumberInRange(0, fade[2] * 2) : AvatarUtils.getRandomNumberInRange(fade[2] / 2,
                                 fade[2] * 2);
                         Vec3d centre = AvatarEntityUtils.getBottomMiddleOfEntity(entity);
-                        ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(BendingStyles.get(Firebending.ID)).collide(true)
+                        ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(BendingStyles.get(Firebending.ID)).collide(world.rand.nextBoolean())
                                 .clr(rgb[0], rgb[1], rgb[2]).fade(rRandom, gRandom, bRandom, (int) (0.75F * AvatarUtils.getRandomNumberInRange(100, 175)))
                                 .time(16).spawnEntity(entity.getOwner())
                                 .scale(size).spawnEntity(entity).swirl(rings, particles, maxRadius,
@@ -274,7 +274,7 @@ public class AbilityFireShot extends Ability {
 
                         Vec3d centre = AvatarEntityUtils.getBottomMiddleOfEntity(entity);
                         centre = centre.add(randX, randY + entity.getAvgSize() / 2, randZ);
-                        ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(BendingStyles.get(Firebending.ID)).collide(true)
+                        ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(BendingStyles.get(Firebending.ID)).collide(world.rand.nextBoolean())
                                 .clr(rgb[0], rgb[1], rgb[2]).fade(rRandom, gRandom, bRandom, (int) (0.70F * AvatarUtils.getRandomNumberInRange(100, 175))).time(10 + AvatarUtils.getRandomNumberInRange(0, 10))
                                 .scale(size).spawnEntity(entity).swirl(rings, particles, entity.getAvgSize() * 0.75F,
                                 size / 2, (float) (entity.velocity().magnitude() * 10), size * 2, entity,

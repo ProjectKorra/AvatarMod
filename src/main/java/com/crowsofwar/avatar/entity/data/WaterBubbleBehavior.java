@@ -67,14 +67,20 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
 
     //For some reason this works extremely well at high velocities for a beam. Replace water blast with this.
     private static void bubbleSwirl(EntityOffensive entity, World world) {
-        ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(255, 255, 255, 50).gravity(true)
-                .time(16).scale(0.5F).spawnEntity(entity).element(BendingStyles.get(Waterbending.ID))
-                .spin(entity.getAvgSize() / 10, world.rand.nextGaussian() / 20)
-                .swirl((int) (entity.getAvgSize() * 12), (int) (entity.getAvgSize() * 2 * Math.PI),
-                        entity.getAvgSize() * 0.85F, entity.getAvgSize() * 5, ((EntityWaterBubble) entity).getDegreesPerSecond()
-                                * entity.getAvgSize(),
-                        (float) (world.rand.nextGaussian() / 8F), entity, world, true, AvatarEntityUtils.getBottomMiddleOfEntity(entity),
-                        ParticleBuilder.SwirlMotionType.OUT, false, true);
+        try {
+            ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(255, 255, 255, 50).gravity(true)
+                    .time(16).scale(0.5F).spawnEntity(entity).element(BendingStyles.get(Waterbending.ID))
+                    .spin(entity.getAvgSize() / 10, world.rand.nextGaussian() / 20)
+                    .swirl((int) (entity.getAvgSize() * 12), (int) (entity.getAvgSize() * 2 * Math.PI),
+                            entity.getAvgSize() * 0.85F, entity.getAvgSize() * 5, ((EntityWaterBubble) entity).getDegreesPerSecond()
+                                    * entity.getAvgSize(),
+                            (float) (world.rand.nextGaussian() / 8F), entity, world, true, AvatarEntityUtils.getBottomMiddleOfEntity(entity),
+                            ParticleBuilder.SwirlMotionType.OUT, false, true);
+        }
+        catch (IllegalStateException e) {
+            //Do nothing
+            //Should prevent some errors
+        }
     }
 
     public static class Drop extends WaterBubbleBehavior {

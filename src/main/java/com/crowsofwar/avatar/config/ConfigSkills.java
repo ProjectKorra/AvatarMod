@@ -110,13 +110,13 @@ public class ConfigSkills {
 		public float speedMult  = 1;
 
 		@Load
-		public float chiMult = 0.675F;
+		public float chiMult = 0.5875F;
 
 		@Load
 		public float chiHitMult = 1.5F;
 
 		@Load
-		public float cooldownMult = 0.425F;
+		public float cooldownMult = 0.400F;
 
 		@Load
 		public float exhaustionMult = 0.675F;
