@@ -268,7 +268,7 @@ public class AirBurstHandler extends TickHandler {
                     int particles = (int) (Math.sqrt(maxRadius) * 2 * Math.PI);
                     Vec3d centre = AvatarEntityUtils.getBottomMiddleOfEntity(entity);
                     ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size)
-                            .time(24).collide(true)
+                            .time(24).collide(world.rand.nextBoolean())
                             .element(BendingStyles.get(entity.getElement())).clr(0.95F, 0.95F, 0.95F, 0.090F).spawnEntity(entity.getOwner())
                             .swirl(rings, particles, maxRadius * 0.875F, maxRadius / 2, maxRadius * 10,
                                     //Base value is 6. Spd/2 is applied to the shockwave. Without charging, divide by 2 again.

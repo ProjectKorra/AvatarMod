@@ -40,6 +40,7 @@ import net.minecraft.world.World;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
 import static com.crowsofwar.avatar.util.data.StatusControlController.PLACE_BLOCK;
@@ -124,7 +125,9 @@ public class AbilityEarthControl extends Ability {
             maxBlocks = 3;
 
         List<EntityFloatingBlock> blocks = world.getEntitiesWithinAABB(EntityFloatingBlock.class,
-                entity.getEntityBoundingBox().grow(3, 2, 3));
+                entity.getEntityBoundingBox().grow(5, 5, 5)).stream().filter(entityFloatingBlock ->
+                entityFloatingBlock.getOwner() == entity && entityFloatingBlock.getBehavior() instanceof FloatingBlockBehavior.PlayerControlled)
+                .collect(Collectors.toList());
         for (EntityFloatingBlock b : blocks) {
             if (b.getController() == entity)
                 heldBlocks++;
