@@ -483,7 +483,7 @@ public class EntitySkyBison extends EntityBender implements IEntityOwnable, IInv
 		if (index > -1) {
 
 			//Fix this as well, since the max age is now 7. Yay.
-			float sizeOffset = condition.getAgeDays() < 7 ? condition.getAgeDays() / condition.getAdultAge() / 2F : 1F;
+			float sizeOffset = condition.getAgeDays() < 7 ? condition.getAgeDays() / condition.getAdultAge() / 2F : 2F;
 			double offset = 0.75;
 			double angle = (index + 0.5) * Math.PI - toRadians(rotationYaw);
 			double yOffset = passenger.getYOffset() + (2.5 * (sizeOffset + 0.35));
