@@ -427,7 +427,7 @@ public abstract class WaterBubbleBehavior extends OffensiveBehaviour {
 
                             //Now do the same thing with velocity
                             Vec3d look = bubble.getLookVec().scale(push / 40);
-                            ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(255, 255, 255, 110).collide(true).collideParticles(true)
+                            ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(255, 255, 255, 110).collide(world.rand.nextBoolean()).collideParticles(world.rand.nextBoolean())
                                     .pos(xRand, yRand, zRand).time(40).spawnEntity(bubble).vel(look.add(world.rand.nextGaussian() / 10,
                                             world.rand.nextGaussian() / 10, world.rand.nextGaussian() / 10)).element(BendingStyles.get(Waterbending.ID))
                                     .scale(1F).spawn(world);
