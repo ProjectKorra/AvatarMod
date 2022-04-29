@@ -167,7 +167,6 @@ public class WaterSkateHandler extends TickHandler {
 
                     if (player.collidedHorizontally)
                         player.motionY = 0.5;
-                    AvatarUtils.afterVelocityAdded(player);
 
 //                    if (!world.isRemote) {
 //                        if (world.isAirBlock(player.getPosition().down()))
