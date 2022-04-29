@@ -203,6 +203,7 @@ public class AvatarMod {
 
 
         /*              Hyper               */
+        Abilities.register(new AbilityHyperFlight());
         Abilities.register(new AbilityHyperBlast());
         Abilities.register(new AbilityHyperBeam());
         Abilities.register(new AbilityHyperForm());

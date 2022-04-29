@@ -100,6 +100,7 @@ public class TickHandlerController {
 	public static TickHandler HYPER_ADVENT_CHARGER = new AdventChargeHandler(59);
 	public static TickHandler HYPER_ADVENT_RAIN = new AdventRainHandler(60);
 	public static TickHandler HYPER_ADVENT_EXPLOSION = new AdventExplosionHandler(61);
+	public static TickHandler HYPER_FLIGHT_HANDLER = new HyperFlightHandler(62);
 
 
 

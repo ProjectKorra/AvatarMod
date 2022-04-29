@@ -1,7 +1,7 @@
-package com.crowsofwar.avatar.bending.bending.custom.ki.statctrls;
+package com.crowsofwar.avatar.bending.bending.custom.hyper.statctrls;
 
 import com.crowsofwar.avatar.bending.bending.Abilities;
-import com.crowsofwar.avatar.bending.bending.custom.ki.AbilityKiFlight;
+import com.crowsofwar.avatar.bending.bending.custom.hyper.AbilityHyperFlight;
 import com.crowsofwar.avatar.client.controls.AvatarControl;
 import com.crowsofwar.avatar.entity.mob.EntityBender;
 import com.crowsofwar.avatar.util.AvatarUtils;
@@ -11,9 +11,6 @@ import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.StatusControl;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
 import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockLiquid;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -22,11 +19,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import static com.crowsofwar.avatar.bending.bending.Ability.*;
-import static com.crowsofwar.avatar.util.data.TickHandlerController.KI_FLIGHT_HANDlER;
+import static com.crowsofwar.avatar.util.data.TickHandlerController.HYPER_FLIGHT_HANDLER;
 
-public class StatCtrlKiFlight extends StatusControl {
+public class StatCtrlHyperFlight extends StatusControl {
 
-    public StatCtrlKiFlight() {
+    public StatCtrlHyperFlight() {
         super(15, AvatarControl.CONTROL_JUMP, CrosshairPosition.BELOW_CROSSHAIR);
     }
 
@@ -39,8 +36,8 @@ public class StatCtrlKiFlight extends StatusControl {
         BendingData data = ctx.getData();
         World world = ctx.getWorld();
 
-        AbilityData abilityData = data.getAbilityData("ki_flight");
-        AbilityKiFlight flight = (AbilityKiFlight) Abilities.get("ki_flight");
+        AbilityData abilityData = data.getAbilityData("hyper_flight");
+        AbilityHyperFlight flight = (AbilityHyperFlight) Abilities.get("hyper_flight");
 
         if (flight != null) {
             float chiCost, exhaustion, burnOut;
@@ -94,14 +91,8 @@ public class StatCtrlKiFlight extends StatusControl {
                 entity.addVelocity(velocity.x(), velocity.y(), velocity.z());
                 AvatarUtils.afterVelocityAdded(entity);
 
-                IBlockState state = world.getBlockState(entity.getPosition());
-                Block currentBlock = state.getBlock();
-                if (!(currentBlock instanceof BlockLiquid) && !state.isFullBlock() && !state.isFullCube()) {
-               //     damageNearbyEntities(ctx);
-                }
 
-
-                data.addTickHandler(KI_FLIGHT_HANDlER, ctx);
+                data.addTickHandler(HYPER_FLIGHT_HANDLER, ctx);
                 data.getMiscData().setFallAbsorption(fallAbsorption);
 
                 abilityData.addXp(flight.getProperty(XP_USE, abilityData).floatValue());
@@ -115,7 +106,7 @@ public class StatCtrlKiFlight extends StatusControl {
                 abilityData.setAbilityCooldown(0);
                 if (entity instanceof EntityPlayer)
                     ((EntityPlayer) entity).capabilities.isFlying = true;
-                
+
                 return true;
 
             }
@@ -124,6 +115,7 @@ public class StatCtrlKiFlight extends StatusControl {
         return false;
 
     }
+
 
 }
 
