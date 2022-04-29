@@ -1,7 +1,7 @@
 package com.crowsofwar.avatar.bending.bending.custom.abyss;
 
 import com.crowsofwar.avatar.bending.bending.Ability;
-import com.crowsofwar.avatar.bending.bending.custom.abyss.powermods.HyperFormPowerModifier;
+import com.crowsofwar.avatar.bending.bending.custom.abyss.powermods.AbyssFormPowerModifier;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
@@ -13,12 +13,13 @@ import net.minecraft.world.World;
 
 import java.util.Objects;
 
+import static com.crowsofwar.avatar.util.data.TickHandlerController.ABYSS_FORM_HANDLER;
 import static com.crowsofwar.avatar.util.data.TickHandlerController.HYPER_FORM_HANDLER;
 
 public class AbilityAbyssalForm extends Ability {
 
     public AbilityAbyssalForm() {
-        super(Abyssbending.ID, "hyper_form");
+        super(Abyssbending.ID, "abyss_form");
     }
 
     @Override
@@ -44,7 +45,7 @@ public class AbilityAbyssalForm extends Ability {
 
         float chi = getChiCost(ctx);
 
-        if (!data.hasTickHandler(HYPER_FORM_HANDLER)) {
+        if (!data.hasTickHandler(ABYSS_FORM_HANDLER)) {
             if (bender.consumeChi(chi)) {
 
                 //Buff abilities are unaffected by powerrating, otherwise they'd be stupid good
@@ -79,7 +80,7 @@ public class AbilityAbyssalForm extends Ability {
 
                 if (data.hasBendingId(getBendingId())) {
 
-                    HyperFormPowerModifier modifier = new HyperFormPowerModifier();
+                    AbyssFormPowerModifier modifier = new AbyssFormPowerModifier();
                     modifier.setTicks(-1);
 
                     // Ignore warning; we know manager != null if they have the bending style
@@ -89,11 +90,11 @@ public class AbilityAbyssalForm extends Ability {
                 }
 
                 abilityData.addXp(getProperty(XP_USE, ctx).floatValue());
-                data.addTickHandler(HYPER_FORM_HANDLER, ctx);
+                data.addTickHandler(ABYSS_FORM_HANDLER, ctx);
 
             }
         } else {
-            data.removeTickHandler(HYPER_FORM_HANDLER, ctx);
+            data.removeTickHandler(ABYSS_FORM_HANDLER, ctx);
             Objects.requireNonNull(data.getPowerRatingManager(getBendingId())).clearModifiers(ctx);
         }
 

@@ -13,7 +13,7 @@ import java.util.UUID;
 
 public class Abyssbending extends BendingStyle {
 
-    public static final UUID ID = UUID.fromString("0c69057b-bdc4-406b-b185-a3c76c164df3");
+    public static final UUID ID = UUID.fromString("b7d068e0-13c5-4b1f-b1fc-a2681f2108b5");
 
     private BendingMenuInfo menu;
 
@@ -21,7 +21,7 @@ public class Abyssbending extends BendingStyle {
         registerAbilities();
         Color light = new Color(100, 200, 255);
         Color dark = new Color(50, 100, 175);
-        Color iconClr = new Color(255, 255, 255);
+        Color iconClr = new Color(25, 25, 25);
         MenuTheme.ThemeColor background = new MenuTheme.ThemeColor(light, dark);
         MenuTheme.ThemeColor edge = new MenuTheme.ThemeColor(dark, dark);
         MenuTheme.ThemeColor icon = new MenuTheme.ThemeColor(iconClr, iconClr);
@@ -51,7 +51,7 @@ public class Abyssbending extends BendingStyle {
 
     @Override
     public String getName() {
-        return "hyperbending";
+        return "abyssbending";
     }
 
     @Override

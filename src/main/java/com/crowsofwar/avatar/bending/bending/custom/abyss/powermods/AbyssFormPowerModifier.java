@@ -10,7 +10,7 @@ import com.crowsofwar.avatar.util.data.ctx.BendingContext;
 
 import java.util.Objects;
 
-public class HyperFormPowerModifier extends PowerRatingModifier {
+public class AbyssFormPowerModifier extends PowerRatingModifier {
 
     @Override
     public double get(BendingContext ctx) {
@@ -19,7 +19,7 @@ public class HyperFormPowerModifier extends PowerRatingModifier {
         AbilityData abilityData = data.getAbilityData(new AbilityAbyssalForm());
 
         //Powerrating should be an integer but I'll leave it as a double toa count for user error
-        return Objects.requireNonNull(Abilities.get("hyper_form")).getProperty(Ability.POWERRATING, abilityData).doubleValue();
+        return Objects.requireNonNull(Abilities.get("abyss_form")).getProperty(Ability.POWERRATING, abilityData).doubleValue();
 
     }
 

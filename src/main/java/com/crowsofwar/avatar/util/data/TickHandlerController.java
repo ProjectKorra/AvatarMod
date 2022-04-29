@@ -4,6 +4,8 @@ import com.crowsofwar.avatar.bending.bending.combustion.tickhandlers.CombustionA
 import com.crowsofwar.avatar.bending.bending.combustion.tickhandlers.FusionDriveHandler;
 import com.crowsofwar.avatar.bending.bending.combustion.tickhandlers.MegatonDiveHandler;
 import com.crowsofwar.avatar.bending.bending.combustion.tickhandlers.RocketBoostHandler;
+import com.crowsofwar.avatar.bending.bending.custom.abyss.tickhandlers.AbyssFlightHandler;
+import com.crowsofwar.avatar.bending.bending.custom.abyss.tickhandlers.AbyssFormHandler;
 import com.crowsofwar.avatar.bending.bending.custom.dark.tickhandlers.*;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.tickhandlers.DemonWingsHandler;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.tickhandlers.DemonicAuraHandler;
@@ -101,6 +103,8 @@ public class TickHandlerController {
 	public static TickHandler HYPER_ADVENT_RAIN = new AdventRainHandler(60);
 	public static TickHandler HYPER_ADVENT_EXPLOSION = new AdventExplosionHandler(61);
 	public static TickHandler HYPER_FLIGHT_HANDLER = new HyperFlightHandler(62);
+	public static TickHandler ABYSS_FORM_HANDLER = new AbyssFormHandler(63);
+	public static TickHandler ABYSS_FLIGHT_HANDLER = new AbyssFlightHandler(64);
 
 
 

@@ -2,6 +2,7 @@ package com.crowsofwar.avatar.util.data;
 
 import com.crowsofwar.avatar.bending.bending.air.statctrls.*;
 import com.crowsofwar.avatar.bending.bending.combustion.statctrls.StatCtrlRocketBoost;
+import com.crowsofwar.avatar.bending.bending.custom.abyss.statctrls.StatCtrlAbyssFlight;
 import com.crowsofwar.avatar.bending.bending.custom.dark.statctrls.StatCtrlDeathDescent;
 import com.crowsofwar.avatar.bending.bending.custom.dark.statctrls.StatCtrlSetOblivionBeam;
 import com.crowsofwar.avatar.bending.bending.custom.dark.statctrls.StatCtrlShadeBurst;
@@ -113,7 +114,8 @@ public class StatusControlController {
 			RELEASE_HYPER_IMPLOSION = new StatCtrlHyperImplosion(false),
 			CHARGE_HYPER_ADVENT = new StatCtrlHyperAdvent(true),
 			RELEASE_HYPER_ADVENT = new StatCtrlHyperAdvent(false),
-			HYPER_FLIGHT = new StatCtrlHyperFlight();
+			HYPER_FLIGHT = new StatCtrlHyperFlight(),
+			ABYSS_FLIGHT = new StatCtrlAbyssFlight();
 	// @formatter:on
 
 	public static StatusControl lookup(int id) {

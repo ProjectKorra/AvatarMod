@@ -23,6 +23,9 @@ import com.crowsofwar.avatar.bending.bending.AbilityModifiers;
 import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.air.*;
 import com.crowsofwar.avatar.bending.bending.combustion.*;
+import com.crowsofwar.avatar.bending.bending.custom.abyss.AbilityAbyssFlight;
+import com.crowsofwar.avatar.bending.bending.custom.abyss.AbilityAbyssalForm;
+import com.crowsofwar.avatar.bending.bending.custom.abyss.Abyssbending;
 import com.crowsofwar.avatar.bending.bending.custom.dark.*;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.*;
 import com.crowsofwar.avatar.bending.bending.custom.hyper.*;
@@ -210,6 +213,10 @@ public class AvatarMod {
         Abilities.register(new AbilityHyperImplosion());
         Abilities.register(new AbilityHyperAdvent());
 
+        /*              Abyss               */
+        Abilities.register(new AbilityAbyssalForm());
+        Abilities.register(new AbilityAbyssFlight());
+
 
     }
 
@@ -230,6 +237,7 @@ public class AvatarMod {
         BendingStyles.register(new Lightbending());
         BendingStyles.register(new Demonbending());
         BendingStyles.register(new Hyperbending());
+        BendingStyles.register(new Abyssbending());
 
     }
 

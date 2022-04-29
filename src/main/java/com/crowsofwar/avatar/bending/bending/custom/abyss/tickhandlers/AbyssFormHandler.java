@@ -19,9 +19,9 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 
-public class HyperFormHandler extends TickHandler {
+public class AbyssFormHandler extends TickHandler {
 
-    public HyperFormHandler(int id) {
+    public AbyssFormHandler(int id) {
         super(id);
     }
 
@@ -29,12 +29,12 @@ public class HyperFormHandler extends TickHandler {
     public boolean tick(BendingContext ctx) {
         EntityLivingBase entity = ctx.getBenderEntity();
         BendingData data = ctx.getData();
-        AbilityData aD = data.getAbilityData("hyper_form");
+        AbilityData aD = data.getAbilityData("abyss_form");
         World world = ctx.getWorld();
 
-        AbilityAbyssalForm hyperForm = (AbilityAbyssalForm) Abilities.get("hyper_form");
+        AbilityAbyssalForm hyperForm = (AbilityAbyssalForm) Abilities.get("abyss_form");
         int duration = data.getTickHandlerDuration(this);
-        float scale = 0.75F + Math.max(0, aD.getLevel()) * 0.125F;
+        float scale = 1F;
 
         assert hyperForm != null;
         int kaioKenDuration = hyperForm.getProperty(Ability.DURATION, aD).intValue();
@@ -59,8 +59,14 @@ public class HyperFormHandler extends TickHandler {
             Vec3d pos = AvatarEntityUtils.getBottomMiddleOfEntity(entity);
             pos = entity.onGround ? pos.add(0, entity.getEyeHeight(), 0) : pos.add(0, entity.getEyeHeight() / 2, 0);
             ParticleBuilder.create(ParticleBuilder.Type.FLASH).time(25 + AvatarUtils.getRandomNumberInRange(1, 2)).
-                    clr(r, g, b, 10).fade(getClrRand(), getClrRand(), getClrRand(), AvatarUtils.getRandomNumberInRange(10, 20))
-                    .element(BendingStyles.get(Abyssbending.ID)).scale(scale).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 10).swirl((int) (kaioKenDuration / 20 * scale),
+                    clr(r, g, b, 10).fade(getClrRand(), getClrRand(), getClrRand(), AvatarUtils.getRandomNumberInRange(40, 80))
+                    .element(BendingStyles.get(Abyssbending.ID)).scale(scale).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 25).swirl((int) (kaioKenDuration / 20 * scale),
+                            (int) (scale * Math.PI), scale, scale / 2, kaioKenDuration * 20, (0.5F / scale),
+                            entity, world, true, pos,
+                            ParticleBuilder.SwirlMotionType.OUT, false, true);
+            ParticleBuilder.create(ParticleBuilder.Type.FLASH).time(25 + AvatarUtils.getRandomNumberInRange(1, 2)).
+                    clr(r, g, b, 10).fade(getClrRand(), getClrRand(), getClrRand(), AvatarUtils.getRandomNumberInRange(40, 80))
+                    .element(BendingStyles.get(Abyssbending.ID)).scale(scale).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 55).swirl((int) (kaioKenDuration / 20 * scale),
                             (int) (scale * Math.PI), scale, scale / 2, kaioKenDuration * 20, (0.5F / scale),
                             entity, world, true, pos,
                             ParticleBuilder.SwirlMotionType.OUT, false, true);
@@ -83,14 +89,14 @@ public class HyperFormHandler extends TickHandler {
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(location.plus(Vector.getEntityPos(entity)).toMinecraft()).time(4 + AvatarUtils.getRandomNumberInRange(1, 4)).
                         vel(world.rand.nextGaussian() / 40, world.rand.nextDouble() / 2, world.rand.nextGaussian() / 40)
                         .clr(r, g, b, 150).fade(getClrRand(), getClrRand(), getClrRand(), AvatarUtils.getRandomNumberInRange(20, 40))
-                        .element(BendingStyles.get(Kibending.ID)).scale(scale * 1.5F).glow(true).spawn(world);
+                        .scale(scale * 1.5F).glow(world.rand.nextBoolean()).spawn(world);
             }
         }
         return false;// duration >= kaioKenDuration;
     }
 
     private int getClrRand() {
-        return AvatarUtils.getRandomNumberInRange(1, 255);
+        return AvatarUtils.getRandomNumberInRange(1, 30);
     }
 }
 
