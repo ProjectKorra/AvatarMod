@@ -7,8 +7,8 @@ import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 
-import static com.crowsofwar.avatar.util.data.StatusControlController.CHARGE_HYPER_IMPLOSION;
-import static com.crowsofwar.avatar.util.data.StatusControlController.RELEASE_HYPER_IMPLOSION;
+import static com.crowsofwar.avatar.util.data.StatusControlController.CHARGE_ABYSS_IMPLOSION;
+import static com.crowsofwar.avatar.util.data.StatusControlController.RELEASE_ABYSS_IMPLOSION;
 
 public class AbilityAbyssImplosion extends Ability {
     public static final String
@@ -16,7 +16,7 @@ public class AbilityAbyssImplosion extends Ability {
             SLOW_MULT = "slowMult";
 
     public AbilityAbyssImplosion() {
-        super(Abyssbending.ID, "hyper_implosion");
+        super(Abyssbending.ID, "abyss_implosion");
     }
 
     @Override
@@ -33,14 +33,14 @@ public class AbilityAbyssImplosion extends Ability {
 
         //The charge status control adds the release status control, but the release status control doesn't activate until the right click button is released.
 
-        boolean hasHyperCharge = data.hasStatusControl(RELEASE_HYPER_IMPLOSION);
+        boolean hasHyperCharge = data.hasStatusControl(RELEASE_ABYSS_IMPLOSION);
 
 
         if (bender.consumeChi(getChiCost(ctx) / 4) && !hasHyperCharge) {
-            data.addStatusControl(CHARGE_HYPER_IMPLOSION);
+            data.addStatusControl(CHARGE_ABYSS_IMPLOSION);
         } else if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) {
             if (!hasHyperCharge) {
-                data.addStatusControl(CHARGE_HYPER_IMPLOSION);
+                data.addStatusControl(CHARGE_ABYSS_IMPLOSION);
             }
         }
         super.execute(ctx);

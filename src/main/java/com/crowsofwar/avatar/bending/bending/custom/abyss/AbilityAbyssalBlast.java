@@ -51,11 +51,11 @@ public class AbilityAbyssalBlast extends Ability {
 
 
     public AbilityAbyssalBlast() {
-        super(Abyssbending.ID, "hyper_blast");
+        super(Abyssbending.ID, "abyss_blast");
     }
 
     private static float getClrRand() {
-        return AvatarUtils.getRandomNumberInRange(1, 255) / 255F;
+        return AvatarUtils.getRandomNumberInRange(1, 25) / 255F;
     }
 
     @Override
@@ -130,12 +130,12 @@ public class AbilityAbyssalBlast extends Ability {
                     double spawnY = position.y();
                     double spawnZ = position.z();
                     ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x(),
-                                    world.rand.nextGaussian() / 80 + velocity.y(), world.rand.nextGaussian() / 80 + velocity.z()).glow(true)
-                            .time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(0.95F, 0.95F, 0.95F, 0.05F).spawnEntity(entity)
+                                    world.rand.nextGaussian() / 80 + velocity.y(), world.rand.nextGaussian() / 80 + velocity.z()).glow(world.rand.nextBoolean())
+                            .time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(0.05F, 0.05F, 0.05F, 0.05F).spawnEntity(entity)
                             .scale(size * (1 / size)).element(BendingStyles.get(Abyssbending.ID)).collide(world.rand.nextBoolean()).spawn(world);
                     ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x(),
-                                    world.rand.nextGaussian() / 80 + velocity.y(), world.rand.nextGaussian() / 80 + velocity.z()).glow(true)
-                            .time(10 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(0.95F, 0.95F, 0.95F, 0.05F).spawnEntity(entity)
+                                    world.rand.nextGaussian() / 80 + velocity.y(), world.rand.nextGaussian() / 80 + velocity.z()).glow(false)
+                            .time(10 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(0.05F, 0.05F, 0.05F, 0.05F).spawnEntity(entity)
                             .scale(size * (1 / size)).element(BendingStyles.get(Abyssbending.ID)).collide(world.rand.nextBoolean()).spawn(world);
                     entity.swingArm(world.rand.nextBoolean() ? EnumHand.MAIN_HAND : EnumHand.OFF_HAND);
                 }
@@ -170,7 +170,7 @@ public class AbilityAbyssalBlast extends Ability {
                     int particles = (int) (Math.min((int) (entity.getAvgSize() * Math.PI), 2) + (entity.velocity().magnitude() / 20));
                     Vec3d centre = AvatarEntityUtils.getMiddleOfEntity(entity);
                     ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(BendingStyles.get(Airbending.ID)).collide(AvatarUtils.getRandomNumberInRange(1, 100) > 90)
-                            .clr(getClrRand(), getClrRand(), getClrRand(), 0.035F).time(12).glow(true)
+                            .clr(getClrRand(), getClrRand(), getClrRand(), 0.035F).time(12).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 96)
                             .scale(size * 0.75F).spawnEntity(entity).swirl(rings, particles, entity.getAvgSize() * 0.75F,
                                     size / 3F, (float) (entity.velocity().sqrMagnitude() / 10 * entity.getAvgSize()), (-0.75F / size), entity,
                                     world, true, centre, ParticleBuilder.SwirlMotionType.IN,
@@ -189,12 +189,12 @@ public class AbilityAbyssalBlast extends Ability {
                         double spawnY = pos.y;
                         double spawnZ = pos.z;
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x,
-                                        world.rand.nextGaussian() / 80 + velocity.y, world.rand.nextGaussian() / 80 + velocity.z).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 35)
+                                        world.rand.nextGaussian() / 80 + velocity.y, world.rand.nextGaussian() / 80 + velocity.z).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 90)
                                 .time(4 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(getClrRand(), getClrRand(), getClrRand(), 0.5F).spawnEntity(entity)
-                                .scale(1.25F * entity.getAvgSize() * (1 / entity.getAvgSize())).element(BendingStyles.get(Airbending.ID)).collide(AvatarUtils.getRandomNumberInRange(1, 100) > 70)
+                                .scale(1.25F * entity.getAvgSize() * (1 / entity.getAvgSize())).element(BendingStyles.get(Airbending.ID)).collide(AvatarUtils.getRandomNumberInRange(1, 100) > 99)
                                 .collideParticles(AvatarUtils.getRandomNumberInRange(1, 100) > 70).spawn(world);
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x,
-                                        world.rand.nextGaussian() / 80 + velocity.y, world.rand.nextGaussian() / 80 + velocity.z).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 35)
+                                        world.rand.nextGaussian() / 80 + velocity.y, world.rand.nextGaussian() / 80 + velocity.z).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 90)
                                 .time(16 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(getClrRand(), getClrRand(), getClrRand(), 0.2F).spawnEntity(entity)
                                 .scale(1.25F * entity.getAvgSize() * (1 / entity.getAvgSize())).element(BendingStyles.get(Airbending.ID)).spawn(world);
 

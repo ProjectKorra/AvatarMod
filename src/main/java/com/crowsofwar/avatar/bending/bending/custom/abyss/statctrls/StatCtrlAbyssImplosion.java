@@ -22,6 +22,7 @@ import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.custom.abyss.AbilityAbyssImplosion;
 import com.crowsofwar.avatar.bending.bending.custom.abyss.Abyssbending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
+import com.crowsofwar.avatar.entity.EntityAbyssBall;
 import com.crowsofwar.avatar.entity.EntityHyperBall;
 import com.crowsofwar.avatar.entity.EntityOffensive;
 import com.crowsofwar.avatar.entity.data.OffensiveBehaviour;
@@ -39,24 +40,28 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import static com.crowsofwar.avatar.bending.bending.custom.ki.tickhandlers.SpiritBombHandler.SPIRIT_BOMB_MOVEMENT_MOD_ID;
+import static com.crowsofwar.avatar.bending.bending.custom.abyss.tickhandlers.AbyssImplosionHandler.ABYSS_IMPLOSION_MOVEMENT_MOD_ID;
 import static com.crowsofwar.avatar.client.controls.AvatarControl.CONTROL_RIGHT_CLICK_DOWN;
 import static com.crowsofwar.avatar.client.controls.AvatarControl.CONTROL_RIGHT_CLICK_UP;
 import static com.crowsofwar.avatar.util.data.StatusControl.CrosshairPosition.RIGHT_OF_CROSSHAIR;
-import static com.crowsofwar.avatar.util.data.StatusControlController.RELEASE_HYPER_IMPLOSION;
-import static com.crowsofwar.avatar.util.data.TickHandlerController.HYPER_IMPLOSION_HANDLER;
+import static com.crowsofwar.avatar.util.data.StatusControlController.RELEASE_ABYSS_IMPLOSION;
+import static com.crowsofwar.avatar.util.data.TickHandlerController.ABYSS_IMPLOSION_HANDLER;
 
 /**
  * @author CrowsOfWar
  */
-public class StatCtrlHyperImplosion extends StatusControl {
+public class StatCtrlAbyssImplosion extends StatusControl {
 
     private final boolean setting;
 
-    public StatCtrlHyperImplosion(boolean setting) {
+    public StatCtrlAbyssImplosion(boolean setting) {
         super(setting ? 11 : 12, setting ? CONTROL_RIGHT_CLICK_DOWN : CONTROL_RIGHT_CLICK_UP,
                 RIGHT_OF_CROSSHAIR);
         this.setting = setting;
+    }
+
+    private static int getClrRand() {
+        return AvatarUtils.getRandomNumberInRange(1, 25);
     }
 
     @Override
@@ -65,31 +70,31 @@ public class StatCtrlHyperImplosion extends StatusControl {
         BendingData data = ctx.getData();
         EntityLivingBase bender = ctx.getBenderEntity();
         World world = ctx.getWorld();
-        AbilityData abilityData = ctx.getData().getAbilityData("hyper_implosion");
-        AbilityAbyssImplosion implosion = (AbilityAbyssImplosion) Abilities.get("hyper_implosion");
+        AbilityData abilityData = ctx.getData().getAbilityData("abyss_implosion");
+        AbilityAbyssImplosion implosion = (AbilityAbyssImplosion) Abilities.get("abyss_implosion");
 
         if (data.hasBendingId(Abyssbending.ID) && implosion != null) {
             if (setting) {
                 //Adds the entity here so the player can charge it in the tickhandler.
                 //Really basic attributes are set here, overriden later in the tickhandler.
 
-                EntityHyperBall ball = new EntityHyperBall(world);
+                EntityAbyssBall ball = new EntityAbyssBall(world);
                 ball.setAbility(implosion);
                 ball.setOwner(bender);
                 ball.setElement(Abyssbending.ID);
                 ball.setPosition(Vector.getEyePos(bender).plusY(10));
-                ball.setBehaviour(new HyperImplosionControlled());
+                ball.setBehaviour(new AbyssImplosionControlled());
                 ball.setVelocity(Vector.ZERO);
                 ball.setLifeTime(250);
                 //Other attributes set later
                 if (!world.isRemote)
                     world.spawnEntity(ball);
 
-                data.addStatusControl(RELEASE_HYPER_IMPLOSION);
-                data.addTickHandler(HYPER_IMPLOSION_HANDLER, ctx);
+                data.addStatusControl(RELEASE_ABYSS_IMPLOSION);
+                data.addTickHandler(ABYSS_IMPLOSION_HANDLER, ctx);
             } else {
-                if (bender.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(SPIRIT_BOMB_MOVEMENT_MOD_ID) != null)
-                    bender.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(SPIRIT_BOMB_MOVEMENT_MOD_ID);
+                if (bender.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(ABYSS_IMPLOSION_MOVEMENT_MOD_ID) != null)
+                    bender.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(ABYSS_IMPLOSION_MOVEMENT_MOD_ID);
             }
         }
 
@@ -97,7 +102,7 @@ public class StatCtrlHyperImplosion extends StatusControl {
     }
 
     //Player controlled behaviour for the ball
-    public static class HyperImplosionControlled extends OffensiveBehaviour {
+    public static class AbyssImplosionControlled extends OffensiveBehaviour {
 
         @Override
         public OffensiveBehaviour onUpdate(EntityOffensive entity) {
@@ -118,11 +123,11 @@ public class StatCtrlHyperImplosion extends StatusControl {
                 int particles = (int) (entity.getAvgSize() * Math.PI);
 
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size).time(8 + AvatarUtils.getRandomNumberInRange(0, 4))
-                        .element(BendingStyles.get(entity.getElement())).clr(getClrRand(), getClrRand(), getClrRand(), getClrRand()).spawnEntity(entity).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 15)
+                        .element(BendingStyles.get(entity.getElement())).clr(getClrRand(), getClrRand(), getClrRand(), getClrRand()).spawnEntity(entity).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 95)
                         .swirl(rings, particles, entity.getAvgSize() * 1.1F, size * 15, entity.getAvgSize() * 10, (-1 / size),
                                 entity, world, false, centre, ParticleBuilder.SwirlMotionType.OUT, false, true);
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size).time(8 + AvatarUtils.getRandomNumberInRange(0, 4))
-                        .element(BendingStyles.get(entity.getElement())).clr(getClrRand(), getClrRand(), getClrRand()).spawnEntity(entity).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 50)
+                        .element(BendingStyles.get(entity.getElement())).clr(getClrRand(), getClrRand(), getClrRand()).spawnEntity(entity).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 95)
                         .swirl(rings, particles, entity.getAvgSize() * 1.1F, size * 15, entity.getAvgSize() * 10, (-1 / size),
                                 entity, world, false, centre, ParticleBuilder.SwirlMotionType.OUT, false, true);
 
@@ -151,10 +156,6 @@ public class StatCtrlHyperImplosion extends StatusControl {
         public void save(NBTTagCompound nbt) {
 
         }
-    }
-
-    private static int getClrRand() {
-        return AvatarUtils.getRandomNumberInRange(1, 255);
     }
 
 }

@@ -3,6 +3,8 @@ package com.crowsofwar.avatar.util.data;
 import com.crowsofwar.avatar.bending.bending.air.statctrls.*;
 import com.crowsofwar.avatar.bending.bending.combustion.statctrls.StatCtrlRocketBoost;
 import com.crowsofwar.avatar.bending.bending.custom.abyss.statctrls.StatCtrlAbyssFlight;
+import com.crowsofwar.avatar.bending.bending.custom.abyss.statctrls.StatCtrlAbyssImplosion;
+import com.crowsofwar.avatar.bending.bending.custom.abyss.statctrls.StatCtrlSetAbyssBeam;
 import com.crowsofwar.avatar.bending.bending.custom.dark.statctrls.StatCtrlDeathDescent;
 import com.crowsofwar.avatar.bending.bending.custom.dark.statctrls.StatCtrlSetOblivionBeam;
 import com.crowsofwar.avatar.bending.bending.custom.dark.statctrls.StatCtrlShadeBurst;
@@ -115,7 +117,11 @@ public class StatusControlController {
 			CHARGE_HYPER_ADVENT = new StatCtrlHyperAdvent(true),
 			RELEASE_HYPER_ADVENT = new StatCtrlHyperAdvent(false),
 			HYPER_FLIGHT = new StatCtrlHyperFlight(),
-			ABYSS_FLIGHT = new StatCtrlAbyssFlight();
+			ABYSS_FLIGHT = new StatCtrlAbyssFlight(),
+			CHARGE_ABYSS_BEAM = new StatCtrlSetAbyssBeam(true),
+			SHOOT_ABYSS_BEAM = new StatCtrlSetAbyssBeam(false),
+			CHARGE_ABYSS_IMPLOSION = new StatCtrlAbyssImplosion(true),
+			RELEASE_ABYSS_IMPLOSION = new StatCtrlAbyssImplosion(false);
 	// @formatter:on
 
 	public static StatusControl lookup(int id) {

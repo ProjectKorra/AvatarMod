@@ -6,6 +6,8 @@ import com.crowsofwar.avatar.bending.bending.air.AbilityAirblade;
 import com.crowsofwar.avatar.bending.bending.air.tickhandlers.AirBurstHandler;
 import com.crowsofwar.avatar.bending.bending.air.tickhandlers.ShootAirBurstHandler;
 import com.crowsofwar.avatar.bending.bending.air.tickhandlers.SmashGroundHandler;
+import com.crowsofwar.avatar.bending.bending.custom.abyss.statctrls.StatCtrlAbyssImplosion;
+import com.crowsofwar.avatar.bending.bending.custom.abyss.tickhandlers.AbyssImplosionHandler;
 import com.crowsofwar.avatar.bending.bending.custom.dark.tickhandlers.DeathDescentHandler;
 import com.crowsofwar.avatar.bending.bending.custom.dark.tickhandlers.ShadeBurstHandler;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.AbilityChaosLash;
@@ -94,6 +96,8 @@ public abstract class OffensiveBehaviour extends Behavior<EntityOffensive> {
         registerBehavior(StatCtrlHyperImplosion.HyperImplosionControlled.class);
         registerBehavior(HyperImplosionHandler.HyperImplosionBehaviour.class);
         registerBehavior(AdventRainHandler.AdventBehaviour.class);
+        registerBehavior(StatCtrlAbyssImplosion.AbyssImplosionControlled.class);
+        registerBehavior(AbyssImplosionHandler.AbyssImplosionBehaviour.class);
     }
 
     public static class Idle extends OffensiveBehaviour {

@@ -54,18 +54,18 @@ import java.util.UUID;
 
 import static com.crowsofwar.avatar.bending.bending.Ability.*;
 import static com.crowsofwar.avatar.bending.bending.fire.AbilityFlamethrower.RANDOMNESS;
-import static com.crowsofwar.avatar.util.data.StatusControlController.SHOOT_HYPER_BEAM;
+import static com.crowsofwar.avatar.util.data.StatusControlController.SHOOT_ABYSS_BEAM;
 import static com.crowsofwar.gorecore.util.Vector.getEyePos;
 import static java.lang.Math.toRadians;
 
 /**
  * @author CrowsOfWar
  */
-public class HyperBeamHandler extends TickHandler {
+public class AbyssalBeamHandler extends TickHandler {
 
-    public static final UUID HYPER_BEAM_MOVEMENT_MOD_ID = UUID.randomUUID();
+    public static final UUID ABYSS_BEAM_MOVEMENT_MOD_ID = UUID.randomUUID();
 
-    public HyperBeamHandler(int id) {
+    public AbyssalBeamHandler(int id) {
         super(id);
     }
 
@@ -76,8 +76,8 @@ public class HyperBeamHandler extends TickHandler {
         EntityLivingBase entity = ctx.getBenderEntity();
         Bender bender = ctx.getBender();
         World world = ctx.getWorld();
-        AbilityData abilityData = data.getAbilityData("hyper_beam");
-        AbilityAbyssalBeam hyperBeam = (AbilityAbyssalBeam) Abilities.get("hyper_beam");
+        AbilityData abilityData = data.getAbilityData("abyssal_beam");
+        AbilityAbyssalBeam hyperBeam = (AbilityAbyssalBeam) Abilities.get("abyssal_beam");
         if (hyperBeam == null)
             return false;
 
@@ -86,14 +86,9 @@ public class HyperBeamHandler extends TickHandler {
         //Inverts what happens as you want chi to decrease when you're more powerful
         requiredChi *= powerFactor;
 
-        if (bender.consumeChi(requiredChi) && data.hasStatusControl(SHOOT_HYPER_BEAM)) {
+        if (bender.consumeChi(requiredChi) && data.hasStatusControl(SHOOT_ABYSS_BEAM)) {
 
             Vector eye = getEyePos(entity);
-//            boolean isRaining = world.isRaining() && world.canSeeSky(entity.getPosition()) && world.getBiome(entity.getPosition()).canRain();
-//            boolean inWaterBlock = world.getBlockState(entity.getPosition()) instanceof BlockLiquid || world.getBlockState(entity.getPosition()).getBlock() == Blocks.WATER
-//                    || world.getBlockState(entity.getPosition()).getBlock() == Blocks.FLOWING_WATER;
-//            boolean headInLiquid = world.getBlockState(entity.getPosition().up()) instanceof BlockLiquid || world.getBlockState(entity.getPosition().up()).getBlock() == Blocks.WATER
-//                    || world.getBlockState(entity.getPosition().up()).getBlock() == Blocks.FLOWING_WATER;
 
 
             double speedMult = hyperBeam.getProperty(SPEED, abilityData).floatValue() * 3;
@@ -104,7 +99,6 @@ public class HyperBeamHandler extends TickHandler {
             float xp = hyperBeam.getProperty(XP_HIT, abilityData).floatValue();
             int lifetime = hyperBeam.getProperty(LIFETIME, abilityData).intValue();
             float knockback = hyperBeam.getProperty(KNOCKBACK, abilityData).floatValue();
-
 
 
             // Affect stats by power rating
@@ -203,10 +197,10 @@ public class HyperBeamHandler extends TickHandler {
                         .clr(getClrRand(), getClrRand(), getClrRand(), 5 / 255F).spawn(world);
                 AvatarUtils.spawnDirectionalHelix(world, entity, look.toMinecraft(), particles * 4, distance, size * 0.75,
                         ParticleBuilder.Type.FLASH, start.toMinecraft(), look.toMinecraft(),
-                        true, 8, true, getClrRand(), getClrRand(), getClrRand(), 0.8F, size * 0.75F);
+                        true, 8, AvatarUtils.getRandomNumberInRange(1, 100) > 98, getClrRand(), getClrRand(), getClrRand(), 0.2F, size * 0.75F);
                 AvatarUtils.spawnDirectionalHelix(world, entity, look.toMinecraft(), particles * 2, distance, size * 0.75,
                         ParticleBuilder.Type.FLASH, start.toMinecraft(), look.toMinecraft(),
-                        true, 8, true, getClrRand(), getClrRand(), getClrRand(), 0.15F, size * 0.75F);
+                        true, 8, false, getClrRand(), getClrRand(), getClrRand(), 0.3F, size * 0.75F);
 
 
                 //Particles at the beginning of the beam
@@ -229,12 +223,12 @@ public class HyperBeamHandler extends TickHandler {
                                             look.z() * 0.0125 + world.rand.nextGaussian() / 80, look.z() * 0.0125 + world.rand.nextGaussian() / 80).
                                     scale(size * 0.65F).element(BendingStyles.get(Firebending.ID))
                                     .time(8).pos(start.toMinecraft().add(look.times(0.05).toMinecraft().add(x1, y1 - 0.025, z1))).spin(0.1, world.rand.nextGaussian() / 20)
-                                    .clr(getClrRand(), getClrRand(), getClrRand(), 0.85F).glow(true).spawnEntity(entity).spawn(world);
+                                    .clr(getClrRand(), getClrRand(), getClrRand(), 0.25F).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 98).spawnEntity(entity).spawn(world);
                             ParticleBuilder.create(ParticleBuilder.Type.FLASH).vel(look.x() * 0.0125 + world.rand.nextGaussian() / 80,
                                             look.z() * 0.0125 + world.rand.nextGaussian() / 80, look.z() * 0.0125 + world.rand.nextGaussian() / 80).
                                     scale(size * 0.65F)
                                     .time(8).pos(start.toMinecraft().add(look.times(0.05).toMinecraft().add(x1, y1 - 0.025, z1))).spin(0.1, world.rand.nextGaussian() / 20)
-                                    .clr(getClrRand(), getClrRand(), getClrRand(), 0.15F).glow(true).spawnEntity(entity).spawn(world);
+                                    .clr(getClrRand(), getClrRand(), getClrRand(), 0.30F).glow(false).spawnEntity(entity).spawn(world);
 
                         }
                     }
@@ -246,7 +240,7 @@ public class HyperBeamHandler extends TickHandler {
                         SoundCategory.PLAYERS, 0.4f, 0.8f);
 
             float movementModifier = 1F - Math.min(requiredChi * 12.5F, 0.7F);
-            if (entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(HYPER_BEAM_MOVEMENT_MOD_ID) == null)
+            if (entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(ABYSS_BEAM_MOVEMENT_MOD_ID) == null)
                 applyMovementModifier(entity, movementModifier);
 
             entity.world.playSound(null, new BlockPos(entity), SoundEvents.BLOCK_FIRE_EXTINGUISH, entity.getSoundCategory(),
@@ -257,20 +251,20 @@ public class HyperBeamHandler extends TickHandler {
 
             return true;
         }
-        return !data.hasStatusControl(SHOOT_HYPER_BEAM);
+        return !data.hasStatusControl(SHOOT_ABYSS_BEAM);
     }
 
     private float getClrRand() {
-        return AvatarUtils.getRandomNumberInRange(1, 255) / 255F;
+        return AvatarUtils.getRandomNumberInRange(1, 25) / 255F;
     }
 
     @Override
     public void onRemoved(BendingContext ctx) {
         super.onRemoved(ctx);
         EntityLivingBase entity = ctx.getBenderEntity();
-        AbilityData abilityData = ctx.getData().getAbilityData("hyper_beam");
-        if (entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(HYPER_BEAM_MOVEMENT_MOD_ID) != null)
-            entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(HYPER_BEAM_MOVEMENT_MOD_ID);
+        AbilityData abilityData = ctx.getData().getAbilityData("abyssal_beam");
+        if (entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(ABYSS_BEAM_MOVEMENT_MOD_ID) != null)
+            entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(ABYSS_BEAM_MOVEMENT_MOD_ID);
         abilityData.setRegenBurnout(true);
 
     }
@@ -279,9 +273,9 @@ public class HyperBeamHandler extends TickHandler {
 
         IAttributeInstance moveSpeed = entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
 
-        moveSpeed.removeModifier(HYPER_BEAM_MOVEMENT_MOD_ID);
+        moveSpeed.removeModifier(ABYSS_BEAM_MOVEMENT_MOD_ID);
 
-        moveSpeed.applyModifier(new AttributeModifier(HYPER_BEAM_MOVEMENT_MOD_ID, "Hyper Beam Movement Modifier", multiplier - 1, 1));
+        moveSpeed.applyModifier(new AttributeModifier(ABYSS_BEAM_MOVEMENT_MOD_ID, "Abyss Beam Movement Modifier", multiplier - 1, 1));
 
     }
 

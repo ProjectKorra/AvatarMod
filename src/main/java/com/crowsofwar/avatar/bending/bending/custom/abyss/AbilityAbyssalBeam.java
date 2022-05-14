@@ -5,6 +5,7 @@ import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 
+import static com.crowsofwar.avatar.util.data.StatusControlController.CHARGE_ABYSS_BEAM;
 import static com.crowsofwar.avatar.util.data.StatusControlController.CHARGE_HYPER_BEAM;
 
 public class AbilityAbyssalBeam extends Ability {
@@ -12,7 +13,7 @@ public class AbilityAbyssalBeam extends Ability {
     public static final String RANDOMNESS = "randomness";
 
     public AbilityAbyssalBeam() {
-        super(Abyssbending.ID, "hyper_beam");
+        super(Abyssbending.ID, "abyssal_beam");
     }
 
     @Override
@@ -21,7 +22,7 @@ public class AbilityAbyssalBeam extends Ability {
         Bender bender = ctx.getBender();
         if (bender.consumeChi(getChiCost(ctx) / 4)) {
             if (!ctx.getWorld().isRemote)
-                data.addStatusControl(CHARGE_HYPER_BEAM);
+                data.addStatusControl(CHARGE_ABYSS_BEAM);
             ctx.getAbilityData().setRegenBurnout(false);
         }
     }

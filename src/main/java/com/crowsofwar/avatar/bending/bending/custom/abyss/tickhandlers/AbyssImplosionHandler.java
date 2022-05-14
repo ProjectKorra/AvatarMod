@@ -5,7 +5,7 @@ import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.custom.abyss.AbilityAbyssImplosion;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.entity.AvatarEntity;
-import com.crowsofwar.avatar.entity.EntityHyperBall;
+import com.crowsofwar.avatar.entity.EntityAbyssBall;
 import com.crowsofwar.avatar.entity.EntityOffensive;
 import com.crowsofwar.avatar.entity.data.OffensiveBehaviour;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
@@ -32,17 +32,17 @@ import java.util.UUID;
 
 import static com.crowsofwar.avatar.bending.bending.Ability.*;
 import static com.crowsofwar.avatar.bending.bending.custom.demonic.AbilityHellBastion.SLOW_MULT;
-import static com.crowsofwar.avatar.util.data.StatusControlController.RELEASE_HYPER_IMPLOSION;
+import static com.crowsofwar.avatar.util.data.StatusControlController.RELEASE_ABYSS_IMPLOSION;
 
-public class HyperImplosionHandler extends TickHandler {
-    public static final UUID HYPER_IMPLOSION_MOVEMENT_MOD_ID = UUID.randomUUID();
+public class AbyssImplosionHandler extends TickHandler {
+    public static final UUID ABYSS_IMPLOSION_MOVEMENT_MOD_ID = UUID.randomUUID();
 
-    public HyperImplosionHandler(int id) {
+    public AbyssImplosionHandler(int id) {
         super(id);
     }
 
     private static int getClrRand() {
-        return AvatarUtils.getRandomNumberInRange(1, 255);
+        return AvatarUtils.getRandomNumberInRange(1, 25);
     }
 
     @Override
@@ -51,8 +51,8 @@ public class HyperImplosionHandler extends TickHandler {
         EntityLivingBase entity = ctx.getBenderEntity();
         BendingData data = ctx.getData();
         Bender bender = ctx.getBender();
-        AbilityData abilityData = ctx.getData().getAbilityData("hyper_implosion");
-        AbilityAbyssImplosion hyperImplosion = (AbilityAbyssImplosion) Abilities.get("hyper_implosion");
+        AbilityData abilityData = ctx.getData().getAbilityData("abyss_implosion");
+        AbilityAbyssImplosion hyperImplosion = (AbilityAbyssImplosion) Abilities.get("abyss_implosion");
 
         float charge;
         //4 stages, max charge of 4.
@@ -105,7 +105,7 @@ public class HyperImplosionHandler extends TickHandler {
                 world.playSound(null, new BlockPos(entity), SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.PLAYERS, 0.25F * charge, 0.4F + world.rand.nextFloat() / 10);
 
             //Charging the ball
-            EntityHyperBall ball = AvatarEntity.lookupEntity(world, EntityHyperBall.class, entityHyperBall -> entityHyperBall.getOwner() == entity);
+            EntityAbyssBall ball = AvatarEntity.lookupEntity(world, EntityAbyssBall.class, entityHyperBall -> entityHyperBall.getOwner() == entity);
             if (ball != null) {
                 ball.setDamage(ball.getDamage() + damage);
                 ball.setEntitySize(ball.getAvgSize() < maxEntitySize ? ball.getAvgSize() + 0.1F : maxEntitySize);
@@ -115,22 +115,22 @@ public class HyperImplosionHandler extends TickHandler {
                 ball.setPerformanceAmount(performanceAmount);
             }
             //Dropping the ball
-            if (!data.hasStatusControl(RELEASE_HYPER_IMPLOSION)) {
+            if (!data.hasStatusControl(RELEASE_ABYSS_IMPLOSION)) {
 
                 //Behaviour to drop it
                 if (ball != null) {
-                    ball.setBehaviour(new HyperImplosionBehaviour());
+                    ball.setBehaviour(new AbyssImplosionBehaviour());
                     ball.setExplosionDamage(damage);
                     ball.setExplosionSize(radius * 3);
                 }
-                entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(HYPER_IMPLOSION_MOVEMENT_MOD_ID);
+                entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(ABYSS_IMPLOSION_MOVEMENT_MOD_ID);
 
                 world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE,
                         SoundCategory.BLOCKS, 1, 0.5F);
 
                 return true;
             }
-            return !data.hasStatusControl(RELEASE_HYPER_IMPLOSION);
+            return !data.hasStatusControl(RELEASE_ABYSS_IMPLOSION);
         } else {
             return true;
         }
@@ -141,25 +141,25 @@ public class HyperImplosionHandler extends TickHandler {
         IAttributeInstance moveSpeed = entity.getEntityAttribute(SharedMonsterAttributes
                 .MOVEMENT_SPEED);
 
-        moveSpeed.removeModifier(HYPER_IMPLOSION_MOVEMENT_MOD_ID);
+        moveSpeed.removeModifier(ABYSS_IMPLOSION_MOVEMENT_MOD_ID);
 
-        moveSpeed.applyModifier(new AttributeModifier(HYPER_IMPLOSION_MOVEMENT_MOD_ID,
-                "Hyper Implosion charge modifier", multiplier - 1, 1));
+        moveSpeed.applyModifier(new AttributeModifier(ABYSS_IMPLOSION_MOVEMENT_MOD_ID,
+                "Abyss Implosion charge modifier", multiplier - 1, 1));
 
     }
 
     @Override
     public void onRemoved(BendingContext ctx) {
         super.onRemoved(ctx);
-        AbilityData abilityData = AbilityData.get(ctx.getBenderEntity(), "hyper_implosion");
+        AbilityData abilityData = AbilityData.get(ctx.getBenderEntity(), "abyss_implosion");
         if (abilityData != null)
             abilityData.setRegenBurnout(true);
-        if (ctx.getBenderEntity().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(HYPER_IMPLOSION_MOVEMENT_MOD_ID) != null)
-            ctx.getBenderEntity().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(HYPER_IMPLOSION_MOVEMENT_MOD_ID);
+        if (ctx.getBenderEntity().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(ABYSS_IMPLOSION_MOVEMENT_MOD_ID) != null)
+            ctx.getBenderEntity().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(ABYSS_IMPLOSION_MOVEMENT_MOD_ID);
 
     }
 
-    public static class HyperImplosionBehaviour extends OffensiveBehaviour {
+    public static class AbyssImplosionBehaviour extends OffensiveBehaviour {
 
         @Override
         public OffensiveBehaviour onUpdate(EntityOffensive entity) {
@@ -177,13 +177,13 @@ public class HyperImplosionHandler extends TickHandler {
                     int rings = (int) (entity.getAvgSize() * 4);
                     int particles = (int) (entity.getAvgSize() * Math.PI);
 
-                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size).time(8 + AvatarUtils.getRandomNumberInRange(0, 4)).glow(true)
+                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size).time(8 + AvatarUtils.getRandomNumberInRange(0, 4)).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 85)
                             .element(BendingStyles.get(entity.getElement())).clr(getClrRand(), getClrRand(), getClrRand(),
                                     getClrRand()).spawnEntity(entity).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 20)
                             .swirl(rings, particles, entity.getAvgSize() * 1.1F, size * 15, entity.getAvgSize() * 10, (-1 / size),
                                     entity, world, false, centre, ParticleBuilder.SwirlMotionType.OUT, false, true);
                     ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size).time(8 + AvatarUtils.getRandomNumberInRange(0, 4))
-                            .element(BendingStyles.get(entity.getElement())).clr(getClrRand(), getClrRand(), getClrRand()).spawnEntity(entity).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 60)
+                            .element(BendingStyles.get(entity.getElement())).clr(getClrRand(), getClrRand(), getClrRand()).spawnEntity(entity).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 90)
                             .swirl(rings, particles, entity.getAvgSize() * 1.1F, size * 15, entity.getAvgSize() * 10, (-1 / size),
                                     entity, world, false, centre, ParticleBuilder.SwirlMotionType.OUT, false, true);
                 }

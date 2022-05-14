@@ -111,8 +111,7 @@ public class AdventRainHandler extends TickHandler {
             if (!world.isRemote)
                 world.spawnEntity(ball);
         }
-        return !data.hasStatusControl(StatusControlController.RELEASE_HYPER_ADVENT) ||
-                data.getTickHandlerDuration(this) > maxCharge;
+        return !data.hasStatusControl(StatusControlController.RELEASE_HYPER_ADVENT);
     }
 
     private int getClrRand() {

@@ -67,12 +67,12 @@ public class AbyssFlightHandler extends TickHandler {
                         .fade(getClrRand(), getClrRand(), getClrRand(), 160 + AvatarUtils.getRandomNumberInRange(30, 60))
                         .pos(pos.toMinecraft()).vel(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20)
                         .scale(size).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).collide(world.rand.nextBoolean())
-                        .ability(fly).spawnEntity(target).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 25).spawn(world);
+                        .ability(fly).spawnEntity(target).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 85).spawn(world);
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).clr(r, g * 4, b, 215 + AvatarUtils.getRandomNumberInRange(0, 40))
                         .fade(getClrRand(), getClrRand(), getClrRand(), 160 + AvatarUtils.getRandomNumberInRange(30, 60))
                         .pos(pos.toMinecraft()).vel(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20)
                         .scale(size).time(6 + AvatarUtils.getRandomNumberInRange(0, 6)).collide(world.rand.nextBoolean())
-                        .ability(fly).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 25).spawnEntity(target).spawn(world);
+                        .ability(fly).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 85).spawnEntity(target).spawn(world);
             }
         }
         int duration = 40;

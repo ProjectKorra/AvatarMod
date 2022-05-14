@@ -36,11 +36,11 @@ import static com.crowsofwar.avatar.bending.bending.Ability.CHI_COST;
 /**
  * @author CrowsOfWar
  */
-public class ChargeHyperBeam extends TickHandler {
+public class ChargeAbyssalBeam extends TickHandler {
 
-    public static final UUID HYPER_BEAM_MOVEMENT_ID = UUID.randomUUID();
+    public static final UUID ABYSSAL_BEAM_MOVEMENT_ID = UUID.randomUUID();
 
-    public ChargeHyperBeam(int id) {
+    public ChargeAbyssalBeam(int id) {
         super(id);
     }
 
@@ -51,8 +51,8 @@ public class ChargeHyperBeam extends TickHandler {
         EntityLivingBase entity = ctx.getBenderEntity();
         Bender bender = ctx.getBender();
         World world = ctx.getWorld();
-        AbilityData abilityData = data.getAbilityData("hyper_beam");
-        AbilityAbyssalBeam hyperBeam = (AbilityAbyssalBeam) Abilities.get("hyper_beam");
+        AbilityData abilityData = data.getAbilityData("abyssal_beam");
+        AbilityAbyssalBeam hyperBeam = (AbilityAbyssalBeam) Abilities.get("abyssal_beam");
         int chargeDuration = data.getTickHandlerDuration(this);
         if (hyperBeam == null)
             return false;
@@ -64,7 +64,7 @@ public class ChargeHyperBeam extends TickHandler {
 
 
         float movementModifier = 1F - Math.min(requiredChi * 12.5F, 0.7F);
-        if (entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(HYPER_BEAM_MOVEMENT_ID) == null)
+        if (entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(ABYSSAL_BEAM_MOVEMENT_ID) == null)
             applyMovementModifier(entity, movementModifier);
 
         entity.world.playSound(null, new BlockPos(entity), SoundEvents.BLOCK_FIRE_EXTINGUISH, entity.getSoundCategory(),
@@ -77,11 +77,11 @@ public class ChargeHyperBeam extends TickHandler {
     public void onRemoved(BendingContext ctx) {
         super.onRemoved(ctx);
         EntityLivingBase entity = ctx.getBenderEntity();
-        AbilityData abilityData = ctx.getData().getAbilityData("hyper_beam");
-        if (entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(HYPER_BEAM_MOVEMENT_ID) != null)
-            entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(HYPER_BEAM_MOVEMENT_ID);
+        AbilityData abilityData = ctx.getData().getAbilityData("abyssal_beam");
+        if (entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(ABYSSAL_BEAM_MOVEMENT_ID) != null)
+            entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(ABYSSAL_BEAM_MOVEMENT_ID);
         abilityData.setRegenBurnout(true);
-        ctx.getData().addTickHandler(TickHandlerController.HYPER_BEAM_HANDLER, ctx);
+        ctx.getData().addTickHandler(TickHandlerController.ABYSSAL_BEAM_HANDLER, ctx);
 
     }
 
@@ -89,9 +89,9 @@ public class ChargeHyperBeam extends TickHandler {
 
         IAttributeInstance moveSpeed = entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
 
-        moveSpeed.removeModifier(HYPER_BEAM_MOVEMENT_ID);
+        moveSpeed.removeModifier(ABYSSAL_BEAM_MOVEMENT_ID);
 
-        moveSpeed.applyModifier(new AttributeModifier(HYPER_BEAM_MOVEMENT_ID, "Hyper Beam Movement Modifier", multiplier - 1, 1));
+        moveSpeed.applyModifier(new AttributeModifier(ABYSSAL_BEAM_MOVEMENT_ID, "Abyssal Beam Movement Modifier", multiplier - 1, 1));
 
     }
 

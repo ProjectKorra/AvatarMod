@@ -4,8 +4,7 @@ import com.crowsofwar.avatar.bending.bending.combustion.tickhandlers.CombustionA
 import com.crowsofwar.avatar.bending.bending.combustion.tickhandlers.FusionDriveHandler;
 import com.crowsofwar.avatar.bending.bending.combustion.tickhandlers.MegatonDiveHandler;
 import com.crowsofwar.avatar.bending.bending.combustion.tickhandlers.RocketBoostHandler;
-import com.crowsofwar.avatar.bending.bending.custom.abyss.tickhandlers.AbyssFlightHandler;
-import com.crowsofwar.avatar.bending.bending.custom.abyss.tickhandlers.AbyssFormHandler;
+import com.crowsofwar.avatar.bending.bending.custom.abyss.tickhandlers.*;
 import com.crowsofwar.avatar.bending.bending.custom.dark.tickhandlers.*;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.tickhandlers.DemonWingsHandler;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.tickhandlers.DemonicAuraHandler;
@@ -105,6 +104,9 @@ public class TickHandlerController {
 	public static TickHandler HYPER_FLIGHT_HANDLER = new HyperFlightHandler(62);
 	public static TickHandler ABYSS_FORM_HANDLER = new AbyssFormHandler(63);
 	public static TickHandler ABYSS_FLIGHT_HANDLER = new AbyssFlightHandler(64);
+	public static TickHandler CHARGE_ABYSSAL_BEAM = new ChargeAbyssalBeam(65);
+	public static TickHandler ABYSSAL_BEAM_HANDLER = new AbyssalBeamHandler(66);
+	public static TickHandler ABYSS_IMPLOSION_HANDLER = new AbyssImplosionHandler(67);
 
 
 

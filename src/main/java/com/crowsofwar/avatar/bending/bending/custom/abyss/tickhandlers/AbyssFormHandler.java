@@ -5,7 +5,6 @@ import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.custom.abyss.AbilityAbyssalForm;
 import com.crowsofwar.avatar.bending.bending.custom.abyss.Abyssbending;
-import com.crowsofwar.avatar.bending.bending.custom.ki.Kibending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
@@ -59,14 +58,14 @@ public class AbyssFormHandler extends TickHandler {
             Vec3d pos = AvatarEntityUtils.getBottomMiddleOfEntity(entity);
             pos = entity.onGround ? pos.add(0, entity.getEyeHeight(), 0) : pos.add(0, entity.getEyeHeight() / 2, 0);
             ParticleBuilder.create(ParticleBuilder.Type.FLASH).time(25 + AvatarUtils.getRandomNumberInRange(1, 2)).
-                    clr(r, g, b, 10).fade(getClrRand(), getClrRand(), getClrRand(), AvatarUtils.getRandomNumberInRange(40, 80))
-                    .element(BendingStyles.get(Abyssbending.ID)).scale(scale).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 25).swirl((int) (kaioKenDuration / 20 * scale),
+                    clr(r, g, b, 10).fade(getClrRand(), getClrRand(), getClrRand(), AvatarUtils.getRandomNumberInRange(40, 90))
+                    .element(BendingStyles.get(Abyssbending.ID)).scale(scale).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 98).swirl((int) (kaioKenDuration / 20 * scale),
                             (int) (scale * Math.PI), scale, scale / 2, kaioKenDuration * 20, (0.5F / scale),
                             entity, world, true, pos,
                             ParticleBuilder.SwirlMotionType.OUT, false, true);
             ParticleBuilder.create(ParticleBuilder.Type.FLASH).time(25 + AvatarUtils.getRandomNumberInRange(1, 2)).
-                    clr(r, g, b, 10).fade(getClrRand(), getClrRand(), getClrRand(), AvatarUtils.getRandomNumberInRange(40, 80))
-                    .element(BendingStyles.get(Abyssbending.ID)).scale(scale).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 55).swirl((int) (kaioKenDuration / 20 * scale),
+                    clr(r, g, b, 10).fade(getClrRand(), getClrRand(), getClrRand(), AvatarUtils.getRandomNumberInRange(49, 90))
+                    .element(BendingStyles.get(Abyssbending.ID)).scale(scale).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 96).swirl((int) (kaioKenDuration / 20 * scale),
                             (int) (scale * Math.PI), scale, scale / 2, kaioKenDuration * 20, (0.5F / scale),
                             entity, world, true, pos,
                             ParticleBuilder.SwirlMotionType.OUT, false, true);
@@ -96,7 +95,7 @@ public class AbyssFormHandler extends TickHandler {
     }
 
     private int getClrRand() {
-        return AvatarUtils.getRandomNumberInRange(1, 30);
+        return AvatarUtils.getRandomNumberInRange(1, 20);
     }
 }
 
