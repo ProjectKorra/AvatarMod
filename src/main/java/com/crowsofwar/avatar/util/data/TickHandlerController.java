@@ -107,6 +107,9 @@ public class TickHandlerController {
 	public static TickHandler CHARGE_ABYSSAL_BEAM = new ChargeAbyssalBeam(65);
 	public static TickHandler ABYSSAL_BEAM_HANDLER = new AbyssalBeamHandler(66);
 	public static TickHandler ABYSS_IMPLOSION_HANDLER = new AbyssImplosionHandler(67);
+	public static TickHandler ABYSS_END_CHARGER = new AbyssChargeHandler(68);
+	public static TickHandler ABYSS_END_RAIN = new AbyssRainHandler(68);
+	public static TickHandler ABYSS_END_EXPLOSION = new AbyssExplosionHandler(69);
 
 
 

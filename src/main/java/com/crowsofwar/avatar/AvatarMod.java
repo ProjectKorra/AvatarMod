@@ -217,6 +217,7 @@ public class AvatarMod {
         Abilities.register(new AbilityAbyssFlight());
         Abilities.register(new AbilityAbyssalBeam());
         Abilities.register(new AbilityAbyssImplosion());
+        Abilities.register(new AbilityAbyssalEnd());
 
 
     }

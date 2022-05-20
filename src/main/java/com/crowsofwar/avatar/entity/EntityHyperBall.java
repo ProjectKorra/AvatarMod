@@ -242,12 +242,12 @@ public class EntityHyperBall extends EntityOffensive {
                     .element(BendingStyles.get(getElement())).
                     clr(getClrRand(), getClrRand(), getClrRand()).spawnEntity(this).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 30)
                     .swirl(rings, particles, getAvgSize() * 1.1F, size * 10, getAvgSize() * 10, -15, this,
-                            world, false, centre, ParticleBuilder.SwirlMotionType.OUT, false, true, true);
+                            world, false, centre, ParticleBuilder.SwirlMotionType.OUT, false, true, true, 255, 255);
             ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size).time(36 + AvatarUtils.getRandomNumberInRange(0, 4))
                     .element(BendingStyles.get(getElement())).
                     clr(getClrRand(), getClrRand(), getClrRand(), getClrRand()).spawnEntity(this).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 60)
                     .swirl(rings, particles, getAvgSize() * 1.1F, size * 10, getAvgSize() * 10, -15, this,
-                            world, false, centre, ParticleBuilder.SwirlMotionType.OUT, false, true, true);
+                            world, false, centre, ParticleBuilder.SwirlMotionType.OUT, false, true, true, 255, 255);
 
         }
     }

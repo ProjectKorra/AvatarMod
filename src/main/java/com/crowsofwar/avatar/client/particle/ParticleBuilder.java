@@ -277,7 +277,7 @@ public final class ParticleBuilder {
     public void swirl(int rings, int particles, float radius, float iterationSize,
                       float spinSpeed, float velMult, Entity entity, World world, boolean shield,
                       Vec3d pos, SwirlMotionType type, boolean followEntity, boolean randomVel,
-                      boolean randomClr) {
+                      boolean randomClr, int maxClr, int maxAlpha) {
         for (int i = 0; i < rings + 1; i++) {
             //Drawing from the player to the edge of the radius
             for (double j = 0; j < (radius); j += iterationSize) {
@@ -314,8 +314,8 @@ public final class ParticleBuilder {
                     if (followEntity)
                         vel = vel.add(entity.motionX, entity.motionY, entity.motionZ);
                     if (randomClr)
-                        this.clr(AvatarUtils.getRandomNumberInRange(1, 255), AvatarUtils.getRandomNumberInRange(1, 255),
-                                AvatarUtils.getRandomNumberInRange(1, 255), AvatarUtils.getRandomNumberInRange(1, 255));
+                        this.clr(AvatarUtils.getRandomNumberInRange(1, maxClr), AvatarUtils.getRandomNumberInRange(1, maxClr),
+                                AvatarUtils.getRandomNumberInRange(1, maxClr), AvatarUtils.getRandomNumberInRange(1, maxAlpha));
                     try {
                         this.pos(circlePos).vel(vel).spawn(world, false);
                     } catch (IllegalStateException ignored) {

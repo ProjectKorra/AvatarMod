@@ -113,7 +113,7 @@ public class AbilityAbyssalBlast extends Ability {
             gust.setTier(getCurrentTier(ctx));
             gust.setChiHit(getProperty(CHI_HIT, ctx).floatValue());
             gust.setXp(getProperty(XP_HIT, ctx).floatValue());
-            gust.setBehaviour(new HyperBlastBehaviour());
+            gust.setBehaviour(new AbyssalBlastBehaviour());
             gust.setDamageSource("avatar_Ki");
             if (!world.isRemote)
                 world.spawnEntity(gust);
@@ -158,7 +158,7 @@ public class AbilityAbyssalBlast extends Ability {
         return true;
     }
 
-    public static class HyperBlastBehaviour extends OffensiveBehaviour {
+    public static class AbyssalBlastBehaviour extends OffensiveBehaviour {
 
         @Override
         public Behavior<EntityOffensive> onUpdate(EntityOffensive entity) {
@@ -170,7 +170,7 @@ public class AbilityAbyssalBlast extends Ability {
                     int particles = (int) (Math.min((int) (entity.getAvgSize() * Math.PI), 2) + (entity.velocity().magnitude() / 20));
                     Vec3d centre = AvatarEntityUtils.getMiddleOfEntity(entity);
                     ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(BendingStyles.get(Airbending.ID)).collide(AvatarUtils.getRandomNumberInRange(1, 100) > 90)
-                            .clr(getClrRand(), getClrRand(), getClrRand(), 0.035F).time(12).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 96)
+                            .clr(getClrRand(), getClrRand(), getClrRand(), 0.35F).time(12).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 96)
                             .scale(size * 0.75F).spawnEntity(entity).swirl(rings, particles, entity.getAvgSize() * 0.75F,
                                     size / 3F, (float) (entity.velocity().sqrMagnitude() / 10 * entity.getAvgSize()), (-0.75F / size), entity,
                                     world, true, centre, ParticleBuilder.SwirlMotionType.IN,

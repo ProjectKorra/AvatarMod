@@ -2,6 +2,7 @@ package com.crowsofwar.avatar.util.data;
 
 import com.crowsofwar.avatar.bending.bending.air.statctrls.*;
 import com.crowsofwar.avatar.bending.bending.combustion.statctrls.StatCtrlRocketBoost;
+import com.crowsofwar.avatar.bending.bending.custom.abyss.statctrls.StatCtrlAbyssEnd;
 import com.crowsofwar.avatar.bending.bending.custom.abyss.statctrls.StatCtrlAbyssFlight;
 import com.crowsofwar.avatar.bending.bending.custom.abyss.statctrls.StatCtrlAbyssImplosion;
 import com.crowsofwar.avatar.bending.bending.custom.abyss.statctrls.StatCtrlSetAbyssBeam;
@@ -121,7 +122,9 @@ public class StatusControlController {
 			CHARGE_ABYSS_BEAM = new StatCtrlSetAbyssBeam(true),
 			SHOOT_ABYSS_BEAM = new StatCtrlSetAbyssBeam(false),
 			CHARGE_ABYSS_IMPLOSION = new StatCtrlAbyssImplosion(true),
-			RELEASE_ABYSS_IMPLOSION = new StatCtrlAbyssImplosion(false);
+			RELEASE_ABYSS_IMPLOSION = new StatCtrlAbyssImplosion(false),
+			CHARGE_ABYSS_END = new StatCtrlAbyssEnd(true),
+			RELEASE_ABYSS_END = new StatCtrlAbyssEnd(false);
 	// @formatter:on
 
 	public static StatusControl lookup(int id) {

@@ -238,16 +238,16 @@ public class EntityAbyssBall extends EntityOffensive {
             int rings = (int) (getAvgSize() * 6);
             int particles = (int) (getAvgSize() * Math.PI * 2);
 
-            ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size).time(36 + AvatarUtils.getRandomNumberInRange(0, 4)).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 85)
+            ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size * 2).time(36 + AvatarUtils.getRandomNumberInRange(0, 4)).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 85)
                     .element(BendingStyles.get(getElement())).
                     clr(getClrRand(), getClrRand(), getClrRand()).spawnEntity(this).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 30)
                     .swirl(rings, particles, getAvgSize() * 1.1F, size * 10, getAvgSize() * 10, -15, this,
-                            world, false, centre, ParticleBuilder.SwirlMotionType.OUT, false, true, true);
-            ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size).time(36 + AvatarUtils.getRandomNumberInRange(0, 4))
+                            world, false, centre, ParticleBuilder.SwirlMotionType.OUT, false, true, true, 25, 255);
+            ParticleBuilder.create(ParticleBuilder.Type.FLASH).scale(size * 2).time(36 + AvatarUtils.getRandomNumberInRange(0, 4))
                     .element(BendingStyles.get(getElement())).
-                    clr(getClrRand(), getClrRand(), getClrRand(), getClrRand()).spawnEntity(this).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 99)
+                    clr(getClrRand(), getClrRand(), getClrRand(), getClrRand() * 5).spawnEntity(this).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 99)
                     .swirl(rings, particles, getAvgSize() * 1.1F, size * 10, getAvgSize() * 10, -15, this,
-                            world, false, centre, ParticleBuilder.SwirlMotionType.OUT, false, true, true);
+                            world, false, centre, ParticleBuilder.SwirlMotionType.OUT, false, true, true, 25, 255);
 
         }
     }

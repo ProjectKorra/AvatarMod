@@ -19,6 +19,7 @@ package com.crowsofwar.avatar.entity;
 
 import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.air.Airbending;
+import com.crowsofwar.avatar.bending.bending.custom.abyss.AbilityAbyssalBlast;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.data.AbilityData;
@@ -27,11 +28,13 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.entity.projectile.EntityThrowable;
+import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -311,6 +314,9 @@ public class EntityAirGust extends EntityOffensive {
                 Dissipate();
         } else if (entity instanceof EntityAirBubble)
             Dissipate();
+        if (entity instanceof EntityLivingBase && getBehaviour() instanceof AbilityAbyssalBlast.AbyssalBlastBehaviour) {
+            ((EntityLivingBase) entity).addPotionEffect(new PotionEffect(MobEffects.WITHER, 40, 1));
+        }
     }
 
     @Override

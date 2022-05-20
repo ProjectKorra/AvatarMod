@@ -60,13 +60,13 @@ public class AbyssFormHandler extends TickHandler {
             ParticleBuilder.create(ParticleBuilder.Type.FLASH).time(25 + AvatarUtils.getRandomNumberInRange(1, 2)).
                     clr(r, g, b, 10).fade(getClrRand(), getClrRand(), getClrRand(), AvatarUtils.getRandomNumberInRange(40, 90))
                     .element(BendingStyles.get(Abyssbending.ID)).scale(scale).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 98).swirl((int) (kaioKenDuration / 20 * scale),
-                            (int) (scale * Math.PI), scale, scale / 2, kaioKenDuration * 20, (0.5F / scale),
+                            (int) (scale * Math.PI), scale, scale / 2, kaioKenDuration * 20, (1.5F / scale),
                             entity, world, true, pos,
                             ParticleBuilder.SwirlMotionType.OUT, false, true);
             ParticleBuilder.create(ParticleBuilder.Type.FLASH).time(25 + AvatarUtils.getRandomNumberInRange(1, 2)).
                     clr(r, g, b, 10).fade(getClrRand(), getClrRand(), getClrRand(), AvatarUtils.getRandomNumberInRange(49, 90))
                     .element(BendingStyles.get(Abyssbending.ID)).scale(scale).glow(AvatarUtils.getRandomNumberInRange(1, 100) > 96).swirl((int) (kaioKenDuration / 20 * scale),
-                            (int) (scale * Math.PI), scale, scale / 2, kaioKenDuration * 20, (0.5F / scale),
+                            (int) (scale * Math.PI), scale, scale / 2, kaioKenDuration * 20, (1.5F / scale),
                             entity, world, true, pos,
                             ParticleBuilder.SwirlMotionType.OUT, false, true);
         }
