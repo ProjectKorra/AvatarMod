@@ -226,10 +226,10 @@ public class EntityAirGust extends EntityOffensive {
                 double spawnY = mid.y + world.rand.nextGaussian() / 10;
                 double spawnZ = mid.z + world.rand.nextGaussian() / 10;
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20,
-                        world.rand.nextGaussian() / 20).time(4).clr(0.95F, 0.95F, 0.95F, 0.1F).spawnEntity(getOwner())
+                                world.rand.nextGaussian() / 20).time(4).clr(0.95F, 0.95F, 0.95F, 0.1F).spawnEntity(getOwner())
                         .scale(getAvgSize() * 1.25F).element(BendingStyles.get(getElement())).collide(true).spawn(world);
                 ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 20, world.rand.nextGaussian() / 20,
-                        world.rand.nextGaussian() / 20).time(12).clr(0.95F, 0.95F, 0.95F, 0.1F).spawnEntity(getOwner())
+                                world.rand.nextGaussian() / 20).time(12).clr(0.95F, 0.95F, 0.95F, 0.1F).spawnEntity(getOwner())
                         .scale(getAvgSize() * 1.25F).element(BendingStyles.get(getElement())).collide(true).spawn(world);
             }
         }
@@ -247,8 +247,10 @@ public class EntityAirGust extends EntityOffensive {
         if (getDestroyProjectiles()) {
             if (entity instanceof IOffensiveEntity && ((IOffensiveEntity) entity).getDamage() < 6 * getAvgSize() ||
                     entity instanceof EntityOffensive && getAvgSize() < 1.25 * getAvgSize() || (entity.isProjectile() && entity.velocity().sqrMagnitude() <
-                    velocity().sqrMagnitude()) || entity.getTier() < getTier()) {
-                ((IOffensiveEntity) entity).Dissipate(entity);
+                    velocity().sqrMagnitude()) || entity.isProjectile() && entity.getTier() < getTier()) {
+                if (entity instanceof IOffensiveEntity)
+                    ((IOffensiveEntity) entity).Dissipate(entity);
+                else entity.setDead();
             }
             if (entity.getTier() == getTier()) {
                 Dissipate();

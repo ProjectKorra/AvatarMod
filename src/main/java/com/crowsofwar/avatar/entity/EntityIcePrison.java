@@ -281,4 +281,16 @@ public class EntityIcePrison extends AvatarEntity {
         setMaxImprisonedTime(getImprisonedTime());
 
     }
+
+    @Override
+    public boolean isProjectile() {
+        return false;
+    }
+
+    @Override
+    public boolean isShield() {
+        return true;
+    }
+
+
 }
