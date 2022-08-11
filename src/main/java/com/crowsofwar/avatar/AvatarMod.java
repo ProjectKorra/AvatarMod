@@ -170,6 +170,7 @@ public class AvatarMod {
         Abilities.register(new AbilityCombustionAura());
         Abilities.register(new AbilityFusionDrive());
         Abilities.register(new AbilityMegatonDive());
+        Abilities.register(new AbilityNuclearImpact());
 
         /*              CUSTOM              */
 

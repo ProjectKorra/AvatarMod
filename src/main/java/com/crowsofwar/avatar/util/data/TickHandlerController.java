@@ -1,9 +1,6 @@
 package com.crowsofwar.avatar.util.data;
 
-import com.crowsofwar.avatar.bending.bending.combustion.tickhandlers.CombustionAuraHandler;
-import com.crowsofwar.avatar.bending.bending.combustion.tickhandlers.FusionDriveHandler;
-import com.crowsofwar.avatar.bending.bending.combustion.tickhandlers.MegatonDiveHandler;
-import com.crowsofwar.avatar.bending.bending.combustion.tickhandlers.RocketBoostHandler;
+import com.crowsofwar.avatar.bending.bending.combustion.tickhandlers.*;
 import com.crowsofwar.avatar.bending.bending.custom.abyss.tickhandlers.*;
 import com.crowsofwar.avatar.bending.bending.custom.dark.tickhandlers.*;
 import com.crowsofwar.avatar.bending.bending.custom.demonic.tickhandlers.DemonWingsHandler;
@@ -110,6 +107,8 @@ public class TickHandlerController {
 	public static TickHandler ABYSS_END_CHARGER = new AbyssChargeHandler(68);
 	public static TickHandler ABYSS_END_RAIN = new AbyssRainHandler(68);
 	public static TickHandler ABYSS_END_EXPLOSION = new AbyssExplosionHandler(69);
+	//Nice.
+	public static TickHandler NUCLEAR_IMPACT_HANDLER = new NuclearImpactHandler(70);
 
 
 

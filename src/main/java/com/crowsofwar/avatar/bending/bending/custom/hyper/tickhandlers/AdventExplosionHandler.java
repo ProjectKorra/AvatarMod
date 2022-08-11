@@ -6,8 +6,6 @@ import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.combustion.AbilityMegatonDive;
 import com.crowsofwar.avatar.bending.bending.custom.hyper.AbilityHyperAdvent;
 import com.crowsofwar.avatar.bending.bending.custom.hyper.Hyperbending;
-import com.crowsofwar.avatar.bending.bending.fire.Firebending;
-import com.crowsofwar.avatar.blocks.BlockTemp;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
@@ -18,15 +16,11 @@ import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.StatusControlController;
 import com.crowsofwar.avatar.util.data.TickHandler;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
-import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.attributes.IAttribute;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -34,7 +28,6 @@ import java.util.List;
 
 import static com.crowsofwar.avatar.bending.bending.custom.hyper.tickhandlers.AdventChargeHandler.ADVENT_MOVE_MOD_ID;
 import static com.crowsofwar.gorecore.util.Vector.toRectangular;
-import static java.lang.Math.toRadians;
 
 public class AdventExplosionHandler extends TickHandler {
 
