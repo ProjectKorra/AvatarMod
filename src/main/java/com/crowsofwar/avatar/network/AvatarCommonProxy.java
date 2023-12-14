@@ -21,16 +21,21 @@ import com.crowsofwar.avatar.AvatarMod;
 import com.crowsofwar.avatar.client.particles.newparticles.ParticleAvatar;
 import com.crowsofwar.avatar.client.controls.IControlsHandler;
 import com.crowsofwar.avatar.client.controls.KeybindingWrapper;
+import com.crowsofwar.avatar.client.render.lightning.render.GLCompat;
 import com.crowsofwar.avatar.util.data.AvatarPlayerData;
 import com.crowsofwar.avatar.client.gui.AvatarGui;
 import com.crowsofwar.avatar.capabilities.IAdvancedGliderCapabilityHandler;
 import com.crowsofwar.gorecore.data.PlayerDataFetcher;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IThreadListener;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+
+import java.util.logging.Level;
 
 /**
  * Allows calling of side-specific code by using a common base class and
@@ -69,6 +74,8 @@ public interface AvatarCommonProxy {
      * Called during the FMLInitialization event
      */
     void init();
+
+    void postInit(FMLPostInitializationEvent e);
 
     AvatarGui createClientGui(int id, EntityPlayer player, World world, int x, int y, int z);
 
@@ -112,7 +119,7 @@ public interface AvatarCommonProxy {
      * Looks up keybinding by name
      */
     KeybindingWrapper createKeybindWrapper(String keybindName);
-
+    
 	/**
 	 * Register the item models so they can be configured to use the correct textures
 	 */
@@ -125,4 +132,11 @@ public interface AvatarCommonProxy {
     World getClientWorld();
 
     IAdvancedGliderCapabilityHandler getClientGliderCapability();
+
+    void checkGLCaps();
+
+    // TODO - Should be deleted
+    void effectNT(NBTTagCompound nbt);
+
+    float partialTicks();
 }

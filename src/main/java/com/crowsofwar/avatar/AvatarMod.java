@@ -38,6 +38,8 @@ import com.crowsofwar.avatar.bending.bending.water.*;
 import com.crowsofwar.avatar.blocks.AvatarBlocks;
 import com.crowsofwar.avatar.client.gui.AvatarGuiHandler;
 import com.crowsofwar.avatar.client.particle.AvatarParticles;
+import com.crowsofwar.avatar.client.render.lightning.main.ModEventHandler;
+import com.crowsofwar.avatar.client.render.lightning.main.PacketDispatcher;
 import com.crowsofwar.avatar.common.triggers.AvatarTriggers;
 import com.crowsofwar.avatar.config.*;
 import com.crowsofwar.avatar.entity.*;
@@ -66,9 +68,14 @@ import com.crowsofwar.avatar.util.event.ServerEventHandler;
 import com.crowsofwar.avatar.util.windhelper.WindHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.RangedAttribute;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -81,11 +88,16 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
+import org.apache.logging.log4j.Logger;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
 import java.io.File;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.Random;
 
 import static com.crowsofwar.avatar.config.ConfigMobs.MOBS_CONFIG;
 import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
@@ -111,6 +123,17 @@ public class AvatarMod {
 
     private int nextMessageID = 1;
     private int nextEntityID = 1;
+
+    // From Drillgon's MainRegistry
+    public static Logger logger;
+    public static int generalOverride = 0;
+    public static int polaroidID = 1;
+    public static final int schrabFromUraniumChance = 100;
+    public static int x;
+    public static int y;
+    public static int z;
+    public static long time;
+    Random rand = new Random();
 
 
     private static void registerAbilities() {
@@ -349,7 +372,25 @@ public class AvatarMod {
             }
         }**/
 
-
+        // From Drillgon's MainRegistry
+        if(generalOverride > 0 && generalOverride < 19) {
+            polaroidID = generalOverride;
+        } else {
+            polaroidID = rand.nextInt(18) + 1;
+            while(polaroidID == 4 || polaroidID == 9)
+                polaroidID = rand.nextInt(18) + 1;
+        }
+        if(SharedMonsterAttributes.MAX_HEALTH.clampValue(Integer.MAX_VALUE) <= 2000)
+            try{
+                @SuppressWarnings("deprecation")
+                Field f = ReflectionHelper.findField(RangedAttribute.class, "maximumValue", "field_111118_b");
+                Field modifiersField = Field.class.getDeclaredField("modifiers");
+                modifiersField.setAccessible(true);
+                modifiersField.setInt(f, f.getModifiers() & ~Modifier.FINAL);
+                f.set(SharedMonsterAttributes.MAX_HEALTH, Integer.MAX_VALUE);
+            } catch(Exception ignored){}
+        proxy.checkGLCaps();
+        reloadConfig();
     }
 
     @EventHandler
@@ -422,8 +463,17 @@ public class AvatarMod {
 
         proxy.init();
         proxy.registerParticles();
+        PacketDispatcher.registerPackets();
+        MinecraftForge.EVENT_BUS.register(new ModEventHandler());
+
         AvatarTriggers.init();
 
+    }
+
+    public static void reloadConfig() {
+//        Configuration config = new Configuration(new File(proxy.getDataDir().getPath() + "/config/hbm/hbm.cfg"));
+//        config.load();
+//        config.save();
     }
 
     @EventHandler
@@ -438,10 +488,9 @@ public class AvatarMod {
             mat.rotate(90, 1, 0, 0);
             Vector4f v = new Vector4f(2, 1, 1, 1).mul(mat);
         }
-
         //Allows for BendingContext shenanigans
         Abilities.all().forEach(Ability::postInit);
-
+        proxy.postInit(e);
     }
 
     @EventHandler
