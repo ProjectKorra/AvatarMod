@@ -38,18 +38,27 @@ import net.minecraft.world.World;
  * Creates a multi-use bubble of water. Right click to shield, left click to lob.
  * Shift to circle it around you. Circling it charges it up
  * Can be used as a water source for other moves.
+ * Has 3 "forms". Base, Wave, and Arc.
+ * Wave form is unlocked by unlocking the ability Wave. It lets you expand the ring as a shockwave, or push your shield.
+ * Arc form is unlocked by unlocking water arc/water stream.
+ * Upgrades primarily focus on these forms rather than the base one.
  * <p>
+ * Level 1: When in Wave form, you can right click while swirling for a water shockwave, expanding the radius of the swirl,
+ * or left click while shielding to push out the shield.
+ * While in Arc form, you can left click while swirling to shoot mini water arcs from it (damage based on Water Arc).
  * Level 3: Take the water bubble from any water source around you.
- * Level 4 Path 1: Holding shift charges it up and makes it spin incredibly fast. Left click to throw it,
- * making a massive water explosion.
- * Level 4 Path 2: Significantly increased health; while holding shift, right click to make
- * an encompassing shield around you.
+ * Level 4 Path 1: Arcing Monsoon ;; Heightened offensive power. Water explosion is bigger, for both the base orb
+ * and the ring. Additionally, left clicking while having the shield results in a cone burst rather than pushing things away.
+ * Max radius and max range are used for the explosion distance for each move, while the default explosion variables are for the projectile.
+ * Level 4 Path 2: Cresting Serenity ;; Significantly increased health; while holding shift, right click to make
+ * an encompassing shield around you. Your shield is significantly bigger.
  */
 public class AbilityFlowControl extends Ability {
 
     public static final String
-            RING = "ring",
-            INFINITE_WATER = "infiniteWater";
+            SPHERE = "sphere",
+            INFINITE_WATER = "infiniteWater",
+            BURST = "burst";
 
     public AbilityFlowControl() {
         super(Waterbending.ID, "flow_control");
@@ -59,9 +68,9 @@ public class AbilityFlowControl extends Ability {
     @Override
     public void init() {
         super.init();
-        addProperties(WATER_LEVEL, EXPLOSION_SIZE, EXPLOSION_DAMAGE, EFFECT_RADIUS, MAX_HEALTH, CHARGE_FREQUENCY,
-                CHARGE_AMOUNT);
-        addBooleanProperties(RING, INFINITE_WATER, REFLECT);
+        addProperties(WATER_LEVEL, EXPLOSION_SIZE, EXPLOSION_DAMAGE, EFFECT_RADIUS, CHARGE_FREQUENCY,
+                CHARGE_AMOUNT, EFFECT_RADIUS, RANGE, MAX_RADIUS, MAX_RANGE);
+        addBooleanProperties(SPHERE, INFINITE_WATER, BURST);
     }
 
     @Override
@@ -81,16 +90,21 @@ public class AbilityFlowControl extends Ability {
             int lifeTime = getProperty(LIFETIME, ctx).intValue();
             float damage = getProperty(DAMAGE, ctx).floatValue();
             float xp = getProperty(XP_HIT, ctx).floatValue();
+            //Also need to implement health???
             int waterLevel = getProperty(WATER_LEVEL, ctx).intValue();
             float size = getProperty(SIZE, ctx).floatValue();
             float chiHit = getProperty(CHI_HIT, ctx).floatValue();
             int performance = getProperty(PERFORMANCE, ctx).intValue();
+            float swirlRadius = getProperty(EFFECT_RADIUS, ctx).floatValue();
+            float distance = getProperty(RANGE, ctx).floatValue();
 
             BlockPos spawnPos = abilityData.getSourceInfo().getBlockPos();
 
             lifeTime = (int) powerModify(lifeTime, abilityData);
             damage = powerModify(damage, abilityData);
             size = powerModify(size, abilityData);
+            swirlRadius = powerModify(swirlRadius, abilityData);
+            distance = powerModify(distance, abilityData);
 
             EntityWaterBubble existing = AvatarEntity.lookupControlledEntity(world, EntityWaterBubble.class,
                     entity);
@@ -103,6 +117,8 @@ public class AbilityFlowControl extends Ability {
                 //Grow the bubble with an appear animation
                 bubble.setEntitySize(0.05F);
                 bubble.setMaxEntitySize(size);
+                bubble.setMaxSize(size);
+                bubble.setMaxHealth(waterLevel);
                 bubble.setHealth(waterLevel);
                 bubble.setXp(xp);
                 bubble.setChiHit(chiHit);
@@ -111,7 +127,12 @@ public class AbilityFlowControl extends Ability {
                 bubble.setAbility(this);
                 bubble.setPosition(spawnPos.getX(), spawnPos.getY() + 0.5, spawnPos.getZ());
                 bubble.setState(EntityWaterBubble.State.BUBBLE);
+                bubble.setDefaultState(EntityWaterBubble.State.BUBBLE);
                 bubble.setDegreesPerSecond(size * 2);
+                bubble.setSwirlRadius(swirlRadius);
+                bubble.setDistance(distance);
+                bubble.setDamageSource("avatar_Water");
+                bubble.setPiercing(false);
 
                 //Only want to spawn it server side
                 if (!world.isRemote)
@@ -122,6 +143,7 @@ public class AbilityFlowControl extends Ability {
                 data.addStatusControl(StatusControlController.LOB_BUBBLE);
                 data.addStatusControl(StatusControlController.SHIELD_BUBBLE);
                 data.addStatusControl(StatusControlController.SWIRL_BUBBLE);
+                data.addStatusControl(StatusControlController.MODIFY_WATER);
             }
         }
         else {
@@ -129,12 +151,6 @@ public class AbilityFlowControl extends Ability {
         }
         super.execute(ctx);
 
-    }
-
-
-    @Override
-    public boolean isChargeable() {
-        return true;
     }
 
     @Override

@@ -290,8 +290,8 @@ avatar.ability.flow_control.desc=Water's most essential ability. Use a bubble of
 avatar.ability.flow_control.lvl1=Create an extremely versatile bubble of water! You can use other water moves from it. Shift to swirl, left click to lob, right click to shield.
 avatar.ability.flow_control.lvl2=Able to draw from snow and ice, range of creation increased. General stats increased.
 avatar.ability.flow_control.lvl3=Can create a permanent water source when lobbed; shield capabilities considerably increased, water can be drawn from plants.
-avatar.ability.flow_control.lvl4_1=§9§l§oTidal Bomb ;; Massively increased offensive and charging capabilities. Hold shift for a massive water aoe when shot.
-avatar.ability.flow_control.lvl4_2=§9§l§oWhirling Vortex ;; Water forms into a solid ring around you. Short shockwave rather than a projectile when shot. Extremely strong shield.
+avatar.ability.flow_control.lvl4_1=§9§l§oTidal Bomb ;; Massively increased offensive and charging capabilities. Left click while shielding for a burst, if you have water blast unlocked.
+avatar.ability.flow_control.lvl4_2=§9§l§oWhirling Vortex ;; Water forms into a solid ring around you. Extremely strong shield.
 
 
 avatar.ability.water_arc=§9§lWater §9§lArc
@@ -299,8 +299,8 @@ avatar.ability.water_arc.desc=One of waterbending's most basic attacks. Shoot a 
 avatar.ability.water_arc.lvl1=Basic water arc.
 avatar.ability.water_arc.lvl2=Farther pick-up range, bigger water splash. Can draw from snow and ice.
 avatar.ability.water_arc.lvl3=Much faster, can deflect more projectiles, and can be drawn from plants. Can also be turned into short-ranged blades (hold right click and move the mouse).
-avatar.ability.water_arc.lvl4_1=§9§l§oCascading Falls ;; You can now release considerably more melee slashes from the arc and form combos, cuts non-solid plants.
-avatar.ability.water_arc.lvl4_2=§9§l§oCurve of the Moon ;; Spins in all directions like a swimming fish, deflects more projectiles, and can be released into a shockwave or a high-pressure arc.
+avatar.ability.water_arc.lvl4_1=§9§l§oTidal Lash ;; Water whip!
+avatar.ability.water_arc.lvl4_2=§9§l§oWave Blast ;; Bigger, better, faster, stronger!
 
 avatar.ability.wave=§9§lWave
 avatar.ability.wave.desc=Summon a wave of water to push nearby enemies away!

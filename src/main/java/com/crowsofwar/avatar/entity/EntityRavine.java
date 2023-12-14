@@ -18,6 +18,7 @@
 package com.crowsofwar.avatar.entity;
 
 import com.crowsofwar.avatar.bending.bending.earth.Earthbending;
+import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.block.*;
 import net.minecraft.block.state.IBlockState;
@@ -135,21 +136,24 @@ public class EntityRavine extends EntityOffensive {
     }
 
     public void spawnEntity() {
-        if (!world.isRemote) {
-            BlockPos pos = new BlockPos(posX, posY, posZ);
 
-            //TODO: BUG - Spawns weirdly/not at all with snow layers and such. Fix.
-            if (world.getBlockState(pos.down()).getBlockHardness(world, pos.down()) != -1 && !world.isAirBlock(pos.down())
-                    && world.isBlockNormalCube(pos.down(), false)
-                    // Checks that the block above is not solid, since this causes the falling blocks to vanish.
-                    && !world.isBlockNormalCube(pos, false)) {
+        BlockPos pos = new BlockPos(posX, posY, posZ);
+        Vec3d centre = AvatarEntityUtils.getMiddleOfEntity(this);
 
-                // Falling blocks do the setting block to air themselves.
-                //Fixed issues with floating blocks not appearing??? Now time to fix going up areas with
-                //non-solid blocks.
-                EntityFallingBlock fallingblock = new EntityFallingBlock(world, posX, (int) (posY - 0.5) + 0.5,
-                        posZ, world.getBlockState(new BlockPos(posX, posY - 1, posZ)));
-                fallingblock.motionY = 0.15 + getAvgSize() / 10;
+        //TODO: BUG - Spawns weirdly/not at all with snow layers and such. Fix.
+        if (world.getBlockState(pos.down()).getBlockHardness(world, pos.down()) != -1 && !world.isAirBlock(pos.down())
+                && world.isBlockNormalCube(pos.down(), false)
+                // Checks that the block above is not solid, since this causes the falling blocks to vanish.
+                && !world.isBlockNormalCube(pos, false)) {
+
+            // Falling blocks do the setting block to air themselves.
+            //Fixed issues with floating blocks not appearing??? Now time to fix going up areas with
+            //non-solid blocks.
+            EntityFallingBlock fallingblock = new EntityFallingBlock(world, centre.x, posY - 1,
+                    centre.z, world.getBlockState(new BlockPos(posX, posY - 1, posZ)));
+            //Any more than 0.3 breaks things
+            fallingblock.motionY = Math.min(0.15 + velocity().magnitude() / 120, 0.3);
+            if (!world.isRemote) {
                 world.spawnEntity(fallingblock);
             }
         }
@@ -216,6 +220,11 @@ public class EntityRavine extends EntityOffensive {
             if (!shouldBreakBlocks())
                 Dissipate();
         }
+    }
+
+    @Override
+    public boolean canCollideWith(Entity entity) {
+        return super.canCollideWith(entity) && !(entity instanceof EntityFloatingBlock);
     }
 
     @Nullable

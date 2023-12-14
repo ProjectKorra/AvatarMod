@@ -18,202 +18,115 @@
 package com.crowsofwar.avatar.bending.bending.water;
 
 import com.crowsofwar.avatar.bending.bending.Ability;
-import com.crowsofwar.avatar.bending.bending.BendingAi;
+import com.crowsofwar.avatar.entity.AvatarEntity;
+import com.crowsofwar.avatar.entity.EntityWaterBubble;
+import com.crowsofwar.avatar.entity.data.WaterBubbleBehavior;
 import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
+import com.crowsofwar.avatar.util.data.StatusControlController;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
-import com.crowsofwar.avatar.entity.AvatarEntity;
-import com.crowsofwar.avatar.entity.EntityWaterArc;
-import com.crowsofwar.avatar.entity.data.WaterArcBehavior;
-import com.crowsofwar.avatar.util.Raytrace;
-import com.crowsofwar.gorecore.util.Vector;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import java.util.function.BiPredicate;
-
-import static com.crowsofwar.avatar.config.ConfigSkills.SKILLS_CONFIG;
-import static com.crowsofwar.avatar.config.ConfigStats.STATS_CONFIG;
-import static com.crowsofwar.avatar.util.data.StatusControlController.THROW_WATER;
-import static com.crowsofwar.gorecore.util.Vector.getLookRectangular;
-import static java.lang.Math.toRadians;
-
 /**
  * @author CrowsOfWar
+ *
+ * Creates a water arc. Wow. Amazing.
+ * Press shift to 'bind' it to you, allowing you to use it as a whip.
+ * Middle click to change from flow control to water arc.w
  */
 public class AbilityWaterArc extends Ability {
 
+    public static final String WATER_HITS = "waterHits";
     public AbilityWaterArc() {
         super(Waterbending.ID, "water_arc");
         requireRaytrace(-1, true);
     }
 
     @Override
-    public void execute(AbilityContext ctx) {
-        World world = ctx.getWorld();
-        Bender bender = ctx.getBender();
-        EntityLivingBase entity = ctx.getBenderEntity();
-        BendingData data = ctx.getData();
-
-        Vector targetPos = getClosestWaterbendableBlock(entity, ctx.getLevel() * 2);
-
-
-        if (targetPos != null || ctx.consumeWater(1) || (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative())) {
-
-            if (targetPos == null) {
-                targetPos = Vector.getEyePos(entity).plus(getLookRectangular(entity).times(2.5));
-            }
-            if (targetPos != null && (entity instanceof EntityPlayer && !((EntityPlayer) entity).isCreative())) {
-                world.setBlockToAir(targetPos.toBlockPos());
-            }
-
-
-            float damageMult = 1F;
-            float gravity = 8;
-            float size = 0.5F;
-            //The water arc number in the combo.
-
-            if (ctx.getLevel() == 1) {
-                damageMult = 1.25F;
-                gravity = 7.5F;
-                size = 0.65F;
-            }
-            if (ctx.getLevel() == 2) {
-                damageMult = 1.5F;
-                gravity = 7;
-                size = 0.8F;
-            }
-            if (ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND)) {
-                damageMult = 3F;
-                gravity = 3;
-                size = 0.4F;
-            }
-            if (ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.FIRST)) {
-                gravity = 9.81F;
-                size = 0.5F;
-            }
-
-            if (bender.consumeChi(STATS_CONFIG.chiWaterArc)) {
-
-                removeExisting(ctx);
-
-                EntityWaterArc water = new EntityWaterArc(world);
-                water.setOwner(entity);
-                assert targetPos != null;
-                water.setPosition(targetPos.x() + 0.5, targetPos.y() - 0.5, targetPos.z() + 0.5);
-                water.setDamageMult(damageMult);
-                water.setEntitySize(size);
-                water.setDamage(damageMult * STATS_CONFIG.waterArcSettings.damage);
-                water.setXp(SKILLS_CONFIG.waterHit);
-                water.setTier(getCurrentTier(ctx));
-                water.setLifeTime(30);
-                water.setBehavior(new WaterArcBehavior.PlayerControlled());
-                water.isSpear(ctx.isDynamicMasterLevel(AbilityData.AbilityTreePath.SECOND));
-                water.setGravity(gravity);
-                water.setAbility(this);
-                if (!world.isRemote)
-                    world.spawnEntity(water);
-                ctx.getData().addStatusControl(THROW_WATER);
-
-
-            }
-        }
+    public void init() {
+        super.init();
+       addProperties(WATER_LEVEL, EXPLOSION_SIZE, EXPLOSION_DAMAGE, EFFECT_RADIUS, CHARGE_FREQUENCY,
+                CHARGE_AMOUNT, EFFECT_RADIUS, RANGE, WATER_HITS);
     }
 
-	/*private Vector getClosestWaterBlock(EntityLivingBase entity, int level) {
-		World world = entity.world;
-
-		Vector eye = Vector.getEyePos(entity);
-
-		double rangeMult = 0.6;
-		if (level >= 1) {
-			rangeMult = 1;
-		}
-
-		double range = STATS_CONFIG.waterArcSearchRadius * rangeMult;
-		for (int i = 0; i < STATS_CONFIG.waterArcAngles; i++) {
-			for (int j = 0; j < STATS_CONFIG.waterArcAngles; j++) {
-
-				double yaw = entity.rotationYaw + i * 360.0 / STATS_CONFIG.waterArcAngles;
-				double pitch = entity.rotationPitch + j * 360.0 / STATS_CONFIG.waterArcAngles;
-
-				BiPredicate<BlockPos, IBlockState> isWater = (pos, state) -> state.getBlock() == Blocks.WATER
-						|| state.getBlock() == Blocks.FLOWING_WATER || state.getBlock() == Blocks.ICE || state.getBlock() == Blocks.SNOW_LAYER
-						|| state.getBlock() == Blocks.SNOW;
-
-				Vector angle = Vector.toRectangular(toRadians(yaw), toRadians(pitch));
-				Raytrace.Result result = Raytrace.predicateRaytrace(world, eye, angle, range, isWater);
-				if (result.hitSomething()) {
-					return result.getPosPrecise();
-				}
-
-			}
-
-		}
-
-		return null;
-
-	}**/
-
-    //For bending snow and ice; is a separate method so that when passives are active it's easy to differentiate
-    //For some reason this doesn't work; will use alternate method for now
-    private Vector getClosestWaterbendableBlock(EntityLivingBase entity, int level) {
-        World world = entity.world;
-
-        Vector eye = Vector.getEyePos(entity);
-
-        double rangeMult = 0.6;
-        if (level >= 1) {
-            rangeMult = 1;
-        }
-
-        double range = STATS_CONFIG.waterArcSearchRadius * rangeMult;
-        for (int i = 0; i < STATS_CONFIG.waterArcAngles; i++) {
-            for (int j = 0; j < STATS_CONFIG.waterArcAngles; j++) {
-
-                double yaw = entity.rotationYaw + i * 360.0 / STATS_CONFIG.waterArcAngles;
-                double pitch = entity.rotationPitch + j * 360.0 / STATS_CONFIG.waterArcAngles;
-
-                BiPredicate<BlockPos, IBlockState> isWater = (pos, state) -> (STATS_CONFIG.waterBendableBlocks.contains(state.getBlock())
-                        || STATS_CONFIG.plantBendableBlocks.contains(state.getBlock())) && state.getBlock() != Blocks.AIR;
-
-                Vector angle = Vector.toRectangular(toRadians(yaw), toRadians(pitch));
-                Raytrace.Result result = Raytrace.predicateRaytrace(world, eye, angle, range, isWater);
-                if (result.hitSomething()) {
-                    return result.getPosPrecise();
-                }
-
-            }
-
-        }
-
-        return null;
-
-    }
-
-    /**
-     * Kills already existing water arc if there is one
-     */
-    private void removeExisting(AbilityContext ctx) {
-
-        EntityWaterArc water = AvatarEntity.lookupControlledEntity(ctx.getWorld(), EntityWaterArc
-                .class, ctx.getBenderEntity());
-
-        if (water != null) {
-            water.setBehavior(new WaterArcBehavior.Thrown());
-        }
-
-    }
 
     @Override
-    public BendingAi getAi(EntityLiving entity, Bender bender) {
-        return new AiWaterArc(this, entity, bender);
+    public void execute(AbilityContext ctx) {
+        EntityLivingBase entity = ctx.getBenderEntity();
+        Bender bender = ctx.getBender();
+        BendingData data = ctx.getData();
+        World world = ctx.getWorld();
+        AbilityData abilityData = ctx.getAbilityData();
+
+        if (ctx.consumeWater(getProperty(WATER_AMOUNT, ctx).intValue())) {
+            int lifeTime = getProperty(LIFETIME, ctx).intValue();
+            float damage = getProperty(DAMAGE, ctx).floatValue();
+            float xp = getProperty(XP_HIT, ctx).floatValue();
+            //Also need to implement health???
+            int waterLevel = getProperty(WATER_LEVEL, ctx).intValue();
+            float size = getProperty(SIZE, ctx).floatValue();
+            float chiHit = getProperty(CHI_HIT, ctx).floatValue();
+            int performance = getProperty(PERFORMANCE, ctx).intValue();
+            float swirlRadius = getProperty(EFFECT_RADIUS, ctx).floatValue();
+            float distance = getProperty(RANGE, ctx).floatValue();
+
+            BlockPos spawnPos = abilityData.getSourceInfo().getBlockPos();
+
+            lifeTime = (int) powerModify(lifeTime, abilityData);
+            damage = powerModify(damage, abilityData);
+            size = powerModify(size, abilityData);
+            swirlRadius = powerModify(swirlRadius, abilityData);
+            distance = powerModify(distance, abilityData);
+
+            EntityWaterBubble existing = AvatarEntity.lookupControlledEntity(world, EntityWaterBubble.class,
+                    entity);
+            if (existing == null) {
+                EntityWaterBubble bubble = new EntityWaterBubble(world);
+                bubble.setLifeTime(lifeTime);
+                bubble.setDamage(damage);
+                bubble.setTier(getCurrentTier(ctx));
+                bubble.setOwner(entity);
+                //Grow the bubble with an appear animation
+                bubble.setEntitySize(0.05F);
+                bubble.setMaxEntitySize(size);
+                bubble.setMaxSize(size);
+                bubble.setMaxHealth(waterLevel);
+                bubble.setHealth(waterLevel);
+                bubble.setXp(xp);
+                bubble.setChiHit(chiHit);
+                bubble.setBehaviour(new WaterBubbleBehavior.Grow());
+                bubble.setPerformanceAmount(performance);
+                bubble.setAbility(this);
+                bubble.setPosition(spawnPos.getX(), spawnPos.getY() + 0.5, spawnPos.getZ());
+                bubble.setState(EntityWaterBubble.State.ARC);
+                bubble.setDefaultState(EntityWaterBubble.State.ARC);
+                bubble.setDegreesPerSecond(size * 2);
+                bubble.setSwirlRadius(swirlRadius);
+                bubble.setDistance(distance);
+                bubble.setDamageSource("avatar_Water");
+                bubble.setPiercing(false);
+                bubble.setHits(getProperty(WATER_HITS, ctx).intValue());
+
+                //Only want to spawn it server side
+                if (!world.isRemote)
+                    world.spawnEntity(bubble);
+
+                //Add all status controls except for throw.
+                //Replace lob w/ throw while holding shift.
+                data.addStatusControl(StatusControlController.LOB_BUBBLE);
+                data.addStatusControl(StatusControlController.SHIELD_BUBBLE);
+                data.addStatusControl(StatusControlController.SWIRL_BUBBLE);
+                data.addStatusControl(StatusControlController.MODIFY_WATER);
+            }
+        }
+        else {
+            bender.sendMessage("avatar.waterSourceFail");
+        }
+        super.execute(ctx);
+
     }
 
     @Override

@@ -14,7 +14,8 @@ import net.minecraft.world.World;
 public class StatCtrlResetBubble extends StatusControl {
 
     //Used for determining what type of reset; nothing else
-    private EntityWaterBubble.State state;
+    private final EntityWaterBubble.State state;
+
     public StatCtrlResetBubble(AvatarControl control, CrosshairPosition position, EntityWaterBubble.State state) {
         //Either shield or swirl. No bubble reset, so I only need a ternary operator here
         super(state == EntityWaterBubble.State.SHIELD ? 36 : 19, control, position);
@@ -32,8 +33,13 @@ public class StatCtrlResetBubble extends StatusControl {
             //The behaviour immediately changes the state, so change the stat ctrl first
             if (state.equals(EntityWaterBubble.State.SHIELD))
                 data.addStatusControl(StatusControlController.SHIELD_BUBBLE);
-           if (state.equals(EntityWaterBubble.State.STREAM))
-               data.addStatusControl(StatusControlController.SWIRL_BUBBLE);
+            if (state.equals(EntityWaterBubble.State.STREAM))
+                data.addStatusControl(StatusControlController.SWIRL_BUBBLE);
+            //Removes old stat ctrls
+            data.removeStatusControl(StatusControlController.PUSH_SWIRL_BUBBLE);
+            data.removeStatusControl(StatusControlController.RELEASE_SWIRL_BUBBLE);
+            data.removeStatusControl(StatusControlController.PUSH_SHIELD_BUBBLE);
+            data.removeStatusControl(StatusControlController.RELEASE_SHIELD_BUBBLE);
             bubble.setBehaviour(new WaterBubbleBehavior.Grow());
         }
 

@@ -171,7 +171,9 @@ public abstract class Ability {
             MAX_CHICOST = "maxChiCost",
             MAX_BURNOUT = "maxBurnout",
             MAX_EXHAUSTION = "maxExhaustion",
-            MAX_COOLDOWN = "maxCooldown";
+            MAX_COOLDOWN = "maxCooldown",
+            MAX_RADIUS = "maxRadius",
+            MAX_RANGE = "maxRange";
     //Jump stuff
     public static final String
             JUMP_HEIGHT = "jumpHeight",

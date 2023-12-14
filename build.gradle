@@ -69,44 +69,29 @@ repositories {
     mavenCentral()
     jcenter()
     maven {
+        name = "Gradle Plugins"
         url = "https://plugins.gradle.org/m2/"
     }
     
     maven {
-        name = "forge"
+        name = "MinecraftForge Maven"
         url = "https://maven.minecraftforge.net"
     }
     
-    maven {
-        name = "amuzil"
-        url = "https://repo.amuzil.com/artifactory/release/"
-    }
-
-    maven {
-        name = "codechickenlib"
-        url = "http://chickenbones.net/maven/"
-    }
-    
-    maven {
-        // location of the maven that hosts JEI files
-        name = "Progwml6 maven"
-        url = "https://dvs1.progwml6.com/files/maven/"
-    }
-    
-    maven {
-        // location of a maven mirror for JEI files, as a fallback
-        name = "ModMaven"
-        url = "https://modmaven.k-4u.nl"
-    }
-    
-    maven {
-        name = "DragonForge"
-        url = "https://raw.github.com/dragon-forge/maven/master"
-    }
+    //maven {
+    //    name = "Amuzil Repository"
+    //    url = "https://repo.amuzil.com/artifactory/release/"
+    //}
     
     //Patchouli guidebook
+    // maven {
+    //     name = "BlameJared Maven"
+    //     url = 'https://maven.blamejared.com'
+    // }
+
     maven {
-        url = 'https://maven.blamejared.com'
+        name = "Curse Maven"
+        url = "https://cursemaven.com"
     }
 }
 
@@ -127,21 +112,23 @@ tasks.runServer.dependsOn tasks.useDeobfDependencies
 dependencies {
     provided fileTree(dir: dependenciesConfig.libraries + (dependenciesConfig.obfuscated ? "" : "Deobf"), include: ["*.jar"])
     
+    // Gradle is weird sometimes
+
     // Forge Mods
     
     //provided "elucent.albedo:albedo:1.1.0-3"
-    provided "codechicken:CodeChickenLib:1.12.2-3.2.2.353:universal"
-    compile "tk.zeitheron:hammerlib-1.12.2:2.0.6.26:deobf"
-    compile "tk.zeitheron:coloredlux-1.12.2:12.4.20:deobf"
+    //provided "codechicken:CodeChickenLib:1.12.2-3.2.2.353:universal"
     
-    // compile against the JEI API but do not include it at runtime
-    provided "mezz:jei-1.12.2:4.16.1.302:api"
-    // at runtime, use the full JEI jar
-    runtime "mezz:jei-1.12.2:4.16.1.302"
+    // Colored Lux 12.6.29
+    //compile "curse.maven:coloredlux-347912:3493508"
     
-    compile "vazkii.patchouli:Patchouli:1.0-19.98"
+    // JEI 4.16.1.302
+   // runtime "curse.maven:jei-238222:3043174"
+
+    // BetterQuesting API 3.5.320
+    //provided "curse.maven:betterquesting-238856:2858945"
     
-    if (dependenciesConfig.obfuscated) { } else { }
+    //compile "vazkii.patchouli:Patchouli:1.0-19.98"
     
     // Other Stuff
     shadow "org.yaml:snakeyaml:1.23"
@@ -311,5 +298,5 @@ task release(dependsOn: ["cleanBuild", "publish"]) {
 }
 
 runClient {
-    args = ['--username', 'Dev']
+   args = ['--username', 'Dev']
 }

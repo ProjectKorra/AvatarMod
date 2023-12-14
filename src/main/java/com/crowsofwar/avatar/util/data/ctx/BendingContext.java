@@ -204,15 +204,6 @@ public class BendingContext {
             }
         }
 
-        //Allows for water bubbles to count as a source block
-        EntityWaterBubble bubble = AvatarEntity.lookupControlledEntity(world, EntityWaterBubble.class, getBenderEntity());
-        if (bubble != null) {
-            if (bubble.getHealth() >= amount) {
-                bubble.setHealth(bubble.getHealth() - amount);
-                return true;
-            }
-        }
-
         return bender.consumeWaterLevel(amount);
 
     }

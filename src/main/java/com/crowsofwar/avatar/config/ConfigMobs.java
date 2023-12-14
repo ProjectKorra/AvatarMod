@@ -78,13 +78,28 @@ public class ConfigMobs {
         DEFAULT_FOODS.put("minecraft:sugar", 2);
 
         //Water.
-//        DEFAULT_SCROLL_DROPS.put("polarbear", 10.0);
-//        DEFAULT_SCROLL_TYPE.put("polarbear", "water");
-//        DEFAULT_SCROLL_TYPE.put("squid", "water");
-//        DEFAULT_SCROLL_DROPS.put("guardian", 15.0);
-//        DEFAULT_SCROLL_TYPE.put("guardian", "water");
-//        DEFAULT_SCROLL_DROPS.put("elderguardian", 40.0);
-//        DEFAULT_SCROLL_TYPE.put("elderguardian", "water");
+        DEFAULT_SCROLL_DROPS.put("polarbear", new MobDrops("polarbear",
+                new DropInfo(ScrollType.WATER, 1, 40.0, 3),
+                new DropInfo(ScrollType.WATER, 2, 20.0, 2),
+                new DropInfo(ScrollType.WATER, 3, 15.0),
+                new DropInfo(ScrollType.WATER, 4, 7.5)));
+        DEFAULT_SCROLL_DROPS.put("squid", new MobDrops("squid",
+                new DropInfo(ScrollType.WATER, 1, 15.0, 2),
+                new DropInfo(ScrollType.WATER, 2, 10.0),
+                new DropInfo(ScrollType.WATER, 3, 2.5)));
+        DEFAULT_SCROLL_DROPS.put("guardian", new MobDrops("guardian",
+                new DropInfo(ScrollType.WATER, 1, 50.0, 4),
+                new DropInfo(ScrollType.WATER, 2, 35.0, 2),
+                new DropInfo(ScrollType.WATER, 3, 20.0, 2),
+                new DropInfo(ScrollType.WATER, 4, 15.0),
+                new DropInfo(ScrollType.WATER, 5, 10.0)));
+        DEFAULT_SCROLL_DROPS.put("elderguardian", new MobDrops("elderguardian",
+                new DropInfo(ScrollType.WATER, 1, 50.0, 5),
+                new DropInfo(ScrollType.WATER, 2, 35.0, 2),
+                new DropInfo(ScrollType.WATER, 3, 30.0, 2),
+                new DropInfo(ScrollType.WATER, 4, 20.0, 2),
+                new DropInfo(ScrollType.WATER, 5, 15.0),
+                new DropInfo(ScrollType.WATER, 6, 10.0)));
 
         //Fire
         //Some mob names are weird, don't change them.
@@ -185,12 +200,20 @@ public class ConfigMobs {
                 new DropInfo(ScrollType.SAND, 1, 15.0),
                 new DropInfo(ScrollType.SAND, 2, 5.0)
         ));
-        //Ice
-//        DEFAULT_SCROLL_DROPS.put("polarbear", 10.0);
-//        DEFAULT_SCROLL_TYPE.put("polarbear", "ice");
-//        DEFAULT_SCROLL_DROPS.put("stray", 10.0);
-//        DEFAULT_SCROLL_TYPE.put("stray", "ice");
 
+        //Ice
+        DEFAULT_SCROLL_DROPS.put("polarbear", new MobDrops("polarbear",
+                new DropInfo(ScrollType.ICE, 1, 10.0),
+                new DropInfo(ScrollType.ICE, 2, 5.0)));
+        DEFAULT_SCROLL_DROPS.put("stray", new MobDrops("stray",
+                new DropInfo(ScrollType.ICE, 1, 15.0),
+                new DropInfo(ScrollType.ICE, 2, 5.0)));
+        DEFAULT_SCROLL_DROPS.put("guardian", new MobDrops("guardian",
+                new DropInfo(ScrollType.ICE, 1, 5.0)));
+        DEFAULT_SCROLL_DROPS.put("elderguardian", new MobDrops("elderguardian",
+                new DropInfo(ScrollType.ICE, 1, 10.0),
+                new DropInfo(ScrollType.ICE, 2, 5.0),
+                new DropInfo(ScrollType.ICE, 3, 2.5)));
         //All
         DEFAULT_SCROLL_DROPS.put("witch", new MobDrops("witch",
                 new DropInfo(ScrollType.ALL, 1, 10, 2),

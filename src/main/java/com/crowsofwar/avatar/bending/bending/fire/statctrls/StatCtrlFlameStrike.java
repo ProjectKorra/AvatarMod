@@ -152,7 +152,7 @@ public class StatCtrlFlameStrike extends StatusControl {
                             look.y * mult + world.rand.nextGaussian() * accuracyMult,
                             look.z * mult + world.rand.nextGaussian() * accuracyMult)
                             .element(BendingStyles.get(Firebending.ID)).ability(strike).spawnEntity(entity)
-                            .clr(r, g, b, 150).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(50, 140)).collide(true).collideParticles(true)
+                            .clr(r, g, b, 150).fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(50, 140)).collide(world.rand.nextBoolean())
                             .scale(size * 0.75F).time(lifeTime + AvatarUtils.getRandomNumberInRange(1, 5)).
                             spawn(world);
                     //Using the random function each time ensures a different number for every value, making the ability "feel" better.
@@ -166,7 +166,7 @@ public class StatCtrlFlameStrike extends StatusControl {
                             look.y * mult + world.rand.nextGaussian() * accuracyMult,
                             look.z * mult + world.rand.nextGaussian() * accuracyMult)
                             .element(BendingStyles.get(Firebending.ID)).ability(strike).spawnEntity(entity)
-                            .clr(255, 60 + AvatarUtils.getRandomNumberInRange(0, 60), 10, 150).collide(true).collideParticles(true)
+                            .clr(255, 60 + AvatarUtils.getRandomNumberInRange(0, 60), 10, 150).collide(world.rand.nextBoolean()).collideParticles(world.rand.nextBoolean())
                             .scale(size * 0.75F).time(lifeTime + AvatarUtils.getRandomNumberInRange(1, 5))
                             .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(40, 140)).spawn(world);
                 }
@@ -289,14 +289,15 @@ public class StatCtrlFlameStrike extends StatusControl {
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 30,
                                 entity.world.rand.nextGaussian() / 30, entity.world.rand.nextGaussian() / 30).time(5 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(rgb[0], rgb[1], rgb[2])
                                 .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).scale(entity.getAvgSize() * 2F).element(BendingStyles.get(entity.getElement()))
-                                .ability(entity.getAbility()).spawnEntity(entity.getOwner()).collide(true).collideParticles(true).spawn(entity.world);
+                                .ability(entity.getAbility()).spawnEntity(entity.getOwner()).spawn(entity.world);
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 30,
                                 entity.world.rand.nextGaussian() / 30, entity.world.rand.nextGaussian() / 30).time(5 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(rgb[0], rgb[1], rgb[2])
                                 .fade(rRandom, gRandom, bRandom, AvatarUtils.getRandomNumberInRange(100, 175)).scale(entity.getAvgSize() * 2F).element(BendingStyles.get(entity.getElement()))
-                                .ability(entity.getAbility()).spawnEntity(entity.getOwner()).collide(true).collideParticles(true).spawn(entity.world);
+                                .ability(entity.getAbility()).spawnEntity(entity.getOwner()).collide(entity.world.rand.nextBoolean())
+                                .collideParticles(entity.world.rand.nextBoolean()).spawn(entity.world);
                         ParticleBuilder.create(ParticleBuilder.Type.FIRE).pos(spawnX, spawnY, spawnZ).vel(entity.world.rand.nextGaussian() / 50,
                                 entity.world.rand.nextGaussian() / 50, entity.world.rand.nextGaussian() / 50).time(5 + AvatarUtils.getRandomNumberInRange(0, 2)).scale(entity.getAvgSize() / 2)
-                                .element(BendingStyles.get(entity.getElement())).ability(entity.getAbility()).spawnEntity(entity.getOwner()).collide(true).collideParticles(true).spawn(entity.world);
+                                .element(BendingStyles.get(entity.getElement())).ability(entity.getAbility()).spawnEntity(entity.getOwner()).collide(entity.world.rand.nextBoolean()).spawn(entity.world);
                     }
                 }
             }

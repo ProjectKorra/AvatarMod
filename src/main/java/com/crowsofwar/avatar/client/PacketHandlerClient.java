@@ -20,17 +20,20 @@ package com.crowsofwar.avatar.client;
 import com.crowsofwar.avatar.AvatarLog;
 import com.crowsofwar.avatar.AvatarLog.WarningType;
 import com.crowsofwar.avatar.AvatarMod;
-import com.crowsofwar.avatar.util.helper.GliderHelper;
+import com.crowsofwar.avatar.bending.bending.Abilities;
 import com.crowsofwar.avatar.client.gui.AvatarUiRenderer;
 import com.crowsofwar.avatar.client.gui.skills.SkillsGui;
-import com.crowsofwar.avatar.bending.bending.Abilities;
-import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.network.IPacketHandler;
 import com.crowsofwar.avatar.network.packets.*;
 import com.crowsofwar.avatar.network.packets.glider.PacketCClientGliding;
 import com.crowsofwar.avatar.network.packets.glider.PacketCSyncGliderDataToClient;
 import com.crowsofwar.avatar.network.packets.glider.PacketCUpdateClientTarget;
+import com.crowsofwar.avatar.util.data.AbilityData;
+import com.crowsofwar.avatar.util.data.Bender;
+import com.crowsofwar.avatar.util.data.BendingData;
+import com.crowsofwar.avatar.util.helper.GliderHelper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumParticleTypes;
@@ -60,6 +63,9 @@ public class PacketHandlerClient implements IPacketHandler {
 
     @Override
     public IMessage onPacketReceived(IMessage packet, MessageContext ctx) {
+
+        if (packet instanceof PacketCUseAbility)
+            return handleKeypress((PacketCUseAbility) packet, ctx);
 
         if (packet instanceof PacketCParticles)
             return handlePacketParticles((PacketCParticles) packet, ctx, ((PacketCParticles) packet).getVelIsMagnitude());
@@ -93,6 +99,27 @@ public class PacketHandlerClient implements IPacketHandler {
     @Override
     public Side getSide() {
         return Side.CLIENT;
+    }
+
+    //Client side equivalent of the server method
+    private IMessage handleKeypress(PacketCUseAbility packet, MessageContext ctx) {
+
+        //Can't use the message ctx since the player is only available server side
+        EntityPlayer player = mc.player;
+        EntityLivingBase source = player.world.getPlayerEntityByUUID(packet.getBender());
+        //Ensures it doesn't execute twice for the player who executed the ability initially
+        if (source != player && source != null) {
+            //Sets the world and sends packets to *ensure* visuals are seen by others
+            Bender bender = Bender.get(source);
+            player.setWorld(source.world);
+            if (bender != null) {
+                bender.getData().saveAll();
+                bender.executeAbility(packet.getAbility(), packet.getRaytrace(), packet.getSwitchpath());
+            }
+
+        }
+
+        return null;
     }
 
     private IMessage handlePacketParticles(PacketCParticles packet, MessageContext ctx, boolean velIsMagnitude) {
@@ -187,12 +214,11 @@ public class PacketHandlerClient implements IPacketHandler {
                     Abilities.all().get(i).setProperties(packet.properties[i]);
                 }
             });
+        } else {
+            for (int i = 0; i < packet.properties.length; i++) {
+                Abilities.all().get(i).setPropertiesClient(packet.properties[i]);
+            }
         }
-        else {
-			for (int i = 0; i < packet.properties.length; i++) {
-				Abilities.all().get(i).setPropertiesClient(packet.properties[i]);
-			}
-		}
 
         return null;
     }

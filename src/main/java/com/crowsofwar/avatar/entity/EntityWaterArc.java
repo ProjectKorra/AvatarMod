@@ -17,6 +17,7 @@
 
 package com.crowsofwar.avatar.entity;
 
+import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.water.AbilityWaterArc;
 import com.crowsofwar.avatar.bending.bending.water.Waterbending;
 import com.crowsofwar.avatar.util.data.AbilityData;
@@ -267,7 +268,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
                         vel = targetPos == Vec3d.ZERO ? vel : targetPos.subtract(circlePos).normalize().scale(0.075).add(vel);
                     ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(circlePos).spawnEntity(this).vel(vel)
                             .clr(0, 102, 255, 145).scale(getAvgSize() * 1.75F).target(targetPos == Vec3d.ZERO ? pos : targetPos)
-                            .time(8 + AvatarUtils.getRandomNumberInRange(0, 2)).collide(true).collideParticles(true).element(new Waterbending()).spawn(world);
+                            .time(8 + AvatarUtils.getRandomNumberInRange(0, 2)).element(BendingStyles.get(Waterbending.ID)).spawn(world);
                 }
 
                 //Particles along the line
@@ -275,7 +276,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
                     pos = pos.add(AvatarUtils.bezierCurve(((points.length - i - 1D / (h + 1)) / points.length), points));
                     ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(pos).spawnEntity(this).vel(world.rand.nextGaussian() / 120,
                             world.rand.nextGaussian() / 120, world.rand.nextGaussian() / 120).clr(0, 102, 255, 185)
-                            .time(10 + AvatarUtils.getRandomNumberInRange(0, 2)).scale(getAvgSize() * 1.75F).collide(true).collideParticles(true).element(new Waterbending()).spawn(world);
+                            .time(10 + AvatarUtils.getRandomNumberInRange(0, 2)).scale(getAvgSize() * 1.75F).element(BendingStyles.get(Waterbending.ID)).spawn(world);
 
                 }
                 //Dripping water particles
@@ -283,7 +284,7 @@ public class EntityWaterArc extends EntityArc<EntityWaterArc.WaterControlPoint> 
                     pos = pos.add(AvatarUtils.bezierCurve(((points.length - i - 1D / (h + 1)) / points.length), points));
                     ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(pos).spawnEntity(this).vel(world.rand.nextGaussian() / 20,
                             world.rand.nextDouble() / 12, world.rand.nextGaussian() / 20).clr(0, 102, 255, 185)
-                            .time(6 + AvatarUtils.getRandomNumberInRange(0, 2)).scale(getAvgSize() * 1.5F).gravity(true).collide(true).collideParticles(true).element(new Waterbending()).spawn(world);
+                            .time(6 + AvatarUtils.getRandomNumberInRange(0, 2)).scale(getAvgSize() * 1.5F).gravity(true).element(BendingStyles.get(Waterbending.ID)).spawn(world);
                 }
                 //}
             }

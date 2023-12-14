@@ -30,6 +30,8 @@ import com.crowsofwar.avatar.entity.EntityLightningArc;
 import com.crowsofwar.avatar.entity.mob.EntityBender;
 import com.crowsofwar.avatar.network.AvatarChatMessages;
 import com.crowsofwar.avatar.network.packets.PacketCPowerRating;
+import com.crowsofwar.avatar.network.packets.PacketSUseAbility;
+import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.avatar.util.Raytrace;
 import com.crowsofwar.avatar.util.data.ctx.AbilityContext;
 import com.crowsofwar.avatar.util.data.ctx.BendingContext;
@@ -79,7 +81,7 @@ public abstract class Bender {
     }
 
     public static boolean isBenderSupported(EntityLivingBase entity) {
-        return (entity == null || (entity instanceof EntityPlayer && !(entity instanceof FakePlayer)) || entity instanceof EntityBender)
+        return ((entity instanceof EntityPlayer && !(entity instanceof FakePlayer)) || entity instanceof EntityBender)
                 && (Bender.get(entity) != null && Bender.get(entity).getInfo().getId() != null);
     }
 
@@ -277,6 +279,27 @@ public abstract class Bender {
 
     }
 
+    //These methods are wrapper methods, and they use packets to ensure players see everything.
+    //AI and mobs execute their own abilities while sending out packets.
+    public void handleExecution(Ability ability, boolean switchPath) {
+        Raytrace.Result raytrace = Raytrace.getTargetBlock(getEntity(),
+                ability.getRaytrace());
+        //Manually execute it client side:
+        executeAbility(ability, raytrace, switchPath);
+        //Server side
+        if (getEntity() instanceof EntityPlayer)
+            AvatarMod.network.sendToServer(new PacketSUseAbility(ability, raytrace, switchPath, getEntity().getPersistentID()));
+    }
+
+    //Same method but with a raytrace
+    public void handleExecution(Ability ability, Raytrace.Result raytrace, boolean switchPath) {
+        //Manually execute it client side:
+        executeAbility(ability, raytrace, switchPath);
+        //Server side
+        if (getEntity() instanceof EntityPlayer)
+            AvatarMod.network.sendToServer(new PacketSUseAbility(ability, raytrace, switchPath, getEntity().getPersistentID()));
+    }
+
     /**
      * Same as regular {@link #executeAbility(Ability, boolean)}, but allows a provided raytrace, instead
      * of performing another on the fly.
@@ -298,6 +321,9 @@ public abstract class Bender {
         BendingData data = getData();
         EntityLivingBase entity = getEntity();
         AbilityData aD = AbilityData.get(getEntity(), ability.getName());
+
+        //Save data to sync clients for particles
+        data.save(DataCategory.ABILITY_DATA);
 
         if (aD != null) {
             int level = aD.getLevel();
@@ -360,6 +386,7 @@ public abstract class Bender {
                     Ability.syncProperties((EntityPlayer) entity);
                 else Ability.syncEntityProperties();
                 Objects.requireNonNull(Bender.get(entity)).sendMessage("avatar.reload");
+                Ability.syncEntityProperties();
             }
         }
 
@@ -368,6 +395,8 @@ public abstract class Bender {
         // On client-side, players will send a packet to the server, while other entities will do
         // nothing. Particles will be spawned. Remember to check what side you're on when executing abilities!
 
+        //Save data to sync clients for particles
+        data.save(DataCategory.ABILITY_DATA);
     }
 
     /**

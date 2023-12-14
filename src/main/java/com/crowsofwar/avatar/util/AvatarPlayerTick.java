@@ -23,6 +23,7 @@ import com.crowsofwar.avatar.bending.bending.Ability;
 import com.crowsofwar.avatar.bending.bending.BendingStyle;
 import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.air.Airbending;
+import com.crowsofwar.avatar.bending.bending.water.Waterbending;
 import com.crowsofwar.avatar.util.data.Bender;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.event.AbilityUnlockEvent;
@@ -76,14 +77,14 @@ public class AvatarPlayerTick {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
-        if (Bender.isBenderSupported(event.player)) {
+        if (Bender.isBenderSupported(event.player) && event.player instanceof EntityPlayerMP) {
             Ability.syncProperties(event.player);
         }
     }
 
     @SubscribeEvent
     public static void onPlayerDeath(LivingDeathEvent event) {
-        if (event.getEntityLiving() instanceof EntityPlayer && Bender.isBenderSupported(event.getEntityLiving())) {
+        if (event.getEntityLiving() instanceof EntityPlayerMP && Bender.isBenderSupported(event.getEntityLiving())) {
             Ability.syncProperties((EntityPlayer) event.getEntityLiving());
         }
     }
@@ -93,24 +94,8 @@ public class AvatarPlayerTick {
         // When a player logs in, they are sent the glyph data, server settings and spell properties.
         if (event.player instanceof EntityPlayerMP) {
             Ability.syncProperties(event.player);
-        }
-    }
-
-    @SubscribeEvent(priority = EventPriority.HIGH)
-    public static void worldJoinEvent(EntityJoinWorldEvent event) {
-        if (event.getEntity() instanceof EntityLivingBase && Bender.isBenderSupported((EntityLivingBase) event.getEntity())) {
-            //Syncs the properties if they're not loaded
-            List<Ability> initialisedAbilities = Abilities.all().stream().filter(ability -> !ability.arePropertiesInitialised())
-                    .collect(Collectors.toList());
-
-            if (!initialisedAbilities.isEmpty())
-                Ability.syncEntityProperties();
-
-            if (event.getEntity() instanceof EntityPlayer)
-                Ability.syncProperties((EntityPlayer) event.getEntity());
-
-            if (SKILLS_CONFIG.startWithRandomBending && !event.getWorld().isRemote) {
-                EntityLivingBase bender = (EntityLivingBase) event.getEntity();
+            if (SKILLS_CONFIG.startWithRandomBending && !event.player.world.isRemote) {
+                EntityLivingBase bender = event.player;
                 if (Bender.isBenderSupported(bender)) {
                     BendingData data = BendingData.getFromEntity(bender);
                     if (data != null && !data.hasElements()) {
@@ -129,11 +114,19 @@ public class AvatarPlayerTick {
                             Ability ability = Objects.requireNonNull(style.getAllAbilities().get(0));
                             if (!MinecraftForge.EVENT_BUS.post(new AbilityUnlockEvent(bender, ability)))
                                 data.getAbilityData(ability).unlockAbility();
+                            //Unlocks water arc too
+                            if (style instanceof Waterbending) {
+                                Ability arc = Objects.requireNonNull(style.getAllAbilities().get(1));
+                                if (!MinecraftForge.EVENT_BUS.post(new AbilityUnlockEvent(bender, arc)))
+                                    data.getAbilityData(arc).unlockAbility();
+                            }
                         }
                     }
                 }
             }
         }
+        if (event.player != null)
+            Bender.adjustConfigModifier(event.player);
     }
 
     //Prevents keybinds from letting you use abilities you haven't learned

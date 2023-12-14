@@ -51,13 +51,24 @@ import java.util.UUID;
 /**
  * @author CrowsOfWar
  */
-public class EntityWaterBubble extends EntityOffensive implements IShieldEntity {
+public class EntityWaterBubble extends EntityArc<EntityWaterBubble.WaterControlPoint> implements IShieldEntity {
 
+    //Used for determining the distance for the swirl
+    public static final DataParameter<Float> SYNC_STREAM_RADIUS = EntityDataManager.createKey(EntityWaterBubble.class,
+            DataSerializers.FLOAT);
+    //For the shield/default bubble
+    public static final DataParameter<Float> SYNC_DISTANCE = EntityDataManager.createKey(EntityWaterBubble.class,
+            DataSerializers.FLOAT);
     private static final DataParameter<Float> SYNC_HEALTH = EntityDataManager.createKey(EntityWaterBubble.class, DataSerializers.FLOAT);
     private static final DataParameter<Float> SYNC_DEGREES_PER_SECOND = EntityDataManager.createKey(EntityWaterBubble.class, DataSerializers.FLOAT);
     private static final DataParameter<Float> SYNC_MAX_SIZE = EntityDataManager.createKey(EntityWaterBubble.class, DataSerializers.FLOAT);
     //Using ordinals of the STATE to sync them
     private static final DataParameter<Integer> SYNC_STATE = EntityDataManager.createKey(EntityWaterBubble.class,
+            DataSerializers.VARINT);
+    //GOTTA SYNC THE DEFAULT STATE TOO CAUSE WATER ARC
+    private static final DataParameter<Integer> SYNC_DEFAULT_STATE = EntityDataManager.createKey(EntityWaterBubble.class,
+            DataSerializers.VARINT);
+    private static final DataParameter<Integer> SYNC_WATER_HITS = EntityDataManager.createKey(EntityWaterBubble.class,
             DataSerializers.VARINT);
     /**
      * Whether the water bubble will get a water source upon landing. Only
@@ -71,6 +82,7 @@ public class EntityWaterBubble extends EntityOffensive implements IShieldEntity 
         this.putsOutFires = true;
         this.noClip = false;
     }
+
 
     //The method in EntityOffensive is used for growing the water bubble.
     //The method here is for charging it.
@@ -100,6 +112,19 @@ public class EntityWaterBubble extends EntityOffensive implements IShieldEntity 
 
     }
 
+    @Override
+    public float getDamage() {
+        if (isPiercing())
+            return super.getDamage() / 2;
+        return super.getDamage();
+    }
+
+    @Override
+    public void setDamage(float damage) {
+        //TODO: implement percentage health into damage (health / max health)
+        super.setDamage(damage);
+    }
+
     public float getDegreesPerSecond() {
         return dataManager.get(SYNC_DEGREES_PER_SECOND);
     }
@@ -117,13 +142,50 @@ public class EntityWaterBubble extends EntityOffensive implements IShieldEntity 
         dataManager.set(SYNC_STATE, state.ordinal());
     }
 
+    public State getDefaultState() {
+        return State.values()[dataManager.get(SYNC_DEFAULT_STATE)];
+    }
+
+    public void setDefaultState(State state) {
+        dataManager.set(SYNC_DEFAULT_STATE, state.ordinal());
+    }
+
+    public float getSwirlRadius() {
+        return dataManager.get(SYNC_STREAM_RADIUS);
+    }
+
+    //Used for determining the distance of the shield *and* the distance of the swirl.
+    public void setSwirlRadius(float radius) {
+        dataManager.set(SYNC_STREAM_RADIUS, radius);
+    }
+
+    public float getDistance() {
+        return dataManager.get(SYNC_DISTANCE);
+    }
+
+    public void setDistance(float dist) {
+        dataManager.set(SYNC_DISTANCE, dist);
+    }
+
+    public int getHitsLeft() {
+        return dataManager.get(SYNC_WATER_HITS);
+    }
+
+    public void setHits(int hits) {
+        dataManager.set(SYNC_WATER_HITS, hits);
+    }
+
     @Override
     protected void entityInit() {
         super.entityInit();
         dataManager.register(SYNC_MAX_SIZE, 1.5F);
         dataManager.register(SYNC_HEALTH, 3F);
         dataManager.register(SYNC_DEGREES_PER_SECOND, 5F);
-        dataManager.register(SYNC_STATE, 0);
+        dataManager.register(SYNC_STREAM_RADIUS, 2.5F);
+        dataManager.register(SYNC_DISTANCE, 2F);
+        dataManager.register(SYNC_STATE, State.BUBBLE.ordinal());
+        dataManager.register(SYNC_DEFAULT_STATE, State.BUBBLE.ordinal());
+        dataManager.register(SYNC_WATER_HITS, 0);
     }
 
     @Override
@@ -131,7 +193,7 @@ public class EntityWaterBubble extends EntityOffensive implements IShieldEntity 
         super.onUpdate();
 
         if (getBehaviour() != null && getBehaviour() instanceof WaterBubbleBehavior.Lobbed) {
-            setVelocity(velocity().times(0.9));
+            setVelocity(velocity().times(0.975));
         }
         if (getHealth() == 0) {
             this.setDead();
@@ -160,32 +222,6 @@ public class EntityWaterBubble extends EntityOffensive implements IShieldEntity 
                 }
             }
         }
-		/*
-		if (!world.isRemote && inWaterSource) {
-			setDead();
-			if (getOwner() != null) {
-				BendingData data = Objects.requireNonNull(Bender.get(getOwner())).getData();
-				if (data != null) {
-					data.removeStatusControl(StatusControlController.LOB_BUBBLE);
-				}
-			}
-		}**/
-
-
-//        //particles!
-//        if (world.isRemote && getOwner() != null) {
-//            //Colours: 0, 102, 255, 255 in order of r, g, b, a
-//            //Particles are * 2 * PI because that's the circumference of a circle and idk.
-//            //Use the bottom of the entity cause my method is bad and shifts the centre point up. Dw about it.
-//            ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(60, 102, 255, 160)
-//                    .time(14).scale(0.5F).spawnEntity(this).element(BendingStyles.get(Waterbending.ID))
-//                    .swirl((int) (getAvgSize() * 14), (int) (getAvgSize() * 6 * Math.PI),
-//                            getAvgSize(), getAvgSize() * 5, getDegreesPerSecond() * getAvgSize(),
-//                            -0.5F / getAvgSize(), this, world, false, AvatarEntityUtils.getBottomMiddleOfEntity(this),
-//                            ParticleBuilder.SwirlMotionType.OUT, false, true);
-//
-//
-//        }
 
 
     }
@@ -200,7 +236,7 @@ public class EntityWaterBubble extends EntityOffensive implements IShieldEntity 
 
     @Override
     public void Explode() {
-         super.Explode();
+        super.Explode();
     }
 
     @Override
@@ -212,25 +248,90 @@ public class EntityWaterBubble extends EntityOffensive implements IShieldEntity 
         }
     }
 
-    public void cleanup () {
+    public void cleanup() {
         if (getOwner() != null) {
             BendingData data = BendingData.getFromEntity(getOwner());
             if (data != null) {
+                //Base move
                 data.removeStatusControl(StatusControlController.SHIELD_BUBBLE);
                 data.removeStatusControl(StatusControlController.LOB_BUBBLE);
                 data.removeStatusControl(StatusControlController.RESET_SHIELD_BUBBLE);
                 data.removeStatusControl(StatusControlController.SWIRL_BUBBLE);
                 data.removeStatusControl(StatusControlController.RESET_SWIRL_BUBBLE);
-                //Throw
+                //Added from wave
+                data.removeStatusControl(StatusControlController.PUSH_SWIRL_BUBBLE);
+                data.removeStatusControl(StatusControlController.RESET_SWIRL_BUBBLE);
+                data.removeStatusControl(StatusControlController.PUSH_SHIELD_BUBBLE);
+                data.removeStatusControl(StatusControlController.RESET_SHIELD_BUBBLE);
+                //Added from water arc
+                data.removeStatusControl(StatusControlController.MODIFY_WATER);
+
             }
         }
     }
 
+    @Override
+    public float getAoeDamage() {
+        return super.getAoeDamage() / 2;
+    }
 
     @Override
     public boolean shouldExplode() {
         //Add "Thrown" later
         return getBehaviour() instanceof WaterBubbleBehavior.Lobbed;
+    }
+
+
+    @Override
+    public int getFireTime() {
+        return 0;
+    }
+
+    @Override
+    protected void updateCpBehavior() {
+        //Copied from the super class & adjusted:
+        if (getHitsLeft() <= 0)
+            super.updateCpBehavior();
+        else if (getOwner() != null) {
+            getLeader().setPosition(position().plusY(height / 2));
+            getLeader().setVelocity(velocity());
+
+            // Move control points to follow leader
+
+            //Iterates for every point up to the last
+            for (int i = 1; i < points.size() - 1; i++) {
+
+                ControlPoint leader = points.get(i - 1);
+                ControlPoint p = points.get(i);
+                Vector leadPos = leader.position();
+                double sqrDist = p.position().sqrDist(leadPos);
+
+                if (sqrDist > getControlPointTeleportDistanceSq() && getControlPointTeleportDistanceSq() != -1) {
+
+                    Vector toFollowerDir = p.position().minus(leader.position()).normalize();
+
+                    double idealDist = Math.sqrt(getControlPointTeleportDistanceSq());
+                    if (idealDist > 1) idealDist -= 1; // Make sure there is some room
+
+                    Vector revisedOffset = leader.position().plus(toFollowerDir.times(idealDist));
+                    p.setPosition(revisedOffset);
+                    leader.setPosition(revisedOffset);
+                    p.setVelocity(Vector.ZERO);
+
+                } else if (sqrDist > getControlPointMaxDistanceSq() && getControlPointMaxDistanceSq() != -1) {
+
+                    Vector diff = leader.position().minus(p.position());
+                    diff = diff.normalize().times(getVelocityMultiplier());
+                    p.setVelocity(p.velocity().plus(diff));
+
+                }
+            }
+
+            Vec3d pos = Vector.getEntityPos(getOwner()).toMinecraft().add(0, getOwner().getEyeHeight() / 2, 0);
+            Vec3d look = getOwner().getLookVec();
+            ControlPoint point = getControlPoint(getAmountOfControlPoints() - 1);
+            point.setPosition(Vector.fromVec3d(pos.add(look.scale(2))));
+        }
     }
 
     @Override
@@ -246,7 +347,7 @@ public class EntityWaterBubble extends EntityOffensive implements IShieldEntity 
                     .swirl((int) (getAvgSize() * 6), (int) (getAvgSize() * 6 * Math.PI * Math.max(getDegreesPerSecond() / 4, 1)),
                             getAvgSize(), getAvgSize() * 3, getDegreesPerSecond()
                                     * getAvgSize() * 2,
-                            Math.max(getDegreesPerSecond() / 4, 1) + 2, this, world, true, AvatarEntityUtils.getMiddleOfEntity(this),
+                            getDegreesPerSecond() / 2 + 2, this, world, true, AvatarEntityUtils.getMiddleOfEntity(this),
                             ParticleBuilder.SwirlMotionType.OUT, false, true);
         }
     }
@@ -262,7 +363,22 @@ public class EntityWaterBubble extends EntityOffensive implements IShieldEntity 
     }
 
     @Override
+    public boolean isPiercing() {
+        return super.isPiercing() || getHitsLeft() > 0;
+    }
+
+
+    @Override
     public void onCollideWithEntity(Entity entity) {
+
+        if (isPiercing() || shouldExplode())
+            super.onCollideWithEntity(entity);
+
+        if (getHitsLeft() > 0) {
+            setHits(getHitsLeft() - 1);
+            setBehaviour(new WaterBubbleBehavior.PlayerControlled());
+        }
+
         if (entity instanceof AvatarEntity) {
             ((AvatarEntity) entity).onMajorWaterContact();
             //Assume if the entity is a shield it's being player controlled. Probably. Hopefully.
@@ -294,6 +410,9 @@ public class EntityWaterBubble extends EntityOffensive implements IShieldEntity 
 
     @Override
     public boolean onCollideWithSolid() {
+        if (super.onCollideWithSolid() && !(getBehaviour() instanceof WaterBubbleBehavior.PlayerControlled) && getHitsLeft() > 0) {
+            setBehaviour(new WaterBubbleBehavior.PlayerControlled());
+        }
         return super.onCollideWithSolid();
     }
 
@@ -337,9 +456,41 @@ public class EntityWaterBubble extends EntityOffensive implements IShieldEntity 
         return super.shouldRenderInPass(pass);
     }
 
+    @Override
+    protected double getControlPointTeleportDistanceSq() {
+        return getControlPointMaxDistanceSq() * getAmountOfControlPoints();
+    }
+
+    @Override
+    protected double getControlPointMaxDistanceSq() {
+        return 0.5F * getMaxSize();
+    }
+
+    @Override
+    public int getAmountOfControlPoints() {
+        return 7;
+    }
+
+    @Override
+    protected WaterControlPoint createControlPoint(float size, int index) {
+        return new WaterControlPoint(this, size, posX, posY, posZ);
+    }
+
     public enum State {
+        //Default
         BUBBLE,
+        //Shield
         SHIELD,
-        STREAM
+        //Stream around the player
+        STREAM,
+        //Water Arc
+        ARC
+    }
+
+    public static class WaterControlPoint extends ControlPoint {
+
+        public WaterControlPoint(EntityArc arc, float size, double x, double y, double z) {
+            super(arc, size, x, y, z);
+        }
     }
 }

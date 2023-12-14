@@ -99,7 +99,7 @@ public abstract class FireballBehavior extends OffensiveBehaviour {
             //S P I N
             if (!fireballs.isEmpty() && fireballs.size() > 1) {
                 angle *= 10;
-                dragPos = AvatarEntityUtils.circularMotion(owner, angle, index, fireballs.size());
+                dragPos = AvatarEntityUtils.circularMotion(owner, angle, index, fireballs.size(), 2.5F);
             }
 
             AvatarEntityUtils.dragEntityTowardsPoint(entity, dragPos, 0.20);

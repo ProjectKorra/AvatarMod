@@ -37,7 +37,7 @@ public class ItemEmptyExpBottle extends Item implements AvatarItem {
             orbAmount -= storedExp;
         }
 
-        if (playerIn.experienceTotal >= requiredAmount) {
+        if (playerIn.experienceTotal >= requiredAmount && (playerIn.experience > 0 || playerIn.experienceLevel > 0)) {
             if (playerIn.experienceTotal < storedExp)
                 storedExp = playerIn.experienceTotal;
             XPUtils.takeXP(playerIn, (int) (storedExp * 0.75F));

@@ -129,7 +129,6 @@ public class FlameGlideHandler extends TickHandler {
                 if (!target.onGround)
                     target.isAirBorne = true;
 
-                AvatarUtils.afterVelocityAdded(target);
                 if (target instanceof EntityBender || target instanceof EntityPlayer && !((EntityPlayer) target).isCreative())
                     data.addBurnout(jump.getBurnOut(data) / 20);
                 if (target instanceof EntityPlayer)

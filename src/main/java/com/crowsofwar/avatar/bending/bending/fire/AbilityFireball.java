@@ -113,8 +113,9 @@ public class AbilityFireball extends Ability {
             boolean canUse = !data.hasStatusControl(THROW_FIREBALL);
 
             List<EntityFireball> fireballs = world.getEntitiesWithinAABB(EntityFireball.class,
-                    entity.getEntityBoundingBox().grow(3.5, 3.5, 3.5));
-            fireballs = fireballs.stream().filter(entityFireball -> entityFireball.getOwner() == entity).collect(Collectors.toList());
+                    entity.getEntityBoundingBox().grow(5, 5, 5));
+            fireballs = fireballs.stream().filter(entityFireball -> entityFireball.getOwner() == entity &&
+                    entityFireball.getBehaviour() instanceof FireballBehavior.PlayerControlled).collect(Collectors.toList());
             canUse |= fireballs.size() < fireballAmount;
 
             size *= abilityData.getDamageMult() * abilityData.getXpModifier();
@@ -124,7 +125,6 @@ public class AbilityFireball extends Ability {
             explosionDamage *= abilityData.getDamageMult() * abilityData.getXpModifier();
             chiHit *= abilityData.getDamageMult();
             lifetime *= (0.75 + 0.25 * abilityData.getDamageMult() * abilityData.getXpModifier());
-            // System.out.println(size);
 
             if (canUse) {
                 assert target != null;

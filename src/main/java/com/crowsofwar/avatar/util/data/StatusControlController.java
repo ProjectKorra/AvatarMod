@@ -6,6 +6,7 @@ import com.crowsofwar.avatar.bending.bending.fire.statctrls.*;
 import com.crowsofwar.avatar.bending.bending.ice.StatCtrlShieldShatter;
 import com.crowsofwar.avatar.bending.bending.lightning.StatCtrlThrowLightningSpear;
 import com.crowsofwar.avatar.bending.bending.sand.StatCtrlSandstormRedirect;
+import com.crowsofwar.avatar.bending.bending.water.statctrls.StatCtrlModifyWater;
 import com.crowsofwar.avatar.bending.bending.water.statctrls.flowcontrol.*;
 import com.crowsofwar.avatar.bending.bending.water.statctrls.waterarc.StatCtrlThrowWater;
 import com.crowsofwar.avatar.bending.bending.water.statctrls.waterblast.StatCtrlBurstWaterBlast;
@@ -67,7 +68,12 @@ public class StatusControlController {
 			SHIELD_BUBBLE = new StatCtrlShieldBubble(),
 			RESET_SHIELD_BUBBLE = new StatCtrlResetBubble(AvatarControl.CONTROL_RIGHT_CLICK_UP, StatusControl.CrosshairPosition.RIGHT_OF_CROSSHAIR, EntityWaterBubble.State.SHIELD),
 			RESET_SWIRL_BUBBLE = new StatCtrlResetBubble(AvatarControl.CONTROL_SHIFT, StatusControl.CrosshairPosition.BELOW_CROSSHAIR, EntityWaterBubble.State.STREAM),
-			SWIRL_BUBBLE = new StatCtrlSwirlBubble();
+			SWIRL_BUBBLE = new StatCtrlSwirlBubble(),
+			PUSH_SWIRL_BUBBLE = new StatCtrlPushRing(true),
+			RELEASE_SWIRL_BUBBLE = new StatCtrlPushRing(false),
+			PUSH_SHIELD_BUBBLE = new StatCtrlPushShield(true),
+			RELEASE_SHIELD_BUBBLE = new StatCtrlPushShield(false),
+			MODIFY_WATER = new StatCtrlModifyWater();
 	// @formatter:on
 
 	public static StatusControl lookup(int id) {

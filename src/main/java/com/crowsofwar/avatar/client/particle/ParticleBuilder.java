@@ -441,7 +441,9 @@ public final class ParticleBuilder {
      * @throws IllegalStateException if the particle builder is not yet building.
      */
     public ParticleBuilder pos(double x, double y, double z) {
-        if (!building) throw new IllegalStateException("Not building yet!");
+        if (!building) {
+            throw new IllegalStateException("Not building yet!");
+        }
         this.x = x;
         this.y = y;
         this.z = z;
@@ -1016,7 +1018,11 @@ public final class ParticleBuilder {
      */
     public void spawn(World world) {
 
-        if (!building) throw new IllegalStateException("Not building yet!");
+        if (!building) {
+            AvatarLog.warn("Not building yet!");
+            reset();
+          //  throw new IllegalStateException("Not building yet!");
+        }
 
         if (y < 0 && entity == null)
             AvatarLog.warn(AvatarLog.WarningType.INVALID_CODE, "Spawning particle below y = 0 - are you sure the position/entity "

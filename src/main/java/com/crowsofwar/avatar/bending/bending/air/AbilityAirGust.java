@@ -112,7 +112,6 @@ public class AbilityAirGust extends Ability {
             if (!world.isRemote)
                 world.spawnEntity(gust);
 
-            entity.swingArm(EnumHand.MAIN_HAND);
 
             if (world.isRemote) {
                 for (double angle = 0; angle < 360; angle += Math.max((int) (size * 15), 15)) {
@@ -127,15 +126,16 @@ public class AbilityAirGust extends Ability {
                     ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x(),
                             world.rand.nextGaussian() / 80 + velocity.y(), world.rand.nextGaussian() / 80 + velocity.z())
                             .time(6 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(0.95F, 0.95F, 0.95F, 0.05F).spawnEntity(entity)
-                            .scale(size * (1 / size)).element(BendingStyles.get(Airbending.ID)).collide(true).spawn(world);
+                            .scale(size * (1 / size)).element(BendingStyles.get(Airbending.ID)).spawn(world);
                     ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x(),
                             world.rand.nextGaussian() / 80 + velocity.y(), world.rand.nextGaussian() / 80 + velocity.z())
                             .time(10 + AvatarUtils.getRandomNumberInRange(0, 6)).clr(0.95F, 0.95F, 0.95F, 0.05F).spawnEntity(entity)
                             .scale(size * (1 / size)).element(BendingStyles.get(Airbending.ID)).collide(true).spawn(world);
+                    entity.swingArm(world.rand.nextBoolean() ? EnumHand.MAIN_HAND : EnumHand.OFF_HAND);
                 }
             }
 
-            entity.swingArm(world.rand.nextBoolean() ? EnumHand.MAIN_HAND : EnumHand.OFF_HAND);
+
             ctx.getAbilityData().setRegenBurnout(true);
             entity.world.playSound(null, new BlockPos(entity), SoundEvents.ENTITY_FIREWORK_LAUNCH, entity.getSoundCategory(), 1.0F + Math.max(ctx.getLevel(), 0) / 2F, 0.9F + world.rand.nextFloat() / 10);
             super.execute(ctx);
@@ -163,7 +163,7 @@ public class AbilityAirGust extends Ability {
                     float size = 0.75F * entity.getAvgSize() * (1 / entity.getAvgSize() + 0.5F);
                     int particles = (int) (Math.min((int) (entity.getAvgSize() * Math.PI), 2) + (entity.velocity().magnitude() / 20));
                     Vec3d centre = AvatarEntityUtils.getMiddleOfEntity(entity);
-                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(BendingStyles.get(Airbending.ID)).collide(true)
+                    ParticleBuilder.create(ParticleBuilder.Type.FLASH).element(BendingStyles.get(Airbending.ID)).collide(world.rand.nextBoolean())
                             .clr(0.95F, 0.95F, 0.95F, 0.035F).time(12)
                             .scale(size * 0.75F).spawnEntity(entity).swirl(rings, particles, entity.getAvgSize() * 0.75F,
                             size / 3F, (float) (entity.velocity().sqrMagnitude() / 10 * entity.getAvgSize()), (-0.75F / size), entity,
@@ -185,11 +185,12 @@ public class AbilityAirGust extends Ability {
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x,
                                 world.rand.nextGaussian() / 80 + velocity.y, world.rand.nextGaussian() / 80 + velocity.z)
                                 .time(4 + AvatarUtils.getRandomNumberInRange(0, 4)).clr(0.95F, 0.95F, 0.95F, 0.1F).spawnEntity(entity)
-                                .scale(1.25F * entity.getAvgSize() * (1 / entity.getAvgSize())).element(BendingStyles.get(Airbending.ID)).collide(true).collideParticles(true).spawn(world);
+                                .scale(1.25F * entity.getAvgSize() * (1 / entity.getAvgSize())).element(BendingStyles.get(Airbending.ID)).collideParticles(world.rand.nextBoolean()).spawn(world);
                         ParticleBuilder.create(ParticleBuilder.Type.FLASH).pos(spawnX, spawnY, spawnZ).vel(world.rand.nextGaussian() / 80 + velocity.x,
                                 world.rand.nextGaussian() / 80 + velocity.y, world.rand.nextGaussian() / 80 + velocity.z)
                                 .time(16 + AvatarUtils.getRandomNumberInRange(0, 2)).clr(0.95F, 0.95F, 0.95F, 0.1F).spawnEntity(entity)
-                                .scale(1.25F * entity.getAvgSize() * (1 / entity.getAvgSize())).element(BendingStyles.get(Airbending.ID)).collide(true).collideParticles(true).spawn(world);
+                                .scale(1.25F * entity.getAvgSize() * (1 / entity.getAvgSize())).element(BendingStyles.get(Airbending.ID)).collide(world.rand.nextBoolean())
+                                .collideParticles(world.rand.nextBoolean()).spawn(world);
 
                     }
                 }

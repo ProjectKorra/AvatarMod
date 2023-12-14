@@ -23,7 +23,7 @@ import com.crowsofwar.avatar.client.gui.AvatarUiRenderer;
 import com.crowsofwar.avatar.entity.EntityLightningArc;
 import com.crowsofwar.avatar.entity.mob.EntityBender;
 import com.crowsofwar.avatar.network.packets.PacketCErrorMessage;
-import com.crowsofwar.avatar.network.packets.PacketSUseAbility;
+import com.crowsofwar.avatar.network.packets.PacketCUseAbility;
 import com.crowsofwar.avatar.registry.AvatarItems;
 import com.crowsofwar.avatar.util.Raytrace;
 import com.crowsofwar.avatar.util.analytics.AnalyticEvents;
@@ -153,9 +153,9 @@ public class PlayerBender extends Bender {
 
     @Override
     public void executeAbility(Ability ability, Raytrace.Result raytrace, boolean switchPath) {
-        if (getWorld().isRemote) {
+        if (!getWorld().isRemote) {
             super.executeAbility(ability, raytrace, switchPath);
-            AvatarMod.network.sendToServer(new PacketSUseAbility(ability, raytrace, switchPath));
+            AvatarMod.network.sendToAll(new PacketCUseAbility(ability, raytrace, switchPath, getEntity().getPersistentID()));
         } else {
             super.executeAbility(ability, raytrace, switchPath);
         }

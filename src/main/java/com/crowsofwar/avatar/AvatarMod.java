@@ -44,6 +44,7 @@ import com.crowsofwar.avatar.common.triggers.AvatarTriggers;
 import com.crowsofwar.avatar.config.*;
 import com.crowsofwar.avatar.entity.*;
 import com.crowsofwar.avatar.entity.data.Behavior;
+import com.crowsofwar.avatar.entity.EntityFlames;
 import com.crowsofwar.avatar.entity.mob.*;
 import com.crowsofwar.avatar.item.CustomFurnaceRecipes;
 import com.crowsofwar.avatar.item.UpgradeItems;
@@ -59,7 +60,6 @@ import com.crowsofwar.avatar.network.packets.glider.PacketSServerGliding;
 import com.crowsofwar.avatar.registry.AvatarItems;
 import com.crowsofwar.avatar.registry.CapabilityRegistry;
 import com.crowsofwar.avatar.util.AvatarDataSerializers;
-import com.crowsofwar.avatar.util.AvatarPlayerTick;
 import com.crowsofwar.avatar.util.HumanBenderSpawner;
 import com.crowsofwar.avatar.util.analytics.AvatarAnalytics;
 import com.crowsofwar.avatar.util.command.AvatarCommand;
@@ -154,9 +154,9 @@ public class AvatarMod {
         Abilities.register(new AbilityFlameGlide());
         Abilities.register(new AbilityImmolate());
         /*    			Water	  			*/
-//        Abilities.register(new AbilityWaterArc());
-        Abilities.register(new AbilityCreateWave());
         Abilities.register(new AbilityFlowControl());
+        Abilities.register(new AbilityWaterArc());
+        Abilities.register(new AbilityCreateWave());
         Abilities.register(new AbilityWaterSkate());
         Abilities.register(new AbilityWaterBlast());
         Abilities.register(new AbilityCleanse());
@@ -178,7 +178,7 @@ public class AvatarMod {
         Abilities.register(new AbilityLightningSpear());
         Abilities.register(new AbilityLightningArc());
         Abilities.register(new AbilityLightningRedirect());
-        Abilities.register(new AbilityLightningRaze());
+  //      Abilities.register(new AbilityLightningRaze());
         /*    			Combustion	  		*/
         Abilities.register(new AbilityExplosion());
         Abilities.register(new AbilityExplosivePillar());
@@ -265,10 +265,11 @@ public class AvatarMod {
         registerPacket(PacketCClientGliding.class, Side.CLIENT);
         registerPacket(PacketCUpdateClientTarget.class, Side.CLIENT);
         registerPacket(PacketCSyncAbilityProperties.class, Side.CLIENT);
+        registerPacket(PacketCUseAbility.class, Side.CLIENT);
 
         NetworkRegistry.INSTANCE.registerGuiHandler(this, new AvatarGuiHandler());
 
-        FMLCommonHandler.instance().bus().register(new AvatarPlayerTick());
+       // FMLCommonHandler.instance().bus().register(new AvatarPlayerTick());
 
         AvatarDataSerializers.register();
 

@@ -4,7 +4,6 @@ import com.crowsofwar.avatar.bending.bending.BendingStyles;
 import com.crowsofwar.avatar.bending.bending.water.Waterbending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
-import com.crowsofwar.avatar.util.AvatarParticleUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
 import com.crowsofwar.gorecore.util.Vector;
 import net.minecraft.entity.EntityLivingBase;
@@ -188,35 +187,31 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
         System.out.println(getAvgSize());
 
 
-        if (world.isRemote && getOwner() != null && ticksExisted % 2 == 0) {
+        if (world.isRemote && getOwner() != null) {
             //Expanding vortex???
             double dist = getControlPoint(getAmountOfControlPoints() - 1).getDistance(getLeader());
 
-//            //Spawns a spinning vortex near the player. Let's hope this works.
-//            AvatarParticleUtils.spawnSpinningDirectionalVortex(world, this,
-//                    position().plus(Vector.getLookRectangular(this).times(-dist)).toMinecraft(),
-//                    (int) (dist * getAvgSize() * 60), dist, 0.1F,
-//                    Math.min(getAvgSize() * 2 * dist / getLifeTime(), getAvgSize() * 2),
-//                    ParticleBuilder.Type.CUBE, Vec3d.ZERO,
-//                    Vec3d.ZERO, true,
-//                    20, 120, 255, 120,4, BendingStyles.get(Waterbending.ID),
-//                    false, getAvgSize() / 2);
-            float size = getAvgSize() * 0.75F;
+            float size = getAvgSize();
+
+            Vec3d swirlPos = AvatarEntityUtils.getMiddleOfEntity(this).add(getLookVec().scale(size));
+            //Don't want to change the y
+            swirlPos = swirlPos.subtract(0, getLookVec().scale(size).y, 0);
             //Overall sphere shape/swirl
-            ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(255, 255, 255, 50).collideParticles(true).gravity(true)
-                    .time(16).scale(0.5F).spawnEntity(this).element(BendingStyles.get(Waterbending.ID))
+            ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(255, 255, 255, 60)
+                    .time(32).scale(0.5F).spawnEntity(this).element(BendingStyles.get(Waterbending.ID))
                     .spin(size / 10, world.rand.nextGaussian() / 20)
                     .swirl((int) (size * 12), (int) (size * 4 * Math.PI),
                             size, size * 5, (float) (velocity().magnitude() * size * 6F),
-                            (float) (world.rand.nextGaussian() / 8F), this, world, false, AvatarEntityUtils.getBottomMiddleOfEntity(this),
+                            (float) (world.rand.nextGaussian() / 8F), this, world, true, swirlPos,
                             ParticleBuilder.SwirlMotionType.OUT, false, true);
-            ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(255, 255, 255, 90).collideParticles(true).gravity(true)
-                    .time(16).scale(0.5F).spawnEntity(this).element(BendingStyles.get(Waterbending.ID))
+            ParticleBuilder.create(ParticleBuilder.Type.CUBE).clr(255, 255, 255, 45)
+                    .time(6).scale(0.75F).spawnEntity(this).element(BendingStyles.get(Waterbending.ID)).collide(world.rand.nextBoolean())
+                    .collideParticles(world.rand.nextBoolean())
                     .spin(size / 10, world.rand.nextGaussian() / 20)
                     .swirl((int) (size * 12), (int) (size * 4 * Math.PI),
-                            size, size * 3, (float) (velocity().magnitude() * size * 6),
-                            (float) (world.rand.nextGaussian() / 8F), this, world, true, AvatarEntityUtils.getBottomMiddleOfEntity(this),
-                            ParticleBuilder.SwirlMotionType.OUT, false, true);
+                            size, size * 3, (float) (velocity().magnitude() * size * 20),
+                            (float) (world.rand.nextGaussian() / 8F), this, world, true, swirlPos,
+                            ParticleBuilder.SwirlMotionType.OUT, true, true);
 
 
             Vec3d[] points = new Vec3d[getAmountOfControlPoints()];
@@ -226,8 +221,8 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
             //First, we need a bezier curve. Joy.
             //0 is the leader/front one
             for (int i = 0; i < getAmountOfControlPoints(); i++) {
-                Vec3d pos = getControlPoint(points.length - i - 1).position().toMinecraft();
-                Vec3d pos2 = i < points.length - 1 ? getControlPoint(Math.max(points.length - i - 2, 0)).position().toMinecraft() : Vec3d.ZERO;
+                Vec3d pos = getControlPoint(points.length - i - 1).position().minusY(getHeight() / 2).toMinecraft();
+                Vec3d pos2 = i < points.length - 1 ? getControlPoint(Math.max(points.length - i - 2, 0)).position().minusY(getHeight() / 2).toMinecraft() : Vec3d.ZERO;
 
                 for (int h = 0; h < 4; h++) {
                     pos = pos.add(AvatarUtils.bezierCurve(((points.length - i - 1D / (h + 1)) / points.length), points));
@@ -241,18 +236,18 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
                     Vec3d vel = new Vec3d(world.rand.nextGaussian() / 240, world.rand.nextGaussian() / 240, world.rand.nextGaussian() / 240);
 
                     if (targetPos != circlePos)
-                        vel = targetPos == Vec3d.ZERO ? vel : targetPos.subtract(circlePos).normalize().scale(0.15).add(vel);
+                        vel = targetPos == Vec3d.ZERO ? vel : targetPos.subtract(circlePos).normalize().scale(0.20).add(vel);
                     ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(circlePos).spawnEntity(this).vel(vel)
                             .clr(0, 102, 255, 85).scale(getAvgSize()).target(targetPos == Vec3d.ZERO ? pos : targetPos)
-                            .time(14 + AvatarUtils.getRandomNumberInRange(0, 4)).collide(true).collideParticles(true).element(new Waterbending()).spawn(world);
+                            .time(18 + AvatarUtils.getRandomNumberInRange(0, 4)).element(BendingStyles.get(Waterbending.ID)).spawn(world);
                 }
 
                 //Particles along the line
-                for (int h = 0; h < 5; h++) {
+                for (int h = 0; h < 2; h++) {
                     pos = pos.add(AvatarUtils.bezierCurve(((points.length - i - 1D / (h + 1)) / points.length), points));
                     ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(pos).spawnEntity(this).vel(world.rand.nextGaussian() / 40 * getAvgSize(),
                             world.rand.nextGaussian() / 40 * getAvgSize(), world.rand.nextGaussian() / 40 * getAvgSize()).scale(getAvgSize()).clr(0, 102, 255, 105)
-                            .time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).collide(true).collideParticles(true).element(new Waterbending()).spawn(world);
+                            .time(12 + AvatarUtils.getRandomNumberInRange(0, 5)).element(BendingStyles.get(Waterbending.ID)).spawn(world);
 
                 }
                 //Dripping water particles
@@ -260,7 +255,7 @@ public class EntityWaterCannon extends EntityArc<EntityWaterCannon.WaterControlP
                     pos = pos.add(AvatarUtils.bezierCurve(((points.length - i - 1D / (h + 1)) / points.length), points));
                     ParticleBuilder.create(ParticleBuilder.Type.CUBE).pos(pos).spawnEntity(this).vel(world.rand.nextGaussian() / 20,
                             world.rand.nextDouble() / 12, world.rand.nextGaussian() / 20).clr(0, 102, 255, 85)
-                            .time(6 + AvatarUtils.getRandomNumberInRange(0, 3)).target(pos).scale(getAvgSize()).gravity(true).collide(true).collideParticles(true).element(new Waterbending()).spawn(world);
+                            .time(6 + AvatarUtils.getRandomNumberInRange(0, 3)).target(pos).scale(getAvgSize()).gravity(true).element(BendingStyles.get(Waterbending.ID)).spawn(world);
                 }
             }
         }

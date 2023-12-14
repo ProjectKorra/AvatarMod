@@ -4,6 +4,7 @@ import com.crowsofwar.avatar.bending.bending.sand.Sandbending;
 import com.crowsofwar.avatar.client.particle.ParticleBuilder;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
 import com.crowsofwar.avatar.util.AvatarUtils;
+import com.crowsofwar.avatar.util.data.AbilityData;
 import com.crowsofwar.avatar.util.data.BendingData;
 import com.crowsofwar.avatar.util.data.SandstormMovementHandler;
 import com.crowsofwar.avatar.util.data.StatusControlController;
@@ -324,6 +325,11 @@ public class EntitySandstorm extends EntityOffensive {
 
         AvatarUtils.afterVelocityAdded(entity);
         onContact(entity);
+
+        if (getOwner() != null && getAbility() != null) {
+            AbilityData abilityData = AbilityData.get(getOwner(), getAbility().getName());
+            abilityData.addXp(getXpPerHit() / 20);
+        }
 
     }
 

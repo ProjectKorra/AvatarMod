@@ -50,7 +50,7 @@ public class AbilityCleanse extends Ability {
     @Override
     public void init() {
         super.init();
-        addProperties(SPEED_DURATION, SPEED_LEVEL, SLOWNESS_DURATION, SLOWNESS_LEVEL,
+        addProperties(SPEED_DURATION, SPEED_LEVEL,
                 SATURATION_DURATION, SATURATION_LEVEL, RADIUS, REGEN_DURATION, REGEN_LEVEL,
                 INSTANT_HEALTH_LEVEL, SOURCE_RANGE, SOURCE_ANGLES, HIGHEST_LEVEL_CLEANSED, WATER_LEVEL,
                 ABSORPTION_DURATION, ABSORPTION_LEVEL);

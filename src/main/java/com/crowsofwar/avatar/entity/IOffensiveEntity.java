@@ -1,6 +1,9 @@
 package com.crowsofwar.avatar.entity;
 
 import com.crowsofwar.avatar.bending.bending.BattlePerformanceScore;
+import com.crowsofwar.avatar.bending.bending.BendingStyle;
+import com.crowsofwar.avatar.bending.bending.BendingStyles;
+import com.crowsofwar.avatar.bending.bending.fire.Firebending;
 import com.crowsofwar.avatar.client.particle.AvatarParticles;
 import com.crowsofwar.avatar.entity.mob.EntityBender;
 import com.crowsofwar.avatar.util.AvatarEntityUtils;
@@ -38,7 +41,7 @@ public interface IOffensiveEntity {
             spawnExplosionParticles(world, AvatarEntityUtils.getMiddleOfEntity(entity));
             playExplosionSounds(entity);
             List<Entity> collided = world.getEntitiesInAABBexcluding(entity, entity.getEntityBoundingBox().grow(getExplosionHitboxGrowth(),
-                    getExplosionHitboxGrowth(), getExplosionHitboxGrowth()),
+                            getExplosionHitboxGrowth(), getExplosionHitboxGrowth()),
                     entity1 -> entity1 != entity.getOwner());
 
             if (!collided.isEmpty()) {
@@ -93,6 +96,7 @@ public interface IOffensiveEntity {
     }
 
     default void attackEntity(AvatarEntity attacker, Entity hit, boolean explosionDamage, Vec3d vel) {
+        System.out.println(getDamage());
         vel = new Vec3d(vel.x * getKnockbackMult().x, vel.y * getKnockbackMult().y, vel.z * getKnockbackMult().z);
         if (attacker.getOwner() != null && hit != null && hit != attacker && !attacker.world.isRemote) {
             AbilityData data = AbilityData.get(attacker.getOwner(), attacker.getAbility().getName());
@@ -116,9 +120,13 @@ public interface IOffensiveEntity {
                         }
 
                     } else if (ds) {
+                        BendingStyle style = BendingStyles.get(attacker.getElement());
                         BattlePerformanceScore.addScore(attacker.getOwner(), getPerformanceAmount());
                         data.addXp(getXpPerHit());
-                        hit.setFire(getFireTime());
+                        //Only fire-like moves can set things on fire (fire, combustion, lightning)
+                        if (style != null && (style instanceof Firebending || style.isSpecialtyBending() && style.getParentBendingId()
+                                == Firebending.ID))
+                            hit.setFire(getFireTime());
                         if (setVelocity())
                             AvatarUtils.setVelocity(hit, vel);
                         else hit.addVelocity(vel.x, vel.y, vel.z);
@@ -136,15 +144,21 @@ public interface IOffensiveEntity {
                         }
                     }
                 }
-            } if (data != null && !attacker.canDamageEntity(hit) && attacker.canCollideWith(hit)
-                    || attacker instanceof IOffensiveEntity && ((IOffensiveEntity) attacker).multiHit()) {
+            }
+            if (data != null && (!attacker.canDamageEntity(hit) && attacker.canCollideWith(hit)
+                    || attacker instanceof IOffensiveEntity && ((IOffensiveEntity) attacker).multiHit())) {
+                BendingStyle style = BendingStyles.get(attacker.getElement());
+
                 if (hit instanceof EntityItem)
                     vel = vel.scale(0.05);
                 if (!(hit instanceof AvatarEntity))
                     BattlePerformanceScore.addScore(attacker.getOwner(), getPerformanceAmount());
                 if (!(attacker instanceof IOffensiveEntity && ((IOffensiveEntity) attacker).multiHit()))
                     data.addXp(getXpPerHit());
-                hit.setFire(getFireTime());
+                //Only fire-like moves can set things on fire (fire, combustion, lightning)
+                if (style != null && (style instanceof Firebending || style.isSpecialtyBending() && style.getParentBendingId()
+                        == Firebending.ID))
+                    hit.setFire(getFireTime());
                 if (hit instanceof EntityOffensive)
                     ((EntityOffensive) hit).applyElementalContact(attacker);
                 if (setVelocity())

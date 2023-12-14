@@ -32,60 +32,61 @@ import static com.crowsofwar.avatar.util.data.StatusControlController.START_FLAM
  */
 public class AbilityFlamethrower extends Ability {
 
-	public static final String
-			RANDOMNESS = "randomness",
-			FLAMES_PER_SECOND = "particles";
+    public static final String
+            RANDOMNESS = "randomness",
+            FLAMES_PER_SECOND = "particles";
 
-	public AbilityFlamethrower() {
-		super(Firebending.ID, "flamethrower");
-	}
+    public AbilityFlamethrower() {
+        super(Firebending.ID, "flamethrower");
+    }
 
-	@Override
-	public void execute(AbilityContext ctx) {
-		BendingData data = ctx.getData();
-		Bender bender = ctx.getBender();
-		if (bender.consumeChi(getChiCost(ctx) / 4)) {
-			data.addStatusControl(START_FLAMETHROW);
-			ctx.getAbilityData().setRegenBurnout(false);
-		}
-	}
+    @Override
+    public void execute(AbilityContext ctx) {
+        BendingData data = ctx.getData();
+        Bender bender = ctx.getBender();
+        if (bender.consumeChi(getChiCost(ctx) / 4)) {
+            if (!ctx.getWorld().isRemote)
+                data.addStatusControl(START_FLAMETHROW);
+            ctx.getAbilityData().setRegenBurnout(false);
+        }
+    }
 
-	@Override
-	public void init() {
-		super.init();
-		addProperties(FIRE_R, FIRE_G, FIRE_B, FADE_R, FADE_G, FADE_B, RANDOMNESS,  FLAMES_PER_SECOND);
-		addBooleanProperties(SMELTS, SETS_FIRES);
-	}
+    @Override
+    public void init() {
+        super.init();
+        addProperties(FIRE_R, FIRE_G, FIRE_B, FADE_R, FADE_G, FADE_B, RANDOMNESS, FLAMES_PER_SECOND);
+        addBooleanProperties(SMELTS, SETS_FIRES);
+    }
 
-	@Override
-	public int getBaseTier() {
-		return 2;
-	}
+    @Override
+    public int getBaseTier() {
+        return 2;
+    }
 
-	@Override
-	public boolean isOffensive() {
-		return true;
-	}
+    @Override
+    public boolean isOffensive() {
+        return true;
+    }
 
-	@Override
-	public BendingAi getAi(EntityLiving entity, Bender bender) {
-		return new AiFlamethrower(this, entity, bender);
-	}
+    @Override
+    public BendingAi getAi(EntityLiving entity, Bender bender) {
+        return new AiFlamethrower(this, entity, bender);
+    }
 
-	@Override
-	public int getCooldown(AbilityContext ctx) {
-		return 0;
-	}
+    @Override
+    public int getCooldown(AbilityContext ctx) {
+        return 0;
+    }
 
-	@Override
-	public float getBurnOut(AbilityContext ctx) {
-		return 0;
-	}
+    @Override
+    public float getBurnOut(AbilityContext ctx) {
+        return 0;
+    }
 
-	@Override
-	public float getExhaustion(AbilityContext ctx) {
-		return 0;
-	}
+    @Override
+    public float getExhaustion(AbilityContext ctx) {
+        return 0;
+    }
 
 
 }

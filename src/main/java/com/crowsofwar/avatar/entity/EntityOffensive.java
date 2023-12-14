@@ -52,6 +52,10 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
             .createKey(EntityOffensive.class, DataSerializers.FLOAT);
     private static final DataParameter<Float> SYNC_MAX_WIDTH = EntityDataManager
             .createKey(EntityOffensive.class, DataSerializers.FLOAT);
+    private static final DataParameter<Float> SYNC_EXPANDED_WIDTH = EntityDataManager
+            .createKey(EntityOffensive.class, DataSerializers.FLOAT);
+    private static final DataParameter<Float> SYNC_EXPANDED_HEIGHT = EntityDataManager
+            .createKey(EntityOffensive.class, DataSerializers.FLOAT);
     private static final DataParameter<OffensiveBehaviour> SYNC_BEHAVIOR = EntityDataManager
             .createKey(EntityOffensive.class, OffensiveBehaviour.DATA_SERIALIZER);
     private static final DataParameter<Boolean> SYNC_PIERCES = EntityDataManager
@@ -182,6 +186,11 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
         return (dataManager.get(SYNC_MAX_HEIGHT) + dataManager.get(SYNC_MAX_WIDTH)) / 2;
     }
 
+    public void setMaxEntitySize(float size) {
+        dataManager.set(SYNC_MAX_HEIGHT, size);
+        dataManager.set(SYNC_MAX_WIDTH, size);
+    }
+
     public float getAvgSize() {
         if (getHeight() == getWidth()) {
             return getHeight();
@@ -201,11 +210,6 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
     public void setMaxEntitySize(float height, float width) {
         dataManager.set(SYNC_MAX_HEIGHT, height);
         dataManager.set(SYNC_MAX_WIDTH, width);
-    }
-
-    public void setMaxEntitySize(float size) {
-        dataManager.set(SYNC_MAX_HEIGHT, size);
-        dataManager.set(SYNC_MAX_WIDTH, size);
     }
 
     public float getDamage() {
@@ -327,6 +331,8 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
         dataManager.register(SYNC_REDIRECTABLE, false);
         dataManager.register(SYNC_DISSIPATE, false);
         dataManager.register(SYNC_EXPLODE, true);
+        dataManager.register(SYNC_EXPANDED_HEIGHT, 0.5F);
+        dataManager.register(SYNC_EXPANDED_WIDTH, 0.5F);
     }
 
     @Override
@@ -355,6 +361,7 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
     public AxisAlignedBB getCollisionBox(Entity entityIn) {
         return getExpandedHitbox();
     }
+
 
     @Override
     public void onUpdate() {
@@ -399,6 +406,10 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
 
         if (shouldDissipate() || shouldExplode())
             ticksMoving++;
+
+        //Resets the counter
+        if (!shouldExplode() && !shouldDissipate())
+            ticksMoving = 0;
 
         if (ticksMoving >= getLifeTime() && (shouldDissipate() || shouldExplode()) && getLifeTime() > 0) {
             if (shouldDissipate())
@@ -733,14 +744,23 @@ public abstract class EntityOffensive extends AvatarEntity implements IOffensive
         return dmgSource;
     }
 
+    //Too lazy to change the original get methods, and data serializers don't allow for doubles.
+    public void setExpandedWidth(double width) {
+        dataManager.set(SYNC_EXPANDED_WIDTH, (float) width);
+    }
+
     @Override
     public double getExpandedHitboxWidth() {
-        return 0.25;
+        return dataManager.get(SYNC_EXPANDED_WIDTH);
+    }
+
+    public void setExpandedHeight(double height) {
+        dataManager.set(SYNC_EXPANDED_HEIGHT, (float) height);
     }
 
     @Override
     public double getExpandedHitboxHeight() {
-        return 0.25;
+        return dataManager.get(SYNC_EXPANDED_HEIGHT);
     }
 
     @Override
